@@ -1,0 +1,73 @@
+//    uniCenta oPOS - touch friendly EPoS
+//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.TimeSeriesProduct");
+report.setReport("/com/openbravo/reports/sales_chart_timeseriesproduct");
+report.setResourceBundle("com/openbravo/reports/sales_chart_timeseriesproduct_messages");
+
+report.setSentence("SELECT "
+        + "products.code AS code, "
+        + "products.codetype AS codetype, "
+        + "products.reference AS prodref, "
+        + "products.name AS prodname, "
+        + "DATE(receipts.datenew) AS datesold, "
+        + "receipts.datenew AS datestamp, "
+        + "count(ticketlines.UNITS) AS unitssold "
+    + "FROM ((ticketlines ticketlines "
+        + "INNER JOIN products products "
+            + "ON (ticketlines.PRODUCT = products.id)) "
+        + "INNER JOIN tickets tickets "
+           + "ON (TICKET = tickets.id)) "
+        + "INNER JOIN receipts receipts "
+            + "ON (tickets.id = receipts.id) "
+    + "WHERE ?(QBF_FILTER) "
+    + "GROUP BY DATE(receipts.datenew) "
+    + "ORDER BY 5 ASC");
+
+report.addParameter("receipts.DATENEW");
+report.addParameter("receipts.DATENEW");
+
+paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
+
+paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
+// JG - 8 Jan 14 paramdates.setEndDate(com.openbravo.beans.DateUtils.getToday());
+paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
+
+report.addQBFFilter(paramdates);
+
+report.addParameter("products.NAME");
+//report.addParameter("products.ID");
+report.addParameter("products.CATEGORY");
+report.addParameter("products.PRICEBUY");
+report.addParameter("products.PRICESELL");
+report.addParameter("products.CODE");
+
+report.addQBFFilter(new com.openbravo.pos.ticket.ProductFilter2());
+
+report.addField("code", com.openbravo.data.loader.Datas.STRING);
+report.addField("codetype", com.openbravo.data.loader.Datas.STRING);
+report.addField("prodref", com.openbravo.data.loader.Datas.STRING);
+report.addField("prodname", com.openbravo.data.loader.Datas.STRING);
+report.addField("datesold", com.openbravo.data.loader.Datas.TIMESTAMP);
+report.addField("datestamp", com.openbravo.data.loader.Datas.TIMESTAMP);
+report.addField("unitssold", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;

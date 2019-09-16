@@ -1,0 +1,81 @@
+//    uniCenta oPOS - Touch Friendly POS
+//    Copyright (c) 2009 - 2014 uniCenta
+//    www.unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <www.gnu.org/licenses/>.
+//		added by g.irura @ 27/03/2010. 
+// 		CALCULATES PROFIT FOR EACH ITEM THAT IS SOLD AS WELL AS QUANTITY OF ITEMS OCCURRING IN THE PARTICULAR SALE
+//		IF A PRICE ADJUSTMENT OCCURS, IT IS REFLECTED IN THE TRAIL OF RECEIPTS ON DATES. THE REPORT ALSO SHOWS THE TOTAL PROFITS MADE ON PRODUCTS/SERVICES SOLD
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.SalesProfit");
+report.setReport("/com/openbravo/reports/sales_productsalesprofit");
+report.setResourceBundle("com/openbravo/reports/sales_productsalesprofit_messages");
+
+// Amend: JG uniCenta May 2014
+// Amend: JG uniCenta July 2014
+// Amend: JG uniCenta April 2017
+// Amend: JG uniCenta September 2017
+
+report.setSentence("SELECT products.REFERENCE, " +
+       "products.NAME, " +
+       "products.PRICEBUY, " +
+       "products.PRICESELL, " +
+       "SUM(ticketlines.UNITS) AS SOLD_UNITS, " +
+       "SUM(ticketlines.UNITS * products.PRICEBUY) AS COST_VALUE, " +
+       "SUM(ticketlines.UNITS * products.PRICESELL) AS EXPECTED_SALES_VALUE, " +
+       "SUM(ticketlines.UNITS * ticketlines.PRICE) AS ACTUAL_SALES_VALUE, " +
+         "SUM(ticketlines.UNITS * products.PRICESELL) " +
+       "- SUM(ticketlines.UNITS * products.PRICEBUY) " +
+          "AS EXPECTED_PROFIT, " +
+       "SUM(ticketlines.UNITS * ticketlines.PRICE) - SUM(ticketlines.UNITS * products.PRICEBUY) " +
+          "AS ACTUAL_PROFIT " +
+  "FROM (ticketlines ticketlines " +
+       "INNER JOIN receipts receipts " +
+           "ON (ticketlines.TICKET = receipts.ID)) " +
+       "LEFT OUTER JOIN products products " +
+          "ON (ticketlines.PRODUCT = products.ID) " +
+    "WHERE ?(QBF_FILTER) " +
+    "GROUP BY ticketlines.PRODUCT " +
+    "ORDER BY products.REFERENCE ASC");
+
+report.addParameter("RECEIPTS.DATENEW");
+report.addParameter("RECEIPTS.DATENEW");
+paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
+paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
+// JG - 8 Jan 14 paramdates.setEndDate(com.openbravo.beans.DateUtils.getToday());
+paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
+report.addQBFFilter(paramdates);
+
+report.addParameter("products.NAME");
+report.addParameter("products.CATEGORY");
+report.addParameter("products.CODE");
+report.addParameter("stockcurrent.UNITS");
+report.addQBFFilter(new com.openbravo.pos.ticket.ProductFilter1());
+
+report.addField("REFERENCE", com.openbravo.data.loader.Datas.STRING);
+report.addField("NAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("PRICEBUY", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("PRICESELL", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("SOLD_UNITS", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("COST_VALUE", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("EXPECTED_SALES_VALUE", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("ACTUAL_SALES_VALUE", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("EXPECTED_PROFIT", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("ACTUAL_PROFIT", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;

@@ -1,0 +1,72 @@
+//    uniCenta oPOS - touch friendly EPoS
+//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.TaxCatSales");
+report.setReport("/com/openbravo/reports/sales_taxcatsales");
+report.setResourceBundle("com/openbravo/reports/sales_taxcatsales_messages");
+
+report.setSentence("SELECT " + 
+       "closedcash.DATEEND, " +
+       "taxes.NAME AS TAXNAME, " +
+       "categories.NAME, " +
+       "SUM(ticketlines.UNITS) AS QTY, " +
+       "SUM(ticketlines.PRICE * ticketlines.UNITS) AS CATPRICE, " +
+       "SUM((ticketlines.PRICE * taxes.RATE) * ticketlines.UNITS) AS CATTAX, " +
+       "SUM((ticketlines.PRICE + ticketlines.PRICE * taxes.RATE) " +
+          "* ticketlines.UNITS) AS CATTOTAL " +
+    "FROM taxes taxes " +
+       "CROSS JOIN closedcash closedcash " +
+       "CROSS JOIN ((((ticketlines ticketlines " +
+           "LEFT OUTER JOIN products products " +
+              "ON (ticketlines.PRODUCT = products.ID)) " +
+          "RIGHT OUTER JOIN products_cat products_cat " +
+             "ON (products_cat.PRODUCT = products.ID)) " +
+         "LEFT OUTER JOIN categories categories " +
+            "ON (products.CATEGORY = categories.ID)) " +
+        "RIGHT OUTER JOIN tickets tickets " +
+           "ON (tickets.ID = ticketlines.TICKET)) " +
+       "RIGHT OUTER JOIN receipts receipts " +
+          "ON (receipts.ID = tickets.ID) " +
+    "WHERE closedcash.MONEY = receipts.MONEY " +
+        "AND ticketlines.TAXID = taxes.ID AND ?(QBF_FILTER) " +
+    "GROUP BY taxes.NAME, categories.NAME " +
+        "ORDER BY TAXNAME ASC, categories.NAME ASC");
+
+report.addParameter("receipts.DATENEW");
+report.addParameter("receipts.DATENEW");
+
+paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
+
+paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
+// JG - 8 Jan 14 paramdates.setEndDate(com.openbravo.beans.DateUtils.getToday());
+paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
+
+report.addQBFFilter(paramdates);
+
+report.addField("DATEEND", com.openbravo.data.loader.Datas.TIMESTAMP);
+report.addField("TAXNAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("NAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("QTY", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("CATPRICE", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("CATTAX", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("CATTOTAL", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;

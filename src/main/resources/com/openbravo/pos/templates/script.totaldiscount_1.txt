@@ -1,0 +1,51 @@
+// script.totaldiscount
+// This script applies UsersInput% Discount for the Total Receipt value
+//
+//    uniCenta oPOS - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2018 uniCenta
+//    http://sourceforge.net/projects/unicentaopos
+//
+//    This file is part of uniCenta oPOS.
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+// **************************************************************************
+// This script applies UsersInput% Discount for the Total Receipt value
+
+import com.openbravo.format.Formats;
+import com.openbravo.pos.ticket.TicketLineInfo;
+import com.openbravo.pos.ticket.TicketProductInfo; 
+
+discountrate = 1 - sales.getInputValue();
+
+index = sales.getSelectedIndex();
+if (index >= 0) {
+    if (ticket.getTotal() > 0.0 && discountrate > 0.0) {
+        sdiscount = Formats.PERCENT.formatValue((1-discountrate));
+        for (int number= 0; number < ticket.getLinesCount(); number++) {
+            line = ticket.getLine(number);
+            ticket.setLine(number,
+            new TicketLineInfo(
+                    line.getProductID(),
+                    line.getProductName() + " - Discount @  " + sdiscount + " was " + line.getPrice(),
+                    line.getProductTaxCategoryID(),
+                    line.getMultiply(),
+                    (double)Math.rint(line.getPrice() * discountrate *100) /100d,
+                    line.getTaxInfo())); 
+        }  
+    } else {  
+        java.awt.Toolkit.getDefaultToolkit().beep();
+    }
+} else {
+    java.awt.Toolkit.getDefaultToolkit().beep();
+}

@@ -1,0 +1,52 @@
+// Copyright:   Original open-source found in the public domain
+// Modified:    uniCenta November 2016
+//
+// Description:
+// Prompts to Upsell a Product. Adds a new line with a description and value 
+//
+// How To:
+// ADD to Product Properties page
+//
+// <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+// <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+// 
+// <properties>
+// <entry key="Upsell">0.50</entry>
+// </properties>
+//
+// ADD to the ticket.addline script
+//
+//
+// START
+import com.openbravo.format.Formats;
+import com.openbravo.pos.ticket.TicketLineInfo;
+import com.openbravo.pos.ticket.TicketProductInfo;
+
+index = sales.getSelectedIndex();
+
+if (index >= 0) { 
+    line = ticket.getLine(index); 
+    if (line.getProperty("Upsell") != null) {
+	Object[] options = {"Upsell","No",};    
+	value = (JOptionPane.showOptionDialog(null,
+	"Make it a Large for " + line.getProperty("Upsell") + "?", "Upsell!",
+	JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+	null, options, options));
+	
+        if (value == JOptionPane.YES_OPTION) {
+            Double newPrice = new Double(line.getProperty("Upsell"));
+            newname = "* make it a large";
+            ticket.insertLine(ticket.getLinesCount(),
+            new TicketLineInfo(line.getProductID(), newname,
+            line.getProductTaxCategoryID(), line.getMultiply(), 0, 
+            line.getTaxInfo()));
+
+            sales.setSelectedIndex(ticket.getLinesCount()-1);
+            index = sales.getSelectedIndex();
+            line = ticket.getLine(index); 
+            line.setPriceTax(newPrice);
+            sales.setSelectedIndex(ticket.getLinesCount()-2);				
+	}
+    }
+}
+// END

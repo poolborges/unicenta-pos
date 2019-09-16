@@ -1,0 +1,71 @@
+//    uniCenta oPOS is a point of sales application designed for touch screens.
+//    Copyright (C) 2009-2018 uniCenta
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS.
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.ClosedProducts");
+report.setReport("/com/openbravo/reports/sales_closedproducts_1");
+report.setResourceBundle("com/openbravo/reports/sales_closedproducts_1_messages");
+
+report.setSentence("SELECT categories.NAME AS catname, " +
+       "products.REFERENCE AS prodref, " +
+       "products.NAME AS prodname, " +
+       "products.PRICESELL, " +
+       "sum(ticketlines.UNITS) AS totalunits, " +
+       "sum(ticketlines.units * ticketlines.price) as totalprice, " +
+       "taxes.RATE * 100 AS taxrate, " +
+       "sum((ticketlines.PRICE * taxes.rate) * units) AS totaltax, " +
+       "sum((ticketlines.units * ticketlines.PRICE) + (ticketlines.PRICE * taxes.rate)) AS totaltotal, " +
+       "closedcash.DATESTART AS DATESTART, " +
+       "closedcash.DATEEND AS DATEEND " +
+  "FROM (((((ticketlines ticketlines " +
+            "INNER JOIN taxes taxes ON (ticketlines.TAXID = taxes.ID)) " +
+           "INNER JOIN tickets tickets ON (ticketlines.TICKET = tickets.ID)) " +
+          "INNER JOIN receipts receipts ON (tickets.ID = receipts.ID)) " +
+         "INNER JOIN closedcash closedcash ON (receipts.MONEY = closedcash.MONEY)) " +
+        "INNER JOIN products products ON (ticketlines.PRODUCT = products.ID)) " +
+       "INNER JOIN categories categories ON (products.CATEGORY = categories.ID) " +
+    "WHERE ?(QBF_FILTER) " +
+"GROUP BY products.REFERENCE");
+
+report.addParameter("closedcash.DATEEND");
+report.addParameter("closedcash.DATEEND");
+paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
+paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
+// JG - 8 Jan 14 paramdates.setEndDate(com.openbravo.beans.DateUtils.getToday());
+paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
+report.addQBFFilter(paramdates);
+
+report.addParameter("products.NAME");
+report.addParameter("products.CATEGORY");
+report.addParameter("products.CODE");
+report.addParameter("stockcurrent.UNITS");
+report.addQBFFilter(new com.openbravo.pos.ticket.ProductFilter1());
+
+report.addField("catname", com.openbravo.data.loader.Datas.STRING);
+report.addField("prodref", com.openbravo.data.loader.Datas.STRING);
+report.addField("prodname", com.openbravo.data.loader.Datas.STRING);
+report.addField("PRICESELL", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("totalunits", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("totalprice", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("taxrate", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("totaltax", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("totaltotal", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;

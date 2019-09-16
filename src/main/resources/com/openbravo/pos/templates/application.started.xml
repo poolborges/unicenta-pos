@@ -1,0 +1,7 @@
+import uk.co.pos_apps.PosApps;
+import uk.co.pos_apps.common.AppContext;
+System.out.println("Application Start Event Fired for: "+device);
+AppContext.setDbURL(dbURL);
+AppContext.setDbUser(dbUser);
+AppContext.setDbPassword(dbPassword);
+PosApps.getCustomerUpdates(device);

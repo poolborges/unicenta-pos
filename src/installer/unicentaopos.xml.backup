@@ -1,0 +1,337 @@
+<project>
+    <shortName>unicentaopos</shortName>
+    <fullName>uniCenta oPOS</fullName>
+    <version>4.5</version>
+    <readmeFile>README</readmeFile>
+    <licenseFile>licensing/uniCenta oPOS Notice.txt</licenseFile>
+    <leftImage>v_logo_dark.png</leftImage>
+    <logoImage>unicentaopos.png</logoImage>
+    <splashImage>uniCenta_splash_dark.png</splashImage>
+    <wmImage>unicentaopos.png</wmImage>
+    <allowLanguageSelection>1</allowLanguageSelection>
+    <componentList>
+        <component>
+            <name>default</name>
+            <description>Default Component</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>1</selected>
+            <show>1</show>
+            <desktopShortcutList>
+                <shortcut>
+                    <comment>uniCenta oPOS - Touch Friendly Point Of Sale</comment>
+                    <exec>sh ${installdir}/start.sh</exec>
+                    <icon>${installdir}/unicentaopos.png</icon>
+                    <name>uniCenta oPOS</name>
+                    <noPinToStart>0</noPinToStart>
+                    <path>${installdir}</path>
+                    <platforms>windows</platforms>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/start.bat</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon>${installdir}/unicentaopos.ico</windowsIcon>
+                    <windowsPath>${installdir}</windowsPath>
+                </shortcut>
+            </desktopShortcutList>
+            <folderList>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfiles</name>
+                    <platforms>all</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>../../target/reports</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../../target/locales</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../../target/licensing</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../../target/lib</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../../target/Bonus</origin>
+                            <onPackingFilterList>
+                                <fileNameFilter>
+                                    <logic>does_not_match</logic>
+                                    <pattern>Thumbs.db</pattern>
+                                </fileNameFilter>
+                            </onPackingFilterList>
+                        </distributionDirectory>
+                        <distributionFile>
+                            <origin>../../target/start.bat</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>../../target/configure.bat</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>../../target/unicentaopos.jar</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>uniCenta_splash_dark.png</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>unicentaopos.png</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>unicentaopos.ico</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>window.logo.png</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>README_Locales.txt</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>README</origin>
+                        </distributionFile>
+                        <distributionDirectory>
+                            <allowWildcards>1</allowWildcards>
+                            <includeFiles>.pdf</includeFiles>
+                            <origin>Release Notes</origin>
+                            <onPackingFilterList>
+                                <fileNameFilter>
+                                    <logic>matches</logic>
+                                    <pattern>*.pdf</pattern>
+                                </fileNameFilter>
+                            </onPackingFilterList>
+                        </distributionDirectory>
+                        <distributionFile>
+                            <origin>../../target/configure.sh</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>../../target/start.sh</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>orderpop.bat</origin>
+                        </distributionFile>
+                        <distributionDirectory>
+                            <origin>../../target/Configs</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../../target/Templates</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>helper</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>DEB1</description>
+                    <destination>/usr/share/icons</destination>
+                    <name>unicentaoposiscon</name>
+                    <platforms>linux</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>unicentaopos.png</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>DEB2</description>
+                    <destination>/usr/share/applications</destination>
+                    <name>unicentaoposdesktop</name>
+                    <platforms>linux</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>unicentaopos.desktop</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>DEB3</description>
+                    <destination>/usr/bin/</destination>
+                    <name>unicentaoposexec</name>
+                    <platforms>linux</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>unicentaopos</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <startMenuShortcutList>
+                <startMenuShortcut>
+                    <comment>Touch Friendly Point Of Sale</comment>
+                    <name>uniCenta oPOS</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/start.bat</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon>${installdir}/unicentaopos.ico</windowsIcon>
+                    <windowsPath>${installdir}</windowsPath>
+                </startMenuShortcut>
+                <startMenuShortcut>
+                    <comment>Run uniCenta oPOS Remote Order popup</comment>
+                    <name>Order Pop</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/orderpop.bat</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon>${installdir}/unicentaopos.ico</windowsIcon>
+                    <windowsPath>${installdir}</windowsPath>
+                </startMenuShortcut>
+                <startMenuShortcut>
+                    <comment>Configure uniCenta oPOS</comment>
+                    <name>Configure</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/configure.bat</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon>${installdir}/unicentaopos.ico</windowsIcon>
+                    <windowsPath>${installdir}</windowsPath>
+                </startMenuShortcut>
+                <startMenuFileShortcut>
+                    <comment>Images you can use in uniCenta oPOS</comment>
+                    <filePath>${installdir}/Bonus</filePath>
+                    <name>Bonus</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsIcon></windowsIcon>
+                </startMenuFileShortcut>
+                <startMenuFileShortcut>
+                    <comment>Modify uniCenta oPOS languages</comment>
+                    <filePath>${installdir}/locales</filePath>
+                    <name>Locales</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsIcon></windowsIcon>
+                </startMenuFileShortcut>
+                <startMenuShortcut>
+                    <comment>Uninstall ${product_fullname}</comment>
+                    <name>Uninstall ${product_fullname}</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon></windowsIcon>
+                    <windowsPath>${installdir}/</windowsPath>
+                </startMenuShortcut>
+            </startMenuShortcutList>
+        </component>
+    </componentList>
+    <preInstallationActionList>
+        <autodetectJava>
+            <abortOnError>0</abortOnError>
+            <customErrorMessage>Java JRE not found on your machine. Install the correct Java JRE runtime and then continue with install.</customErrorMessage>
+            <explanation>Checking for Java JRE</explanation>
+            <progressText>Searching....</progressText>
+            <promptUser>1</promptUser>
+            <selectionOrder>newest</selectionOrder>
+            <onErrorActionList>
+                <showInfo>
+                    <explanation>When done...
+Please use the JRE 1.8 version located in your Windows\ folder</explanation>
+                    <text>Couldn't find Java JRE runtime on your machine!
+Opening the Java website for you
+
+Install the correct Java JRE runtime for your machine
+
+Then continue with uniCenta oPOS installation.</text>
+                </showInfo>
+                <launchBrowser>
+                    <url>http://www.java.com</url>
+                </launchBrowser>
+            </onErrorActionList>
+            <validVersionList>
+                <validVersion>
+                    <bitness></bitness>
+                    <maxVersion>1.8</maxVersion>
+                    <minVersion>1.8</minVersion>
+                    <requireJDK>0</requireJDK>
+                    <vendor>sun</vendor>
+                </validVersion>
+            </validVersionList>
+        </autodetectJava>
+    </preInstallationActionList>
+    <postInstallationActionList>
+        <launchBrowser>
+            <url>${installdir}/helper/post-install.html</url>
+        </launchBrowser>
+    </postInstallationActionList>
+    <createOsxBundleZip>1</createOsxBundleZip>
+    <description>uniCenta oPOS - Touch Friendly Point of Sale</description>
+    <enableRollback>1</enableRollback>
+    <enableTimestamp>1</enableTimestamp>
+    <licenseFileEncoding>utf-8</licenseFileEncoding>
+    <nativePackageName>uniCenta oPOS</nativePackageName>
+    <outputDirectory>../../target/installers</outputDirectory>
+    <productComments>uniCenta oPOS Touch Friendly Point of Sale</productComments>
+    <productContact>info@unicenta.com</productContact>
+    <productUrlHelpLink>https://unicenta.com/support</productUrlHelpLink>
+    <productUrlInfoAbout>https://unicenta.com/about-unicenta-opos/</productUrlInfoAbout>
+    <readmeFileEncoding>utf-8</readmeFileEncoding>
+    <release>4.3.1</release>
+    <requireInstallationByRootUser>1</requireInstallationByRootUser>
+    <saveRelativePaths>1</saveRelativePaths>
+    <splashScreenDelay>4</splashScreenDelay>
+    <summary>POS</summary>
+    <vendor>uniCenta</vendor>
+    <windowsExecutableIcon>unicentaopos.ico</windowsExecutableIcon>
+    <windowsResourceComments>uniCenta oPOS is free software licensed under GNU GPL 3</windowsResourceComments>
+    <windowsResourceFileDescription>uniCenta oPOS executable</windowsResourceFileDescription>
+    <windowsResourceFileVersion>4.20</windowsResourceFileVersion>
+    <windowsResourceInternalName>uniCenta oPOS</windowsResourceInternalName>
+    <windowsResourceLegalTrademarks>uniCenta and uniCenta oPOS are trademarks of uniCenta</windowsResourceLegalTrademarks>
+    <windowsUninstallerExecutableIcon>unicentaopos.ico</windowsUninstallerExecutableIcon>
+    <parameterList>
+        <directoryParameter>
+            <name>installdir</name>
+            <description>Installer.Parameter.installdir.description</description>
+            <explanation>Installer.Parameter.installdir.explanation</explanation>
+            <value>${platform_install_prefix}/${product_shortname}-${product_version}</value>
+            <default>${platform_install_prefix}/${product_shortname}-${product_version}</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <cliOptionName>prefix</cliOptionName>
+            <mustBeWritable>1</mustBeWritable>
+            <mustExist>0</mustExist>
+            <width>30</width>
+        </directoryParameter>
+        <linkParameter>
+            <name>open_browser</name>
+            <title>Installation Help</title>
+            <description>Open uniCenta Website</description>
+            <explanation>Get online help with your uniCenta oPOS installation</explanation>
+            <insertAfter>${installation_finished}${installation_finished}</insertAfter>
+            <clickedActionList>
+                <launchBrowser>
+                    <url>https://unicenta.com/pages/configure-unicenta-opos/</url>
+                </launchBrowser>
+            </clickedActionList>
+        </linkParameter>
+    </parameterList>
+    <platformOptionsList>
+        <platformOptions>
+            <description>uniCenta oPOS - Touch Friendly Point Of Sale</description>
+            <platform>deb</platform>
+            <release>1</release>
+            <summary>POS</summary>
+            <vendor>uniCenta</vendor>
+        </platformOptions>
+        <platformOptions>
+            <platform>windows</platform>
+        </platformOptions>
+        <platformOptions>
+            <platform>linux</platform>
+        </platformOptions>
+        <platformOptions>
+            <platform>osx</platform>
+        </platformOptions>
+    </platformOptionsList>
+    <readmeFileList>
+        <readmeFile>
+            <code>en</code>
+            <encoding>utf-8</encoding>
+            <file>README</file>
+        </readmeFile>
+    </readmeFileList>
+    <slideShowImageList>
+        <slideShowImage>
+            <path>uniCenta_logo_500_222.png</path>
+        </slideShowImage>
+    </slideShowImageList>
+</project>
+

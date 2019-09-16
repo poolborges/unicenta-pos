@@ -1,0 +1,26 @@
+import com.openbravo.format.Formats;
+import com.openbravo.pos.ticket.TicketLineInfo;
+import com.openbravo.pos.ticket.TicketProductInfo;
+
+discountrate = 1 - (sales.getInputValue() / 100.0);
+
+index = sales.getSelectedIndex();
+if (index >= 0) {
+    line = ticket.getLine(index);
+    if (line.getPrice() > 0.0 && discountrate > 0.0) {
+        sdiscount = Formats.PERCENT.formatValue((1-discountrate));
+        ticket.setLine(index,
+            new TicketLineInfo(
+                    line.getProductID(),
+                    line.getProductName() + " -" + sdiscount,
+                    line.getProductTaxCategoryID(),
+                    line.getMultiply(),
+                    line.getPrice () * discountrate,
+                    line.getTaxInfo()));
+        sales.setSelectedIndex(index);
+    } else {
+         java.awt.Toolkit.getDefaultToolkit().beep();
+    }
+} else {
+    java.awt.Toolkit.getDefaultToolkit().beep();
+}

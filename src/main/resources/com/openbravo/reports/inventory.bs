@@ -1,0 +1,77 @@
+//    uniCenta oPOS - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.Inventory");
+report.setReport("/com/openbravo/reports/inventory");
+report.setResourceBundle("com/openbravo/reports/inventory_messages");
+
+report.setSentence("SELECT " +
+                "stockcurrent.LOCATION AS LOCATIONID, " +
+                "locations.NAME AS LOCATIONNAME, " +
+                "products.REFERENCE, " +
+                "products.NAME AS PRODUCTNAME, " +
+                "products.CATEGORY, " +
+                "categories.NAME AS CATEGORYNAME, " +
+                "SUM(stockcurrent.UNITS) AS UNITS, " +
+                "products.PRICEBUY, " +
+                "products.PRICESELL, " +
+                "COALESCE(products.STOCKVOLUME, 0) AS STOCKVOLUME, " +
+                "COALESCE(products.STOCKCOST, 0) AS STOCKCOST, " +
+                "COALESCE(stocklevel.STOCKSECURITY, 0) AS STOCKSECURITY, " +
+                "COALESCE(stocklevel.STOCKMAXIMUM, 0) AS STOCKMAXIMUM " +
+                "FROM stockcurrent " +
+                "JOIN locations ON stockcurrent.LOCATION = locations.ID " +
+                "JOIN products ON stockcurrent.PRODUCT = products.ID " +
+                "JOIN categories ON products.CATEGORY = categories.ID " +
+                "LEFT OUTER JOIN stocklevel ON stockcurrent.LOCATION = " +
+                    "stocklevel.LOCATION AND stockcurrent.PRODUCT = stocklevel.PRODUCT " +
+                "WHERE ?(QBF_FILTER) " +
+                "GROUP BY stockcurrent.LOCATION, locations.NAME, products.REFERENCE, " +
+                    "products.NAME, products.CATEGORY, categories.NAME, products.PRICEBUY, " +
+                    "products.PRICESELL, products.STOCKVOLUME, products.STOCKCOST, " +
+                    "stocklevel.STOCKSECURITY, stocklevel.STOCKMAXIMUM " +
+                "ORDER BY STOCKCURRENT.LOCATION, categories.NAME, PRODUCTS.NAME");
+
+report.addParameter("products.NAME");
+report.addParameter("products.PRICEBUY");
+report.addParameter("products.PRICESELL");
+report.addParameter("products.CATEGORY");
+report.addParameter("products.CODE");
+report.addQBFFilter(new com.openbravo.pos.ticket.ProductFilter());
+
+report.addParameter("stockcurrent.LOCATION");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsLocationWithFirst());
+
+report.addField("LOCATIONID", com.openbravo.data.loader.Datas.STRING);
+report.addField("LOCATIONNAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("REFERENCE", com.openbravo.data.loader.Datas.STRING);
+report.addField("NAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("CATEGORY", com.openbravo.data.loader.Datas.STRING);
+report.addField("CATEGORYNAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("UNITS", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("PRICEBUY", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("PRICESELL", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("STOCKVOLUME", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("STOCKCOST", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("STOCKSECURITY", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("STOCKMAXIMUM", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;

@@ -1,0 +1,74 @@
+//    uniCenta oPOS - Touch Friendly Point Of Sale
+//    Copyright (c) 2015 uniCenta
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.Suppliers.Reports.Diary");
+report.setReport("/com/openbravo/reports/suppliers_diary");
+report.setResourceBundle("com/openbravo/reports/suppliers_messages");
+
+report.setSentence("SELECT "
+                    + "suppliers.NAME, "
+                    + "stockdiary.datenew, "
+                    + "products.NAME, products.REFERENCE, "
+                    + "stockdiary.units, stockdiary.price, "
+                    + "stockdiary.supplierdoc, stockdiary.reason, "
+                    + "sum(stockdiary.units * stockdiary.price) AS totalP " 
+                + "FROM (stockdiary stockdiary "
+                        + "INNER JOIN suppliers suppliers "
+                        + "ON (stockdiary.supplier = suppliers.id)) "
+                        + "INNER JOIN products products "
+                        + "ON (stockdiary.product = products.ID) "
+                + "WHERE VISIBLE = " + app.getSession().DB.TRUE() + " AND ?(QBF_FILTER)" 
+                    + "GROUP BY suppliers.id, stockdiary.id, products.id " 
+                + "ORDER BY suppliers.NAME, stockdiary.datenew DESC");
+
+report.addParameter("stockdiary.DATENEW");
+report.addParameter("stockdiary.DATENEW");
+paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
+
+paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
+paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
+report.addQBFFilter(paramdates);
+
+report.addParameter("products.NAME");
+report.addParameter("products.PRICEBUY");
+report.addParameter("products.PRICESELL");
+report.addParameter("products.CATEGORY");
+report.addParameter("products.CODE");
+report.addQBFFilter(new com.openbravo.pos.ticket.ProductFilter());
+
+report.addParameter("suppliers.ID");
+report.addParameter("suppliers.NAME");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsSuppliers());
+
+report.addParameter("stockdiary.REASON");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsReason());
+
+report.addField("SUPPLIERNAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("DATENEW", com.openbravo.data.loader.Datas.TIMESTAMP);
+report.addField("PRODUCTNAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("REFERENCE", com.openbravo.data.loader.Datas.STRING);
+report.addField("UNITS", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("PRICE", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("SUPPLIERDOC", com.openbravo.data.loader.Datas.STRING);
+report.addField("REASON", com.openbravo.data.loader.Datas.INT);
+report.addField("TOTALP", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;

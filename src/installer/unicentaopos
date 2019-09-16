@@ -1,0 +1,3 @@
+#!/bin/sh
+
+sh /opt/unicentaopos-4.2/start.sh

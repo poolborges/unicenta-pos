@@ -1,0 +1,48 @@
+//    uniCenta oPOS  - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//   uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.CashFlow");
+report.setReport("/com/openbravo/reports/sales_cashflow");
+report.setResourceBundle("com/openbravo/reports/sales_cashflow_messages");
+
+report.setSentence("SELECT " +
+			"payments.PAYMENT, " +
+			"SUM( payments.TOTAL ) AS PAYMENT_TOTAL " +
+                    "FROM closedcash, payments, receipts " +
+                    "WHERE closedcash.MONEY = receipts.MONEY " +
+			"AND payments.RECEIPT = receipts.ID AND ?(QBF_FILTER) " +
+                    "GROUP BY payments.PAYMENT");
+
+report.addParameter("closedcash.DATESTART");
+report.addParameter("closedcash.DATESTART");
+
+paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
+
+paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
+// JG - 8 Jan 14 paramdates.setEndDate(com.openbravo.beans.DateUtils.getToday());
+paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
+
+report.addQBFFilter(paramdates);
+
+report.addField("PAYMENT", com.openbravo.data.loader.Datas.STRING);
+report.addField("PAYMENT_TOTAL", com.openbravo.data.loader.Datas.DOUBLE);
+
+return report;

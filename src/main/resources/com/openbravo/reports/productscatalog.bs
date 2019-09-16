@@ -1,0 +1,51 @@
+//    uniCenta oPOS - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.Catalog");
+report.setReport("/com/openbravo/reports/products");
+report.setResourceBundle("com/openbravo/reports/productscatalog_messages");
+
+report.setSentence("SELECT " +
+            "products.ID, products.REFERENCE, products.CODE, products.NAME, " +
+            "products.PRICEBUY, products.PRICESELL, " +
+            "TC.ID AS TAXCAT, TC.NAME AS TAXCATNAME, " +
+            "categories.ID AS CATEGORY, categories.NAME AS CATEGORYNAME, " +
+            "products.UNITS " +
+        "FROM products LEFT OUTER JOIN categories ON products.CATEGORY = categories.ID " +
+            "LEFT OUTER JOIN TAXcategories TC ON products.TAXCAT = TC.ID " +
+            "WHERE ?(QBF_FILTER) " +
+            "ORDER BY categories.NAME, products.NAME");
+
+report.addParameter("categories.ID");
+report.addQBFFilter(new com.openbravo.pos.ticket.CategoryFilter());
+
+report.addField("ID", com.openbravo.data.loader.Datas.STRING);
+report.addField("REFERENCE", com.openbravo.data.loader.Datas.STRING);
+report.addField("CODE", com.openbravo.data.loader.Datas.STRING);
+report.addField("NAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("PRICEBUY", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("PRICESELL", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("TAXCAT", com.openbravo.data.loader.Datas.STRING);
+report.addField("TAXCATNAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("CATEGORY", com.openbravo.data.loader.Datas.STRING);
+report.addField("CATEGORYNAME", com.openbravo.data.loader.Datas.STRING);
+
+report;

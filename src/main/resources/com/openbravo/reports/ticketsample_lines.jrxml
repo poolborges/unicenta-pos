@@ -1,0 +1,183 @@
+ <!-- Created with iReport - A designer for JasperReports -->
+ <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+ <jasperReport
+ 		 name="ticketsample_lines"
+ 		 columnCount="1"
+ 		 printOrder="Vertical"
+ 		 orientation="Portrait"
+ 		 pageWidth="535"
+ 		 pageHeight="802"
+ 		 columnWidth="535"
+ 		 columnSpacing="0"
+ 		 leftMargin="0"
+ 		 rightMargin="0"
+ 		 topMargin="0"
+ 		 bottomMargin="0"
+ 		 whenNoDataType="NoPages"
+ 		 isTitleNewPage="false"
+ 		 isSummaryNewPage="false">
+ 	<property name="ireport.scriptlethandling" value="0" />
+ 	<property name="ireport.encoding" value="UTF-8" />
+ 	<import value="java.util.*" />
+  	<import value="net.sf.jasperreports.engine.*" />
+ 	<import value="net.sf.jasperreports.engine.data.*" />
+ 
+ 
+ 	<field name="productName" class="java.lang.String"/>
+ 	<field name="_THIS" class="com.openbravo.pos.ticket.TicketLineInfo"/>
+ 
+ 		<background>
+ 			<band height="31"  isSplitAllowed="true" >
+ 			</band>
+ 		</background>
+ 		<title>
+ 			<band height="0"  isSplitAllowed="true" >
+ 			</band>
+ 		</title>
+ 		<pageHeader>
+ 			<band height="24"  isSplitAllowed="true" >
+ 				<rectangle>
+ 					<reportElement
+ 						x="0"
+ 						y="0"
+ 						width="517"
+ 						height="24"
+ 						key="rectangle-1"/>
+ 					<graphicElement stretchType="NoStretch"/>
+  				</rectangle>
+ 				<staticText>
+ 					<reportElement
+ 						x="12"
+ 						y="5"
+ 						width="149"
+ 						height="14"
+ 						key="staticText-1"/>
+ 					<box></box>
+ 					<textElement>
+ 						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+ 					</textElement>
+ 				<text><![CDATA[Name]]></text>
+ 				</staticText>
+ 				<staticText>
+ 					<reportElement
+ 						x="176"
+ 						y="5"
+ 						width="113"
+ 						height="14"
+ 						key="staticText-2"/>
+ 					<box></box>
+ 					<textElement textAlignment="Right">
+ 						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+ 					</textElement>
+ 				<text><![CDATA[Price]]></text>
+ 				</staticText>
+ 				<staticText>
+ 					<reportElement
+ 						x="360"
+ 						y="5"
+ 						width="136"
+ 						height="14"
+ 						key="staticText-4"/>
+ 					<box></box>
+ 					<textElement textAlignment="Right">
+ 						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+ 					</textElement>
+ 				<text><![CDATA[Total]]></text>
+ 				</staticText>
+ 				<staticText>
+ 					<reportElement
+ 						x="289"
+ 						y="5"
+ 						width="71"
+ 						height="14"
+ 						key="staticText-5"/>
+ 					<box></box>
+ 					<textElement textAlignment="Right">
+ 						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+ 					</textElement>
+ 				<text><![CDATA[Units]]></text>
+ 				</staticText>
+ 			</band>
+ 		</pageHeader>
+ 		<columnHeader>
+ 			<band height="0"  isSplitAllowed="true" >
+ 			</band>
+ 		</columnHeader>
+ 		<detail>
+ 			<band height="20"  isSplitAllowed="true" >
+ 				<rectangle>
+ 					<reportElement
+ 						x="0"
+ 						y="0"
+ 						width="517"
+   						height="20"
+ 						key="rectangle-2"/>
+ 					<graphicElement stretchType="NoStretch"/>
+ 				</rectangle>
+ 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+ 					<reportElement
+ 						x="12"
+ 						y="0"
+ 						width="149"
+ 						height="18"
+ 						key="textField-1"/>
+ 					<box></box>
+ 					<textElement>
+ 						<font/>
+ 					</textElement>
+ 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{productName}]]></textFieldExpression>
+ 				</textField>
+ 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+ 					<reportElement
+ 						x="360"
+ 						y="0"
+ 						width="136"
+ 						height="18"
+ 						key="textField-2"/>
+ 					<box></box>
+ 					<textElement textAlignment="Right">
+ 						<font/>
+ 					</textElement>
+ 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{_THIS}.printSubValue()]]></textFieldExpression>
+ 				</textField>
+ 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+ 					<reportElement
+ 						x="176"
+ 						y="0"
+ 						width="113"
+ 						height="18"
+ 						key="textField-3"/>
+ 					<box></box>
+ 					<textElement textAlignment="Right">
+ 						<font/>
+ 					</textElement>
+ 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{_THIS}.printPrice()]]></textFieldExpression>
+ 				</textField>
+ 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+ 					<reportElement
+ 						x="289"
+ 						y="0"
+ 						width="71"
+ 						height="18"
+ 						key="textField-4"/>
+ 					<box></box>
+ 					<textElement textAlignment="Right">
+ 						<font/>
+ 					</textElement>
+ 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{_THIS}.printMultiply()]]></textFieldExpression>
+ 				</textField>
+ 			</band>
+ 		</detail>
+ 		<columnFooter>
+ 			<band height="0"  isSplitAllowed="true" >
+ 			</band>
+ 		</columnFooter>
+ 		<pageFooter>
+ 			<band height="37"  isSplitAllowed="true" >
+ 			</band>
+ 		</pageFooter>
+ 		<summary>
+ 			<band height="0"  isSplitAllowed="true" >
+ 			</band>
+ 		</summary>
+ </jasperReport>

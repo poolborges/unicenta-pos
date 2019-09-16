@@ -1,0 +1,3 @@
+import uk.co.pos_apps.PosApps;
+System.out.println("Customer Created Event Fired for: "+device);
+PosApps.createCustomer(device, customer);

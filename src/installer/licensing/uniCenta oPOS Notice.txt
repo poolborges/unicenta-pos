@@ -1,0 +1,95 @@
+﻿General Public License
+
+This file is part of uniCenta oPOS
+https://unicenta.com
+
+This license file applies to the uniCenta oPOS software 
+(the "uniCenta oPOS Software"), except as described in B) and C) below.
+
+uniCenta oPOS is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+uniCenta oPOS is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with uniCenta oPOS. If not, see <http://www.gnu.org/licenses/>
+
+A) posApps Digital Receipts and Card Payments are owned and offered under a uniCenta
+proprietary license. Application source code is not available.
+
+B) Some portions of the uniCenta oPOS Software are provided by third parties.
+In this distribution, they are:
+- WebLaf
+- wpDataTables
+- Dallas Semiconductor
+
+- JRViewer.java and JRViewer400.form - based on JasperReports JRViewer300
+Copyright (C) 2001-2016 JasperSoft Corporation + uniCenta
+http://www.jaspersoft.com. Distributed under the Lesser General Public License (LGPL)
+https://unicenta.com. Distributed under the GNU General Public License (GPL3)
+
+C) This product uses certain third party software libraries, 
+Portions of this code are developed by The Apache Software Foundation (www.apache.org).
+These files are:
+- axis and its dependencies
+- commons and its dependencies
+- velocity and its dependecies
+- jasper reports and its dependecies
+- velocity and its dependencies
+- struts and its dependencies
+Copyright 1999-2016, The Apache Software Foundation. 
+Distributed under the Apache License Version 2.0, January 2004
+
+Other third party libraries 
+- barcode4j - available at http://barcode4j.sourceforge.net/. 
+Copyright 2002-2016 Jeremias Maerki and Copyright 2005-2006 Dietmar Buerkle. 
+Distributed under the Apache License Version 2.0, January 2004
+
+- bsh-core- available at http://www.beanshell.org/
+- Copyright Pat Niemeyer. Distributed under the Sun Public License or the 
+GNU Lesser Public License
+
+- iText (a dependency of jasperreports) - available from http://www.lowagie.com/iText/.  
+Copyright 1999-2016 by Bruno Lowagie. Distributed under the MPL and LGPL.
+
+- jasperreports
+available from http://www.jasperforge.org/jaspersoft/opensource/business_intelligence/jasperreports/. 
+Copyright 2016 JasperSoft Corporation. 
+Distributed under the GNU LESSER GENERAL PUBLIC LICENSE Version 2.1, February 1999
+
+- jcommon (a dependency of jfreechart) 
+- jfreechart - available from http://www.jfree.org/jfreechart/. 2005-2016 Object Refinery Limited.
+Distributed under the GNU LESSER GENERAL PUBLIC LICENSE
+
+- RXTXcomm
+- librxtxParallel
+- librxtxSerial
+- librxtxParallel
+- librxtxSerial
+- librxtxSerial
+All available from http://www.rxtx.org/. Copyright 1998-2006 Keane Jarvi. 
+Distributed under the RXTX License v 2.1 (LGPL v 2.1 + Linking Over Controlled Interface)
+
+- swingx - available from https://swingx.dev.java.net/. 
+Copyright (c) 2005-2016 Sun Microsystems, Inc. Distributed under the Lesser 
+General Public License (LGPL).
+
+- weblaf - available from weblookandfeel.com/ 
+Copyright (c) 2005-2016 Kirill Grouchnikov. Distributed under the Berkeley Software 
+Distribution (BSD) License
+
+License (LGPL)
+- jdt-compiler (a dependency of jasperreports)
+Copyright 2008 The Eclipse Foundation. Distributed under the Common Public License v1.0
+
+- jpos - available from http://www.javapos.com/. 
+Distributed under the Common Public License
+
+All other libraries, licenses and portions of code are available in the public domain and are acknowledged.
+
+If you have questions about the licensing terms for uniCenta oPOS Software please contact: info@unicenta.com

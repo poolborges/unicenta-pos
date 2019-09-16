@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    uniCenta oPOS - Touch friendly Point Of Sale
+    Copyright (c) 2009-2018 uniCenta.
+    http://sourceforge.net/projects/unicentaopos
+
+    This file is part of uniCenta oPOS.
+
+    uniCenta oPOS is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    uniCenta oPOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<output>
+    <ticket>
+        <image>Printer.Ticket.Logo</image>
+        <line></line>
+        <line></line>
+        <line size="1"><text align="center" length="42" bold="true">Partial Cash Report</text></line>
+        <line></line>
+
+<!-- START OF SEQUENCE DETAIL -->
+        <line><text length="18" bold="true">Run by:</text><text>${payments.printUser()}</text></line>
+        <line><text length="18" bold="true">Terminal:</text><text>${payments.printHost()}</text></line>    
+        <line><text length="18" bold="true">Sequence:</text><text>${payments.printSequence()}</text></line> 
+        <line><text length="18" bold="true">Start Date:</text><text>${payments.printDateStart()}</text></line>  
+        <line><text length="18" bold="true">End Date:</text><text>${payments.printDateEnd()}</text></line>  
+        <line></line> 
+<!-- END OF SEQUENCE DETAIL -->
+
+<!-- START OF SALES -->
+        <line size="1"><text align="center" length="42" bold="true">Sales</text></line>
+        <line>
+            <text align ="left" length="16" bold="true">Name</text>
+            <text align ="right" length="6" bold="true">Sold</text>
+            <text align ="right" length="10" bold="true">Net</text>
+            <text align ="right" length="10" bold="true">Total</text>
+        </line>
+        <line><text>------------------------------------------</text></line>
+            #foreach ($line in $payments.getProductSalesLines())
+                <line>
+                    <text align ="left" length="16">${line.printProductName()}</text>
+                    <text align ="right" length="6">${line.printProductUnits()}</text>
+                    <text align ="right" length="10">${line.printProductPriceNet()}</text>
+                    <text align ="right" length="10">${line.printProductSubValue()}</text>
+                </line>
+            #end
+        <line><text>------------------------------------------</text></line>
+        <line>
+                    <text align ="left" length="16" bold="true">Total</text>
+                    <text align ="right" length="6" bold="true">${payments.printProductSalesTotalUnits()}</text>
+                    <text align ="right" length="10" bold="true">${payments.printSalesBase()}</text>
+                    <text align ="right" length="10" bold="true">${payments.printProductSalesTotal()}</text>
+        </line>
+        <line></line>
+<!-- END OF SALES SUMMARY -->
+
+<!-- START OF CATEGORIES SUMMARY -->
+        <line size="1"><text align="center" length="42" bold="true">Product Categories</text></line>
+        <line>
+            <text align ="left" length="16" bold="true">Name</text>
+            <text align ="right" length="6" bold="true">Sold</text>
+            <text align ="right" length="10" bold="true"></text>
+            <text align ="right" length="10" bold="true">Total</text>
+        </line>
+        <line><text>------------------------------------------</text></line>
+            #foreach ($line in $payments.getCategorySalesLines())
+                <line>
+                    <text align ="left" length="16">${line.printCategoryName()}</text>
+                    <text align ="right" length="6">${line.printCategoryUnits()}</text>
+                    <text align ="right" length="10"></text>
+                    <text align ="right" length="10">${line.printCategorySum()}</text>
+                </line>
+            #end
+        <line><text>------------------------------------------</text></line>
+        <line><text align ="left" length="16" bold="true">Total</text>
+            <text align ="right" length="6" bold="true">${payments.printCategorySalesTotalUnits()}</text>
+            <text align ="right" length="10" bold="true"></text>
+            <text align ="right" length="10" bold="true">${payments.printCategorySalesTotal()}</text>
+        </line>
+        <line></line>
+<!-- END OF CATEGORIES SUMMARY -->
+
+<!-- START OF VOIDS -->
+        <line size="1"><text align="center" length="42" bold="true">Line Voids</text></line>
+        <line>
+            <text align ="left" length="6" bold="true">Tkt</text>
+            <text align ="left" length="12" bold="true">User</text>
+            <text align ="left" length="19" bold="true">Product</text>
+            <text align ="right" length="5" bold="true">Total</text>
+        </line>
+        <line><text>------------------------------------------</text></line>
+            #foreach ($line in $payments.getRemovedProductLines())
+                <line>
+                    <text align ="left" length="6">${line.printTicketId()}</text>                    
+                    <text align ="left" length="11">${line.printWorkerName()}</text>
+                    <text align ="left" length="1"></text>                    
+                    <text align ="left" length="19">${line.printProductName()}</text>
+                    <text align ="right" length="5">${line.printTotalUnits()}</text>
+                </line>
+            #end
+        <line><text>------------------------------------------</text></line>
+        <line></line>
+<!-- END OF VOIDS -->
+
+<!-- START OF NO SALES -->
+        <line size="1"><text align="center" length="42" bold="true">No Sales</text></line>	
+        <line>
+            <text align ="left" length="34" bold="true">User</text>
+            <text align ="right" length="8" bold="true">Ticket</text>
+        </line>
+        <line><text>------------------------------------------</text></line>
+            #foreach ($line in $payments.getDrawerOpenedLines())
+                <line>
+                    <text align ="left" length="34">${line.printUserName()}</text>
+                    <text align ="right" length="8">${line.printTicketId()}</text>
+                </line>
+            #end
+        <line><text>------------------------------------------</text></line>
+        <line></line>
+<!-- END OF NO SALES -->
+
+<!-- START OF TAXES ANALYSIS -->
+        <line size="1"><text align="center" length="42" bold="true">Taxes</text></line>
+        <line>
+            <text align ="left" length="12" bold="true">Name</text>
+            <text align ="right" length="10" bold="true">Net</text>	
+            <text align ="right" length="10" bold="true">Gross</text>
+            <text align ="right" length="10" bold="true">Total</text>
+        </line>
+        <line><text>------------------------------------------</text></line>
+            #foreach ($line in $payments.getSaleLines())
+                <line>
+                    <text align ="left" length="12">${line.printTaxName()}</text>
+                    <text align ="right" length="10">${line.printTaxNet()}</text>
+                    <text align ="right" length="10">${line.printTaxGross()}</text>
+                    <text align ="right" length="10">${line.printTaxes()}</text>
+
+                </line> 
+            #end        
+        <line><text>------------------------------------------</text></line>        
+        <line></line>
+<!-- END OF TAXES ANALYSIS -->
+
+<!-- START OF PAYMENTS -->
+        <line size="1"><text align="center" length="42" bold="true">Payments</text></line>
+        <line>
+            <text align ="left" length="32" bold="true">Type</text>
+            <text align ="right" length="10" bold="true">Total</text>
+        </line>
+        <line><text>------------------------------------------</text></line> 
+            #foreach ($line in $payments.getPaymentLines())
+                <line>
+                    <text align ="left" length="22">${line.printType()}</text>
+                    <text align ="right" length="10">${line.printReason()}</text>
+                    <text align ="right" length="10">${line.printValue()}</text>
+                </line> 
+            #end
+        <line><text>------------------------------------------</text></line>
+        <line>
+            <text align ="left" length="30" bold="true">Total</text>
+            <text align ="right" length="12" bold="true">${payments.printPaymentsTotal()}</text>
+        </line>
+        <line></line>
+<!-- END OF PAYMENTS RECEIVED -->
+
+<!-- START OF TOTALS SUMMARY -->
+        <line><text>******************************************</text></line>
+        <line size="1"><text align="center" length="42" bold="true">SUMMARY</text></line>
+        <line><text>******************************************</text></line>
+        <line><text align ="left" length="30" bold="true">Tickets</text>
+            <text align ="right" length="12" bold="true">${payments.printSales()}</text>
+        </line>                
+        <line><text align ="left" length="30" bold="true">Ticket Lines</text>
+            <text align ="right" length="12" bold="true">${payments.printProductSalesRows()}</text>
+        </line>
+        <line><text align ="left" length="30" bold="true">Payments</text>
+            <text align ="right" length="12" bold="true">${payments.printPayments()}</text>
+        </line>      
+        <line><text align ="left" length="30" bold="true">Net Sales</text>
+            <text align ="right" length="12" bold="true">${payments.printSalesBase()}</text>
+        </line>
+        <line><text align ="left" length="30" bold="true">Tax</text>
+            <text align ="right" length="12" bold="true">${payments.printSalesTaxes()}</text>
+        </line>
+        <line><text align ="left" length="30" bold="true">Gross Sales</text>
+            <text align ="right" length="12" bold="true">${payments.printSalesTotal()}</text>
+        </line>        
+<!-- END OF TOTALS SUMMARY -->
+
+    </ticket>
+
+</output>

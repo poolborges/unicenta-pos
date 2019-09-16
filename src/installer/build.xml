@@ -1,0 +1,12 @@
+<project name="ProjectName" default="deploy" basedir=".">
+    <description>
+        Deploy
+    </description>
+
+  <target name="deploy">
+
+  	<scp file="${file}" todir="${userName}:${password}@${host}:${remoteDir}" trust="true"/>
+
+  </target>
+
+</project>

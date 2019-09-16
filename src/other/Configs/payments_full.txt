@@ -1,0 +1,38 @@
+//    uniCenta oPOS - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2017 uniCenta
+//    http://sourceforge.net/projects/unicentaopos
+//
+//    This file is part of uniCenta oPOS.
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+// *************************************************************************
+
+
+payment.addButton("1000", 1000.0);
+payment.addButton("500", 500.0);
+payment.addButton("200", 200.0);
+payment.addButton("100", 100.0);
+payment.addButton("50", 50.0);
+payment.addButton("20", 20.0);
+payment.addButton("10", 10.0);
+payment.addButton("5", 5.0);
+payment.addButton("2", 2.0);
+payment.addButton("1", 1.00);
+payment.addButton(".50", 0.50);
+payment.addButton(".25", 0.25);
+payment.addButton(".20", 0.20);
+payment.addButton(".10", 0.10);
+payment.addButton(".05", 0.05);
+payment.addButton(".02", 0.02);
+payment.addButton(".01", 0.01);

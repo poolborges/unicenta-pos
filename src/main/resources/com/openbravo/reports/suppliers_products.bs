@@ -1,0 +1,51 @@
+//    uniCenta oPOS - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2018 uniCenta
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.Suppliers.Reports.Products");
+report.setReport("/com/openbravo/reports/suppliers_products");
+report.setResourceBundle("com/openbravo/reports/suppliers_messages");
+
+report.setSentence("SELECT "
+                    + "suppliers.name AS SUPPLIERNAME, "
+                    + "products.REFERENCE, "
+                    + "products.CODE, "
+                    + "products.NAME AS PRODUCTNAME, "
+                    + "products.PRICEBUY, "
+                    + "products.PRICESELL "
+                + "FROM (suppliers suppliers "
+                        + "INNER JOIN products products "
+                        + "ON (suppliers.id = products.SUPPLIER)) "
+                + "WHERE ?(QBF_FILTER)" 
+                + "ORDER BY SUPPLIERNAME, PRODUCTNAME");
+
+report.addParameter("SUPPLIERS.ID");
+report.addParameter("SUPPLIERS.NAME");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsSuppliers());
+
+report.addField("SUPPLIERNAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("REFERENCE", com.openbravo.data.loader.Datas.STRING);
+report.addField("CODE", com.openbravo.data.loader.Datas.STRING);
+report.addField("PRODUCTNAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("PRICEBUY", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("PRICESELL", com.openbravo.data.loader.Datas.DOUBLE);
+
+
+report;

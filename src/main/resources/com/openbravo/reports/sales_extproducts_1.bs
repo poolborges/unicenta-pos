@@ -1,0 +1,70 @@
+//    uniCenta oPOS - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+
+// *** NOT SUITABLE FOR DERBY DB'S***
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.ExtendedByProducts");
+report.setReport("/com/openbravo/reports/sales_extproducts");
+report.setResourceBundle("com/openbravo/reports/sales_extproducts_messages");
+
+report.setSentence("SELECT " +
+        "customers.TAXID,  " +
+        "customers.NAME AS CUSTOMER, " +
+        "categories.NAME AS CATEGORY, " +
+        "products.REFERENCE AS REFERENCE,  " +
+        "products.NAME AS PRODUCT, " +
+        "SUM(ticketlines.UNITS) AS UNIT,  " +
+        "SUM(ticketlines.UNITS * ticketlines.PRICE) AS TOTAL, " +
+        "SUM(ticketlines.UNITS * ticketlines.PRICE) / SUM(ticketlines.UNITS) AS MEANPRICE " +
+        "FROM tickets  " +
+            "LEFT OUTER JOIN customers ON tickets.CUSTOMER = customers.ID, ticketlines " +
+            "LEFT OUTER JOIN products ON ticketlines.PRODUCT = products.ID " +
+            "LEFT OUTER JOIN categories ON products.CATEGORY = categories.ID, receipts " +
+        "WHERE receipts.ID = tickets.ID AND tickets.ID = ticketlines.TICKET AND ?(QBF_FILTER) " +
+        "GROUP BY customers.ID, categories.ID, products.ID " +
+        "ORDER BY customers.NAME, categories.NAME, products.NAME");
+
+report.addParameter("receipts.DATENEW");
+report.addParameter("receipts.DATENEW");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsDatesInterval());
+
+report.addParameter("products.NAME");
+report.addParameter("products.PRICEBUY");
+report.addParameter("products.PRICESELL");
+report.addParameter("products.CATEGORY");
+report.addParameter("products.CODE");
+report.addQBFFilter(new com.openbravo.pos.ticket.ProductFilter());
+
+report.addParameter("customers.ID");
+report.addParameter("customers.NAME");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsCustomer());
+
+report.addField("TAXID", com.openbravo.data.loader.Datas.STRING);
+report.addField("CUSTOMER", com.openbravo.data.loader.Datas.STRING);
+report.addField("CATEGORY", com.openbravo.data.loader.Datas.STRING);
+report.addField("REFERENCE", com.openbravo.data.loader.Datas.STRING);
+report.addField("PRODUCT", com.openbravo.data.loader.Datas.STRING);
+report.addField("UNIT", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("TOTAL", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("MEANPRICE", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;
+

@@ -1,0 +1,326 @@
+/* ------------------------------------- */
+/* 8. Media Queries .................... */
+/* ------------------------------------- */
+
+
+
+
+
+@include large-desktop {
+  body {@include fontStack($raleway, 1.6em, 1.6);}
+
+
+
+  .main-logo {
+   max-width: 300px;
+  }
+   #homeCenter .main-logo {
+     left:  calc(50% - 100px);
+   }
+
+  .project {
+    .item {
+      .caption {
+        bottom: em(-70px);
+        height: em(70px);
+        .photo-details {
+          padding: 0 em(15px);
+          bottom: em(10px);
+          h4 {
+          }
+          span {
+            font-size: em(12px);
+          }
+        }
+        .view {
+            margin: em(30px) em(15px);
+            height: em(30px);
+            width: em(60px);
+            line-height: em(30px);
+            font-size: em(12px);
+        }
+      }
+
+      .close {
+        height: em(10px) !important;
+        width: em(100px) !important;
+      }
+
+      &:hover .photo-details {
+        @include vendor-prefix(transform, translateY(0));
+      }
+
+      &:hover .caption {
+        @include vendor-prefix(transform, translateY(em(-70px)));
+      }
+    }
+  }
+
+  .portfolio {
+    .item {
+      .caption {
+        .photo-details {
+          padding: 0 em(15px);
+          bottom: em(10px);
+          span {
+            font-size: em(12px);
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+
+  #subscribe-form {
+    .input-email {
+      font-size: 1em;
+      padding: 0px 20px;
+      height: em(44px);
+    }
+    .input-submit {
+      height: em(44px);
+
+    }
+
+  }
+
+  #contact_form {
+    font-size: em(14px);
+
+    div {
+      padding: 0 em(5px);
+    }
+
+    .input-name {
+      margin-bottom: em(10px);
+      padding: em(10px);
+      height: em(45px);
+    }
+
+    .input-message {
+      height: em(100px);
+    }
+
+    .submit {
+      height: em(40px);
+
+    }
+  }
+
+  #form-messages {
+    padding: 0 em(5px);
+    margin: em(10px) 0;
+    .success {
+      font-size: em(12px);
+    }
+  }
+
+
+  address {
+    margin-top: em(25px) !important;
+    span {
+      font-size: em(16px);
+    }
+
+    i {
+      padding-right: em(5px);
+    }
+  }
+
+  #countdown {
+    .title {
+      padding: 0 em(15px);
+    }
+
+    address {
+      margin-top: em(10px) !important;
+      span {
+        font-size: em(16px);
+        margin-bottom: em(5px);
+      }
+
+      i {
+        padding-right: em(5px);
+      }
+    }
+  }
+
+  .launch-date {
+    height: em(160px);
+    h2 {
+      margin-bottom: em(-5px);
+      margin-top: em(-5px);
+    }
+  }
+
+}
+
+
+
+@include extra-large-desktop {
+  body {@include fontStack($raleway, 2em, 1.6);}
+}
+
+@include desktop {
+  .instagram_feed {
+     li {width: 33.33% !important;}
+  }
+}
+
+
+
+
+@include medium {
+
+  #leftSide {@include sides(relative, 0, 0, 100% );}
+
+  #rightSide {@include sides(relative, 0, 0, 100%, 100%);}
+
+  .project {
+    .project_info {
+      position: fixed;
+      width: 100%;
+      left: 0;
+      top: 0;
+    }
+  }
+
+  .full-height {height: 80vh;}
+  .mid-height {height: 400px;}
+  #countdown {
+    address {padding: 0;}
+  }
+
+}
+
+
+
+@include tablet {
+
+  body {@include fontStack($raleway, 1em, 1.6);}
+
+  #contact_form {
+    .input-name {width: 100%;}
+
+  }
+
+  .launch-date {
+    height: 140px;
+  }
+
+  address {
+    span {padding: 5px 0; }
+  }
+
+  p {
+    font-size: 1em;
+  }
+}
+
+
+
+@include  landscape-phone {
+
+  body {@include fontStack($raleway, 0.75em, 1.6);}
+
+  #leftSide {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; }
+
+  #rightSide {
+    position: relative;
+    top: 0;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+    background: transparent;
+    overflow-x: hidden; }
+
+    .h-content {
+      position: relative;
+      z-index: 0;
+      top: 0;
+      width: 100%;
+      padding: 10px 10%;
+      color: #fff;
+    }
+
+    .main-logo {
+      position: relative;;
+      top: 8%;
+      max-width: 140px;
+      margin-top: 20px;
+     }
+
+    #homeCenter .main-logo {
+      left: calc(50% - 70px);
+    }
+
+    .social_icons {
+      @include socialIcons(relative, 0, 0, 100%, 1em);
+
+    }
+
+    #homeCenter .social_icons {
+      text-align: center;
+      left: 50%;
+      @include vendor-prefix(transform, translate(-50%));;
+    }
+
+    address {
+      span {font-size: 14px;}
+      i {font-size: 1.2em;}
+    }
+
+    #countdown {
+      > div {
+        padding: 15px 0 !important;
+      }
+    }
+}
+
+@include phone {
+
+  body {@include fontStack($raleway, 0.75em, 1.6);}
+
+  .main-logo {max-width: 180px;}
+
+ #homeCenter .main-logo {left: calc(50% - 90px);}
+
+  .instagram_feed {
+     li {width: 50%;}
+  }
+
+  .service {
+    .feature {padding: 15px 0;}
+  }
+
+  address {
+    span {font-size: 1em;}
+    i {font-size: 1.2em;}
+  }
+
+  #countdown {
+    > div {
+      padding: 15px 0 !important;
+    }
+  }
+}
+
+@include smallPhone {
+
+    body {
+        @include fontStack($raleway, 0.625em, 1.6);
+    }
+
+    .main-logo {max-width: 160px;}
+
+   #homeCenter {
+      .main-logo {left: calc(50% - 80px);}
+    }
+}

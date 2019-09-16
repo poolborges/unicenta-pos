@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    uniCenta oPOS - Touch friendly Point Of Sale
+    Copyright (c) 2009-2018 uniCenta.
+    http://sourceforge.net/projects/unicentaopos
+
+    This file is part of uniCenta oPOS.
+
+    uniCenta oPOS is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    uniCenta oPOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+ 
+<!-- To ENABLE a feature remove the beginning and end of line commentors -->
+<!-- To DISABLE a feature you must add the beginning and of line commentors -->
+
+<configuration>
+<!-- Sales Ticket Button Bar - Show icons **************************************** -->
+
+	<!-- SET Sales Ticket Refund Item (Default=DISABLED) -->
+	<!-- <button key="button.refundit" image="refundit" code="script.Refundit"/> -->
+
+	<!-- SET Sales Ticket ServiceCharge (Default=DISABLED) -->
+	<!-- <button key="button.scharge" image="heart" code="script.ServiceCharge"/> -->
+        
+	<!-- SET Sales line Note (Default=DISABLED) -->
+	<!-- <button key="button.note" image="refundit" code="script.addlinenote"/> -->        
+                
+	<!-- SET Line or Total Discount (Default=TotalDiscount= ENABLED) -->
+	<button key="button.totaldiscount" image="discount" code="script.totaldiscount"/>
+	<!-- <button key="button.linediscount" image="discount_b" code="script.linediscount"/>  -->
+
+	<!-- SET Waiter's name (Default=DISABLED) -->
+	<!-- <button key="button.setperson" image="user" code="script.SetPerson"/>  -->
+
+	<!-- SET Remote Printer (Default=DISABLED) --> 
+	<!-- <button key="button.sendorder" image="kit_print" code="script.SendOrder"/>  -->
+
+	<!-- SET Ticket Print Preview (Default=ENABLED) -->
+    	<button key="button.print" image="ticket_print" template="Printer.TicketPreview"/>
+
+	<!-- SET Open Cashdrawer (Default=ENABLED) -->
+	<button key="button.opendrawer" image="cashdrawer" template="Printer.OpenDrawer"/>
+
+	<!-- Open posapps settings / configuration screen (Default=ENABLED) -->
+	<button key="button.posapps" image="img.posapps" code="script.posapps" />
+
+	<!-- SET Virtual Keyboard (Default=ENABLED) -->
+	<button key="button.keyboard" image="keyboard_48" code="script.Keyboard"/>
+
+<!-- END Sales Ticket Button Bar - Show icons -->
+
+<!-- SET Ticket Button Bar - Text Only ****************************************************************** -->
+	<!-- <button key="button.refundit" name="button.refundit" code="script.Refundit"/> -->
+    	<!-- <button key="button.linediscount" name="button.linediscount" code="script.linediscount"/> -->
+    	<!-- <button key="button.discount" name="button.totaldiscount" code="script.totaldiscount"/> -->
+    	<!-- <button key="button.setperson" name="button.setperson" code="script.SetPerson"/> -->
+    	<!-- <button key="button.sendorder" name="button.sendorder" code="script.SendOrder"/> -->
+    	<!-- <button key="button.print" titlekey="button.print" template="Printer.TicketPreview"/> -->
+    	<!-- <button key="button.opendrawer" titlekey="button.opendrawer" template="Printer.OpenDrawer"/> -->
+    	<!-- <button key="button.keyboard" titlekey="button.keyboard" template="script.Keyboard"/> -->        
+<!-- END Ticket Button Bar - Text Only -->
+
+<!-- SET Product Area Size ********************************************* -->
+	<!-- Maximum Category height for 800x480 for PDA in Full Screen mode -->
+	<!-- <cat-height value="100" /> -->
+
+	<!-- Maximum Category height for 800x600 -->
+	<!--  <cat-height value="155" /> -->
+
+	<!-- Maximum Category height for 1024x768 in Full Screen mode (Default=ENABLED) -->
+	<cat-height value="320" />
+        
+	<!-- Maximum Category height for 1280x1024 in Full Screen mode -->
+	<!--  <cat-height value="640" /> -->
+<!-- END Product Area Size -->
+
+<!-- SET Product Button Sizes ****************************************** -->
+	<!-- Small Product button size in Sales screen (Default=DISABLED) -->
+	<!--  <img-width value="64"/> -->
+	<!--  <img-height value="48"/> -->
+
+	<!-- Medium Product button size in Sales screen (Default=ENABLED) -->
+   	<img-width value="107"/>
+	<img-height value="60"/>
+    
+<!-- Large Product button size in Sales screen (Default=DISABLED)-->
+	<!-- <img-width value="128"/> -->
+	<!-- <img-height value="96"/> -->
+<!-- END Product Button Size -->
+
+<!-- Print Receipt (Default=ENABLED) -->
+        <printselected value="true"/>
+
+<!-- ADDITIONAL FEATURES ************************************************* -->
+    <!-- SET Show Change in Cash Sale (Default=ENABLED -->
+        <event key="ticket.close" code="Ticket.Close"/>
+	<event key="cash.close" code="Cash.Close"/>
+
+    <event key="ticket.removeline" code="ticket.removeline"/>
+
+    <!-- posApps REST Customer Events -->
+    <event key="customer.created" code="Customer.Created"/>
+    <event key="customer.updated" code="Customer.Updated"/>
+    <event key="customer.deleted" code="Customer.Deleted"/>
+
+        <!-- <event key="ticket.change" code="event.change"/> -->
+        <!-- <event key="ticket.addline" code="event.addline"/> -->
+        <!-- <event key="ticket.removeline" code="event.removeline"/> -->
+        <!-- <event key="ticket.setline" code="event.setline"/> -->
+        <!-- <event key="ticket.show" code="event.show"/> -->
+        <!-- <event key="ticket.total" code="script.Event.Total"/> -->
+        <!-- <event key="ticket.total" code="event.total"/> -->
+        <!-- <event key="ticket.close" code="event.close"/> -->
+        <!-- <event key="ticket.close" code="script.printreport"/> -->
+
+         <taxesincluded value="true"/>
+         <taxcategoryid value="001"/>
+         <pricevisible value="true" />
+         
+</configuration>

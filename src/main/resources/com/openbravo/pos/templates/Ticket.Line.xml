@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    uniCenta oPOS - Touch friendly Point Of Sale
+    Copyright (c) 2009-2018 uniCenta.
+    http://sourceforge.net/projects/unicentaopos
+
+    This file is part of uniCenta oPOS.
+
+    uniCenta oPOS is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    uniCenta oPOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+
+<!-- This sales transaction screen is great for Retailers! -->
+<line>
+    <column name="label.item" width="185" align="left" value="&lt;html&gt;
+	#if ($ticketline.isProductCom()) &lt;i&gt;*&amp;nbsp;&amp;nbsp;
+		${ticketline.printName()}&lt;/i&gt; 
+	#else 
+		${ticketline.printName()} 
+	#end
+	&lt;br&gt;${ticketline.getProductAttSetInstDesc()}"/>
+
+    <column name="label.price" width="50" align="right" value="${ticketline.printPrice()}"/>
+    <column name="label.units" width="50" align="right" value="x${ticketline.printMultiply()}"/>
+    <column name="label.tax" width="50" align="right" value="${ticketline.printTaxRate()}"/>
+    <column name="label.value" width="100" align="right" value="${ticketline.printValue()}"/>
+    <column name="label.printto" width="5" align="center" value="${ticketline.printPrinter()}"/>    
+<!--<column name="label.sendorder" width="5" align="left" value="${ticketline.getProperty('printkb','?')}"/> -->
+<!--<column name="label.sendstatus" width="5" align="left" value="${ticketline.getProperty('sendstatus','?')}"/> -->
+</line>
+
+<!-- This sales transaction screen is great for Hospitality!
+<line>
+    <column name="label.item2" width="335" align="left" value="&lt;html&gt;
+    #if ($ticketline.isProductCom()) 
+        &lt;i&gt;*&amp;nbsp;&amp;nbsp;${ticketline.printName()}&lt;/i&gt; 
+    #else 
+        ${ticketline.printName()} 
+    #end
+    &lt;br&gt;${ticketline.getProductAttSetInstDesc()}"/>
+    
+    <column name="label.units2" width="50" align="right" value="x${ticketline.printMultiply()}"/>
+    <column name="label.value2" width="50" align="right" value="${ticketline.printValue()}"/>
+    <column name="label.printto" width="5" align="center" value="${ticketline.printPrinter()}"/>    
+</line>
+ -->

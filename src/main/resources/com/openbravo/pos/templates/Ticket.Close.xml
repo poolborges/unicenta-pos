@@ -1,0 +1,78 @@
+//    uniCenta oPOS - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2018 uniCenta
+//    http://sourceforge.net/projects/unicentaopos
+//
+//    This file is part of uniCenta oPOS.
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+// **************************************************************************
+// Ticket.Close
+// This script displays the amount of Cash Change (CashTendered - TicketValue) to be given to Customer
+
+        import java.awt.Font;
+        import javax.swing.plaf.FontUIResource;
+        import com.openbravo.pos.payment.PaymentInfo;
+        import javax.swing.JOptionPane;
+        import javax.swing.JDialog;
+        import uk.co.pos_apps.PosApps;
+        import java.awt.Window;
+
+
+
+        Window rootWindow ;
+
+        Window[] allWindows = Window.getWindows();
+
+        for (int i=0 ; i < allWindows.length; i++){
+        if (allWindows[i].getName().equals("frame0")){
+        rootWindow = (Window)allWindows[i];
+        }
+        }
+
+        PosApps posApps = new PosApps();
+
+        posApps.init(ticket,dbURL,dbUser,dbPassword,rootWindow,"Email");
+
+
+
+boolean isCash = false;
+String change = "";
+PaymentInfo p = ticket.payments.getFirst();
+
+if ("cash".equals(p.getName())) {
+    isCash = true;
+    change = p.printChange();
+}
+
+// Get details of the original font before we change it otherwise all dialogboxes will use new settings
+JOptionPane pane = new JOptionPane();
+Font originalFont=pane.getFont();
+
+UIManager.put("OptionPane.buttonFont", new FontUIResource(new Font("ARIAL",Font.PLAIN,20)));
+message = "Change: " + change;
+ JLabel FontText = new JLabel(message);
+ FontText.setFont (new Font ( "Arial", Font.BOLD, 36) );
+
+if(isCash) {
+     JOptionPane pane = new JOptionPane();
+     pane.setMessage(FontText);
+     pane.setPreferredSize( new Dimension(450,150));
+     JDialog dialog = pane.createDialog("Cash payment");
+    new Thread(new Runnable() { void run() {
+        dialog.show();
+    } }).start();
+}
+
+// Return to default settings
+UIManager.put("OptionPane.buttonFont", new FontUIResource(new Font(originalFont.getName(),originalFont.getStyle(),originalFont.getSize())));

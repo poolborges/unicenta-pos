@@ -1,0 +1,75 @@
+//    uniCenta oPOS - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.ClosedProducts");
+report.setReport("/com/openbravo/reports/sales_closedproducts");
+report.setResourceBundle("com/openbravo/reports/sales_closedproducts_messages");
+
+report.setSentence("SELECT " + 
+                        "closedcash.HOST, " +
+                        "closedcash.MONEY, " +
+                        "closedcash.DATEEND, " +
+                        "products.REFERENCE, " +
+                        "products.NAME, " +
+                        "PRICESELL AS PRICE, " +
+                            "Sum(ticketlines.UNITS) AS UNITS, " +
+                            "Sum((ticketlines.PRICE+ticketlines.PRICE*taxes.RATE)*UNITS) AS VALUE, " +
+                            "Sum((ticketlines.PRICE+ticketlines.PRICE*taxes.RATE)*ticketlines.UNITS-(ticketlines.PRICE+(ticketlines.PRICE*taxes.RATE))*ticketlines.UNITS) AS DISCOUNT, " +
+                            "Sum((ticketlines.PRICE+(ticketlines.PRICE*taxes.RATE))*ticketlines.UNITS) AS TOTAL " +
+                        "FROM ((tickets INNER JOIN (ticketlines INNER JOIN products ON ticketlines.PRODUCT = products.ID) " +
+                            "ON tickets.ID = ticketlines.TICKET) INNER JOIN (receipts INNER JOIN closedcash " +
+                            "ON receipts.MONEY = closedcash.MONEY) ON tickets.ID = receipts.ID) INNER JOIN taxes ON ticketlines.TAXID = taxes.ID " +
+                        "WHERE closedcash.MONEY = receipts.MONEY AND receipts.ID = tickets.ID AND tickets.ID = ticketlines.TICKET AND ?(QBF_FILTER) " +
+                        "GROUP BY closedcash.HOST, closedcash.MONEY, closedcash.DATEEND, products.REFERENCE, products.NAME " +
+                        "ORDER BY products.NAME, closedcash.HOST, closedcash.DATEEND");
+
+report.addParameter("closedcash.DATEEND");
+report.addParameter("closedcash.DATEEND");
+
+paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
+
+paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
+// JG - 8 Jan 14 paramdates.setEndDate(com.openbravo.beans.DateUtils.getToday());
+paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
+
+report.addQBFFilter(paramdates);
+
+report.addParameter("products.NAME");
+report.addParameter("products.PRICEBUY");
+report.addParameter("products.PRICESELL");
+report.addParameter("products.CATEGORY");
+// report.addParameter("products.SUPPLIER");
+report.addParameter("products.CODE");
+
+report.addQBFFilter(new com.openbravo.pos.ticket.ProductFilter());
+
+report.addField("HOST", com.openbravo.data.loader.Datas.STRING);
+report.addField("MONEY", com.openbravo.data.loader.Datas.STRING);
+report.addField("DATEEND", com.openbravo.data.loader.Datas.TIMESTAMP);
+report.addField("REFERENCE", com.openbravo.data.loader.Datas.STRING);
+report.addField("NAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("PRICE", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("UNITS", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("VALUE", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("DISCOUNT", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("TOTAL", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;

@@ -1,0 +1,45 @@
+//    uniCenta oPOS  - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2018 uniCenta
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//   uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>
+
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.NewProducts");
+<<<<<<< HEAD
+report.setReport("/com/openbravo/reports/tools_badprice");
+report.setResourceBundle("com/openbravo/reports/tools_badprice_messages");
+=======
+report.setReport("/com/openbravo/reports/tools_newproducts");
+report.setResourceBundle("com/openbravo/reports/tools_newproducts_messages");
+>>>>>>> origin/MultiTax
+
+report.setSentence("SELECT "
+        + "csvimport.REFERENCE, csvimport.CODE, "
+        + "csvimport.NAME, csvimport.PRICEBUY, csvimport.PRICESELL "
+        + "FROM csvimport "
+        + "WHERE csvimport.CSVERROR='New product' "
+        + "ORDER BY csvimport.REFERENCE");
+
+report.addField("reference", com.openbravo.data.loader.Datas.STRING);
+report.addField("code", com.openbravo.data.loader.Datas.STRING);
+report.addField("name", com.openbravo.data.loader.Datas.STRING);
+report.addField("pricebuy", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("pricesell", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;

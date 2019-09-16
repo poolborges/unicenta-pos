@@ -1,0 +1,78 @@
+@import "_var.scss";
+
+// Color variables
+$p-color          : $woodsmoke;
+$s-color          : $woodsmoke;
+$t-color          : $woodsmoke;
+
+@import "_style.scss";
+
+.gradient {
+  @include gradient(lighten($s-color, 5%), lighten($p-color,5%));
+}
+
+
+/* ------------------------------------- */
+/* Project ................... */
+/* ------------------------------------- */
+
+.project {
+  .item {
+    .caption {
+      .photo-details {
+        span {color: $white;}}
+      .view {
+          background: lighten($p-color, 5%);
+          color: $white;
+      }
+    }
+  }
+}
+
+.price {
+  background: lighten($p-color, 5%);
+}
+
+
+/* ------------------------------------- */
+/* Portfolio ................... */
+/* ------------------------------------- */
+
+  .item {
+    .caption {
+        span {color: $white !important;}
+      }
+    }
+
+    /* ------------------------------------- */
+    /* Twitter Feeds ................... */
+    /* ------------------------------------- */
+    .twitter {
+      @include elBase(100%, 10% 8%, $s-color, $white);
+      text-align: center;
+
+      i {
+        display: block;
+        font-size: 60px;
+        color: $white;
+        margin-bottom: 5px;
+      }
+
+      p {
+        a {
+          span {color: $white !important;}
+        }
+      }
+
+      .timePosted {
+        color: $white !important;
+        a {
+          color: $white !important;
+        }
+      }
+
+      h6 {
+        font-weight: 500;
+        color: $white;
+      }
+    }

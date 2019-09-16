@@ -1,0 +1,28 @@
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.BarcodeSheet");
+report.setReport("/com/openbravo/reports/barcode_sheet_jm");
+report.setResourceBundle("com/openbravo/reports/barcode_sheet_jm_messages");
+
+report.setSentence("SELECT "
+                + "products.CODE, products.CODETYPE, products.NAME, "
+                + "((0.2*pricesell) + pricesell) as TOTALPRICE, "
+                + "categories.ID AS CATEGORY, "
+                + "categories.NAME AS CATEGORYNAME "
+                + "FROM products LEFT OUTER JOIN categories ON products.CATEGORY = categories.ID "
+                + "WHERE ?(QBF_FILTER) "
+                + "ORDER BY categories.NAME, products.NAME");
+
+report.addParameter("products.NAME");
+report.addParameter("products.CATEGORY");
+report.addParameter("products.CODE");
+report.addQBFFilter(new com.openbravo.pos.ticket.ProductFilter4());
+
+report.addField("CODE", com.openbravo.data.loader.Datas.STRING);
+report.addField("CODETYPE", com.openbravo.data.loader.Datas.STRING);
+report.addField("NAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("TOTALPRICE", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;
+

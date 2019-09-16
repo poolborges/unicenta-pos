@@ -1,0 +1,78 @@
+//    uniCenta oPOS - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.InventoryDiffDetail");
+report.setReport("/com/openbravo/reports/inventorydiffdetail");
+report.setResourceBundle("com/openbravo/reports/inventory_messages");
+
+report.setSentence("SELECT " +
+                "locations.ID AS LOCATIONID, locations.NAME AS LOCATIONNAME, " +
+                "products.REFERENCE, products.NAME, " +
+                "stockdiary.ATTRIBUTESETINSTANCE_ID, attributesetinstance.DESCRIPTION, " +
+                "products.CATEGORY, categories.NAME AS CATEGORYNAME, " +
+                "SUM(CASE WHEN stockdiary.UNITS <0 THEN stockdiary.UNITS ELSE 0 END) AS UNITSOUT, " +
+                "SUM(CASE WHEN stockdiary.UNITS <0 THEN stockdiary.UNITS * stockdiary.PRICE ELSE 0 END) AS TOTALOUT, " +
+                "SUM(CASE WHEN stockdiary.UNITS >=0 THEN stockdiary.UNITS ELSE 0 END) AS UNITSIN, " +
+                "SUM(CASE WHEN stockdiary.UNITS >=0 THEN stockdiary.UNITS * stockdiary.PRICE ELSE 0 END) AS TOTALIN, " +
+                "SUM(stockdiary.UNITS) AS UNITSDIFF, " +
+                "SUM(stockdiary.UNITS * stockdiary.PRICE) AS TOTALDIFF " +
+            "FROM stockdiary " +
+                "JOIN locations ON stockdiary.LOCATION = locations.ID " +
+                "JOIN products ON products.ID = stockdiary.PRODUCT " +
+                        "LEFT OUTER JOIN categories ON products.CATEGORY = categories.ID " +
+                    "LEFT OUTER JOIN attributesetinstance ON stockdiary.ATTRIBUTESETINSTANCE_ID = attributesetinstance.ID " +
+            "WHERE ?(QBF_FILTER) " +
+            "GROUP BY locations.ID, products.CATEGORY, products.REFERENCE, DESCRIPTION " +
+            "ORDER BY locations.ID, categories.NAME, products.NAME");
+
+report.addParameter("stockdiary.DATENEW");
+report.addParameter("stockdiary.DATENEW");
+
+paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
+
+paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
+// JG - 8 Jan 14 paramdates.setEndDate(com.openbravo.beans.DateUtils.getToday());
+paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
+
+report.addQBFFilter(paramdates);
+
+report.addParameter("locations.ID");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsLocationWithFirst());
+
+report.addParameter("stockdiary.REASON");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsReason());
+
+report.addField("LOCATIONID", com.openbravo.data.loader.Datas.STRING);
+report.addField("LOCATIONNAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("REFERENCE", com.openbravo.data.loader.Datas.STRING);
+report.addField("NAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("ATTINSTANCEID", com.openbravo.data.loader.Datas.STRING);
+report.addField("ATTINSTANCEDESC", com.openbravo.data.loader.Datas.STRING);
+report.addField("CATEGORY", com.openbravo.data.loader.Datas.STRING);
+report.addField("CATEGORYNAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("UNITSOUT", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("TOTALOUT", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("UNITSIN", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("TOTALIN", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("UNITSDIFF", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("TOTALDIFF", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;

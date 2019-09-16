@@ -1,0 +1,54 @@
+//    uniCenta oPOS - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.PaymentReport");
+report.setReport("/com/openbravo/reports/sales_paymentreport");
+report.setResourceBundle("com/openbravo/reports/sales_paymentreport_messages");
+
+report.setSentence("SELECT " +
+    "LEFT(DATE(receipts.DATENEW),10) AS GROUPDATE, " +
+    "receipts.DATENEW, " +
+    "payments.PAYMENT, " +
+    "payments.NOTES, " +
+    "payments.TOTAL " +
+"FROM payments,receipts " +
+"WHERE payments.RECEIPT = receipts.ID AND ?(QBF_FILTER) " +
+"ORDER BY receipts.DATENEW");
+
+report.addParameter("receipts.DATENEW");
+report.addParameter("receipts.DATENEW");
+//report.addParameter("payments.PAYMENT");
+
+paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
+
+paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
+// JG - 8 Jan 14 paramdates.setEndDate(com.openbravo.beans.DateUtils.getToday());
+paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
+
+report.addQBFFilter(paramdates);
+
+report.addField("GROUPDATE", com.openbravo.data.loader.Datas.TIMESTAMP);
+report.addField("DATENEW", com.openbravo.data.loader.Datas.TIMESTAMP);
+report.addField("PAYMENT", com.openbravo.data.loader.Datas.STRING);
+report.addField("NOTES", com.openbravo.data.loader.Datas.STRING);
+report.addField("TOTAL", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;

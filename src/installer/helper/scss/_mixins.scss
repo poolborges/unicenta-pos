@@ -1,0 +1,176 @@
+// Converting px to em
+@function em($target, $context: $base-f-size) {
+  @return ($target / $context) * 1em;
+}
+
+// Converting px to rem
+@function rem($target, $context: $base-f-size) {
+  @return ($target / $context) * 1rem;
+}
+
+// Vendor prefix
+@mixin vendor-prefix($name, $argument) {
+  -webkit-#{$name}: #{$argument};
+  -ms-#{$name}: #{$argument};
+  -moz-#{$name}: #{$argument};
+  -o-#{$name}: #{$argument};
+  #{$name}: #{$argument};
+}
+
+// Font Stack
+@mixin fontStack ($f-family:null, $f-size:null, $l-height:null) {
+  font-family     : $f-family;
+  font-size       : $f-size;
+  line-height     : $l-height;
+}
+
+// Heading
+@mixin heading ($f-size:null, $f-weight:null, $m-bottom:null) {
+  font-size: $f-size;
+  font-weight: $f-weight;
+  margin-bottom: $m-bottom;
+}
+
+// Sides
+@mixin sides ($position:null, $top:null, $left:null,
+$width:null, $height:null, $overflow:null, $background:null ) {
+  position: $position;
+  top: $top;
+  left: $left;
+  width: $width;
+  height: $height;
+  overflow: $overflow;
+  background: $background;
+}
+
+// Hover effect
+@mixin hover ($transform:null, $color:null, $bg-color:null, $br-color:null) {
+  &:hover {
+    @include vendor-prefix(transform, $transform);
+    color: $color;
+    background: $bg-color;
+    border-color: $br-color;
+  }
+}
+
+// Gradient
+@mixin gradient ($color_1:null, $color_2:null) {
+  @include vendor-prefix(background, linear-gradient(
+    rgba($color_1,.95),
+    rgba($color_2,.95)));
+}
+
+// social_icons
+@mixin socialIcons ($position:null, $left:null, $bottom:null, $width:null, $f-size:null) {
+  position: $position;
+  left: $left;
+  bottom: $bottom;
+  width: $width;
+  font-size: $f-size;
+}
+
+// elements base
+@mixin elBase ($width:null, $padding:null,
+$background:null, $color:null) {
+  width: $width;
+  padding: $padding;
+  background: $background;
+  color: $color;
+}
+
+// display
+@mixin display ($display:null, $align:null) {
+  display: $display;
+  vertical-align: $align;
+}
+
+// caption
+@mixin caption (){
+  position: absolute;
+  width: calc(100% - 15px);
+  color: $white;
+  overflow: hidden;
+  @include vendor-prefix(transition, $medium-transition);
+  background: rgba($t-color,.95);
+  top: 0;
+  height: 100%;
+  opacity: 0;
+  cursor: url("../img/icon-zoom.png"), pointer !important;
+}
+
+// mediaQuery
+
+// Special Devices Media Queries
+$special-phone          : 740px;
+$special-tablet         : 1024px;
+
+// Media Queries
+$small-phone                : 320px;
+$phone-width                : 480px;
+$tablet-width               : 768px;
+$medium-width               : 1024px;
+$notebook-width             : 1280px;
+$desktop-width              : 1600px;
+$large-desktop-width        : 2000px;
+$extra-large-desktop-width  : 2500px;
+
+
+@mixin landscape-phone {
+    @media screen and (max-device-width: $special-phone) and (orientation: landscape) {
+        @content;
+    }
+}
+
+@mixin landscape-tablet {
+    @media only screen and (max-device-width: $special-tablet) and (orientation: landscape) {
+        @content;
+    }
+}
+
+@mixin smallPhone {
+  @media only screen and (max-width: $small-phone) {
+      @content;
+  }
+}
+
+@mixin phone {
+    @media only screen and (max-width: $phone-width) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media only screen and (max-width: $tablet-width) {
+        @content;
+    }
+}
+
+@mixin medium {
+    @media only screen and (max-width: $medium-width) {
+        @content;
+    }
+}
+
+@mixin notebook {
+    @media only screen and (max-width: $notebook-width) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media only screen and (max-width: $desktop-width) {
+        @content;
+    }
+}
+
+@mixin large-desktop {
+    @media only screen and (min-width: $large-desktop-width) {
+        @content;
+    }
+}
+
+@mixin extra-large-desktop {
+    @media only screen and (min-width: $extra-large-desktop-width) {
+        @content;
+    }
+}

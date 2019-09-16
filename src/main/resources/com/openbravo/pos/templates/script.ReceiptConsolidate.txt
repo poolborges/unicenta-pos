@@ -1,0 +1,65 @@
+// script.ReceiptConsolidate
+// Remove duplicate item entries and ADD's Units to first entry of the item
+// This script only consolidates items with a valid ProductID 
+//
+//    uniCenta oPOS - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2018 uniCenta
+//    http://sourceforge.net/projects/unicentaopos
+//
+//    This file is part of uniCenta oPOS.
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+// **************************************************************************
+
+import com.openbravo.format.Formats;
+import com.openbravo.pos.ticket.TicketLineInfo;
+import com.openbravo.pos.ticket.TicketInfo;
+import com.openbravo.pos.ticket.TicketProductInfo; 
+import java.util.Properties;
+
+int numlines = ticket.getLinesCount(); 
+
+for (int i = 0 ; i < numlines ; i++) {  
+ 	current_ticketline = ticket.getLine(i);
+	current_unit  = current_ticketline.getMultiply();
+	if ( current_unit != 0){
+		for (int j = i + 1 ; j < numlines ; j++) {
+			if ( ticket.getLine(j).getProductID() != null) {
+				loop_ticketline = ticket.getLine(j);
+				loop_unit  = loop_ticketline.getMultiply();  
+ 				String current_productid = current_ticketline.getProductID();
+				String loop_productid    = loop_ticketline.getProductID();
+
+				if ( loop_productid.equals(current_productid) && (loop_ticketline.getPrice() == current_ticketline.getPrice()) && (loop_unit != 0) ){
+					current_unit = current_unit + loop_unit;
+					loop_ticketline.setMultiply(0);	
+				}
+			}	
+		}
+	current_ticketline.setMultiply(current_unit);
+	}	
+ }
+
+
+// now remove the ticket lines where the unit = 0
+// start deleteing in reverse order
+
+for (int i = numlines - 1 ; i > 0 ; i--) { 
+	loop_ticketline = ticket.getLine(i);
+	loop_unit  = loop_ticketline.getMultiply();
+	if (loop_unit == 0){
+		ticket.removeLine(i);
+		
+	}
+} 

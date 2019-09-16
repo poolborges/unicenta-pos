@@ -1,0 +1,54 @@
+//    uniCenta oPOS - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-201 uniCenta
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.UserNoSales");
+report.setReport("/com/openbravo/reports/usernosales");
+report.setResourceBundle("com/openbravo/reports/usernosales_messages");
+
+report.setSentence("SELECT " +
+           "people.name, MIN(draweropened.opendate) as STARTDATE, MAX(draweropened.opendate) as ENDDATE, draweropened.ticketid " +
+        "FROM draweropened draweropened, people people " +
+        "WHERE (UPPER(draweropened.name) LIKE UPPER(people.name)) " +
+            "AND ?(QBF_FILTER) " +
+        "GROUP BY draweropened.opendate " +
+        "ORDER BY draweropened.opendate DESC");
+
+
+report.addParameter("draweropened.OPENDATE");
+report.addParameter("draweropened.OPENDATE");
+
+paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
+
+paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
+paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
+
+report.addQBFFilter(paramdates);
+
+report.addParameter("people.ID");
+report.addParameter("people.NAME");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsUser());
+
+report.addField("NAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("STARTDATE", com.openbravo.data.loader.Datas.TIMESTAMP);
+report.addField("OPENDATE", com.openbravo.data.loader.Datas.TIMESTAMP);
+report.addField("TICKETID", com.openbravo.data.loader.Datas.STRING);
+
+report;

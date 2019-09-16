@@ -1,0 +1,22 @@
+.root {
+    -fx-text-base-color: rgb(252.0, 240.0, 237.0);
+    -fx-text-fill: -fx-text-base-color;     
+     -dark: rgb(47.0, 52.0, 57.0);
+     -fx-background-color: -dark;
+    
+    /*default font */
+    -fx-font-family: 'Helvetica Neue';
+   
+    -fx-font-size: 25.0px;
+    -fx-font-weight: 600;
+    -fx-disabled-opacity: 0.6; 
+
+    -flatter-red: rgb(237.0, 68.0, 37.0);
+    -flatter-blue: rgb(0.0, 184.0, 222.0);
+    
+    -fx-base: #383838;
+    -fx-background: -fx-base;
+    -fx-control-inner-background: -fx-base;   
+    -fx-control-inner-background-alt: -fx-base;     
+
+}

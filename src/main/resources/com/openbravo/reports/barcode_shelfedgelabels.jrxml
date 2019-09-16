@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" columnCount="3" pageWidth="595" pageHeight="842" columnWidth="188" leftMargin="15" rightMargin="15" topMargin="20" bottomMargin="20" uuid="50ad8d67-6507-4fc8-b1c8-0cfb1ca6c9a6">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="New Dataset 1" uuid="ca5a45c6-90d2-4d4c-b4cb-f882dc8483ee">
+		<queryString language="SQL">
+			<![CDATA[]]>
+		</queryString>
+		<field name="products_REFERENCE" class="java.lang.String"/>
+		<field name="products_CODE" class="java.lang.String"/>
+		<field name="products_NAME" class="java.lang.String"/>
+		<field name="products_PRICESELL" class="java.lang.Double"/>
+	</subDataset>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="CODE" class="java.lang.String"/>
+	<field name="REFERENCE" class="java.lang.String"/>
+	<field name="NAME" class="java.lang.String"/>
+	<field name="PRICESELL" class="java.lang.Double"/>
+	<field name="CODETYPE" class="java.lang.String"/>
+	<field name="TAXRATE" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="100" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="3" width="188" height="20" uuid="f9279652-6768-44d6-a249-4ecc9e015be4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAME}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+				<reportElement key="image-1" x="15" y="63" width="160" height="32" uuid="594e2fe3-ee4c-4079-89f1-71ab244ab8c6"/>
+				<imageExpression><![CDATA[($F{CODETYPE}.equals("EAN-13") ? com.openbravo.pos.util.BarcodeImage.getBarcodeEAN13($F{CODE}) :
+    ($F{CODETYPE}.equals("EAN-8") ? com.openbravo.pos.util.BarcodeImage.getBarcodeEAN8($F{CODE}) :
+        ($F{CODETYPE}.equals("UPC-A") ? com.openbravo.pos.util.BarcodeImage.getBarcodeUPCA($F{CODE}) :
+            ($F{CODETYPE}.equals("UPC-A") ? com.openbravo.pos.util.BarcodeImage.getBarcodeUPCE($F{CODE}) :
+                ($F{CODETYPE}.equals("CODE128") ? com.openbravo.pos.util.BarcodeImage.getBarcode128($F{CODE}) :
+                    com.openbravo.pos.util.BarcodeImage.getBarcodeUPCE($F{CODE})
+                )
+            )
+        )
+    )
+)]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="0" y="28" width="188" height="30" uuid="e20642f7-3806-4368-989a-0bbe86592ded"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="SansSerif" size="20" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[com.openbravo.format.Formats.CURRENCY.formatValue($F{PRICESELL} * $F{TAXRATE})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

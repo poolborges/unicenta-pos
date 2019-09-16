@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ticketsample" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="e4815fa6-4211-4036-b5d8-9e0203f21ea9">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<field name="TICKET" class="com.openbravo.pos.ticket.TicketInfo"/>
+	<field name="PLACE" class="java.lang.String"/>
+	<field name="TAXESLOGIC" class="java.lang.Object"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="96" splitType="Stretch">
+			<image scaleImage="RealSize">
+				<reportElement key="image-1" x="0" y="1" width="276" height="83" uuid="4ed01b77-4987-44bf-94ec-c58881ba13a1"/>
+				<imageExpression><![CDATA["reports/com/openbravo/reports/logo.png"]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-2" x="276" y="2" width="250" height="16" uuid="c0242fdb-e841-4ad5-ab05-1f23562d71e8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TICKET}.printTicketHeaderLine1()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-2" x="276" y="17" width="250" height="16" uuid="132bca10-55c9-46cd-af75-610b262f15ee"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TICKET}.printTicketHeaderLine2()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-2" x="276" y="32" width="250" height="16" uuid="66f76ef9-27d1-4436-a1b5-1db451b79f63"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TICKET}.printTicketHeaderLine3()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-2" x="276" y="47" width="250" height="16" uuid="9433df7e-cadb-453f-8d20-71d818f0eba2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TICKET}.printTicketHeaderLine4()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-2" x="276" y="62" width="250" height="16" uuid="864d3d51-3a29-4246-8db8-775866425f77"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TICKET}.printTicketHeaderLine5()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-2" x="276" y="77" width="250" height="16" uuid="a549e687-1227-43a1-9029-62b3350a2ab7"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TICKET}.printTicketHeaderLine6()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="253" splitType="Stretch">
+			<rectangle>
+				<reportElement key="rectangle-3" x="10" y="169" width="517" height="1" uuid="83c8ceb0-43ca-40ee-a4e0-b69408c24904"/>
+			</rectangle>
+			<rectangle>
+				<reportElement key="rectangle-2" x="312" y="7" width="215" height="85" uuid="7ccb8dbe-2c37-4ed6-97a4-bc8dba06279b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement key="rectangle-1" x="10" y="7" width="302" height="85" uuid="208a5eca-9258-4dfe-9623-bd0c8f04a956"/>
+			</rectangle>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-2" x="128" y="11" width="160" height="21" uuid="007eeca1-9e02-436e-bdae-1b6547b19364"/>
+				<textFieldExpression><![CDATA[$F{TICKET}.printId()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-3" x="19" y="11" width="109" height="21" uuid="21d86c7c-f359-4ae0-b1e8-7dcf35443ae1"/>
+				<textElement>
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Receipt]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-4" x="19" y="32" width="109" height="21" uuid="60287ccc-9018-41ee-bb74-9db39e679527"/>
+				<textElement>
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-3" x="128" y="32" width="160" height="21" uuid="9de75355-1489-439c-9acc-424848a38998"/>
+				<textFieldExpression><![CDATA[$F{TICKET}.printDate()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-5" x="19" y="53" width="109" height="21" uuid="ac022351-4afe-4e5e-a7f6-1cea5facf901"/>
+				<textElement>
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Account]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-4" x="324" y="11" width="190" height="19" uuid="99c8ab08-ff3c-435c-bb39-1643dc4e838a">
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{TICKET}.getCustomer() != null)]]></printWhenExpression>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{TICKET}.getCustomer().getName()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-5" x="128" y="53" width="160" height="21" uuid="4db5aff2-3219-49b2-8db7-4cb48358bb3e">
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{TICKET}.getCustomer() != null)]]></printWhenExpression>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{TICKET}.getCustomer().getTaxid()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-6" x="324" y="199" width="188" height="19" uuid="19412683-3790-47f2-816e-09d3936eb6c9"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TICKET}.printTax()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-7" x="324" y="218" width="188" height="19" uuid="56aa24f9-b900-4fee-8521-10791a9e92a9"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TICKET}.printTotal()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-8" x="324" y="180" width="188" height="19" uuid="2ae0f4f7-bd15-4f2f-86f7-e4d298d56944"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TICKET}.printSubTotal()]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement key="subreport-1" x="10" y="100" width="517" height="65" uuid="36ca1eed-1b44-494b-a51c-881ed1239266"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource(
+$F{TICKET}.getLines()
+)]]></dataSourceExpression>
+				<subreportExpression><![CDATA[JasperCompileManager.compileReport(
+net.sf.jasperreports.engine.xml.JRXmlLoader.load(getClass().getResourceAsStream(
+"/com/openbravo/reports/ticketsample_lines.jrxml"
+))
+)]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement key="staticText-6" x="164" y="180" width="160" height="19" uuid="c94b1551-d20a-4145-846e-af63b6b942e7"/>
+				<textElement>
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Subtotal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-8" x="164" y="199" width="160" height="19" uuid="0a731f94-c4b3-435f-9358-87af44670d7b"/>
+				<textElement>
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Taxes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-9" x="164" y="218" width="160" height="19" uuid="227f3d50-e51c-40e6-b325-c1438a26be10"/>
+				<textElement>
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-4" x="324" y="31" width="190" height="19" uuid="c02da605-0382-45a6-84c8-924b81079fdb">
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{TICKET}.getCustomer() != null)]]></printWhenExpression>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{TICKET}.getCustomer().getAddress()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-4" x="324" y="51" width="190" height="19" uuid="65eba4ef-093c-4261-84e4-f4d704a4cc4d">
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{TICKET}.getCustomer() != null)]]></printWhenExpression>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{TICKET}.getCustomer().getPostal()]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="137" splitType="Stretch">
+			<line>
+				<reportElement x="1" y="2" width="534" height="1" uuid="e7026c38-d875-4852-8569-8adaa8119e78"/>
+			</line>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-2" x="0" y="5" width="534" height="21" uuid="3fb73960-4dc7-462a-91b2-6424b1192ae7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TICKET}.printTicketFooterLine1()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-2" x="0" y="26" width="534" height="21" uuid="1e4f0f60-d47a-4f4f-9315-098c0283c981"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TICKET}.printTicketFooterLine2()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-2" x="0" y="46" width="534" height="21" uuid="8b401ee1-15b3-4ae8-b0f5-e4436f857de9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TICKET}.printTicketFooterLine3()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-2" x="0" y="66" width="534" height="21" uuid="6b50c6fd-2406-4bea-9dee-5699cdca6e15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TICKET}.printTicketFooterLine4()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-2" x="0" y="86" width="534" height="21" uuid="8312c4d7-1782-43a2-aab8-387be734b4ba"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TICKET}.printTicketFooterLine5()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-2" x="0" y="106" width="534" height="21" uuid="5c3fde1d-9bd8-42e4-9c83-fab162c77cf2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TICKET}.printTicketFooterLine6()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="19" splitType="Stretch"/>
+	</summary>
+</jasperReport>

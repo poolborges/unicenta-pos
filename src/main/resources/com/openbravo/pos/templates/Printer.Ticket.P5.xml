@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    uniCenta oPOS - Touch friendly Point Of Sale
+    Copyright (c) 2009-2018 uniCenta.
+    http://sourceforge.net/projects/unicentaopos
+
+    This file is part of uniCenta oPOS.
+
+    uniCenta oPOS is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    uniCenta oPOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<output>
+    <display>
+        <line>
+            <text align="left" length="10">Order sent to P5</text>
+            <text align="right" length="10">${ticket.printTotal()}</text>
+        </line>
+        <line>
+            <text align="center" length="20">Thank you.</text>
+        </line>
+    </display>
+
+    <ticket printer="5">
+        <line></line>
+        <line></line>
+        <line size = "1"><text bold = "true" align="center" length="42">Printer 5</text></line>
+        <line></line>
+        <line size = "1"><text>Order : </text><text bold = "true">${ticket.getPickupId()}</text></line>
+
+        <line><text align="left" length="15">Date:</text><text>${ticket.printDate()}</text></line>
+        <line><text align="left" length="15">Sent from: </text><text>${ticket.getHost()}</text></line> 
+        <line><text align="left" length="15">Server:</text><text>${ticket.printUser()}</text></line>
+
+        #if ($ticket.getCustomer())
+            <line><text align="left" length="15">Customer:</text><text>${ticket.getCustomer().getName()}</text></line>
+            <line><text align="left" length="15">Account #:</text><text>${ticket.getCustomer().getTaxid()}</text></line>
+        #end
+
+        #if (${tickettext.place} != ${place})
+            <line><text align="left" length="15">Table:</text><text>${place}</text></line>
+        #end
+        
+        <line></line>
+        <line><text align ="left" length="17">Item</text><text align ="right" length="5"></text></line>
+        <line><text>------------------------------------------</text></line>
+
+        #foreach ($ticketline in $ticket.getLines())
+            #if($ticketline.printPrinter().equals("5"))
+                #if($ticketline.getProperty("ticket.updated").equals("true"))
+                    #if ($ticketline.isProductCom())
+                        <line size="1"><text align ="left" length="37">--${ticketline.printName()}</text></line>
+                    #else
+                        <line size="1">
+                        <text align ="left" length="5"> ${ticketline.printMultiply()}x</text>
+                        <text align ="left" length="37"> ${ticketline.printName()}</text>
+                        </line>
+                    #end
+
+                    <!-- un-comment line below if you want to add a product's properties -->
+                    <!-- <line><text align ="left" length="42">${ticketline.getProperty("ingredients", "")}</text> </line> -->
+
+                    <!-- un-comment line below if you want to add a user input sales line's Note -->
+                    <!-- <line><text align ="left" length="42">${ticketline.getProperty("notes", "")}</text> </line> -->      
+
+            <!-- Add the following lines only for 2.30 Attributes -->
+                    #if ($ticketline.productAttSetInstId)
+                        <line><text align ="left" length="42">${ticketline.productAttSetInstDesc}</text></line>
+                        <line></line>
+                    #end
+                    ${ticketline.setProperty("ticket.updated", "false")}
+                #end
+            #end
+        #end
+    </ticket>
+</output>

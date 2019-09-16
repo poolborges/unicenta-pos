@@ -1,0 +1,69 @@
+//    uniCenta oPOS  - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//   uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>
+// 
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.CategorySales1");
+report.setReport("/com/openbravo/reports/sales_categorysales_1");
+report.setResourceBundle("com/openbravo/reports/sales_categorysales_1_messages");
+
+report.setSentence("SELECT IF(categories_1.NAME IS NULL, categories.name, categories_1.name) AS PARENTCAT, " +
+       "categories.NAME AS SUBCAT, " +
+       "products.REFERENCE AS PRODREF, " +
+       "products.NAME AS PRODNAME, " +
+       "SUM(ticketlines.UNITS) AS UNITS, " +
+       "SUM(ticketlines.PRICE * ticketlines.UNITS) AS SALES " +
+  "FROM (((((taxes taxes " +
+            "INNER JOIN ticketlines ticketlines ON (taxes.ID = ticketlines.TAXID)) " +
+           "INNER JOIN products products ON (products.ID = ticketlines.PRODUCT)) " +
+          "RIGHT OUTER JOIN categories categories ON (categories.ID = products.CATEGORY)) " +
+         "LEFT OUTER JOIN categories categories_1 ON (categories.PARENTID = categories_1.ID)) " +
+        "INNER JOIN tickets tickets ON (tickets.ID = ticketlines.TICKET)) " +
+       "INNER JOIN receipts receipts ON (tickets.ID = receipts.ID) " +
+    "WHERE ?(QBF_FILTER) " +
+    "GROUP BY categories.NAME, products.REFERENCE " +
+    "ORDER BY PARENTCAT ASC, SUBCAT ASC, PRODNAME ASC");
+
+report.addParameter("receipts.DATENEW");
+report.addParameter("receipts.DATENEW");
+
+paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
+paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
+paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
+report.addQBFFilter(paramdates);
+
+// report.addParameter("categories.PARENTID");
+// report.addParameter("categories.PARENTID");
+// report.addQBFFilter(new com.openbravo.pos.ticket.CategoryFilter_1());
+
+report.addParameter("products.NAME");
+report.addParameter("products.CATEGORY");
+report.addParameter("products.CODE");
+report.addParameter("stockcurrent.UNITS");
+report.addQBFFilter(new com.openbravo.pos.ticket.ProductFilter1());
+
+report.addField("PARENTCAT", com.openbravo.data.loader.Datas.STRING);
+report.addField("SUBCAT", com.openbravo.data.loader.Datas.STRING);
+report.addField("PRODREF", com.openbravo.data.loader.Datas.STRING);
+report.addField("PRODNAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("UNITS", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("SALES", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;

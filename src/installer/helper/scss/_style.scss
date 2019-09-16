@@ -1,0 +1,1294 @@
+/*------------------------------------------------------------------
+ Deft - Multiporpose Coming Soon Template
+
+* Version       :  1
+* Build Date    : 31 May 2016
+* Last Update   : 3 June 2016
+* Author        : CodeRare
+* Primary use   : Coming Soon
+
+Copyright (C) 2016 Coderare
+-------------------------------------------------------------------*/
+
+/*------------------------------------------------------------------
+[Table of contents]
+
+1. @Import & Reset
+2. Generic styles
+3. Home
+4. Quote
+5. Instagram Feeds
+6. Twitter Feeds
+7. Sider
+8. Project
+9. Portfolio
+10. Photo Swipe
+11. Clock
+12. Countdown
+13. About
+14. Review
+15. Pricing
+16. App
+17. Team
+18. Clients
+19. Subscribe form
+20. Contact Form
+21. Footer
+22. Dry styles
+23. Bootstrap styles
+24. Plugin styles
+25. Media Queries
+
+-------------------------------------------------------------------*/
+
+/* ------------------------------------- */
+/* @Import & Reset  ................... */
+/* ------------------------------------- */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, s, samp,
+small, strike, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, main {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+
+@import "_mixins.scss";
+@import "ionicons.min.css";
+@import "bootstrap.min.css";
+@import "magnific-popup.css";
+@import "flexslider.css";
+@import "animsition.min.css";
+@import "photoswipe.css";
+@import "default-skin/default-skin.css";
+@import "jquery.mCustomScrollbar.min.css";
+
+@import url("https://fonts.googleapis.com/css?family=Raleway:400,100,200,300,500,600,700,800");
+
+/* ------------------------------------- */
+/* Generic styles ................... */
+/* ------------------------------------- */
+
+body {
+  @include fontStack($raleway, 1.1em, 1.6);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  background: $p-color;
+}
+
+h1 { @include heading( 2.369em, 300, 20px);}
+h2 { @include heading( 1.777em, 400, 20px);}
+h3 {@include heading( 1.333em, 400, 10px);}
+h4 {@include heading(1em, 400, 10px);}
+h5 {@include heading(0.85em, 400, 10px);}
+h6 {@include heading(0.8em, 400, 10px);}
+
+#leftSide {
+  @include sides(relative, 0, 0, 50%, 100vh, hidden);
+}
+
+#rightSide {
+  @include sides(absolute, 0, 50%, 50%, 100%);
+  overflow-x: hidden;
+  background: $white;
+}
+
+.gradient {
+  @include gradient($s-color, $p-color);
+}
+
+/* ------------------------------------- */
+/* Home ................... */
+/* ------------------------------------- */
+
+#home, #homeCenter {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.h-content {
+  position: relative;
+  z-index: 0;
+  top: 32vh;
+  width: 100%;
+  padding: 10px 10%;
+  color: $white;
+}
+
+.h-content-fullwidth {
+  position: relative;
+  z-index: 0;
+  top: 36vh;
+  width: 100%;
+  padding: 10px 10%;
+  color: $white;
+}
+
+#homeCenter .h-content {
+  text-align: center;
+}
+
+ .main-logo {
+  position: absolute;
+  top: 8%;
+  max-width: 150px;
+  left:  10%;
+}
+
+
+#homeCenter .main-logo {
+  left:  calc(50% - 100px);
+}
+
+.social_icons {
+  @include socialIcons(absolute, 0, 50px, 100%, 1em);
+  padding-left: 10%;
+  z-index: 2;
+  color: $white;
+
+  li {
+    display: inline;
+    i {
+      font-size: 1.4em;
+      transition: all .3s;
+      display: inline-block;
+      padding: 15px;
+
+      &:hover {
+        color: darken($p-color, 30%);
+        transition: .1s;
+      }
+
+    }
+  }
+
+}
+
+#homeCenter .social_icons {
+  @extend .social_icons;
+  text-align: center;
+  left: 50%;
+  padding: 0;
+  @include vendor-prefix(transform, translate(-50%));
+}
+
+
+/* ------------------------------------- */
+/* Quote  ................... */
+/* ------------------------------------- */
+
+.quotes-stripe {
+  @include elBase(100%, 10% 8%, $t-color, $white);
+  display: table;
+
+  .quote-mark {
+    position: absolute;
+    z-index: 1;
+    left: 20px;
+    opacity: .05;
+    img {
+      position: relative;
+      top: -25px;
+    }
+  }
+
+  blockquote {
+    position: relative;
+    z-index: 1;
+    q {
+      font-size: 1.5em;
+      font-weight: 200 !important;
+    }
+
+    cite {
+      color: lighten($black, 50%);
+      margin-top: 20px;
+      margin-bottom: 0;
+      display: block;
+      font-size: 1em;
+      &::before {
+        content: "\2014 \0020";
+      }
+    }
+  }
+
+  h2 {
+    position: relative;
+    z-index: 1;
+    font-weight: 200 !important;
+  }
+}
+
+
+/* ------------------------------------- */
+/* Instagram Feeds ................... */
+/* ------------------------------------- */
+.instagram_feed {
+  display: table;
+  height: 100%;
+  width: 100%;
+  background: $wild-sand;
+  padding: 15px 7.5px;
+
+    li {
+      background: $wild-sand;
+      width: 25%;
+      display: inline-block;
+      float: left;
+      padding: 7.5px;
+      opacity: 1;
+      img {
+        height: auto;
+        width: 100%;
+      }
+    }
+
+}
+
+
+/* ------------------------------------- */
+/* Twitter Feeds ................... */
+/* ------------------------------------- */
+.twitter {
+  @include elBase(100%, 10% 8%, $t-color, $white);
+  text-align: center;
+
+  i {
+    display: block;
+    font-size: 60px;
+    color: $p-color;
+    margin-bottom: 5px;
+  }
+
+  p {
+    font-size: 1em;
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+
+  .timePosted {
+    font-size: .85em;
+    font-weight: 400;
+  }
+
+  h6 {
+    font-weight: 500;
+    color: $p-color;
+  }
+}
+
+/* ------------------------------------- */
+/* Sider ................... */
+/* ------------------------------------- */
+#slider {
+  position: relative;
+  width: 100%;
+  .slides {
+    width: 100%;
+  }
+}
+
+/* Plugin Css*/
+.flexslider {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.flex-control-nav {
+  bottom: 10px !important;
+  li {
+    a {
+      width: 30px;
+      height: 3px;
+    }
+  }
+}
+
+.flex-direction-nav {
+  a {
+    height: 100%;
+  }
+}
+
+/* ------------------------------------- */
+/* Project ................... */
+/* ------------------------------------- */
+.project, .portfolio, .swipe_portfolio {
+  position: relative;
+  padding: 15px 7.5px;
+}
+
+.project {
+  background: $wild-sand;
+  .item {
+    padding-left: 7.5px;
+    padding-right: 7.5px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    cursor: pointer;
+    height: auto;
+
+    .caption {
+      position: absolute;
+      width: calc(100% - 15px);
+      color: $white;
+      overflow: hidden;
+      @include vendor-prefix(transition, $medium-transition);
+      background: $t-color;
+      bottom: -70px;
+      height: 70px;
+
+      .photo-details {
+        position: absolute;
+        padding: 0 15px;
+        bottom: 10px;
+        @include vendor-prefix(transform, translateY(100%));
+        @include vendor-prefix(transition, $medium-transition);
+        h4 {
+          padding: 0;
+          margin: 0;
+        }
+        span {
+          font-size: 12px;
+          font-weight: 500;
+          margin: 0;
+          color: $p-color;
+        }
+      }
+      .view {
+          margin: 20px 15px;
+          text-align: center;
+          height: 30px;
+          width: 60px;
+          line-height: 30px;
+          background: $p-color;
+          color: $white;
+          font-size: 12px;
+          float: right;
+          font-weight: 600;
+      }
+    }
+
+    &:hover .photo-details {
+      @include vendor-prefix(transform, translateY(0));
+    }
+
+    &:hover .caption {
+      @include vendor-prefix(transform, translateY(-70px));
+    }
+    img {width: 100%;}
+  }
+
+  .project_info {
+    position: fixed;
+    z-index: 3;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    background: $white;
+    overflow: auto;
+    @include vendor-prefix(transform, translateX(100%));
+    @include vendor-prefix(transition, $medium-transition);
+    li {
+      display: none;
+      height: 100%;
+      width: 100%;
+      &.is-visible {
+        display: block;
+        .close {
+          @include vendor-prefix(transform, translateX(0));
+          opacity: 1;
+        }
+      }
+      img {
+        width: 100%;
+      }
+      .project_content {
+        padding: 10%;
+      }
+    }
+  }
+
+  &.show {
+    @include vendor-prefix(transition, $medium-transition);
+    .project_info {
+      @include vendor-prefix(transform, translateX(0));
+    }
+  }
+
+  .close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 3;
+    text-align: center;
+    height: 50px;
+    width: 50px;
+    overflow: hidden;
+    background: $p-color;
+    @include vendor-prefix(transform, translateX(100px));
+    @include vendor-prefix(transition, $medium-transition);
+    text-align: center;
+    opacity: 0;
+    transition-delay: .1s;
+
+    i {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      @include vendor-prefix(transform, translate(-50%, -50%));
+      font-size: 1.2em;
+      text-align: center;
+      color: $white !important;
+    }
+  }
+
+}
+
+/* ------------------------------------- */
+/* Portfolio ................... */
+/* ------------------------------------- */
+
+.portfolio {
+  background: $wild-sand;
+  .item {
+    padding-left: 7.5px;
+    padding-right: 7.5px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    cursor: pointer;
+    height: auto;
+    .caption {
+      @include caption();
+      .photo-details {
+        position: absolute;
+        padding: 0 15px;
+        bottom: 10px;
+        @include vendor-prefix(transform, translateY(100%));
+        @include vendor-prefix(transition, $medium-transition);
+        h4 {
+          padding: 0;
+          margin: 0;
+        }
+        span {
+          font-size: 12px;
+          font-weight: 500;
+          margin: 0;
+          color: $p-color;
+        }
+      }
+    }
+
+      &:hover .photo-details {
+        @include vendor-prefix(transform, translateY(0));
+      }
+
+      &:hover .caption {
+        opacity: 1;
+      }
+      img {width: 100%;}
+  }
+}
+
+/* ------------------------------------- */
+/* Swipe Portfolio ................... */
+/* ------------------------------------- */
+.swipe_portfolio {
+  .my-gallery {
+    figure {
+      padding-left: 7.5px;
+      padding-right: 7.5px;
+      overflow: hidden;
+      margin-bottom: 15px;
+      cursor: pointer;
+      height: auto;
+      a {
+        @include vendor-prefix(transition, $medium-transition);
+        cursor: url("../img/icon-zoom.png"), pointer;}
+
+      figcaption {
+        @include caption();
+        .photo-details {
+          position: absolute;
+          padding: 0 15px;
+          bottom: 10px;
+          @include vendor-prefix(transform, translateY(100%));
+          @include vendor-prefix(transition, $medium-transition);
+          p {
+            display: none !important;
+          }
+        }
+      }
+      &:hover .photo-details {
+        @include vendor-prefix(transform, translateY(0));
+      }
+      &:hover {
+        figcaption {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+/* ------------------------------------- */
+/* Clock ................... */
+/* ------------------------------------- */
+#clock {
+  font-size: 1.2em;
+  font-weight: 600;
+  .clock-box {
+    display: inline;
+  }
+}
+
+#clock_wedding {
+  @extend #clock;
+}
+
+
+/* ------------------------------------- */
+/* Countdown ................... */
+/* ------------------------------------- */
+#countdown {
+  @include elBase(100%, 10% 8%, $t-color, $white);
+
+  > div {
+    padding: 0;
+    height: 100%;
+    display: table;
+  }
+
+  .title {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0 15px;
+    h2 {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+
+  address {
+    margin-top: 10px !important;
+    span {
+      padding: 0;
+      color: darken($white, 20%);
+      font-weight: 500;
+      display: block;
+      font-size: em(15px);
+      margin-bottom: 10px;
+    }
+
+    i {
+      font-size: 1.5em;
+      padding-right: 10px;
+      color: $white;
+    }
+  }
+}
+
+.launch-date {
+  display: table-cell;
+  vertical-align: middle;
+  background: lighten($t-color, 5%);
+  text-align: center;
+  height: 160px;
+  border-radius: 3px;
+  @include vendor-prefix(box-shadow, 0px 2px 33px -6px rgba(0,0,0,0.75));
+  h2 {font-size: 3.5em;
+    margin-bottom: -5px;
+    margin-top: -20px;
+  }
+  span {
+    color: $white;
+  }
+}
+
+/* ------------------------------------- */
+/* About ................... */
+/* ------------------------------------- */
+.about {
+  @include elBase(100%, 10% 8%);
+  p {color: lighten($black, 40%);}
+
+}
+
+.service {
+  text-align: center;
+  margin-top: 50px !important;
+
+  .feature {
+    display: inline-block;
+    padding: 30px 0;
+    background: #f5f5f5;
+    @include vendor-prefix(transition, $fast-transition);
+    cursor: pointer;
+    @include hover(translateY(-10px), $bg-color: #eaeaea);
+
+
+    h6 {
+      font-weight: 700;
+      margin: 0;
+    }
+
+    i {
+      font-size: 2.2em;
+    }
+
+  }
+
+}
+
+/* ------------------------------------- */
+/* Review ................... */
+/* ------------------------------------- */
+#review {
+  @include elBase(100%, 10% 8%, $t-color, $white);
+
+  .customer-review {
+    text-align: center;
+
+    img {
+      max-width: 100px;
+    }
+
+    h6 {
+      font-weight: 600;
+      margin-top: 30px;
+    }
+
+    p {
+      margin-top: 10px;
+      color: rgba(255,255,255,.9);
+      font-weight: 300;
+    }
+  }
+
+}
+
+
+/* ------------------------------------- */
+/* Pricing ................... */
+/* ------------------------------------- */
+
+.pricing {
+  @include elBase(100%, 10% 8%, $t-color, $white);
+}
+
+.offers {
+  ul {
+    display: inline-block;
+    padding: 20px 0;
+  }
+
+  li {
+    padding: 5px 0;
+    font-size: .85em;
+    font-weight: 600;
+    color: rgba(255, 255, 255, .7);
+  }
+}
+
+.price {
+  padding: 30px 15px;
+  text-align: center;
+  @include vendor-prefix(transition, $fast-transition);
+  border-radius: 3px;
+  cursor: pointer;
+  background-color: $p-color;
+  float: right;
+  @include vendor-prefix(box-shadow, 0px 2px 33px -6px rgba(0,0,0,0.75));
+    @include hover(translateY(-10px));
+
+  .rate {
+    margin-top: -10px;
+    font-size: 2.5em;
+    font-weight: 400;
+    margin-bottom: 0;
+    &::before {
+      content: '$';
+      font-size: .5em !important;
+    }
+  }
+
+  p {
+    margin: 0 !important;
+  }
+
+}
+
+
+/* ------------------------------------- */
+/* App ................... */
+/* ------------------------------------- */
+
+.appContainer {
+  position: table;
+  overflow: hidden;
+  position: relative;
+  width: 130%;
+  left: -15%;
+  padding: 10% 0;
+  padding-bottom: 15%;
+
+}
+
+
+/* ------------------------------------- */
+/* Team ................... */
+/* ------------------------------------- */
+.team {
+  @include elBase(100%, 10% 8%, $wild-sand, $black);
+  p {color: lighten($black, 40%);}
+
+}
+
+.member {
+  padding: 7.5px;
+  margin: 20px 0;
+  .member-img {
+    position: relative;
+    overflow: hidden;
+
+    img {
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .member-overlay {
+      @include vendor-prefix(background, linear-gradient(rgba($t-color,0.5), rgba($t-color,1)));
+      position: absolute;
+      height: 100%;
+      top: 0;
+      width: 100%;
+      color: $white;
+      overflow: hidden;
+      @include vendor-prefix(transition, $medium-transition);
+      opacity: 0;
+
+      .overlay-info {
+        position: relative;
+        transform: translateY(200%);
+        top: 50%;
+        width: 100%;
+        @include vendor-prefix(transition, $medium-transition);
+        text-align: center;
+
+
+        h5 {
+          font-weight: 600;
+          margin-bottom:0;
+        }
+
+        h6 {font-weight: 600;
+          color: $p-color;}
+
+        a {
+          color: $white;
+          display: inline;
+          padding: 5px 10px;
+        }
+      }
+
+
+    }
+
+    &:hover .overlay-info {
+      @include vendor-prefix(transform, translateY(0));
+    }
+
+
+
+  }
+
+  .member-details {
+    width: 100%;
+    position: relative;
+    z-index: 4;
+    text-align: center;
+    padding: 20px 0;
+    h5 {
+      font-weight: 700;
+      padding: 0;
+      margin: 0;
+    }
+    h6 {
+      font-weight: 500;
+    }
+  }
+
+  &:hover .member-overlay {
+    opacity: 1;
+  }
+  &:hover .member-overlay ul {
+    @include vendor-prefix(transform, translateY(0));
+  }
+
+
+}
+
+/* ------------------------------------- */
+/* Clients ................... */
+/* ------------------------------------- */
+
+.clients {
+  @include elBase(100%, 10% 8%, $t-color);
+
+  .client {
+    text-align: center;
+    padding: 20px 0;
+  }
+}
+
+/* ------------------------------------- */
+/* Subscribe form ................... */
+/* ------------------------------------- */
+
+#subscribe {
+  @include elBase(100%, 10% 8%, $t-color, $white);
+  @include vendor-prefix(transition, $medium-transition);
+}
+
+#subscribe-form {
+  .input-email {
+    width: 55%;
+    background: lighten($t-color, 5%);;
+    padding: 0px 20px;
+    @include vendor-prefix(transition, $fast-transition);
+    border-radius: 3px;
+    height: 44px;
+    border-style: none;
+    font-size: 1.2em;
+    font-weight: 500;
+  }
+  .input-submit {
+    background: transparent;
+    color: $white;
+    @include vendor-prefix(transition, $fast-transition);
+    height: 44px;
+    border: 2px solid $white;
+    border-radius: 3px;
+    font-weight: 500;
+    float: right;
+    font-size: 1em;
+    width: 30%;
+    text-align: center;
+    &:hover {
+      @include hover($bg-color: $p-color, $color: $white, $br-color: $p-color);
+    }
+
+  }
+  #subscribe-result {
+    @include vendor-prefix(transform, translateY(15px));
+    font-size: .8em;
+    color: $white;
+    font-weight: 700;
+  }
+
+  .subscribe-success {
+    color: $success !important;
+  }
+  .subscribe-error {
+    color: $error !important;
+  }
+}
+
+
+/* ------------------------------------- */
+/* Contact Form ................... */
+/* ------------------------------------- */
+
+#contact {
+  @include elBase(100%, 10% calc(8% + 5px), $wild-sand, $black);
+  h2 {font-weight: 400;}
+  p {color: lighten($black, 40%);}
+
+}
+
+#contact_form {
+  margin-top: 30px !important;
+  width: 100%;
+  font-size: 14px;
+
+  div {
+    display: table;
+    padding: 0 5px;
+  }
+
+  .input-name {
+    border:none;
+    margin-bottom: 10px;
+    padding: 10px;
+    width: 100%;
+    height: 45px;
+    border-radius: 3px;
+    color: $white !important;
+    @include vendor-prefix(transition, $fast-transition);
+    font-weight: 600;
+    background: lighten($t-color, 5%);
+    color: $white;
+    &:focus {
+      background: $t-color;
+    }
+  }
+
+  .input-email {
+    @extend .input-name;
+  }
+
+  .input-message {
+    @extend .input-name;
+    height: 100px;
+  }
+
+  .submit {
+    @extend .input-name;
+    position: relative;
+    background: $p-color;
+    width: 100%;
+    height: 40px;
+    width: 100%;
+    &:focus {background: $p-color;}
+    @include hover($bg-color:(darken($p-color,5%)));
+
+  }
+}
+
+#form-messages {
+  padding: 0 5px;
+  margin: 10px 0;
+  .success {
+    background: $success;
+    padding: 1em;
+    display: none;
+    color: $white;
+    font-weight: 700;
+    font-size: 12px;
+  }
+
+  .error {
+      @extend .success;
+    background: $error;
+  }
+}
+
+
+
+address {
+  margin-top: 25px !important;
+  span {
+    color: lighten($black, 40%);
+    font-weight: 600;
+    display: inline-block;
+    font-size: 16px;
+  }
+
+  i {
+    font-size: 1.5em;
+    padding-right: 5px;
+    color: $p-color;
+  }
+}
+
+/* ------------------------------------- */
+/* Footer ................... */
+/* ------------------------------------- */
+
+footer {
+  position: relative;
+  bottom: 0;
+  display: table;
+  @include elBase(100%, 5%, $t-color, $white);
+
+  p {
+    display: table-cell;
+    vertical-align: middle;
+    font-size: em(12px);
+    font-weight: 500 !important;
+  }
+
+  .drag {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 1.2em;
+    @include vendor-prefix(transition, $fast-transition);
+    @include hover(translateY(-10px));
+
+  }
+
+}
+
+/* ------------------------------------- */
+/* Dry styles ................... */
+/* ------------------------------------- */
+.button-light {
+  display: inline-block;
+  background: transparent;
+  color: $white;
+  @include vendor-prefix(transition, $fast-transition);
+  border: 2px solid $white;
+  border-radius: 3px;
+  font-weight: 500;
+  font-size: 1em;
+  text-align: center;
+  padding: em(10px) em(25px);
+  &:hover {
+    @include hover($bg-color: $white, $color: $p-color, $br-color: $white);
+  }
+}
+
+.button-solid {
+  display: inline-block;
+  @include vendor-prefix(transition, $fast-transition);
+  border: 2px solid transparent;
+  padding: em(10px) em(25px);
+  background: $p-color;
+  border-radius: 3px;
+  &:focus {background: $p-color;}
+  @include hover($bg-color:(darken($p-color,5%)));
+}
+
+input:focus {
+  outline:none !important;
+}
+
+textarea:focus {
+  outline:none !important;
+}
+
+button:focus {
+  outline:none !important;
+}
+
+.filled {
+  background: $white;
+  color: $p-color;
+  font-weight: 700;
+  display: inline-block;
+  padding: 5px 10px;
+}
+
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+li {
+  list-style: none;
+}
+
+ul {
+  padding: 0;
+}
+
+/* Margins */
+.mt10 {margin-top: 10px;}
+.mt20 {margin-top: 20px;}
+.mt30 {margin-top: 30px;}
+.mt40 {margin-top: 40px;}
+.mt50 {margin-top: 50px;}
+.mt60 {margin-top: 60px;}
+.mt70 {margin-top: 70px;}
+.mt80 {margin-top: 80px;}
+.mt90 {margin-top: 90px;}
+.mt100 {margin-top: 100px;}
+.mt120 {margin-top: 120px;}
+.mt130 {margin-top: 130px;}
+.mt140 {margin-top: 140px;}
+.mt150 {margin-top: 150px;}
+.mt200 {margin-top: 200px;}
+
+.mb10 {margin-bottom: 10px;}
+.mb20 {margin-bottom: 20px;}
+.mb30 {margin-bottom: 30px;}
+.mb40 {margin-bottom: 40px;}
+.mb50 {margin-bottom: 50px;}
+.mb60 {margin-bottom: 60px;}
+.mb70 {margin-bottom: 70px;}
+.mb80 {margin-bottom: 80px;}
+.mb90 {margin-bottom: 90px;}
+.mb100 {margin-bottom: 100px;}
+.mb120 {margin-bottom: 120px;}
+.mb130 {margin-bottom: 130px;}
+.mb140 {margin-bottom: 140px;}
+.mb150 {margin-bottom: 150px;}
+.mb200 {margin-bottom: 200px;}
+
+/* Background img appender Css */
+.background-img-holder {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  top: 0;
+  left: 0;
+}
+
+.overlay:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba($t-color,0.4);
+}
+
+i {
+  cursor: pointer;
+}
+
+/* ------------------------------------- */
+/* Bootstrap styles ................... */
+/* ------------------------------------- */
+
+.full-height {
+  height: 100vh !important;
+}
+
+.mid-height {
+  height: 400px;
+}
+
+p {
+  font-size: .85em;
+  font-weight: 500;
+  margin-bottom: 20px;
+
+  a {
+    color: $p-color;
+    text-decoration: none;
+    &:hover {color: darken($p-color, 20%);}
+  }
+}
+
+.row {
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: $white;
+  text-decoration: none;
+  &:hover {
+    color: $white;
+    text-decoration: none;
+    }
+  &:visited {
+    outline: none !important;
+    text-decoration: none;}
+  &:focus {
+    color: $white;
+    outline: none !important;
+    text-decoration: none;}
+}
+
+::-moz-selection {
+  color: $white;
+  background: $p-color !important;
+}
+
+::selection {
+  color: $white;
+  background: $p-color !important;
+}
+
+img {
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.ion-heart {
+  color: $crimson;
+}
+
+/* ------------------------------------- */
+/* Plugin styles ................... */
+/* ------------------------------------- */
+
+/* Particles */
+#particles-js {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  z-index: -1;
+}
+
+/* magnificPopup */
+.mfp-zoom-out-cur, .mfp-zoom-out-cur .mfp-image-holder .mfp-close {
+    cursor: url("../img/icon-zoom-out.png"), pointer;
+  }
+
+.mfp-title {
+  font-size: .75em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* photoSwipe */
+.pswp__ui--fit .pswp__top-bar,
+.pswp__ui--fit .pswp__caption{
+  background: $t-color;
+}
+
+.pswp__item {
+  cursor: url("../img/icon-zoom-out.png"), pointer;
+}
+
+.pswp--zoom-allowed .pswp__img {
+  cursor: url("../img/icon-zoom.png"), pointer;
+}
+
+.pswp__button--arrow--left:before, .pswp__button--arrow--right:before {
+    content: '';
+    top: 35px;
+    background-color: $t-color;
+    height: 30px;
+    width: 32px;
+    position: absolute;
+}
+
+
+@import "_media.scss";

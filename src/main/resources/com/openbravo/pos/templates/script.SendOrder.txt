@@ -1,0 +1,76 @@
+// script.SendOrder
+// Sends an item in a Sale to a remote Printers
+//
+//    uniCenta oPOS - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2018 uniCenta
+//    http://sourceforge.net/projects/unicentaopos
+//
+//    This file is part of uniCenta oPOS.
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+// **************************************************************************
+
+private boolean printedP1 = false;
+private boolean printedP2 = false;
+private boolean printedP3 = false;
+private boolean printedP4 = false;
+private boolean printedP5 = false;
+private boolean printedP6 = false;
+
+for(int i= 0; i < ticket.getLinesCount(); i++){
+    line = ticket.getLine(i);
+
+    if (line.getProperty("product.printer")!=null) {
+
+        if (line.getProperty("product.printer").equals("1")) {
+            if((printedP1 == false) && line.getProperty("ticket.updated").equals("true")) {
+                sales.printTicket("Printer.Ticket.P1"); 
+                printedP1 = true;
+            }
+        }
+
+        if (line.getProperty("product.printer").equals("2")) {
+            if((printedP2 == false) && line.getProperty("ticket.updated").equals("true")){
+                sales.printTicket("Printer.Ticket.P2"); 
+                printedP2 = true;
+            }
+        }
+        if (line.getProperty("product.printer").equals("3")) {
+            if((printedP3 == false) && line.getProperty("ticket.updated").equals("true")){
+                sales.printTicket("Printer.Ticket.P3"); 
+                printedP3 = true;
+            }
+        }
+
+        if (line.getProperty("product.printer").equals("4")) {
+            if((printedP4 == false) && line.getProperty("ticket.updated").equals("true")){
+                sales.printTicket("Printer.Ticket.P4"); 
+                printedP4 = true;
+            }
+        }
+        if (line.getProperty("product.printer").equals("5")) {
+            if((printedP5 == false) && line.getProperty("ticket.updated").equals("true")){
+                sales.printTicket("Printer.Ticket.P5"); 
+                printedP5 = true;
+            }
+        }
+
+        if (line.getProperty("product.printer").equals("6")) {
+            if((printedP6 == false) && line.getProperty("ticket.updated").equals("true")){
+                sales.printTicket("Printer.Ticket.P6"); 
+                printedP6 = true;
+            }
+        }
+    }
+}

@@ -1,0 +1,44 @@
+//    uniCenta oPOS - Touch Friendly POS
+//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.EPM.PerformanceReport");
+report.setReport("/com/openbravo/reports/epm_performance");
+report.setResourceBundle("com/openbravo/reports/epm_performance_messages");
+
+report.setSentence("SELECT people.NAME, MIN(receipts.DATENEW) AS STARTDATE, MAX(receipts.DATENEW) AS ENDDATE, SUM(ticketlines.UNITS * ticketlines.PRICE) AS TOTAL " +
+                "FROM people, receipts, tickets, ticketlines WHERE people.ID = tickets.PERSON AND receipts.ID = tickets.ID AND tickets.ID = ticketlines.TICKET AND ?(QBF_FILTER) " +
+                "GROUP BY people.NAME ORDER BY people.NAME");
+
+report.addParameter("receipts.DATENEW");
+report.addParameter("receipts.DATENEW");
+
+paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
+paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
+// JG - 8 Jan 14 paramdates.setEndDate(com.openbravo.beans.DateUtils.getToday());
+paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
+
+report.addQBFFilter(paramdates);
+
+report.addField("NAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("STARTDATE", com.openbravo.data.loader.Datas.TIMESTAMP);
+report.addField("ENDDATE", com.openbravo.data.loader.Datas.TIMESTAMP);
+report.addField("TOTAL", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;

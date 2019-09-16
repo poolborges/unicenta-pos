@@ -1,0 +1,6 @@
+initialcount = ticket.getLinesCount();
+for (int i = initialcount-1; i > 0; i--) {
+if(ticket.getLine(i).getProductCategoryID() == null){
+   ticket.removeLine(i);
+}
+}

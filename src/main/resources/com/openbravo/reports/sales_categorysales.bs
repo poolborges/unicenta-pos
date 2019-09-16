@@ -1,0 +1,58 @@
+//    uniCenta oPOS  - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//   uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.CategorySales");
+report.setReport("/com/openbravo/reports/sales_categorysales");
+report.setResourceBundle("com/openbravo/reports/sales_categorysales_messages");
+
+// JG - 8 Jan 14 Convert lowercasednname to UPPERCASE for compatability
+
+report.setSentence("SELECT categories.ID, categories.NAME, " +
+    "SUM(ticketlines.UNITS) AS QTY, " +
+    "SUM(ticketlines.PRICE * ticketlines.UNITS) AS CATPRICE, " +
+    "SUM((products.PRICESELL * ticketlines.UNITS)-((products.ISVPRICE ) * (ticketlines.PRICE * ticketlines.UNITS))) AS DISC, " +
+    "SUM((ticketlines.PRICE * taxes.RATE)* ticketlines.UNITS) AS CATTAX, " +
+    "SUM((ticketlines.PRICE * ticketlines.UNITS) + ((ticketlines.PRICE * taxes.RATE)* ticketlines.UNITS)) AS CATTOTAL " +
+"FROM (tickets INNER JOIN receipts ON tickets.ID = receipts.ID) INNER JOIN ((categories INNER JOIN products ON categories.ID = products.CATEGORY) INNER JOIN (taxes INNER JOIN ticketlines ON taxes.ID = ticketlines.TAXID) ON products.ID = ticketlines.PRODUCT) ON tickets.ID = ticketlines.TICKET " +
+"WHERE ?(QBF_FILTER) " +
+"GROUP BY categories.ID, categories.NAME " +
+"ORDER BY categories.NAME");
+
+report.addParameter("receipts.DATENEW");
+report.addParameter("receipts.DATENEW");
+
+paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
+
+paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
+// JG - 8 Jan 14 paramdates.setEndDate(com.openbravo.beans.DateUtils.getToday());
+paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
+
+report.addQBFFilter(paramdates);
+
+report.addField("ID", com.openbravo.data.loader.Datas.STRING);
+report.addField("NAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("QTY", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("CATPRICE", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("DISC", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("CATTAX", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("CATTOTAL", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;

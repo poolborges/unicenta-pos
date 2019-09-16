@@ -1,0 +1,8 @@
+//Set Person (Waiter) Source: Crruth
+
+value = javax.swing.JOptionPane.showInputDialog("Enter Waiter", ticket.getProperty("person")); 
+
+if (value != null) {
+         // the user pressed OK
+         ticket.setProperty("person", value);
+}

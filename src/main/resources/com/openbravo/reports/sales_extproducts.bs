@@ -1,0 +1,76 @@
+//    uniCenta oPOS - Touch Friendly Point Of Sale
+//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+
+// *** NOT SUITABLE FOR DERBY DB'S***
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.ExtendedByProducts");
+report.setReport("/com/openbravo/reports/sales_extproducts");
+report.setResourceBundle("com/openbravo/reports/sales_extproducts_messages");
+
+report.setSentence("SELECT " +
+//        "customers.ID, customers.name AS CUSTname, " +
+        "customers.name AS CUSTname, " +
+        "categories.NAME AS CATname, " +
+        "products.REFERENCE AS PRODref, products.NAME AS PRODname, " +
+//        "receipts.datenew, " +
+        "SUM(ticketlines.units) AS TOTALunits, " +
+        "SUM(ticketlines.UNITS * ticketlines.PRICE) AS TOTALnet, " +
+        "SUM((ticketlines.PRICE * taxes.RATE) * ticketlines.UNITS) AS TOTALtax, " +
+        "SUM((ticketlines.PRICE * ticketlines.UNITS) + ((ticketlines.PRICE * taxes.RATE) * ticketlines.UNITS)) AS TOTALgross " +
+    "FROM (((((products products INNER JOIN categories categories " +
+            "ON (products.CATEGORY = categories.ID)) " +
+            "INNER JOIN ticketlines ticketlines ON (ticketlines.product = products.ID)) " +
+            "INNER JOIN tickets tickets ON (ticketlines.ticket = tickets.id)) " +
+            "INNER JOIN customers customers ON (tickets.customer = customers.id)) " +
+            "INNER JOIN receipts receipts ON (tickets.id = receipts.id)) " +
+            "INNER JOIN taxes taxes ON (ticketlines.taxid = taxes.id) " +
+    "WHERE ?(QBF_FILTER) " +
+    "GROUP BY customers.name, categories.NAME, products.REFERENCE " +
+    "ORDER BY CUSTname ASC, CATname ASC, PRODname ASC"); 
+
+report.addParameter("customers.ID");
+ report.addParameter("customers.NAME");
+ report.addQBFFilter(new com.openbravo.pos.reports.JParamsCustomer());
+
+ report.addParameter("receipts.DATENEW");
+ report.addParameter("receipts.DATENEW");
+ paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
+ paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
+ paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
+ report.addQBFFilter(paramdates);
+
+report.addParameter("products.NAME");
+report.addParameter("products.PRICEBUY");
+report.addParameter("products.PRICESELL");
+report.addParameter("products.CATEGORY");
+report.addParameter("products.CODE");
+report.addQBFFilter(new com.openbravo.pos.ticket.ProductFilter());
+
+report.addField("CUSTname", com.openbravo.data.loader.Datas.STRING);
+report.addField("CATname", com.openbravo.data.loader.Datas.STRING);
+report.addField("PRODref", com.openbravo.data.loader.Datas.STRING);
+report.addField("PRODname", com.openbravo.data.loader.Datas.STRING);
+report.addField("TOTALunits", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("TOTALnet", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("TOTALtax", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("TOTALgross", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;

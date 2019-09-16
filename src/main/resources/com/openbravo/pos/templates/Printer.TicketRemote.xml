@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    uniCenta oPOS - Touch friendly Point Of Sale
+    Copyright (c) 2009-2018 uniCenta.
+    http://sourceforge.net/projects/unicentaopos
+
+    This file is part of uniCenta oPOS.
+
+    uniCenta oPOS is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    uniCenta oPOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<output>
+
+    <display>
+        <line>
+            <text align="left" length="8">Sent!</text>
+            <text align="right" length="12">${ticket.printTotal()}</text>
+        </line>
+        <line>
+            <text align="center" length="20">Thank you</text>
+        </line>
+    </display>
+
+    <ticket printer = "2">
+        <line></line>
+        <line></line>
+        <line size = "1">
+            <text bold = "true" align="center" length="42">ORDER</text>
+        </line>
+        <line></line>
+
+        #if (${tickettext.place} != ${place})
+            <line size ="1">
+                <text bold="true" align="left" length="15">Table:</text>
+                <text bold="true">${place}</text>
+            </line>
+        #end
+        
+        <line>
+            <text align="left" length="15">Server:</text>
+            <text>${ticket.printUser()}</text>
+        </line>        
+                
+        <line>
+            <text align="left" length="15">Date:</text>
+            <text>${ticket.printDate()}</text>
+        </line>
+        <line>
+            <text align="left" length="15">Receipt:</text>
+            <text>${ticket.printId()}</text>
+        </line>
+        
+        #if ($ticket.getCustomer())
+            <line>
+                <text align="left" length="15">Customer:</text>
+                <text>${ticket.getCustomer().getName()}</text>
+            </line>
+            <line>
+                <text align="left" length="15">Account #:</text>
+                <text>${ticket.getCustomer().getTaxid()}</text>
+            </line>
+        #end
+
+        <line></line>
+        <line>
+            <text align ="left" length="17">Item</text>
+            <text align ="right" length="5"></text>
+        </line>
+        <line>
+            <text>------------------------------------------</text>
+        </line>
+
+    #foreach ($ticketline in $ticket.getLines())
+<!-- Show Product's assigned Printer
+<line><text align="left" length="15">Printer :</text><text>${ticketline.printPrinter()}</text></line>-->    
+
+        #if(($ticketline.printPrinter()) && ($ticketline.getProperty("sendstatus").equals("No")))
+            <line size = "1">
+                <text align ="left" length="5">${ticketline.printMultiply()}x</text>
+            #if ($ticketline.isProductCom())
+                <text align ="left" length="37">--${ticketline.printName()}</text>
+            #else
+                <text align ="left" length="37">${ticketline.printName()}</text>
+            #end
+            </line>
+
+            <!-- un-comment line below if you want to add a product's properties -->
+            <!-- <line><text align ="left" length="42">${ticketline.getProperty("ingredients", "")}</text> </line> -->
+            
+            <!-- un-comment line below if you want to add a user input sales line's Note -->
+            <!-- <line><text align ="left" length="42">${ticketline.getProperty("notes", "")}</text> </line> -->                  
+
+            #if ($ticketline.productAttSetInstId)
+                <line>
+                    <text align ="left" length="42">    ${ticketline.productAttSetInstDesc}</text>
+                </line>
+                <line></line>
+            #end
+        #end
+    #end
+        <line>
+            <text>------------------------------------------</text>
+        </line>
+    </ticket>
+</output>

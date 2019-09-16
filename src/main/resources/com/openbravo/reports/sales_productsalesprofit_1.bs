@@ -1,0 +1,77 @@
+//    uniCenta oPOS - touch friendly EPoS
+//    Copyright (c) 2009 - 2018 uniCenta
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+//		added by g.irura @ 27/03/2010. 
+// 		CALCULATES PROFIT FOR EACH ITEM THAT IS SOLD AS WELL AS QUANTITY OF ITEMS OCCURRING IN THE PARTICULAR SALE
+//		IF A PRICE ADJUSTMENT OCCURS, IT IS REFLECTED IN THE TRAIL OF RECEIPTS ON DATES. THE REPORT ALSO SHOWS THE TOTAL PROFITS MADE ON PRODUCTS/SERVICES SOLD
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.SalesProfit");
+report.setReport("/com/openbravo/reports/sales_productsalesprofit");
+report.setResourceBundle("com/openbravo/reports/sales_productsalesprofit_messages");
+
+// Amend: Janar Nagel Jan 2014
+// Amend: JG uniCenta May 2014
+// Amend: JG uniCenta July 2014
+
+report.setSentence("SELECT " +
+    "products.NAME, " +
+    "IFNULL((SELECT CODE FROM products WHERE id = ticketlines.PRODUCT),'-') AS CODE, " +
+        " tickets.TICKETID,  " +
+        "receipts.datenew AS DATE, " +
+    "IFNULL(CAST((SELECT NAME FROM products WHERE id = ticketlines.PRODUCT) AS CHAR(10000) CHARACTER SET utf8), " +
+        "CAST(CONCAT(SUBSTR(ticketlines.attributes, " +
+        "LOCATE('product.name', ticketlines.attributes) + 14, " +
+        "(LOCATE('%</entry>', ticketlines.attributes)-LOCATE('product.name', ticketlines.attributes)-14)),'%') AS CHAR(10000) CHARACTER SET utf8)) AS NAME, " +
+    "IFNULL((SELECT PRICEBUY FROM products WHERE id = ticketlines.PRODUCT),0) AS PRICEBUY, " +
+        "ticketlines.PRICE AS PRICESELL, " +
+        "(ticketlines.units) AS UNITSSOLD, " +
+        "(ticketlines.UNITS*ticketlines.PRICE) AS TOTAL, " +
+        "(ticketlines.UNITS*(ticketlines.PRICE-IFNULL((SELECT PRICEBUY FROM products WHERE id = ticketlines.PRODUCT),0))) AS PROFITLOSS " +
+    "FROM products, ticketlines " +
+        "LEFT JOIN tickets ON tickets.id = ticketlines.TICKET " +
+        "LEFT JOIN receipts ON receipts.ID = tickets.id " +
+    "WHERE ?(QBF_FILTER) " +
+    "ORDER BY products.NAME, receipts.DATENEW DESC");
+
+report.addParameter("receipts.DATENEW");
+report.addParameter("receipts.DATENEW");
+paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
+paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
+// JG - 8 Jan 14 paramdates.setEndDate(com.openbravo.beans.DateUtils.getToday());
+paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
+report.addQBFFilter(paramdates);
+
+report.addParameter("products.NAME");
+report.addParameter("products.CATEGORY");
+report.addParameter("products.CODE");
+report.addParameter("stockcurrent.UNITS");
+report.addQBFFilter(new com.openbravo.pos.ticket.ProductFilter1());
+
+report.addField("CODE", com.openbravo.data.loader.Datas.STRING);
+report.addField("TICKETID", com.openbravo.data.loader.Datas.INT);
+report.addField("DATE", com.openbravo.data.loader.Datas.TIMESTAMP);
+report.addField("NAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("PRICEBUY", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("PRICESELL", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("UNITSSOLD", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("TOTAL", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("PROFITLOSS", com.openbravo.data.loader.Datas.DOUBLE);
+
+report;

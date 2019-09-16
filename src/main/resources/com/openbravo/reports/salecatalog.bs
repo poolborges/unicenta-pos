@@ -1,0 +1,69 @@
+//    uniCenta oPOS - touch friendly EPoS
+//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    https://unicenta.com
+//
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+
+report = new com.openbravo.pos.reports.PanelReportBean();
+
+report.setTitleKey("Menu.SaleCatalog");
+report.setReport("/com/openbravo/reports/salecatalog");
+report.setResourceBundle("com/openbravo/reports/salecatalog_messages");
+
+report.setSentence("SELECT products.id, "
+        + "products.reference, products.code, products.codetype, products.name, "
+        + "products.pricesell, products.image, "
+        + "T.ID AS TAX, "
+        + "T.RATE + 1 AS TAXRATE, "
+        + "categories.name AS CATEGORYNAME, suppliers.name, stockcurrent.location "
+        + "FROM (((products products "
+        +   "INNER JOIN stockcurrent stockcurrent "
+        +      "ON (products.id = stockcurrent.product)) "
+        +   "LEFT OUTER JOIN taxes T "
+        +     "ON (products.taxcat = T.id)) "
+        +   "LEFT OUTER JOIN categories categories "
+        +     "ON (products.category = categories.id)) "
+        +   "RIGHT OUTER JOIN suppliers suppliers "
+        +     "ON (suppliers.id = products.supplier) "
+        + "WHERE ?(QBF_FILTER) "
+        + "ORDER BY CATEGORYNAME ASC, products.name ASC");
+
+report.addParameter("products.NAME");
+report.addParameter("products.CATEGORY");
+report.addParameter("products.CODE");
+report.addQBFFilter(new com.openbravo.pos.ticket.ProductFilter4());
+
+report.addParameter("suppliers.ID");
+report.addParameter("suppliers.NAME");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsSuppliers());
+
+report.addParameter("stockcurrent.LOCATION");
+report.addQBFFilter(new com.openbravo.pos.reports.JParamsLocation());
+
+report.addField("ID", com.openbravo.data.loader.Datas.STRING);
+report.addField("REFERENCE", com.openbravo.data.loader.Datas.STRING);
+report.addField("CODE", com.openbravo.data.loader.Datas.STRING);
+report.addField("CODETYPE", com.openbravo.data.loader.Datas.STRING);
+report.addField("NAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("PRICESELL", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("IMAGE", com.openbravo.data.loader.Datas.IMAGE);
+report.addField("TAX", com.openbravo.data.loader.Datas.STRING);
+report.addField("TAXRATE", com.openbravo.data.loader.Datas.DOUBLE);
+report.addField("CATEGORYNAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("SUPPLIER", com.openbravo.data.loader.Datas.STRING);
+report.addField("LOCATION", com.openbravo.data.loader.Datas.STRING);
+
+report;
