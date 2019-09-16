@@ -2,7 +2,8 @@
 /nbactions.xml
 /nb-configuration.xml
 /unicentaopos.iml
-*.jar
+/.settings/
+/.idea/
 *.prefs
 .classpath
 .project
