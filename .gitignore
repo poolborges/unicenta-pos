@@ -3,3 +3,6 @@
 /nb-configuration.xml
 /unicentaopos.iml
 *.jar
+*.prefs
+.classpath
+.project
