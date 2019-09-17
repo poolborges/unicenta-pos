@@ -14,7 +14,8 @@
     <!-- Specify this via command line i.e -Dbitrock.exec=/path/to/bitrock/builder-->  
     <bitrock.exec/>  
     <!-- windows, osx, linux -->  
-    <bitrock.platform/> 
+    <bitrock.platform/>
+    <app.dist.directory>${project.build.directory}/unicentaopos-${project.version}</app.dist.directory>
   </properties>  
   <dependencies>
     <dependency> 
@@ -318,12 +319,32 @@
               <goal>copy-dependencies</goal> 
             </goals>  
             <configuration> 
-              <outputDirectory>${project.build.directory}/lib</outputDirectory>  
+              <outputDirectory>${app.dist.directory}/lib</outputDirectory>
               <overWriteReleases>false</overWriteReleases>  
               <overWriteSnapshots>false</overWriteSnapshots>  
               <overWriteIfNewer>true</overWriteIfNewer> 
             </configuration> 
-          </execution> 
+          </execution>
+          <execution>
+            <id>copy-artifact</id>
+            <phase>install</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <version>${project.version}</version>
+                  <type>${project.packaging}</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${app.dist.directory}</outputDirectory>
+                  <destFileName>${project.build.finalName}.jar</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
         </executions> 
       </plugin>  
       <plugin> 
@@ -351,55 +372,55 @@
               <goal>copy-resources</goal> 
             </goals>  
             <configuration> 
-              <outputDirectory>${project.build.directory}</outputDirectory>  
+              <outputDirectory>${app.dist.directory}</outputDirectory>
               <resources> 
                 <resource> 
-                  <targetPath>${basedir}/target/lib/Windows</targetPath>  
+                  <targetPath>${app.dist.directory}/lib/Windows</targetPath>
                   <directory>${basedir}/src/other/Windows</directory>  
                   <filtering>false</filtering> 
                 </resource>  
                 <resource> 
-                  <targetPath>${basedir}/target/lib/Linux</targetPath>  
+                  <targetPath>${app.dist.directory}/lib/Linux</targetPath>
                   <directory>${basedir}/src/other/Linux</directory>  
                   <filtering>false</filtering> 
                 </resource>  
                 <resource> 
-                  <targetPath>${basedir}/target/lib/Mac_OS_X</targetPath>  
+                  <targetPath>${app.dist.directory}/lib/Mac_OS_X</targetPath>
                   <directory>${basedir}/src/other/Mac_OS_X</directory>  
                   <filtering>false</filtering> 
                 </resource>  
                 <resource> 
-                  <targetPath>${basedir}/target/</targetPath>  
+                  <targetPath>${app.dist.directory}/</targetPath>
                   <directory>${basedir}/src/scripts</directory>  
                   <filtering>false</filtering> 
                 </resource>  
                 <resource> 
-                  <targetPath>${basedir}/target/licensing</targetPath>  
+                  <targetPath>${app.dist.directory}/licensing</targetPath>
                   <directory>${basedir}/src/installer/licensing</directory>  
                   <filtering>false</filtering> 
                 </resource>  
                 <resource> 
-                  <targetPath>${basedir}/target/Bonus</targetPath>  
+                  <targetPath>${app.dist.directory}/Bonus</targetPath>
                   <directory>${basedir}/src/other/Bonus</directory>  
                   <filtering>false</filtering> 
                 </resource> 
                 <resource>                  
-                  <targetPath>${basedir}/target/Configs</targetPath>  
+                  <targetPath>${app.dist.directory}/Configs</targetPath>
                   <directory>${basedir}/src/other/Configs</directory>  
                   <filtering>false</filtering> 
                 </resource>                  
                 <resource> 
-                  <targetPath>${basedir}/target/Templates</targetPath>  
+                  <targetPath>${app.dist.directory}/Templates</targetPath>
                   <directory>${basedir}/src/other/Templates</directory>  
                   <filtering>false</filtering> 
                 </resource>  
                 <resource>                                     
-                  <targetPath>${basedir}/target/reports/com</targetPath>  
+                  <targetPath>${app.dist.directory}/reports/com</targetPath>
                   <directory>${basedir}/src/main/resources/com</directory>  
                   <filtering>false</filtering> 
                 </resource>  
                 <resource> 
-                  <targetPath>${basedir}/target/locales</targetPath>  
+                  <targetPath>${app.dist.directory}/locales</targetPath>
                   <directory>${basedir}/src/main/resources</directory>  
                   <filtering>false</filtering>  
                   <excludes> 
