@@ -7,3 +7,4 @@
 *.prefs
 .classpath
 .project
+/build
