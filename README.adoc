@@ -1,1 +1,15 @@
-= unicenta-pos
+= KROS POS
+
+This solution is based on Unicenta oPOS 4.5 (2019-06-30)
+Not follow future version of Unicenta oPOS
+
+PS:: Unicenta oPOS is a fork of OpenBravo POS
+
+== About
+
+* Modularity based on OSGI 7
+
+== Tobe
+
+* krospos-core-api
+* krospos-core-impl

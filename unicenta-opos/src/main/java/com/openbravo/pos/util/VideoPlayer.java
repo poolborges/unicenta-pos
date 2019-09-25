@@ -24,6 +24,8 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 
+import static com.openbravo.pos.util.PosProviderConstants.VIDEO_MEDIA_URL_SAMPLE;
+
 /**
  * Provides JavaFX media player services
  * @author uniCenta
@@ -32,9 +34,7 @@ import javafx.stage.Stage;
 
 public class VideoPlayer extends Application {    
     public static void main(String[] args) { launch(args); }
-        private static final String MEDIA_URL =
-// Testing URL
-                "http://unicenta.org/downloads/unicentaopos_v3Beta1_preview.mp4";
+        private static final String MEDIA_URL = VIDEO_MEDIA_URL_SAMPLE;
        
 @Override
     public void start(Stage primaryStage) {

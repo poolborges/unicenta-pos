@@ -19,6 +19,8 @@
 
 package com.unicenta.pos.util;
  
+import com.openbravo.pos.util.PosProviderConstants;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -35,18 +37,13 @@ public class FtpUpload extends Thread {
 
     @Override
     public void run() {
-        String ftpUrl = "ftp://%s:%s@%s/%s;type=i";
-        String host = "unicenta.org";
-        String user = "logger";
-        String pass = "!!FllPqfz!!";
-
         try {
             sMachine = InetAddress.getLocalHost().getHostName();
 
             String filePath = System.getProperty("user.home") + "/" + sMachine + ".lau";
             String uploadPath = sMachine + ".lau";
 
-            ftpUrl = String.format(ftpUrl, user, pass, host, uploadPath);
+            String ftpUrl = String.format("%s/%s;type=i", PosProviderConstants.PROVIDER_FTP_URL, uploadPath);
 
             URL url = new URL(ftpUrl);
             URLConnection conn = url.openConnection();

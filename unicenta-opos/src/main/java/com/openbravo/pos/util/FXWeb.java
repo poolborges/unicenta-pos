@@ -38,6 +38,8 @@ import javax.swing.SwingUtilities;
 
 import com.sun.javafx.application.PlatformImpl;
 
+import static com.openbravo.pos.util.PosProviderConstants.PROVIDER_SPLASHER_HTML_URL;
+
 /**
  * SwingFXWebView
  */
@@ -115,7 +117,7 @@ public class FXWeb extends JPanel
             FXWeb.this.stage.setScene(scene);
             FXWeb.this.browser = new WebView();
             FXWeb.this.webEngine = FXWeb.this.browser.getEngine();
-            FXWeb.this.webEngine.load("http://unicenta.org/splasher.html");
+            FXWeb.this.webEngine.load(PROVIDER_SPLASHER_HTML_URL);
             final ObservableList<Node> children = root.getChildren();
             children.add(FXWeb.this.browser);
             FXWeb.this.jfxPanel.setScene(scene);

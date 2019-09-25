@@ -29,7 +29,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.net.MalformedURLException;
 import java.net.URL;
- 
+
+import static com.openbravo.pos.util.PosProviderConstants.PROVIDER_SPLASHER_HTML_URL;
 import static javafx.concurrent.Worker.State.FAILED;
   
 public class UniBrowser extends JFrame {
@@ -162,7 +163,7 @@ public class UniBrowser extends JFrame {
         SwingUtilities.invokeLater(() -> {
             UniBrowser browser = new UniBrowser();
             browser.setVisible(true);
-            browser.loadURL("http://unicenta.org/splasher.html");
+            browser.loadURL(PROVIDER_SPLASHER_HTML_URL);
         });
     }
 }

@@ -67,7 +67,6 @@ import com.dalsemi.onewire.container.OneWireContainer;
 import com.dalsemi.onewire.utils.*;
 import com.dalsemi.onewire.application.monitor.*;
 import com.openbravo.pos.util.uOWWatch;
-import com.unicenta.pos.util.FtpUpload;
 import org.joda.time.Instant;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -435,11 +434,14 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
             Logger.getLogger(JRootApp.class.getName()).log(Level.SEVERE, null, ex);
         }        
 
+        /**
+         * TODO REMOVE FTPUpload log Uploader
         try {                         
-            new FtpUpload().start();
+            new com.unicenta.pos.util.FtpUpload().start();
         } catch (Exception ex) {
             Logger.getLogger(JRootApp.class.getName()).log(Level.SEVERE, null, ex);
         }
+         */
         
         m_propsdb = m_dlSystem.getResourceAsProperties(m_props.getHost() + "/properties");
 

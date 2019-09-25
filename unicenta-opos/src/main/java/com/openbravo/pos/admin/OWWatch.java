@@ -1,4 +1,4 @@
-
+package com.openbravo.pos.admin;
 /*---------------------------------------------------------------------------
  * Copyright (c) 1999,2000 Dallas Semiconductor Corporation, All Rights Reserved.
  *
