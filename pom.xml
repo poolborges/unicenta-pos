@@ -12,5 +12,6 @@
 
     <modules>
         <module>unicenta-opos</module>
+        <module>unicentaopos-samples</module>
     </modules>
 </project>

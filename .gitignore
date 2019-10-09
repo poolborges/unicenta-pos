@@ -1,0 +1,10 @@
+/target/
+/nbactions.xml
+/nb-configuration.xml
+/unicentaopos.iml
+/.settings/
+/.idea/
+*.prefs
+.classpath
+.project
+/build
