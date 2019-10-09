@@ -4,7 +4,6 @@ language: java
 
 # Testing Against Multiple JDKs
 jdk:
-  - openjdk8
   - openjdk11
   - openjdk-ea
 

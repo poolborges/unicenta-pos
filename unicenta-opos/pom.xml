@@ -7,9 +7,10 @@
   <version>4.5</version>  
   <packaging>jar</packaging>  
   <properties> 
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
-    <maven.compiler.source>1.8</maven.compiler.source>  
-    <maven.compiler.target>1.8</maven.compiler.target>  
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>11</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
     <kotlin.version>1.3.50</kotlin.version>
     <!-- Specify this via command line i.e -Dbitrock.exec=/path/to/bitrock/builder-->  
     <bitrock.exec/>  
@@ -361,7 +362,8 @@
           </archive> 
         </configuration> 
       </plugin>  
-      <plugin> 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>  
         <version>2.7</version>  
         <executions> 
@@ -457,9 +459,10 @@
       <plugin> 
         <groupId>org.apache.maven.plugins</groupId>  
         <artifactId>maven-compiler-plugin</artifactId>  
-        <version>2.3.2</version>  
-        <configuration> 
-          <showDeprecation>false</showDeprecation>  
+        <version>3.8.0</version>
+        <configuration>
+          <showWarnings>true</showWarnings>
+          <showDeprecation>true</showDeprecation>
           <debug>true</debug> 
         </configuration> 
       </plugin>
