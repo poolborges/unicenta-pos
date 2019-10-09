@@ -26,8 +26,6 @@
 
 package com.unicenta.orderpop;
 
-import com.openbravo.pos.forms.AppConfig;
-import com.openbravo.pos.util.AltEncrypter;
 import javafx.application.Application;
 import javafx.collections.*;
 import javafx.concurrent.Task;
@@ -46,6 +44,7 @@ import javafx.scene.image.ImageView;
 
 
 public class OrderPop extends Application {
+
     private static final Logger logger = Logger.getLogger(OrderPop.class.getName());
 
     public static void main(String[] args) { 
@@ -272,19 +271,24 @@ public class OrderPop extends Application {
     // better for this to be independent but use current instance's credentials
 
         logger.info("Get DB connection");
-        
-        String url = AppConfig.getInstance().getProperty("db.URL") +
-                        AppConfig.getInstance().getProperty("db.schema") +
-                        AppConfig.getInstance().getProperty("db.options");                        
-        String sDBUser = AppConfig.getInstance().getProperty("db.user");
-        String sDBPassword = AppConfig.getInstance().getProperty("db.password");
+         /* TODO
+        String url = com.openbravo.pos.forms.AppConfig.getInstance().getProperty("db.URL") +
+                com.openbravo.pos.forms.AppConfig.getInstance().getProperty("db.schema") +
+                com.openbravo.pos.forms.AppConfig.getInstance().getProperty("db.options");
+        String sDBUser = com.openbravo.pos.forms.AppConfig.getInstance().getProperty("db.user");
+        String sDBPassword = com.openbravo.pos.forms.AppConfig.getInstance().getProperty("db.password");
 
         if (sDBUser != null && sDBPassword != null && sDBPassword.startsWith("crypt:")) {
-            AltEncrypter cypher = new AltEncrypter("cypherkey" + sDBUser);
+
+            com.openbravo.pos.util.AltEncrypter cypher = new com.openbravo.pos.util.AltEncrypter("cypherkey" + sDBUser);
+
             sDBPassword = cypher.decrypt(sDBPassword.substring(6));
+
         }
-        
         return DriverManager.getConnection(url, sDBUser, sDBPassword);
+          */
+        
+        return null;
     } 
 
     static class DatabaseThreadFactory implements ThreadFactory {

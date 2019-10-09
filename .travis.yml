@@ -5,6 +5,12 @@ language: java
 # Testing Against Multiple JDKs
 jdk:
   - openjdk8
+  - openjdk11
+  - openjdk-ea
+
+matrix:
+  allow_failures:
+    - jdk: openjdk-ea
 
 # If a build is successful, the code is submitted for coverage analysis
 after_success:
