@@ -1,11 +1,16 @@
 = KROS POS
 
-This solution is based on Unicenta oPOS 4.5 (2019-06-30)
-Not follow future version of Unicenta oPOS
-
-PS:: Unicenta oPOS is a fork of OpenBravo POS
+image:https://travis-ci.org/poolborges/unicenta-pos.svg?branch=master["Build Status", link="https://travis-ci.org/poolborges/unicenta-pos"]
+image:https://codecov.io/github/poolborges/unicenta-pos/coverage.svg["Code Coverage", link="https://codecov.io/gh/poolborges/unicenta-pos"]
+image:https://img.shields.io/badge/license-GPL%202.0-brightgreen.svg?style=flat["License", link="http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html"]
 
 == About
+
+This solution is based on Unicenta oPOS 4.5 (2019-06-30)
+
+NOTE:: WILL NOT follow future version of Unicenta oPOS
+
+PS:: Unicenta oPOS is a fork of OpenBravo POS
 
 * Modularity based on OSGI 7
 
