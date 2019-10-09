@@ -20,95 +20,92 @@
 package com.openbravo.pos.sales;
 
 import com.openbravo.data.loader.Session;
+
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Window;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
+
 import net.proteanit.sql.DbUtils;
 
 /**
- *
  * @author JG uniCenta
  */
 public class JMooringDetails extends javax.swing.JDialog {
 
-        private Connection con;  
-        private ResultSet rs;
-        private Statement stmt;
-        private String ID;
-        private String SQL;
-        private String vesselName = "";
-        private Integer vesselSize;
-        private Integer vesselDays;
-        private Boolean vesselPower;
-        private boolean create = false;
+    private final Session session;
+
+    private String vesselName = "";
+    private Integer vesselSize;
+    private Integer vesselDays;
+    private Boolean vesselPower;
+    private boolean create = false;
 
 
-    private JMooringDetails(java.awt.Frame parent, boolean modal) {
+    private JMooringDetails(java.awt.Frame parent, boolean modal, Session session) {
         super(parent, modal);
+        this.session = session;
     }
 
- 
-    private JMooringDetails(java.awt.Dialog parent, boolean modal) {
+
+    private JMooringDetails(java.awt.Dialog parent, boolean modal, Session session) {
         super(parent, modal);
+        this.session = session;
     }
 
-    private void init(Session s) {
+    private void init() {
 
         initComponents();
         setTitle("Select Vessel details");
-        
-         try{
-            con=s.getConnection(); 
-            stmt = (Statement) con.createStatement();          
-        
-        SQL = "SELECT * FROM moorers";     
-        rs = stmt.executeQuery(SQL);
-       
-        jTableSelector.setModel(DbUtils.resultSetToTableModel(rs));
-        jTableSelector.getColumnModel().getColumn(0).setPreferredWidth(200);
-        jTableSelector.getColumnModel().getColumn(1).setPreferredWidth(40);
-        jTableSelector.getColumnModel().getColumn(2).setPreferredWidth(40);
-        jTableSelector.getColumnModel().getColumn(3).setPreferredWidth(40);
-        jTableSelector.setRowSelectionAllowed(true);
-        jTableSelector.getTableHeader().setReorderingAllowed(true);
+    }
 
-        
-           } catch (Exception e) {                
-       }        
-        
+    private void loadTableData(Session session){
+        try {
+            Statement stmt = session.getConnection().createStatement();
 
+            final String SQL = "SELECT * FROM moorers";
+            final ResultSet rs = stmt.executeQuery(SQL);
+
+            jTableSelector.setModel(DbUtils.resultSetToTableModel(rs));
+            jTableSelector.getColumnModel().getColumn(0).setPreferredWidth(200);
+            jTableSelector.getColumnModel().getColumn(1).setPreferredWidth(40);
+            jTableSelector.getColumnModel().getColumn(2).setPreferredWidth(40);
+            jTableSelector.getColumnModel().getColumn(3).setPreferredWidth(40);
+            jTableSelector.setRowSelectionAllowed(true);
+            jTableSelector.getTableHeader().setReorderingAllowed(true);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
     }
 
     /**
-     *
      * @param parent
      * @param s
      * @return
      */
     public static JMooringDetails getMooringDetails(Component parent, Session s) {
         Window window = SwingUtilities.getWindowAncestor(parent);
-       // m_oticket = new ticket();
+        // m_oticket = new ticket();
         JMooringDetails myMsg;
         if (window instanceof Frame) {
-            myMsg = new JMooringDetails((Frame) window, true);
+            myMsg = new JMooringDetails((Frame) window, true, s);
         } else {
-            myMsg = new JMooringDetails((Dialog) window, true);
+            myMsg = new JMooringDetails((Dialog) window, true, s);
         }
-        myMsg.init(s);
+        myMsg.init();
         myMsg.applyComponentOrientation(parent.getComponentOrientation());
-        
-        
+
+
         return myMsg;
     }
 
     /**
-     *
      * @return
      */
     public boolean isCreate() {
@@ -116,7 +113,6 @@ public class JMooringDetails extends javax.swing.JDialog {
     }
 
     /**
-     *
      * @return
      */
     public String getVesselName() {
@@ -124,7 +120,6 @@ public class JMooringDetails extends javax.swing.JDialog {
     }
 
     /**
-     *
      * @return
      */
     public Integer getVesselSize() {
@@ -132,7 +127,6 @@ public class JMooringDetails extends javax.swing.JDialog {
     }
 
     /**
-     *
      * @return
      */
     public Integer getVesselDays() {
@@ -140,16 +134,15 @@ public class JMooringDetails extends javax.swing.JDialog {
     }
 
     /**
-     *
      * @return
      */
     public Boolean getVesselPower() {
         return vesselPower;
-    } 
+    }
 
-   
 
-    /** This method is called from within the constructor to
+    /**
+     * This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
@@ -178,24 +171,24 @@ public class JMooringDetails extends javax.swing.JDialog {
 
         jTableSelector.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jTableSelector.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Vessel Name", "Size", "Days", "Power"
-            }
+                new Object[][]{
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null}
+                },
+                new String[]{
+                        "Vessel Name", "Size", "Days", "Power"
+                }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
+            boolean[] canEdit = new boolean[]{
+                    false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jTableSelector.setRowHeight(25);
@@ -227,69 +220,83 @@ public class JMooringDetails extends javax.swing.JDialog {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 508, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jText, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jbtnCreateTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 508, Short.MAX_VALUE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(10, 10, 10)
+                                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jText, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jbtnCreateTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(jbtnCreateTicket))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel1)
+                                        .addComponent(jbtnCreateTicket))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-536)/2, (screenSize.height-274)/2, 536, 274);
+        setBounds((screenSize.width - 536) / 2, (screenSize.height - 274) / 2, 536, 274);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbtnCreateTicketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCreateTicketActionPerformed
         // use the passed parameters to add line to the ticket
-        
-        if (vesselName.equals("")){
-        this.create = false;
-        dispose(); 
-        }else{
-        this.create = true;   
-        dispose();
+
+        if (vesselName.equals("")) {
+            this.create = false;
+            dispose();
+        } else {
+            this.create = true;
+            dispose();
         }
-        
+
     }//GEN-LAST:event_jbtnCreateTicketActionPerformed
 
     private void jTableSelectorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableSelectorMouseClicked
 
-        try{
-         int row = jTableSelector.getSelectedRow();  
-         vesselName =(jTableSelector.getModel().getValueAt(row, 0).toString());
-         SQL = "SELECT * FROM moorers WHERE VESSELNAME ='" + vesselName +"';";
-         rs = stmt.executeQuery(SQL);
-         if (rs.next()){
-             vesselDays=rs.getInt("DAYS");
-             vesselSize=rs.getInt("SIZE");
-             vesselPower=rs.getBoolean("POWER");            
-             jText.setText(vesselName);
-         }
-        }catch (Exception e){
-        JOptionPane.showMessageDialog(null, e);
+        int row = jTableSelector.getSelectedRow();
+        vesselName = (jTableSelector.getModel().getValueAt(row, 0).toString());
+
+        try {
+            new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    final String SQL = "SELECT * FROM moorers WHERE VESSELNAME = ?";
+
+                    PreparedStatement preparedStatement = session.getConnection().prepareStatement(SQL);
+                    preparedStatement.setString(1, vesselName);
+
+                    final ResultSet rs = preparedStatement.executeQuery();
+                    if (rs.next()) {
+                        vesselDays = rs.getInt("DAYS");
+                        vesselSize = rs.getInt("SIZE");
+                        vesselPower = rs.getBoolean("POWER");
+                        jText.setText(vesselName);
+                    }
+
+                    return null;
+                }
+            }.execute();
+
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
         }
-        
-        
+
+
     }//GEN-LAST:event_jTableSelectorMouseClicked
 
     private void jTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextActionPerformed

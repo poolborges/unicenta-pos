@@ -23,13 +23,13 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.DataRead;
 import com.openbravo.data.loader.ImageUtils;
 import com.openbravo.data.loader.SerializableRead;
+import com.openbravo.resources.ImageResources;
 import com.openbravo.pos.util.ThumbNailBuilder;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -46,14 +46,9 @@ public class Floor implements SerializableRead {
     private Container m_container;
     private Icon m_icon;
     
-    private static Image defimg = null;
-    
     /** Creates a new instance of Floor */
     public Floor() {
-        try {
-            defimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("com/openbravo/images/floors.png"));               
-        } catch (Exception fnfe) {
-        }            
+
     }
 
     /**
@@ -66,9 +61,14 @@ public class Floor implements SerializableRead {
         m_sID = dr.getString(1);
         m_sName = dr.getString(2);
         BufferedImage img = ImageUtils.readImage(dr.getBytes(3));
-        ThumbNailBuilder tnbcat = new ThumbNailBuilder(32, 32, defimg);
         m_container = new JPanelDrawing(img);
-        m_icon = new ImageIcon(tnbcat.getThumbNail(img));        
+
+        if(img == null){
+            m_icon = ImageResources.ICON_FLOORS.getIcon();
+        }else{
+            ThumbNailBuilder tnbcat = new ThumbNailBuilder(32, 32, img);
+            m_icon = new ImageIcon(tnbcat.getThumbNail(null));
+        }
     }
 
     /**

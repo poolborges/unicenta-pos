@@ -93,6 +93,14 @@ public class ThumbNailBuilder {
     }
 
     /**
+     * get Thumbnail Image
+     * @return
+     */
+    public Image getThumbNail() {
+        return m_imgdefault;
+    }
+
+    /**
      *
      * @param img
      * @param text
@@ -135,6 +143,11 @@ public class ThumbNailBuilder {
     }
     
     private Image createThumbNail(Image img) {
+
+        //Image is already in size or too small
+        if(img.getHeight(null) <= m_height && img.getWidth(null) <= m_width){
+            return img;
+        }
             
         int targetw;
         int targeth;

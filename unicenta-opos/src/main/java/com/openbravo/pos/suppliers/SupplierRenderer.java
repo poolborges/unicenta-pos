@@ -19,10 +19,11 @@
 
 package com.openbravo.pos.suppliers;
 
+import com.openbravo.resources.ImageResources;
+
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JList;
 
 /**
@@ -36,7 +37,7 @@ public class SupplierRenderer extends DefaultListCellRenderer {
     /** Creates a new instance of SupplierRenderer */
     public SupplierRenderer() {
 
-        icosupplier = new ImageIcon(getClass().getClassLoader().getResource("com/openbravo/images/supplier_sml.png"));
+        icosupplier = ImageResources.ICON_SUPPLIER.getIcon();
     }
 
     @Override

@@ -19,10 +19,11 @@
 
 package com.openbravo.pos.customers;
 
+import com.openbravo.resources.ImageResources;
+
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JList;
 
 /**
@@ -36,7 +37,7 @@ public class CustomerRenderer extends DefaultListCellRenderer {
     /** Creates a new instance of CustomerRenderer */
     public CustomerRenderer() {
 
-        icocustomer = new ImageIcon(getClass().getClassLoader().getResource("com/openbravo/images/customer_sml.png"));
+        icocustomer = ImageResources.ICON_CUSTOMER.getIcon();
         
     }
 

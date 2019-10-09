@@ -19,10 +19,11 @@
 
 package com.openbravo.pos.epm;
 
+import com.openbravo.resources.ImageResources;
+
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JList;
 
 /**
@@ -35,7 +36,7 @@ public class EmployeeRenderer extends DefaultListCellRenderer {
 
     /** Creates a new instance of EmployeeRenderer */
     public EmployeeRenderer() {
-        icoemployee = new ImageIcon(getClass().getClassLoader().getResource("com/openbravo/images/user.png"));
+        icoemployee = ImageResources.getIcon("com/openbravo/images/user.png");
     }
 
     @Override

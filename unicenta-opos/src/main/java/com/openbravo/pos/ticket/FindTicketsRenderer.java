@@ -19,10 +19,11 @@
 
 package com.openbravo.pos.ticket;
 
+import com.openbravo.resources.ImageResources;
+
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JList;
 
 /**
@@ -42,9 +43,9 @@ public class FindTicketsRenderer extends DefaultListCellRenderer {
     
     /** Creates a new instance of TicketRenderer */
     public FindTicketsRenderer() {
-        this.icoTicketNormal = new ImageIcon(getClass().getClassLoader().getResource("com/openbravo/images/pay.png"));
-        this.icoTicketRefund = new ImageIcon(getClass().getClassLoader().getResource("com/openbravo/images/refundit.png"));
-        this.icoTicketRefunded = new ImageIcon(getClass().getClassLoader().getResource("com/openbravo/images/cancel.png"));        
+        this.icoTicketNormal = ImageResources.getIcon("com/openbravo/images/pay.png");
+        this.icoTicketRefund = ImageResources.getIcon("com/openbravo/images/refundit.png");
+        this.icoTicketRefunded = ImageResources.getIcon("com/openbravo/images/cancel.png");
     }
 
     @Override
