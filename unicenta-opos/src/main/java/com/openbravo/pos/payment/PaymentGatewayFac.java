@@ -39,9 +39,11 @@ public class PaymentGatewayFac {
             case "external":
                 return new PaymentGatewayExt();
             case "Dejavoo":
-                return new PaymentGatewayDejavoo();
+//TODO move to external                 return new PaymentGatewayDejavoo();
+                throw new UnsupportedOperationException("Not supported PaymentGateway: Dejavoo");
             case "PaymentSense":
-                return new PaymentGatewayPaymentSense();
+//TODO move to external                return new PaymentGatewayPaymentSense();
+                throw new UnsupportedOperationException("Not supported PaymentGateway: PaymentSense");
             case "Vantiv":
 //                return new PaymentGatewayVantiv();                
             default:
