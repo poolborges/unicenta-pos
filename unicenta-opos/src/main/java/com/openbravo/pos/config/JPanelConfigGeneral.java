@@ -18,7 +18,6 @@
 //    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.config;
 
-import com.alee.laf.WebLookAndFeel;
 import com.openbravo.data.user.DirtyManager;
 import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
@@ -31,14 +30,10 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.openbravo.pos.util.FileChooserEvent;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
-import org.pushingpixels.substance.api.SubstanceLookAndFeel;
-import org.pushingpixels.substance.api.SubstanceSkin;
-import org.pushingpixels.substance.api.skin.SkinInfo;
 
 /**
  *
@@ -84,13 +79,11 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
             jcboLAF.addItem(new LAFInfo(laf.getName(), laf.getClassName()));
         }
 
-        // Substance skins
-        // new SubstanceLookAndFeel()
-        Map<String, SkinInfo> skins = SubstanceLookAndFeel.getAllSkins();
-
-        skins.values().forEach((skin) -> {
-            jcboLAF.addItem(new LAFInfo(skin.getDisplayName(), skin.getClassName()));
-        });
+        // FlatLaf - Flat Look and Feel 
+        jcboLAF.addItem(new LAFInfo("Flat Dark", com.formdev.flatlaf.FlatDarkLaf.class.getCanonicalName()));
+        jcboLAF.addItem(new LAFInfo("Flat Darcula", com.formdev.flatlaf.FlatDarculaLaf.class.getCanonicalName()));
+        jcboLAF.addItem(new LAFInfo("Flat Light", com.formdev.flatlaf.FlatLightLaf.class.getCanonicalName()));
+        jcboLAF.addItem(new LAFInfo("Flat IntelliJ", com.formdev.flatlaf.FlatIntelliJLaf.class.getCanonicalName()));
 
         jcboLAF.addActionListener((java.awt.event.ActionEvent evt) -> {
             changeLAF();
@@ -204,8 +197,6 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
                     Object laf1 = Class.forName(lafname).newInstance();
                     if (laf1 instanceof LookAndFeel) {
                         UIManager.setLookAndFeel((LookAndFeel) laf1);
-                    } else if (laf1 instanceof SubstanceSkin) {
-                        SubstanceLookAndFeel.setSkin((SubstanceSkin) laf1);
                     }
                     SwingUtilities.updateComponentTreeUI(JPanelConfigGeneral.this.getTopLevelAncestor());
                 }catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {

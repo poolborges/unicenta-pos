@@ -19,7 +19,6 @@
 
 package com.openbravo.pos.config;
 
-import com.alee.laf.WebLookAndFeel;
 import com.openbravo.basic.BasicException;
 import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
@@ -30,8 +29,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -103,14 +100,7 @@ public class JFrmConfig extends javax.swing.JFrame {
             public void run() {
                 
                 AppConfig config = new AppConfig(args);
-                config.load();    
-                
-                WebLookAndFeel.install ();                 
-                
-//                try {                    
-//                    UIManager.setLookAndFeel(config.getProperty("swing.defaultlaf"));
-//                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-//                }
+                config.load();     
                 
                 new JFrmConfig(config).setVisible(true);
             }

@@ -19,7 +19,6 @@
 
 package com.openbravo.pos.forms;
 
-import com.alee.laf.WebLookAndFeel;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.instance.InstanceQuery;
 import java.rmi.NotBoundException;
@@ -33,10 +32,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.openbravo.pos.ticket.TicketInfo;
 import java.io.IOException;
 import javax.swing.SwingUtilities;
-
-import org.pushingpixels.substance.api.SubstanceLookAndFeel;
-import org.pushingpixels.substance.api.SubstanceSkin;
-import org.pushingpixels.trident.*;
 
 
 public class StartPOS {
@@ -97,8 +92,6 @@ public class StartPOS {
                     Object laf = Class.forName(config.getProperty("swing.defaultlaf")).newInstance();                    
                     if (laf instanceof LookAndFeel){
                         UIManager.setLookAndFeel((LookAndFeel) laf);
-                    } else if (laf instanceof SubstanceSkin) {                      
-                        SubstanceLookAndFeel.setSkin((SubstanceSkin) laf);
                     }
 // JG 6 May 2013 to multicatch
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {                

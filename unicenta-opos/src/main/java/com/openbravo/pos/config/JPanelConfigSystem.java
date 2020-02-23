@@ -22,11 +22,6 @@ package com.openbravo.pos.config;
 import com.openbravo.data.user.DirtyManager;
 import com.openbravo.pos.forms.AppConfig;
 import java.awt.*;
-import com.alee.extended.colorchooser.*;
-import com.alee.managers.language.*;
-import com.alee.laf.*;
-import com.alee.extended.colorchooser.ColorDisplayType;
-import javax.swing.*;
 
 
 /**
@@ -40,8 +35,6 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
     /** Creates new form JPanelConfigDatabase */
     public JPanelConfigSystem() {
 
-        WebLookAndFeel.initializeManagers ();
-        
         initComponents();
         
         

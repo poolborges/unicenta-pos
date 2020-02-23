@@ -12,8 +12,6 @@
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
     </properties>
 
 
@@ -34,7 +32,7 @@
                         <configuration>
                             <file>${project.basedir}/onewire/OneWireAPI.jar</file>
                             <groupId>com.dalsemi.onewire</groupId> 
-                            <artifactId>OneWireAPI</artifactId> 
+                            <artifactId>onewire-api</artifactId> 
                             <version>0.1</version>
                             <packaging>jar</packaging>
                         </configuration>
