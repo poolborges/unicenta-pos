@@ -469,30 +469,5 @@
     </plugins>  
     <finalName>unicentaopos</finalName> 
   </build>  
-  <repositories> 
-    <repository> 
-      <id>unicenta-repo</id>  
-      <url>http://repo.unicenta.org/maven2/</url>  
-      <layout>default</layout> 
-    </repository>  
-    <repository> 
-      <id>mvnrepository-repo</id>  
-      <url>https://mvnrepository.com/artifacts/</url>  
-      <layout>default</layout> 
-    </repository>  
-    <!--These are needed for Swing/Netbeans -->  
-    <repository> 
-      <id>maven2-repository.netbeans.maven2</id>  
-      <name>Netbeans Maven Repository</name>  
-      <url>http://bits.netbeans.org/maven2/</url>  
-      <layout>default</layout> 
-    </repository>  
-    <repository> 
-      <id>oracleReleases</id>  
-      <name>oracle Released Java Packages</name>  
-      <url>http://download.oracle.com/maven</url>  
-      <layout>default</layout> 
-    </repository> 
-  </repositories>  
   <name>unicentaopos</name> 
 </project>
