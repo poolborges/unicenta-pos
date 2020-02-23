@@ -10,11 +10,51 @@ This solution is based on Unicenta oPOS 4.5 (2019-06-30)
 
 NOTE:: WILL NOT follow future version of Unicenta oPOS
 
-PS:: Unicenta oPOS is a fork of OpenBravo POS
+krPOS:: fork of Unicenta oPOS which is a fork of OpenBravo POS,...
+
+== NEXT 
+
+* REMOVE all use of package uk.co.pos_apps from base/core code
+
+.Search (kotlin)
+----
+uk.co.pos_apps.PosApps
+uk.co.pos_apps.payment.dejavoo.DejavooProcessor;
+uk.co.pos_apps.common.AppContext
+----
+
+
+.Search and remove (uk.co.pos_apps)
+----
+src/main/java/com/openbravo/pos/payment/PaymentGatewayDejavoo.kt
+
+src/main/java/com/openbravo/pos/payment/PaymentGatewayPaymentSense.kt
+
+src/main/java/com/openbravo/pos/payment/PaymentGatewayVantiv.kt
+
+src/main/resources/com/openbravo/pos/templates/Ticket.Close.xml
+
+src/main/resources/com/openbravo/pos/templates/Cash.Close.xml
+
+src/main/resources/com/openbravo/pos/templates/script.posapps.txt
+
+src/main/resources/com/openbravo/pos/templates/customer.updated.xml
+
+src/main/resources/com/openbravo/pos/templates/customer.deleted.xml
+
+src/main/resources/com/openbravo/pos/templates/customer.created.xml
+
+src/main/resources/com/openbravo/pos/templates/application.started.xml
+----
+
+== Future/
+
+Modularity
 
 * Modularity based on OSGI 7
 
-== Tobe
+
+Provide API, SPI 
 
 * krospos-core-api
 * krospos-core-impl
