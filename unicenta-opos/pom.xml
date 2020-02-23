@@ -5,7 +5,8 @@
   <groupId>com.unicenta</groupId>  
   <artifactId>unicentaopos</artifactId>  
   <version>4.5</version>  
-  <packaging>jar</packaging>  
+  <packaging>jar</packaging>
+  <name>krPOS :: Unicenta.oPOS</name>  
   <properties> 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>11</java.version>
@@ -518,5 +519,4 @@
     </plugins>  
     <finalName>unicentaopos</finalName> 
   </build>  
-  <name>unicentaopos</name> 
 </project>

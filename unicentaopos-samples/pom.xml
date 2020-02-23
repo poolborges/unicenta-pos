@@ -11,6 +11,7 @@
 
     <artifactId>unicentaopos-samples</artifactId>
     <packaging>jar</packaging>
+    <name>krPOS :: Unicenta.Samples</name>  
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -6,6 +6,7 @@
     <artifactId>kropos-parent</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
+    <name>krPOS :: Unicenta.Parent</name>
 
     <url>http://kriolsolutions.github.io/krospos</url>
     <description>Open Source POS</description>

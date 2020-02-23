@@ -11,6 +11,7 @@
 
     <artifactId>unicenta-payment</artifactId>
     <packaging>jar</packaging>
+    <name>krPOS :: Unicenta.Payment</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
