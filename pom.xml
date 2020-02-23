@@ -11,6 +11,7 @@
     <description>Open Source POS</description>
 
     <modules>
+        <module>unicenta-thirdparty</module>
         <module>unicenta-opos</module>
         <module>unicentaopos-samples</module>
     </modules>
