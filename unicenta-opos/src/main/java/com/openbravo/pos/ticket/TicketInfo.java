@@ -79,16 +79,6 @@ public final class TicketInfo implements SerializableRead, Externalizable {
     private Double nsum;
     private int ticketstatus;
 
-    private static String Hostname;
-
-    public static void setHostname(String name) {
-        Hostname=name;
-    }
-
-    public static String getHostname() {
-        return Hostname;
-    }
-
     /** Creates new TicketModel */
     public TicketInfo() {
         m_sId = UUID.randomUUID().toString();
