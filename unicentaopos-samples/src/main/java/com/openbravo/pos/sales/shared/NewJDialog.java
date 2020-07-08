@@ -67,7 +67,7 @@ public class NewJDialog extends javax.swing.JDialog {
         jPanel_Percent.add(jBtnPc20);
 
         jPanelValue.setBackground(new java.awt.Color(255, 255, 255));
-        jPanelValue.setLayout(new java.awt.GridLayout());
+        jPanelValue.setLayout(new java.awt.GridLayout(1, 0));
 
         jBtnVal1.setFont(new java.awt.Font("Century Gothic", 0, 28)); // NOI18N
         jBtnVal1.setText(bundle.getString("label.Val1")); // NOI18N
