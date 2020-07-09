@@ -17,8 +17,7 @@
         <bitrock.directory>${project.build.directory}/installbuilder</bitrock.directory>
         
         <app.dist.directory>${project.build.directory}/unicentaopos-${project.version}</app.dist.directory>
-    
-        <javafx.version>11</javafx.version>
+
     </properties>  
     <dependencies>
         <dependency> 
