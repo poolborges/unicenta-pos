@@ -19,8 +19,6 @@
 
 package com.openbravo.pos.sales;
 
-import bsh.EvalError;
-import bsh.Interpreter;
 import com.alee.extended.time.ClockType;
 import com.alee.extended.time.WebClock;
 import com.alee.managers.notification.NotificationIcon;
@@ -2925,19 +2923,19 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     private void j_btnRemotePrtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_j_btnRemotePrtActionPerformed
         
         String rScript = (dlSystem.getResourceAsText("script.SendOrder"));
-
-            Interpreter i = new Interpreter(); 
+        
         try {                       
-            i.set("ticket", m_oTicket);  
-            i.set("place",  m_oTicketExt);             
-            i.set("user", m_App.getAppUserView().getUser());
-            i.set("sales", this);
-            i.set("pickupid", m_oTicket.getPickupId());
+            
+            ScriptEngine scriptEngine = ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
+            scriptEngine.put("ticket", m_oTicket);  
+            scriptEngine.put("place",  m_oTicketExt);             
+            scriptEngine.put("user", m_App.getAppUserView().getUser());
+            scriptEngine.put("sales", this);
+            scriptEngine.put("pickupid", m_oTicket.getPickupId());
 
-            Object result;
-            result = i.eval(rScript);
+            Object result = scriptEngine.eval(rScript);
 
-        } catch (EvalError ex) {
+        } catch (ScriptException ex) {
             Logger.getLogger(JPanelTicket.class.getName()).log(Level.ALL, null, ex);
         }
 

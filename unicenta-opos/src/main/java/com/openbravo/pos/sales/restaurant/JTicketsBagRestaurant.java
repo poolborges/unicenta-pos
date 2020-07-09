@@ -23,8 +23,6 @@
 
 package com.openbravo.pos.sales.restaurant;
 
-import bsh.Interpreter;
-import bsh.EvalError;
 import com.alee.extended.time.ClockType;
 import com.alee.extended.time.WebClock;
 import com.alee.managers.notification.NotificationIcon;
@@ -84,7 +82,6 @@ public class JTicketsBagRestaurant extends javax.swing.JPanel {
     private ListKeyed taxcollection;
     private TaxesLogic taxeslogic;
     
-    private Interpreter i;
    
     
     /** Creates new form JTicketsBagRestaurantMap
@@ -347,15 +344,18 @@ public class JTicketsBagRestaurant extends javax.swing.JPanel {
         ticket = m_restaurant.getActiveTicket();
         String rScript = (m_dlSystem.getResourceAsText("script.SendOrder"));
 
-            Interpreter i = new Interpreter(); 
+            
         try {  
-            i.set("ticket", ticket); 
-            i.set("place",m_restaurant.getTableName());            
-            i.set("user", m_App.getAppUserView().getUser());
-            i.set("sales", this);
-            i.set("pickupid", ticket.getPickupId());            
-            Object result = i.eval(rScript);
-        } catch (EvalError ex) {
+            ScriptEngine scriptEngine = ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
+            scriptEngine.put("ticket", ticket); 
+            scriptEngine.put("place",m_restaurant.getTableName());            
+            scriptEngine.put("user", m_App.getAppUserView().getUser());
+            scriptEngine.put("sales", this);
+            scriptEngine.put("pickupid", ticket.getPickupId());
+            
+            Object result = scriptEngine.eval(rScript);
+            
+        } catch (ScriptException ex) {
             Logger.getLogger(JPanelTicket.class.getName()).log(Level.SEVERE, null, ex);
         }
          // Autologoff after sales            
