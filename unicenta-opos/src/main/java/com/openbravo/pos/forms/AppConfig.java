@@ -30,21 +30,22 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  * Creation and Editing of stored settings
+ *
  * @author JG uniCenta
  */
 public class AppConfig implements AppProperties {
 
     private static final Logger logger = Logger.getLogger("com.openbravo.pos.forms.AppConfig");
-     
+
     private static AppConfig m_instance = null;
     private Properties m_propsconfig;
-    private File configfile;  
-      
+    private File configfile;
+
     /**
      * Set configuration array
+     *
      * @param args array strings
      */
     public AppConfig(String[] args) {
@@ -54,33 +55,30 @@ public class AppConfig implements AppProperties {
             init(new File(args[0]));
         }
     }
-      
+
     /**
      * unicenta resources file
+     *
      * @param configfile resource file
      */
     public AppConfig(File configfile) {
         init(configfile);
-        this.configfile = configfile;
-        m_propsconfig = new Properties();
         load();
-        logger.log(Level.INFO, "Reading configuration file: {0}", configfile.getAbsolutePath());        
     }
-    
+
     private void init(File configfile) {
         this.configfile = configfile;
         m_propsconfig = new Properties();
+    }
 
-        logger.log(Level.INFO, "Reading configuration file: {0}", configfile.getAbsolutePath());
+    private static File getDefaultConfig() {
+        return new File(new File(System.getProperty("user.home")),
+                 AppLocal.APP_ID + ".properties");
     }
-    
-    private File getDefaultConfig() {
-        return new File(new File(System.getProperty("user.home"))
-            , AppLocal.APP_ID + ".properties");            
-    }
-    
+
     /**
      * Get key pair value from properties resource
+     *
      * @param sKey key pair value
      * @return key pair from .properties filename
      */
@@ -88,7 +86,7 @@ public class AppConfig implements AppProperties {
     public String getProperty(String sKey) {
         return m_propsconfig.getProperty(sKey);
     }
-    
+
     /**
      *
      * @return Machine name
@@ -106,8 +104,7 @@ public class AppConfig implements AppProperties {
     public File getConfigFile() {
         return configfile;
     }
-    
-   
+
     public String getTicketHeaderLine1() {
         return getProperty("tkt.header1");
     }
@@ -115,15 +112,15 @@ public class AppConfig implements AppProperties {
     public String getTicketHeaderLine2() {
         return getProperty("tkt.header2");
     }
-    
+
     public String getTicketHeaderLine3() {
         return getProperty("tkt.header3");
     }
-    
+
     public String getTicketHeaderLine4() {
         return getProperty("tkt.header4");
     }
-   
+
     public String getTicketHeaderLine5() {
         return getProperty("tkt.header5");
     }
@@ -131,7 +128,7 @@ public class AppConfig implements AppProperties {
     public String getTicketHeaderLine6() {
         return getProperty("tkt.header6");
     }
-    
+
     public String getTicketFooterLine1() {
         return getProperty("tkt.footer1");
     }
@@ -154,11 +151,12 @@ public class AppConfig implements AppProperties {
 
     public String getTicketFooterLine6() {
         return getProperty("tkt.footer6");
-    }    
-    
+    }
+
     /**
      * Update .properties resource key pair values
-     * @param sKey  key pair left side
+     *
+     * @param sKey key pair left side
      * @param sValue key pair right side value
      */
     public void setProperty(String sKey, String sValue) {
@@ -168,9 +166,10 @@ public class AppConfig implements AppProperties {
             m_propsconfig.setProperty(sKey, sValue);
         }
     }
-    
-   /**
+
+    /**
      * Local machine identity
+     *
      * @return Machine name from OS
      */
     private String getLocalHostName() {
@@ -180,20 +179,19 @@ public class AppConfig implements AppProperties {
             return "localhost";
         }
     }
-   
+
     public static AppConfig getInstance() {
 
         if (m_instance == null) {
-            m_instance = new AppConfig(new File(System.getProperty("user.home")
-                , AppLocal.APP_ID + ".properties"));
+            m_instance = new AppConfig(getDefaultConfig());
         }
         return m_instance;
     }
-    
+
     public Boolean getBoolean(String sKey) {
         return Boolean.valueOf(m_propsconfig.getProperty(sKey));
     }
-    
+
     public void setBoolean(String sKey, Boolean sValue) {
         if (sValue == null) {
             m_propsconfig.remove(sKey);
@@ -203,7 +201,7 @@ public class AppConfig implements AppProperties {
             m_propsconfig.setProperty(sKey, "false");
         }
     }
-    
+
     /**
      *
      * @return Delete .properties filename
@@ -217,7 +215,7 @@ public class AppConfig implements AppProperties {
      * Get instance settings
      */
     public void load() {
-
+        logger.log(Level.INFO, "Try Loading configuration file: {0}", configfile.getAbsolutePath());
         loadDefault();
 
         try {
@@ -225,11 +223,20 @@ public class AppConfig implements AppProperties {
             if (in != null) {
                 m_propsconfig.load(in);
                 in.close();
+            }else{
+                logger.log(Level.WARNING, "Faild to read configuration file: {0}", configfile.getAbsolutePath());
             }
-        } catch (IOException e){
-            loadDefault();
+        } catch (IOException e) {
+            try {
+                logger.log(Level.INFO, "Storing default configuration to file: {0}", configfile.getAbsolutePath());
+                loadDefault();
+                save();
+                
+            } catch (IOException ex) {
+                logger.log(Level.SEVERE, "Fail storing default configuration", ex);
+            }
         }
-   
+
     }
 
     /**
@@ -247,83 +254,85 @@ public class AppConfig implements AppProperties {
 
     /**
      * Save values to properties file
+     *
      * @throws java.io.IOException explicit on OS
      */
     public void save() throws IOException {
-        
+
         OutputStream out = new FileOutputStream(configfile);
         if (out != null) {
             m_propsconfig.store(out, AppLocal.APP_NAME + ". Configuration file.");
             out.close();
         }
     }
-    
-    
+
     private void loadDefault() {
+
+        logger.log(Level.INFO, "Load default configuration");
         
         m_propsconfig = new Properties();
-        
+
         String dirname = System.getProperty("dirname.path");
         dirname = dirname == null ? "./" : dirname;
-             
+
         m_propsconfig.setProperty("db.multi", "false");
         m_propsconfig.setProperty("override.check", "false");
-        m_propsconfig.setProperty("override.pin", "");        
-        
-        m_propsconfig.setProperty("db.driverlib", new File(new File(dirname)
-            , "mysql-connector-java-5.1.39.jar").getAbsolutePath());
+        m_propsconfig.setProperty("override.pin", "");
+
+        m_propsconfig.setProperty("db.driverlib", new File(new File(dirname),
+                 "mysql-connector-java-5.1.39.jar").getAbsolutePath());
         m_propsconfig.setProperty("db.engine", "MySQL");
         m_propsconfig.setProperty("db.driver", "com.mysql.jdbc.Driver");
 
 // primary DB
         m_propsconfig.setProperty("db.name", "Main DB");
-        m_propsconfig.setProperty("db.URL", "jdbc:mysql://localhost:3306/"); 
+        m_propsconfig.setProperty("db.URL", "jdbc:mysql://localhost:3306/");
         m_propsconfig.setProperty("db.schema", "unicentaopos");
-        m_propsconfig.setProperty("db.options", "?zeroDateTimeBehavior=convertToNull");        
+        m_propsconfig.setProperty("db.options", "?zeroDateTimeBehavior=convertToNull");
         m_propsconfig.setProperty("db.user", "username");
-        m_propsconfig.setProperty("db.password", "password");     
+        m_propsconfig.setProperty("db.password", "password");
 
 // secondary DB        
-        m_propsconfig.setProperty("db1.name", "");        
-        m_propsconfig.setProperty("db1.URL", "jdbc:mysql://localhost:3306/"); 
+        m_propsconfig.setProperty("db1.name", "");
+        m_propsconfig.setProperty("db1.URL", "jdbc:mysql://localhost:3306/");
         m_propsconfig.setProperty("db1.schema", "unicentaopos");
-        m_propsconfig.setProperty("db1.options", "?zeroDateTimeBehavior=convertToNull");        
+        m_propsconfig.setProperty("db1.options", "?zeroDateTimeBehavior=convertToNull");
         m_propsconfig.setProperty("db1.user", "");
-        m_propsconfig.setProperty("db1.password", ""); 
+        m_propsconfig.setProperty("db1.password", "");
 
         m_propsconfig.setProperty("machine.hostname", getLocalHostName());
-        
+
         Locale l = Locale.getDefault();
         m_propsconfig.setProperty("user.language", l.getLanguage());
         m_propsconfig.setProperty("user.country", l.getCountry());
         m_propsconfig.setProperty("user.variant", l.getVariant());
-        
-        m_propsconfig.setProperty("swing.defaultlaf", System.getProperty("swing.defaultlaf", "javax.swing.plaf.metal.MetalLookAndFeel"));                
-        
+
+        m_propsconfig.setProperty("swing.defaultlaf", System.getProperty("swing.defaultlaf", "javax.swing.plaf.metal.MetalLookAndFeel"));
+
         m_propsconfig.setProperty("machine.printer", "screen");
         m_propsconfig.setProperty("machine.printer.2", "Not defined");
         m_propsconfig.setProperty("machine.printer.3", "Not defined");
         m_propsconfig.setProperty("machine.printer.4", "Not defined");
         m_propsconfig.setProperty("machine.printer.5", "Not defined");
         m_propsconfig.setProperty("machine.printer.6", "Not defined");
-                
+
         m_propsconfig.setProperty("machine.display", "screen");
         m_propsconfig.setProperty("machine.scale", "Not defined");
         m_propsconfig.setProperty("machine.screenmode", "fullscreen");
         m_propsconfig.setProperty("machine.ticketsbag", "standard");
         m_propsconfig.setProperty("machine.scanner", "Not defined");
-        m_propsconfig.setProperty("machine.iButton", "false");  
-        m_propsconfig.setProperty("machine.iButtonResponse","5");
-        m_propsconfig.setProperty("machine.uniqueinstance", "true");        
-        
+        m_propsconfig.setProperty("machine.iButton", "false");
+        m_propsconfig.setProperty("machine.iButtonResponse", "5");
+        m_propsconfig.setProperty("machine.uniqueinstance", "true");
+
         m_propsconfig.setProperty("payment.gateway", "external");
         m_propsconfig.setProperty("payment.magcardreader", "Not defined");
         m_propsconfig.setProperty("payment.testmode", "true");
         m_propsconfig.setProperty("payment.commerceid", "");
         m_propsconfig.setProperty("payment.commercepassword", "password");
-        
+
         m_propsconfig.setProperty("machine.printername", "(Default)");
-        m_propsconfig.setProperty("screen.receipt.columns", "42");        
+        m_propsconfig.setProperty("screen.receipt.columns", "42");
 
         // Receipt printer paper set to 72mmx200mm
         m_propsconfig.setProperty("paper.receipt.x", "10");
@@ -342,19 +351,19 @@ public class AppConfig implements AppProperties {
         m_propsconfig.setProperty("tkt.header1", "uniCenta oPOS");
         m_propsconfig.setProperty("tkt.header2", "Touch Friendly Point Of Sale");
         m_propsconfig.setProperty("tkt.header3", "Copyright (c) 2009-2018 uniCenta");
-        m_propsconfig.setProperty("tkt.header4", "Change header text in Configuration");                
-        
-        m_propsconfig.setProperty("tkt.footer1", "Change footer text in Configuration");        
+        m_propsconfig.setProperty("tkt.header4", "Change header text in Configuration");
+
+        m_propsconfig.setProperty("tkt.footer1", "Change footer text in Configuration");
         m_propsconfig.setProperty("tkt.footer2", "Thank you for your custom");
         m_propsconfig.setProperty("tkt.footer3", "Please Call Again");
-        
+
         m_propsconfig.setProperty("table.showcustomerdetails", "true");
-        m_propsconfig.setProperty("table.customercolour", "#58B000");        
+        m_propsconfig.setProperty("table.customercolour", "#58B000");
         m_propsconfig.setProperty("table.showwaiterdetails", "true");
-        m_propsconfig.setProperty("table.waitercolour", "#258FB0");                
-        m_propsconfig.setProperty("table.tablecolour", "#D62E52"); 
-        m_propsconfig.setProperty("till.amountattop", "true");        
-        m_propsconfig.setProperty("till.hideinfo", "true");                
+        m_propsconfig.setProperty("table.waitercolour", "#258FB0");
+        m_propsconfig.setProperty("table.tablecolour", "#D62E52");
+        m_propsconfig.setProperty("till.amountattop", "true");
+        m_propsconfig.setProperty("till.hideinfo", "true");
 
     }
 }
