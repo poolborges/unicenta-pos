@@ -11,7 +11,8 @@
 
     <artifactId>unicentaopos-samples</artifactId>
     <packaging>jar</packaging>
-    <name>krPOS :: Unicenta.Samples</name>  
+    <name>krPOS :: Unicenta.Samples</name>
+    <description>Open Source POS Samples</description>  
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,45 +21,53 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <javafx.version>11</javafx.version>
-    </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-base</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-media</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-swing</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-web</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
+        <auto-service.version>1.0-rc7</auto-service.version>
         
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        <code.coverage.min>0.95</code.coverage.min>
+    </properties>
+    
+    <organization>
+        <name>Paulo Borges</name> <!-- To be Chnge for a Organization Name -->
+    </organization>
+    <inceptionYear>2020</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License, version 3</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+            <distribution>manual</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>poolborges</id>
+            <name>Paulo Borges</name>
+            <organization>Kriol Solutions, Cabo Verde</organization>
+            <roles>
+                <role>Project Manager</role>
+                <role>Developer</role>
+                <role>Despot</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>keviborges</id>
+            <name>Kevin Borges</name>
+            <organization>Kriol Solutions, Cabo Verde</organization>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+    
+    <contributors>
+        <contributor>
+            <name>Maria Semedo</name>
+        </contributor>
+    </contributors>
+  
+    <dependencies>
         <dependency>
             <groupId>org.usb4java</groupId>
             <artifactId>usb4java</artifactId>
@@ -72,11 +81,57 @@
             <version>4.5</version>
         </dependency>
   
+        <!-- Groovy Script Engine -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>3.0.4</version>
+            <type>pom</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.groovy</groupId>
+                    <artifactId>groovy-testng</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <!-- ScriptEngine Loading at Runtime -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-script-util</artifactId>
+            <version>1.3.72</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-script-runtime</artifactId>
+            <version>1.3.72</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-compiler-embeddable</artifactId>
+            <version>1.3.72</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>1.3.72</version>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <!-- Annotation used to generate ServiceLoader configuration File -->
+        <dependency>
+            <groupId>com.google.auto.service</groupId>
+            <artifactId>auto-service-annotations</artifactId>
+            <version>${auto-service.version}</version>
+        </dependency>
         
     </dependencies>
 
     <build>
-        <plugins>
+        <plugins> 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -84,9 +139,235 @@
                 <configuration>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
+
+                    <annotationProcessorPaths>
+                        <!-- AnnotationProcessor ServiceLoader configuration file (META-INF/services/x) -->
+                        <path>
+                            <groupId>com.google.auto.service</groupId>
+                            <artifactId>auto-service</artifactId>
+                            <version>${auto-service.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.17</version>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <configLocation>buildConfig/checkstyle-krpos.xml</configLocation>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>false</failsOnError>
+                            <suppressionsLocation>buildConfig/checkstyle-suppressions.xml</suppressionsLocation>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rules>
+                                    <rule>
+                                        <element>PACKAGE</element>
+                                        <excludes>*Test</excludes>
+                                        <limits>
+                                            <limit>
+                                                <counter>LINE</counter>
+                                                <value>COVEREDRATIO</value>
+                                                <minimum>${code.coverage.min}</minimum>
+                                            </limit>
+                                        </limits>
+                                    </rule>
+                                </rules>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>config/sun_checks.xml</configLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+    
+    <profiles>
+        <profile>
+            <id>jdk11</id>
+            <activation>
+                <jdk>[11, )</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-base</artifactId>
+                    <version>${javafx.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-fxml</artifactId>
+                    <version>${javafx.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-graphics</artifactId>
+                    <version>${javafx.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-controls</artifactId>
+                    <version>${javafx.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-media</artifactId>
+                    <version>${javafx.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-swing</artifactId>
+                    <version>${javafx.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-web</artifactId>
+                    <version>${javafx.version}</version>
+                </dependency>
+            </dependencies>
+            
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.openjfx</groupId>
+                        <artifactId>javafx-maven-plugin</artifactId>
+                        <version>0.0.4</version>
+                        <configuration>
+                            <mainClass>com.unicenta.orderpop.OrderPop</mainClass>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <jdk>[8, 11)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.oracle</groupId>
+                    <artifactId>javafx</artifactId>
+                    <version>2.2</version>
+                    <systemPath>${java.home}/lib/ext/jfxrt.jar</systemPath>
+                    <scope>system</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <!-- jfx:jar jfx:native -->
+                    <plugin>
+                        <groupId>com.zenjava</groupId>
+                        <artifactId>javafx-maven-plugin</artifactId>
+                        <version>8.8.3</version>
+                        <configuration>
+                            <vendor>KriolSolutions</vendor>
+                            <mainClass>com.unicenta.orderpop.OrderPop</mainClass>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
+        <profile>
+            <id>coverage</id>
+            <properties>
+                <checkstyle.skip>true</checkstyle.skip>
+            </properties>
+            <activation>
+                <property>
+                    <name>coverage</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.openclover</groupId>
+                        <artifactId>clover-maven-plugin</artifactId>
+                        <version>4.4.1</version>
+                        <configuration>
+                            <jdk>1.8</jdk>
+                            <excludes>
+                                <exclude>**/*Resources.java</exclude>
+                            </excludes>
+                            <contextFilters>main,log,iflog</contextFilters>
+                            <methodContexts>
+                                <main>(.* )?public static void main\(String\[\] args\).*</main>
+                            </methodContexts>
+                            <statementContexts>
+                                <log>System.out.println\(.*\);</log>
+                                <log>LOGGER.info\(.*\);</log>
+                                <iflog>^if \(LOG.*.is.*Enabled\(\)\).*</iflog>
+                            </statementContexts>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
