@@ -8,3 +8,4 @@
 .classpath
 .project
 /build
+/unicenta-thirdparty/target/

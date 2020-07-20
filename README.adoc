@@ -10,11 +10,16 @@ This solution is based on Unicenta oPOS 4.5 (2019-06-30)
 
 NOTE:: WILL NOT follow future version of Unicenta oPOS
 
-krPOS:: fork of Unicenta oPOS which is a fork of OpenBravo POS,...
+krPOS:: fork of Unicenta oPOS which is a fork of OpenBravo POS
 
-== NEXT 
+Openbravo has acquired Librepos (previously named Tina POS), Adrian Romero, founder and main developer for Tina POS,
+
+* License: GPL version 3
+
+== TODO - Define PaymentGateway as java SPI
 
 * REMOVE all use of package uk.co.pos_apps from base/core code
+* PaymentGatewayProvider should
 
 .Search (kotlin)
 ----
@@ -52,7 +57,8 @@ src/main/resources/com/openbravo/pos/templates/application.started.xml
 Modularity
 
 * Modularity based on OSGI 7
-
+* ScriptEngine: 
+** Kotlin(kts), others are possible, but may not included (groovy)
 
 Provide API, SPI 
 
