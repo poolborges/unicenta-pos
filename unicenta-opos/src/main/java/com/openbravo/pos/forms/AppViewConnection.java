@@ -59,15 +59,6 @@ public class AppViewConnection {
             String sUserPath = System.getProperty("user.home"); 
             String filePath = sUserPath + "\\open.db";            
             
-            if (isJavaWebStart()) {
-                Class.forName(props.getProperty("db.driver"), true, Thread.currentThread().getContextClassLoader());
-            } else {
-                ClassLoader cloader = new URLClassLoader(new URL[] {
-                    new File(props.getProperty("db.driverlib")).toURI().toURL()});
-                DriverManager.registerDriver(new DriverWrapper((Driver) 
-                        Class.forName(props.getProperty("db.driver"), 
-                                true, cloader).newInstance()));
-            }
 
             if("true".equals(props.getProperty("db.multi"))) {
                 if (!Files.exists(Paths.get(filePath))) {
@@ -128,8 +119,6 @@ public class AppViewConnection {
 
             return new Session(dbURL, sDBUser,sDBPassword);
                 
-        } catch (InstantiationException | IllegalAccessException | MalformedURLException | ClassNotFoundException e) {
-            throw new BasicException(AppLocal.getIntString("message.databasedrivererror"), e);
         } catch (SQLException eSQL) {
             throw new BasicException(AppLocal.getIntString("message.databaseconnectionerror"), eSQL);
         }

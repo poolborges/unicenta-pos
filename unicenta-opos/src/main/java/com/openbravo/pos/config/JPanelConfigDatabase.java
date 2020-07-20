@@ -629,9 +629,6 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
             String user = jtxtDbUser.getText();
             String password = new String(jtxtDbPassword.getPassword());
 
-            ClassLoader cloader = new URLClassLoader(new URL[]{new File(driverlib).toURI().toURL()});
-            DriverManager.registerDriver(new DriverWrapper((Driver) Class.forName(driver, true, cloader).newInstance()));
-
             Session session =  new Session(url, user, password);
             Connection connection = session.getConnection();
             boolean isValid;
@@ -646,10 +643,6 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
                 JMessageDialog.showMessage(this, 
                         new MessageInf(MessageInf.SGN_WARNING, "Connection Error"));
             }
-        } catch (InstantiationException | IllegalAccessException | MalformedURLException | ClassNotFoundException e) {
-            JMessageDialog.showMessage(this, 
-                    new MessageInf(MessageInf.SGN_WARNING, 
-                            AppLocal.getIntString("message.databasedrivererror"), e));
         } catch (SQLException e) {
             JMessageDialog.showMessage(this, 
                     new MessageInf(MessageInf.SGN_WARNING, 
@@ -668,9 +661,6 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
             String user = jtxtDbUser1.getText();
             String password = new String(jtxtDbPassword1.getPassword());
 
-            ClassLoader cloader = new URLClassLoader(new URL[]{new File(driverlib).toURI().toURL()});
-            DriverManager.registerDriver(new DriverWrapper((Driver) Class.forName(driver, true, cloader).newInstance()));
-
             Session session =  new Session(url, user, password);
             Connection connection = session.getConnection();
             boolean isValid;
@@ -684,10 +674,6 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
                 JMessageDialog.showMessage(this, 
                         new MessageInf(MessageInf.SGN_WARNING, "Connection Error"));
             }
-        } catch (InstantiationException | IllegalAccessException | MalformedURLException | ClassNotFoundException e) {
-            JMessageDialog.showMessage(this, 
-                    new MessageInf(MessageInf.SGN_WARNING, 
-                            AppLocal.getIntString("message.databasedrivererror"), e));
         } catch (SQLException e) {
             JMessageDialog.showMessage(this, 
                     new MessageInf(MessageInf.SGN_WARNING, 
