@@ -64,3 +64,10 @@ Provide API, SPI
 
 * krospos-core-api
 * krospos-core-impl
+
+
+== Docker 
+
+----
+ docker run --name unicenta -p 3306:3306 -d -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=unicenta -e MYSQL_USER=unicenta -e MYSQL_PASSWORD=unicenta mysql:5.6
+----
