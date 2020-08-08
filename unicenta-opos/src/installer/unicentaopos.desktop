@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=4.2
 Encoding=UTF-8
-Name=uniCenta oPOS
+Name=KrOS POS
 Terminal=false
 Exec=unicentaopos
 Icon=unicentaopos
@@ -9,7 +9,7 @@ Type=Application
 InitialPreference=6
 Categories=Application;Office;
 StartupNotify=false
-GenericName=uniCenta oPOS
-Comment=uniCenta oPOS Touch Friendly Point Of Sale
-Name[en_US]=uniCenta oPOS
-GenericName[en_US]=uniCenta oPOS
+GenericName=KrOS POS
+Comment=KrOS POS Touch Friendly Point Of Sale
+Name[en_US]=KrOS POS
+GenericName[en_US]=KrOS POS

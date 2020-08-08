@@ -1,21 +1,21 @@
-//    uniCenta oPOS  - Touch Friendly Point Of Sale
+//    KrOS POS  - Touch Friendly Point Of Sale
 //    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
 //    https://unicenta.com
 //
-//    This file is part of uniCenta oPOS
+//    This file is part of KrOS POS
 //
-//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    KrOS POS is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
 //    the Free Software Foundation, either version 3 of the License, or
 //    (at your option) any later version.
 //
-//   uniCenta oPOS is distributed in the hope that it will be useful,
+//   KrOS POS is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+//    along with KrOS POS.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.openbravo.pos.sales;
 
@@ -992,7 +992,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             *      ManufacturerCode and ProductCode must be exactly 10 digits
             *      If code begins with 0 then is actually a UPC-A with prepended 0
             *        
-            *  uniCenta oPOS Retailer instore uses these RULES
+            *  KrOS POS Retailer instore uses these RULES
             *  Prefixes 020 to 029 are set aside for Retailer internal use 
             *  This means that CCCC becomes price/weight values
             *  Prefixes 978 and 979 are set aside for ISBN - Future use
@@ -1177,7 +1177,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
 /* Note: if begins 02 then its a standard                 
 // UPC-A max value limitation is 4 digit price
 // UPC-A Extended uses State digit to give 5 digit price
-// uniCenta oPOS does not support UPC-A Extended at this time                
+// KrOS POS does not support UPC-A Extended at this time                
 // Identifier   Prod    State   Cost    CheckCode
 // I            PPPPP   S       CCCC    K                        
 // 1            23456   7       8901    2
@@ -3294,7 +3294,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     // End of variables declaration//GEN-END:variables
 
 /* Remote Orders Display
-    We only know about uniCenta oPOS orders and won't try and handle any 
+    We only know about KrOS POS orders and won't try and handle any 
     that are injected from an external source
 */    
 

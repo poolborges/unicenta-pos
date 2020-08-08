@@ -1,6 +1,6 @@
 @echo off
 
-REM    uniCenta oPOS Touch Friendly Point of Sales designed for Touch Screen
+REM    KrOS POS Touch Friendly Point of Sales designed for Touch Screen
 
 REM    Copyright (c) 2009-2018 uniCenta
 
@@ -8,11 +8,11 @@ REM    https://unicenta.com
 
 REM
 
-REM    This file is part of uniCenta oPOS
+REM    This file is part of KrOS POS
 
 REM
 
-REM    uniCenta oPOS is free software: you can redistribute it and/or modify
+REM    KrOS POS is free software: you can redistribute it and/or modify
 
 REM    it under the terms of the GNU General Public License as published by
 
@@ -22,7 +22,7 @@ REM    (at your option) any later version.
 
 REM
 
-REM    uniCenta oPOS is distributed in the hope that it will be useful,
+REM    KrOS POS is distributed in the hope that it will be useful,
 
 REM    but WITHOUT ANY WARRANTY; without even the implied warranty of
 
@@ -34,7 +34,7 @@ REM
 
 REM    You should have received a copy of the GNU General Public License
 
-REM    along with uniCenta oPOS.  If not, see http://www.gnu.org/licenses/>
+REM    along with KrOS POS.  If not, see http://www.gnu.org/licenses/>
 
 REM
 

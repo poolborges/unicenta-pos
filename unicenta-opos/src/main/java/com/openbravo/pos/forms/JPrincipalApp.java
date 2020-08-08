@@ -1,15 +1,15 @@
-//    uniCenta oPOS Touch Friendly Point of Sale
+//    KrOS POS Touch Friendly Point of Sale
 //    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
 //    https://unicenta.com/product
 //
-//    This file is part of uniCenta oPOS.
+//    This file is part of KrOS POS.
 //
-//    uniCenta oPOS is free software: you can redistribute it and/or modify
+//    KrOS POS is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
 //    the Free Software Foundation, either version 3 of the License, or
 //    (at your option) any later version.
 //
-//    uniCenta oPOS is distributed in the hope that it will be useful,
+//    KrOS POS is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU General Public License for more details.
