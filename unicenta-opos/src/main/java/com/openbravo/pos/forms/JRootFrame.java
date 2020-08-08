@@ -81,7 +81,7 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
             add(m_rootapp, BorderLayout.CENTER);
 
             try {
-                this.setIconImage(ImageIO.read(JRootFrame.class.getResourceAsStream("/com/openbravo/images/favicon.png")));
+                this.setIconImage(ImageIO.read(JRootFrame.class.getResourceAsStream("/com/openbravo/images/app_logo_48x48.png")));
             } catch (IOException e) {
             }
 

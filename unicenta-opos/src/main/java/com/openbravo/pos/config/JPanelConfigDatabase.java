@@ -312,7 +312,7 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
 
         jLabel5.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/uniCenta_logo_vert_100.png"))); // NOI18N
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/logo.png"))); // NOI18N
         jLabel5.setText(bundle.getString("message.DBDefault")); // NOI18N
         jLabel5.setToolTipText("");
         jLabel5.setVerticalAlignment(javax.swing.SwingConstants.TOP);

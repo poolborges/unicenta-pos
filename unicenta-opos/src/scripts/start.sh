@@ -42,4 +42,4 @@ CYGWIN*|MINGW32*) LIBRARYPATH=/lib/Windows/i368-mingw32;;
 esac
 
 # start uniCenta oPOS
-java -cp $CP -Xms512m -Xmx1024m -splash:unicenta_splash_dark.png -Djava.library.path=$DIRNAME$LIBRARYPATH -Ddirname.path=$DIRNAME/ com.openbravo.pos.forms.StartPOS
+java -cp $CP -Xms512m -Xmx1024m -splash:app_splash.png -Djava.library.path=$DIRNAME$LIBRARYPATH -Ddirname.path=$DIRNAME/ com.openbravo.pos.forms.StartPOS

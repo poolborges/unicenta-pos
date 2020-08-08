@@ -63,9 +63,6 @@
         <Component class="javax.swing.JLabel" name="poweredby">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/com/openbravo/images/poweredby_uni.png"/>
-            </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder bottom="0" left="5" right="5" top="0"/>
@@ -144,7 +141,7 @@
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/com/openbravo/images/unicenta.png"/>
+                      <Image iconType="3" name="/com/openbravo/images/logo_320&#xd7;320.png"/>
                     </Property>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="&quot;&lt;html&gt;&lt;center&gt;uniCenta oPOS - Touch Friendly Point of Sale&lt;br&gt;&quot; +&#xa;    &quot;Copyright \u00A9 2009-2017 uniCenta &lt;br&gt;&quot; +&#xa;    &quot;https://unicenta.com&lt;br&gt;&quot; +&#xa;    &quot;&lt;br&gt;&quot; +&#xa;    &quot;uniCenta oPOS is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.&lt;br&gt;&quot; +&#xa;    &quot;&lt;br&gt;&quot; +&#xa;    &quot;uniCenta oPOS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.&lt;br&gt;&quot; +&#xa;    &quot;&lt;br&gt;&quot; +&#xa;    &quot;You should have received a copy of the GNU General Public License along with uniCenta oPOS.  If not, see http://www.gnu.org/licenses/&lt;br&gt;&quot; +&#xa;    &quot;&lt;/center&gt;&quot;" type="code"/>

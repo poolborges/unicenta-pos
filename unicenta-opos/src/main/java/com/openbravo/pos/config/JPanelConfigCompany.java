@@ -273,7 +273,7 @@ public class JPanelConfigCompany extends javax.swing.JPanel implements PanelConf
 
         jLogo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/printer.ticket.logo.jpg"))); // NOI18N
+        jLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/app_logo_100x100.png"))); // NOI18N
         jLogo.setToolTipText("");
         jLogo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jLogo.setOpaque(true);

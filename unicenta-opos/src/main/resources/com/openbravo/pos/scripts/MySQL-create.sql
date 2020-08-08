@@ -896,7 +896,7 @@ INSERT INTO resources(id, name, restype, content) VALUES('52', 'Printer.TicketLi
 INSERT INTO resources(id, name, restype, content) VALUES('53', 'Printer.TicketNew', 0, $FILE{/com/openbravo/pos/templates/Printer.TicketLine.xml});
 INSERT INTO resources(id, name, restype, content) VALUES('54', 'Printer.TicketPreview', 0, $FILE{/com/openbravo/pos/templates/Printer.TicketPreview.xml});
 INSERT INTO resources(id, name, restype, content) VALUES('55', 'Printer.TicketTotal', 0, $FILE{/com/openbravo/pos/templates/Printer.TicketTotal.xml});
-INSERT INTO resources(id, name, restype, content) VALUES('56', 'Printer.Ticket.Logo', 1, $FILE{/com/openbravo/images/printer.ticket.logo.jpg});
+INSERT INTO resources(id, name, restype, content) VALUES('56', 'Printer.Ticket.Logo', 1, $FILE{/com/openbravo/images/app_logo_100x100.png});
 
 -- SCRIPTS
 INSERT INTO resources(id, name, restype, content) VALUES('57', 'script.AddLineNote', 0, $FILE{/com/openbravo/pos/templates/script.AddLineNote.txt});
@@ -926,7 +926,7 @@ INSERT INTO resources(id, name, restype, content) VALUES('75', 'Ticket.Line', 0,
 INSERT INTO resources(id, name, restype, content) VALUES('76', 'ticket.removeline', 0, $FILE{/com/openbravo/pos/templates/ticket.removeline.txt});
 INSERT INTO resources(id, name, restype, content) VALUES('77', 'ticket.setline', 0, $FILE{/com/openbravo/pos/templates/ticket.setline.txt});
 INSERT INTO resources(id, name, restype, content) VALUES('78', 'Ticket.TicketLineTaxesIncluded', 0, $FILE{/com/openbravo/pos/templates/Ticket.TicketLineTaxesIncluded.xml});
-INSERT INTO resources(id, name, restype, content) VALUES('79', 'Window.Logo', 1, $FILE{/com/openbravo/pos/templates/window.logo.png});
+INSERT INTO resources(id, name, restype, content) VALUES('79', 'Window.Logo', 1, $FILE{/com/openbravo/pos/templates/app_logo_48x48.png});
 INSERT INTO resources(id, name, restype, content) VALUES('80', 'Window.Title', 0, $FILE{/com/openbravo/pos/templates/Window.Title.txt});
 INSERT INTO resources(id, name, restype, content) VALUES('81', 'script.posapps', 0, $FILE{/com/openbravo/pos/templates/script.posapps.txt});
 INSERT INTO resources(id, name, restype, content) VALUES('82', 'Cash.Close', 0, $FILE{/com/openbravo/pos/templates/Cash.Close.xml});

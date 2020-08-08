@@ -5,9 +5,9 @@
     <readmeFile>README</readmeFile>
     <licenseFile>licensing/KrOS POS Notice.txt</licenseFile>
     <leftImage>v_logo_dark.png</leftImage>
-    <logoImage>unicentaopos.png</logoImage>
-    <splashImage>uniCenta_splash_dark.png</splashImage>
-    <wmImage>unicentaopos.png</wmImage>
+    <logoImage>app_logo_48x48</logoImage>
+    <splashImage>app_splash.png</splashImage>
+    <wmImage>app_logo_48x48</wmImage>
     <allowLanguageSelection>1</allowLanguageSelection>
     <componentList>
         <component>
@@ -20,7 +20,7 @@
                 <shortcut>
                     <comment>KrOS POS - Open Source Point Of Sale</comment>
                     <exec>sh ${installdir}/start.sh</exec>
-                    <icon>${installdir}/unicentaopos.png</icon>
+                    <icon>${installdir}/app_logo_48x48</icon>
                     <name>KrOS POS</name>
                     <noPinToStart>0</noPinToStart>
                     <path>${installdir}</path>
@@ -29,7 +29,7 @@
                     <runInTerminal>0</runInTerminal>
                     <windowsExec>${installdir}/start.bat</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon>${installdir}/unicentaopos.ico</windowsIcon>
+                    <windowsIcon>${installdir}/app_logo.ico</windowsIcon>
                     <windowsPath>${installdir}</windowsPath>
                 </shortcut>
             </desktopShortcutList>
@@ -71,16 +71,16 @@
                             <origin>../../target/unicentaopos.jar</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>uniCenta_splash_dark.png</origin>
+                            <origin>app_splash.png</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>unicentaopos.png</origin>
+                            <origin>app_logo_48x48</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>unicentaopos.ico</origin>
+                            <origin>app_logo.ico</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>window.logo.png</origin>
+                            <origin>app_logo_48x48.png</origin>
                         </distributionFile>
                         <distributionFile>
                             <origin>README_Locales.txt</origin>
@@ -126,7 +126,7 @@
                     <platforms>linux</platforms>
                     <distributionFileList>
                         <distributionFile>
-                            <origin>unicentaopos.png</origin>
+                            <origin>app_logo_48x48</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>
@@ -161,7 +161,7 @@
                     <runInTerminal>0</runInTerminal>
                     <windowsExec>${installdir}/start.bat</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon>${installdir}/unicentaopos.ico</windowsIcon>
+                    <windowsIcon>${installdir}/app_logo.ico</windowsIcon>
                     <windowsPath>${installdir}</windowsPath>
                 </startMenuShortcut>
                 <startMenuShortcut>
@@ -171,7 +171,7 @@
                     <runInTerminal>0</runInTerminal>
                     <windowsExec>${installdir}/orderpop.bat</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon>${installdir}/unicentaopos.ico</windowsIcon>
+                    <windowsIcon>${installdir}/app_logo.ico</windowsIcon>
                     <windowsPath>${installdir}</windowsPath>
                 </startMenuShortcut>
                 <startMenuShortcut>
@@ -181,7 +181,7 @@
                     <runInTerminal>0</runInTerminal>
                     <windowsExec>${installdir}/configure.bat</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon>${installdir}/unicentaopos.ico</windowsIcon>
+                    <windowsIcon>${installdir}/app_logo.ico</windowsIcon>
                     <windowsPath>${installdir}</windowsPath>
                 </startMenuShortcut>
                 <startMenuFileShortcut>
@@ -270,13 +270,13 @@ Then continue with KrOS POS installation.</text>
     <splashScreenDelay>4</splashScreenDelay>
     <summary>POS</summary>
     <vendor>uniCenta</vendor>
-    <windowsExecutableIcon>unicentaopos.ico</windowsExecutableIcon>
+    <windowsExecutableIcon>app_logo.ico</windowsExecutableIcon>
     <windowsResourceComments>KrOS POS is free software licensed under GNU GPL 3</windowsResourceComments>
     <windowsResourceFileDescription>KrOS POS executable</windowsResourceFileDescription>
     <windowsResourceFileVersion>4.20</windowsResourceFileVersion>
     <windowsResourceInternalName>KrOS POS</windowsResourceInternalName>
     <windowsResourceLegalTrademarks>uniCenta and KrOS POS are trademarks of uniCenta</windowsResourceLegalTrademarks>
-    <windowsUninstallerExecutableIcon>unicentaopos.ico</windowsUninstallerExecutableIcon>
+    <windowsUninstallerExecutableIcon>app_logo.ico</windowsUninstallerExecutableIcon>
     <parameterList>
         <directoryParameter>
             <name>installdir</name>
