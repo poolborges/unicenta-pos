@@ -27,7 +27,7 @@
  */
 
 //    Portions:
-//    uniCenta oPOS  - Touch Friendly Point Of Sale
+//    KrOS POS  - Touch Friendly Point Of Sale
 //    Copyright (c) 2009-2017 uniCenta
 //    https://unicenta.com
 //    author Jack Gerrard
