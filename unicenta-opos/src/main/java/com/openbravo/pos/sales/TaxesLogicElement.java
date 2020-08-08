@@ -1,4 +1,4 @@
-//    uniCenta oPOS  - Touch Friendly Point Of Sale
+//    uniCenta oPOS  - Open Source Point Of Sale
 //    Copyright (c) 2009-20167
 //    2008-2013 Openbravo, S.L.
 //    https://unicenta.com

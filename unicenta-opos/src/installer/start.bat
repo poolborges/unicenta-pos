@@ -1,6 +1,6 @@
 @echo off
 
-REM    KrOS POS Touch Friendly Point of Sales designed for Touch Screen
+REM    KrOS POS Open Source Point Of Sales designed for Touch Screen
 
 REM    Copyright (c) 2009-2018 uniCenta
 

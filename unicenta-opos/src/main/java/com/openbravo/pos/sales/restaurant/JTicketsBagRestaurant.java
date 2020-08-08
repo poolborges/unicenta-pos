@@ -1,4 +1,4 @@
-//    uniCenta oPOS  - Touch Friendly Point Of Sale
+//    uniCenta oPOS  - Open Source Point Of Sale
 //    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
 //    https://unicenta.com
 //
@@ -16,7 +16,7 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
-//    uniCenta oPOS  - Touch Friendly Point Of Sale
+//    uniCenta oPOS  - Open Source Point Of Sale
 //    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
 //    https://unicenta.com
 //

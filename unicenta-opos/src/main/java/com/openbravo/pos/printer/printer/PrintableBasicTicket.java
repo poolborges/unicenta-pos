@@ -1,4 +1,4 @@
-//    KrOS POS  - Touch Friendly Point Of Sale
+//    KrOS POS  - Open Source Point Of Sale
 //    Copyright (c) 2009-20162009 Openbravo, S.L.
 //    https://unicenta.com
 //

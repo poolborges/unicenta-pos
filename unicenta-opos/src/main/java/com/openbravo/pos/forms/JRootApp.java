@@ -1,4 +1,4 @@
-//    KrOS POS  - Touch Friendly Point Of Sale
+//    KrOS POS  - Open Source Point Of Sale
 //    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
 //    https://unicenta.com
 //
@@ -520,7 +520,7 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
         String newText = m_props.getProperty("start.text");
         if (newText != null) {
             if (newText.equals("")){
-                jLabel1.setText("<html><center>KrOS POS - Touch Friendly Point of Sale<br>" +
+                jLabel1.setText("<html><center>KrOS POS - Open Source Point Of Sale<br>" +
                 "Copyright \u00A9  uniCenta <br>" +
                 "https://unicenta.com/<br>" +
                 "<br>" +
@@ -1028,7 +1028,7 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/unicenta.png"))); // NOI18N
-        jLabel1.setText("<html><center>KrOS POS - Touch Friendly Point of Sale<br>" +
+        jLabel1.setText("<html><center>KrOS POS - Open Source Point Of Sale<br>" +
             "Copyright \u00A9 2009-2018 uniCenta <br>" +
             "https://unicenta.com<br>" +
             "<br>" +

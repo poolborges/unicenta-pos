@@ -1,5 +1,5 @@
 #!/bin/sh
-#    KrOS POS Touch Friendly Point of Sale designed for Touch Screen
+#    KrOS POS Open Source Point Of Sale designed for Touch Screen
 #    Copyright (C) 2009-2018 uniCenta
 #    https://unicenta.com
 #

@@ -18,7 +18,7 @@
             <show>1</show>
             <desktopShortcutList>
                 <shortcut>
-                    <comment>KrOS POS - Touch Friendly Point Of Sale</comment>
+                    <comment>KrOS POS - Open Source Point Of Sale</comment>
                     <exec>sh ${installdir}/start.sh</exec>
                     <icon>${installdir}/unicentaopos.png</icon>
                     <name>KrOS POS</name>
@@ -155,7 +155,7 @@
             </folderList>
             <startMenuShortcutList>
                 <startMenuShortcut>
-                    <comment>Touch Friendly Point Of Sale</comment>
+                    <comment>Open Source Point Of Sale</comment>
                     <name>KrOS POS</name>
                     <runAsAdmin>0</runAsAdmin>
                     <runInTerminal>0</runInTerminal>
@@ -253,13 +253,13 @@ Then continue with KrOS POS installation.</text>
         </launchBrowser>
     </postInstallationActionList>
     <createOsxBundleZip>1</createOsxBundleZip>
-    <description>KrOS POS - Touch Friendly Point of Sale</description>
+    <description>KrOS POS - Open Source Point Of Sale</description>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
     <licenseFileEncoding>utf-8</licenseFileEncoding>
     <nativePackageName>KrOS POS</nativePackageName>
     <outputDirectory>../../target/installers</outputDirectory>
-    <productComments>KrOS POS Touch Friendly Point of Sale</productComments>
+    <productComments>KrOS POS Open Source Point Of Sale</productComments>
     <productContact>info@unicenta.com</productContact>
     <productUrlHelpLink>https://unicenta.com/support</productUrlHelpLink>
     <productUrlInfoAbout>https://unicenta.com/about-unicenta-opos/</productUrlInfoAbout>
@@ -305,7 +305,7 @@ Then continue with KrOS POS installation.</text>
     </parameterList>
     <platformOptionsList>
         <platformOptions>
-            <description>KrOS POS - Touch Friendly Point Of Sale</description>
+            <description>KrOS POS - Open Source Point Of Sale</description>
             <platform>deb</platform>
             <release>1</release>
             <summary>POS</summary>

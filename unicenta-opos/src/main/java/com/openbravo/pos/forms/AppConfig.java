@@ -1,4 +1,4 @@
-//    KrOS POS  - Touch Friendly Point Of Sale
+//    KrOS POS  - Open Source Point Of Sale
 //    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
 //    https://unicenta.com
 //
@@ -349,7 +349,7 @@ public class AppConfig implements AppProperties {
         m_propsconfig.setProperty("paper.standard.mediasizename", "A4");
 
         m_propsconfig.setProperty("tkt.header1", "KrOS POS");
-        m_propsconfig.setProperty("tkt.header2", "Touch Friendly Point Of Sale");
+        m_propsconfig.setProperty("tkt.header2", "Open Source Point Of Sale");
         m_propsconfig.setProperty("tkt.header3", "Copyright (c) 2009-2018 uniCenta");
         m_propsconfig.setProperty("tkt.header4", "Change header text in Configuration");
 
