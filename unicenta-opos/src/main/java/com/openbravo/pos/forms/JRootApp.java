@@ -522,15 +522,18 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
         if (newText != null) {
             if (newText.equals("")){
                 jLabel1.setText("<html><center>KrOS POS - Open Source Point Of Sale<br>" +
-                "Copyright \u00A9  uniCenta <br>" +
-                "https://unicenta.com/<br>" +
+                "Copyright \u00A9 KrOS POS <br>" +
+                "More info on official <href a=\"https://github.com/poolborges/unicenta-pos\">site</a><br>" +
+                "</center><br>" +
+                "<br>" +
+                "<h2>License: GPL v3<h2>" +
                 "<br>" +
                 "KrOS POS is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br>" +
                 "<br>" +
                 "KrOS POS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br>" +
                 "<br>" +
-                "You should have received a copy of the GNU General Public License along with KrOS POS.  If not, see http://www.gnu.org/licenses/<br>" +
-                "</center>");
+                "You should have received a copy of the GNU General Public License along with KrOS POS.  If not, see http://www.gnu.org/licenses/<br>"
+                );
                 
             } else {
                 try {    
