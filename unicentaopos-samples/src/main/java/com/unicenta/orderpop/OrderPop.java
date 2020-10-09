@@ -1,4 +1,4 @@
-//  uniCenta oPOS  - Touch Friendly Point Of Sale
+//  KrOS POS  - Open Source Point Of Sale
 //  Copyright (c) 2017 uniCenta
 //  https://unicenta.com
 //
@@ -15,12 +15,12 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
+//  along with KrOS POS.  If not, see <http://www.gnu.org/licenses/>.
 
 /* uniCenta's OrderPop is a simple utilty to list tickets sent to remote printer
- * It connects to and list uniCenta oPOS orders table rows and requires a 
+ * It connects to and list KrOS POS orders table rows and requires a 
  * manual refresh using the button.
- * It runs independently of uniCenta oPOS and uses the provided orderpop.bat
+ * It runs independently of KrOS POS and uses the provided orderpop.bat
 
 */
 
@@ -131,7 +131,7 @@ public class OrderPop extends Application {
         layout.setPrefHeight(300);
         layout.setPrefWidth(500);
         
-        stage.getIcons().add(new Image("/com/openbravo/images/unicentaopos.png"));
+        stage.getIcons().add(new Image("/com/openbravo/images/app_logo_48x48"));
         stage.setTitle("Orders Waiting...");
         stage.setScene(new Scene(layout));
         stage.setAlwaysOnTop(true);        
@@ -242,7 +242,7 @@ public class OrderPop extends Application {
 
 /* 
  * We don't need to create Orders table as should already exist
- * as created by uniCenta oPOS or unicenta_remote_display apps
+ * as created by KrOS POS or unicenta_remote_display apps
     private void createSchema(Connection con) throws SQLException {
       logger.info("Add Orders table to schema if not exist");
       Statement st = con.createStatement();
@@ -267,7 +267,7 @@ public class OrderPop extends Application {
 }
   
     private Connection getConnection() throws ClassNotFoundException, SQLException {
-    // use explicit connection rather than uniCenta oPOS instance session
+    // use explicit connection rather than KrOS POS instance session
     // better for this to be independent but use current instance's credentials
 
         logger.info("Get DB connection");

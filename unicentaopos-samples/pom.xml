@@ -128,6 +128,14 @@
             <version>${auto-service.version}</version>
         </dependency>
         
+        
+        <!-- org.scijava/scripting-java -->
+        <dependency>
+            <groupId>org.patrodyne</groupId>
+            <artifactId>patrodyne-scripting-java</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        
     </dependencies>
 
     <build>
