@@ -6,11 +6,11 @@ image:https://img.shields.io/badge/license-GPL%202.0-brightgreen.svg?style=flat[
 
 == About
 
-This solution is based on Unicenta oPOS 4.5 (2019-06-30)
+This solution is based on KrOS POS 4.5 (2019-06-30)
 
-NOTE:: WILL NOT follow future version of Unicenta oPOS
+NOTE:: WILL NOT follow future version of KrOS POS
 
-krPOS:: fork of Unicenta oPOS which is a fork of OpenBravo POS
+krPOS:: fork of KrOS POS which is a fork of OpenBravo POS
 
 Openbravo has acquired Librepos (previously named Tina POS), Adrian Romero, founder and main developer for Tina POS,
 
