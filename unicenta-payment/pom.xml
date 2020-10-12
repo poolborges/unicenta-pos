@@ -12,15 +12,87 @@
     <artifactId>unicenta-payment</artifactId>
     <packaging>jar</packaging>
     <name>krPOS :: Unicenta.Payment</name>
+    <description>KrPOS :: Unicenta Payment Gateways:</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-
+        
         <javafx.version>11</javafx.version>
+        <kotlin.version>1.3.50</kotlin.version>
+        <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
+        <junit-jupiter.version>5.4.2</junit-jupiter.version>
     </properties>
 
+    <dependencies>
+        <!-- Kotlin -->  
+        <dependency> 
+            <groupId>org.jetbrains.kotlin</groupId>  
+            <artifactId>kotlin-stdlib</artifactId>  
+            <version>${kotlin.version}</version> 
+        </dependency>
+        
+        <!-- Testing Dependencies -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.12.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
+    <build> 
+        <plugins> 
+            
+            <plugin> 
+                <artifactId>kotlin-maven-plugin</artifactId>  
+                <groupId>org.jetbrains.kotlin</groupId>  
+                <version>${kotlin.version}</version>  
+                <!-- NEED DEPENDENCY - PROPETARY (posApps)
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                                <sourceDir>${project.basedir}/src/main/java</sourceDir>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+                                <sourceDir>${project.basedir}/src/test/java</sourceDir>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                </executions> 
+                 -->
+            </plugin> 
+            
+        </plugins>
+    </build>
 
 </project>
