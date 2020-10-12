@@ -42,6 +42,9 @@
                     <platforms>all</platforms>
                     <distributionFileList>
                         <distributionDirectory>
+                            <origin>native</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
                             <origin>../target/unicentaopos/lib</origin>
                         </distributionDirectory>
                         <distributionDirectory>

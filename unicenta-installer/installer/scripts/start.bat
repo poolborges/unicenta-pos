@@ -25,4 +25,7 @@ set CP=%CP%;"%DIRNAME%lib/*"
 set CP=%CP%;"%DIRNAME%locales/"
 set CP=%CP%;"%DIRNAME%reports/"
 
-start /B javaw -Xms512m -Xmx1024m -cp %CP% -Djava.library.path="%DIRNAME%lib/Windows/i368-mingw32" -Ddirname.path="%DIRNAME%./" -splash:app_splash.png com.openbravo.pos.forms.StartPOS %1
+set NATIVE_DIR="%DIRNAME%native/"
+set LIBRARYPATH="%NATIVE%Windows/i368-mingw32"
+
+start /B javaw -Xms512m -Xmx1024m -cp %CP% -Djava.library.path="%DIRNAME%;%LIBRARYPATH%" -Ddirname.path="%DIRNAME%./" -splash:app_splash.png com.openbravo.pos.forms.StartPOS %1
