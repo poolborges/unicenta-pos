@@ -1,28 +1,28 @@
 ﻿General Public License
 
-This file is part of KrOS POS
+This file is part of uniCenta oPOS
 https://unicenta.com
 
-This license file applies to the KrOS POS software 
-(the "KrOS POS Software"), except as described in B) and C) below.
+This license file applies to the uniCenta oPOS software 
+(the "uniCenta oPOS Software"), except as described in B) and C) below.
 
-KrOS POS is free software: you can redistribute it and/or modify
+uniCenta oPOS is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-KrOS POS is distributed in the hope that it will be useful,
+uniCenta oPOS is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with KrOS POS. If not, see <http://www.gnu.org/licenses/>
+along with uniCenta oPOS. If not, see <http://www.gnu.org/licenses/>
 
 A) posApps Digital Receipts and Card Payments are owned and offered under a uniCenta
 proprietary license. Application source code is not available.
 
-B) Some portions of the KrOS POS Software are provided by third parties.
+B) Some portions of the uniCenta oPOS Software are provided by third parties.
 In this distribution, they are:
 - WebLaf
 - wpDataTables
@@ -92,4 +92,4 @@ Distributed under the Common Public License
 
 All other libraries, licenses and portions of code are available in the public domain and are acknowledged.
 
-If you have questions about the licensing terms for KrOS POS Software please contact: info@unicenta.com
+If you have questions about the licensing terms for uniCenta oPOS Software please contact: info@unicenta.com

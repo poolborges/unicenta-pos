@@ -1,11 +1,11 @@
-Project: KrOS POS v4.5
+Project: uniCenta oPOS v4.5
 Topic:	README installer
 Author:	Jack Gerrard
 Date: 	1 January 2018
 
-Welcome to the KrOS POS family.
+Welcome to the uniCenta oPOS family.
 
-KrOS POS Point Of Sale free software licensed to you under
+uniCenta oPOS Point Of Sale free software licensed to you under
 the GNU GPL 3 license.
 It is a commercial-grade quality product and your use is not
 restricted in any way.
@@ -13,13 +13,13 @@ restricted in any way.
 It can scale from a single machine on your counter-top to tens and
 tens of terminals in different locations.
 
-KrOS POS is used all around the world and it's become a 
+uniCenta oPOS is used all around the world and it's become a 
 favourite for a wide-range of businesses not just because it is 
 free, but because of its ease of use, exceptional flexibility and
 reliability.
 
 So let's get you started!
-The key to making sure you get the best out of KrOS POS is: 
+The key to making sure you get the best out of uniCenta oPOS is: 
 Set-up
 
 Have some patience when you first start out and try to follow these 
@@ -34,7 +34,7 @@ simple steps...
    properly. A Schema must be created and Users Permissions also set
    correctly. 
 
-3. Fire-up KrOS POS and head straight for the Configuration 
+3. Fire-up unicenta oPOS and head straight for the Configuration 
    panel. Settings are here for everything from Databases through to
    Printers.
 
@@ -43,7 +43,7 @@ simple steps...
    remember it!
 
 5. Set Taxes
-   KrOS POS comes with two Rate types already created: Exempt
+   uniCenta oPOS comes with two Rate types already created: Exempt
    and Standard. Have as many as you want.
 
 6. Create Categories. Use Categories to group your Products.
@@ -52,7 +52,7 @@ simple steps...
    You can rename it and go on to create as many as you need.
 
 7. Create Products. Probably the most important part in 
-   KrOS POS you need to get right.
+   uniCenta oPOS you need to get right.
    Assign everything here from Barcodes through to Sales screen
    button images and fancy looking text. 
 
@@ -61,16 +61,16 @@ simple steps...
    Have your store logo to hand and a good idea of your receipt
    layout before you start.
 
-9. Play with KrOS POS first. Get to know it. Take your time.
+9. Play with uniCenta oPOS first. Get to know it. Take your time.
    Don't rush.
-   You will be up & running with KrOS POS in no time compared
+   You will be up & running with uniCenta oPOS in no time compared
    to other systems.
 
 10.All done! You're ready to deploy in your store. Now take a Backup!
    Always better to do it now rather starting over again or trying to
    unravel mistakes later when trading.
 
-We're proud of our app' and we hope you enjoy using KrOS POS.
+We're proud of our app' and we hope you enjoy using uniCenta oPOS.
 
 Jack Gerrard
 Founder, uniCenta

@@ -1,9 +1,9 @@
-Project: KrOS POS v4.5
+Project: uniCenta oPOS v4.5
 Topic:	README installer
 Author:	Jack Gerrard
 Date: 	1 January 2018
 
-Acknowledgement: The content of the language/Locale files are compiled from the efforts of uniCenta and KrOS POS Community Members.
+Acknowledgement: The content of the language/Locale files are compiled from the efforts of uniCenta and uniCenta oPOS Community Members.
 We appreciate and acknowledge everyone who has contributed to making this distribution possible.
 
 All files, including these Locale files, are made available under the GPL v3 License and within those terms must be passed on to any person who requests them
@@ -12,7 +12,7 @@ All files, including these Locale files, are made available under the GPL v3 Lic
 
 Please refer to Locales Guide for installation details.
 
-KrOS POS v4.5 is delivered with support for 15 languages.
+uniCenta oPOS v4.5 is delivered with support for 15 languages.
 
 Full translations provided by uniCenta include:
 English UK - the default language set.
@@ -23,7 +23,7 @@ German - UI mostly complete. Reports approx' 75%
 
 Not all locales are completely translated.
 
-The locale files shipped with this version of KrOS POS are the 
+The locale files shipped with this version of uniCenta oPOS are the 
 latest at the date of this release.
 
 Latest locales can be found here: https://unicenta.com
@@ -35,11 +35,11 @@ pos_messages.properties is the MAIN application label and Messages file
 
 Reports:
 Each report has a .properties file associated with it.
-You will find the files in the KrOS POS installation folder in the
+You will find the files in the uniCenta oPOS installation folder in the
 uniCenta instalation sub-folder \reports\com\openbravo\reports
 
 HOW TO CHANGE YOUR LANGUAGE
-All languages are now compiled into the KrOS POS executable.
+All languages are now compiled into the uniCenta oPOS executable.
 Any required locale file changes will require the project to be recompiled.
 
-Set the KrOS POS Configuration>Locale to your required language
+Set the uniCenta oPOS Configuration>Locale to your required language

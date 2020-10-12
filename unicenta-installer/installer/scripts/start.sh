@@ -1,26 +1,27 @@
 #!/bin/sh
-#    KrOS POS Open Source Point Of Sale designed for Touch Screen
-#    Copyright (C) 2009-2018 uniCenta
-#    https://unicenta.com
+#    uniCenta oPOS Touch Friendly Point of Sale designed for Touch Screen
+#    Copyright (C) 2009-2017 uniCenta
+#    http://sourceforge.net/projects/unicentaopos
 #
-#    This file is part of KrOS POS.
+#    This file is part of uniCenta oPOS.
 #
-#    KrOS POS is free software: you can redistribute it and/or modify
+#    uniCenta oPOS is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    KrOS POS is distributed in the hope that it will be useful,
+#    uniCenta oPOS is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with KrOS POS.  If not, see <http://www.gnu.org/licenses/>.
+#    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
 
 DIRNAME=`dirname $0`
 CP=$DIRNAME/unicentaopos.jar
 
+CP=$CP:$DIRNAME/lib/*
 CP=$CP:$DIRNAME/locales/
 CP=$CP:$DIRNAME/reports/
 
@@ -41,5 +42,5 @@ Darwin) LIBRARYPATH=/lib/Mac_OS_X;;
 CYGWIN*|MINGW32*) LIBRARYPATH=/lib/Windows/i368-mingw32;;
 esac
 
-# start KrOS POS
+# start uniCenta oPOS
 java -cp $CP -Xms512m -Xmx1024m -splash:app_splash.png -Djava.library.path=$DIRNAME$LIBRARYPATH -Ddirname.path=$DIRNAME/ com.openbravo.pos.forms.StartPOS

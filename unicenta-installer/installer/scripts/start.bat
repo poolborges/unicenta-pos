@@ -20,6 +20,9 @@ REM    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>
 REM
 set DIRNAME=%~dp0
 set CP="%DIRNAME%unicentaopos.jar"
-set CP=%CP%;"%DIRNAME%locales/"
 
-start /B javaw -cp %CP% com.openbravo.pos.config.JFrmConfig
+set CP=%CP%;"%DIRNAME%lib/*"
+set CP=%CP%;"%DIRNAME%locales/"
+set CP=%CP%;"%DIRNAME%reports/"
+
+start /B javaw -Xms512m -Xmx1024m -cp %CP% -Djava.library.path="%DIRNAME%lib/Windows/i368-mingw32" -Ddirname.path="%DIRNAME%./" -splash:app_splash.png com.openbravo.pos.forms.StartPOS %1

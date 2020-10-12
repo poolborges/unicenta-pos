@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>unicenta-thirdparty</module>
         <module>unicenta-opos</module>
         <module>unicentaopos-samples</module>
+        <module>unicenta-installer</module>
     </modules>
     
     <build>
