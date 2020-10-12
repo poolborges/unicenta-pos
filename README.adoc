@@ -46,7 +46,7 @@ NOTE: WILL NOT follow future version of Unicenta oPOS
 
 == Screenshots 
 
-image::krpos-screenshot.png[]
+image::krpos-screenshot.gif[]
 
 == TODO - Define PaymentGateway as java SPI
 
