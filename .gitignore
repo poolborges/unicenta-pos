@@ -9,3 +9,4 @@
 .project
 /build
 /unicenta-thirdparty/target/
+/unicenta-payment/target/
