@@ -10,11 +10,16 @@
 :stem:
 
 ifdef::env-github[]
-:imagesdir: docs/images/
+:imagesdir: https://raw.githubusercontent.com/poolborges/unicenta-pos/master/docs/images/
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
 endif::[]
 
 [[doc]]
-= KROS POS
+= krPOS - Kriol Point Of Sales
 :author: Copyright (c) 2020-2020 Paulo Borges.
 :revnumber: krpos-0.0.1-snapshot
 :revdate: {last-update-label} {docdatetime}
@@ -26,13 +31,16 @@ image:https://img.shields.io/badge/license-GPL%202.0-brightgreen.svg?style=flat[
 
 == About
 
-This solution is based on KrOS POS 4.5 (2019-06-30)
+krPOS is Point Of Sales for "Kriol" Markert
 
-NOTE:: WILL NOT follow future version of KrOS POS
+NOTE: WILL NOT follow future version of Unicenta oPOS
 
-krPOS:: fork of KrOS POS which is a fork of OpenBravo POS
+=== History of krPOS
 
-Openbravo has acquired Librepos (previously named Tina POS), Adrian Romero, founder and main developer for Tina POS,
+* krPOS is a fork of UnicentaOPOS 4.5 (2019-06-30) 
+* UnicentaOPOS is a fork of OpenBravo POS
+* Openbravo has acquired Librepos (previously named Tina POS) 
+** Adrian Romero was founder and main developer for Tina POS
 
 * License: GPL version 3
 
