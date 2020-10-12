@@ -1,4 +1,24 @@
+// Global settings
+:ascii-ids:
+:encoding: UTF-8
+:lang: pt_PT
+:icons: font
+:toc:
+:toc-placement!:
+:toclevels: 3
+:numbered:
+:stem:
+
+ifdef::env-github[]
+:imagesdir: docs/images/
+endif::[]
+
+[[doc]]
 = KROS POS
+:author: Copyright (c) 2020-2020 Paulo Borges.
+:revnumber: krpos-0.0.1-snapshot
+:revdate: {last-update-label} {docdatetime}
+:version-label!:
 
 image:https://travis-ci.org/poolborges/unicenta-pos.svg?branch=master["Build Status", link="https://travis-ci.org/poolborges/unicenta-pos"]
 image:https://codecov.io/github/poolborges/unicenta-pos/coverage.svg["Code Coverage", link="https://codecov.io/gh/poolborges/unicenta-pos"]
@@ -15,6 +35,10 @@ krPOS:: fork of KrOS POS which is a fork of OpenBravo POS
 Openbravo has acquired Librepos (previously named Tina POS), Adrian Romero, founder and main developer for Tina POS,
 
 * License: GPL version 3
+
+== Screenshots 
+
+image::krpos-screenshot.png[]
 
 == TODO - Define PaymentGateway as java SPI
 
