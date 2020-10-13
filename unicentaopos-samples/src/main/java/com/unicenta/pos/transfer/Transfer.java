@@ -192,15 +192,7 @@ public final class Transfer extends JPanel implements JPanelView {
         connectionProps.put("password", db_password2);
         
         try {
-            Class.forName(jtxtDbDriver.getText());
-
-            ClassLoader cloader = new URLClassLoader(
-                    new URL[]{
-                        new File(jtxtDbDriverLib.getText()).toURI().toURL()
-                    });
-            DriverManager.registerDriver(
-                    new DriverWrapper((Driver) Class.forName(jtxtDbDriver.getText(), 
-                            true, cloader).newInstance()));
+            
             con_source = (Connection) DriverManager.getConnection(
                     db_url2, db_user2, db_password2);
 
@@ -212,11 +204,7 @@ public final class Transfer extends JPanel implements JPanelView {
             
             return (true);
             
-        } catch (ClassNotFoundException 
-                | MalformedURLException 
-                | InstantiationException 
-                | IllegalAccessException 
-                | SQLException e) {
+        } catch (SQLException e) {
             
             JMessageDialog.showMessage(this, 
                     new MessageInf(MessageInf.SGN_DANGER, 
@@ -2312,15 +2300,8 @@ public final class Transfer extends JPanel implements JPanelView {
             String user = txtDbUser.getText();
             String password = new String(txtDbPass.getPassword());
 
-            ClassLoader cloader = new URLClassLoader(new URL[] {
-                new File(driverlib).toURI().toURL()
-            });
-            
-            DriverManager.registerDriver(
-                    new DriverWrapper((Driver) 
-                            Class.forName(driver, true, cloader).newInstance()));
 
-            Session session_source = new Session(url, user, password);
+            session_source = new Session(url, user, password);
             Connection connection = session_source.getConnection();
             boolean isValid = (connection == null) 
                     ? false : connection.isValid(1000);
@@ -2372,20 +2353,12 @@ public final class Transfer extends JPanel implements JPanelView {
                 JMessageDialog.showMessage(this, 
                         new MessageInf(MessageInf.SGN_WARNING, "Connection Error"));
             }
-        } catch (InstantiationException 
-                | IllegalAccessException 
-                | MalformedURLException 
-                | ClassNotFoundException e) {
-            JMessageDialog.showMessage(this, 
-                    new MessageInf(MessageInf.SGN_WARNING, 
-                    AppLocal.getIntString("message.databasedrivererror"), e));
-        
-        } catch (SQLException e) {
+        }catch (SQLException e) {
             JMessageDialog.showMessage(this, 
                     new MessageInf(MessageInf.SGN_WARNING, 
                     AppLocal.getIntString("message.databaseconnectionerror"), e));
         
-        } catch (Exception e) {
+        } catch (HeadlessException e) {
             JMessageDialog.showMessage(this, 
                     new MessageInf(MessageInf.SGN_WARNING, "Unknown exception", e));
         }

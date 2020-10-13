@@ -29,6 +29,9 @@ import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
@@ -108,16 +111,25 @@ public class JResetPickupID extends javax.swing.JFrame {
                 config.load();    
                 
 // Set the look and feel.
-// JG 6 May 2013 to Multicatch                
+// JG 6 May 2013 to Multicatch        
+                String lafClassName = config.getProperty("swing.defaultlaf");
                 try {                    
-                    Object laf = Class.forName(config.getProperty("swing.defaultlaf")).newInstance();                    
+                    Object laf = Class.forName(lafClassName).getDeclaredConstructor().newInstance();                    
                     if (laf instanceof LookAndFeel){
                         UIManager.setLookAndFeel((LookAndFeel) laf);
 //                    } else if (laf instanceof SubstanceSkin) {                      
 //                        SubstanceLookAndFeel.setSkin((SubstanceSkin) laf);                   
                     }
 // JG 6 May 2013 to multicatch
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+                } catch (NoSuchMethodException 
+                        | InvocationTargetException
+                        | IllegalArgumentException
+                        | IllegalAccessException
+                        | InstantiationException
+                        | ClassNotFoundException 
+                        | SecurityException
+                        | UnsupportedLookAndFeelException ex) {
+                    Logger.getLogger(JResetPickupID.class.getName()).log(Level.SEVERE, "Cannot instanciate swing LookAndFeel for: "+lafClassName, ex);
                 }
                 
                 JResetPickupID resetFrame = new JResetPickupID(config);//
