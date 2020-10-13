@@ -48,58 +48,51 @@ NOTE: WILL NOT follow future version of Unicenta oPOS
 
 image::krpos-screenshot.gif[]
 
-== TODO - Define PaymentGateway as java SPI
+== Service Provider Iinterface (SPI)
 
-* REMOVE all use of package uk.co.pos_apps from base/core code
-* PaymentGatewayProvider should
+About Java SPI available since Java 1.5 (eg: Used in JDBC driver loading)
 
-.Search (kotlin)
-----
-uk.co.pos_apps.PosApps
-uk.co.pos_apps.payment.dejavoo.DejavooProcessor;
-uk.co.pos_apps.common.AppContext
-----
+* META-INF/services
+* https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html
+* https://en.wikipedia.org/wiki/Service_provider_interface
+
+.Example of possible SPI 
+|====
+|ResourceLoader, ResourceProvider resource:file:// resource:db:// resource:classpath://
+|PaymentGatewayProvider
+|====
 
 
-.Search and remove (uk.co.pos_apps)
-----
-src/main/java/com/openbravo/pos/payment/PaymentGatewayDejavoo.kt
-
-src/main/java/com/openbravo/pos/payment/PaymentGatewayPaymentSense.kt
-
-src/main/java/com/openbravo/pos/payment/PaymentGatewayVantiv.kt
-
-src/main/resources/com/openbravo/pos/templates/Ticket.Close.xml
-
-src/main/resources/com/openbravo/pos/templates/Cash.Close.xml
-
-src/main/resources/com/openbravo/pos/templates/script.posapps.txt
-
-src/main/resources/com/openbravo/pos/templates/customer.updated.xml
-
-src/main/resources/com/openbravo/pos/templates/customer.deleted.xml
-
-src/main/resources/com/openbravo/pos/templates/customer.created.xml
-
-src/main/resources/com/openbravo/pos/templates/application.started.xml
-----
-
-== Future/
-
-Modularity
+== Modularity
 
 * Modularity based on OSGI 7
 * ScriptEngine: 
-** Kotlin(kts), others are possible, but may not included (groovy)
+** Kotlin(kts)
+** groovy (but may not included, just for testing/evaluation)
 
-Provide API, SPI 
+Modularity of code base (impl should provide default implementation)
 
 * krospos-core-api
-* krospos-core-impl
+* krospos-core-impl 
+* krospos-gui-api
+* krospos-gui-core
+* krospos-data-api
+* krospos-data-impl
 
+=== OSGI 
+
+* Fragment for static resource customization
+* capabilities and requirement
+* Declarative Service (Dependency Injection)
+* ConfigAdmin
+* Custom Annotation
+* Apache Karaf (Apache Felix)
+* TornadoFX (OSGI and JavaFX)
+* ...
 
 == Docker 
 
+.Run MySQL database for Developer Env 
 ----
  docker run --name unicenta -p 3306:3306 -d -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=unicenta -e MYSQL_USER=unicenta -e MYSQL_PASSWORD=unicenta mysql:5.6
 ----
