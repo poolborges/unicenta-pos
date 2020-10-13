@@ -20,28 +20,12 @@
 // Cash.Close
 // This script runs in the cash.close event
 
-        import java.awt.Font;
-        import javax.swing.plaf.FontUIResource;
-        import com.openbravo.pos.payment.PaymentInfo;
-        import javax.swing.JOptionPane;
-        import javax.swing.JDialog;
-        import uk.co.pos_apps.PosApps;
-        import java.awt.Window;
+import java.awt.Font;
+import javax.swing.plaf.FontUIResource;
+import com.openbravo.pos.payment.PaymentInfo;
+import javax.swing.JOptionPane;
+import javax.swing.JDialog;
+import java.awt.Window;
 
-
-
-        System.out.println("cash.close event!");
-        Window rootWindow ;
-
-        Window[] allWindows = Window.getWindows();
-
-        for (int i=0 ; i < allWindows.length; i++){
-        if (allWindows[i].getName().equals("frame0")){
-        rootWindow = (Window)allWindows[i];
-        }
-        }
-
-        PosApps.initEOD("PaymentSense",rootWindow);
-
-
-
+System.out.println("SCRIPT_RUN: Cash.Close send amount to !");
+//KrPosHubClient.sendEvent("cash.close", event.getContent());

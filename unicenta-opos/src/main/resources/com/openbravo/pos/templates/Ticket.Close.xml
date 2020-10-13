@@ -20,30 +20,17 @@
 // Ticket.Close
 // This script displays the amount of Cash Change (CashTendered - TicketValue) to be given to Customer
 
-        import java.awt.Font;
-        import javax.swing.plaf.FontUIResource;
-        import com.openbravo.pos.payment.PaymentInfo;
-        import javax.swing.JOptionPane;
-        import javax.swing.JDialog;
-        import uk.co.pos_apps.PosApps;
-        import java.awt.Window;
+import java.awt.Font;
+import javax.swing.plaf.FontUIResource;
+import com.openbravo.pos.payment.PaymentInfo;
+import javax.swing.JOptionPane;
+import javax.swing.JDialog;
+import java.awt.Window;
+//import io.github.kriosolutions.krposhub.KrPosHubClient
 
-
-
-        Window rootWindow ;
-
-        Window[] allWindows = Window.getWindows();
-
-        for (int i=0 ; i < allWindows.length; i++){
-        if (allWindows[i].getName().equals("frame0")){
-        rootWindow = (Window)allWindows[i];
-        }
-        }
-
-        PosApps posApps = new PosApps();
-
-        posApps.init(ticket,dbURL,dbUser,dbPassword,rootWindow,"Email");
-
+System.out.println("SCRIPT_RUN: Ticket.Close send krpos-hub");   
+System.out.println("Ticket.Close: send event to KRPOS-HUB should send notification/email");  
+//KrPosHubClient.sendEvent(ticket,dbURL,dbUser,dbPassword,rootWindow,"Email");
 
 
 boolean isCash = false;

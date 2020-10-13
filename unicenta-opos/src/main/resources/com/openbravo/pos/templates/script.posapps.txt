@@ -21,21 +21,9 @@
 // **************************************************************************
 // This script opens up the posapps settings / config screen
 
-import uk.co.pos_apps.PosApps;
+//import io.github.kriosolutions.krposhub.KrPosHubClient
 import java.awt.Window;
 
-System.out.println("Run posapps!");
+System.out.println("SCRIPT_RUN: Run posapps!");
 
-Window rootWindow ;
- 
-Window[] allWindows = Window.getWindows();
- 
-for (int i=0 ; i < allWindows.length; i++){
-    if (allWindows[i].getName().equals("frame0")){
-                 rootWindow = (Window)allWindows[i];
-             }
-}
- 
-PosApps posApps = new PosApps();
- 
-posApps.init(ticket,dbURL,dbUser,dbPassword,rootWindow,"Settings");
+//KrPosHubClient.openScreen(ticket,dbURL,dbUser,dbPassword,rootWindow,"Settings");
