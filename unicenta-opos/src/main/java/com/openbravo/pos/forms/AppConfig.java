@@ -24,8 +24,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,7 +45,7 @@ public class AppConfig implements AppProperties {
     private static final Logger logger = Logger.getLogger("com.openbravo.pos.forms.AppConfig");
 
     private static AppConfig m_instance = null;
-    private Properties m_propsconfig;
+    private SortedStoreProperties m_propsconfig;
     private File configfile;
 
     /**
@@ -67,7 +73,7 @@ public class AppConfig implements AppProperties {
 
     private void init(File configfile) {
         this.configfile = configfile;
-        m_propsconfig = new Properties();
+        m_propsconfig = new SortedStoreProperties();
     }
 
     private static File getDefaultConfig() {
@@ -220,8 +226,7 @@ public class AppConfig implements AppProperties {
             m_propsconfig.load(in);
         } catch (IOException e) {
             try {
-                logger.log(Level.WARNING, "Faild to read configuration file: "+configfile.getAbsolutePath(), e);
-                logger.log(Level.INFO, "Try to save default configuration to file: {0}", configfile.getAbsolutePath());
+                logger.log(Level.WARNING, "Faild to read configuration file: " + configfile.getAbsolutePath(), e);
                 loadDefault();
                 save();
 
@@ -252,8 +257,11 @@ public class AppConfig implements AppProperties {
      */
     public void save() throws IOException {
 
-        try (OutputStream out = new FileOutputStream(configfile)) {
+        logger.log(Level.INFO, "Saving configuration to file: {0}", configfile.getAbsolutePath());
+        try ( OutputStream out = new FileOutputStream(configfile)) {
             m_propsconfig.store(out, AppLocal.APP_NAME + ". Configuration file.");
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, "Fail saving configuration to file: "+configfile.getAbsolutePath(), ex);
         }
     }
 
@@ -261,7 +269,7 @@ public class AppConfig implements AppProperties {
 
         logger.log(Level.INFO, "Load default configuration");
 
-        m_propsconfig = new Properties();
+        m_propsconfig = new SortedStoreProperties();
 
         String dirname = System.getProperty("dirname.path");
         dirname = dirname == null ? "./" : dirname;
@@ -356,5 +364,41 @@ public class AppConfig implements AppProperties {
         m_propsconfig.setProperty("till.amountattop", "true");
         m_propsconfig.setProperty("till.hideinfo", "true");
 
+    }
+}
+
+class SortedStoreProperties extends Properties {
+
+    @Override
+    public void store(OutputStream out, String comments) throws IOException {
+        Properties sortedProps;
+        sortedProps = new Properties() {
+            @Override
+            public Set<Map.Entry<Object, Object>> entrySet() {
+
+                Set<Map.Entry<Object, Object>> sortedSet = new TreeSet<>(new Comparator<Map.Entry<Object, Object>>() {
+                    @Override
+                    public int compare(Map.Entry<Object, Object> o1, Map.Entry<Object, Object> o2) {
+                        return o1.getKey().toString().compareTo(o2.getKey().toString());
+                    }
+                }
+                );
+                sortedSet.addAll(super.entrySet());
+                return sortedSet;
+            }
+
+            @Override
+            public Set<Object> keySet() {
+                return new TreeSet<>(super.keySet());
+            }
+
+            @Override
+            public synchronized Enumeration<Object> keys() {
+                return Collections.enumeration(new TreeSet<>(super.keySet()));
+            }
+
+        };
+        sortedProps.putAll(this);
+        sortedProps.store(out, comments);
     }
 }
