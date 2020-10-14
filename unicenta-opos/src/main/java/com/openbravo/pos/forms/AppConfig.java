@@ -16,7 +16,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with KrOS POS.  If not, see <http://www.gnu.org/licenses/>
-
 package com.openbravo.pos.forms;
 
 import java.io.File;
@@ -73,7 +72,7 @@ public class AppConfig implements AppProperties {
 
     private static File getDefaultConfig() {
         return new File(new File(System.getProperty("user.home")),
-                 AppLocal.APP_ID + ".properties");
+                AppLocal.APP_ID + ".properties");
     }
 
     /**
@@ -216,22 +215,16 @@ public class AppConfig implements AppProperties {
      */
     public void load() {
         logger.log(Level.INFO, "Try Loading configuration file: {0}", configfile.getAbsolutePath());
-        loadDefault();
 
-        try {
-            InputStream in = new FileInputStream(configfile);
-            if (in != null) {
-                m_propsconfig.load(in);
-                in.close();
-            }else{
-                logger.log(Level.WARNING, "Faild to read configuration file: {0}", configfile.getAbsolutePath());
-            }
+        try ( InputStream in = new FileInputStream(configfile)) {
+            m_propsconfig.load(in);
         } catch (IOException e) {
             try {
-                logger.log(Level.INFO, "Storing default configuration to file: {0}", configfile.getAbsolutePath());
+                logger.log(Level.WARNING, "Faild to read configuration file: "+configfile.getAbsolutePath(), e);
+                logger.log(Level.INFO, "Try to save default configuration to file: {0}", configfile.getAbsolutePath());
                 loadDefault();
                 save();
-                
+
             } catch (IOException ex) {
                 logger.log(Level.SEVERE, "Fail storing default configuration", ex);
             }
@@ -259,17 +252,15 @@ public class AppConfig implements AppProperties {
      */
     public void save() throws IOException {
 
-        OutputStream out = new FileOutputStream(configfile);
-        if (out != null) {
+        try (OutputStream out = new FileOutputStream(configfile)) {
             m_propsconfig.store(out, AppLocal.APP_NAME + ". Configuration file.");
-            out.close();
         }
     }
 
     private void loadDefault() {
 
         logger.log(Level.INFO, "Load default configuration");
-        
+
         m_propsconfig = new Properties();
 
         String dirname = System.getProperty("dirname.path");
@@ -280,7 +271,7 @@ public class AppConfig implements AppProperties {
         m_propsconfig.setProperty("override.pin", "");
 
         m_propsconfig.setProperty("db.driverlib", new File(new File(dirname),
-                 "mysql-connector-java-5.1.39.jar").getAbsolutePath());
+                "mysql-connector-java-5.1.39.jar").getAbsolutePath());
         m_propsconfig.setProperty("db.engine", "MySQL");
         m_propsconfig.setProperty("db.driver", "com.mysql.jdbc.Driver");
 
