@@ -318,7 +318,7 @@ public final class TicketInfo implements SerializableRead, Externalizable {
     public String getReturnMessage(){
         return ( (getPayments().get(getPayments().size()-1)) instanceof PaymentInfoMagcard )
             ? ((PaymentInfoMagcard)(getPayments().get(getPayments().size()-1))).getReturnMessage()
-            : LocalRes.getIntString("button.OK");
+            : LocalRes.getIntString("button.ok");
     }
 
     public void setActiveCash(String value) {

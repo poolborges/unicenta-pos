@@ -613,7 +613,7 @@ public class JTicketsFinder extends javax.swing.JDialog implements EditorCreator
 
         jcmdOK.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jcmdOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
-        jcmdOK.setText(AppLocal.getIntString("button.OK")); // NOI18N
+        jcmdOK.setText(AppLocal.getIntString("button.ok")); // NOI18N
         jcmdOK.setEnabled(false);
         jcmdOK.setFocusPainted(false);
         jcmdOK.setFocusable(false);

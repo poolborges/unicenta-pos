@@ -215,7 +215,7 @@ public class JFind extends JDialog {
 
         jcmdOK.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jcmdOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
-        jcmdOK.setText(LocalRes.getIntString("button.OK")); // NOI18N
+        jcmdOK.setText(LocalRes.getIntString("button.ok")); // NOI18N
         jcmdOK.setMaximumSize(new java.awt.Dimension(65, 33));
         jcmdOK.setMinimumSize(new java.awt.Dimension(65, 33));
         jcmdOK.setPreferredSize(new java.awt.Dimension(110, 45));

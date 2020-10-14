@@ -129,7 +129,7 @@ public class JDlgChangePassword extends javax.swing.JDialog {
 
         jcmdOK.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jcmdOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
-        jcmdOK.setText(AppLocal.getIntString("button.OK")); // NOI18N
+        jcmdOK.setText(AppLocal.getIntString("button.ok")); // NOI18N
         jcmdOK.setPreferredSize(new java.awt.Dimension(110, 45));
         jcmdOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

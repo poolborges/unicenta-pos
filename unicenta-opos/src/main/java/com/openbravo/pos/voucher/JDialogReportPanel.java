@@ -229,7 +229,7 @@ public abstract class JDialogReportPanel extends javax.swing.JDialog {
         jPanel8.setLayout(new java.awt.BorderLayout());
 
         jcmdOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
-        jcmdOK.setText(AppLocal.getIntString("Button.OK")); // NOI18N
+        jcmdOK.setText(AppLocal.getIntString("button.ok")); // NOI18N
         jcmdOK.setEnabled(false);
         jcmdOK.setFocusPainted(false);
         jcmdOK.setFocusable(false);

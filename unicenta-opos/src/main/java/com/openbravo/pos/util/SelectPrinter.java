@@ -164,7 +164,7 @@ public class SelectPrinter extends javax.swing.JDialog {
 
         jcmdOK.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jcmdOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
-        jcmdOK.setText(AppLocal.getIntString("button.OK")); // NOI18N
+        jcmdOK.setText(AppLocal.getIntString("button.ok")); // NOI18N
         jcmdOK.setToolTipText("");
         jcmdOK.setMargin(new java.awt.Insets(8, 16, 8, 16));
         jcmdOK.setPreferredSize(new java.awt.Dimension(80, 45));

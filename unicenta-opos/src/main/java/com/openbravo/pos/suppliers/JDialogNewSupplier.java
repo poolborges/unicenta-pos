@@ -311,7 +311,7 @@ public class JDialogNewSupplier extends javax.swing.JDialog {
 
         m_jBtnOK.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         m_jBtnOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
-        m_jBtnOK.setText(AppLocal.getIntString("Button.OK")); // NOI18N
+        m_jBtnOK.setText(AppLocal.getIntString("button.ok")); // NOI18N
         m_jBtnOK.setFocusPainted(false);
         m_jBtnOK.setFocusable(false);
         m_jBtnOK.setMargin(new java.awt.Insets(8, 16, 8, 16));

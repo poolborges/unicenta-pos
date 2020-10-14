@@ -385,7 +385,7 @@ public class JSupplierFinder extends javax.swing.JDialog implements EditorCreato
         jPanel1.add(jcmdCancel);
 
         jcmdOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
-        jcmdOK.setText(AppLocal.getIntString("button.OK")); // NOI18N
+        jcmdOK.setText(AppLocal.getIntString("button.ok")); // NOI18N
         jcmdOK.setEnabled(false);
         jcmdOK.setFocusPainted(false);
         jcmdOK.setFocusable(false);

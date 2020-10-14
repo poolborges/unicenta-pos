@@ -175,9 +175,9 @@ public class JMessageDialog extends javax.swing.JDialog {
         jPanel3.setLayout(new java.awt.BorderLayout());
 
         jcmdOK.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jcmdOK.setText(LocalRes.getIntString("button.OK")); // NOI18N
+        jcmdOK.setText(LocalRes.getIntString("button.ok")); // NOI18N
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages"); // NOI18N
-        jcmdOK.setActionCommand(bundle.getString("button.OK")); // NOI18N
+        jcmdOK.setActionCommand(bundle.getString("button.ok")); // NOI18N
         jcmdOK.setMaximumSize(new java.awt.Dimension(65, 33));
         jcmdOK.setMinimumSize(new java.awt.Dimension(65, 33));
         jcmdOK.setPreferredSize(new java.awt.Dimension(65, 33));
