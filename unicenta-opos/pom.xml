@@ -272,10 +272,17 @@
         </dependency>
      -->
         
+        <!-- flatlaf - Swing LaF -->
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
             <version>0.27</version>
+        </dependency>
+        <!-- Flat Look and Feel addon for SwingX -->
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf-swingx</artifactId>
+            <version>0.43</version>
         </dependency>
     
     </dependencies>  
