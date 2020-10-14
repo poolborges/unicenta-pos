@@ -268,7 +268,7 @@
               <Font name="Arial" size="12" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="pos_messages.properties" key="button.exit" replaceFormat="AppLocal.getIntString(&quot;Button.Exit&quot;)"/>
+              <ResourceString bundle="pos_messages.properties" key="button.exit" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[70, 33]"/>
