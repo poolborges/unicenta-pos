@@ -553,7 +553,7 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jcboTicketsBag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(94, 94, 94)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jtxtStartupLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -581,7 +581,7 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(0, 50, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -591,36 +591,6 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
         getAccessibleContext().setAccessibleName("");
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jcboLAFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcboLAFActionPerformed
-
-    }//GEN-LAST:event_jcboLAFActionPerformed
-
-    private void jtxtStartupTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtStartupTextActionPerformed
-
-    }//GEN-LAST:event_jtxtStartupTextActionPerformed
-
-    private void jtxtStartupTextFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtxtStartupTextFocusGained
-        // JG 31 August 2103 GNU GPL License Warning
-
-//        transferFocus();
-
-//        JOptionPane.showMessageDialog(jPanel1,"<html>Changing default Startup Text content may violate the <br>"
-//           + " Free Software Foundation's GNU General Public License GPL","GNU GPL Warning",JOptionPane.WARNING_MESSAGE);
-
-    }//GEN-LAST:event_jtxtStartupTextFocusGained
-
-    private void jbtnTextClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnTextClearActionPerformed
-        jtxtStartupText.setText("");
-    }//GEN-LAST:event_jbtnTextClearActionPerformed
-
-    private void jtxtStartupHTMLFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtxtStartupHTMLFocusGained
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtxtStartupHTMLFocusGained
-
-    private void jtxtStartupHTMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtStartupHTMLActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtxtStartupHTMLActionPerformed
-
     private void jbtnClearHTMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnClearHTMLActionPerformed
         jtxtStartupHTML.setText("");
     }//GEN-LAST:event_jbtnClearHTMLActionPerformed
@@ -629,20 +599,49 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
         // TODO add your handling code here:
     }//GEN-LAST:event_jbtnHTMLActionPerformed
 
-    private void jbtnLogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnLogoActionPerformed
+    private void jtxtStartupHTMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtStartupHTMLActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jbtnLogoActionPerformed
+    }//GEN-LAST:event_jtxtStartupHTMLActionPerformed
+
+    private void jtxtStartupHTMLFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtxtStartupHTMLFocusGained
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtxtStartupHTMLFocusGained
 
     private void jLblURLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLblURLMouseClicked
-        JOptionPane.showMessageDialog(this, 
-            AppLocal.getIntString("message.URL"), 
-            "URL", 
+        JOptionPane.showMessageDialog(this,
+            AppLocal.getIntString("message.URL"),
+            "URL",
             JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jLblURLMouseClicked
+
+    private void jbtnTextClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnTextClearActionPerformed
+        jtxtStartupText.setText("");
+    }//GEN-LAST:event_jbtnTextClearActionPerformed
 
     private void jbtnTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnTextActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jbtnTextActionPerformed
+
+    private void jbtnLogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnLogoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbtnLogoActionPerformed
+
+    private void jtxtStartupTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtStartupTextActionPerformed
+
+    }//GEN-LAST:event_jtxtStartupTextActionPerformed
+
+    private void jtxtStartupTextFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtxtStartupTextFocusGained
+        // JG 31 August 2103 GNU GPL License Warning
+
+        //        transferFocus();
+
+        //        JOptionPane.showMessageDialog(jPanel1,"<html>Changing default Startup Text content may violate the <br>"
+            //           + " Free Software Foundation's GNU General Public License GPL","GNU GPL Warning",JOptionPane.WARNING_MESSAGE);
+    }//GEN-LAST:event_jtxtStartupTextFocusGained
+
+    private void jcboLAFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcboLAFActionPerformed
+
+    }//GEN-LAST:event_jcboLAFActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

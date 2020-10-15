@@ -268,6 +268,7 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
 
         jbtnRestore.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jbtnRestore.setText(AppLocal.getIntString("button.factory")); // NOI18N
+        jbtnRestore.setToolTipText(jbtnRestore.getText());
         jbtnRestore.setMaximumSize(new java.awt.Dimension(103, 33));
         jbtnRestore.setMinimumSize(new java.awt.Dimension(103, 33));
         jbtnRestore.setPreferredSize(new java.awt.Dimension(110, 45));
@@ -279,6 +280,7 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
 
         jbtnExit.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jbtnExit.setText(AppLocal.getIntString("button.exit")); // NOI18N
+        jbtnExit.setToolTipText(jbtnExit.getText());
         jbtnExit.setMaximumSize(new java.awt.Dimension(70, 33));
         jbtnExit.setMinimumSize(new java.awt.Dimension(70, 33));
         jbtnExit.setPreferredSize(new java.awt.Dimension(110, 45));
@@ -290,6 +292,7 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
 
         jbtnSave.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jbtnSave.setText(AppLocal.getIntString("button.save")); // NOI18N
+        jbtnSave.setToolTipText(jbtnSave.getText());
         jbtnSave.setMaximumSize(new java.awt.Dimension(70, 33));
         jbtnSave.setMinimumSize(new java.awt.Dimension(70, 33));
         jbtnSave.setPreferredSize(new java.awt.Dimension(110, 45));
