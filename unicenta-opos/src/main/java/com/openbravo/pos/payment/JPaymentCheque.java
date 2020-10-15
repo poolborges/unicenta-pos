@@ -52,7 +52,7 @@ public class JPaymentCheque extends javax.swing.JPanel implements JPaymentInterf
         m_jTendered.addEditorKeys(m_jKeys);
         
  /* added JDL 11.05.13        
-        AppConfig m_config =  new AppConfig(new File((System.getProperty("user.home")), AppLocal.APP_ID + ".properties"));        
+        AppConfig m_config =  AppConfig.getInstance();        
         m_config.load();        
         priceWith00 =("true".equals(m_config.getProperty("till.pricewith00")));
         if (priceWith00) {

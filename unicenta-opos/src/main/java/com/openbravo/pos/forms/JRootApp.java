@@ -410,8 +410,8 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
             Logger.getLogger(JRootApp.class.getName()).log(Level.SEVERE, null, ex);
         }
 // create the filename
-        String sUserPath = System.getProperty("user.home"); 
-        String filePath = sUserPath + "/" + sMachine + ".lau";
+        String sUserPath = AppConfig.getInstance().getAppDataDirectory(); 
+        File filePath = new File(sUserPath, sMachine + ".lau");
         
         Instant machineTimestamp = Instant.now();
         String sContent = sUserPath + "," 
@@ -421,15 +421,15 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
                 + AppLocal.APP_VERSION + "\n";
         
         try {
-            Files.write(Paths.get(filePath), sContent.getBytes(), 
+            Files.write(filePath.toPath(), sContent.getBytes(), 
                     StandardOpenOption.APPEND, StandardOpenOption.CREATE);
         } catch (IOException ex) {
             Logger.getLogger(JRootApp.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         try {
-            filePath = sUserPath + "/open.db";
-            Files.write(Paths.get(filePath), sContent.getBytes(), 
+            filePath = new File(sUserPath, "open.db");
+            Files.write(filePath.toPath(), sContent.getBytes(), 
                     StandardOpenOption.CREATE);
         } catch (IOException ex) {
             Logger.getLogger(JRootApp.class.getName()).log(Level.SEVERE, null, ex);
@@ -576,11 +576,10 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
                 shutdownIButtonMonitor();
 
 // delete the open.db tracking file
-                String sUserPath = System.getProperty("user.home");
-//                String filePath = sUserPath + "\\open.db";
-                String filePath = sUserPath + "/open.db";
+                String sUserPath = AppConfig.getInstance().getAppDataDirectory();
+                File filePath = new File(sUserPath, "open.db");
             try {
-                Files.deleteIfExists(Paths.get(filePath));
+                Files.deleteIfExists(filePath.toPath());
             } catch (IOException ex) {
                 Logger.getLogger(JRootApp.class.getName()).log(Level.SEVERE, null, ex);
             }

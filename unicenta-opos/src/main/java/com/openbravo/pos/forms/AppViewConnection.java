@@ -55,13 +55,12 @@ public class AppViewConnection {
         try {
             String dbURL=null;
             String sDBUser=null;
-            String sDBPassword=null;
-            String sUserPath = System.getProperty("user.home"); 
-            String filePath = sUserPath + "\\open.db";            
+            String sDBPassword=null; 
+            File filePath = new File(AppConfig.getInstance().getAppDataDirectory(), "open.db");            
             
 
             if("true".equals(props.getProperty("db.multi"))) {
-                if (!Files.exists(Paths.get(filePath))) {
+                if (!filePath.exists()) {
                     ImageIcon icon = new ImageIcon("/com/openbravo/images/app_logo_48x48");
                     Object[] dbs = {
                     "0 - " + props.getProperty("db.name"),

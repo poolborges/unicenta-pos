@@ -78,7 +78,7 @@ public class PaymentPanelMagCard extends javax.swing.JPanel implements PaymentPa
         initComponents();
         
 
-        AppConfig config = new AppConfig(new File(new File(System.getProperty("user.home")), AppLocal.APP_ID + ".properties"));
+        AppConfig config = AppConfig.getInstance();
         config.load();
 
 

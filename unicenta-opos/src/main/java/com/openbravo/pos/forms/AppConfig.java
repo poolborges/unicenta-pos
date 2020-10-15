@@ -47,6 +47,10 @@ public class AppConfig implements AppProperties {
     private static AppConfig m_instance = null;
     private SortedStoreProperties m_propsconfig;
     private File configfile;
+    
+    private static final String APP_CONFIG_DIRECTORY = System.getProperty("user.home");
+    private static final String APP_CONFIG_FILE_NAME = AppLocal.APP_ID + ".properties";
+    private static final File APP_CONFIG_FILE_DEFAULT = new File(APP_CONFIG_DIRECTORY, APP_CONFIG_FILE_NAME);
 
     /**
      * Set configuration array
@@ -77,8 +81,11 @@ public class AppConfig implements AppProperties {
     }
 
     private static File getDefaultConfig() {
-        return new File(new File(System.getProperty("user.home")),
-                AppLocal.APP_ID + ".properties");
+        return APP_CONFIG_FILE_DEFAULT;
+    }
+    
+    public String getAppDataDirectory(){
+        return APP_CONFIG_DIRECTORY;
     }
 
     /**
