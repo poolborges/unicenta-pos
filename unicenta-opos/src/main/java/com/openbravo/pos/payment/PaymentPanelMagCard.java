@@ -64,7 +64,6 @@ public class PaymentPanelMagCard extends javax.swing.JPanel implements PaymentPa
     String logicalDeviceName = "MagTekMSR_Encrypted";
     String encryptedCardData = null;
     String encryptionKey = null;
-    boolean isMercury;
     MSRControl113 msr = null;
     //----------------------------------------------------------------------//
     
@@ -82,12 +81,6 @@ public class PaymentPanelMagCard extends javax.swing.JPanel implements PaymentPa
         AppConfig config = new AppConfig(new File(new File(System.getProperty("user.home")), AppLocal.APP_ID + ".properties"));
         config.load();
 
-        String payProcessor = config.getProperty("payment.gateway");
-        if ("MercuryPay".equals(payProcessor)) {
-            isMercury = true;
-        } else {
-            isMercury = false;
-        }
 
         if (m_cardreader != null) {
             // They will be able to pay by card
@@ -101,9 +94,6 @@ public class PaymentPanelMagCard extends javax.swing.JPanel implements PaymentPa
         msr = new MSR();
         msr.addDataListener(this);
         msr.addErrorListener(this);
-        if (isMercury) {
-            processMSRSession();
-    }
     }
     
     private void processMSRSession() {
