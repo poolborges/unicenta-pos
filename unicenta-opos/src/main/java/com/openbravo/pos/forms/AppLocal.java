@@ -62,4 +62,12 @@ public class AppLocal {
     public static String getIntString(String sKey, Object ... sValues) {
         return m_resources.getString(sKey, sValues);
     }
+    
+    public static String getLockFileName(){
+        return APP_ID+"_open.db";
+    }
+    
+    public static String getLogFileName(){
+        return APP_ID+".log";
+    }
 }

@@ -23,13 +23,6 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.Session;
 import com.openbravo.pos.util.AltEncrypter;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.sql.Driver;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -56,7 +49,7 @@ public class AppViewConnection {
             String dbURL=null;
             String sDBUser=null;
             String sDBPassword=null; 
-            File filePath = new File(AppConfig.getInstance().getAppDataDirectory(), "open.db");            
+            File filePath = new File(AppConfig.getInstance().getAppDataDirectory(), AppLocal.getLockFileName());            
             
 
             if("true".equals(props.getProperty("db.multi"))) {
@@ -120,16 +113,6 @@ public class AppViewConnection {
                 
         } catch (SQLException eSQL) {
             throw new BasicException(AppLocal.getIntString("message.databaseconnectionerror"), eSQL);
-        }
-    }
-
-    private static boolean isJavaWebStart() {
-
-        try {
-            Class.forName("javax.jnlp.ServiceManager");
-            return true;
-        } catch (ClassNotFoundException ue) {
-            return false;
         }
     }
 }

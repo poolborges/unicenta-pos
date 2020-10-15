@@ -48,11 +48,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.logging.Level;
@@ -70,7 +66,6 @@ import com.openbravo.pos.util.uOWWatch;
 import org.joda.time.Instant;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 
@@ -78,7 +73,6 @@ import java.nio.file.StandardOpenOption;
  *
  * @author adrianromero
  */
-// public class JRootApp extends JPanel implements AppView {
 public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListener  {
 
     private AppProperties m_props;
@@ -91,18 +85,10 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
     private Date m_dActiveCashDateStart;
     private Date m_dActiveCashDateEnd;
     
-    private Double m_dActiveCashNotes;
-    private Double m_dActiveCashCoins;
-    private Double m_dActiveCashCards;
-    
     private String m_sClosedCashIndex;
     private int m_iClosedCashSequence;
     private Date m_dClosedCashDateStart;
     private Date m_dClosedCashDateEnd;
-    
-//    private Double m_dClosedCashNotes;
-//    private Double m_dClosedCashCoins;
-//    private Double m_dClosedCashCards;
     
     private String m_sInventoryLocation;
     
@@ -121,22 +107,13 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
 
     private String m_clock;
     private String m_date; 
-    private Connection con;  
-    private ResultSet rs;
-    private Statement stmt;
-    private String SQL;
-    private String sJLVersion;
-    private DatabaseMetaData md;
     
-    private final int m_rate=0;
+    private static final Logger LOG = Logger.getLogger(JRootApp.class.getName());
     
     static {        
         initOldClasses();
     }
 
-    private String sLaunch;
-    private String sMachine;    
-                
     private class PrintTimeAction implements ActionListener {
 
         @Override
@@ -146,8 +123,8 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
 
             DateTime m_datetime = getDateTime();
         
-            //TODO load Windows Title m_jLblTitle.setText(m_dlSystem.getResourceAsText("Window.Title"));
-            m_jLblTitle.setText("KrOS POS");
+            //TODO load Windows Title 
+            m_jLblTitle.setText(m_dlSystem.getResourceAsText("Window.Title"));
             m_jLblTitle.repaint();
             jLabel2.setText("  " + m_date + " " + m_clock);
 /*
@@ -392,26 +369,8 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
             }   
         }
 
-        /*
-        * JG 10 Dec 2018
-        * Test rig in prep' to track user install/launch success/fails
-        * We only need core info' to identify for POC
-        * For testing; code and declares are deliberately verbose
-        * 
-        * FUTURE : 
-        * App' error logging 
-        * Also auto-Notify users of available app' updates. 
-        * To be replaced with our REST API
-        */        
-        
-        try {
-            sMachine = InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(JRootApp.class.getName()).log(Level.SEVERE, null, ex);
-        }
 // create the filename
         String sUserPath = AppConfig.getInstance().getAppDataDirectory(); 
-        File filePath = new File(sUserPath, sMachine + ".lau");
         
         Instant machineTimestamp = Instant.now();
         String sContent = sUserPath + "," 
@@ -421,27 +380,21 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
                 + AppLocal.APP_VERSION + "\n";
         
         try {
-            Files.write(filePath.toPath(), sContent.getBytes(), 
+            Files.write(new File(sUserPath, AppLocal.getLogFileName()).toPath(), sContent.getBytes(), 
                     StandardOpenOption.APPEND, StandardOpenOption.CREATE);
         } catch (IOException ex) {
-            Logger.getLogger(JRootApp.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
         
         try {
-            filePath = new File(sUserPath, "open.db");
-            Files.write(filePath.toPath(), sContent.getBytes(), 
+            Files.write(new File(sUserPath, AppLocal.getLockFileName()).toPath(), sContent.getBytes(), 
                     StandardOpenOption.CREATE);
         } catch (IOException ex) {
-            Logger.getLogger(JRootApp.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }        
 
         /**
-         * TODO REMOVE FTPUpload log Uploader
-        try {                         
-            new com.unicenta.pos.util.FtpUpload().start();
-        } catch (Exception ex) {
-            Logger.getLogger(JRootApp.class.getName()).log(Level.SEVERE, null, ex);
-        }
+         * TODO Send Logging file to remote server, Ping remote server
          */
         
         m_propsdb = m_dlSystem.getResourceAsProperties(m_props.getHost() + "/properties");
