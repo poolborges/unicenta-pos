@@ -37,15 +37,7 @@ public class PaymentGatewayFac {
 // JG 16 May 12 use switch
         switch (sReader) {
             case "external":
-                return new PaymentGatewayExt();
-            case "Dejavoo":
-//TODO move to external                 return new PaymentGatewayDejavoo();
-                throw new UnsupportedOperationException("Not supported PaymentGateway: Dejavoo");
-            case "PaymentSense":
-//TODO move to external                return new PaymentGatewayPaymentSense();
-                throw new UnsupportedOperationException("Not supported PaymentGateway: PaymentSense");
-            case "Vantiv":
-//                return new PaymentGatewayVantiv();                
+                return new PaymentGatewayExt();             
             default:
                 return null;
         }

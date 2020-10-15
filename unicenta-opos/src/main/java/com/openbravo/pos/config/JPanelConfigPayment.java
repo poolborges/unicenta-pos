@@ -52,9 +52,6 @@ public class JPanelConfigPayment extends javax.swing.JPanel implements PanelConf
         // Payment Provider                
         initPayments("Not defined", new ConfigPaymentPanelEmpty());
         initPayments("external", new ConfigPaymentPanelEmpty());
-        initPayments("PaymentSense",  new ConfigPaymentPanelEmpty());
-        initPayments("Dejavoo",  new ConfigPaymentPanelEmpty());
-        initPayments("Vantiv",  new ConfigPaymentPanelEmpty());
 
         // Lector de tarjetas.
         jcboCardReader.addItem("Not defined");
