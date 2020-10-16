@@ -16,7 +16,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with KrOS POS.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.data.user;
 
 import java.util.*;
@@ -25,14 +24,14 @@ import java.awt.Component;
 import javax.swing.event.EventListenerList;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.LocalRes;
-import com.openbravo.pos.customers.CustomerInfo;
 import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.pos.customers.CustomerInfoGlobal;
-import com.openbravo.pos.customers.DataLogicCustomers;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.forms.BeanFactoryException;
 import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.scripting.ScriptEngine;
+import com.openbravo.pos.scripting.ScriptException;
 import com.openbravo.pos.scripting.ScriptFactory;
 
 /**
@@ -40,31 +39,16 @@ import com.openbravo.pos.scripting.ScriptFactory;
  * @author JG uniCenta
  */
 public class BrowsableEditableData {
-    
-    /**
-     * Ticket Type = Debit
-     */
+
     public static final int ST_NORECORD = 0;
-
-    /**
-     * Ticket Type = Credit (Refund)
-     */
     public static final int ST_UPDATE = 1;
-
-    /**
-     * Payment Type = Debit (On Account)
-     */
     public static final int ST_DELETE = 2;
-
-    /**
-     * Payment Type = Credit (On Account)
-     */
     public static final int ST_INSERT = 3;
-    
+
     private final static int INX_EOF = -1;
-    
+
     private BrowsableData m_bd;
-    
+
     protected EventListenerList listeners = new EventListenerList();
 
     private EditorRecord m_editorrecord;
@@ -73,11 +57,12 @@ public class BrowsableEditableData {
 //    private DocumentLoader m_keyvalue;
     private int m_iIndex;
     private boolean m_bIsAdjusting;
-    
+
     private boolean iseditable = true;
-    
+
     /**
      * Creates a new instance of BrowsableEditableData
+     *
      * @param bd
      * @param ed
      * @param dirty
@@ -91,14 +76,15 @@ public class BrowsableEditableData {
         m_iIndex = INX_EOF; // En EOF
         m_bIsAdjusting = false;
 //        m_keyvalue = DocumentLoaderBasic.INSTANCE;
-        
+
         // Inicializo ?
         m_editorrecord.writeValueEOF();
         m_Dirty.setDirty(false);
     }
-    
+
     /**
      * Check Ticket Dirty state
+     *
      * @param dataprov
      * @param saveprov
      * @param c
@@ -111,6 +97,7 @@ public class BrowsableEditableData {
 
     /**
      * Ticket Dirty state
+     *
      * @param dataprov
      * @param saveprov
      * @param ed
@@ -122,6 +109,7 @@ public class BrowsableEditableData {
 
     /**
      * Ticket data for list
+     *
      * @return
      */
     public final ListModel getListModel() {
@@ -130,18 +118,20 @@ public class BrowsableEditableData {
 
     /**
      * Value Changes
+     *
      * @return
      */
     public final boolean isAdjusting() {
         return m_bIsAdjusting || m_bd.isAdjusting();
     }
-    
-    private Object getCurrentElement() {           
+
+    private Object getCurrentElement() {
         return (m_iIndex >= 0 && m_iIndex < m_bd.getSize()) ? m_bd.getElementAt(m_iIndex) : null;
-    }    
+    }
 
     /**
      * Return index
+     *
      * @return
      */
     public final int getIndex() {
@@ -150,6 +140,7 @@ public class BrowsableEditableData {
 
     /**
      * Add to State listener
+     *
      * @param l
      */
     public final void addStateListener(StateListener l) {
@@ -158,6 +149,7 @@ public class BrowsableEditableData {
 
     /**
      * Delete from State listener
+     *
      * @param l
      */
     public final void removeStateListener(StateListener l) {
@@ -166,6 +158,7 @@ public class BrowsableEditableData {
 
     /**
      * Edit State listener
+     *
      * @param l
      */
     public final void addEditorListener(EditorListener l) {
@@ -174,6 +167,7 @@ public class BrowsableEditableData {
 
     /**
      * Delete from State listener
+     *
      * @param l
      */
     public final void removeEditorListener(EditorListener l) {
@@ -182,6 +176,7 @@ public class BrowsableEditableData {
 
     /**
      * Add to browse listener
+     *
      * @param l
      */
     public final void addBrowseListener(BrowseListener l) {
@@ -190,6 +185,7 @@ public class BrowsableEditableData {
 
     /**
      * Delete from browse listener
+     *
      * @param l
      */
     public final void removeBrowseListener(BrowseListener l) {
@@ -198,31 +194,32 @@ public class BrowsableEditableData {
 
     /**
      * Return State
+     *
      * @return
      */
     public int getState() {
         return m_iState;
     }
-    
-    private void fireStateUpdate() { 
+
+    private void fireStateUpdate() {
         EventListener[] l = listeners.getListeners(StateListener.class);
         int iState = getState();
-        for (int i = 0; i < l.length; i++) {
-            ((StateListener) l[i]).updateState(iState);
+        for (EventListener l1 : l) {
+            ((StateListener) l1).updateState(iState);
         }
     }
 
     /**
      * Execute listener event fire
      */
-    protected void fireDataBrowse() { 
-        
+    protected void fireDataBrowse() {
+
         m_bIsAdjusting = true;
         // Lanzamos los eventos...
         Object obj = getCurrentElement();
         int iIndex = getIndex();
         int iCount = m_bd.getSize();
-        
+
         // actualizo el registro
         if (obj == null) {
             m_iState = ST_NORECORD;
@@ -232,70 +229,74 @@ public class BrowsableEditableData {
             m_editorrecord.writeValueEdit(obj);
         }
         m_Dirty.setDirty(false);
-        fireStateUpdate();   
-        
+        fireStateUpdate();
+
         // Invoco a los Editor Listener
-        EventListener[] l = listeners.getListeners(EditorListener.class);
-        for (int i = 0; i < l.length; i++) {
-            ((EditorListener) l[i]).updateValue(obj);
+        for (EventListener l1 : listeners.getListeners(EditorListener.class)) {
+            ((EditorListener) l1).updateValue(obj);
         }
         // Y luego a los Browse Listener
-        l = listeners.getListeners(BrowseListener.class);
-        for (int i = 0; i < l.length; i++) {
-            ((BrowseListener) l[i]).updateIndex(iIndex, iCount);
+        for (EventListener l1 : listeners.getListeners(BrowseListener.class)) {
+            ((BrowseListener) l1).updateIndex(iIndex, iCount);
         }
         m_bIsAdjusting = false;
     }
-    
+
     /**
      * Data available
+     *
      * @return
      */
     public boolean canLoadData() {
         return m_bd.canLoadData();
     }
-    
+
     /**
      * Flag data editable
+     *
      * @param value
      */
     public void setEditable(boolean value) {
         iseditable = value;
     }
-    
+
     /**
      * Flag data can insert
+     *
      * @return
      */
     public boolean canInsertData() {
-        return iseditable && m_bd.canInsertData();          
+        return iseditable && m_bd.canInsertData();
     }
-    
+
     /**
      * Flag data can delete
+     *
      * @return
      */
     public boolean canDeleteData() {
-        return iseditable && m_bd.canDeleteData();      
+        return iseditable && m_bd.canDeleteData();
     }
-    
+
     /**
      * Flag can update
+     *
      * @return
      */
     public boolean canUpdateData() {
-        return iseditable && m_bd.canUpdateData();      
+        return iseditable && m_bd.canUpdateData();
     }
-        
+
     /**
      * Refresh current state
      */
     public void refreshCurrent() {
         baseMoveTo(m_iIndex);
-    }    
+    }
 
     /**
      * Refresh object data
+     *
      * @throws BasicException
      */
     public void refreshData() throws BasicException {
@@ -303,10 +304,11 @@ public class BrowsableEditableData {
         m_bd.refreshData();
         m_editorrecord.refresh();
         baseMoveTo(0);
-    }    
+    }
 
     /**
      * Load object data
+     *
      * @throws BasicException
      */
     public void loadData() throws BasicException {
@@ -318,6 +320,7 @@ public class BrowsableEditableData {
 
     /**
      * Unload object data
+     *
      * @throws BasicException
      */
     public void unloadData() throws BasicException {
@@ -326,9 +329,10 @@ public class BrowsableEditableData {
         m_editorrecord.refresh();
         baseMoveTo(0);
     }
-  
+
     /**
      * Sort object data
+     *
      * @param c
      * @throws BasicException
      */
@@ -337,13 +341,14 @@ public class BrowsableEditableData {
         m_bd.sort(c);
         baseMoveTo(0);
     }
-    
+
     /**
      * Move data to object
+     *
      * @param i
      * @throws BasicException
      */
-    public void moveTo(int i) throws BasicException {        
+    public void moveTo(int i) throws BasicException {
         saveData();
         if (m_iIndex != i) {
             baseMoveTo(i);
@@ -352,28 +357,31 @@ public class BrowsableEditableData {
 
     /**
      * Step into data -1 (Back)
+     *
      * @throws BasicException
      */
     public final void movePrev() throws BasicException {
         saveData();
-        if (m_iIndex > 0) {        
+        if (m_iIndex > 0) {
             baseMoveTo(m_iIndex - 1);
         }
     }
 
     /**
      * Step into data +1 (Forward)
+     *
      * @throws BasicException
      */
     public final void moveNext() throws BasicException {
         saveData();
-        if (m_iIndex < m_bd.getSize() - 1) {        
+        if (m_iIndex < m_bd.getSize() - 1) {
             baseMoveTo(m_iIndex + 1);
         }
     }
 
     /**
      * Step into data BOF (First)
+     *
      * @throws BasicException
      */
     public final void moveFirst() throws BasicException {
@@ -385,6 +393,7 @@ public class BrowsableEditableData {
 
     /**
      * Step into data EOF (End)
+     *
      * @throws BasicException
      */
     public final void moveLast() throws BasicException {
@@ -396,6 +405,7 @@ public class BrowsableEditableData {
 
     /**
      * Step into data =value (Next)
+     *
      * @param f
      * @return
      * @throws BasicException
@@ -403,75 +413,41 @@ public class BrowsableEditableData {
     public final int findNext(Finder f) throws BasicException {
         return m_bd.findNext(m_iIndex, f);
     }
-    
+
     /**
      * Save data
+     *
      * @throws BasicException
      */
     public void saveData() throws BasicException {
 
-        //Get the customer being referenced for firing action events
-        boolean isCustomerChangeEvent = false;
-        Object[] customer = new Object[27];
-        if (m_editorrecord.getClass().getName().equals("com.openbravo.pos.customers.CustomersView")) {
-            isCustomerChangeEvent = true;
-            customer = (Object[]) m_editorrecord.createValue();
-        }
-
         if (m_Dirty.isDirty()) {
-            if (m_iState == ST_UPDATE) {
-                int i = m_bd.updateRecord(m_iIndex, m_editorrecord.createValue());
-                m_editorrecord.refresh();
-                baseMoveTo(i);
-
-                if (isCustomerChangeEvent) {
-                    triggerCustomerEvent("customer.updated", customer, customer[27]);
-                }
-
-
-            } else if (m_iState == ST_INSERT) {
-
-                if (isCustomerChangeEvent) {
-                    m_editorrecord.refresh();
-
-                    AppView appView = (AppView) customer[27];
-                    int i = m_bd.insertRecord(customer);
+            switch (m_iState) {
+                case ST_UPDATE: {
+                    int i = m_bd.updateRecord(m_iIndex, m_editorrecord.createValue());
                     m_editorrecord.refresh();
                     baseMoveTo(i);
-
-                    triggerCustomerEvent("customer.created", customer, customer[27]);
-
-                    int n = JOptionPane.showConfirmDialog(
-                          null, 
-                          AppLocal.getIntString("message.customerassign"), 
-                          AppLocal.getIntString("title.editor"), 
-                            JOptionPane.YES_NO_OPTION);
-
-                    if (n == 0) {
-                        CustomerInfoGlobal customerInfoGlobal = CustomerInfoGlobal.getInstance();
-                        CustomerInfoExt customerInfoExt = new CustomerInfoExt(customer[0].toString());
-                        customerInfoGlobal.setCustomerInfoExt(customerInfoExt);
-                        customerInfoExt.setName(customer[3].toString());
-
-                        appView.getAppUserView().showTask("com.openbravo.pos.sales.JPanelTicketSales");
-                    }
-
-                } else {
+                    break;
+                }
+                case ST_INSERT: {
                     int i = m_bd.insertRecord(m_editorrecord.createValue());
                     m_editorrecord.refresh();
                     baseMoveTo(i);
+                    break;
                 }
-
-            } else if (m_iState == ST_DELETE) {
-                int i = m_bd.removeRecord(m_iIndex);
-                m_editorrecord.refresh();
-                baseMoveTo(i);
-
-                if (isCustomerChangeEvent) {
-                    triggerCustomerEvent("customer.deleted", customer, customer[27]);
+                case ST_DELETE: {
+                    int i = m_bd.removeRecord(m_iIndex);
+                    m_editorrecord.refresh();
+                    baseMoveTo(i);
+                    break;
                 }
+                default:
+                    break;
             }
-        }   
+        }
+        
+        //TODO should remove specific code
+        saveCustomerData();
     }
 
     private void triggerCustomerEvent(String event, Object[] customer, Object appContext) {
@@ -485,29 +461,30 @@ public class BrowsableEditableData {
             scriptEngine.put("device", appView.getProperties().getProperty("machine.hostname"));
             scriptEngine.eval(script);
 
-        }
-        catch (Exception e) {
-            System.err.println("Script Exception: "+e);
+        } catch (BeanFactoryException | ScriptException e) {
+            System.err.println("Script Exception: " + e);
         }
     }
-      
+
     /**
      * Reinstantiate data
+     *
      * @param c
      */
-    public void actionReloadCurrent(Component c) {        
-        if (!m_Dirty.isDirty() ||
-                JOptionPane.showConfirmDialog(c, 
-                    LocalRes.getIntString("message.changeslost"), 
-                    LocalRes.getIntString("title.editor"), 
-                    JOptionPane.YES_NO_OPTION, 
-                    JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {  
+    public void actionReloadCurrent(Component c) {
+        if (!m_Dirty.isDirty()
+                || JOptionPane.showConfirmDialog(c,
+                        LocalRes.getIntString("message.changeslost"),
+                        LocalRes.getIntString("title.editor"),
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
             refreshCurrent();
-        }             
+        }
     }
-  
+
     /**
      * Evaluate data before before commit
+     *
      * @param c
      * @return
      * @throws BasicException
@@ -515,14 +492,15 @@ public class BrowsableEditableData {
     public boolean actionClosingForm(Component c) throws BasicException {
         if (m_Dirty.isDirty()) {
             int res = JOptionPane.showConfirmDialog(c, LocalRes.getIntString("message.wannasave"), LocalRes.getIntString("title.editor"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if (res == JOptionPane.YES_OPTION) {
-                saveData();
-                return true;
-            } else if (res == JOptionPane.NO_OPTION) {
-                refreshCurrent();
-                return true;
-            } else {
-                return false;
+            switch (res) {
+                case JOptionPane.YES_OPTION:
+                    saveData();
+                    return true;
+                case JOptionPane.NO_OPTION:
+                    refreshCurrent();
+                    return true;
+                default:
+                    return false;
             }
         } else {
             return true;
@@ -532,28 +510,28 @@ public class BrowsableEditableData {
     /*
      * Metodos publicos finales (algunos protegidos que podrian ser finales
      */
-
     /**
      * Instantiate data
+     *
      * @throws BasicException
      */
-    
     public final void actionLoad() throws BasicException {
         loadData();
         if (m_bd.getSize() == 0) {
             actionInsert();
         }
     }
-    
+
     /**
      * Insert data - conditional
+     *
      * @throws BasicException
      */
     public final void actionInsert() throws BasicException {
         // primero persistimos
         saveData();
-        
-        if (canInsertData()) {       
+
+        if (canInsertData()) {
             // Y nos ponemos en estado de insert
             m_iState = ST_INSERT;
             m_editorrecord.writeValueInsert();
@@ -561,17 +539,18 @@ public class BrowsableEditableData {
             fireStateUpdate(); // ?
         }
     }
-    
+
     /**
-     * Delete data 
+     * Delete data
+     *
      * @throws BasicException
      */
     public final void actionDelete() throws BasicException {
         // primero persistimos
         saveData();
-        
+
         if (canDeleteData()) {
-        
+
             // Y nos ponemos en estado de delete
             Object obj = getCurrentElement();
             int iIndex = getIndex();
@@ -583,15 +562,69 @@ public class BrowsableEditableData {
                 fireStateUpdate(); // ?
             }
         }
-    }   
-    
-    private final void baseMoveTo(int i) {
-    // Este senor y el constructor a INX_EOF, son los unicos que tienen potestad de modificar m_iIndex.
+    }
+
+    private void baseMoveTo(int i) {
+        // Este senor y el constructor a INX_EOF, son los unicos que tienen potestad de modificar m_iIndex.
         if (i >= 0 && i < m_bd.getSize()) {
             m_iIndex = i;
         } else {
             m_iIndex = INX_EOF;
         }
         fireDataBrowse();
-    }    
+    }
+
+    /**
+     * saveCustomerData Trigger Script Execution on event
+     * Execute only in view context of com.openbravo.pos.customers.CustomersView
+     * 
+     *   Events: customer.created, customer.updated, customer.deleted
+     * 
+     * @throws BasicException 
+     */
+    private void saveCustomerData() throws BasicException {
+   
+        if (m_editorrecord.getClass().getName().equals("com.openbravo.pos.customers.CustomersView")) {
+
+            // com.openbravo.pos.customers.CustomersView MUST return Array of 27 Objects
+            Object[] customer = (Object[]) m_editorrecord.createValue();
+            AppView appView = (AppView) customer[27];
+
+            if (m_Dirty.isDirty()) {
+                switch (m_iState) {
+                    case ST_UPDATE: {
+                        triggerCustomerEvent("customer.updated", customer, appView);
+                        break;
+                    }
+                    case ST_INSERT: {
+                        triggerCustomerEvent("customer.created", customer, appView);
+
+                        int n = JOptionPane.showConfirmDialog(
+                                null,
+                                AppLocal.getIntString("message.customerassign"),
+                                AppLocal.getIntString("title.editor"),
+                                JOptionPane.YES_NO_OPTION);
+
+                        if (n == 0) {
+                            CustomerInfoGlobal customerInfoGlobal = CustomerInfoGlobal.getInstance();
+                            CustomerInfoExt customerInfoExt = new CustomerInfoExt(customer[0].toString());
+                            customerInfoGlobal.setCustomerInfoExt(customerInfoExt);
+                            customerInfoExt.setName(customer[3].toString());
+
+                            if (appView != null) {
+                                appView.getAppUserView().showTask("com.openbravo.pos.sales.JPanelTicketSales");
+                            }
+                        }
+                        break;
+                    }
+                    case ST_DELETE: {
+                        triggerCustomerEvent("customer.deleted", customer, appView);
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+        }
+    }
 }
