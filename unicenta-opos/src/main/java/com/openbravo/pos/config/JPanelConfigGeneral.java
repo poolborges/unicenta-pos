@@ -28,6 +28,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import com.openbravo.pos.util.FileChooserEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
@@ -41,6 +42,8 @@ import javax.swing.JOptionPane;
  */
 
 public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConfig {
+    
+    private static final Logger LOGGER = Logger.getLogger(JPanelConfigGeneral.class.getName());
 
     private final DirtyManager dirty = new DirtyManager();
 
@@ -53,7 +56,7 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
         try {
             IP = InetAddress.getLocalHost();
         } catch (UnknownHostException ex) {
-            Logger.getLogger(JPanelConfigGeneral.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, "Cannot get LocalHost from InetAddress", ex);
         }
 
         jtxtMachineHostname.getDocument().addDocumentListener(dirty);
@@ -194,12 +197,13 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
             SwingUtilities.invokeLater(() -> {
                 try {
                     String lafname = laf.getClassName();
-                    Object laf1 = Class.forName(lafname).newInstance();
+                    Object laf1 = Class.forName(lafname).getDeclaredConstructor().newInstance();
                     if (laf1 instanceof LookAndFeel) {
                         UIManager.setLookAndFeel((LookAndFeel) laf1);
                     }
                     SwingUtilities.updateComponentTreeUI(JPanelConfigGeneral.this.getTopLevelAncestor());
-                }catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+                }catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
+                    LOGGER.log(Level.WARNING, "Cannot set Look and Feel", ex);
                 }
             });
         }

@@ -19,11 +19,17 @@
 
 package com.openbravo.pos.forms;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author adrianromero
  */
 public class BeanFactoryData implements BeanFactoryApp {
+    
+    private static final Logger LOGGER = Logger.getLogger(BeanFactoryData.class.getName());
     
     private BeanFactoryApp bf;
     
@@ -45,10 +51,11 @@ public class BeanFactoryData implements BeanFactoryApp {
             if (sfactoryname.endsWith("Create")) {
                 sfactoryname = sfactoryname.substring(0, sfactoryname.length() - 6);
             }
-            bf = (BeanFactoryApp) Class.forName(sfactoryname + app.getSession().DB.getName()).newInstance();
+            bf = (BeanFactoryApp) Class.forName(sfactoryname + app.getSession().DB.getName()).getDeclaredConstructor().newInstance();
             bf.init(app);                     
 // JG 16 May use multicatch
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | BeanFactoryException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | BeanFactoryException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
+            LOGGER.log(Level.WARNING, "Cannot found Bean ", ex);
             throw new BeanFactoryException(ex);
         }
     }

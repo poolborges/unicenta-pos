@@ -20,6 +20,9 @@
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -27,6 +30,7 @@ import com.openbravo.basic.BasicException;
  */
 public class SerializerReadClass implements SerializerRead {
 
+    private static final Logger LOGGER = Logger.getLogger(SerializerReadClass.class.getName());
     private final Class m_clazz;
     
     /** Creates a new instance of DefaultSerializerRead
@@ -43,13 +47,15 @@ public class SerializerReadClass implements SerializerRead {
      */
     @Override
     public Object readValues(DataRead dr) throws BasicException {
+        SerializableRead sr = null;
         try {
-            SerializableRead sr = (SerializableRead) m_clazz.newInstance();
+            sr = (SerializableRead) m_clazz.getDeclaredConstructor().newInstance();
             sr.readValues(dr);
-            return sr;
 // JG 16 May 12 use multicatch
-        } catch (java.lang.InstantiationException | IllegalAccessException | ClassCastException eIns) {
-            return null;
+        } catch (java.lang.InstantiationException | IllegalAccessException | ClassCastException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
+            LOGGER.log(Level.WARNING, "Cannot found readvalues ", ex);
         }
+        
+        return sr;
     }
 }

@@ -74,6 +74,8 @@ import java.nio.file.StandardOpenOption;
  * @author adrianromero
  */
 public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListener  {
+    
+    private static final Logger LOGGER = Logger.getLogger(JRootApp.class.getName());
 
     private AppProperties m_props;
     private Session session;     
@@ -648,7 +650,7 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
                     Class bfclass = Class.forName(beanfactory);
 
                     if (BeanFactory.class.isAssignableFrom(bfclass)) {
-                        bf = (BeanFactory) bfclass.newInstance();             
+                        bf = (BeanFactory) bfclass.getDeclaredConstructor().newInstance();             
                     } else {
                         Constructor constMyView = bfclass.getConstructor(new Class[] {AppView.class});
                         Object bean = constMyView.newInstance(new Object[] {this});
@@ -658,6 +660,7 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
                 } catch (ClassNotFoundException | InstantiationException 
                         | IllegalAccessException | NoSuchMethodException 
                         | SecurityException | IllegalArgumentException | InvocationTargetException e) {
+                    LOGGER.log(Level.WARNING, "Cannot found Bean: "+beanfactory, e);
                     throw new BeanFactoryException(e);
                 }
             }

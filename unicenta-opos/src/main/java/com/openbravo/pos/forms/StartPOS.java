@@ -29,8 +29,8 @@ import java.util.logging.Logger;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import com.openbravo.pos.ticket.TicketInfo;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
 
 
@@ -89,12 +89,12 @@ public class StartPOS {
                 // Set the look and feel.
                 try {             
                     
-                    Object laf = Class.forName(config.getProperty("swing.defaultlaf")).newInstance();                    
+                    Object laf = Class.forName(config.getProperty("swing.defaultlaf")).getDeclaredConstructor().newInstance();                    
                     if (laf instanceof LookAndFeel){
                         UIManager.setLookAndFeel((LookAndFeel) laf);
                     }
 // JG 6 May 2013 to multicatch
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {                
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
                     logger.log(Level.WARNING, "Cannot set Look and Feel", e);
                 }
 
