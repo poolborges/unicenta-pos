@@ -193,12 +193,12 @@ public class TicketLineInfo1 implements SerializableWrite, SerializableRead, Ser
     @Override
     public void writeValues(DataWrite dp) throws BasicException {
         dp.setString(1, m_sTicket);
-        dp.setInt(2, new Integer(m_iLine));
+        dp.setInt(2, m_iLine);
         dp.setString(3, productid);
         dp.setString(4, attsetinstid);
 
-        dp.setDouble(5, new Double(multiply));
-        dp.setDouble(6, new Double(price));
+        dp.setDouble(5, multiply);
+        dp.setDouble(6, price);
 
         dp.setString(7, tax.getId());
         try {

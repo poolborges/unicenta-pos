@@ -229,7 +229,7 @@ public final class PaymentsEditor extends javax.swing.JPanel implements EditorRe
             if (d == null) {
                 return null;
             } else if (d.doubleValue() < 0.0) {
-                return new Double(-d.doubleValue());
+                return -d.doubleValue();
             } else {
                 return d;
             }
@@ -241,14 +241,14 @@ public final class PaymentsEditor extends javax.swing.JPanel implements EditorRe
         }
         @Override
         public Double positivize(Double d) {
-            return d == null ? null : new Double(-d.doubleValue());
+            return d == null ? null : -d;
         }
         @Override
         public Double addSignum(Double d) {
             if (d == null) {
                 return null;
-            } else if (d.doubleValue() > 0.0) {
-                return new Double(-d.doubleValue());
+            } else if (d > 0.0) {
+                return -d;
             } else {
                 return d;
             }

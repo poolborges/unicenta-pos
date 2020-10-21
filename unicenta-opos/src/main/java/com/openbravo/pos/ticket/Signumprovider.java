@@ -58,9 +58,9 @@ public class Signumprovider {
      */
     public Double correctSignum(Object key, Double value) {
         if (m_positives.contains(key)) {
-            return value.doubleValue() < 0.0 ? new Double(-value.doubleValue()) : value;
+            return value < 0.0 ? -value : value;
         } else if (m_negatives.contains(key)) {
-            return value.doubleValue() > 0.0 ? new Double(-value.doubleValue()) : value;
+            return value > 0.0 ? -value : value;
         } else {
             return value;
         }        

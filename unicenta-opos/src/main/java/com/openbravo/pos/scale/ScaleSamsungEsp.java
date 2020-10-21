@@ -93,12 +93,12 @@ public class ScaleSamsungEsp implements Scale, SerialPortEventListener {
                 double dWeight = m_dWeightBuffer / m_dWeightDecimals;
                 m_dWeightBuffer = 0.0;
                 m_dWeightDecimals = 1.0;
-                return new Double(dWeight);
+                return dWeight;
             } else {
                 m_iStatusScale = SCALE_READY;
                 m_dWeightBuffer = 0.0;
                 m_dWeightDecimals = 1.0;
-                return new Double(0.0);
+                return 0.0;
             }
         }
     }

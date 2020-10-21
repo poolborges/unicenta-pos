@@ -163,7 +163,7 @@ public class ResultSetTableModel implements TableModel {
     if ((rowIndex >= 0) && (rowIndex < getRowCount()) && (columnIndex >= 0)
       && (columnIndex < getColumnCount())) {
       if (columnIndex == 0) {
-        result = new Integer(rowIndex + 1);
+        result = rowIndex + 1;
       } else {
         result = m_Data[rowIndex][columnIndex - 1];
       }

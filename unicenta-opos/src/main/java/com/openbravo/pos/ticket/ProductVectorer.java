@@ -62,8 +62,8 @@ public class ProductVectorer implements Vectorer {
         m_sValues[0] = Formats.STRING.formatValue(myprod.getReference());
         m_sValues[1] = Formats.STRING.formatValue(myprod.getCode());
         m_sValues[2] = Formats.STRING.formatValue(myprod.getName());
-        m_sValues[3] = Formats.CURRENCY.formatValue(new Double(myprod.getPriceBuy()));
-        m_sValues[4] = Formats.CURRENCY.formatValue(new Double(myprod.getPriceSell()));     
+        m_sValues[3] = Formats.CURRENCY.formatValue(myprod.getPriceBuy());
+        m_sValues[4] = Formats.CURRENCY.formatValue(myprod.getPriceSell());     
         return m_sValues;
     }
 }

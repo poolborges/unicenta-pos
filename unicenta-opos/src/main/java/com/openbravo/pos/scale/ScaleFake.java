@@ -32,7 +32,7 @@ public class ScaleFake implements Scale {
      */
     @Override
     public Double readWeight() throws ScaleException {
-        return new Double(Math.random() * 2.0);
+        return Math.random() * 2.0;
     }
     
 }

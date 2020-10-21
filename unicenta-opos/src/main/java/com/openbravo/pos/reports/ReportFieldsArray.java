@@ -38,7 +38,7 @@ public class ReportFieldsArray implements ReportFields {
         // Creo el mapa de claves
         m_keys = new HashMap();
         for (int i = 0; i < afields.length; i++) {
-            m_keys.put(afields[i], new Integer(i));
+            m_keys.put(afields[i], i);
         }
     }
     

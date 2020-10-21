@@ -98,7 +98,7 @@ public class JPaymentBank extends javax.swing.JPanel implements JPaymentInterfac
             m_dPaid = value;
         } 
 
-        m_jMoneyEuros.setText(Formats.CURRENCY.formatValue(new Double(m_dPaid)));
+        m_jMoneyEuros.setText(Formats.CURRENCY.formatValue(m_dPaid));
         
         int iCompare = RoundUtils.compare(m_dPaid, m_dTotal);
         
