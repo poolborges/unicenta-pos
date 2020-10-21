@@ -224,7 +224,7 @@ public class JRPrinterAWT300 implements Printable {
 
   
     private Image printPageToImage(int pageIndex, float zoom) throws JRException {
-        Image pageImage = new BufferedImage(
+        BufferedImage pageImage = new BufferedImage(
                 (int) (jasperPrint.getPageWidth() * zoom) + 1,
                 (int) (jasperPrint.getPageHeight() * zoom) + 1,
                 BufferedImage.TYPE_INT_RGB
@@ -233,7 +233,7 @@ public class JRPrinterAWT300 implements Printable {
         JRGraphics2DExporter exporter = new JRGraphics2DExporter();
         exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
         SimpleGraphics2DExporterOutput output = new SimpleGraphics2DExporterOutput();
-        output.setGraphics2D((Graphics2D) pageImage.getGraphics());
+        output.setGraphics2D(pageImage.createGraphics());
         exporter.setExporterOutput(output);
         SimpleGraphics2DReportConfiguration configuration = new SimpleGraphics2DReportConfiguration();
         configuration.setPageIndex(pageIndex);
