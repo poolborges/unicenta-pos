@@ -113,18 +113,24 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
          
         final ThumbNailBuilder tnb = new ThumbNailBuilder(32, 32, "com/openbravo/images/user.png");        
 
-        peopleread = (DataRead dr) -> new AppUser(
-                dr.getString(1),
-                dr.getString(2),
-                dr.getString(3),
-                dr.getString(4),
-                dr.getString(5),
-                new ImageIcon(tnb.getThumbNail(ImageUtils.readImage(dr.getBytes(6)))));
+        peopleread = new SerializerRead() { 
+            public Object readValues(DataRead dr) throws BasicException { 
+                return new AppUser( 
+                        dr.getString(1), 
+                        dr.getString(2), 
+                        dr.getString(3), 
+                        dr.getString(4), 
+                        dr.getString(5), 
+                        new ImageIcon(tnb.getThumbNail(ImageUtils.readImage(dr.getBytes(6)))));                 
+            } 
+        };
    
 // START OF PRODUCT ************************************************************      
-        productIdRead =(DataRead dr) -> (                       
-                dr.getString(1)
-                );
+        productIdRead = new SerializerRead() { 
+            public Object readValues(DataRead dr) throws BasicException { 
+                return dr.getString(1);                 
+            } 
+        };
 
  	m_getProductAllFields = new PreparedSentence(s
 		, "SELECT ID FROM products WHERE REFERENCE=? AND CODE=? AND NAME=? "
