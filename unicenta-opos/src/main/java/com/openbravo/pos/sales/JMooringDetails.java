@@ -19,19 +19,20 @@
 
 package com.openbravo.pos.sales;
 
+import com.openbravo.data.gui.ResultSetTableModel;
 import com.openbravo.data.loader.Session;
 
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Window;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import javax.swing.*;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
-import net.proteanit.sql.DbUtils;
 
 /**
  * @author JG uniCenta
@@ -71,7 +72,7 @@ public class JMooringDetails extends javax.swing.JDialog {
             final String SQL = "SELECT * FROM moorers";
             final ResultSet rs = stmt.executeQuery(SQL);
 
-            jTableSelector.setModel(DbUtils.resultSetToTableModel(rs));
+            jTableSelector.setModel(new ResultSetTableModel(rs));
             jTableSelector.getColumnModel().getColumn(0).setPreferredWidth(200);
             jTableSelector.getColumnModel().getColumn(1).setPreferredWidth(40);
             jTableSelector.getColumnModel().getColumn(2).setPreferredWidth(40);
@@ -140,7 +141,7 @@ public class JMooringDetails extends javax.swing.JDialog {
         return vesselPower;
     }
 
-
+    
     /**
      * This method is called from within the constructor to
      * initialize the form.
