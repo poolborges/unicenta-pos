@@ -25,6 +25,7 @@ import com.openbravo.basic.BasicException;
  *
  * @author JG uniCenta
  */
+@FunctionalInterface
 public interface Finder {
 
     /**

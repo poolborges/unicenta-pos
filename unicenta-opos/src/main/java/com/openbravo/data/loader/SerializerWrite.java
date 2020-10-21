@@ -26,6 +26,7 @@ import com.openbravo.basic.BasicException;
  * @author JG uniCenta
  * @param <T>
  */
+@FunctionalInterface
 public interface SerializerWrite<T> {
     
     /**

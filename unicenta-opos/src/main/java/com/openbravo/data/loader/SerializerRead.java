@@ -25,6 +25,7 @@ import com.openbravo.basic.BasicException;
  *
  * @author  adrian
  */
+@FunctionalInterface
 public interface SerializerRead {
 
     /**
