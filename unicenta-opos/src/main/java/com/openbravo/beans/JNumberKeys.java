@@ -20,8 +20,8 @@
 package com.openbravo.beans;
 
 import java.awt.ComponentOrientation;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -29,7 +29,7 @@ import java.util.Vector;
  */
 public class JNumberKeys extends javax.swing.JPanel {
 
-    private Vector m_Listeners = new Vector();
+    private final List<JNumberEventListener> m_Listeners = new ArrayList();
     
     private boolean minusenabled = true;
     private boolean equalsenabled = true;
@@ -173,13 +173,11 @@ public class JNumberKeys extends javax.swing.JPanel {
         @Override
         public void actionPerformed(java.awt.event.ActionEvent evt) {
            
-            JNumberEvent oEv = new JNumberEvent(JNumberKeys.this, m_cCad);            
-            JNumberEventListener oListener;
+            final JNumberEvent oEv = new JNumberEvent(JNumberKeys.this, m_cCad);   
             
-            for (Enumeration e = m_Listeners.elements(); e.hasMoreElements();) {
-                oListener = (JNumberEventListener) e.nextElement();
-                oListener.keyPerformed(oEv);
-            }
+            m_Listeners.stream().forEach((JNumberEventListener listener) -> {
+                listener.keyPerformed(oEv);
+            });
         }
     }
 

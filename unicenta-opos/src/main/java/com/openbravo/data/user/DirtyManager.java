@@ -35,7 +35,7 @@ public class DirtyManager implements DocumentListener, ChangeListener, ActionLis
     /**
      *
      */
-    protected Vector listeners = new Vector();
+    private final List<DirtyListener> listeners = new ArrayList();
     
     /** Creates a new instance of DirtyManager */
     public DirtyManager() {
@@ -63,11 +63,9 @@ public class DirtyManager implements DocumentListener, ChangeListener, ActionLis
      */
     protected void fireChangedDirty() {
         
-        Enumeration e = listeners.elements();
-        while (e.hasMoreElements()) {
-            DirtyListener l = (DirtyListener) e.nextElement();
-            l.changedDirty(m_bDirty);
-        }
+        listeners.stream().forEach((DirtyListener listener) -> {
+            listener.changedDirty(m_bDirty);
+        });
     }
     
     /**
