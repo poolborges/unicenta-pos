@@ -9,9 +9,8 @@
     <name>krPOS :: Unicenta.oPOS</name>  
     <properties> 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.source>14</maven.compiler.source>
+        <maven.compiler.target>14</maven.compiler.target>
         <kotlin.version>1.3.50</kotlin.version>
     </properties>  
     <dependencies>
@@ -24,22 +23,12 @@
             <groupId>org.jfree</groupId>  
             <artifactId>jfreechart</artifactId>  
             <version>1.5.0</version> 
-        </dependency>
-        <dependency> 
-            <groupId>commons-beanutils</groupId>  
-            <artifactId>commons-beanutils</artifactId>  
-            <version>1.9.4</version> 
-        </dependency>  
-        <dependency> 
-            <groupId>commons-digester</groupId>  
-            <artifactId>commons-digester</artifactId>  
-            <version>2.1</version> 
-        </dependency>  
+        </dependency> 
         <!-- iText Java-PDF library-->
         <dependency> 
-            <groupId>com.lowagie</groupId>  
-            <artifactId>itext</artifactId>  
-            <version>4.2.1</version> 
+            <groupId>com.itextpdf</groupId>  
+            <artifactId>itextpdf</artifactId>  
+            <version>5.5.6</version> 
         </dependency>  
         <!-- Apache POI - Java API To Access Microsoft Format Files -->
         <dependency> 
@@ -52,6 +41,16 @@
             <artifactId>barcode4j</artifactId>  
             <version>2.1</version> 
         </dependency>  
+        <dependency> 
+            <groupId>commons-beanutils</groupId>  
+            <artifactId>commons-beanutils</artifactId>  
+            <version>1.9.4</version> 
+        </dependency>  
+        <dependency> 
+            <groupId>commons-digester</groupId>  
+            <artifactId>commons-digester</artifactId>  
+            <version>2.1</version> 
+        </dependency> 
         <dependency> 
             <groupId>commons-codec</groupId>  
             <artifactId>commons-codec</artifactId>  
@@ -91,7 +90,7 @@
         <dependency> 
             <groupId>org.beanshell</groupId>  
             <artifactId>bsh</artifactId>  
-            <version>2.0b4</version> 
+            <version>2.0b5</version> 
         </dependency>  
         <dependency> 
             <groupId>org.bidib.jbidib.org.qbang.rxtx</groupId>  
@@ -144,7 +143,7 @@
         <dependency> 
             <groupId>mysql</groupId>  
             <artifactId>mysql-connector-java</artifactId>  
-            <version>8.0.16</version> 
+            <version>8.0.21</version> 
             <scope>runtime</scope>
         </dependency>  
         <dependency> 
@@ -195,12 +194,13 @@
             <artifactId>joda-time</artifactId>  
             <version>2.9.7</version> 
         </dependency>  
-        <!-- https://mvnrepository.com/artifact/de.sciss/weblaf -->  
+        <!--  -->
         <dependency>
             <groupId>de.sciss</groupId>  
             <artifactId>weblaf-complete</artifactId>  
             <version>1.29</version> 
         </dependency>
+          
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>javax.persistence-api</artifactId>
@@ -284,7 +284,7 @@
             <plugin> 
                 <groupId>org.apache.maven.plugins</groupId>  
                 <artifactId>maven-compiler-plugin</artifactId>  
-                <version>3.8.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
