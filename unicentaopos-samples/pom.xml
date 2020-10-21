@@ -127,6 +127,12 @@
             <artifactId>auto-service-annotations</artifactId>
             <version>${auto-service.version}</version>
         </dependency>
+        <!-- util class to Lookup for ServiceProvider -->
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util-lookup</artifactId>
+            <version>RELEASE121</version>
+        </dependency>
         
         
         <!-- org.scijava/scripting-java -->
