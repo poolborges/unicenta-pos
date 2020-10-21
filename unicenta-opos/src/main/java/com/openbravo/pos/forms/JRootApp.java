@@ -55,7 +55,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import javax.swing.*;     
-import org.joda.time.DateTime;
 import com.dalsemi.onewire.OneWireAccessProvider;
 import com.dalsemi.onewire.adapter.DSPortAdapter;
 import com.dalsemi.onewire.OneWireException;
@@ -63,10 +62,10 @@ import com.dalsemi.onewire.container.OneWireContainer;
 import com.dalsemi.onewire.utils.*;
 import com.dalsemi.onewire.application.monitor.*;
 import com.openbravo.pos.util.uOWWatch;
-import org.joda.time.Instant;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.time.Instant;
 
 
 /**
@@ -122,8 +121,6 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
         public void actionPerformed(ActionEvent evt) {
             m_clock = getLineTimer();
             m_date = getLineDate();
-
-            DateTime m_datetime = getDateTime();
         
             //TODO load Windows Title 
             m_jLblTitle.setText(m_dlSystem.getResourceAsText("Window.Title"));
@@ -159,11 +156,7 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
 */                    
         }
     }
-    
-    private DateTime getDateTime() {
-        DateTime dt = DateTime.now();
-    return dt;
-}
+
    private String getLineTimer() {
         return Formats.HOURMIN.formatValue(new Date());
     }
