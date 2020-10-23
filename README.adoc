@@ -76,8 +76,6 @@ Separate event publisher, event handling and script execution to distint compone
 ** Has some Objects Generic/Global always available such: DeviceInfo (Where POS is running)
 ** Has specific Context (
 
-== 
-
 
 == Modularity
 
