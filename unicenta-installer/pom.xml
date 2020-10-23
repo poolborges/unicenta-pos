@@ -17,6 +17,8 @@
         <!-- Specify this via command line i.e -Dbitrock.exec=~/bitrock/installbuilder-19.9.0/bin/builder-->  
         <bitrock.directory>${project.build.directory}/installbuilder</bitrock.directory>
         <app.dist.directory>${project.build.directory}/unicentaopos</app.dist.directory>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
     
     <dependencies>

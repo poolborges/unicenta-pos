@@ -26,6 +26,54 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <url>http://kriolsolutions.github.io/krospos</url>
     <description>Open Source POS</description>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <jacoco.plugin.version>0.8.5</jacoco.plugin.version>
+        <dependency.check.version>6.0.2</dependency.check.version>
+    </properties>
+    
+    <organization>
+        <name>Paulo Borges</name> <!-- To be Chnge for a Organization Name -->
+    </organization>
+    <inceptionYear>2020</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License, version 3</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+            <distribution>manual</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>poolborges</id>
+            <name>Paulo Borges</name>
+            <organization>Kriol Solutions, Cabo Verde</organization>
+            <roles>
+                <role>Project Manager</role>
+                <role>Developer</role>
+                <role>Despot</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>keviborges</id>
+            <name>Kevin Borges</name>
+            <organization>Kriol Solutions, Cabo Verde</organization>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+    
+    <contributors>
+        <contributor>
+            <name>Maria Semedo</name>
+        </contributor>
+    </contributors>
 
     <modules>
         <module>unicenta-thirdparty</module>
@@ -51,95 +99,137 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <artifactId>maven-dependency-plugin</artifactId>
                     <version>3.1.2</version>
                 </plugin>
+                <plugin>
+                    <groupId>com.atlassian.maven.plugins</groupId>
+                    <artifactId>clover-maven-plugin</artifactId>
+                    <version>4.1.1</version>
+                    <configuration>
+                        <targetPercentage>50%</targetPercentage>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
         
         <plugins>
             <plugin>
-                <groupId>org.openclover</groupId>
-                <artifactId>clover-maven-plugin</artifactId>
-                <version>4.4.1</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
                 <configuration>
-                    <targetPercentage>50%</targetPercentage>
+                    <reuseForks>true</reuseForks>
+                    <argLine>${argLine} -Xmx2048m</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <configuration>
+                    <reuseForks>true</reuseForks>
+                    <argLine>${argLine} -Xmx4096m -XX:MaxPermSize=512M ${itCoverageAgent}</argLine>
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>verify</phase>
                         <goals>
-                            <goal>check</goal>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.5</version>
-                <executions>
-                    <execution>
-                        <id>coverage-initialize</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>      
-                        <id>coverage-report</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                    <!-- Threshold -->
-
-                    <execution>
-
-                        <id>coverage-check</id>
-
-                        <goals>
-
-                            <goal>check</goal>
-
-                        </goals>
-
-                        <configuration>
-
-                            <rules>
-
-                                <rule>
-
-                                    <element>CLASS</element>
-
-                                    <excludes>
-
-                                        <exclude>com.example.demo.Application</exclude>
-
-                                    </excludes>
-
-                                    <limits>
-
-                                        <limit>
-
-                                            <counter>LINE</counter>
-
-                                            <value>COVEREDRATIO</value>
-
-                                            <minimum>80%</minimum>
-
-                                        </limit>
-
-                                    </limits>
-
-                                </rule>
-
-                            </rules>
-
-                        </configuration>
-
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
+    
+    <profiles>
+        <profile>
+            <id>qa</id>
+            <build>
+                <plugins>
+                    
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>jacoco-initialize</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                                <configuration>
+                                    <destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile>
+                                    <propertyName>surefireArgLine</propertyName>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>jacoco-site</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                    <dataFile>${project.build.directory}/coverage-reports/jacoco.exec</dataFile>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>default-report</id>
+                                <goals>
+                                </goals>
+                                <configuration>
+                                    <dataFile>${project.build.directory}/jacoco.exec</dataFile>
+                                    <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+                                </configuration>
+                            </execution>
+                            <!-- Threshold -->
+                            <execution>
+                                <id>coverage-check</id>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <rule>
+                                            <element>CLASS</element>
+                                            <excludes>
+                                                <exclude>com.example.demo.Application</exclude>
+                                            </excludes>
+                                            <limits>
+                                                <limit>
+                                                    <counter>LINE</counter>
+                                                    <value>COVEREDRATIO</value>
+                                                    <minimum>80%</minimum>
+                                                </limit>
+                                            </limits>
+                                        </rule>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>${dependency.check.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     
     
     <reporting>
@@ -150,7 +240,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <reportSets>
                     <reportSet>
                         <reports>
-                            <!-- select non-aggregate reports -->
+                            <!-- select: report, aggregate -->
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>${dependency.check.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
                             <report>report</report>
                         </reports>
                     </reportSet>

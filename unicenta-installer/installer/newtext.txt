@@ -1,4 +1,4 @@
-<html><center>uniCenta oPOS - Touch Friendly Point of Sale<br>
+<html><center>KrOS POS - Open Source Point Of Sale<br>
 Copyright 2009-2018 uniCenta <br>
 https://unicenta.com/<br>
 <br>

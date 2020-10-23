@@ -26,9 +26,9 @@
  * http://www.jaspersoft.com
  */
 //    Portions:
-//    KrOS POS  - Touch Friendly Point Of Sale
+//    KrOS POS
 //    Copyright (c) 2009-2017 uniCenta
-//    https://unicenta.com
+//    
 //    author Jack Gerrard
 // This class is a copy of net.sf.jasperreports.engine.print.JRPrinterAWT
 // The modifications are:

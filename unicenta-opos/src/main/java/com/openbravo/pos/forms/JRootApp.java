@@ -1,21 +1,18 @@
 //    KrOS POS  - Open Source Point Of Sale
 //    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
-//    https://unicenta.com
 //
-//    This file is part of KrOS POS
-//
-//    KrOS POS is free software: you can redistribute it and/or modify
+//    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
 //    the Free Software Foundation, either version 3 of the License, or
 //    (at your option) any later version.
 //
-//   KrOS POS is distributed in the hope that it will be useful,
+//    This program is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with KrOS POS.  If not, see <http://www.gnu.org/licenses/>
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 package com.openbravo.pos.forms;
 
@@ -476,11 +473,11 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
                 "<br>" +
                 "<h2>License: GPL v3</h2>" +
                 "<br>" +
-                "KrOS POS is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br>" +
+                "This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br>" +
                 "<br>" +
-                "KrOS POS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br>" +
+                " This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br>" +
                 "<br>" +
-                "You should have received a copy of the GNU General Public License along with KrOS POS.  If not, see http://www.gnu.org/licenses/<br>"
+                "You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/<br>"
                 );
                 
             } else {
@@ -979,15 +976,15 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/logo_320×320.png"))); // NOI18N
-        jLabel1.setText("<html><center>KrOS POS - Touch Friendly Point of Sale<br>" +
+        jLabel1.setText("<html><center>KrOS POS - Open Source Point Of Sale<br>" +
             "Copyright \u00A9 2009-2017 uniCenta <br>" +
-            "https://unicenta.com<br>" +
             "<br>" +
-            "KrOS POS is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br>" +
             "<br>" +
-            "KrOS POS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br>" +
+            "This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br>" +
             "<br>" +
-            "You should have received a copy of the GNU General Public License along with KrOS POS.  If not, see http://www.gnu.org/licenses/<br>" +
+            " This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br>" +
+            "<br>" +
+            "You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/<br>" +
             "</center>");
         jLabel1.setAlignmentX(0.5F);
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);

@@ -1,0 +1,27 @@
+
+
+
+
+== 
+
+* DateTimeFormatter
+* NumberFormat (Number and Currency
+
+== 
+
+
+----
+Locale defaultLocale = Locale.getDefault();
+Locale.setDefault(Locale.CANADA_FRENCH);
+----
+
+
+
+----
+Locale usLocale = Locale.US;
+BigDecimal number = new BigDecimal(102_300.456d);
+
+NumberFormat usNumberFormat = NumberFormat.getCurrencyInstance(usLocale); 
+assertEquals(usNumberFormat.format(number), "$102,300.46");
+----
+

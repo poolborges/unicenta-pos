@@ -63,6 +63,22 @@ About Java SPI available since Java 1.5 (eg: Used in JDBC driver loading)
 |====
 
 
+== EventSystem & ScriptEngine
+
+
+Separate event publisher, event handling and script execution to distint component
+
+
+* EventPublisher
+* EventHandler
+* ScriptRunnerEventHandler
+* AppContext 
+** Has some Objects Generic/Global always available such: DeviceInfo (Where POS is running)
+** Has specific Context (
+
+== 
+
+
 == Modularity
 
 * Modularity based on OSGI 7
