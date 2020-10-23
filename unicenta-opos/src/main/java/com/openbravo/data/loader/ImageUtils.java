@@ -127,7 +127,7 @@ public class ImageUtils {
      */
     public static BufferedImage readImage(byte[] imageByteArray) {
         Objects.requireNonNull(imageByteArray, "imageByteArray should not be null");
-        BufferedImage image = null; new BufferedImage(0,0,BufferedImage.TYPE_BYTE_GRAY);
+        BufferedImage image = null;
         try (ByteArrayInputStream input = new ByteArrayInputStream(imageByteArray)) {
             image = ImageIO.read(input);
         } catch (IOException ex) {
