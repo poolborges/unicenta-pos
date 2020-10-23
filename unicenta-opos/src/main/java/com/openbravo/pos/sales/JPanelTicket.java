@@ -473,7 +473,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         return m_oTicket;
     }
     
-    //private void refreshTicket() {
     private void refreshTicket() {    
         
         CardLayout cl = (CardLayout)(getLayout());

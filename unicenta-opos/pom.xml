@@ -168,12 +168,12 @@
         -->
         
         <!-- Apache FOP - Multiple Output format:PDF,... (NOTFOUND Dependency in CODE)
-        <dependency> 
-            <groupId>org.apache.xmlgraphics</groupId>  
-            <artifactId>fop</artifactId>  
-            <version>2.5</version> 
-        </dependency>  
-         --> 
+       <dependency> 
+           <groupId>org.apache.xmlgraphics</groupId>  
+           <artifactId>fop</artifactId>  
+           <version>2.5</version> 
+       </dependency>  
+        --> 
         <dependency> 
             <groupId>net.sf.jasperreports</groupId>  
             <artifactId>jasperreports</artifactId>  
@@ -263,6 +263,12 @@
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf-swingx</artifactId>
             <version>0.43</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>0.4.13</version>
         </dependency>
     
     </dependencies>  

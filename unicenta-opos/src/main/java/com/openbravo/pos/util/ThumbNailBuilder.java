@@ -16,31 +16,36 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with KrOS POS.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.util;
 
 import java.awt.image.*;
 import java.awt.*;
+import java.awt.font.TextAttribute;
+import java.io.IOException;
+import java.text.AttributedString;
 import javax.imageio.ImageIO;
-import javax.swing.JLabel;
+import net.coobird.thumbnailator.Thumbnailator;
 
 /**
  *
  * @author JG uniCenta
  */
 public class ThumbNailBuilder {
-    
+
     private Image m_imgdefault;
     private int m_width;
     private int m_height;
-    
-    /** Creates a new instance of ThumbNailBuilder
+
+    /**
+     * Creates a new instance of ThumbNailBuilder
+     *
      * @param width
-     * @param height */    
+     * @param height
+     */
     public ThumbNailBuilder(int width, int height) {
         init(width, height, null);
     }
-    
+
     /**
      *
      * @param width
@@ -49,9 +54,9 @@ public class ThumbNailBuilder {
      */
     public ThumbNailBuilder(int width, int height, Image imgdef) {
         init(width, height, imgdef);
-      
+
     }
-    
+
     /**
      *
      * @param width
@@ -59,15 +64,14 @@ public class ThumbNailBuilder {
      * @param img
      */
     public ThumbNailBuilder(int width, int height, String img) {
-        
-        Image defimg;
+
         try {
-            init(width, height, ImageIO.read(getClass().getClassLoader().getResourceAsStream(img)));               
-        } catch (Exception fnfe) {
+            init(width, height, ImageIO.read(getClass().getClassLoader().getResourceAsStream(img)));
+        } catch (IOException fnfe) {
             init(width, height, null);
-        }                 
-    }    
-    
+        }
+    }
+
     private void init(int width, int height, Image imgdef) {
         m_width = width;
         m_height = height;
@@ -75,25 +79,26 @@ public class ThumbNailBuilder {
             m_imgdefault = null;
         } else {
             m_imgdefault = createThumbNail(imgdef);
-        } 
+        }
     }
-    
+
     /**
      *
      * @param img
      * @return
      */
     public Image getThumbNail(Image img) {
-   
+
         if (img == null) {
             return m_imgdefault;
         } else {
             return createThumbNail(img);
-        }     
+        }
     }
 
     /**
      * get Thumbnail Image
+     *
      * @return
      */
     public Image getThumbNail() {
@@ -107,110 +112,61 @@ public class ThumbNailBuilder {
      * @return
      */
     public Image getThumbNailText(Image img, String text) {
-                
-        img = getThumbNail(img);
         
-        BufferedImage imgtext = new BufferedImage(img.getWidth(null), 
-                img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = imgtext.createGraphics();
-                
-        // The text        
-        JLabel label = new JLabel();
-        label.setOpaque(false);
-        label.setText(text);
-        label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        label.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);            
+        BufferedImage imageBuf = toBufferedImage(getThumbNail(img));
 
-        Dimension d = label.getPreferredSize();
-        label.setBounds(0, 0, imgtext.getWidth(), d.height);  
-        
-        
-        // The background
-        Color c1 = new Color(0xff, 0xff, 0xff, 0x40);
-        Color c2 = new Color(0xff, 0xff, 0xff, 0xd0);
+        Font font = new Font("Arial", Font.BOLD, 18);
 
-        Paint gpaint = new GradientPaint(new Point(0,0), c1, new Point(label.getWidth() / 2, 0), c2, true);
+	AttributedString attributedText = new AttributedString(text);
+	attributedText.addAttribute(TextAttribute.FONT, font);
+	attributedText.addAttribute(TextAttribute.FOREGROUND, Color.BLACK);
+	 
+	Graphics g = imageBuf.getGraphics();
         
-        g2d.drawImage(img, 0, 0, null);
-        g2d.translate(0, imgtext.getHeight() - label.getHeight());
-        g2d.setPaint(gpaint);            
-//        g2d.fillRect(0 , 0, imgtext.getWidth(), label.getHeight());    
-        label.paint(g2d);
-            
-        g2d.dispose();
-       
-        return imgtext;    
+        FontMetrics metrics = g.getFontMetrics(font);
+        
+        //Center
+	//int positionX = (imageBuf.getWidth() - metrics.stringWidth(text)) / 2;
+	//int positionY = (imageBuf.getHeight() - metrics.getHeight()) / 2 + metrics.getAscent();
+        //Top Left
+        int positionX = 0;
+	int positionY = metrics.getAscent();
+        
+	g.drawString(attributedText.getIterator(), positionX, positionY);
+  
+        return imageBuf;
     }
-    
+
     private Image createThumbNail(Image img) {
 
         //Image is already in size or too small
-        if(img.getHeight(null) <= m_height && img.getWidth(null) <= m_width){
+        if (img.getHeight(null) <= m_height && img.getWidth(null) <= m_width) {
             return img;
         }
-            
-        int targetw;
-        int targeth;
 
-        double scalex = (double) m_width / (double) img.getWidth(null);
-        double scaley = (double) m_height / (double) img.getHeight(null);
-        if (scalex < scaley) {
-            targetw = m_width;
-            targeth = (int) (img.getHeight(null) * scalex);
-        } else {
-            targetw = (int) (img.getWidth(null) * scaley);
-            targeth = (int) m_height;
+        return Thumbnailator.createThumbnail(img, m_width, m_width);
+    }
+
+    /**
+     * Converts a given Image into a BufferedImage
+     *
+     * @param img The Image to be converted
+     * @return The converted BufferedImage
+     */
+    private static BufferedImage toBufferedImage(Image img) {
+        if (img instanceof BufferedImage) {
+            return (BufferedImage) img;
         }
 
-        int midw = img.getWidth(null);
-        int midh = img.getHeight(null);
-        BufferedImage midimg = null;
-        Graphics2D g2d = null;
+        // Create a buffered image with transparency
+        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 
-        Image previmg = img;
-        int prevw = img.getWidth(null);
-        int prevh = img.getHeight(null);
+        // Draw the image on to the buffered image
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
 
-        do {
-            if (midw > targetw) {
-                midw /= 2;
-                if (midw < targetw) {
-                    midw = targetw;
-                }
-            } else {
-                midw = targetw;
-            }
-            if (midh > targeth) {
-                midh /= 2;
-                if (midh < targeth) {
-                    midh = targeth;
-                }
-            } else {
-                midh = targeth;
-            }
-            if (midimg == null) {
-                midimg = new BufferedImage(midw, midh, BufferedImage.TYPE_INT_ARGB);
-                g2d = midimg.createGraphics();
-                g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            }
-            g2d.drawImage(previmg, 0, 0, midw, midh, 0, 0, prevw, prevh, null);
-            prevw = midw;
-            prevh = midh;
-            previmg = midimg;
-        } while (midw != targetw || midh != targeth);
-
-        g2d.dispose();
-
-        if (m_width != midimg.getWidth() || m_height != midimg.getHeight()) {
-            midimg = new BufferedImage(m_width, m_height, BufferedImage.TYPE_INT_ARGB);
-            int x = (m_width > targetw) ? (m_width - targetw) / 2 : 0;
-            int y = (m_height > targeth) ? (m_height - targeth) / 2 : 0;
-            g2d = midimg.createGraphics();
-            g2d.drawImage(previmg, x, y, x + targetw, y + targeth,
-                                   0, 0, targetw, targeth, null);
-            g2d.dispose();
-            previmg = midimg;
-        } 
-        return previmg;           
-    }    
+        // Return the buffered image
+        return bimage;
+    }
 }

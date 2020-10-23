@@ -24,8 +24,8 @@ import com.openbravo.basic.BasicException;
  */
 public class BasicSentenceEnum implements SentenceEnum {
     
-    BaseSentence sent;
-    DataResultSet SRS;
+    private final BaseSentence sent;
+    private DataResultSet SRS;
     
     /** Creates a new instance of AbstractSentenceEnum
      * @param sent */
@@ -38,6 +38,7 @@ public class BasicSentenceEnum implements SentenceEnum {
      *
      * @throws BasicException
      */
+    @Override
     public void load() throws BasicException {
         load(null);
     }
@@ -47,6 +48,7 @@ public class BasicSentenceEnum implements SentenceEnum {
      * @param params
      * @throws BasicException
      */
+    @Override
     public void load(Object params) throws BasicException {
         SRS = sent.openExec(params);
     }
@@ -56,6 +58,7 @@ public class BasicSentenceEnum implements SentenceEnum {
      * @return
      * @throws BasicException
      */
+    @Override
     public Object getCurrent() throws BasicException {
         if (SRS == null) {
             throw new BasicException(LocalRes.getIntString("exception.nodataset"));
@@ -69,6 +72,7 @@ public class BasicSentenceEnum implements SentenceEnum {
      * @return
      * @throws BasicException
      */
+    @Override
     public boolean next() throws BasicException {
         if (SRS == null) {
             throw new BasicException(LocalRes.getIntString("exception.nodataset"));

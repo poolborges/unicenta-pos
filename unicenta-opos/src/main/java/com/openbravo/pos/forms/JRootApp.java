@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>
-
 package com.openbravo.pos.forms;
 
 import com.openbravo.basic.BasicException;
@@ -51,7 +50,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
-import javax.swing.*;     
+import javax.swing.*;
 import com.dalsemi.onewire.OneWireAccessProvider;
 import com.dalsemi.onewire.adapter.DSPortAdapter;
 import com.dalsemi.onewire.OneWireException;
@@ -64,51 +63,50 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 
-
 /**
  *
  * @author adrianromero
  */
-public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListener  {
-    
+public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListener {
+
     private static final Logger LOGGER = Logger.getLogger(JRootApp.class.getName());
 
     private AppProperties m_props;
-    private Session session;     
+    private Session session;
     private DataLogicSystem m_dlSystem;
-    
+
     private Properties m_propsdb = null;
     private String m_sActiveCashIndex;
     private int m_iActiveCashSequence;
     private Date m_dActiveCashDateStart;
     private Date m_dActiveCashDateEnd;
-    
+
     private String m_sClosedCashIndex;
     private int m_iClosedCashSequence;
     private Date m_dClosedCashDateStart;
     private Date m_dClosedCashDateEnd;
-    
+
     private String m_sInventoryLocation;
-    
+
     private StringBuilder inputtext;
-   
+
     private DeviceScale m_Scale;
     private DeviceScanner m_Scanner;
-    private DeviceTicket m_TP;   
+    private DeviceTicket m_TP;
     private TicketParser m_TTP;
-    
+
     private final Map<String, BeanFactory> m_aBeanFactories;
-    
+
     private JPrincipalApp m_principalapp = null;
-    
-    private static HashMap<String, String> m_oldclasses; 
+
+    private static HashMap<String, String> m_oldclasses;
 
     private String m_clock;
-    private String m_date; 
-    
-    private static final Logger LOG = Logger.getLogger(JRootApp.class.getName());
-    
-    static {        
+    private String m_date;
+
+
+
+    static {
         initOldClasses();
     }
 
@@ -118,146 +116,124 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
         public void actionPerformed(ActionEvent evt) {
             m_clock = getLineTimer();
             m_date = getLineDate();
-        
-            //TODO load Windows Title 
-            m_jLblTitle.setText(m_dlSystem.getResourceAsText("Window.Title"));
-            m_jLblTitle.repaint();
             jLabel2.setText("  " + m_date + " " + m_clock);
-/*
-* JG Note: Arbritary 8 hour cycle for MySQL server ping on chosen port:nnnn
-* MySQL default setting is 28800 seconds (8hrs)
-* Better than a host ping as need to know if MySQL is alive & kicking
-* Be careful though as MySQL could run out of Connections if it's left on default
-            
-
-            webProgressBar.setValue(0);
-            
-            if (getDateTime().getHourOfDay() == 7 
-                || getDateTime().getHourOfDay() == 15
-                || getDateTime().getHourOfDay() == 23) {
-
-                if (getDateTime().getMinuteOfHour() == 59 && 
-                    (getDateTime().getSecondOfMinute() == 59)) {
-                    try {
-                        if (pingServer()) {
-                            webProgressBar.setValue(0);
-                        } else {
-                            webProgressBar.setString("Server is down!");
-                            webProgressBar.setValue(100);
-                        }
-                    } catch (UnknownHostException ex) {
-                        Logger.getLogger(JRootApp.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-*/                    
         }
     }
 
-   private String getLineTimer() {
+    private String getLineTimer() {
         return Formats.HOURMIN.formatValue(new Date());
     }
+
     private String getLineDate() {
-        DateFormat df = DateFormat.getDateInstance(DateFormat.DEFAULT,getDefaultLocale());
-        return df.format(new Date());        
+        DateFormat df = DateFormat.getDateInstance(DateFormat.DEFAULT, getDefaultLocale());
+        return df.format(new Date());
     }
-    
 
     public JRootApp() {
-        
+
         m_aBeanFactories = new HashMap<>();
-        
-        initComponents ();            
+
+        //TODO load Windows Title 
+        //m_jLblTitle.setText(m_dlSystem.getResourceAsText("Window.Title"));
+        //m_jLblTitle.repaint();
+
+        initComponents();
         jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(30, 30));
         serverMonitor.setVisible(false);
-        webMemoryBar1.setShowMaximumMemory ( true );
+        webMemoryBar1.setShowMaximumMemory(true);
     }
     private DSPortAdapter m_oneWireAdapter;
     private DeviceMonitor m_oneWireMonitor;
-        
+
     private void initIButtonMonitor() {
 
         assert m_oneWireMonitor == null;
-        try
-        {
+        try {
             m_oneWireAdapter = OneWireAccessProvider.getDefaultAdapter();
             m_oneWireAdapter.setSearchAllDevices();
             m_oneWireAdapter.targetFamily(0x01);
             m_oneWireAdapter.setSpeed(DSPortAdapter.SPEED_REGULAR);
             m_oneWireMonitor = new DeviceMonitor(m_oneWireAdapter);
 // Normal state
-            m_oneWireMonitor.setMaxStateCount(5);            
+            m_oneWireMonitor.setMaxStateCount(5);
 // Use for testing
 //            m_oneWireMonitor.setMaxStateCount(100);                        
             m_oneWireMonitor.addDeviceMonitorEventListener(this);
             new Thread(m_oneWireMonitor).start();
-    }
-        catch (OneWireException e) {
-            JMessageDialog.showMessage(this, 
-                new MessageInf(MessageInf.SGN_WARNING, 
-                AppLocal.getIntString("message.ibuttonnotfound"), e));
+        } catch (OneWireException e) {
+            JMessageDialog.showMessage(this,
+                    new MessageInf(MessageInf.SGN_WARNING,
+                            AppLocal.getIntString("message.ibuttonnotfound"), e));
         }
     }
+
     private void shutdownIButtonMonitor() {
-        if(m_oneWireMonitor != null) {
+        if (m_oneWireMonitor != null) {
             m_oneWireMonitor.killMonitor();
             try {
                 m_oneWireAdapter.freePort();
-            }
-            catch (Exception e) {
-//                System.out.println(e);
+            } catch (OneWireException e) {
+                LOGGER.log(Level.SEVERE, "Exception on shuttdown IButtonMonitor", e);
             }
         }
     }
+
     public void releaseResources() {
         shutdownIButtonMonitor();
     }
-    
+
     final static int UNIQUE_KEY_FAMILY = 0x01;
-    
+
     private boolean isDeviceRelevant(OneWireContainer container) {
         String iButtonId = container.getAddressAsString();
         try {
-            if(container.getAdapter().getAdapterAddress().equals(iButtonId))
+            if (container.getAdapter().getAdapterAddress().equals(iButtonId)) {
                 return false;
-        } catch(OneWireException e) {
+            }
+        } catch (OneWireException e) {
+            LOGGER.log(Level.SEVERE, "Exception on getting IButton Address", e);
         }
-        
+
         int familyNumber = Address.toByteArray(iButtonId)[0];
         return (familyNumber == UNIQUE_KEY_FAMILY);
     }
-    
-    /** Called when an iButton is inserted.
-     * @param devt */
+
+    /**
+     * Called when an iButton is inserted.
+     *
+     * @param devt
+     */
     @Override
     public void deviceArrival(DeviceMonitorEvent devt) {
         assert m_dlSystem != null;
-        
+
         for (int i = 0; i < devt.getDeviceCount(); i++) {
-            OneWireContainer container = devt.getContainerAt(i);            
-            if(!isDeviceRelevant(container))
+            OneWireContainer container = devt.getContainerAt(i);
+            if (!isDeviceRelevant(container)) {
                 continue;
-            
+            }
+
             String iButtonId = devt.getAddressAsStringAt(i);
-            
+
             AppUser user = null;
             try {
                 user = m_dlSystem.findPeopleByCard(iButtonId);
             } catch (BasicException e) {
+                LOGGER.log(Level.WARNING, "Exception: ", e);
                 if (user == null) {
-                    JOptionPane.showMessageDialog(this, 
-                        AppLocal.getIntString("message.ibuttonnotassign"), 
-                        AppLocal.getIntString("title.editor"), 
-                        JOptionPane.INFORMATION_MESSAGE);
-                }                 
+                    JOptionPane.showMessageDialog(this,
+                            AppLocal.getIntString("message.ibuttonnotassign"),
+                            AppLocal.getIntString("title.editor"),
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
             }
-            
+
             if (user == null) {
-                JOptionPane.showMessageDialog(this, 
-                    AppLocal.getIntString("message.ibuttonnotassign"), 
-                    AppLocal.getIntString("title.editor"), 
-                    JOptionPane.INFORMATION_MESSAGE);
-        
+                JOptionPane.showMessageDialog(this,
+                        AppLocal.getIntString("message.ibuttonnotassign"),
+                        AppLocal.getIntString("title.editor"),
+                        JOptionPane.INFORMATION_MESSAGE);
+
             } else {
                 setVisible(false);
                 openAppView(user);
@@ -265,73 +241,79 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
             }
         }
     }
-    /** Called when an iButton is removed.
-     * @param devt */
+
+    /**
+     * Called when an iButton is removed.
+     *
+     * @param devt
+     */
     @Override
     public void deviceDeparture(DeviceMonitorEvent devt) {
 
-        for(int i = 0; i < devt.getDeviceCount(); i++) {
+        for (int i = 0; i < devt.getDeviceCount(); i++) {
             OneWireContainer container = devt.getContainerAt(i);
-            if(!isDeviceRelevant(container))
+            if (!isDeviceRelevant(container)) {
                 continue;
-            
+            }
+
             String iButtonId = devt.getAddressAsStringAt(i);
-            
-            if(m_principalapp != null) {
+
+            if (m_principalapp != null) {
                 AppUser currentUser = m_principalapp.getUser();
-                if(currentUser != null && currentUser.getCard().equals(iButtonId))
+                if (currentUser != null && currentUser.getCard().equals(iButtonId)) {
                     closeAppView();
+                }
             }
         }
     }
-    
+
     @Override
-    public void networkException(DeviceMonitorException dexc)
-    {
+    public void networkException(DeviceMonitorException dexc) {
 //        System.out.println("ERROR: " + dexc.toString());
     }
-    
+
     /**
      *
      * @param props
      * @return
      */
     public boolean initApp(AppProperties props) {
-        
+
         m_props = props;
-        m_jPanelDown.setVisible(!(Boolean.valueOf(m_props.getProperty("till.hideinfo"))));            
+        m_jPanelDown.setVisible(!(Boolean.valueOf(m_props.getProperty("till.hideinfo"))));
 
         applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
-        
+
         try {
             session = AppViewConnection.createSession(m_props);
-            
+
         } catch (BasicException e) {
+            LOGGER.log(Level.WARNING, "Exception: ", e);
             JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_DANGER, e.getMessage(), e));
             return false;
         }
 
         m_dlSystem = (DataLogicSystem) getBean("com.openbravo.pos.forms.DataLogicSystem");
 
-        String sDBVersion = readDataBaseVersion();        
+        String sDBVersion = readDataBaseVersion();
         if (!AppLocal.APP_VERSION.equals(sDBVersion)) {
-            String sScript = sDBVersion == null 
-            ? m_dlSystem.getInitScript() + "-create.sql"
-            : m_dlSystem.getInitScript() + "-upgrade-" + sDBVersion + ".sql";
+            String sScript = sDBVersion == null
+                    ? m_dlSystem.getInitScript() + "-create.sql"
+                    : m_dlSystem.getInitScript() + "-upgrade-" + sDBVersion + ".sql";
 
             if (JRootApp.class.getResource(sScript) == null) {
                 JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_DANGER, sDBVersion == null
-                    ? AppLocal.getIntString("message.databasenotsupported", session.DB.getName() + " " + sDBVersion)
-                    : AppLocal.getIntString("message.noupdatescript")));
+                        ? AppLocal.getIntString("message.databasenotsupported", session.DB.getName() + " " + sDBVersion)
+                        : AppLocal.getIntString("message.noupdatescript")));
                 session.close();
                 return false;
             } else {
-                if (JOptionPane.showConfirmDialog(this
-                        , AppLocal.getIntString(sDBVersion == null 
-                                ? "message.createdatabase" 
-                                : "message.eolupdate", session.DB.getName() + " " + sDBVersion)
-                        , AppLocal.getIntString("message.title")
-                        , JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.OK_OPTION) {  
+                if (JOptionPane.showConfirmDialog(this,
+                        AppLocal.getIntString(sDBVersion == null
+                                ? "message.createdatabase"
+                                : "message.eolupdate", session.DB.getName() + " " + sDBVersion),
+                        AppLocal.getIntString("message.title"),
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.OK_OPTION) {
                     if (sScript.endsWith("MySQL-create.sql")) {
                         try {
                             BatchSentence bsentence = new BatchSentenceResource(session, sScript);
@@ -341,54 +323,55 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
 
                             java.util.List l = bsentence.list();
 
-                            if (l.size() > 0) { 
-                                JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_WARNING
-                                    , AppLocal.getIntString("database.scriptwarning")
-                                    , l.toArray(new Throwable[l.size()])));
+                            if (l.size() > 0) {
+                                JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_WARNING,
+                                        AppLocal.getIntString("database.scriptwarning"),
+                                        l.toArray(new Throwable[l.size()])));
                             }
                         } catch (BasicException e) {
-                            JMessageDialog.showMessage(this
-                                , new MessageInf(MessageInf.SGN_DANGER
-                                , AppLocal.getIntString("database.scripterror"), e));
+
+                            LOGGER.log(Level.WARNING, "Exception: ", e);
+                            JMessageDialog.showMessage(this,
+                                    new MessageInf(MessageInf.SGN_DANGER,
+                                            AppLocal.getIntString("database.scripterror"), e));
                             session.close();
                             return false;
-                        } 
+                        }
                     }
                 } else {
                     session.close();
                     return false;
                 }
-            }   
+            }
         }
 
 // create the filename
-        String sUserPath = AppConfig.getInstance().getAppDataDirectory(); 
-        
+        String sUserPath = AppConfig.getInstance().getAppDataDirectory();
+
         Instant machineTimestamp = Instant.now();
-        String sContent = sUserPath + "," 
-                + machineTimestamp + "," 
-                + AppLocal.APP_ID + "," 
-                + AppLocal.APP_NAME + "," 
+        String sContent = sUserPath + ","
+                + machineTimestamp + ","
+                + AppLocal.APP_ID + ","
+                + AppLocal.APP_NAME + ","
                 + AppLocal.APP_VERSION + "\n";
-        
+
         try {
-            Files.write(new File(sUserPath, AppLocal.getLogFileName()).toPath(), sContent.getBytes(), 
+            Files.write(new File(sUserPath, AppLocal.getLogFileName()).toPath(), sContent.getBytes(),
                     StandardOpenOption.APPEND, StandardOpenOption.CREATE);
         } catch (IOException ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
-        
+
         try {
-            Files.write(new File(sUserPath, AppLocal.getLockFileName()).toPath(), sContent.getBytes(), 
+            Files.write(new File(sUserPath, AppLocal.getLockFileName()).toPath(), sContent.getBytes(),
                     StandardOpenOption.CREATE);
         } catch (IOException ex) {
-            LOG.log(Level.SEVERE, null, ex);
-        }        
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
 
         /**
          * TODO Send Logging file to remote server, Ping remote server
          */
-        
         m_propsdb = m_dlSystem.getResourceAsProperties(m_props.getHost() + "/properties");
 
         try {
@@ -397,115 +380,113 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
                     ? null
                     : m_dlSystem.findActiveCash(sActiveCashIndex);
             if (valcash == null || !m_props.getHost().equals(valcash[0])) {
-                setActiveCash(UUID.randomUUID().toString()
-                    , m_dlSystem.getSequenceCash(m_props.getHost()) + 1, new Date(), null);
+                setActiveCash(UUID.randomUUID().toString(),
+                        m_dlSystem.getSequenceCash(m_props.getHost()) + 1, new Date(), null);
                 m_dlSystem.execInsertCash(
-                new Object[] {getActiveCashIndex(), m_props.getHost()
-                    , getActiveCashSequence()
-                    , getActiveCashDateStart()
-                    , getActiveCashDateEnd()});                  
+                        new Object[]{getActiveCashIndex(), m_props.getHost(),
+                            getActiveCashSequence(),
+                            getActiveCashDateStart(),
+                            getActiveCashDateEnd()});
             } else {
-                setActiveCash(sActiveCashIndex
-                    , (Integer) valcash[1]
-                    , (Date) valcash[2]
-                    , (Date) valcash[3]);
+                setActiveCash(sActiveCashIndex,
+                        (Integer) valcash[1],
+                        (Date) valcash[2],
+                        (Date) valcash[3]);
             }
         } catch (BasicException e) {
-            MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE
-                , AppLocal.getIntString("message.cannotclosecash"), e);
+            MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE,
+                    AppLocal.getIntString("message.cannotclosecash"), e);
             msg.show(this);
             session.close();
             return false;
-        }  
-        
+        }
+
         m_sInventoryLocation = m_propsdb.getProperty("location");
         if (m_sInventoryLocation == null) {
             m_sInventoryLocation = "0";
             m_propsdb.setProperty("location", m_sInventoryLocation);
-            m_dlSystem.setResourceAsProperties(m_props.getHost() + "/properties"
-                , m_propsdb);
+            m_dlSystem.setResourceAsProperties(m_props.getHost() + "/properties",
+                    m_propsdb);
         }
-        
+
         m_TP = new DeviceTicket(this, m_props);
-        
+
         m_TTP = new TicketParser(getDeviceTicket(), m_dlSystem);
         printerStart();
-        
+
         m_Scale = new DeviceScale(this, m_props);
-               
+
         m_Scanner = DeviceScannerFactory.createInstance(m_props);
-            
-        new javax.swing.Timer(250, new PrintTimeAction()).start();
-        
+
+        new javax.swing.Timer(1000, new PrintTimeAction()).start();
+
         String sWareHouse;
 
         try {
             sWareHouse = m_dlSystem.findLocationName(m_sInventoryLocation);
         } catch (BasicException e) {
             sWareHouse = null;
-        }        
-        
+        }
+
         String url;
         try {
             url = session.getURL();
         } catch (SQLException e) {
             url = "";
-        }        
-            m_jHost.setText("<html>" + m_props.getHost() + " - " + sWareHouse + "<br>" + url);
-        
-        
+        }
+        m_jHost.setText("<html>" + m_props.getHost() + " - " + sWareHouse + "<br>" + url);
+
         String newLogo = m_props.getProperty("start.logo");
         if (newLogo != null) {
-           if ("".equals(newLogo)){
+            if ("".equals(newLogo)) {
                 jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/logo.png")));
-           }else{
-                jLabel1.setIcon(new javax.swing.ImageIcon (newLogo));
+            } else {
+                jLabel1.setIcon(new javax.swing.ImageIcon(newLogo));
             }
         }
 
         String newText = m_props.getProperty("start.text");
         if (newText != null) {
-            if (newText.equals("")){
-                jLabel1.setText("<html><center>KrOS POS - Open Source Point Of Sale<br>" +
-                "Copyright \u00A9 KrOS POS <br>" +
-                "More info on official <href a=\"https://github.com/poolborges/unicenta-pos\">site</a><br>" +
-                "</center><br>" +
-                "<br>" +
-                "<h2>License: GPL v3</h2>" +
-                "<br>" +
-                "This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br>" +
-                "<br>" +
-                " This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br>" +
-                "<br>" +
-                "You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/<br>"
+            if (newText.equals("")) {
+                jLabel1.setText("<html><center>KrOS POS - Open Source Point Of Sale<br>"
+                        + "Copyright \u00A9 KrOS POS <br>"
+                        + "More info on official <href a=\"https://github.com/poolborges/unicenta-pos\">site</a><br>"
+                        + "</center>"
+                        + "<br><br>"
+                        + "<h2>License: GPL v3</h2>"
+                        + "<br>"
+                        + "This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br>"
+                        + "<br>"
+                        + " This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br>"
+                        + "<br>"
+                        + "You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/<br>"
                 );
-                
+
             } else {
-                try {    
-                    String newTextCode = new Scanner(new File(newText)
-                        , "UTF-8").useDelimiter("\\A").next();
+                try {
+                    String newTextCode = new Scanner(new File(newText),
+                            "UTF-8").useDelimiter("\\A").next();
                     jLabel1.setText(newTextCode);
+                } catch (FileNotFoundException e) {
                 }
-                    catch (FileNotFoundException e) {
-                }
-            
-                    jLabel1.setAlignmentX(0.5F);
-                    jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-                    jLabel1.setMaximumSize(new java.awt.Dimension(800, 1024));
-                    jLabel1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+
+                jLabel1.setAlignmentX(0.5F);
+                jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+                jLabel1.setMaximumSize(new java.awt.Dimension(800, 1024));
+                jLabel1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
             }
         }
-           
+
         showLogin();
-        
-        String ibutton = m_props.getProperty("machine.iButton");        
-        if(ibutton.equals("true")) {
+
+        String ibutton = m_props.getProperty("machine.iButton");
+        if (ibutton.equals("true")) {
             initIButtonMonitor();
             uOWWatch.iButtonOn();
-        }    
+        }
         return true;
     }
-   
+
     private String readDataBaseVersion() {
         try {
             return m_dlSystem.findVersion();
@@ -513,32 +494,32 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
             return null;
         }
     }
-    
-    public void tryToClose() {   
-        
+
+    public void tryToClose() {
+
         if (closeAppView()) {
-                m_TP.getDeviceDisplay().clearVisor();
-                shutdownIButtonMonitor();
+            m_TP.getDeviceDisplay().clearVisor();
+            shutdownIButtonMonitor();
 
 // delete the open.db tracking file
-                String sUserPath = AppConfig.getInstance().getAppDataDirectory();
-                File filePath = new File(sUserPath, "open.db");
+            String sUserPath = AppConfig.getInstance().getAppDataDirectory();
+            File filePath = new File(sUserPath, "open.db");
             try {
                 Files.deleteIfExists(filePath.toPath());
             } catch (IOException ex) {
                 Logger.getLogger(JRootApp.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             session.close();
-            SwingUtilities.getWindowAncestor(this).dispose();            
+            SwingUtilities.getWindowAncestor(this).dispose();
         }
     }
-    
+
     @Override
-    public DeviceTicket getDeviceTicket(){
+    public DeviceTicket getDeviceTicket() {
         return m_TP;
     }
-    
+
     @Override
     public DeviceScale getDeviceScale() {
         return m_Scale;
@@ -548,16 +529,16 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
     public DeviceScanner getDeviceScanner() {
         return m_Scanner;
     }
-    
+
     @Override
     public Session getSession() {
         return session;
-    } 
+    }
 
     @Override
     public String getInventoryLocation() {
         return m_sInventoryLocation;
-    }   
+    }
 
     @Override
     public String getActiveCashIndex() {
@@ -575,7 +556,7 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
     }
 
     @Override
-    public Date getActiveCashDateEnd(){
+    public Date getActiveCashDateEnd() {
         return m_dActiveCashDateEnd;
     }
 
@@ -585,11 +566,11 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
         m_iActiveCashSequence = iSeq;
         m_dActiveCashDateStart = dStart;
         m_dActiveCashDateEnd = dEnd;
-        
+
         m_propsdb.setProperty("activecash", m_sActiveCashIndex);
         m_dlSystem.setResourceAsProperties(m_props.getHost() + "/properties", m_propsdb);
     }
-    
+
     @Override
     public String getClosedCashIndex() {
         return m_sClosedCashIndex;
@@ -606,10 +587,10 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
     }
 
     @Override
-    public Date getClosedCashDateEnd(){
+    public Date getClosedCashDateEnd() {
         return m_dClosedCashDateEnd;
     }
-    
+
     @Override
     public void setClosedCash(String sIndex, int iSeq, Date dStart, Date dEnd) {
         m_sClosedCashIndex = sIndex;
@@ -618,62 +599,62 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
         m_dClosedCashDateEnd = dEnd;
 
         m_dlSystem.setResourceAsProperties(m_props.getHost() + "/properties", m_propsdb);
-    }    
+    }
 
     @Override
     public AppProperties getProperties() {
         return m_props;
     }
-    
+
     @Override
     public Object getBean(String beanfactory) throws BeanFactoryException {
-        
+
         beanfactory = mapNewClass(beanfactory);
         BeanFactory bf = m_aBeanFactories.get(beanfactory);
 
-        if (bf == null) {   
+        if (bf == null) {
 
             if (beanfactory.startsWith("/")) {
-                bf = new BeanFactoryScript(beanfactory);               
+                bf = new BeanFactoryScript(beanfactory);
             } else {
                 try {
                     Class bfclass = Class.forName(beanfactory);
 
                     if (BeanFactory.class.isAssignableFrom(bfclass)) {
-                        bf = (BeanFactory) bfclass.getDeclaredConstructor().newInstance();             
+                        bf = (BeanFactory) bfclass.getDeclaredConstructor().newInstance();
                     } else {
-                        Constructor constMyView = bfclass.getConstructor(new Class[] {AppView.class});
-                        Object bean = constMyView.newInstance(new Object[] {this});
+                        Constructor constMyView = bfclass.getConstructor(new Class[]{AppView.class});
+                        Object bean = constMyView.newInstance(new Object[]{this});
                         bf = new BeanFactoryObj(bean);
                     }
 
-                } catch (ClassNotFoundException | InstantiationException 
-                        | IllegalAccessException | NoSuchMethodException 
+                } catch (ClassNotFoundException | InstantiationException
+                        | IllegalAccessException | NoSuchMethodException
                         | SecurityException | IllegalArgumentException | InvocationTargetException e) {
-                    LOGGER.log(Level.WARNING, "Cannot found Bean: "+beanfactory, e);
+                    LOGGER.log(Level.WARNING, "Cannot found Bean: " + beanfactory, e);
                     throw new BeanFactoryException(e);
                 }
             }
-            
-            m_aBeanFactories.put(beanfactory, bf);         
-            
+
+            m_aBeanFactories.put(beanfactory, bf);
+
             if (bf instanceof BeanFactoryApp) {
                 ((BeanFactoryApp) bf).init(this);
             }
         }
         return bf.getBean();
     }
-    
+
     private static String mapNewClass(String classname) {
         String newclass = m_oldclasses.get(classname);
-        return newclass == null 
-                ? classname 
+        return newclass == null
+                ? classname
                 : newclass;
     }
-    
+
     private static void initOldClasses() {
         m_oldclasses = new HashMap<>();
-        
+
         m_oldclasses.put("com.openbravo.pos.reports.JReportCustomers", "/com/openbravo/reports/customers.bs");
         m_oldclasses.put("com.openbravo.pos.reports.JReportCustomersB", "/com/openbravo/reports/customersb.bs");
         m_oldclasses.put("com.openbravo.pos.reports.JReportClosedPos", "/com/openbravo/reports/closedpos.bs");
@@ -688,28 +669,28 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
         m_oldclasses.put("com.openbravo.pos.reports.JReportUserSales", "/com/openbravo/reports/usersales.bs");
         m_oldclasses.put("com.openbravo.pos.reports.JReportProducts", "/com/openbravo/reports/products.bs");
         m_oldclasses.put("com.openbravo.pos.reports.JReportCatalog", "/com/openbravo/reports/productscatalog.bs");
-        
+
         m_oldclasses.put("com.openbravo.pos.panels.JPanelTax", "com.openbravo.pos.inventory.TaxPanel");
-       
+
     }
-    
+
     @Override
     public void waitCursorBegin() {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }
-    
+
     @Override
-    public void waitCursorEnd(){
+    public void waitCursorEnd() {
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
-    
+
     @Override
     public AppUserView getAppUserView() {
         return m_principalapp;
     }
 
     private void printerStart() {
-        
+
         String sresource = m_dlSystem.getResourceAsXML("Printer.Start");
         if (sresource == null) {
             m_TP.getDeviceDisplay().writeVisor(AppLocal.APP_NAME, AppLocal.APP_VERSION);
@@ -719,20 +700,20 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
             } catch (TicketPrinterException eTP) {
                 m_TP.getDeviceDisplay().writeVisor(AppLocal.APP_NAME, AppLocal.APP_VERSION);
             }
-        }        
+        }
     }
-  
+
     private void listPeople() {
-        
+
         try {
-           
+
             jScrollPane1.getViewport().setView(null);
 
             JFlowPanel jPeople = new JFlowPanel();
             jPeople.applyComponentOrientation(getComponentOrientation());
-           
+
             java.util.List people = m_dlSystem.listPeopleVisible();
-                     
+
             for (Object people1 : people) {
                 AppUser user = (AppUser) people1;
                 JButton btn = new JButton(new AppUserAction(user));
@@ -744,71 +725,71 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
                 btn.setPreferredSize(new Dimension(110, 60));
                 btn.setMinimumSize(new Dimension(110, 60));
                 btn.setHorizontalAlignment(SwingConstants.CENTER);
-                btn.setHorizontalTextPosition(AbstractButton.CENTER);                 
+                btn.setHorizontalTextPosition(AbstractButton.CENTER);
                 btn.setVerticalTextPosition(AbstractButton.BOTTOM);
-                jPeople.add(btn);                    
+                jPeople.add(btn);
             }
 
             jScrollPane1.getViewport().setView(jPeople);
-            
+
         } catch (BasicException ee) {
         }
     }
 
     class AppUserAction extends AbstractAction {
-      
+
         private final AppUser m_actionuser;
-        
+
         public AppUserAction(AppUser user) {
             m_actionuser = user;
             putValue(Action.SMALL_ICON, m_actionuser.getIcon());
             putValue(Action.NAME, m_actionuser.getName());
         }
-        
+
         public AppUser getUser() {
             return m_actionuser;
         }
-        
+
         @Override
         public void actionPerformed(ActionEvent evt) {
 
             if (m_actionuser.authenticate()) {
-                openAppView(m_actionuser);         
+                openAppView(m_actionuser);
             } else {
-                String sPassword = JPasswordDialog.showEditPassword(JRootApp.this, 
-                    AppLocal.getIntString("label.Password"),
-                    m_actionuser.getName(),
-                    m_actionuser.getIcon());
+                String sPassword = JPasswordDialog.showEditPassword(JRootApp.this,
+                        AppLocal.getIntString("label.Password"),
+                        m_actionuser.getName(),
+                        m_actionuser.getIcon());
                 if (sPassword != null) {
 
                     if (m_actionuser.authenticate(sPassword)) {
-                        openAppView(m_actionuser);                
+                        openAppView(m_actionuser);
                     } else {
-                        MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, 
+                        MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
                                 AppLocal.getIntString("message.BadPassword"));
-                        msg.show(JRootApp.this);                        
+                        msg.show(JRootApp.this);
                     }
-                }   
+                }
             }
         }
     }
-    
+
     private void showView(String view) {
-        CardLayout cl = (CardLayout)(m_jPanelContainer.getLayout());
-        cl.show(m_jPanelContainer, view);  
+        CardLayout cl = (CardLayout) (m_jPanelContainer.getLayout());
+        cl.show(m_jPanelContainer, view);
     }
-    
+
     private void openAppView(AppUser user) {
-        
+
         if (closeAppView()) {
 
             m_principalapp = new JPrincipalApp(this, user);
 
             jPanel3.add(m_principalapp.getNotificator());
             jPanel3.revalidate();
-            
-            m_jPanelContainer.add(m_principalapp
-                , "_" + m_principalapp.getUser().getId());
+
+            m_jPanelContainer.add(m_principalapp,
+                    "_" + m_principalapp.getUser().getId());
             showView("_" + m_principalapp.getUser().getId());
 
             m_principalapp.activate();
@@ -819,9 +800,9 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
         closeAppView();
         showLogin();
     }
-    
+
     public boolean closeAppView() {
-        
+
         if (m_principalapp == null) {
             return true;
         } else if (!m_principalapp.deactivate()) {
@@ -835,43 +816,43 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
             m_principalapp = null;
 
             showLogin();
-            
+
             return true;
         }
     }
-    
+
     private void showLogin() {
-        
+
         listPeople();
-        showView("login");     
+        showView("login");
 
         printerStart();
- 
+
         inputtext = new StringBuilder();
-        m_txtKeys.setText(null);       
+        m_txtKeys.setText(null);
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
                 m_txtKeys.requestFocus();
             }
-        }); 
+        });
     }
-    
+
     private void processKey(char c) {
-        
-        if ((c == '\n') || (c =='?')) {
+
+        if ((c == '\n') || (c == '?')) {
             AppUser user = null;
             try {
                 user = m_dlSystem.findPeopleByCard(inputtext.toString());
             } catch (BasicException e) {
             }
-            
-            if (user == null)  {
-                MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, 
+
+            if (user == null) {
+                MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
                         AppLocal.getIntString("message.nocard"));
-                msg.show(this);                
+                msg.show(this);
             } else {
-                openAppView(user);   
+                openAppView(user);
             }
 
             inputtext = new StringBuilder();
@@ -879,27 +860,27 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
             inputtext.append(c);
         }
     }
-    
+
     private int getProgressBar() {
-        int rate = serverMonitor.getValue();        
+        int rate = serverMonitor.getValue();
         return rate;
     }
-    
+
     private boolean pingServer() throws UnknownHostException {
-    /* 
+        /* 
      * This method is for the future. Connects and will include both servers + backup server
      * Tested locally on JG machine and unicenta-server   
-    */
+         */
         serverMonitor.setString("Checking...");
-        
+
         InetAddress addr = InetAddress.getByName(AppLocal.getIntString("db.ip"));
         int port = 3306;
 
         SocketAddress sockaddr = new InetSocketAddress(addr, port);
         Socket sock = new Socket();
         try {
-            sock.connect(sockaddr, 2000);    
-            serverMonitor.setString("Server is alive!");                    
+            sock.connect(sockaddr, 2000);
+            serverMonitor.setString("Server is alive!");
             serverMonitor.setValue(0);
             return true;
         } catch (IOException ex) {
@@ -907,11 +888,11 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
             return false;
         }
     }
-        
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the FormEditor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the FormEditor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

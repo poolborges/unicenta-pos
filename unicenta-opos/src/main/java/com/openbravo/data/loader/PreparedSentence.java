@@ -174,7 +174,7 @@ public class PreparedSentence extends JDBCSentence {
 
         try {
 
-            LOGGER.log(Level.INFO, "Executing prepared SQL: {0}", m_sentence);
+            LOGGER.log(Level.INFO, "Executing prepared SQL: "+m_sentence + "| Params: "+params.toString());
 
             m_Stmt = m_s.getConnection().prepareStatement(m_sentence);
  

@@ -125,7 +125,8 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                         dr.getString(3),
                         dr.getString(4),
                         dr.getString(5),
-                        new ImageIcon(tnb.getThumbNail(ImageUtils.readImage(dr.getBytes(6)))));
+                        //new ImageIcon(tnb.getThumbNail(ImageUtils.readImage(dr.getBytes(6)))));
+                        new ImageIcon(tnb.getThumbNail()));
             }
         };
 
@@ -546,7 +547,11 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         if (resource == null) {
             try {
                 resource = (byte[]) m_resourcebytes.find(name);
-                resourcescache.put(name, resource);
+                if(resource != null){
+                    resourcescache.put(name, resource);
+                }else{
+                    LOGGER.log(Level.WARNING, "NOT found resource: " + name);
+                }
             } catch (BasicException e) {
                 LOGGER.log(Level.SEVERE, "Exception on get resource: " + name, e);
                 resource = null;
