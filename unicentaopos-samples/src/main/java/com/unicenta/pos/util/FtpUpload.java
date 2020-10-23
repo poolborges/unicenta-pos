@@ -1,8 +1,5 @@
 //    KrOS POS  - Open Source Point Of Sale
 //    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
-//    https://unicenta.com
-//
-//    This file is part of KrOS POS
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -15,7 +12,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with KrOS POS.  If not, see <http://www.gnu.org/licenses/>
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.unicenta.pos.util;
 
@@ -39,9 +36,8 @@ public class FtpUpload extends Thread {
             sMachine = InetAddress.getLocalHost().getHostName();
 
             String filePath = System.getProperty("user.home") + "/" + sMachine + ".lau";
-            String uploadPath = sMachine + ".lau";
-
-            String ftpUrl = ""; //String.format("%s/%s;type=i", com.openbravo.pos.util.PosProviderConstants.PROVIDER_FTP_URL, uploadPath);
+            
+            String ftpUrl = ""; 
 
             URL url = new URL(ftpUrl);
             URLConnection conn = url.openConnection();
@@ -49,7 +45,7 @@ public class FtpUpload extends Thread {
                     FileInputStream inputStream = new FileInputStream(filePath)) {
                 
                 byte[] buffer = new byte[BUFFER_SIZE];
-                int bytesRead = -1;
+                int bytesRead;
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
                     outputStream.write(buffer, 0, bytesRead);
                 }
