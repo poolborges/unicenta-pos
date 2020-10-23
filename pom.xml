@@ -229,6 +229,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>license</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.mycila</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>4.0.rc2</version>
+                        <configuration>
+                            <header>com/mycila/maven/plugin/license/templates/GPL-3.txt</header>
+                            <properties>
+                                <inceptionYear>${project.inceptionYear}</inceptionYear>
+                            </properties>
+                            <includes>
+                                <include>src/**/*.java</include>
+                                <include>src/**/*.xml</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/logback.xml</exclude>
+                                <exclude>**/logback-test.xml</exclude>
+                                <exclude>**/src/test/resources/**</exclude>
+                            </excludes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>check-license</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
     
     
