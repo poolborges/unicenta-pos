@@ -13,11 +13,12 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,149 +26,155 @@ import java.sql.*;
  */
 public abstract class JDBCSentence extends BaseSentence {
     
-    // Conexion
-    // protected Connection m_c;
+    private static final Logger LOGGER = Logger.getLogger(JDBCSentence.class.getName());
 
-    /**
-     *
-     */
-        protected Session m_s;
-    
-    /** Creates a new instance of BaseSentence
-     * @param s */
+    protected Session m_s;
+
     public JDBCSentence(Session s) {
         super();
-        m_s = s; 
+        m_s = s;
     }
 
     /**
      *
      */
     protected static final class JDBCDataResultSet implements DataResultSet {
-        
-        private ResultSet m_rs;
-        private SerializerRead m_serread;
-//        private int m_iColumnCount;
 
-            /**
-             *
-             * @param rs
-             * @param serread
-             */
-            public JDBCDataResultSet(ResultSet rs, SerializerRead serread) {
+        private final ResultSet m_rs;
+        private final SerializerRead m_serread;
+
+        /**
+         *
+         * @param rs
+         * @param serread
+         */
+        public JDBCDataResultSet(ResultSet rs, SerializerRead serread) {
             m_rs = rs;
             m_serread = serread;
-//            m_iColumnCount = -1;
         }
 
-            /**
-             *
-             * @param columnIndex
-             * @return
-             * @throws BasicException
-             */
-            public Integer getInt(int columnIndex) throws BasicException {
+        /**
+         *
+         * @param columnIndex
+         * @return
+         * @throws BasicException
+         */
+        @Override
+        public Integer getInt(int columnIndex) throws BasicException {
             try {
                 int iValue = m_rs.getInt(columnIndex);
                 return m_rs.wasNull() ? null : iValue;
             } catch (SQLException eSQL) {
+                LOGGER.log(Level.SEVERE, "Exception on JDBCDataResultSet", eSQL);
                 throw new BasicException(eSQL);
             }
         }
 
-            /**
-             *
-             * @param columnIndex
-             * @return
-             * @throws BasicException
-             */
-            public String getString(int columnIndex) throws BasicException {
+        /**
+         *
+         * @param columnIndex
+         * @return
+         * @throws BasicException
+         */
+        @Override
+        public String getString(int columnIndex) throws BasicException {
             try {
                 return m_rs.getString(columnIndex);
             } catch (SQLException eSQL) {
+                LOGGER.log(Level.SEVERE, "Exception on JDBCDataResultSet", eSQL);
                 throw new BasicException(eSQL);
             }
         }
 
-            /**
-             *
-             * @param columnIndex
-             * @return
-             * @throws BasicException
-             */
-            public Double getDouble(int columnIndex) throws BasicException {
+        /**
+         *
+         * @param columnIndex
+         * @return
+         * @throws BasicException
+         */
+        @Override
+        public Double getDouble(int columnIndex) throws BasicException {
             try {
                 double dValue = m_rs.getDouble(columnIndex);
                 return m_rs.wasNull() ? null : dValue;
             } catch (SQLException eSQL) {
+                LOGGER.log(Level.SEVERE, "Exception on JDBCDataResultSet", eSQL);
                 throw new BasicException(eSQL);
             }
         }
 
-            /**
-             *
-             * @param columnIndex
-             * @return
-             * @throws BasicException
-             */
-            public Boolean getBoolean(int columnIndex) throws BasicException {
+        /**
+         *
+         * @param columnIndex
+         * @return
+         * @throws BasicException
+         */
+        @Override
+        public Boolean getBoolean(int columnIndex) throws BasicException {
             try {
                 boolean bValue = m_rs.getBoolean(columnIndex);
                 return m_rs.wasNull() ? null : bValue;
             } catch (SQLException eSQL) {
+                LOGGER.log(Level.SEVERE, "Exception on JDBCDataResultSet", eSQL);
                 throw new BasicException(eSQL);
             }
         }
-        
-            /**
-             *
-             * @param columnIndex
-             * @return
-             * @throws BasicException
-             */
-            public java.util.Date getTimestamp(int columnIndex) throws BasicException {        
+
+        /**
+         *
+         * @param columnIndex
+         * @return
+         * @throws BasicException
+         */
+        @Override
+        public java.util.Date getTimestamp(int columnIndex) throws BasicException {
             try {
                 java.sql.Timestamp ts = m_rs.getTimestamp(columnIndex);
                 return ts == null ? null : new java.util.Date(ts.getTime());
             } catch (SQLException eSQL) {
+                LOGGER.log(Level.SEVERE, "Exception on JDBCDataResultSet", eSQL);
                 throw new BasicException(eSQL);
             }
         }
 
-            /**
-             *
-             * @param columnIndex
-             * @return
-             * @throws BasicException
-             */
-            public byte[] getBytes(int columnIndex) throws BasicException {
+        /**
+         *
+         * @param columnIndex
+         * @return
+         * @throws BasicException
+         */
+        @Override
+        public byte[] getBytes(int columnIndex) throws BasicException {
             try {
                 return m_rs.getBytes(columnIndex);
             } catch (SQLException eSQL) {
+                LOGGER.log(Level.SEVERE, "Exception on JDBCDataResultSet", eSQL);
                 throw new BasicException(eSQL);
             }
         }
 
-            /**
-             *
-             * @param columnIndex
-             * @return
-             * @throws BasicException
-             */
-            public Object getObject(int columnIndex) throws BasicException {
+        /**
+         *
+         * @param columnIndex
+         * @return
+         * @throws BasicException
+         */
+        @Override
+        public Object getObject(int columnIndex) throws BasicException {
             try {
                 return m_rs.getObject(columnIndex);
             } catch (SQLException eSQL) {
+                LOGGER.log(Level.SEVERE, "Exception on JDBCDataResultSet", eSQL);
                 throw new BasicException(eSQL);
             }
         }
 
-            /**
-             *
-             * @return
-             * @throws BasicException
-             */
-            public DataField[] getDataField() throws BasicException {
+        /**
+         *
+         * @return @throws BasicException
+         */
+        @Override
+        public DataField[] getDataField() throws BasicException {
             try {
                 ResultSetMetaData md = m_rs.getMetaData();
                 DataField[] df = new DataField[md.getColumnCount()];
@@ -179,55 +186,55 @@ public abstract class JDBCSentence extends BaseSentence {
                 }
                 return df;
             } catch (SQLException eSQL) {
+                LOGGER.log(Level.SEVERE, "Exception on JDBCDataResultSet", eSQL);
                 throw new BasicException(eSQL);
             }
         }
 
-            /**
-             *
-             * @return
-             * @throws BasicException
-             */
-            @Override
+        /**
+         *
+         * @return @throws BasicException
+         */
+        @Override
         public Object getCurrent() throws BasicException {
             return m_serread.readValues(this);
         }
 
-            /**
-             *
-             * @return
-             * @throws BasicException
-             */
-            @Override
+        /**
+         *
+         * @return @throws BasicException
+         */
+        @Override
         public boolean next() throws BasicException {
             try {
                 return m_rs.next();
             } catch (SQLException eSQL) {
+                LOGGER.log(Level.SEVERE, "Exception on JDBCDataResultSet", eSQL);
                 throw new BasicException(eSQL);
             }
         }
 
-            /**
-             *
-             * @throws BasicException
-             */
-            @Override
+        /**
+         *
+         * @throws BasicException
+         */
+        @Override
         public void close() throws BasicException {
             try {
                 m_rs.close();
             } catch (SQLException eSQL) {
+                LOGGER.log(Level.SEVERE, "Exception on JDBCDataResultSet", eSQL);
                 throw new BasicException(eSQL);
             }
         }
 
-            /**
-             *
-             * @return
-             * @throws BasicException
-             */
-            @Override
+        /**
+         *
+         * @return @throws BasicException
+         */
+        @Override
         public int updateCount() throws BasicException {
             return -1; // es decir somos datos.
-        }        
-    }    
+        }
+    }
 }
