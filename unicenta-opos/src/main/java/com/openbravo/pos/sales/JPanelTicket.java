@@ -50,7 +50,6 @@ import com.openbravo.pos.ticket.ProductInfoExt;
 import com.openbravo.pos.ticket.TaxInfo;
 import com.openbravo.pos.ticket.TicketInfo;
 import com.openbravo.pos.ticket.TicketLineInfo;
-import com.openbravo.pos.ticket.TicketTaxInfo;
 import com.openbravo.pos.util.AltEncrypter;
 import com.openbravo.pos.util.InactivityListener;
 import com.openbravo.pos.util.JRPrinterAWT300;
@@ -64,7 +63,6 @@ import java.awt.Window;
 import static java.awt.Window.getWindows;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -91,6 +89,8 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
  */
 public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFactoryApp, TicketsEditor {
    
+    private final static Logger LOGGER = Logger.getLogger(JPanelTicket.class.getName());
+    
     private final static int NUMBERZERO = 0;
     private final static int NUMBERVALID = 1;
     
@@ -121,7 +121,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     private ListKeyed taxcollection;
     
     private SentenceList senttaxcategories;
-    private ListKeyed taxcategoriescollection;
+    //private ListKeyed taxcategoriescollection;
     private ComboBoxValModel taxcategoriesmodel;
     
     private TaxesLogic taxeslogic;
@@ -135,30 +135,19 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
    
     private JPaymentSelect paymentdialogreceipt;
     private JPaymentSelect paymentdialogrefund;
+ 
 
-    private JRootApp root;
-    private Object m_principalapp;
-    private Boolean restaurant;
-    private Boolean orderlistopen;    
-
-    private Action logout;
     private InactivityListener listener;
     private Integer delay = 0;
-    private final String m_sCurrentTicket = null;
 
     protected TicketsEditor m_panelticket; 
     private DataLogicReceipts dlReceipts = null;
     private Boolean priceWith00;
-    private final String temp_jPrice="";
-    private String tableDetails;
     private RestaurantDBUtils restDB;
-    private KitchenDisplay kitchenDisplay;
-    private String ticketPrintType;
     
     private Boolean warrantyPrint=false;
     
     private TicketInfo m_ticket;
-    private TicketInfo m_ticketCopy;
     private AppConfig m_config;
     
     private Integer count = 0;
@@ -344,7 +333,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         java.util.List<TaxInfo> taxlist = senttax.list();
         taxcollection = new ListKeyed<>(taxlist);
         java.util.List<TaxCategoryInfo> taxcategorieslist = senttaxcategories.list();
-        taxcategoriescollection = new ListKeyed<>(taxcategorieslist);
+        //taxcategoriescollection = new ListKeyed<>(taxcategorieslist);
         
         taxcategoriesmodel = new ComboBoxValModel(taxcategorieslist);
         m_jTax.setModel(taxcategoriesmodel);
@@ -943,8 +932,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             String sCode = m_sBarcode.toString();
             String sCodetype = "EAN";                                           // Declare EAN. It's default        
 
-            if ("true".equals(m_App.getProperties()
-                    .getProperty("machine.barcodetype"))) {
+            if ("true".equals(m_App.getProperties().getProperty("machine.barcodetype"))) {
                 sCodetype = "UPC";                
             } else {
                 sCodetype = "EAN";                                              // Ensure not null   
@@ -1167,6 +1155,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                     }
                 } catch(BasicException eData) {
                     stateToZero();
+                    LOGGER.log(Level.SEVERE, "", eData);
                     new MessageInf(eData).show(this);
                 }
                 
@@ -1248,6 +1237,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                     }
                     } catch(BasicException eData) {
                         stateToZero();
+                        LOGGER.log(Level.SEVERE, "", eData);
                         new MessageInf(eData).show(this);
                     }
 
@@ -2954,11 +2944,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                             JOptionPane.WARNING_MESSAGE);
                 } else {
                     m_ticket = ticket;
-                    m_ticketCopy = null;
                     try {
                         taxeslogic.calculateTaxes(m_ticket);
-                        TicketTaxInfo[] taxlist = m_ticket.getTaxLines();
+                        //TicketTaxInfo[] taxlist = m_ticket.getTaxLines();
                     } catch (TaxesException ex) {
+                        LOGGER.log(Level.SEVERE, "", ex);
                     }
                     printTicket("Printer.ReprintTicket", m_ticket, null);                    
                     Notify("'Printed'");

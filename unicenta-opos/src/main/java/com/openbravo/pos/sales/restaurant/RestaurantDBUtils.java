@@ -10,7 +10,10 @@ import com.openbravo.pos.forms.DataLogicSystem;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,6 +21,9 @@ import java.sql.Statement;
  */
 
 public class RestaurantDBUtils {
+    
+    private final static Logger LOGGER = Logger.getLogger(RestaurantDBUtils.class.getName());
+    
     private Session s;
     private Connection con;  
     private Statement stmt;
@@ -81,7 +87,8 @@ public class RestaurantDBUtils {
             pstmt.setString(1,custName); 
             pstmt.setString(2,tableName);    
             pstmt.executeUpdate();
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
     }
 
@@ -97,7 +104,8 @@ public class RestaurantDBUtils {
             pstmt.setString(1,custName); 
             pstmt.setString(2,tableID);    
             pstmt.executeUpdate();
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
     }
 
@@ -113,7 +121,8 @@ public class RestaurantDBUtils {
             pstmt.setString(1,custName); 
             pstmt.setString(2,ticketID);    
             pstmt.executeUpdate();
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
 }
 
@@ -132,7 +141,8 @@ public class RestaurantDBUtils {
                 String customer =rs.getString("CUSTOMER");
                 return(customer); 
             }    
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }   
         
         return "";
@@ -151,7 +161,8 @@ public class RestaurantDBUtils {
             if (rs.next()){
                 String customer =rs.getString("CUSTOMER");
                 return(customer); }    
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }   
 
         return "";
@@ -167,7 +178,8 @@ public class RestaurantDBUtils {
             pstmt=con.prepareStatement(SQL);
             pstmt.setString(1,tableName);     
             pstmt.executeUpdate();
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
     }
 
@@ -181,7 +193,8 @@ public class RestaurantDBUtils {
             pstmt=con.prepareStatement(SQL);
             pstmt.setString(1,tableID);     
             pstmt.executeUpdate();
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
     }
 
@@ -197,7 +210,8 @@ public class RestaurantDBUtils {
             pstmt.setString(1,waiterName); 
             pstmt.setString(2,tableName);    
             pstmt.executeUpdate();
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
     }
   
@@ -213,7 +227,8 @@ public class RestaurantDBUtils {
             pstmt.setString(1,waiterName); 
             pstmt.setString(2,tableID);    
             pstmt.executeUpdate();
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
     }
 
@@ -232,7 +247,8 @@ public class RestaurantDBUtils {
                 String waiter =rs.getString("WAITER");
                 return(waiter);
             }    
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }   
 
        return "";
@@ -253,7 +269,8 @@ public class RestaurantDBUtils {
                 String waiter =rs.getString("WAITER");
                 return(waiter);
             }    
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }   
 
         return "";
@@ -269,7 +286,8 @@ public class RestaurantDBUtils {
             pstmt=con.prepareStatement(SQL);
             pstmt.setString(1,tableName);     
             pstmt.executeUpdate();
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
     }
 
@@ -283,7 +301,8 @@ public class RestaurantDBUtils {
             pstmt=con.prepareStatement(SQL);
             pstmt.setString(1,tableID);     
             pstmt.executeUpdate();
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
     }
 
@@ -302,7 +321,8 @@ public class RestaurantDBUtils {
                 String customer =rs.getString("TICKETID");
                 return(customer);
             }    
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }   
 
         return "";
@@ -320,7 +340,8 @@ public class RestaurantDBUtils {
             pstmt.setString(1,TicketID); 
             pstmt.setString(2,tableName);    
             pstmt.executeUpdate();
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
     }
 
@@ -334,7 +355,8 @@ public class RestaurantDBUtils {
             pstmt=con.prepareStatement(SQL);
             pstmt.setString(1,tableName);     
             pstmt.executeUpdate();
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
     }
 
@@ -348,7 +370,8 @@ public class RestaurantDBUtils {
             pstmt=con.prepareStatement(SQL);
             pstmt.setString(1,tableID);     
             pstmt.executeUpdate();
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
     }
 
@@ -367,7 +390,8 @@ public class RestaurantDBUtils {
                 Integer count =rs.getInt("RECORDCOUNT");
                 return(count);
             }    
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
     
         return 0;
@@ -388,7 +412,8 @@ public class RestaurantDBUtils {
                 String name =rs.getString("NAME");
                 return(name);
             }    
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
     
         return "";
@@ -404,7 +429,8 @@ public class RestaurantDBUtils {
             pstmt=con.prepareStatement(SQL);
             pstmt.setString(1,tableID);     
             pstmt.executeUpdate();
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
     }
 
@@ -423,7 +449,8 @@ public class RestaurantDBUtils {
                 String name =rs.getString("NAME");
                 return(name);
             }    
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
         
         return null;
@@ -443,10 +470,11 @@ public class RestaurantDBUtils {
             if (rs.next()){
                 return(rs.getBoolean("TABLEMOVED"));
             }    
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
         
-        return (false);
+        return false;
     }
 
     /**
@@ -459,7 +487,8 @@ public class RestaurantDBUtils {
             pstmt=con.prepareStatement(SQL);
             pstmt.setString(1,tableID);     
             pstmt.executeUpdate();
-        }catch(Exception e){
+        }catch(SQLException e){
+            LOGGER.log(Level.SEVERE, "", e);
         }
     }  
 }
