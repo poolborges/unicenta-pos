@@ -48,7 +48,10 @@ NOTE: WILL NOT follow future version of Unicenta oPOS
 
 image::krpos-screenshot.gif[]
 
-== Service Provider Iinterface (SPI)
+
+== Future of this project
+
+=== Service Provider Iinterface (SPI)
 
 About Java SPI available since Java 1.5 (eg: Used in JDBC driver loading)
 
@@ -63,7 +66,7 @@ About Java SPI available since Java 1.5 (eg: Used in JDBC driver loading)
 |====
 
 
-== EventSystem & ScriptEngine
+=== EventSystem & ScriptEngine
 
 
 Separate event publisher, event handling and script execution to distint component
@@ -77,9 +80,12 @@ Separate event publisher, event handling and script execution to distint compone
 ** Has specific Context (
 
 
-== Modularity
+=== Modularity
 
-* Modularity based on OSGI 7
+* Modularity 
+** OSGI 7 (I have experience) core, compendium, ...
+** Netbeans Platform (I have No Experience, great UI component, but must be maven/gradle)
+** Eclipse Platform (I little experience, great UI component, but must be maven/gradle)
 * ScriptEngine: 
 ** Kotlin(kts)
 ** groovy (but may not included, just for testing/evaluation)
@@ -93,7 +99,7 @@ Modularity of code base (impl should provide default implementation)
 * krospos-data-api
 * krospos-data-impl
 
-=== OSGI 
+==== OSGI 
 
 * Fragment for static resource customization
 * capabilities and requirement
