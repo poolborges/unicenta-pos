@@ -1,0 +1,1355 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" 
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro" 
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext 
+                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd 
+                    http://www.liquibase.org/xml/ns/pro 
+                    http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd 
+                    http://www.liquibase.org/xml/ns/dbchangelog 
+                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="pauloborges (generated)" id="1603928315936-1">
+        <createTable tableName="applications">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-2">
+        <createTable tableName="attribute">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-3">
+        <createTable tableName="attributeinstance">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="attributesetinstance_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attribute_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-4">
+        <createTable tableName="attributeset">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-5">
+        <createTable tableName="attributesetinstance">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="attributeset_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-6">
+        <createTable tableName="attributeuse">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="attributeset_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attribute_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lineno" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-7">
+        <createTable tableName="attributevalue">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="attribute_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-8">
+        <createTable tableName="breaks">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="visible" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notes" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-9">
+        <createTable tableName="categories">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parentid" type="VARCHAR(255)"/>
+            <column name="image" type="MEDIUMBLOB"/>
+            <column name="texttip" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="1" name="catshowname" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="catorder" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-10">
+        <createTable tableName="closedcash">
+            <column name="money" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="host" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hostsequence" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="datestart" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dateend" type="datetime"/>
+            <column defaultValueNumeric="0" name="nosales" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-11">
+        <createTable tableName="csvimport">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="rownumber" type="VARCHAR(255)"/>
+            <column name="csverror" type="VARCHAR(255)"/>
+            <column name="reference" type="VARCHAR(255)"/>
+            <column name="code" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="pricebuy" type="DOUBLE"/>
+            <column name="pricesell" type="DOUBLE"/>
+            <column name="previousbuy" type="DOUBLE"/>
+            <column name="previoussell" type="DOUBLE"/>
+            <column name="category" type="VARCHAR(255)"/>
+            <column name="tax" type="VARCHAR(255)"/>
+            <column name="searchkey" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-12">
+        <createTable tableName="customers">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="searchkey" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="taxid" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="taxcategory" type="VARCHAR(255)"/>
+            <column name="card" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0.0" name="maxdebt" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(255)"/>
+            <column name="address2" type="VARCHAR(255)"/>
+            <column name="postal" type="VARCHAR(255)"/>
+            <column name="city" type="VARCHAR(255)"/>
+            <column name="region" type="VARCHAR(255)"/>
+            <column name="country" type="VARCHAR(255)"/>
+            <column name="firstname" type="VARCHAR(255)"/>
+            <column name="lastname" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="phone" type="VARCHAR(255)"/>
+            <column name="phone2" type="VARCHAR(255)"/>
+            <column name="fax" type="VARCHAR(255)"/>
+            <column name="notes" type="VARCHAR(255)"/>
+            <column defaultValueBoolean="true" name="visible" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="curdate" type="datetime"/>
+            <column defaultValueNumeric="0.0" name="curdebt" type="DOUBLE"/>
+            <column name="image" type="MEDIUMBLOB"/>
+            <column defaultValueBoolean="false" name="isvip" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.0" name="discount" type="DOUBLE"/>
+            <column defaultValueDate="1900-01-01T00:00:01" name="memodate" type="datetime"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-13">
+        <createTable tableName="draweropened">
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="opendate" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="ticketid" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-14">
+        <createTable tableName="floors">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image" type="MEDIUMBLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-15">
+        <createTable tableName="leaves">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="pplid" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="startdate" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enddate" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notes" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-16">
+        <createTable tableName="lineremoved">
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="removeddate" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="ticketid" type="VARCHAR(255)"/>
+            <column name="productid" type="VARCHAR(255)"/>
+            <column name="productname" type="VARCHAR(255)"/>
+            <column name="units" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-17">
+        <createTable tableName="locations">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="address" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-18">
+        <createTable tableName="moorers">
+            <column name="vesselname" type="VARCHAR(255)"/>
+            <column name="size" type="INT"/>
+            <column name="days" type="INT"/>
+            <column defaultValueBoolean="false" name="power" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-19">
+        <createTable tableName="orders">
+            <column autoIncrement="true" name="id" type="MEDIUMINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="orderid" type="VARCHAR(50)"/>
+            <column defaultValueNumeric="1" name="qty" type="INT"/>
+            <column name="details" type="VARCHAR(255)"/>
+            <column name="attributes" type="VARCHAR(255)"/>
+            <column name="notes" type="VARCHAR(255)"/>
+            <column name="ticketid" type="VARCHAR(50)"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="ordertime" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="displayid" type="INT"/>
+            <column name="auxiliary" type="INT"/>
+            <column name="completetime" type="timestamp"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-20">
+        <createTable tableName="payments">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="receipt" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.0" name="total" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.0" name="tip" type="DOUBLE"/>
+            <column name="transid" type="VARCHAR(255)"/>
+            <column defaultValueBoolean="false" name="isprocessed" type="BIT(1)"/>
+            <column name="returnmsg" type="MEDIUMBLOB"/>
+            <column name="notes" type="VARCHAR(255)"/>
+            <column name="tendered" type="DOUBLE"/>
+            <column name="cardname" type="VARCHAR(255)"/>
+            <column name="voucher" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-21">
+        <createTable tableName="people">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="apppassword" type="VARCHAR(255)"/>
+            <column name="card" type="VARCHAR(255)"/>
+            <column name="role" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="visible" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image" type="MEDIUMBLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-22">
+        <createTable tableName="pickup_number">
+            <column defaultValueNumeric="0" name="id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-23">
+        <createTable tableName="places">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="seats" type="VARCHAR(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="x" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="y" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="floor" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer" type="VARCHAR(255)"/>
+            <column name="waiter" type="VARCHAR(255)"/>
+            <column name="ticketid" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="tablemoved" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-24">
+        <createTable tableName="products">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="reference" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="codetype" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.0" name="pricebuy" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.0" name="pricesell" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="taxcat" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attributeset_id" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0.0" name="stockcost" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.0" name="stockvolume" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image" type="MEDIUMBLOB"/>
+            <column defaultValueBoolean="false" name="iscom" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="isscale" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="isconstant" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="printkb" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="sendstatus" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="isservice" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attributes" type="MEDIUMBLOB"/>
+            <column name="display" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="isvprice" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="isverpatrib" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="texttip" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="warranty" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.0" name="stockunits" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="1" name="printto" type="VARCHAR(255)"/>
+            <column name="supplier" type="VARCHAR(255)"/>
+            <column defaultValue="0" name="uom" type="VARCHAR(255)"/>
+            <column defaultValueDate="1900-01-01T00:00:01" name="memodate" type="datetime"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-25">
+        <createTable tableName="products_bundle">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_bundle" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-26">
+        <createTable tableName="products_cat">
+            <column name="product" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="catorder" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-27">
+        <createTable tableName="products_com">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product2" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-28">
+        <createTable tableName="receipts">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="money" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="datenew" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attributes" type="MEDIUMBLOB"/>
+            <column name="person" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-29">
+        <createTable tableName="reservation_customers">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="customer" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-30">
+        <createTable tableName="reservations">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueDate="2017-01-01T00:00:00" name="datenew" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="chairs" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="isdone" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-31">
+        <createTable tableName="resources">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="restype" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="MEDIUMBLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-32">
+        <createTable tableName="roles">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="permissions" type="MEDIUMBLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-33">
+        <createTable tableName="sharedtickets">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="MEDIUMBLOB"/>
+            <column name="appuser" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="pickupid" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="locked" type="VARCHAR(20)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-34">
+        <createTable tableName="shift_breaks">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="shiftid" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="breakid" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="starttime" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="endtime" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-35">
+        <createTable tableName="shifts">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="startshift" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="endshift" type="datetime"/>
+            <column name="pplid" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-36">
+        <createTable tableName="stockcurrent">
+            <column name="location" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attributesetinstance_id" type="VARCHAR(255)"/>
+            <column name="units" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-37">
+        <createTable tableName="stockdiary">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="datenew" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reason" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="location" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attributesetinstance_id" type="VARCHAR(255)"/>
+            <column name="units" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="appuser" type="VARCHAR(255)"/>
+            <column name="supplier" type="VARCHAR(255)"/>
+            <column name="supplierdoc" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-38">
+        <createTable tableName="stocklevel">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="location" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stocksecurity" type="DOUBLE"/>
+            <column name="stockmaximum" type="DOUBLE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-39">
+        <createTable tableName="suppliers">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="searchkey" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="taxid" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.0" name="maxdebt" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(255)"/>
+            <column name="address2" type="VARCHAR(255)"/>
+            <column name="postal" type="VARCHAR(255)"/>
+            <column name="city" type="VARCHAR(255)"/>
+            <column name="region" type="VARCHAR(255)"/>
+            <column name="country" type="VARCHAR(255)"/>
+            <column name="firstname" type="VARCHAR(255)"/>
+            <column name="lastname" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="phone" type="VARCHAR(255)"/>
+            <column name="phone2" type="VARCHAR(255)"/>
+            <column name="fax" type="VARCHAR(255)"/>
+            <column name="notes" type="VARCHAR(255)"/>
+            <column defaultValueBoolean="true" name="visible" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="curdate" type="datetime"/>
+            <column defaultValueNumeric="0.0" name="curdebt" type="DOUBLE"/>
+            <column name="vatid" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-40">
+        <createTable tableName="taxcategories">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-41">
+        <createTable tableName="taxcustcategories">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-42">
+        <createTable tableName="taxes">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="custcategory" type="VARCHAR(255)"/>
+            <column name="parentid" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0.0" name="rate" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="ratecascade" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rateorder" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-43">
+        <createTable tableName="taxlines">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="receipt" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="taxid" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.0" name="base" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.0" name="amount" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-44">
+        <createTable tableName="taxsuppcategories">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-45">
+        <createTable tableName="thirdparties">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="cif" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(255)"/>
+            <column name="contactcomm" type="VARCHAR(255)"/>
+            <column name="contactfact" type="VARCHAR(255)"/>
+            <column name="payrule" type="VARCHAR(255)"/>
+            <column name="faxnumber" type="VARCHAR(255)"/>
+            <column name="phonenumber" type="VARCHAR(255)"/>
+            <column name="mobilenumber" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="webpage" type="VARCHAR(255)"/>
+            <column name="notes" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-46">
+        <createTable tableName="ticketlines">
+            <column name="ticket" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="line" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product" type="VARCHAR(255)"/>
+            <column name="attributesetinstance_id" type="VARCHAR(255)"/>
+            <column name="units" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="taxid" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attributes" type="MEDIUMBLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-47">
+        <createTable tableName="tickets">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueNumeric="0" name="tickettype" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ticketid" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="person" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="status" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-48">
+        <createTable tableName="ticketsnum">
+            <column name="id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-49">
+        <createTable tableName="ticketsnum_payment">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-50">
+        <createTable tableName="ticketsnum_refund">
+            <column name="id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-51">
+        <createTable tableName="uom">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-52">
+        <createTable tableName="vouchers">
+            <column name="id" type="VARCHAR(100)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="voucher_number" type="VARCHAR(100)"/>
+            <column name="customer" type="VARCHAR(100)"/>
+            <column name="amount" type="DOUBLE"/>
+            <column defaultValue="A" name="status" type="CHAR(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-53">
+        <addUniqueConstraint columnNames="location, product, attributesetinstance_id" constraintName="stockcurrent_inx" tableName="stockcurrent"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-54">
+        <createIndex indexName="attinst_att" tableName="attributeinstance">
+            <column name="attribute_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-55">
+        <createIndex indexName="attinst_set" tableName="attributeinstance">
+            <column name="attributesetinstance_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-56">
+        <createIndex indexName="attsetinst_set" tableName="attributesetinstance">
+            <column name="attributeset_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-57">
+        <createIndex indexName="attuse_att" tableName="attributeuse">
+            <column name="attribute_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-58">
+        <createIndex indexName="attuse_line" tableName="attributeuse" unique="true">
+            <column name="attributeset_id"/>
+            <column name="lineno"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-59">
+        <createIndex indexName="attval_att" tableName="attributevalue">
+            <column name="attribute_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-60">
+        <createIndex indexName="categories_fk_1" tableName="categories">
+            <column name="parentid"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-61">
+        <createIndex indexName="categories_name_inx" tableName="categories" unique="true">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-62">
+        <createIndex indexName="closedcash_inx_1" tableName="closedcash">
+            <column name="datestart"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-63">
+        <createIndex indexName="closedcash_inx_seq" tableName="closedcash" unique="true">
+            <column name="host"/>
+            <column name="hostsequence"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-64">
+        <createIndex indexName="customers_card_inx" tableName="customers">
+            <column name="card"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-65">
+        <createIndex indexName="customers_name_inx" tableName="customers">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-66">
+        <createIndex indexName="customers_skey_inx" tableName="customers" unique="true">
+            <column name="searchkey"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-67">
+        <createIndex indexName="customers_taxcat" tableName="customers">
+            <column name="taxcategory"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-68">
+        <createIndex indexName="customers_taxid_inx" tableName="customers">
+            <column name="taxid"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-69">
+        <createIndex indexName="floors_name_inx" tableName="floors" unique="true">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-70">
+        <createIndex indexName="leaves_pplid" tableName="leaves">
+            <column name="pplid"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-71">
+        <createIndex indexName="payments_fk_receipt" tableName="payments">
+            <column name="receipt"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-72">
+        <createIndex indexName="payments_inx_1" tableName="payments">
+            <column name="payment"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-73">
+        <createIndex indexName="pbundle_inx_prod" tableName="products_bundle" unique="true">
+            <column name="product"/>
+            <column name="product_bundle"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-74">
+        <createIndex indexName="pcom_inx_prod" tableName="products_com" unique="true">
+            <column name="product"/>
+            <column name="product2"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-75">
+        <createIndex indexName="people_card_inx" tableName="people">
+            <column name="card"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-76">
+        <createIndex indexName="people_fk_1" tableName="people">
+            <column name="role"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-77">
+        <createIndex indexName="people_name_inx" tableName="people" unique="true">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-78">
+        <createIndex indexName="places_name_inx" tableName="places" unique="true">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-79">
+        <createIndex indexName="products_attrset_fx" tableName="products">
+            <column name="attributeset_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-80">
+        <createIndex indexName="products_bundle_fk_2" tableName="products_bundle">
+            <column name="product_bundle"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-81">
+        <createIndex indexName="products_cat_inx_1" tableName="products_cat">
+            <column name="catorder"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-82">
+        <createIndex indexName="products_com_fk_2" tableName="products_com">
+            <column name="product2"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-83">
+        <createIndex indexName="products_fk_1" tableName="products">
+            <column name="category"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-84">
+        <createIndex indexName="products_inx_1" tableName="products" unique="true">
+            <column name="code"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-85">
+        <createIndex indexName="products_name_inx" tableName="products">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-86">
+        <createIndex indexName="products_taxcat_fk" tableName="products">
+            <column name="taxcat"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-87">
+        <createIndex indexName="receipts_fk_money" tableName="receipts">
+            <column name="money"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-88">
+        <createIndex indexName="receipts_inx_1" tableName="receipts">
+            <column name="datenew"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-89">
+        <createIndex indexName="res_cust_fk_2" tableName="reservation_customers">
+            <column name="customer"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-90">
+        <createIndex indexName="reservations_inx_1" tableName="reservations">
+            <column defaultValueDate="2017-01-01T00:00:00" name="datenew"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-91">
+        <createIndex indexName="resources_name_inx" tableName="resources" unique="true">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-92">
+        <createIndex indexName="roles_name_inx" tableName="roles" unique="true">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-93">
+        <createIndex indexName="shift_breaks_breakid" tableName="shift_breaks">
+            <column name="breakid"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-94">
+        <createIndex indexName="shift_breaks_shiftid" tableName="shift_breaks">
+            <column name="shiftid"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-95">
+        <createIndex indexName="stockcurrent_attsetinst" tableName="stockcurrent">
+            <column name="attributesetinstance_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-96">
+        <createIndex indexName="stockcurrent_fk_1" tableName="stockcurrent">
+            <column name="product"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-97">
+        <createIndex indexName="stockdiary_attsetinst" tableName="stockdiary">
+            <column name="attributesetinstance_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-98">
+        <createIndex indexName="stockdiary_fk_1" tableName="stockdiary">
+            <column name="product"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-99">
+        <createIndex indexName="stockdiary_fk_2" tableName="stockdiary">
+            <column name="location"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-100">
+        <createIndex indexName="stockdiary_inx_1" tableName="stockdiary">
+            <column name="datenew"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-101">
+        <createIndex indexName="stocklevel_location" tableName="stocklevel">
+            <column name="location"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-102">
+        <createIndex indexName="stocklevel_product" tableName="stocklevel">
+            <column name="product"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-103">
+        <createIndex indexName="suppliers_name_inx" tableName="suppliers">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-104">
+        <createIndex indexName="suppliers_skey_inx" tableName="suppliers" unique="true">
+            <column name="searchkey"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-105">
+        <createIndex indexName="taxcustcat_name_inx" tableName="taxcustcategories" unique="true">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-106">
+        <createIndex indexName="taxes_cat_fk" tableName="taxes">
+            <column name="category"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-107">
+        <createIndex indexName="taxes_custcat_fk" tableName="taxes">
+            <column name="custcategory"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-108">
+        <createIndex indexName="taxes_name_inx" tableName="taxes" unique="true">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-109">
+        <createIndex indexName="taxes_taxes_fk" tableName="taxes">
+            <column name="parentid"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-110">
+        <createIndex indexName="taxlines_receipt" tableName="taxlines">
+            <column name="receipt"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-111">
+        <createIndex indexName="taxlines_tax" tableName="taxlines">
+            <column name="taxid"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-112">
+        <createIndex indexName="thirdparties_cif_inx" tableName="thirdparties" unique="true">
+            <column name="cif"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-113">
+        <createIndex indexName="thirdparties_name_inx" tableName="thirdparties" unique="true">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-114">
+        <createIndex indexName="ticketlines_attsetinst" tableName="ticketlines">
+            <column name="attributesetinstance_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-115">
+        <createIndex indexName="ticketlines_fk_2" tableName="ticketlines">
+            <column name="product"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-116">
+        <createIndex indexName="ticketlines_fk_3" tableName="ticketlines">
+            <column name="taxid"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-117">
+        <createIndex indexName="tickets_customers_fk" tableName="tickets">
+            <column name="customer"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-118">
+        <createIndex indexName="tickets_fk_2" tableName="tickets">
+            <column name="person"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-119">
+        <createIndex indexName="tickets_ticketid" tableName="tickets">
+            <column defaultValueNumeric="0" name="tickettype"/>
+            <column name="ticketid"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-120">
+        <addForeignKeyConstraint baseColumnNames="attribute_id" baseTableName="attributeinstance" constraintName="attinst_att" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attribute" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-121">
+        <addForeignKeyConstraint baseColumnNames="attributesetinstance_id" baseTableName="attributeinstance" constraintName="attinst_set" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attributesetinstance" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-122">
+        <addForeignKeyConstraint baseColumnNames="attributeset_id" baseTableName="attributesetinstance" constraintName="attsetinst_set" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attributeset" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-123">
+        <addForeignKeyConstraint baseColumnNames="attribute_id" baseTableName="attributeuse" constraintName="attuse_att" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attribute" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-124">
+        <addForeignKeyConstraint baseColumnNames="attributeset_id" baseTableName="attributeuse" constraintName="attuse_set" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attributeset" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-125">
+        <addForeignKeyConstraint baseColumnNames="attribute_id" baseTableName="attributevalue" constraintName="attval_att" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attribute" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-126">
+        <addForeignKeyConstraint baseColumnNames="parentid" baseTableName="categories" constraintName="categories_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="categories" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-127">
+        <addForeignKeyConstraint baseColumnNames="taxcategory" baseTableName="customers" constraintName="customers_taxcat" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="taxcustcategories" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-128">
+        <addForeignKeyConstraint baseColumnNames="pplid" baseTableName="leaves" constraintName="leaves_pplid" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="people" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-129">
+        <addForeignKeyConstraint baseColumnNames="receipt" baseTableName="payments" constraintName="payments_fk_receipt" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="receipts" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-130">
+        <addForeignKeyConstraint baseColumnNames="role" baseTableName="people" constraintName="people_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="roles" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-131">
+        <addForeignKeyConstraint baseColumnNames="attributeset_id" baseTableName="products" constraintName="products_attrset_fk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attributeset" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-132">
+        <addForeignKeyConstraint baseColumnNames="product" baseTableName="products_bundle" constraintName="products_bundle_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-133">
+        <addForeignKeyConstraint baseColumnNames="product_bundle" baseTableName="products_bundle" constraintName="products_bundle_fk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-134">
+        <addForeignKeyConstraint baseColumnNames="product" baseTableName="products_cat" constraintName="products_cat_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-135">
+        <addForeignKeyConstraint baseColumnNames="product" baseTableName="products_com" constraintName="products_com_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-136">
+        <addForeignKeyConstraint baseColumnNames="product2" baseTableName="products_com" constraintName="products_com_fk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-137">
+        <addForeignKeyConstraint baseColumnNames="category" baseTableName="products" constraintName="products_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="categories" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-138">
+        <addForeignKeyConstraint baseColumnNames="taxcat" baseTableName="products" constraintName="products_taxcat_fk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="taxcategories" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-139">
+        <addForeignKeyConstraint baseColumnNames="money" baseTableName="receipts" constraintName="receipts_fk_money" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="money" referencedTableName="closedcash" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-140">
+        <addForeignKeyConstraint baseColumnNames="id" baseTableName="reservation_customers" constraintName="res_cust_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="reservations" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-141">
+        <addForeignKeyConstraint baseColumnNames="customer" baseTableName="reservation_customers" constraintName="res_cust_fk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="customers" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-142">
+        <addForeignKeyConstraint baseColumnNames="breakid" baseTableName="shift_breaks" constraintName="shift_breaks_breakid" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="breaks" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-143">
+        <addForeignKeyConstraint baseColumnNames="shiftid" baseTableName="shift_breaks" constraintName="shift_breaks_shiftid" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="shifts" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-144">
+        <addForeignKeyConstraint baseColumnNames="attributesetinstance_id" baseTableName="stockcurrent" constraintName="stockcurrent_attsetinst" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attributesetinstance" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-145">
+        <addForeignKeyConstraint baseColumnNames="product" baseTableName="stockcurrent" constraintName="stockcurrent_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-146">
+        <addForeignKeyConstraint baseColumnNames="location" baseTableName="stockcurrent" constraintName="stockcurrent_fk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="locations" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-147">
+        <addForeignKeyConstraint baseColumnNames="attributesetinstance_id" baseTableName="stockdiary" constraintName="stockdiary_attsetinst" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attributesetinstance" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-148">
+        <addForeignKeyConstraint baseColumnNames="product" baseTableName="stockdiary" constraintName="stockdiary_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-149">
+        <addForeignKeyConstraint baseColumnNames="location" baseTableName="stockdiary" constraintName="stockdiary_fk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="locations" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-150">
+        <addForeignKeyConstraint baseColumnNames="location" baseTableName="stocklevel" constraintName="stocklevel_location" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="locations" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-151">
+        <addForeignKeyConstraint baseColumnNames="product" baseTableName="stocklevel" constraintName="stocklevel_product" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-152">
+        <addForeignKeyConstraint baseColumnNames="category" baseTableName="taxes" constraintName="taxes_cat_fk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="taxcategories" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-153">
+        <addForeignKeyConstraint baseColumnNames="custcategory" baseTableName="taxes" constraintName="taxes_custcat_fk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="taxcustcategories" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-154">
+        <addForeignKeyConstraint baseColumnNames="parentid" baseTableName="taxes" constraintName="taxes_taxes_fk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="taxes" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-155">
+        <addForeignKeyConstraint baseColumnNames="receipt" baseTableName="taxlines" constraintName="taxlines_receipt" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="receipts" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-156">
+        <addForeignKeyConstraint baseColumnNames="taxid" baseTableName="taxlines" constraintName="taxlines_tax" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="taxes" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-157">
+        <addForeignKeyConstraint baseColumnNames="attributesetinstance_id" baseTableName="ticketlines" constraintName="ticketlines_attsetinst" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attributesetinstance" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-158">
+        <addForeignKeyConstraint baseColumnNames="product" baseTableName="ticketlines" constraintName="ticketlines_fk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-159">
+        <addForeignKeyConstraint baseColumnNames="taxid" baseTableName="ticketlines" constraintName="ticketlines_fk_3" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="taxes" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-160">
+        <addForeignKeyConstraint baseColumnNames="ticket" baseTableName="ticketlines" constraintName="ticketlines_fk_ticket" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tickets" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-161">
+        <addForeignKeyConstraint baseColumnNames="customer" baseTableName="tickets" constraintName="tickets_customers_fk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="customers" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-162">
+        <addForeignKeyConstraint baseColumnNames="person" baseTableName="tickets" constraintName="tickets_fk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="people" validate="true"/>
+    </changeSet>
+    <changeSet author="pauloborges (generated)" id="1603928315936-163">
+        <addForeignKeyConstraint baseColumnNames="id" baseTableName="tickets" constraintName="tickets_fk_id" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="receipts" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
