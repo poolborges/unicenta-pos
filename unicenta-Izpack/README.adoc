@@ -1,0 +1,6 @@
+
+
+
+----
+java -jar unicenta-izpack-4.5.jar -console
+----

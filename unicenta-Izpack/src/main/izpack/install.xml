@@ -1,0 +1,77 @@
+<izpack:installation version="5.0"
+                     xmlns:izpack="http://izpack.org/schema/installation"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xsi:schemaLocation="http://izpack.org/schema/installation 
+                     http://izpack.org/schema/5.0/izpack-installation-5.0.xsd">
+ 
+    <info>
+        <appname>@{project.name}</appname>
+        <appversion>@{project.version}</appversion>
+        <appsubpath>krpos</appsubpath>
+        <authors>
+            <author name="Paulo Borges" email="poolborges@example.com" />
+        </authors>
+        <javaversion>1.6</javaversion>
+        <requiresjdk>no</requiresjdk>
+        <url>https://www.github.com/poolborges</url>
+    </info>
+ 
+    <locale>
+        <langpack iso3="eng"/>
+    </locale>
+ 
+    <guiprefs width="800" height="600" resizable="no">
+        <splash>installer/app_splash.png</splash>
+        <modifier key="useButtonIcons" value="yes"/>
+        <modifier key="useLabelIcons" value="no"/>
+        <modifier key="labelGap" value="2"/>
+        <modifier key="layoutAnchor" value="NORTHWEST"/>
+        <modifier key="useHeadingPanel" value="yes" />
+        <modifier key="headingImageOnLeft" value="yes"/>
+        <modifier key="headingLineCount" value="1"/>
+        <modifier key="headingFontSize" value="1.5"/>
+        <modifier key="headingBackgroundColor" value="0x00ffffff"/>
+        <modifier key="headingPanelCounter" value="progressbar"/>
+        <modifier key="headingPanelCounterPos" value="inNavigationPanel"/>
+    </guiprefs>
+    
+    <variables>
+        <variable name="InstallerFrame.logfilePath" value="Default"/>
+        <variable name="WELCOME_TEXT" value="krPOS Instalation"/>
+        <variable name="WELCOME_VERSION" value="Version: 4.5"/>
+    </variables>
+    
+    <resources>
+        <res id="LicencePanel.licence" src="installer/Licence.txt"/>
+        <res id="InfoPanel.info" src="installer/Readme.txt"/>
+        <res id="HTMLHelloPanel.welcome" src="installer/welcome.html"/>
+        <res id="HTMLInfoPanel.welcome" src="installer/welcome.html"/>
+        <res id="IZPackLogo" src="installer/izpack-logo-medium.png"/>
+        <res id="Installer.image" src="installer/installer.png"/>
+    </resources>
+ 
+    <panels>
+        <panel classname="HelloPanel" />
+        <panel classname="TargetPanel"/>
+        <panel classname="PacksPanel"/>
+        <panel classname="InstallPanel"/>
+        <panel classname="FinishPanel"/>
+    </panels>
+ 
+    <packs>
+        <pack name="App Core" required="yes">
+            <description>Application Core</description>
+            <file src="unicentaopos.jar" targetdir="$INSTALL_PATH" override="true"/>
+        </pack>
+        <pack name="App Libs" required="yes">
+            <description>Application libraries</description>
+            <fileset dir="lib" targetdir="${INSTALL_PATH}/lib" override="true"/>
+        </pack>
+        <pack name="App Assets" required="yes">
+            <description>The core images files needed for the application</description>
+            <fileset dir="images" targetdir="${INSTALL_PATH}" override="true"/>
+            <parsable targetfile="${INSTALL_PATH}/app_splash.png"/>
+        </pack>
+    </packs>
+ 
+</izpack:installation>
