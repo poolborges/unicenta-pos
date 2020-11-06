@@ -1,0 +1,8 @@
+= Database Migration 
+
+NOTE: Database Migration should be based on Liquidbase 4
+
+
+== Reference
+
+* https://dba-presents.com/index.php/liquibase/216-liquibase-3-6-x-data-types-mapping-table

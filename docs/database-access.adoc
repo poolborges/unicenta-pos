@@ -1,0 +1,10 @@
+= Database Access
+
+NOTE: Database Access Layer should be based on Liquidbase 4
+
+
+
+== Reference
+
+* Reladomo ORM - https://github.com/goldmansachs/reladomo
+* Reladomo Scala - https://www.youtube.com/watch?v=HjCHaZsEodc

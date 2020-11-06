@@ -51,7 +51,27 @@ image::krpos-screenshot.gif[]
 
 == Future of this project
 
-=== Service Provider Iinterface (SPI)
+
+=== Configuration 
+
+* Only database properties will be available from file, other properties should be saved on database
+* database.1.url, database.1.username, database.1.password
+
+=== Resource 
+
+* Should not be stored on database anymore, but provided on specific jar and available on classpath
+** on OSGI those resource can be easily updated as fragment of bundle kiolos-pos-resource
+
+
+=== Database Migration 
+
+Migration tools
+
+* Liquidbase (I have Experience)
+* Obevo https://github.com/goldmansachs/obevo (No Experience)
+
+
+=== Service Provider Interface (SPI)
 
 About Java SPI available since Java 1.5 (eg: Used in JDBC driver loading)
 
