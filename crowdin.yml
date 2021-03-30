@@ -1,0 +1,5 @@
+files:
+  - source: '*.properties'
+    ignore:
+      - liquibase.properties
+    translation: '%file_name%_%two_letters_code%.%file_extension%'
