@@ -2,4 +2,4 @@ files:
   - source: '/unicenta-opos/src/main/resources/**/*.properties'
     ignore:
       - liquibase.properties
-    translation: '/unicenta-opos/src/main/resources/**/%file_name%_%two_letters_code%.%file_extension%'
+    translation: '/unicenta-opos-i18n/src/main/resources/**/%file_name%_%two_letters_code%.%file_extension%'

@@ -78,6 +78,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </contributors>
 
     <modules>
+        <module>unicenta-opos-i18n</module>
         <module>unicenta-thirdparty</module>
         <module>unicenta-opos</module>
         <module>unicentaopos-samples</module>
