@@ -1,5 +1,5 @@
 files:
-  - source: '*.properties'
+  - source: '/unicenta-opos/src/main/resources/**/*.properties'
     ignore:
       - liquibase.properties
-    translation: '%file_name%_%two_letters_code%.%file_extension%'
+    translation: '/unicenta-opos/src/main/resources/**/%file_name%_%two_letters_code%.%file_extension%'
