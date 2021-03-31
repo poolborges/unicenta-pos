@@ -235,7 +235,7 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
 
         jLabel6.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages"); // NOI18N
-        jLabel6.setText(bundle.getString("label.Database")); // NOI18N
+        jLabel6.setText(bundle.getString("label.database")); // NOI18N
         jLabel6.setPreferredSize(new java.awt.Dimension(125, 30));
 
         jcboDBDriver.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -299,7 +299,7 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
         jButtonTest.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jButtonTest.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/database.png"))); // NOI18N
         jButtonTest.setText(bundle.getString("button.test")); // NOI18N
-        jButtonTest.setActionCommand(bundle.getString("button.test")); // NOI18N
+        jButtonTest.setActionCommand(bundle.getString("Button.Test")); // NOI18N
         jButtonTest.setPreferredSize(new java.awt.Dimension(110, 45));
         jButtonTest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -318,7 +318,7 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
         jButtonTest1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jButtonTest1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/database.png"))); // NOI18N
         jButtonTest1.setText(bundle.getString("button.test")); // NOI18N
-        jButtonTest1.setActionCommand(bundle.getString("button.test")); // NOI18N
+        jButtonTest1.setActionCommand(bundle.getString("Button.Test")); // NOI18N
         jButtonTest1.setEnabled(false);
         jButtonTest1.setPreferredSize(new java.awt.Dimension(110, 45));
         jButtonTest1.addActionListener(new java.awt.event.ActionListener() {
