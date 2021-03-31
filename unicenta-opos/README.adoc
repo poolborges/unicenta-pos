@@ -1,0 +1,14 @@
+
+
+
+== Execute from Maven (mvn) 
+
+
+-----
+$ mvn compile exec:java -Dexec.mainClass="com.openbravo.pos.forms.StartPOS"
+-----
+
+
+----
+$ mvn compile exec:java -Dexec.mainClass="com.openbravo.pos.forms.JFrmConfig"
+----
