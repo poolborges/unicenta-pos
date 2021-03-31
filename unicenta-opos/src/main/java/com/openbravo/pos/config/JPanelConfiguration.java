@@ -227,41 +227,42 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
         jPanelGeneral.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jPanelGeneral.setPreferredSize(new java.awt.Dimension(0, 400));
         jPanelGeneral.setLayout(new javax.swing.BoxLayout(jPanelGeneral, javax.swing.BoxLayout.LINE_AXIS));
-        jTabbedPane1.addTab("General", jPanelGeneral);
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages"); // NOI18N
+        jTabbedPane1.addTab(bundle.getString("jpanelconfiguration.tab.general.title"), jPanelGeneral); // NOI18N
 
         jPanelLocale.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jPanelLocale.setPreferredSize(new java.awt.Dimension(0, 400));
         jPanelLocale.setLayout(new javax.swing.BoxLayout(jPanelLocale, javax.swing.BoxLayout.LINE_AXIS));
-        jTabbedPane1.addTab("Locale", jPanelLocale);
+        jTabbedPane1.addTab(bundle.getString("jpanelconfiguration.tab.locale.title"), jPanelLocale); // NOI18N
 
         jPanelPayment.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jPanelPayment.setPreferredSize(new java.awt.Dimension(0, 400));
         jPanelPayment.setLayout(new javax.swing.BoxLayout(jPanelPayment, javax.swing.BoxLayout.LINE_AXIS));
-        jTabbedPane1.addTab("Payment Method", jPanelPayment);
+        jTabbedPane1.addTab(bundle.getString("jpanelconfiguration.tab.payment_method.title"), jPanelPayment); // NOI18N
 
         jPanelPeripheral.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jPanelPeripheral.setPreferredSize(new java.awt.Dimension(0, 400));
         jPanelPeripheral.setLayout(new javax.swing.BoxLayout(jPanelPeripheral, javax.swing.BoxLayout.LINE_AXIS));
-        jTabbedPane1.addTab("Peripherals", jPanelPeripheral);
+        jTabbedPane1.addTab(bundle.getString("jpanelconfiguration.tab.peripherals.title"), jPanelPeripheral); // NOI18N
 
         jPanelSystem.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jPanelSystem.setPreferredSize(new java.awt.Dimension(0, 400));
         jPanelSystem.setLayout(new javax.swing.BoxLayout(jPanelSystem, javax.swing.BoxLayout.LINE_AXIS));
-        jTabbedPane1.addTab("System Options", jPanelSystem);
+        jTabbedPane1.addTab(bundle.getString("jpanelconfiguration.tab.system_options.title"), jPanelSystem); // NOI18N
 
         jPanelTicketSetup.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jPanelTicketSetup.setPreferredSize(new java.awt.Dimension(0, 400));
         jPanelTicketSetup.setLayout(new javax.swing.BoxLayout(jPanelTicketSetup, javax.swing.BoxLayout.LINE_AXIS));
-        jTabbedPane1.addTab("Ticket Setup", jPanelTicketSetup);
+        jTabbedPane1.addTab(bundle.getString("jpanelconfiguration.tab.ticket_setup.title"), jPanelTicketSetup); // NOI18N
 
         jPanelCompany.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jPanelCompany.setLayout(new javax.swing.BoxLayout(jPanelCompany, javax.swing.BoxLayout.LINE_AXIS));
-        jTabbedPane1.addTab("Company", jPanelCompany);
+        jTabbedPane1.addTab(bundle.getString("jpanelconfiguration.tab.company.title"), jPanelCompany); // NOI18N
 
         jPanelDatabase.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jPanelDatabase.setPreferredSize(new java.awt.Dimension(0, 400));
         jPanelDatabase.setLayout(new javax.swing.BoxLayout(jPanelDatabase, javax.swing.BoxLayout.LINE_AXIS));
-        jTabbedPane1.addTab("Database Setup", jPanelDatabase);
+        jTabbedPane1.addTab(bundle.getString("jpanelconfiguration.tab.database.title"), jPanelDatabase); // NOI18N
 
         jbtnRestore.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jbtnRestore.setText(AppLocal.getIntString("button.factory")); // NOI18N
