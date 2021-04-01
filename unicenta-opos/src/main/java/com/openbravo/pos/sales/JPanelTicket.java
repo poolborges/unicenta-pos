@@ -2908,21 +2908,19 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
 
     private void j_btnRemotePrtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_j_btnRemotePrtActionPerformed
         
-        String rScript = (dlSystem.getResourceAsText("script.SendOrder"));
-        
+        String scriptId = "script.SendOrder";
         try {                       
-            
+            String rScript = (dlSystem.getResourceAsText(scriptId));
             ScriptEngine scriptEngine = ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
             scriptEngine.put("ticket", m_oTicket);  
             scriptEngine.put("place",  m_oTicketExt);             
             scriptEngine.put("user", m_App.getAppUserView().getUser());
             scriptEngine.put("sales", this);
             scriptEngine.put("pickupid", m_oTicket.getPickupId());
-
-            Object result = scriptEngine.eval(rScript);
+            scriptEngine.eval(rScript);
 
         } catch (ScriptException ex) {
-            Logger.getLogger(JPanelTicket.class.getName()).log(Level.ALL, null, ex);
+            LOGGER.log(Level.WARNING, "Exception on executing script: "+scriptId, ex);
         }
 
         remoteOrderDisplay();

@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 
@@ -201,9 +202,7 @@ public class JTicketsFinder extends javax.swing.JDialog implements EditorCreator
         now.set(Calendar.MINUTE, 0);
         now.set(Calendar.SECOND, 0);
         now.set(Calendar.HOUR_OF_DAY, 0);
-        System.out.println(sdf.format(now.getTime()));
         jTxtStartDate.setText(sdf.format(now.getTime()));
-
         repaint();
     }
     

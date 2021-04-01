@@ -23,13 +23,15 @@ package com.openbravo.pos.scale;
 import gnu.io.*;
 import java.io.*;
 import java.util.TooManyListenersException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
 *
 * @author uniCenta + H Singh
 */
 public class ScaleAcomPC100 implements Scale, SerialPortEventListener {
-
+private final static Logger LOGGER = Logger.getLogger(ScaleAcomPC100.class.getName());
 private CommPortIdentifier m_PortIdPrinter;
 private SerialPort m_CommPortPrinter;
 
@@ -70,6 +72,7 @@ public Double readWeight() {
         try {
             wait(200);
         } catch (InterruptedException e) {
+                LOGGER.log(Level.WARNING, null, e);
         }
         if (m_iStatusScale != SCALE_READY) {
             m_iStatusScale = SCALE_READY;
@@ -84,6 +87,7 @@ public Double readWeight() {
         try {
             wait(200);
         } catch (InterruptedException e) {
+            LOGGER.log(Level.WARNING, null, e);
         }
 
         if (m_iStatusScale == SCALE_READY) {
@@ -104,6 +108,7 @@ private void flush() {
     try {
         m_out.flush();
     } catch (IOException e) {
+        LOGGER.log(Level.WARNING, null, e);
     }
 }
 
@@ -127,6 +132,7 @@ private void write(byte[] data) {
         m_out.write(data);
     } catch (NoSuchPortException | PortInUseException | UnsupportedCommOperationException 
             | TooManyListenersException | IOException e) {
+        LOGGER.log(Level.WARNING, null, e);
     }
 }
 
@@ -171,10 +177,12 @@ public void serialEvent(SerialPortEvent e) {
                     m_sScaleReading = "";
                 }
             } catch (IndexOutOfBoundsException ex) {
-                System.out.println("IndexOutOfBoundsException, message not complete yet. Waiting for more data.");
+                LOGGER.log(Level.WARNING, "IndexOutOfBoundsException, message not complete yet.", ex);
             }
 
-            } catch (IOException eIO) {}
+            } catch (IOException eIO) {
+                LOGGER.log(Level.WARNING, "IOException", eIO);
+            }
                 break;
         }
     }

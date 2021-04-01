@@ -31,6 +31,8 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -38,7 +40,7 @@ import javax.swing.*;
  * @author adrianromero
  */
 public class PeopleView extends JPanel implements EditorRecord {
-
+    private static final Logger LOGGER = Logger.getLogger(PeopleView.class.getName());
     private Object m_oId;
     private String m_sPassword;
     
@@ -163,7 +165,7 @@ public class PeopleView extends JPanel implements EditorRecord {
         } else {
             jLblCardID.setText(AppLocal.getIntString("label.card"));            
         }
-        System.out.println(m_jcard.getText().length());        
+        LOGGER.log(Level.FINE, "People Card (Text.length): "+m_jcard.getText().length());
         
         m_jName.setEnabled(true);
         m_jRole.setEnabled(true);

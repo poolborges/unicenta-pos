@@ -41,6 +41,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -50,7 +52,7 @@ import javax.swing.table.TableColumnModel;
  * @author adrianromero
  */
 public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryApp {
-    
+    private static final Logger LOGGER = Logger.getLogger(JPanelCloseMoney.class.getName());
     private AppView m_App;
     private DataLogicSystem m_dlSystem;
     
@@ -650,15 +652,16 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
         
         if (res == JOptionPane.YES_OPTION) {
 
+            String scriptId = "cash.close";
             try {
                 //Fire cash.closed event
                 ScriptEngine scriptEngine = ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
                 DataLogicSystem dlSystem = (DataLogicSystem) m_App.getBean("com.openbravo.pos.forms.DataLogicSystem");
-                String script = dlSystem.getResourceAsXML("cash.close");
+                String script = dlSystem.getResourceAsXML(scriptId);
                 scriptEngine.eval(script);
             }
-            catch (Exception e) {
-                System.out.println(e);
+            catch (BeanFactoryException | ScriptException e) {
+                LOGGER.log(Level.WARNING, "Exception on executing script: "+scriptId, e);
             }
 
             Date dNow = new Date();

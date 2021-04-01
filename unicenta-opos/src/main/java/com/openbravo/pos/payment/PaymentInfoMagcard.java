@@ -222,9 +222,6 @@ public class PaymentInfoMagcard extends PaymentInfo {
     }  
 
     public String printCardNumber() {
-        
-System.out.println("Full Card Number : " + m_sCardNumber);
-
         if (m_sCardNumber.length() > 4) {
             return m_sCardNumber.substring(0, m_sCardNumber.length() - 4).replaceAll("\\.", "*")
                     + m_sCardNumber.substring(m_sCardNumber.length() - 4);

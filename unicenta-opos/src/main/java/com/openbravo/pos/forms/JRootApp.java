@@ -269,7 +269,7 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
 
     @Override
     public void networkException(DeviceMonitorException dexc) {
-//        System.out.println("ERROR: " + dexc.toString());
+        LOGGER.log(Level.WARNING, "DeviceMonitorException", dexc);
     }
 
     /**

@@ -46,11 +46,13 @@ public class ImageUtils {
         byte[] resource = new byte[0];
         int n;
 
-        while ((n = inputstream.read(buffer)) != -1) {
-            byte[] b = new byte[resource.length + n];
-            System.arraycopy(resource, 0, b, 0, resource.length);
-            System.arraycopy(buffer, 0, b, resource.length, n);
-            resource = b;
+        if (inputstream != null) {
+            while ((n = inputstream.read(buffer)) != -1) {
+                byte[] b = new byte[resource.length + n];
+                System.arraycopy(resource, 0, b, 0, resource.length);
+                System.arraycopy(buffer, 0, b, resource.length, n);
+                resource = b;
+            }
         }
         return resource;
     }
@@ -62,14 +64,16 @@ public class ImageUtils {
      */
     public static byte[] getBytesFromResource(String filePath) {
 
-        //TODO improve null checking Objects.requireNonNull(filePath, "filePath should not be null");
-        InputStream in = ImageUtils.class.getResourceAsStream(filePath);
-
         byte[] image = new byte[0];
-        try {
-            return ImageUtils.readStream(in);
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "getBytesFromResource", e);
+        if (filePath != null) {
+            //TODO improve null checking Objects.requireNonNull(filePath, "filePath should not be null");
+            InputStream in = ImageUtils.class.getResourceAsStream(filePath);
+
+            try {
+                return ImageUtils.readStream(in);
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "getBytesFromResource", e);
+            }
         }
         return image;
 
@@ -91,7 +95,7 @@ public class ImageUtils {
      */
     public static BufferedImage readImage(String urlString) {
         //TODO improve null checking Objects.requireNonNull(urlString, "urlString should not be null");
-        BufferedImage image = null;
+        BufferedImage image = generateImage128x128();;
         try {
             image = readImage(new URL(urlString));
         } catch (MalformedURLException ex) {
@@ -107,14 +111,16 @@ public class ImageUtils {
      */
     public static BufferedImage readImage(URL url) {
         //TODO improve null checking Objects.requireNonNull(url, "url should not be null");
-        BufferedImage image = null;
-        try {
-            URLConnection urlConnection = url.openConnection();
-            try (InputStream in = urlConnection.getInputStream()) {
-                image = readImage(readStream(in));
+        BufferedImage image = generateImage128x128();
+        if (url != null) {
+            try {
+                URLConnection urlConnection = url.openConnection();
+                try (InputStream in = urlConnection.getInputStream()) {
+                    image = readImage(readStream(in));
+                }
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, "readImage", ex);
             }
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "readImage", ex);
         }
         return image;
     }
@@ -126,11 +132,13 @@ public class ImageUtils {
      */
     public static BufferedImage readImage(byte[] imageByteArray) {
         //TODO improve null checking Objects.requireNonNull(imageByteArray, "imageByteArray should not be null");
-        BufferedImage image = null;
-        try (ByteArrayInputStream input = new ByteArrayInputStream(imageByteArray)) {
-            image = ImageIO.read(input);
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "readImage", ex);
+        BufferedImage image = generateImage128x128();
+        if (imageByteArray != null) {
+            try (ByteArrayInputStream input = new ByteArrayInputStream(imageByteArray)) {
+                image = ImageIO.read(input);
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, "readImage", ex);
+            }
         }
         return image;
     }
@@ -143,13 +151,15 @@ public class ImageUtils {
     public static byte[] writeImage(BufferedImage img) {
         //TODO improve null checking Objects.requireNonNull(img, "img should not be null");
         byte[] imageByte = new byte[0];
-        try (ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();) {
-            ImageIO.write(img, "png", byteOutputStream);
-            byteOutputStream.flush();
-            byteOutputStream.close();
-            imageByte = byteOutputStream.toByteArray();
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "writeImage", ex);
+        if (img != null) {
+            try (ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();) {
+                ImageIO.write(img, "png", byteOutputStream);
+                byteOutputStream.flush();
+                byteOutputStream.close();
+                imageByte = byteOutputStream.toByteArray();
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, "writeImage", ex);
+            }
         }
         return imageByte;
     }
@@ -162,10 +172,12 @@ public class ImageUtils {
     public static Object readSerializable(byte[] objectByteArrary) {
         //TODO improve null checking Objects.requireNonNull(objectByteArrary, "objectByteArrary should not be null");
         Object obj = null;
-        try (ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(objectByteArrary))) {
-            obj = in.readObject();
-        } catch (IOException | ClassNotFoundException ex) {
-            LOGGER.log(Level.SEVERE, "readSerializable", ex);
+        if (objectByteArrary != null) {
+            try (ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(objectByteArrary))) {
+                obj = in.readObject();
+            } catch (IOException | ClassNotFoundException ex) {
+                LOGGER.log(Level.SEVERE, "readSerializable", ex);
+            }
         }
         return obj;
     }
@@ -178,15 +190,17 @@ public class ImageUtils {
     public static byte[] writeSerializable(Object obj) {
         //TODO improve null checking Objects.requireNonNull(obj, "obj should not be null");
         byte[] objectSerialize = new byte[0];
-        try {
-            ByteArrayOutputStream bOutput = new ByteArrayOutputStream();
-            try (ObjectOutputStream out = new ObjectOutputStream(bOutput)) {
-                out.writeObject(obj);
-                out.flush();
-                objectSerialize = bOutput.toByteArray();
+        if (obj != null) {
+            try {
+                ByteArrayOutputStream bOutput = new ByteArrayOutputStream();
+                try (ObjectOutputStream out = new ObjectOutputStream(bOutput)) {
+                    out.writeObject(obj);
+                    out.flush();
+                    objectSerialize = bOutput.toByteArray();
+                }
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, "writeSerializable", ex);
             }
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "writeSerializable", ex);
         }
         return objectSerialize;
     }
@@ -199,10 +213,12 @@ public class ImageUtils {
     public static Properties readProperties(byte propByte[]) {
         //TODO improve null checking Objects.requireNonNull(propByte, "propByte should not be null");
         Properties prop = new Properties();
-        try {
-            prop.loadFromXML(new ByteArrayInputStream(propByte));
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "readProperties", ex);
+        if (propByte != null) {
+            try {
+                prop.loadFromXML(new ByteArrayInputStream(propByte));
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, "readProperties", ex);
+            }
         }
         return prop;
     }
@@ -214,12 +230,25 @@ public class ImageUtils {
      */
     public static String bytes2hex(byte[] binput) {
 
-        StringBuilder s = new StringBuilder(binput.length * 2);
-        for (int i = 0; i < binput.length; i++) {
-            byte b = binput[i];
-            s.append(HEXCHARS[(b & 0xF0) >> 4]);
-            s.append(HEXCHARS[b & 0x0F]);
+        String result = "";
+        if (binput != null) {
+            StringBuilder s = new StringBuilder(binput.length * 2);
+            for (int i = 0; i < binput.length; i++) {
+                byte b = binput[i];
+                s.append(HEXCHARS[(b & 0xF0) >> 4]);
+                s.append(HEXCHARS[b & 0x0F]);
+            }
+            
+            result = s.toString();
         }
-        return s.toString();
+        return result;
+    }
+
+    public static BufferedImage generateImage(int width, int heigth) {
+        return new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB);
+    }
+
+    public static BufferedImage generateImage128x128() {
+        return generateImage(128, 128);
     }
 }

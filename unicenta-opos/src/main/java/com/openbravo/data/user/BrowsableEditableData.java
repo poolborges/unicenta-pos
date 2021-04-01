@@ -455,18 +455,17 @@ public class BrowsableEditableData {
     }
 
     private void triggerCustomerEvent(String event, Object[] customer, AppView appContext) {
-        String script = "";
         try {
             ScriptEngine scriptEngine = ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
 
             DataLogicSystem dlSystem = (DataLogicSystem) appContext.getBean("com.openbravo.pos.forms.DataLogicSystem");
-            script = dlSystem.getResourceAsXML(event);
+            String script = dlSystem.getResourceAsXML(event);
             scriptEngine.put("customer", customer);
             scriptEngine.put("device", appContext.getProperties().getProperty("machine.hostname"));
             scriptEngine.eval(script);
 
         } catch (BeanFactoryException | ScriptException e) {
-            LOGGER.log(Level.SEVERE, "Exception on executing script: "+script, e);
+            LOGGER.log(Level.WARNING, "Exception on executing script: "+event, e);
         }
     }
 

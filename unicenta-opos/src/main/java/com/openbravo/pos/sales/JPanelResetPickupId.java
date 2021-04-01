@@ -13,9 +13,7 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.sales;
-
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.JMessageDialog;
@@ -32,6 +30,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -41,8 +41,7 @@ import javax.swing.JPanel;
  * @author JG uniCenta
  */
 public class JPanelResetPickupId extends JPanel implements JPanelView {
-
-
+    private static final Logger LOGGER = Logger.getLogger(JPanelResetPickupId.class.getName());
     private AppConfig config;
     private Connection con;
     private String sdbmanager;
@@ -50,11 +49,14 @@ public class JPanelResetPickupId extends JPanel implements JPanelView {
     private AppProperties m_props;
     private String SQL;
     private Statement stmt;
-    
-    /** Creates new form JPaneldbUpdate
-     * @param oApp */
+
+    /**
+     * Creates new form JPaneldbUpdate
+     *
+     * @param oApp
+     */
     public JPanelResetPickupId(AppView oApp) {
-        this(oApp.getProperties());       
+        this(oApp.getProperties());
     }
 
     /**
@@ -62,65 +64,71 @@ public class JPanelResetPickupId extends JPanel implements JPanelView {
      * @param props
      */
     public JPanelResetPickupId(AppProperties props) {
-        
-        initComponents();
-        config = new AppConfig(props.getConfigFile());      
-        m_props=props;
 
-        
+        initComponents();
+        config = new AppConfig(props.getConfigFile());
+        m_props = props;
+
     }
 
     /**
      *
      */
-    public void performReset(){
-       
-       if ("HSQL Database Engine".equals(sdbmanager)) { 
-                SQL = "ALTER SEQUENCE pickup_number RESTART WITH 1";
-                try {
-                    stmt.executeUpdate(SQL);
-//                } catch (SQLException e){System.out.println(e.getMessage());}
-                } catch (SQLException e){}                
-       } else if ("MySQL".equals(sdbmanager)) {
-                SQL = "UPDATE pickup_number SET ID=0";
-                try {
-                    stmt.executeUpdate(SQL);
-//                } catch (SQLException e){System.out.println(e.getMessage());}            
-                } catch (SQLException e){}                    
+    public void performReset() {
+
+        if ("HSQL Database Engine".equals(sdbmanager)) {
+            SQL = "ALTER SEQUENCE pickup_number RESTART WITH 1";
+            try {
+                stmt.executeUpdate(SQL);
+            } catch (SQLException e) {
+                LOGGER.log(Level.WARNING, null, e);
+            }
+        } else if ("MySQL".equals(sdbmanager)) {
+            SQL = "UPDATE pickup_number SET ID=0";
+            try {
+                stmt.executeUpdate(SQL);
+            } catch (SQLException e) {
+                LOGGER.log(Level.WARNING, null, e);
+            }
         } else if ("PostgreSQL".equals(sdbmanager)) {
-                SQL = "ALTER SEQUENCE pickup_number RESTART WITH 1";
-                try {          
-                    stmt.executeUpdate(SQL);
-//                } catch (SQLException e){System.out.println(e.getMessage());}
-                } catch (SQLException e){}                    
+            SQL = "ALTER SEQUENCE pickup_number RESTART WITH 1";
+            try {
+                stmt.executeUpdate(SQL);
+            } catch (SQLException e) {
+                LOGGER.log(Level.WARNING, null, e);
+            }
         } else if ("Oracle".equals(sdbmanager)) {
-                SQL = "ALTER SEQUENCE pickup_number RESTART WITH 1";
-                try {
-                    stmt.executeUpdate(SQL);
-//                } catch (SQLException e){System.out.println(e.getMessage());}
-                } catch (SQLException e){}                    
+            SQL = "ALTER SEQUENCE pickup_number RESTART WITH 1";
+            try {
+                stmt.executeUpdate(SQL);
+            } catch (SQLException e) {
+                LOGGER.log(Level.WARNING, null, e);
+            }
         } else if ("Apache Derby".equals(sdbmanager)) {
-                SQL = "ALTER TABLE pickup_number ALTER COLUMN ID RESTART WITH 1";
-                try {
-                    stmt.executeUpdate(SQL);
-//                } catch (SQLException e){System.out.println(e.getMessage());}                
-                } catch (SQLException e){}                    
+            SQL = "ALTER TABLE pickup_number ALTER COLUMN ID RESTART WITH 1";
+            try {
+                stmt.executeUpdate(SQL);
+            } catch (SQLException e) {
+                LOGGER.log(Level.WARNING, null, e);
+            }
         } else if ("Derby".equals(sdbmanager)) {
-                SQL =  "UPDATE pickup_number SET ID=0";
-                try {
-                    stmt.executeUpdate(SQL);
-//                } catch (SQLException e){System.out.println(e.getMessage());} 
-                } catch (SQLException e){}                    
+            SQL = "UPDATE pickup_number SET ID=0";
+            try {
+                stmt.executeUpdate(SQL);
+            } catch (SQLException e) {
+                LOGGER.log(Level.WARNING, null, e);
+            }
         } else {
-                SQL = "ALTER SEQUENCE pickup_number RESTART WITH 1";
-                try {
-                    stmt.executeUpdate(SQL);
-//                } catch (SQLException e){System.out.println(e.getMessage());}
-                } catch (SQLException e){}                    
+            SQL = "ALTER SEQUENCE pickup_number RESTART WITH 1";
+            try {
+                stmt.executeUpdate(SQL);
+            } catch (SQLException e) {
+                LOGGER.log(Level.WARNING, null, e);
+            }
         }
-                    JOptionPane.showMessageDialog(this,"Reset complete.");
-                 
-   }
+        JOptionPane.showMessageDialog(this, "Reset complete.");
+
+    }
 
     /**
      *
@@ -130,7 +138,7 @@ public class JPanelResetPickupId extends JPanel implements JPanelView {
     public JComponent getComponent() {
         return this;
     }
-    
+
     /**
      *
      * @return
@@ -146,29 +154,28 @@ public class JPanelResetPickupId extends JPanel implements JPanelView {
      */
     @Override
     public void activate() throws BasicException {
-                
-       // connect to the database
-         String db_user =(m_props.getProperty("db.user"));
-         String db_url = (m_props.getProperty("db.URL"));
-         String db_password = (m_props.getProperty("db.password"));     
-         
-         if (db_user != null && db_password != null && db_password.startsWith("crypt:")) {
-                // the password is encrypted
-                AltEncrypter cypher = new AltEncrypter("cypherkey" + db_user);
-                db_password = cypher.decrypt(db_password.substring(6));
+
+        // connect to the database
+        String db_user = (m_props.getProperty("db.user"));
+        String db_url = (m_props.getProperty("db.URL"));
+        String db_password = (m_props.getProperty("db.password"));
+
+        if (db_user != null && db_password != null && db_password.startsWith("crypt:")) {
+            // the password is encrypted
+            AltEncrypter cypher = new AltEncrypter("cypherkey" + db_user);
+            db_password = cypher.decrypt(db_password.substring(6));
         }
-        
-         try{
+
+        try {
             session = AppViewConnection.createSession(m_props);
-            con = DriverManager.getConnection(db_url,db_user,db_password);                   
-            sdbmanager = con.getMetaData().getDatabaseProductName(); 
-            stmt = (Statement) con.createStatement(); 
-            } catch (BasicException | SQLException e) {    
-                
-         JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_DANGER, AppLocal.getIntString("database.UnableToConnect"), e));
-         System.exit(0);
-       }        
-      
+            con = DriverManager.getConnection(db_url, db_user, db_password);
+            sdbmanager = con.getMetaData().getDatabaseProductName();
+            stmt = (Statement) con.createStatement();
+        } catch (BasicException | SQLException e) {
+            LOGGER.log(Level.WARNING, null, e);
+            JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_DANGER, AppLocal.getIntString("database.UnableToConnect"), e));
+        }
+
     }
 
     /**
@@ -177,14 +184,13 @@ public class JPanelResetPickupId extends JPanel implements JPanelView {
      */
     @Override
     public boolean deactivate() {
-    return(true);
-    }      
+        return (true);
+    }
 
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -254,19 +260,18 @@ public class JPanelResetPickupId extends JPanel implements JPanelView {
 
     private void jbtnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnUpdateActionPerformed
         performReset();
-        
+
     }//GEN-LAST:event_jbtnUpdateActionPerformed
 
     private void jbtnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnExitActionPerformed
         deactivate();
-        System.exit(0);
     }//GEN-LAST:event_jbtnExitActionPerformed
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton jbtnExit;
     private javax.swing.JButton jbtnUpdate;
     // End of variables declaration//GEN-END:variables
-    
+
 }

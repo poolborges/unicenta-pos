@@ -35,19 +35,20 @@ import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.printer.DeviceTicket;
 import com.openbravo.pos.printer.TicketParser;
 import com.openbravo.pos.printer.TicketPrinterException;
-import com.openbravo.pos.sales.TaxesLogic;
 import com.openbravo.pos.scripting.ScriptEngine;
 import com.openbravo.pos.scripting.ScriptException;
 import com.openbravo.pos.scripting.ScriptFactory;
 import com.openbravo.pos.ticket.TicketInfo;
 import com.openbravo.pos.ticket.TicketLineInfo;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author JG uniCenta
  */
 public class JTicketsBagTicket extends JTicketsBag {
-    
+    private static final Logger LOGGER = Logger.getLogger(JTicketsBagTicket.class.getName());
     private DataLogicSystem m_dlSystem = null;
     protected DataLogicCustomers dlCustomers = null;
     private final DataLogicSales m_dlSales; 
@@ -97,6 +98,7 @@ public class JTicketsBagTicket extends JTicketsBag {
         try {
             taxeslogic = new TaxesLogic(m_dlSales.getTaxList().list());
         } catch (BasicException ex) {
+            LOGGER.log(Level.WARNING, null, ex);
         }   
     }
     
@@ -148,6 +150,7 @@ public class JTicketsBagTicket extends JTicketsBag {
             try {               
                 m_dlSales.deleteTicket(m_ticketCopy, m_App.getInventoryLocation());
             } catch (BasicException eData) {
+                LOGGER.log(Level.WARNING, null, eData);
                 MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE, AppLocal.getIntString("message.nosaveticket"), eData);
                 msg.show(this);                
             }            
@@ -196,7 +199,9 @@ public class JTicketsBagTicket extends JTicketsBag {
         Integer findTicket=0;    
         try {
                 findTicket = m_jTicketEditor.getValueInteger();
-            }catch (Exception e){            
+            }catch (Exception e){ 
+                LOGGER.log(Level.WARNING, null, e); 
+                
             }
 
         try {
@@ -237,12 +242,16 @@ public class JTicketsBagTicket extends JTicketsBag {
                 try {
                     taxeslogic.calculateTaxes(m_ticket);
                     TicketTaxInfo[] taxlist = m_ticket.getTaxLines();
-                } catch (TaxesException ex) {}
+                } catch (TaxesException ex) {
+                    LOGGER.log(Level.WARNING, null, ex);
+                }
 
                 printTicket();
             }
             
         } catch (BasicException e) {
+            
+                LOGGER.log(Level.WARNING, null, e);
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadticket"), e);
             msg.show(this);
         }
@@ -260,6 +269,8 @@ public class JTicketsBagTicket extends JTicketsBag {
                     &&  m_ticket.getTicketStatus() == 0)                             
                 && m_dlSales.isCashActive(m_ticket.getActiveCash()));
         } catch (BasicException e) {
+            
+                LOGGER.log(Level.WARNING, null, e);
             m_jEdit.setEnabled(false);
             m_jRefund.setEnabled(false);            
         }
@@ -285,6 +296,7 @@ public class JTicketsBagTicket extends JTicketsBag {
                 script.put("taxes", m_ticket.getTaxLines());                
                 m_TTP.printTicket(script.eval(m_dlSystem.getResourceAsXML("Printer.TicketPreview")).toString());
             } catch (    ScriptException | TicketPrinterException e) {
+                LOGGER.log(Level.WARNING, null, e);
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotprintticket"), e);
                 msg.show(this);
             }
@@ -531,6 +543,7 @@ public class JTicketsBagTicket extends JTicketsBag {
                 script.put("taxes", m_ticket.getTaxLines());
                 m_TTP2.printTicket(script.eval(m_dlSystem.getResourceAsXML("Printer.TicketPreview")).toString());
             } catch (ScriptException | TicketPrinterException e) {
+                LOGGER.log(Level.WARNING, null, e);
                 JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_NOTICE, AppLocal.getIntString("message.cannotprint"), e));
             }
         }  
@@ -580,8 +593,6 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             m_jTicketEditor.activate();
         } else {
             readTicket(selectedTicket.getTicketId(), selectedTicket.getTicketType());
-//            System.out.println(selectedTicket.getTicketId() + " " + selectedTicket.getTicketType());
-
         }
 }//GEN-LAST:event_jButton2ActionPerformed
     

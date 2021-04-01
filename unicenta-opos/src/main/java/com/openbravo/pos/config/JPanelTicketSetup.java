@@ -26,12 +26,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import com.openbravo.data.loader.Session;
 import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppProperties;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.AppViewConnection;
 import com.openbravo.pos.util.AltEncrypter;
 import javax.swing.JOptionPane;
 
@@ -40,7 +36,7 @@ import javax.swing.JOptionPane;
  * @author JG uniCenta
  */
 public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig {
-    
+    private static final Logger LOGGER = Logger.getLogger(JPanelTicketSetup.class.getName());
     private final DirtyManager dirty = new DirtyManager();
     private String receipt="1";
     private Integer x = 0;
@@ -351,18 +347,18 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
                 try {
                     stmt.executeUpdate(SQL);
                 } catch (SQLException e){
-                    System.out.println(e.getMessage()); 
+                    LOGGER.log(Level.WARNING, "Exception on reset pickup_number on MySQL", e);
                 }
             } else if ("PostgreSQL".equals(sdbmanager)) {
                 SQL = "ALTER SEQUENCE pickup_number RESTART WITH 1";
                 try {
                     stmt.executeUpdate(SQL);
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+                    LOGGER.log(Level.WARNING, "Exception on reset pickup_number on PostgreSQL", e);
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(JPanelTicketSetup.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.WARNING, null, ex);
         }
         
         }        

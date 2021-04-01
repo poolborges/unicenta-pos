@@ -40,7 +40,6 @@ import com.openbravo.pos.printer.DeviceTicket;
 import com.openbravo.pos.printer.TicketParser;
 import com.openbravo.pos.printer.TicketPrinterException;
 import com.openbravo.pos.sales.DataLogicReceipts;
-import com.openbravo.pos.sales.JPanelTicket;
 import com.openbravo.pos.sales.TaxesLogic;
 import com.openbravo.pos.scripting.ScriptEngine;
 import com.openbravo.pos.scripting.ScriptException;
@@ -57,7 +56,7 @@ import javax.swing.*;
  * @author JG uniCenta
  */
 public class JTicketsBagRestaurant extends javax.swing.JPanel {
-    
+    private static final Logger LOGGER = Logger.getLogger(JTicketsBagRestaurant.class.getName());
     private final AppView m_App;
     private final JTicketsBagRestaurantMap m_restaurant;
     private List<TicketLineInfo> m_aLines;
@@ -97,7 +96,7 @@ public class JTicketsBagRestaurant extends javax.swing.JPanel {
         
         m_dlSystem = (DataLogicSystem) m_App.getBean("com.openbravo.pos.forms.DataLogicSystem");
         dlSales = (DataLogicSales) m_App.getBean("com.openbravo.pos.forms.DataLogicSales");        
-        DataLogicReceipts m_dlReceipts = (DataLogicReceipts) m_App.getBean("com.openbravo.pos.sales.DataLogicReceipts");
+        //DataLogicReceipts m_dlReceipts = (DataLogicReceipts) m_App.getBean("com.openbravo.pos.sales.DataLogicReceipts");
         
         m_TP = new DeviceTicket();
         m_TTP2 = new TicketParser(m_App.getDeviceTicket(), m_dlSystem);     
@@ -172,6 +171,7 @@ public class JTicketsBagRestaurant extends javax.swing.JPanel {
             m_TTP2.printTicket(script.eval(m_dlSystem.getResourceAsXML(sresourcename)).toString()); 
 
         } catch ( ScriptException | TicketPrinterException e) {
+            LOGGER.log(Level.WARNING, "Exception on executing script: "+sresourcename, e);
             JMessageDialog.showMessage(this, 
                 new MessageInf(MessageInf.SGN_NOTICE, 
                 AppLocal.getIntString("message.cannotprint"), e));
@@ -339,21 +339,20 @@ public class JTicketsBagRestaurant extends javax.swing.JPanel {
     @SuppressWarnings("empty-statement")
     private void j_btnKitchenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_j_btnKitchenActionPerformed
         ticket = m_restaurant.getActiveTicket();
-        String rScript = (m_dlSystem.getResourceAsText("script.SendOrder"));
-
-            
+        
+        String scriptId = "script.SendOrder";
         try {  
+            String rScript = (m_dlSystem.getResourceAsText(scriptId));
             ScriptEngine scriptEngine = ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
             scriptEngine.put("ticket", ticket); 
             scriptEngine.put("place",m_restaurant.getTableName());            
             scriptEngine.put("user", m_App.getAppUserView().getUser());
             scriptEngine.put("sales", this);
             scriptEngine.put("pickupid", ticket.getPickupId());
-            
-            Object result = scriptEngine.eval(rScript);
+            scriptEngine.eval(rScript);
             
         } catch (ScriptException ex) {
-            Logger.getLogger(JPanelTicket.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.WARNING, "Exception on executing script: "+scriptId, ex);
         }
          // Autologoff after sales            
             String autoLogoff = (m_App.getProperties().getProperty("till.autoLogoff"));

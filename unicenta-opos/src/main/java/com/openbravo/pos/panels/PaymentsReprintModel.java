@@ -22,16 +22,12 @@ import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.util.StringUtils;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
@@ -42,7 +38,7 @@ import java.util.logging.Logger;
  * @authors JG
  */
 public class PaymentsReprintModel {
-
+    private static final Logger LOGGER = Logger.getLogger(PaymentsReprintModel.class.getName());
     private String m_sHost;
     private String m_sUser;
     private int m_iSeq;
@@ -495,10 +491,8 @@ public class PaymentsReprintModel {
         try {
             date = sdfIn.parse(input);
         } catch (ParseException ex) {
-            Logger.getLogger(PaymentsReprintModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-//        System.out.println(sdfOut.format(date));        
+            LOGGER.log(Level.SEVERE, null, ex);
+        }      
         m_dDateStart=sdfOut.format(date); 
        
         return m_dDateStart;
@@ -513,10 +507,8 @@ public class PaymentsReprintModel {
         try {
             date = sdfIn.parse(input);
         } catch (ParseException ex) {
-            Logger.getLogger(PaymentsReprintModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-//        System.out.println(sdfOut.format(date));        
+            LOGGER.log(Level.SEVERE, null, ex);
+        }      
         m_dDateEnd=sdfOut.format(date); 
        
         return m_dDateEnd;
