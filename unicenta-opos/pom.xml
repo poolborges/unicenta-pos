@@ -211,6 +211,12 @@
             <artifactId>weblaf-complete</artifactId>  
             <version>1.29</version> 
         </dependency>
+        <!-- rsyntaxtextarea Classes inside weblaf-complete
+        <dependency>
+            <groupId>com.fifesoft</groupId>
+            <artifactId>rsyntaxtextarea</artifactId>
+            <version>3.1.2</version>
+        </dependency> -->
           
         <dependency>
             <groupId>javax.persistence</groupId>
