@@ -24,6 +24,7 @@ import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.util.Base64Encoder;
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.io.File;
@@ -31,22 +32,39 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 /**
  *
  * @author adrianromero
  */
 public final class ResourcesView extends JPanel implements EditorRecord {
-    
+    private static final Logger LOGGER = Logger.getLogger(ResourcesView.class.getName());
     private Object m_oId;
-    private ComboBoxValModel m_ResourceModel;
+    private final ComboBoxValModel m_ResourceModel;
+    
+    private final RSyntaxTextArea m_RSyntaxTextArea;
+    private final RTextScrollPane m_RTextScrollPane;
             
     /** Creates new form ResourcesEditor
      * @param dirty */
     public ResourcesView(DirtyManager dirty) {
         initComponents();
+        
+        JPanel cp = new JPanel(new BorderLayout());
+        m_RSyntaxTextArea = new RSyntaxTextArea(20, 60);
+        m_RSyntaxTextArea.setCodeFoldingEnabled(true);
+        m_RTextScrollPane = new RTextScrollPane(m_RSyntaxTextArea);
+        cp.add(m_RTextScrollPane);
+        
+        //Overview Editor with on CardLayout with "text" Identifier
+        m_jContainer.add(cp, "text");
         
         m_ResourceModel = new ComboBoxValModel();
         m_ResourceModel.add(ResourceType.TEXT);
@@ -56,7 +74,7 @@ public final class ResourcesView extends JPanel implements EditorRecord {
         
         m_jName.getDocument().addDocumentListener(dirty);
         m_jType.addActionListener(dirty);
-        m_jText.getDocument().addDocumentListener(dirty);
+        m_RSyntaxTextArea.getDocument().addDocumentListener(dirty);
         m_jImage.addPropertyChangeListener("image", dirty);
         
         writeValueEOF();        
@@ -70,13 +88,16 @@ public final class ResourcesView extends JPanel implements EditorRecord {
         m_oId = null;
         m_jName.setText(null);
         m_ResourceModel.setSelectedItem(null);
-        m_jText.setText(null);
+        m_RSyntaxTextArea.setText(null);
         m_jImage.setImage(null);     
         m_jName.setEnabled(false);
         m_jType.setEnabled(false);
-        m_jText.setEnabled(false);
+        m_RSyntaxTextArea.setEnabled(false);
         m_jImage.setEnabled(false);
-        m_jBtnReadScript.setEnabled(false);        
+        m_jBtnReadScript.setEnabled(false);  
+        
+        m_RSyntaxTextArea.setText(null);
+        m_RSyntaxTextArea.setEnabled(false);
     }
 
     /**
@@ -87,13 +108,16 @@ public final class ResourcesView extends JPanel implements EditorRecord {
         m_oId = null;
         m_jName.setText(null);
         m_ResourceModel.setSelectedItem(ResourceType.TEXT);
-        m_jText.setText(null);
+        m_RSyntaxTextArea.setText(null);
         m_jImage.setImage(null);     
         m_jName.setEnabled(true);
         m_jType.setEnabled(true);
-        m_jText.setEnabled(true);
+        m_RSyntaxTextArea.setEnabled(true);
         m_jImage.setEnabled(true);
-        m_jBtnReadScript.setEnabled(true);        
+        m_jBtnReadScript.setEnabled(true);  
+        
+        m_RSyntaxTextArea.setText(null);
+        m_RSyntaxTextArea.setEnabled(true);
     }
     
     /**
@@ -109,27 +133,30 @@ public final class ResourcesView extends JPanel implements EditorRecord {
         
         ResourceType restype = (ResourceType) m_ResourceModel.getSelectedItem();
         if (restype == ResourceType.TEXT) {
-            m_jText.setText(Formats.BYTEA.formatValue(resource[3]));
-            m_jText.setCaretPosition(0);
+            m_RSyntaxTextArea.setText(Formats.BYTEA.formatValue(resource[3]));
+            m_RSyntaxTextArea.setSyntaxEditingStyle(getResourceSyntaxStyle(m_RSyntaxTextArea.getText()));
+            m_RSyntaxTextArea.setCaretPosition(0);
+            
             m_jImage.setImage(null);
         } else if (restype == ResourceType.IMAGE) {
-            m_jText.setText(null);
+            m_RSyntaxTextArea.setText(null);
             m_jImage.setImage(ImageUtils.readImage((byte[]) resource[3]));
         } else if (restype == ResourceType.BINARY) {
-            m_jText.setText(resource[3] == null
+            m_RSyntaxTextArea.setText(resource[3] == null
                     ? null
                     : Base64Encoder.encodeChunked((byte[]) resource[3]));
-            m_jText.setCaretPosition(0);
+            m_RSyntaxTextArea.setCaretPosition(0);
+            
             m_jImage.setImage(null);
         } else {
-            m_jText.setText(null);
+            m_RSyntaxTextArea.setText(null);
             m_jImage.setImage(null);
         }
         m_jName.setEnabled(false);
         m_jType.setEnabled(false);
-        m_jText.setEnabled(false);
         m_jImage.setEnabled(false);
-        m_jBtnReadScript.setEnabled(false);        
+        m_jBtnReadScript.setEnabled(false);    
+        m_RSyntaxTextArea.setEnabled(false);
     }
 
     /**
@@ -145,31 +172,34 @@ public final class ResourcesView extends JPanel implements EditorRecord {
         
         ResourceType restype = (ResourceType) m_ResourceModel.getSelectedItem();
         if (restype == ResourceType.TEXT) {
-            m_jText.setText(Formats.BYTEA.formatValue(resource[3]));
-            m_jText.setCaretPosition(0);
+            
+            m_RSyntaxTextArea.setText(Formats.BYTEA.formatValue(resource[3]));
+            m_RSyntaxTextArea.setSyntaxEditingStyle(getResourceSyntaxStyle(m_RSyntaxTextArea.getText()));
+            m_RSyntaxTextArea.setCaretPosition(0);
+            
             m_jImage.setImage(null);
-            m_jBtnReadScript.setVisible(true);
         } else if (restype == ResourceType.IMAGE) {
-            m_jText.setText(null);
-            m_jImage.setImage(ImageUtils.readImage((byte[]) resource[3]));
-            m_jBtnReadScript.setVisible(false);            
+            
+            m_RSyntaxTextArea.setText(null);
+            m_jBtnReadScript.setVisible(false);       
+            
+            m_jImage.setImage(ImageUtils.readImage((byte[]) resource[3]));     
         } else if (restype == ResourceType.BINARY) {
-            m_jText.setText(resource[2] == null
+            m_RSyntaxTextArea.setText(resource[2] == null
                     ? null
                     : Base64Encoder.encodeChunked((byte[]) resource[3]));
-            m_jText.setCaretPosition(0);
-            m_jImage.setImage(null);
-            m_jBtnReadScript.setVisible(true);            
+            m_RSyntaxTextArea.setCaretPosition(0); 
+            
+            m_jImage.setImage(null);          
         } else {
-            m_jText.setText(null);
-            m_jImage.setImage(null);
-            m_jBtnReadScript.setVisible(true);            
+            m_RSyntaxTextArea.setText(null);
+            m_jImage.setImage(null);           
         }
         m_jName.setEnabled(true);
         m_jType.setEnabled(true);
-        m_jText.setEnabled(true);
+        
         m_jImage.setEnabled(true);
-        m_jBtnReadScript.setEnabled(true);
+        m_RSyntaxTextArea.setEnabled(true);
     }
     
     /**
@@ -187,11 +217,11 @@ public final class ResourcesView extends JPanel implements EditorRecord {
         ResourceType restype = (ResourceType) m_ResourceModel.getSelectedItem();
         resource[2] = restype.getKey();
         if (restype == ResourceType.TEXT) {
-            resource[3] = Formats.BYTEA.parseValue(m_jText.getText());
+            resource[3] = Formats.BYTEA.parseValue(m_RSyntaxTextArea.getText());
         } else if (restype == ResourceType.IMAGE) {
             resource[3] = ImageUtils.writeImage(m_jImage.getImage());
         } else if (restype == ResourceType.BINARY) {
-            resource[3] = Base64Encoder.decode(m_jText.getText());
+            resource[3] = Base64Encoder.decode(m_RSyntaxTextArea.getText());
         } else {
             resource[3] = null;
         }
@@ -215,24 +245,34 @@ public final class ResourcesView extends JPanel implements EditorRecord {
     public void refresh() {
     }
     
-    private void showView(String view) {
-        CardLayout cl = (CardLayout)(m_jContainer.getLayout());
-        cl.show(m_jContainer, view);  
-    }
-    
-    public static String readFileAsString(String fileName) { 
+    private String readFileAsString() { 
         JFileChooser chooser = new JFileChooser(); 
         chooser.showOpenDialog(null);
-        File f = chooser.getSelectedFile();
-        String filename = f.getAbsolutePath();
-        
-        String data = ""; 
-	try { 
-		data = new String(Files.readAllBytes(Paths.get(filename))); 
-	} catch (IOException e) { 
-		e.printStackTrace(); 
-	} 
+        File file = chooser.getSelectedFile();
+        String data = null;
+        //Only if file was selected
+        if(file != null){
+            String filename = file.getAbsolutePath();
+            try {
+                data = new String(Files.readAllBytes(Paths.get(filename)));
+            } catch (IOException e) {
+                LOGGER.log(Level.WARNING, "Exception reading content: "+file.getAbsolutePath(), e);
+            } 
+        }
 	return data; 
+    }
+    
+    private String getResourceSyntaxStyle(String resource) {
+
+        if (resource.contains("<?xml")) {
+            return SyntaxConstants.SYNTAX_STYLE_XML;
+        } else if (resource.contains("INSERT") || resource.contains("SELECT") 
+                || resource.contains("UPDATE") || resource.contains("DELETE")) {
+            return SyntaxConstants.SYNTAX_STYLE_SQL;
+        } else {
+            return SyntaxConstants.SYNTAX_STYLE_JAVA;
+        }
+
     }
 
     
@@ -331,27 +371,32 @@ public final class ResourcesView extends JPanel implements EditorRecord {
     private void m_jTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jTypeActionPerformed
 
         ResourceType restype = (ResourceType) m_ResourceModel.getSelectedItem();
+        String viewType = "null";
+        
         if (restype == ResourceType.TEXT) {
-            showView("text");
+            viewType = "text";
             m_jBtnReadScript.setVisible(true);            
         } else if (restype == ResourceType.IMAGE) {
-            showView("image");
+            viewType = "image";
             m_jBtnReadScript.setVisible(false);                        
         } else if (restype == ResourceType.BINARY) {
-            showView("text");
+            viewType = "text";
             m_jBtnReadScript.setVisible(true);                        
         } else {
-            showView("null");
+            viewType = "null";
             m_jBtnReadScript.setVisible(true);                        
         }
+
+        CardLayout cl = (CardLayout)(m_jContainer.getLayout());
+        cl.show(m_jContainer, viewType);  
       
     }//GEN-LAST:event_m_jTypeActionPerformed
 
     private void m_jBtnReadScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jBtnReadScriptActionPerformed
-        String filename="";
-        String data = readFileAsString(filename);
+
+        String data = readFileAsString();
         if (data != null) {
-            m_jText.setText(data);            
+           m_RSyntaxTextArea.setText(data);            
         }
     }//GEN-LAST:event_m_jBtnReadScriptActionPerformed
     
