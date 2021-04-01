@@ -16,6 +16,7 @@
 
 package com.openbravo.pos.forms;
 
+import com.openbravo.basic.BasicException;
 import com.openbravo.pos.config.JFrmConfig;
 import com.openbravo.pos.instance.AppMessage;
 import com.openbravo.pos.instance.InstanceManager;
@@ -28,15 +29,19 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import com.openbravo.pos.scripting.ScriptEngine;
+import com.openbravo.pos.scripting.ScriptException;
 import com.openbravo.pos.scripting.ScriptFactory;
 import com.openbravo.pos.util.AltEncrypter;
 import com.openbravo.pos.util.OSValidator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author adrianromero
  */
 public class JRootFrame extends javax.swing.JFrame implements AppMessage {
 
+    private static final Logger LOGGER = Logger.getLogger(JRootFrame.class.getName());
     private InstanceManager m_instmanager = null;
 
     private JRootApp m_rootapp;
@@ -91,6 +96,7 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
             new JFrmConfig(props).setVisible(true); // Show the configuration window.
         }
 
+        String scriptFile = "";
         try {
             /*
             Event Listener
@@ -98,14 +104,14 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
             AltEncrypter cypher = new AltEncrypter("cypherkey" + m_props.getProperty("db.user"));
             ScriptEngine scriptEngine = ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
             DataLogicSystem dataLogicSystem = (DataLogicSystem) m_rootapp.getBean("com.openbravo.pos.forms.DataLogicSystem");
-            String script = dataLogicSystem.getResourceAsXML("application.started");
+            scriptFile = dataLogicSystem.getResourceAsXML("application.started");
             scriptEngine.put("device", m_props.getHost());
             scriptEngine.put("dbURL", m_props.getProperty("db.URL")+m_props.getProperty("db.schema"));
             scriptEngine.put("dbUser", m_props.getProperty("db.user"));
             scriptEngine.put("dbPassword", cypher.decrypt(m_props.getProperty("db.password")));
-            scriptEngine.eval(script);
-        } catch (Exception e) {
-            System.err.println("Event fire exception: " + e);
+            scriptEngine.eval(scriptFile);
+        } catch (BeanFactoryException | ScriptException e) {
+            LOGGER.log(Level.SEVERE, "Exception on executing script: "+scriptFile, e);
         }
     }
 

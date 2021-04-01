@@ -33,12 +33,16 @@ import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.scripting.ScriptEngine;
 import com.openbravo.pos.scripting.ScriptException;
 import com.openbravo.pos.scripting.ScriptFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author JG uniCenta
  */
 public class BrowsableEditableData {
+    
+    private static final Logger LOGGER = Logger.getLogger(BrowsableEditableData.class.getName());
 
     public static final int ST_NORECORD = 0;
     public static final int ST_UPDATE = 1;
@@ -451,17 +455,18 @@ public class BrowsableEditableData {
     }
 
     private void triggerCustomerEvent(String event, Object[] customer, AppView appContext) {
+        String script = "";
         try {
             ScriptEngine scriptEngine = ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
 
             DataLogicSystem dlSystem = (DataLogicSystem) appContext.getBean("com.openbravo.pos.forms.DataLogicSystem");
-            String script = dlSystem.getResourceAsXML(event);
+            script = dlSystem.getResourceAsXML(event);
             scriptEngine.put("customer", customer);
             scriptEngine.put("device", appContext.getProperties().getProperty("machine.hostname"));
             scriptEngine.eval(script);
 
         } catch (BeanFactoryException | ScriptException e) {
-            System.err.println("Script Exception: " + e);
+            LOGGER.log(Level.SEVERE, "Exception on executing script: "+script, e);
         }
     }
 

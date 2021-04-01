@@ -19,6 +19,8 @@ package com.openbravo.pos.printer.escpos;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -26,6 +28,7 @@ import java.io.OutputStream;
  */
 public class PrinterWritterFile extends PrinterWritter {
     
+    private static final Logger LOGGER = Logger.getLogger(PrinterWritterFile.class.getName());
     private String m_sFilePrinter;
     private OutputStream m_out;
     
@@ -50,7 +53,7 @@ public class PrinterWritterFile extends PrinterWritter {
             }
             m_out.write(data);
         } catch (IOException e) {
-            System.err.println(e);
+            LOGGER.log(Level.SEVERE, "Exception on write", e);
         }    
     }
     
@@ -66,7 +69,7 @@ public class PrinterWritterFile extends PrinterWritter {
                 m_out = null;
             }
         } catch (IOException e) {
-            System.err.println(e);
+            LOGGER.log(Level.SEVERE, "Exception on flush: ", e);
         }    
     }
     
@@ -82,7 +85,7 @@ public class PrinterWritterFile extends PrinterWritter {
                 m_out = null;
             }
         } catch (IOException e) {
-            System.err.println(e);
+            LOGGER.log(Level.SEVERE, "Exception on close: ", e);
         }    
     }    
 }

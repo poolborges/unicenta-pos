@@ -21,13 +21,15 @@ import com.openbravo.pos.printer.TicketPrinterException;
 import gnu.io.*;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author JG uniCenta
  */
 public class PrinterWritterRXTX extends PrinterWritter /* implements SerialPortEventListener */ {
-    
+    private static final Logger LOGGER = Logger.getLogger(PrinterWritterRXTX.class.getName());
     private CommPortIdentifier m_PortIdPrinter;
     private CommPort m_CommPortPrinter;  
     
@@ -70,7 +72,7 @@ public class PrinterWritterRXTX extends PrinterWritter /* implements SerialPortE
             m_out.write(data);
 // JG 16 May 12 use multicatch
         } catch (NoSuchPortException | PortInUseException | UnsupportedCommOperationException | IOException e) {
-            System.err.println(e);
+            LOGGER.log(Level.SEVERE, "Exception on write: ", e);
         }      
     }
     
@@ -84,7 +86,7 @@ public class PrinterWritterRXTX extends PrinterWritter /* implements SerialPortE
                 m_out.flush();
             }
         } catch (IOException e) {
-            System.err.println(e);
+            LOGGER.log(Level.SEVERE, "Exception on flush: ", e);
         }    
     }
     
@@ -102,7 +104,7 @@ public class PrinterWritterRXTX extends PrinterWritter /* implements SerialPortE
                 m_PortIdPrinter = null;
             }
         } catch (IOException e) {
-            System.err.println(e);
+            LOGGER.log(Level.SEVERE, "Exception on close: ", e);
         }    
     }
 }

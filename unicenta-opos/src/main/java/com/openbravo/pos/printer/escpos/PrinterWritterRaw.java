@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
@@ -35,7 +37,7 @@ import javax.print.attribute.standard.DocumentName;
 import javax.print.attribute.standard.JobName;
 
 public final class PrinterWritterRaw extends PrinterWritter {
-
+    private static final Logger LOGGER = Logger.getLogger(PrinterWritterRaw.class.getName());
     private byte[] m_printData;
     private PrintService m_printService;
     private final DocFlavor m_docFlavor;
@@ -88,7 +90,7 @@ public final class PrinterWritterRaw extends PrinterWritter {
                 m_out = null;
             }
         } catch (IOException e) {
-            System.err.println(e);
+            LOGGER.log(Level.SEVERE, "Exception on close: ", e);
         }
     }
 

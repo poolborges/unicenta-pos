@@ -13,17 +13,17 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
 import java.sql.*;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
- * @author  adrianromero
+ * @author adrianromero
  */
 public class PreparedSentence extends JDBCSentence {
 
@@ -40,10 +40,10 @@ public class PreparedSentence extends JDBCSentence {
      *
      */
     protected SerializerRead m_SerRead = null;
-    
+
     // Estado
     private PreparedStatement m_Stmt;
-    
+
     /**
      *
      * @param s
@@ -51,9 +51,9 @@ public class PreparedSentence extends JDBCSentence {
      * @param serwrite
      * @param serread
      */
-    public PreparedSentence(Session s, String sentence, SerializerWrite serwrite, SerializerRead serread) {         
+    public PreparedSentence(Session s, String sentence, SerializerWrite serwrite, SerializerRead serread) {
         super(s);
-        m_sentence = sentence;        
+        m_sentence = sentence;
         m_SerWrite = serwrite;
         m_SerRead = serread;
         m_Stmt = null;
@@ -65,7 +65,7 @@ public class PreparedSentence extends JDBCSentence {
      * @param sentence
      * @param serwrite
      */
-    public PreparedSentence(Session s, String sentence, SerializerWrite serwrite) {         
+    public PreparedSentence(Session s, String sentence, SerializerWrite serwrite) {
         this(s, sentence, serwrite, null);
     }
 
@@ -74,10 +74,10 @@ public class PreparedSentence extends JDBCSentence {
      * @param s
      * @param sentence
      */
-    public PreparedSentence(Session s, String sentence) {         
+    public PreparedSentence(Session s, String sentence) {
         this(s, sentence, null, null);
     }
-    
+
     private static final class PreparedSentencePars implements DataWrite {
 
         private PreparedStatement m_ps;
@@ -95,6 +95,7 @@ public class PreparedSentence extends JDBCSentence {
                 throw new BasicException(eSQL);
             }
         }
+
         @Override
         public void setString(int paramIndex, String sValue) throws BasicException {
             try {
@@ -104,6 +105,7 @@ public class PreparedSentence extends JDBCSentence {
                 throw new BasicException(eSQL);
             }
         }
+
         @Override
         public void setDouble(int paramIndex, Double dValue) throws BasicException {
             try {
@@ -112,7 +114,8 @@ public class PreparedSentence extends JDBCSentence {
                 LOGGER.log(Level.SEVERE, "Exception on PreparedSentence", eSQL);
                 throw new BasicException(eSQL);
             }
-        }   
+        }
+
         @Override
         public void setBoolean(int paramIndex, Boolean bValue) throws BasicException {
             try {
@@ -125,18 +128,18 @@ public class PreparedSentence extends JDBCSentence {
                 LOGGER.log(Level.SEVERE, "Exception on PreparedSentence", eSQL);
                 throw new BasicException(eSQL);
             }
-        }   
+        }
+
         @Override
-        public void setTimestamp(int paramIndex, java.util.Date dValue) throws BasicException {        
+        public void setTimestamp(int paramIndex, java.util.Date dValue) throws BasicException {
             try {
                 m_ps.setObject(paramIndex, dValue == null ? null : new Timestamp(dValue.getTime()), Types.TIMESTAMP);
             } catch (SQLException eSQL) {
                 LOGGER.log(Level.SEVERE, "Exception on PreparedSentence", eSQL);
                 throw new BasicException(eSQL);
             }
-        }       
+        }
 
-        
         @Override
         public void setBytes(int paramIndex, byte[] value) throws BasicException {
             try {
@@ -146,6 +149,7 @@ public class PreparedSentence extends JDBCSentence {
                 throw new BasicException(eSQL);
             }
         }
+
         @Override
         public void setObject(int paramIndex, Object value) throws BasicException {
             try {
@@ -167,17 +171,46 @@ public class PreparedSentence extends JDBCSentence {
     public DataResultSet openExec(Object params) throws BasicException {
         // true -> un resultset
         // false -> un updatecount (si -1 entonces se acabo)
-        
+
         closeExec();
-        
+
         DataResultSet result = null;
 
         try {
 
-            LOGGER.log(Level.INFO, "Executing prepared SQL: "+m_sentence + "| Params: "+params.toString());
+            LOGGER.log(Level.INFO, "Prepared statement show SQL: " + m_sentence);
+
+            if (params != null && LOGGER.isLoggable(Level.INFO)) {
+
+                Object[] objectsArray = {params};;
+
+                if (params instanceof Collection) {
+                    Collection objectsCollection = (Collection) params;
+
+                    objectsArray = objectsCollection.toArray();
+
+                } else if (params instanceof Object[]) {
+                    objectsArray = (Object[]) params;
+                }
+
+                StringBuilder sb = new StringBuilder();
+                for (int count = 0; count < objectsArray.length; count++) {
+                    sb.append("{pos: ");
+                    sb.append(count);
+                    sb.append("val: ");
+                    sb.append(objectsArray[count].toString());
+                    sb.append("} ");
+
+                    if (count < objectsArray.length) {
+                        sb.append(",");
+                    }
+                }
+
+                LOGGER.log(Level.INFO, "Prepared statement show Paramters: " + sb.toString());
+            }
 
             m_Stmt = m_s.getConnection().prepareStatement(m_sentence);
- 
+
             if (m_SerWrite != null) {
                 // si m_SerWrite fuera null deberiamos cascar.
                 PreparedSentencePars preparedSentencePars = new PreparedSentencePars(m_Stmt);
@@ -185,35 +218,34 @@ public class PreparedSentence extends JDBCSentence {
             }
 
             if (m_Stmt.execute()) {
-                result =  new JDBCDataResultSet(m_Stmt.getResultSet(), m_SerRead);
-            } else { 
+                result = new JDBCDataResultSet(m_Stmt.getResultSet(), m_SerRead);
+            } else {
                 int iUC = m_Stmt.getUpdateCount();
                 if (iUC < 0) {
-                    result =  null;
+                    result = null;
                 } else {
-                    result =  new SentenceUpdateResultSet(iUC);
+                    result = new SentenceUpdateResultSet(iUC);
                 }
             }
         } catch (SQLException eSQL) {
             LOGGER.log(Level.SEVERE, "Exception on Executing SQL", eSQL);
             throw new BasicException(eSQL);
         }
-        
+
         return result;
     }
-    
+
     /**
      *
-     * @return
-     * @throws BasicException
+     * @return @throws BasicException
      */
     @Override
     public final DataResultSet moreResults() throws BasicException {
         // true -> un resultset
         // false -> un updatecount (si -1 entonces se acabo)
-        
+
         try {
-            if (m_Stmt.getMoreResults()){
+            if (m_Stmt.getMoreResults()) {
                 // tenemos resultset
                 return new JDBCDataResultSet(m_Stmt.getResultSet(), m_SerRead);
             } else {
@@ -226,7 +258,7 @@ public class PreparedSentence extends JDBCSentence {
                 }
             }
         } catch (SQLException eSQL) {
-                LOGGER.log(Level.SEVERE, "Exception on PreparedSentence", eSQL);
+            LOGGER.log(Level.SEVERE, "Exception on PreparedSentence", eSQL);
             throw new BasicException(eSQL);
         }
     }
@@ -237,16 +269,16 @@ public class PreparedSentence extends JDBCSentence {
      */
     @Override
     public final void closeExec() throws BasicException {
-        
+
         if (m_Stmt != null) {
             try {
                 m_Stmt.close();
-           } catch (SQLException eSQL) {
+            } catch (SQLException eSQL) {
                 LOGGER.log(Level.SEVERE, "Exception on PreparedSentence", eSQL);
                 throw new BasicException(eSQL);
             } finally {
                 m_Stmt = null;
             }
         }
-     }      
+    }
 }
