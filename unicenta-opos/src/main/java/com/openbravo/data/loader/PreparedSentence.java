@@ -182,7 +182,7 @@ public class PreparedSentence extends JDBCSentence {
 
             if (params != null && LOGGER.isLoggable(Level.INFO)) {
 
-                Object[] objectsArray = {params};;
+                Object[] objectsArray = null;
 
                 if (params instanceof Collection) {
                     Collection objectsCollection = (Collection) params;
@@ -191,18 +191,23 @@ public class PreparedSentence extends JDBCSentence {
 
                 } else if (params instanceof Object[]) {
                     objectsArray = (Object[]) params;
+                } else {
+                    objectsArray = new Object[]{params};
                 }
 
                 StringBuilder sb = new StringBuilder();
-                for (int count = 0; count < objectsArray.length; count++) {
-                    sb.append("{pos: ");
-                    sb.append(count);
-                    sb.append("val: ");
-                    sb.append(objectsArray[count].toString());
-                    sb.append("} ");
+                if (objectsArray != null) {
+                    for (int count = 0; count < objectsArray.length; count++) {
+                        sb.append("{pos: ");
+                        sb.append(count);
+                        sb.append(", val: ");
+                        sb.append((objectsArray[count] != null ? objectsArray[count].toString() : "null"));
+                        sb.append("} ");
 
-                    if (count < objectsArray.length) {
-                        sb.append(",");
+                        //Enquando for menor
+                        if (count < objectsArray.length-1) {
+                            sb.append(",");
+                        }
                     }
                 }
 
