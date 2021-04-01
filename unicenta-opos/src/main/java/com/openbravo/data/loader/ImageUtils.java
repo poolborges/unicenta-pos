@@ -21,7 +21,6 @@ import java.awt.image.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +41,7 @@ public class ImageUtils {
     }
 
     private static byte[] readStream(InputStream inputstream) throws IOException {
-        Objects.requireNonNull(inputstream, "inputstream should not be null");
+        //TODO improve null checking Objects.requireNonNull(inputstream, "inputstream should not be null");
         byte[] buffer = new byte[1024];
         byte[] resource = new byte[0];
         int n;
@@ -63,7 +62,7 @@ public class ImageUtils {
      */
     public static byte[] getBytesFromResource(String filePath) {
 
-        Objects.requireNonNull(filePath, "filePath should not be null");
+        //TODO improve null checking Objects.requireNonNull(filePath, "filePath should not be null");
         InputStream in = ImageUtils.class.getResourceAsStream(filePath);
 
         byte[] image = new byte[0];
@@ -91,7 +90,7 @@ public class ImageUtils {
      * @return
      */
     public static BufferedImage readImage(String urlString) {
-        Objects.requireNonNull(urlString, "urlString should not be null");
+        //TODO improve null checking Objects.requireNonNull(urlString, "urlString should not be null");
         BufferedImage image = null;
         try {
             image = readImage(new URL(urlString));
@@ -107,7 +106,7 @@ public class ImageUtils {
      * @return
      */
     public static BufferedImage readImage(URL url) {
-        Objects.requireNonNull(url, "url should not be null");
+        //TODO improve null checking Objects.requireNonNull(url, "url should not be null");
         BufferedImage image = null;
         try {
             URLConnection urlConnection = url.openConnection();
@@ -126,7 +125,7 @@ public class ImageUtils {
      * @return
      */
     public static BufferedImage readImage(byte[] imageByteArray) {
-        Objects.requireNonNull(imageByteArray, "imageByteArray should not be null");
+        //TODO improve null checking Objects.requireNonNull(imageByteArray, "imageByteArray should not be null");
         BufferedImage image = null;
         try (ByteArrayInputStream input = new ByteArrayInputStream(imageByteArray)) {
             image = ImageIO.read(input);
@@ -142,7 +141,7 @@ public class ImageUtils {
      * @return
      */
     public static byte[] writeImage(BufferedImage img) {
-        Objects.requireNonNull(img, "img should not be null");
+        //TODO improve null checking Objects.requireNonNull(img, "img should not be null");
         byte[] imageByte = new byte[0];
         try (ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();) {
             ImageIO.write(img, "png", byteOutputStream);
@@ -161,7 +160,7 @@ public class ImageUtils {
      * @return
      */
     public static Object readSerializable(byte[] objectByteArrary) {
-        Objects.requireNonNull(objectByteArrary, "objectByteArrary should not be null");
+        //TODO improve null checking Objects.requireNonNull(objectByteArrary, "objectByteArrary should not be null");
         Object obj = null;
         try (ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(objectByteArrary))) {
             obj = in.readObject();
@@ -177,7 +176,7 @@ public class ImageUtils {
      * @return
      */
     public static byte[] writeSerializable(Object obj) {
-        Objects.requireNonNull(obj, "obj should not be null");
+        //TODO improve null checking Objects.requireNonNull(obj, "obj should not be null");
         byte[] objectSerialize = new byte[0];
         try {
             ByteArrayOutputStream bOutput = new ByteArrayOutputStream();
@@ -198,8 +197,8 @@ public class ImageUtils {
      * @return
      */
     public static Properties readProperties(byte propByte[]) {
+        //TODO improve null checking Objects.requireNonNull(propByte, "propByte should not be null");
         Properties prop = new Properties();
-        Objects.requireNonNull(propByte, "propByte should not be null");
         try {
             prop.loadFromXML(new ByteArrayInputStream(propByte));
         } catch (IOException ex) {
