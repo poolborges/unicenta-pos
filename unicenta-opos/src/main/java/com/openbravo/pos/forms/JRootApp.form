@@ -49,7 +49,7 @@
               <Font name="Arial" size="16" style="1"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Window.Title"/>
+            <Property name="text" type="java.lang.String" value="Kriol Point of Sales (krPoS)"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="JRootApp_m_jLblTitle"/>

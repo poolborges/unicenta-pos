@@ -13,11 +13,11 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>
-
 package com.openbravo.pos.forms;
 
 import com.openbravo.format.Formats;
-import com.openbravo.pos.instance.InstanceQuery;
+import com.openbravo.pos.instance.InstanceManager;
+import java.io.File;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Locale;
@@ -26,93 +26,92 @@ import java.util.logging.Logger;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.rmi.AlreadyBoundException;
 import javax.swing.SwingUtilities;
-
 
 public class StartPOS {
 
-    private static final Logger logger = Logger.getLogger("com.openbravo.pos.forms.StartPOS");
+    private static final Logger LOGGER = Logger.getLogger(StartPOS.class.getName());
 
     private StartPOS() {
     }
 
     public static boolean registerApp() {
-                       
-        InstanceQuery i = null;
         try {
-            i = new InstanceQuery();
-            i.getAppMessage().restoreWindow();
+            InstanceManager.queryInstance().restoreWindow();
             return false;
         } catch (RemoteException | NotBoundException e) {
+            LOGGER.log(Level.WARNING, "Cannot register instane", e);
             return true;
-        }  
+        }
     }
 
-    public static void main (final String args[]) {
+    public static void main(final String args[]) {
 
-        SwingUtilities.invokeLater ( new Runnable () {       
+        SwingUtilities.invokeLater(new Runnable() {
 
             @Override
-            public void run() { 
-                
+            public void run() {
+
                 if (!registerApp()) {
+                    LOGGER.log(Level.WARNING, "Cannot regiter this application, another instance is running");
                     System.exit(1);
                 }
-                
-                AppConfig config = new AppConfig(args);
 
+                File configFile = (args.length > 0 ? new File(args[0]) : null);
+                AppConfig config = new AppConfig(configFile);
                 config.load();
 
                 String slang = config.getProperty("user.language");
                 String scountry = config.getProperty("user.country");
                 String svariant = config.getProperty("user.variant");
-                if (slang != null 
-                        && !slang.equals("") 
-                        && scountry != null 
-                        && svariant != null) {                                        
+                if (slang != null
+                        && !slang.equals("")
+                        && scountry != null
+                        && svariant != null) {
                     Locale.setDefault(new Locale(slang, scountry, svariant));
-                }                
-                
+                }
+
                 Formats.setIntegerPattern(config.getProperty("format.integer"));
                 Formats.setDoublePattern(config.getProperty("format.double"));
                 Formats.setCurrencyPattern(config.getProperty("format.currency"));
                 Formats.setPercentPattern(config.getProperty("format.percent"));
                 Formats.setDatePattern(config.getProperty("format.date"));
                 Formats.setTimePattern(config.getProperty("format.time"));
-                Formats.setDateTimePattern(config.getProperty("format.datetime"));               
-                
+                Formats.setDateTimePattern(config.getProperty("format.datetime"));
+
                 // Set the look and feel.
-                try {             
-                    
-                    Object laf = Class.forName(config.getProperty("swing.defaultlaf")).getDeclaredConstructor().newInstance();                    
-                    if (laf instanceof LookAndFeel){
+                try {
+
+                    Object laf = Class.forName(config.getProperty("swing.defaultlaf")).getDeclaredConstructor().newInstance();
+                    if (laf instanceof LookAndFeel) {
                         UIManager.setLookAndFeel((LookAndFeel) laf);
                     }
-// JG 6 May 2013 to multicatch
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
-                    logger.log(Level.WARNING, "Cannot set Look and Feel", e);
+                    LOGGER.log(Level.WARNING, "Cannot set Look and Feel", e);
                 }
 
                 String screenmode = config.getProperty("machine.screenmode");
 
-                if ("fullscreen".equals(screenmode)) {
-                    JRootKiosk rootkiosk = new JRootKiosk();
+                final JRootFrame rootframe = new JRootFrame(config);
+
+                if ("true".equals(config.getProperty("machine.uniqueinstance"))) {
+                    // Register the running application
                     try {
-                        rootkiosk.initFrame(config);
-                    } catch (IOException ex) {
-                        Logger.getLogger(StartPOS.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else {
-                    JRootFrame rootframe = new JRootFrame(); 
-                    try {
-                        rootframe.initFrame(config);
-                    } catch (Exception ex) {
-                        Logger.getLogger(StartPOS.class.getName()).log(Level.SEVERE, null, ex);
+                        final InstanceManager m_instmanager = new InstanceManager(rootframe);
+
+                    } catch (RemoteException | AlreadyBoundException e) {
+                        LOGGER.log(Level.WARNING, "Cannot create a new instance of application", e);
                     }
                 }
+
+                if ("fullscreen".equals(screenmode)) {
+                    rootframe.initFrame(true);
+                } else {
+                    rootframe.initFrame(false);
+                }
             }
-        });    
-    }    
+        });
+    }
 }

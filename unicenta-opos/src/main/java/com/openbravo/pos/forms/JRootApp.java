@@ -71,7 +71,7 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
 
     private static final Logger LOGGER = Logger.getLogger(JRootApp.class.getName());
 
-    private AppProperties m_props;
+    private final AppProperties m_props;
     private Session session;
     private DataLogicSystem m_dlSystem;
 
@@ -129,8 +129,8 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
         return df.format(new Date());
     }
 
-    public JRootApp() {
-
+    public JRootApp(AppProperties props) {
+        m_props = props;
         m_aBeanFactories = new HashMap<>();
 
         //TODO load Windows Title 
@@ -277,9 +277,9 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
      * @param props
      * @return
      */
-    public boolean initApp(AppProperties props) {
+    public boolean initApp() {
 
-        m_props = props;
+        
         m_jPanelDown.setVisible(!(Boolean.valueOf(m_props.getProperty("till.hideinfo"))));
 
         applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
@@ -931,7 +931,7 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
 
         m_jLblTitle.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
         m_jLblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_jLblTitle.setText("Window.Title");
+        m_jLblTitle.setText("Kriol Point of Sales (krPoS)");
         m_jPanelTitle.add(m_jLblTitle, java.awt.BorderLayout.CENTER);
 
         poweredby.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -957,15 +957,15 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/logo_320×320.png"))); // NOI18N
-        jLabel1.setText("<html><center>KrOS POS - Open Source Point Of Sale<br>" +
+        jLabel1.setText("<html><center>uniCenta oPOS - Touch Friendly Point of Sale<br>" +
             "Copyright \u00A9 2009-2017 uniCenta <br>" +
+            "https://unicenta.com<br>" +
             "<br>" +
+            "uniCenta oPOS is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br>" +
             "<br>" +
-            "This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br>" +
+            "uniCenta oPOS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br>" +
             "<br>" +
-            " This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br>" +
-            "<br>" +
-            "You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/<br>" +
+            "You should have received a copy of the GNU General Public License along with uniCenta oPOS.  If not, see http://www.gnu.org/licenses/<br>" +
             "</center>");
         jLabel1.setAlignmentX(0.5F);
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
