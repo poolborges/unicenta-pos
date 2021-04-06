@@ -13,10 +13,10 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.instance;
 
 import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -27,23 +27,39 @@ import java.rmi.server.UnicastRemoteObject;
  * @author adrianromero
  */
 public class InstanceManager {
-    
+
     private final Registry m_registry;
     private final AppMessage m_message;
-    
-    /** Creates a new instance of InstanceManager
+
+    /**
+     * Creates a new instance of InstanceManager
+     *
      * @param message
      * @throws java.rmi.RemoteException
-     * @throws java.rmi.AlreadyBoundException */
+     * @throws java.rmi.AlreadyBoundException
+     */
     public InstanceManager(AppMessage message) throws RemoteException, AlreadyBoundException {
 
         m_registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
-
         m_message = message;
 
         AppMessage stub = (AppMessage) UnicastRemoteObject.exportObject(m_message, 0);
-        m_registry.bind("AppMessage", stub); 
+        m_registry.bind("AppMessage", stub);
+    }
 
-        // jLabel1.setText("Server ready");
-    }    
+
+    /**
+     * Creates a new instance of InstanceQuery
+     *
+     * @return 
+     * @throws java.rmi.RemoteException
+     * @throws java.rmi.NotBoundException
+     */
+    public static AppMessage queryInstance() throws RemoteException, NotBoundException {
+
+        Registry registry = LocateRegistry.getRegistry();
+        AppMessage m_appstub = (AppMessage) registry.lookup("AppMessage");
+
+        return m_appstub;
+    }
 }
