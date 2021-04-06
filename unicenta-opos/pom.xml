@@ -343,14 +343,31 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>com.openbravo.pos.forms.StartPOS</mainClass>
+                    <mainClass>${execute.mainClass}</mainClass>
                 </configuration>
+       
             </plugin>
         </plugins>  
         <finalName>unicentaopos</finalName> 
     </build>  
     
     <profiles>
+        
+        <profile>
+            <id>run-StartPOS</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <execute.mainClass>com.openbravo.pos.forms.StartPOS</execute.mainClass>
+            </properties>
+        </profile>
+        <profile>
+            <id>run-JFrmConfig</id>
+            <properties>
+                <execute.mainClass>com.openbravo.pos.config.JFrmConfig</execute.mainClass>
+            </properties>
+        </profile>
         <profile>
             <id>dev_dbmigration</id>
             <build>
