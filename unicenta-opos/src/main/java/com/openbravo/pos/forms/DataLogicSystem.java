@@ -37,11 +37,13 @@ import javax.swing.ImageIcon;
 public class DataLogicSystem extends BeanFactoryDataSingle {
 
     private final static Logger LOGGER = Logger.getLogger(ImageUtils.class.getName());
-
+    private Session session;
+    
     protected String m_sInitScript;
-    private SentenceFind m_version;
-    private SentenceExec m_dummy;
     private String m_dbVersion;
+    
+    private SentenceFind m_version;
+    
     protected SentenceList m_peoplevisible;
     protected SentenceFind m_peoplebycard;
     protected SerializerRead peopleread;
@@ -82,7 +84,6 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
     protected SentenceExec m_lineremoved;
     protected SentenceExec m_ticketremoved;
 
-    private String SQL;
     private Map<String, byte[]> resourcescache;
 
     private SentenceList m_voucherlist;
@@ -105,33 +106,20 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      */
     @Override
     public void init(Session s) {
-
+        session = s;
         m_sInitScript = "/com/openbravo/pos/scripts/" + s.DB.getName();
         m_dbVersion = s.DB.getName();
 
         m_version = new PreparedSentence(s, "SELECT VERSION FROM applications WHERE ID = ?",
                 SerializerWriteString.INSTANCE, SerializerReadString.INSTANCE);
 
-        m_dummy = new StaticSentence(s, "SELECT * FROM people WHERE 1 = 0");
-
         final ThumbNailBuilder tnb = new ThumbNailBuilder(32, 32, "com/openbravo/images/user.png");
 
-        peopleread = new SerializerRead() {
-            @Override
-            public Object readValues(DataRead dr) throws BasicException {
-                return new AppUser(
-                        dr.getString(1),
-                        dr.getString(2),
-                        dr.getString(3),
-                        dr.getString(4),
-                        dr.getString(5),
-                        //new ImageIcon(tnb.getThumbNail(ImageUtils.readImage(dr.getBytes(6)))));
-                        new ImageIcon(tnb.getThumbNail()));
-            }
-        };
+        
 
 //// <editor-fold defaultstate="collapsed" desc="START OF PRODUCT">
         productIdRead = new SerializerRead() {
+            @Override
             public Object readValues(DataRead dr) throws BasicException {
                 return dr.getString(1);
             }
@@ -215,7 +203,24 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                 customerIdRead
         );
 
-//// </editor-fold>     
+//// </editor-fold>   
+
+//// <editor-fold defaultstate="collapsed" desc="START OF PEOPLE">
+
+        peopleread = new SerializerRead() {
+            @Override
+            public Object readValues(DataRead dr) throws BasicException {
+                return new AppUser(
+                        dr.getString(1),
+                        dr.getString(2),
+                        dr.getString(3),
+                        dr.getString(4),
+                        dr.getString(5),
+                        //new ImageIcon(tnb.getThumbNail(ImageUtils.readImage(dr.getBytes(6)))));
+                        new ImageIcon(tnb.getThumbNail()));
+            }
+        };
+
         m_peoplevisible = new StaticSentence(s,
                 "SELECT ID, NAME, APPPASSWORD, CARD, ROLE, IMAGE FROM people WHERE VISIBLE = " + s.DB.TRUE() + " ORDER BY NAME",
                 null,
@@ -225,7 +230,33 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                 "SELECT ID, NAME, APPPASSWORD, CARD, ROLE, IMAGE FROM people WHERE CARD = ? AND VISIBLE = " + s.DB.TRUE(),
                 SerializerWriteString.INSTANCE,
                 peopleread);
+        
+        m_changepassword = new StaticSentence(s,
+                "UPDATE people SET APPPASSWORD = ? WHERE ID = ?",
+                new SerializerWriteBasic(new Datas[]{Datas.STRING, Datas.STRING}));
 
+        m_rolepermissions = new PreparedSentence(s,
+                "SELECT PERMISSIONS FROM roles WHERE ID = ?",
+                SerializerWriteString.INSTANCE,
+                SerializerReadBytes.INSTANCE);
+        
+        m_permissionlist = new StaticSentence(s,
+                "SELECT PERMISSIONS FROM permissions WHERE ID = ?",
+                SerializerWriteString.INSTANCE,
+                new SerializerReadBasic(new Datas[]{
+            Datas.STRING
+        }));
+
+        m_updatepermissions = new StaticSentence(s,
+                "INSERT INTO permissions (ID, PERMISSIONS) "
+                + "VALUES (?, ?)",
+                new SerializerWriteBasic(new Datas[]{
+            Datas.STRING,
+            Datas.STRING}));
+
+//// </editor-fold>   
+
+//// <editor-fold defaultstate="collapsed" desc="START OF RESOURCE">
         m_resourcebytes = new PreparedSentence(s,
                 "SELECT CONTENT FROM resources WHERE NAME = ?",
                 SerializerWriteString.INSTANCE,
@@ -242,16 +273,10 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         m_resourcebytesupdate = new PreparedSentence(s,
                 "UPDATE resources SET NAME = ?, RESTYPE = ?, CONTENT = ? WHERE NAME = ?",
                 new SerializerWriteBasicExt(resourcedata, new int[]{1, 2, 3, 1}));
+        
+//// </editor-fold>   
 
-        m_rolepermissions = new PreparedSentence(s,
-                "SELECT PERMISSIONS FROM roles WHERE ID = ?",
-                SerializerWriteString.INSTANCE,
-                SerializerReadBytes.INSTANCE);
-
-        m_changepassword = new StaticSentence(s,
-                "UPDATE people SET APPPASSWORD = ? WHERE ID = ?",
-                new SerializerWriteBasic(new Datas[]{Datas.STRING, Datas.STRING}));
-
+//// <editor-fold defaultstate="collapsed" desc="START OF CASH">
         m_sequencecash = new StaticSentence(s,
                 "SELECT MAX(HOSTSEQUENCE) FROM closedcash WHERE HOST = ?",
                 SerializerWriteString.INSTANCE,
@@ -312,26 +337,26 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
             Datas.STRING, Datas.DOUBLE
         }));
 
+//// </editor-fold>   
+
+//// <editor-fold defaultstate="collapsed" desc="START OF LOCATION AND PLACES">
         m_locationfind = new StaticSentence(s,
                 "SELECT NAME FROM locations WHERE ID = ?",
                 SerializerWriteString.INSTANCE,
                 SerializerReadString.INSTANCE);
+ 
 
-        m_permissionlist = new StaticSentence(s,
-                "SELECT PERMISSIONS FROM permissions WHERE ID = ?",
-                SerializerWriteString.INSTANCE,
-                new SerializerReadBasic(new Datas[]{
+        m_updatePlaces = new StaticSentence(s, "UPDATE PLACES SET X = ?, Y = ? "
+                + "WHERE ID = ?   ", new SerializerWriteBasic(new Datas[]{
+            Datas.INT,
+            Datas.INT,
             Datas.STRING
         }));
+//// </editor-fold>   
 
-        m_updatepermissions = new StaticSentence(s,
-                "INSERT INTO permissions (ID, PERMISSIONS) "
-                + "VALUES (?, ?)",
-                new SerializerWriteBasic(new Datas[]{
-            Datas.STRING,
-            Datas.STRING}));
+//// <editor-fold defaultstate="collapsed" desc="START OF CVIMPORT">     
 
-//  Push Products into CSVImport table      
+        //  Push Products into CSVImport table      
         m_insertCSVEntry = new StaticSentence(s,
                 "INSERT INTO csvimport ( "
                 + "ID, ROWNUMBER, CSVERROR, REFERENCE, "
@@ -353,7 +378,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
             Datas.STRING
         }));
 
-//  Push Product Quantity Update into CSVImport table      
+        //  Push Product Quantity Update into CSVImport table      
         m_insertStockUpdateEntry = new StaticSentence(s,
                 "INSERT INTO csvimport ( "
                 + "ID, ROWNUMBER, CSVERROR, REFERENCE, "
@@ -368,7 +393,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
             Datas.DOUBLE
         }));
 
-//  Push Customers into CSVImport table      
+        //  Push Customers into CSVImport table      
         m_insertCustomerCSVEntry = new StaticSentence(s,
                 "INSERT INTO csvimport ( "
                 + "ID, ROWNUMBER, CSVERROR, SEARCHKEY, NAME) "
@@ -380,7 +405,9 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
             Datas.STRING,
             Datas.STRING
         }));
+//// </editor-fold>  
 
+//// <editor-fold defaultstate="collapsed" desc="START OF ORDER">   
         m_addOrder = new StaticSentence(s,
                 "INSERT INTO orders (ORDERID, QTY, DETAILS, ATTRIBUTES, "
                 + "NOTES, TICKETID, ORDERTIME, DISPLAYID, AUXILIARY, "
@@ -430,12 +457,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                 "DELETE FROM orders WHERE ORDERID = ?",
                 SerializerWriteString.INSTANCE);
 
-        m_updatePlaces = new StaticSentence(s, "UPDATE PLACES SET X = ?, Y = ? "
-                + "WHERE ID = ?   ", new SerializerWriteBasic(new Datas[]{
-            Datas.INT,
-            Datas.INT,
-            Datas.STRING
-        }));
+//// </editor-fold> 
 
         resetResourcesCache();
     }
@@ -478,6 +500,8 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      * @throws BasicException
      */
     public final void execDummy() throws BasicException {
+        
+        SentenceExec m_dummy = new StaticSentence(session, "SELECT * FROM people WHERE 1 = 0");
         m_dummy.exec();
     }
 
@@ -537,6 +561,10 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      *
      */
     public final void resetResourcesCache() {
+        if(resourcescache != null){
+            resourcescache.clear();
+        }
+        
         resourcescache = new HashMap<>();
     }
 
@@ -550,7 +578,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                 if(resource != null){
                     resourcescache.put(name, resource);
                 }else{
-                    LOGGER.log(Level.WARNING, "NOT found resource: " + name);
+                    LOGGER.log(Level.WARNING, "NOT found resource: {0}", name);
                 }
             } catch (BasicException e) {
                 LOGGER.log(Level.SEVERE, "Exception on get resource: " + name, e);
@@ -795,7 +823,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
 // This is used by CSVimport to detect what type of product insert we are looking at, or what error occured
     /**
      *
-     * @param myProduct
+     * @param myProduct Object[]. The array is [0]
      * @return
      * @throws BasicException
      */
