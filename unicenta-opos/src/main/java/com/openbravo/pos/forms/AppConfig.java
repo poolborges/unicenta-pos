@@ -41,26 +41,14 @@ public class AppConfig implements AppProperties {
 
     private static final Logger logger = Logger.getLogger("com.openbravo.pos.forms.AppConfig");
 
-    private static AppConfig m_instance = null;
-    private SortedStoreProperties m_propsconfig;
+    private static volatile AppConfig m_instance = null;
+    private Properties m_propsconfig;
     private File configfile;
-    
+
     private static final String APP_CONFIG_DIRECTORY = System.getProperty("user.home");
     private static final String APP_CONFIG_FILE_NAME = AppLocal.APP_ID + ".properties";
     private static final File APP_CONFIG_FILE_DEFAULT = new File(APP_CONFIG_DIRECTORY, APP_CONFIG_FILE_NAME);
 
-    /**
-     * Set configuration array
-     *
-     * @param args array strings
-     */
-    public AppConfig(String[] args) {
-        if (args.length == 0) {
-            init(getDefaultConfig());
-        } else {
-            init(new File(args[0]));
-        }
-    }
 
     /**
      * unicenta resources file
@@ -68,20 +56,20 @@ public class AppConfig implements AppProperties {
      * @param configfile resource file
      */
     public AppConfig(File configfile) {
-        init(configfile);
-        load();
+        if(configfile != null){
+            this.configfile = configfile;
+        }else {
+            this.configfile = getDefaultConfigFile();
+        }
+        this.m_propsconfig = new SortedStoreProperties();
     }
 
-    private void init(File configfile) {
-        this.configfile = configfile;
-        m_propsconfig = new SortedStoreProperties();
-    }
 
-    private static File getDefaultConfig() {
+    private static File getDefaultConfigFile() {
         return APP_CONFIG_FILE_DEFAULT;
     }
-    
-    public String getAppDataDirectory(){
+
+    public String getAppDataDirectory() {
         return APP_CONFIG_DIRECTORY;
     }
 
@@ -190,11 +178,22 @@ public class AppConfig implements AppProperties {
     }
 
     public static AppConfig getInstance() {
+        AppConfig m_inst = AppConfig.m_instance;
 
-        if (m_instance == null) {
-            m_instance = new AppConfig(getDefaultConfig());
+        //Double check locking pattern
+        //Check for the first time
+        if (m_inst == null) { 
+
+            synchronized (AppConfig.class) {   
+                m_inst = AppConfig.m_instance;
+                //if there is no instance available... create new one
+                if (m_inst == null) {
+                    AppConfig.m_instance = m_inst = new AppConfig(getDefaultConfigFile());
+                }
+            }
         }
-        return m_instance;
+
+        return m_inst;
     }
 
     public Boolean getBoolean(String sKey) {
@@ -216,7 +215,6 @@ public class AppConfig implements AppProperties {
      * @return Delete .properties filename
      */
     public boolean delete() {
-        loadDefault();
         return configfile.delete();
     }
 
@@ -226,16 +224,15 @@ public class AppConfig implements AppProperties {
     public void load() {
         logger.log(Level.INFO, "Try Loading configuration file: {0}", configfile.getAbsolutePath());
 
-        try ( InputStream in = new FileInputStream(configfile)) {
+        try (InputStream in = new FileInputStream(configfile)) {
             m_propsconfig.load(in);
         } catch (IOException e) {
+            logger.log(Level.WARNING, "IOException on load configuration file: " + configfile.getAbsolutePath(), e);
             try {
-                logger.log(Level.WARNING, "Faild to read configuration file: " + configfile.getAbsolutePath(), e);
-                loadDefault();
-                save();
-
-            } catch (IOException ex) {
-                logger.log(Level.SEVERE, "Fail storing default configuration", ex);
+                logger.log(Level.INFO, "Providing default configuration: ", e);
+                m_propsconfig = defaultConfig();
+            } catch (Exception ex) {
+                logger.log(Level.WARNING, "Fail getting default/factory configuration", ex);
             }
         }
 
@@ -262,111 +259,117 @@ public class AppConfig implements AppProperties {
     public void save() throws IOException {
 
         logger.log(Level.INFO, "Saving configuration to file: {0}", configfile.getAbsolutePath());
-        try ( OutputStream out = new FileOutputStream(configfile)) {
+        try (OutputStream out = new FileOutputStream(configfile)) {
             m_propsconfig.store(out, AppLocal.APP_NAME + ". Configuration file.");
         } catch (IOException ex) {
-            logger.log(Level.SEVERE, "Fail saving configuration to file: "+configfile.getAbsolutePath(), ex);
+            logger.log(Level.SEVERE, "Fail saving configuration to file: " + configfile.getAbsolutePath(), ex);
         }
     }
 
-    private void loadDefault() {
+    public void setFactoryConfig() {
+        this.m_propsconfig =  defaultConfig();
+    }
 
-        logger.log(Level.INFO, "Load default configuration");
+    private Properties defaultConfig() {
 
-        m_propsconfig = new SortedStoreProperties();
+        logger.log(Level.INFO, "Default configuration");
+
+        Properties propConfig = new SortedStoreProperties();
 
         String dirname = System.getProperty("dirname.path");
         dirname = dirname == null ? "./" : dirname;
 
-        m_propsconfig.setProperty("db.multi", "false");
-        m_propsconfig.setProperty("override.check", "false");
-        m_propsconfig.setProperty("override.pin", "");
+        propConfig.setProperty("db.multi", "false");
+        propConfig.setProperty("override.check", "false");
+        propConfig.setProperty("override.pin", "");
 
-        m_propsconfig.setProperty("db.driverlib", new File(new File(dirname),
+        propConfig.setProperty("db.driverlib", new File(new File(dirname),
                 "mysql-connector-java-5.1.39.jar").getAbsolutePath());
-        m_propsconfig.setProperty("db.engine", "MySQL");
-        m_propsconfig.setProperty("db.driver", "com.mysql.jdbc.Driver");
+        propConfig.setProperty("db.engine", "MySQL");
+        propConfig.setProperty("db.driver", "com.mysql.jdbc.Driver");
 
 // primary DB
-        m_propsconfig.setProperty("db.name", "Main DB");
-        m_propsconfig.setProperty("db.URL", "jdbc:mysql://localhost:3306/");
-        m_propsconfig.setProperty("db.schema", "unicentaopos");
-        m_propsconfig.setProperty("db.options", "?zeroDateTimeBehavior=convertToNull");
-        m_propsconfig.setProperty("db.user", "username");
-        m_propsconfig.setProperty("db.password", "password");
+        propConfig.setProperty("db.name", "Main DB");
+        propConfig.setProperty("db.URL", "jdbc:mysql://localhost:3306/");
+        propConfig.setProperty("db.schema", "unicentaopos");
+        propConfig.setProperty("db.options", "?zeroDateTimeBehavior=convertToNull");
+        propConfig.setProperty("db.user", "username");
+        propConfig.setProperty("db.password", "password");
 
 // secondary DB        
-        m_propsconfig.setProperty("db1.name", "");
-        m_propsconfig.setProperty("db1.URL", "jdbc:mysql://localhost:3306/");
-        m_propsconfig.setProperty("db1.schema", "unicentaopos");
-        m_propsconfig.setProperty("db1.options", "?zeroDateTimeBehavior=convertToNull");
-        m_propsconfig.setProperty("db1.user", "");
-        m_propsconfig.setProperty("db1.password", "");
+        propConfig.setProperty("db1.name", "");
+        propConfig.setProperty("db1.URL", "jdbc:mysql://localhost:3306/");
+        propConfig.setProperty("db1.schema", "unicentaopos");
+        propConfig.setProperty("db1.options", "?zeroDateTimeBehavior=convertToNull");
+        propConfig.setProperty("db1.user", "");
+        propConfig.setProperty("db1.password", "");
 
-        m_propsconfig.setProperty("machine.hostname", getLocalHostName());
+        propConfig.setProperty("machine.hostname", getLocalHostName());
 
         Locale l = Locale.getDefault();
-        m_propsconfig.setProperty("user.language", l.getLanguage());
-        m_propsconfig.setProperty("user.country", l.getCountry());
-        m_propsconfig.setProperty("user.variant", l.getVariant());
+        propConfig.setProperty("user.language", l.getLanguage());
+        propConfig.setProperty("user.country", l.getCountry());
+        propConfig.setProperty("user.variant", l.getVariant());
 
-        m_propsconfig.setProperty("swing.defaultlaf", System.getProperty("swing.defaultlaf", "javax.swing.plaf.metal.MetalLookAndFeel"));
+        propConfig.setProperty("swing.defaultlaf", System.getProperty("swing.defaultlaf", "javax.swing.plaf.metal.MetalLookAndFeel"));
 
-        m_propsconfig.setProperty("machine.printer", "screen");
-        m_propsconfig.setProperty("machine.printer.2", "Not defined");
-        m_propsconfig.setProperty("machine.printer.3", "Not defined");
-        m_propsconfig.setProperty("machine.printer.4", "Not defined");
-        m_propsconfig.setProperty("machine.printer.5", "Not defined");
-        m_propsconfig.setProperty("machine.printer.6", "Not defined");
+        propConfig.setProperty("machine.printer", "screen");
+        propConfig.setProperty("machine.printer.2", "Not defined");
+        propConfig.setProperty("machine.printer.3", "Not defined");
+        propConfig.setProperty("machine.printer.4", "Not defined");
+        propConfig.setProperty("machine.printer.5", "Not defined");
+        propConfig.setProperty("machine.printer.6", "Not defined");
 
-        m_propsconfig.setProperty("machine.display", "screen");
-        m_propsconfig.setProperty("machine.scale", "Not defined");
-        m_propsconfig.setProperty("machine.screenmode", "fullscreen");
-        m_propsconfig.setProperty("machine.ticketsbag", "standard");
-        m_propsconfig.setProperty("machine.scanner", "Not defined");
-        m_propsconfig.setProperty("machine.iButton", "false");
-        m_propsconfig.setProperty("machine.iButtonResponse", "5");
-        m_propsconfig.setProperty("machine.uniqueinstance", "true");
+        propConfig.setProperty("machine.display", "screen");
+        propConfig.setProperty("machine.scale", "Not defined");
+        propConfig.setProperty("machine.screenmode", "fullscreen");
+        propConfig.setProperty("machine.ticketsbag", "standard");
+        propConfig.setProperty("machine.scanner", "Not defined");
+        propConfig.setProperty("machine.iButton", "false");
+        propConfig.setProperty("machine.iButtonResponse", "5");
+        propConfig.setProperty("machine.uniqueinstance", "true");
 
-        m_propsconfig.setProperty("payment.gateway", "external");
-        m_propsconfig.setProperty("payment.magcardreader", "Not defined");
-        m_propsconfig.setProperty("payment.testmode", "true");
-        m_propsconfig.setProperty("payment.commerceid", "");
-        m_propsconfig.setProperty("payment.commercepassword", "password");
+        propConfig.setProperty("payment.gateway", "external");
+        propConfig.setProperty("payment.magcardreader", "Not defined");
+        propConfig.setProperty("payment.testmode", "true");
+        propConfig.setProperty("payment.commerceid", "");
+        propConfig.setProperty("payment.commercepassword", "password");
 
-        m_propsconfig.setProperty("machine.printername", "(Default)");
-        m_propsconfig.setProperty("screen.receipt.columns", "42");
+        propConfig.setProperty("machine.printername", "(Default)");
+        propConfig.setProperty("screen.receipt.columns", "42");
 
         // Receipt printer paper set to 72mmx200mm
-        m_propsconfig.setProperty("paper.receipt.x", "10");
-        m_propsconfig.setProperty("paper.receipt.y", "10");
-        m_propsconfig.setProperty("paper.receipt.width", "190");
-        m_propsconfig.setProperty("paper.receipt.height", "546");
-        m_propsconfig.setProperty("paper.receipt.mediasizename", "A4");
+        propConfig.setProperty("paper.receipt.x", "10");
+        propConfig.setProperty("paper.receipt.y", "10");
+        propConfig.setProperty("paper.receipt.width", "190");
+        propConfig.setProperty("paper.receipt.height", "546");
+        propConfig.setProperty("paper.receipt.mediasizename", "A4");
 
         // Normal printer paper for A4
-        m_propsconfig.setProperty("paper.standard.x", "72");
-        m_propsconfig.setProperty("paper.standard.y", "72");
-        m_propsconfig.setProperty("paper.standard.width", "451");
-        m_propsconfig.setProperty("paper.standard.height", "698");
-        m_propsconfig.setProperty("paper.standard.mediasizename", "A4");
+        propConfig.setProperty("paper.standard.x", "72");
+        propConfig.setProperty("paper.standard.y", "72");
+        propConfig.setProperty("paper.standard.width", "451");
+        propConfig.setProperty("paper.standard.height", "698");
+        propConfig.setProperty("paper.standard.mediasizename", "A4");
 
-        m_propsconfig.setProperty("tkt.header1", "KrOS POS");
-        m_propsconfig.setProperty("tkt.header2", "Open Source Point Of Sale");
-        m_propsconfig.setProperty("tkt.header3", "Copyright (c) 2009-2018 uniCenta");
-        m_propsconfig.setProperty("tkt.header4", "Change header text in Configuration");
+        propConfig.setProperty("tkt.header1", "KrOS POS");
+        propConfig.setProperty("tkt.header2", "Open Source Point Of Sale");
+        propConfig.setProperty("tkt.header3", "Copyright (c) 2009-2018 KrOS POS");
+        propConfig.setProperty("tkt.header4", "Change header text in Configuration");
 
-        m_propsconfig.setProperty("tkt.footer1", "Change footer text in Configuration");
-        m_propsconfig.setProperty("tkt.footer2", "Thank you for your custom");
-        m_propsconfig.setProperty("tkt.footer3", "Please Call Again");
+        propConfig.setProperty("tkt.footer1", "Change footer text in Configuration");
+        propConfig.setProperty("tkt.footer2", "Thank you for your custom");
+        propConfig.setProperty("tkt.footer3", "Please Call Again");
 
-        m_propsconfig.setProperty("table.showcustomerdetails", "true");
-        m_propsconfig.setProperty("table.customercolour", "#58B000");
-        m_propsconfig.setProperty("table.showwaiterdetails", "true");
-        m_propsconfig.setProperty("table.waitercolour", "#258FB0");
-        m_propsconfig.setProperty("table.tablecolour", "#D62E52");
-        m_propsconfig.setProperty("till.amountattop", "true");
-        m_propsconfig.setProperty("till.hideinfo", "true");
+        propConfig.setProperty("table.showcustomerdetails", "true");
+        propConfig.setProperty("table.customercolour", "#58B000");
+        propConfig.setProperty("table.showwaiterdetails", "true");
+        propConfig.setProperty("table.waitercolour", "#258FB0");
+        propConfig.setProperty("table.tablecolour", "#D62E52");
+        propConfig.setProperty("till.amountattop", "true");
+        propConfig.setProperty("till.hideinfo", "true");
+
+        return propConfig;
 
     }
 }

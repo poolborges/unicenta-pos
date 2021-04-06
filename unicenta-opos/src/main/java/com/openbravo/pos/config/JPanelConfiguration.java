@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.config;
 
 import com.openbravo.basic.BasicException;
@@ -22,54 +21,59 @@ import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.forms.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 import javax.swing.*;
+
 /**
  *
  * @author adrianromero
  */
 public class JPanelConfiguration extends JPanel implements JPanelView {
-        
+
     private List<PanelConfig> m_panelconfig;
+    private CloseEventListener closeEventListener = null;
 
     private AppConfig config;
-    
-    /** Creates new form JPanelConfiguration
-     * @param oApp */
+
+    /**
+     * Creates new form JPanelConfiguration
+     *
+     * @param oApp
+     */
     public JPanelConfiguration(AppView oApp) {
-        this(oApp.getProperties()); 
-        if (oApp!= null) {
+        this(oApp.getProperties());
+        if (oApp != null) {
             jbtnExit.setVisible(false);
         }
-        
-        
+
     }
-    
+
     /**
      *
      * @param props
      */
     public JPanelConfiguration(AppProperties props) {
-        
+
         initComponents();
         config = new AppConfig(props.getConfigFile());
 
         m_panelconfig = new ArrayList<>();
-        
+
         PanelConfig panel;
-        
+
         panel = new JPanelConfigDatabase();
         m_panelconfig.add(panel);
         jPanelDatabase.add(panel.getConfigComponent());
-        
+
         panel = new JPanelConfigGeneral();
         m_panelconfig.add(panel);
         jPanelGeneral.add(panel.getConfigComponent());
-        
+
         panel = new JPanelConfigLocale();
         m_panelconfig.add(panel);
         jPanelLocale.add(panel.getConfigComponent());
-        
+
         panel = new JPanelConfigPayment();
         m_panelconfig.add(panel);
         jPanelPayment.add(panel.getConfigComponent());
@@ -77,11 +81,11 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
         panel = new JPanelConfigPeripheral();
         m_panelconfig.add(panel);
         jPanelPeripheral.add(panel.getConfigComponent());
-        
+
         panel = new JPanelConfigSystem();
         m_panelconfig.add(panel);
         jPanelSystem.add(panel.getConfigComponent());
-        
+
         panel = new JPanelTicketSetup();
         m_panelconfig.add(panel);
         jPanelTicketSetup.add(panel.getConfigComponent());
@@ -91,45 +95,52 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
         jPanelCompany.add(panel.getConfigComponent());
 
     }
-        
+
     private void restoreProperties() {
+
+        config.setFactoryConfig();
+        // paneles auxiliares
+        m_panelconfig.forEach(c -> {
+            c.loadProperties(config);
+        });
         
+        /*
         if (config.delete()) {
             loadProperties();
         } else {
-            JMessageDialog.showMessage(this, 
-                    new MessageInf(MessageInf.SGN_WARNING, 
-                            AppLocal.getIntString("message.cannotdeleteconfig")));            
+            JMessageDialog.showMessage(this,
+                    new MessageInf(MessageInf.SGN_WARNING,
+                            AppLocal.getIntString("message.cannotdeleteconfig")));
         }
+        */
     }
-    
+
     private void loadProperties() {
-        
+
         config.load();
-        
         // paneles auxiliares
-        for (PanelConfig c: m_panelconfig) {
+        m_panelconfig.forEach(c -> {
             c.loadProperties(config);
-        }
+        });
     }
-    
+
     private void saveProperties() {
-        
+
         // paneles auxiliares
-        for (PanelConfig c: m_panelconfig) {
+        m_panelconfig.forEach(c -> {
             c.saveProperties(config);
-        }
-        
+        });
+
         try {
             config.save();
-            JOptionPane.showMessageDialog(this, 
-                AppLocal.getIntString("message.restartchanges"), 
-                AppLocal.getIntString("message.title"), 
-                JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    AppLocal.getIntString("message.restartchanges"),
+                    AppLocal.getIntString("message.title"),
+                    JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException e) {
-            JMessageDialog.showMessage(this, 
-                new MessageInf(MessageInf.SGN_WARNING, 
-                AppLocal.getIntString("message.cannotsaveconfig"), e));
+            JMessageDialog.showMessage(this,
+                    new MessageInf(MessageInf.SGN_WARNING,
+                            AppLocal.getIntString("message.cannotsaveconfig"), e));
         }
     }
 
@@ -141,7 +152,7 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
     public JComponent getComponent() {
         return this;
     }
-    
+
     /**
      *
      * @return
@@ -157,31 +168,34 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
      */
     @Override
     public void activate() throws BasicException {
-        loadProperties();        
+        loadProperties();
     }
-    
+
+    public void setCloseListener(CloseEventListener ev) {
+        closeEventListener = ev;
+    }
+
     /**
      *
      * @return
      */
     @Override
     public boolean deactivate() {
-        
+
         boolean haschanged = false;
-        for (PanelConfig c: m_panelconfig) {
+        for (PanelConfig c : m_panelconfig) {
             if (c.hasChanged()) {
                 haschanged = true;
             }
-        }        
-        
-        
+        }
+
         if (haschanged) {
-            int res = JOptionPane.showConfirmDialog(this, 
-                    AppLocal.getIntString("message.wannasave"), 
-                    AppLocal.getIntString("title.editor"), 
-                    JOptionPane.YES_NO_CANCEL_OPTION, 
+            int res = JOptionPane.showConfirmDialog(this,
+                    AppLocal.getIntString("message.wannasave"),
+                    AppLocal.getIntString("title.editor"),
+                    JOptionPane.YES_NO_CANCEL_OPTION,
                     JOptionPane.QUESTION_MESSAGE);
-            
+
             if (res == JOptionPane.YES_OPTION) {
                 saveProperties();
                 return true;
@@ -191,13 +205,12 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
         } else {
             return true;
         }
-    }      
+    }
 
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -344,28 +357,30 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
 
     private void jbtnRestoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnRestoreActionPerformed
 
-        if (JOptionPane.showConfirmDialog(this, 
-                AppLocal.getIntString("message.configfactory"), 
-                AppLocal.getIntString("message.title"), 
-                JOptionPane.YES_NO_OPTION, 
-                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {          
+        if (JOptionPane.showConfirmDialog(this,
+                AppLocal.getIntString("message.configfactory"),
+                AppLocal.getIntString("message.title"),
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
             restoreProperties();
         }
-        
+
     }//GEN-LAST:event_jbtnRestoreActionPerformed
 
     private void jbtnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnSaveActionPerformed
 
         saveProperties();
-        
+
     }//GEN-LAST:event_jbtnSaveActionPerformed
 
     private void jbtnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnExitActionPerformed
-        deactivate();
-        System.exit(0);
+        if(deactivate() && closeEventListener != null){
+            closeEventListener.windowClosed(new CloseEvent(this));
+        }
+        
     }//GEN-LAST:event_jbtnExitActionPerformed
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelCompany;
@@ -381,5 +396,21 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
     private javax.swing.JButton jbtnRestore;
     private javax.swing.JButton jbtnSave;
     // End of variables declaration//GEN-END:variables
+
+    public interface CloseEventListener extends EventListener {
+        public void windowClosed(CloseEvent e);
+    }
     
+    
+    public class CloseEvent extends java.util.EventObject{
+
+        public CloseEvent(Object source) {
+            super(source);
+        }
+        
+        @Override
+        public String toString(){
+            return CloseEvent.class.getName();
+        }
+    }
 }

@@ -20,10 +20,10 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppProperties;
-import com.openbravo.pos.forms.JRootFrame;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
@@ -42,7 +42,7 @@ public class JFrmConfig extends javax.swing.JFrame {
         initComponents();
         
         try {
-            this.setIconImage(ImageIO.read(JRootFrame.class.getResourceAsStream("/com/openbravo/images/app_logo_48x48.png")));
+            this.setIconImage(ImageIO.read(JFrmConfig.class.getResourceAsStream("/com/openbravo/images/app_logo_48x48.png")));
         } catch (IOException e) {
         }   
         setTitle(AppLocal.APP_NAME + " - " + AppLocal.APP_VERSION + " - " + AppLocal.getIntString("Menu.Configuration"));
@@ -50,6 +50,13 @@ public class JFrmConfig extends javax.swing.JFrame {
         addWindowListener(new MyFrameListener()); 
         
         config = new JPanelConfiguration(props);
+        config.setCloseListener(new JPanelConfiguration.CloseEventListener() {
+            @Override
+            public void windowClosed(JPanelConfiguration.CloseEvent e) {
+                 dispose();         //This frame
+                 System.exit(0);    //Exit JVM
+            }
+        });
         
         getContentPane().add(config, BorderLayout.CENTER);
        
@@ -64,6 +71,7 @@ public class JFrmConfig extends javax.swing.JFrame {
         @Override
         public void windowClosing(WindowEvent evt) {
             if (config.deactivate()) {
+                remove(config);
                 dispose();
             }
         }
@@ -94,8 +102,8 @@ public class JFrmConfig extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                
-                AppConfig config = new AppConfig(args);
+                File configFile = (args.length > 0 ? new File(args[0]) : null);
+                AppConfig config = new AppConfig(configFile);
                 config.load();     
                 
                 new JFrmConfig(config).setVisible(true);

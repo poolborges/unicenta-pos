@@ -136,7 +136,7 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
         jtxtDbUser1.setText(sDBUser1);
         jtxtDbPassword1.setText(sDBPassword1);          
         
-        dirty.setDirty(false);
+        //dirty.setDirty(false);
     }
    
     /**
