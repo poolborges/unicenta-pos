@@ -56,6 +56,7 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
         m_OS = new OSValidator();
     }
 
+
     public void initFrame(boolean kioskMode) {
 
         if (m_rootapp.initApp()) {
@@ -65,13 +66,13 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
                 this.setIconImage(ImageIO.read(JRootFrame.class.getResourceAsStream("/com/openbravo/images/app_logo_48x48.png")));
             } catch (IOException e) {
             }
-            
-            if(kioskMode){
+
+            if (kioskMode) {
                 modeKiosk();
-            }else{
+            } else {
                 modeWindow();
             }
-            
+
         } else {
             JOptionPane.showMessageDialog(this,
                     AppLocal.getIntString("message.databasechange"),
@@ -116,7 +117,7 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
             setVisible(true);
         }
     }
-    
+
     private void sendInitEnvent() {
         String scriptId = "application.started";
         try {
@@ -152,6 +153,7 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
             }
         });
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.

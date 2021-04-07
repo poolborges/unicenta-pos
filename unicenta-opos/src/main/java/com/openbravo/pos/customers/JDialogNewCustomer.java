@@ -175,8 +175,8 @@ public class JDialogNewCustomer extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         txtMaxdebt = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
-        m_jBtnOK = new javax.swing.JButton();
         m_jBtnCancel = new javax.swing.JButton();
+        m_jBtnOK = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(AppLocal.getIntString("label.customer")); // NOI18N
@@ -405,24 +405,9 @@ public class JDialogNewCustomer extends javax.swing.JDialog {
 
         jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
-        m_jBtnOK.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jBtnOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
-        m_jBtnOK.setText(AppLocal.getIntString("Button.OK")); // NOI18N
-        m_jBtnOK.setFocusPainted(false);
-        m_jBtnOK.setFocusable(false);
-        m_jBtnOK.setMargin(new java.awt.Insets(8, 16, 8, 16));
-        m_jBtnOK.setPreferredSize(new java.awt.Dimension(80, 45));
-        m_jBtnOK.setRequestFocusEnabled(false);
-        m_jBtnOK.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                m_jBtnOKActionPerformed(evt);
-            }
-        });
-        jPanel2.add(m_jBtnOK);
-
         m_jBtnCancel.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         m_jBtnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/cancel.png"))); // NOI18N
-        m_jBtnCancel.setText(AppLocal.getIntString("Button.Cancel")); // NOI18N
+        m_jBtnCancel.setText(AppLocal.getIntString("Button.cancel")); // NOI18N
         m_jBtnCancel.setFocusPainted(false);
         m_jBtnCancel.setFocusable(false);
         m_jBtnCancel.setMargin(new java.awt.Insets(8, 16, 8, 16));
@@ -434,6 +419,21 @@ public class JDialogNewCustomer extends javax.swing.JDialog {
             }
         });
         jPanel2.add(m_jBtnCancel);
+
+        m_jBtnOK.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        m_jBtnOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
+        m_jBtnOK.setText(AppLocal.getIntString("button.ok")); // NOI18N
+        m_jBtnOK.setFocusPainted(false);
+        m_jBtnOK.setFocusable(false);
+        m_jBtnOK.setMargin(new java.awt.Insets(8, 16, 8, 16));
+        m_jBtnOK.setPreferredSize(new java.awt.Dimension(80, 45));
+        m_jBtnOK.setRequestFocusEnabled(false);
+        m_jBtnOK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_jBtnOKActionPerformed(evt);
+            }
+        });
+        jPanel2.add(m_jBtnOK);
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.SOUTH);
 

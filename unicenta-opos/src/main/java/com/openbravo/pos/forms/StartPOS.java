@@ -34,45 +34,46 @@ public class StartPOS {
 
     private static final Logger LOGGER = Logger.getLogger(StartPOS.class.getName());
 
-    private StartPOS() {
-    }
+    public static void main(final String args[]) {
 
-    public static boolean registerApp() {
+        /* Single Instance - Use Junique
         try {
             InstanceManager.queryInstance().restoreWindow();
-            return false;
         } catch (RemoteException | NotBoundException e) {
-            LOGGER.log(Level.WARNING, "Cannot register instane", e);
-            return true;
+            LOGGER.log(Level.WARNING, "Cannot start the application, another instance is running", e);
+            System.exit(1);
         }
-    }
+        */
 
-    public static void main(final String args[]) {
+        File configFile = (args.length > 0 ? new File(args[0]) : null);
+        AppConfig config = new AppConfig(configFile);
+        config.load();
 
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
 
-                if (!registerApp()) {
-                    LOGGER.log(Level.WARNING, "Cannot regiter this application, another instance is running");
-                    System.exit(1);
+                // Set the look and feel.
+                String lafClass = config.getProperty("swing.defaultlaf");
+                try {
+                    Object laf = Class.forName(lafClass).getDeclaredConstructor().newInstance();
+                    if (laf instanceof LookAndFeel) {
+                        UIManager.setLookAndFeel((LookAndFeel) laf);
+                    }
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
+                    LOGGER.log(Level.WARNING, "Cannot set Look and Feel: " + lafClass, e);
                 }
 
-                File configFile = (args.length > 0 ? new File(args[0]) : null);
-                AppConfig config = new AppConfig(configFile);
-                config.load();
-
+                //Set I18n or Language 
                 String slang = config.getProperty("user.language");
                 String scountry = config.getProperty("user.country");
                 String svariant = config.getProperty("user.variant");
-                if (slang != null
-                        && !slang.equals("")
-                        && scountry != null
-                        && svariant != null) {
+                if (slang != null && !slang.equals("") && scountry != null && svariant != null) {
                     Locale.setDefault(new Locale(slang, scountry, svariant));
                 }
 
+                //Set Format/Pattern for: Number, Date, Currency 
                 Formats.setIntegerPattern(config.getProperty("format.integer"));
                 Formats.setDoublePattern(config.getProperty("format.double"));
                 Formats.setCurrencyPattern(config.getProperty("format.currency"));
@@ -81,21 +82,7 @@ public class StartPOS {
                 Formats.setTimePattern(config.getProperty("format.time"));
                 Formats.setDateTimePattern(config.getProperty("format.datetime"));
 
-                // Set the look and feel.
-                try {
-
-                    Object laf = Class.forName(config.getProperty("swing.defaultlaf")).getDeclaredConstructor().newInstance();
-                    if (laf instanceof LookAndFeel) {
-                        UIManager.setLookAndFeel((LookAndFeel) laf);
-                    }
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
-                    LOGGER.log(Level.WARNING, "Cannot set Look and Feel", e);
-                }
-
-                String screenmode = config.getProperty("machine.screenmode");
-
                 final JRootFrame rootframe = new JRootFrame(config);
-
                 if ("true".equals(config.getProperty("machine.uniqueinstance"))) {
                     // Register the running application
                     try {
@@ -106,6 +93,7 @@ public class StartPOS {
                     }
                 }
 
+                String screenmode = config.getProperty("machine.screenmode");
                 if ("fullscreen".equals(screenmode)) {
                     rootframe.initFrame(true);
                 } else {

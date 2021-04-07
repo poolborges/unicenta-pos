@@ -153,8 +153,8 @@ public class JDialogNewSupplier extends javax.swing.JDialog {
         jLblTelephone2 = new javax.swing.JLabel();
         txtPhone2 = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
-        m_jBtnOK = new javax.swing.JButton();
         m_jBtnCancel = new javax.swing.JButton();
+        m_jBtnOK = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(AppLocal.getIntString("label.supplier")); // NOI18N
@@ -309,6 +309,21 @@ public class JDialogNewSupplier extends javax.swing.JDialog {
 
         jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
+        m_jBtnCancel.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        m_jBtnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/cancel.png"))); // NOI18N
+        m_jBtnCancel.setText(AppLocal.getIntString("button.cancel")); // NOI18N
+        m_jBtnCancel.setFocusPainted(false);
+        m_jBtnCancel.setFocusable(false);
+        m_jBtnCancel.setMargin(new java.awt.Insets(8, 16, 8, 16));
+        m_jBtnCancel.setPreferredSize(new java.awt.Dimension(80, 45));
+        m_jBtnCancel.setRequestFocusEnabled(false);
+        m_jBtnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_jBtnCancelActionPerformed(evt);
+            }
+        });
+        jPanel2.add(m_jBtnCancel);
+
         m_jBtnOK.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         m_jBtnOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
         m_jBtnOK.setText(AppLocal.getIntString("button.ok")); // NOI18N
@@ -323,21 +338,6 @@ public class JDialogNewSupplier extends javax.swing.JDialog {
             }
         });
         jPanel2.add(m_jBtnOK);
-
-        m_jBtnCancel.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jBtnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/cancel.png"))); // NOI18N
-        m_jBtnCancel.setText(AppLocal.getIntString("Button.Cancel")); // NOI18N
-        m_jBtnCancel.setFocusPainted(false);
-        m_jBtnCancel.setFocusable(false);
-        m_jBtnCancel.setMargin(new java.awt.Insets(8, 16, 8, 16));
-        m_jBtnCancel.setPreferredSize(new java.awt.Dimension(80, 45));
-        m_jBtnCancel.setRequestFocusEnabled(false);
-        m_jBtnCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                m_jBtnCancelActionPerformed(evt);
-            }
-        });
-        jPanel2.add(m_jBtnCancel);
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.SOUTH);
 
