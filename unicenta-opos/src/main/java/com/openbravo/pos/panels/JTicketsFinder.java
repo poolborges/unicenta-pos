@@ -221,7 +221,7 @@ public class JTicketsFinder extends javax.swing.JDialog implements EditorCreator
             afilter[1] = null;
         } else {
             afilter[0] = QBFCompareEnum.COMP_EQUALS;
-            afilter[1] = jtxtTicketID.getValueInteger();
+            afilter[1] = jtxtTicketID.getValue();
         }
         
         switch (jComboBoxTicket.getSelectedIndex()) {
@@ -241,7 +241,7 @@ public class JTicketsFinder extends javax.swing.JDialog implements EditorCreator
                 break;
         }
         
-        afilter[5] = jtxtMoney.getDoubleValue();
+        afilter[5] = jtxtMoney.getValue();
         afilter[4] = afilter[5] == null ? QBFCompareEnum.COMP_NONE : jcboMoney.getSelectedItem();
         
         Object startdate = Formats.TIMESTAMP.parseValue(jTxtStartDate.getText());

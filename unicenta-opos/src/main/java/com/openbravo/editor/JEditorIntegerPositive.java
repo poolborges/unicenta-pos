@@ -13,34 +13,56 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.editor;
 
+import static com.openbravo.editor.JEditorNumber.NUMBER_ZERONULL;
 import com.openbravo.format.Formats;
 
 /**
  *
  * @author JG uniCenta
  */
-public class JEditorIntegerPositive extends JEditorNumber {
-    
-    /** Creates a new instance of JEditorIntegerPositive */
-    public JEditorIntegerPositive() {
-    }
-    
-    /**
-     *
-     * @return
-     */
+public class JEditorIntegerPositive extends JEditorNumber<Integer> {
+
+    @Override
     protected Formats getFormat() {
         return Formats.INT;
     }
 
-    /**
-     *
-     * @return
-     */
+    @Override
     protected int getMode() {
         return EditorKeys.MODE_INTEGER_POSITIVE;
-    }      
+    }
+
+    public void setValueInteger(int value) {
+
+        String sOldText = getText();
+        setCurrentValue(value);
+        reprintText();
+        firePropertyChange("Text", sOldText, getText());
+    }
+
+
+    @Override
+    protected Integer getCurrentValue() {
+        try {
+            return Integer.parseInt(getText());
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    @Override
+    protected void setCurrentValue(Integer value) {
+        if (value >= 0) {
+            setSNumber(Integer.toString(value));
+            setBNegative(false);
+            setINumberStatus(NUMBER_ZERONULL);
+        } else {
+            setSNumber(Integer.toString(-value));
+            setBNegative(true);
+            setINumberStatus(NUMBER_ZERONULL);
+        }
+    }
+
 }

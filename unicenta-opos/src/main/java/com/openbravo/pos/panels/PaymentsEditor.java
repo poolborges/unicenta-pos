@@ -155,7 +155,7 @@ public final class PaymentsEditor extends javax.swing.JPanel implements EditorRe
         payment[3] = m_sPaymentId == null ? UUID.randomUUID().toString() : m_sPaymentId;
         payment[4] = m_ReasonModel.getSelectedKey();
         PaymentReason reason = (PaymentReason) m_ReasonModel.getSelectedItem();
-        Double dtotal = jTotal.getDoubleValue();
+        Double dtotal = jTotal.getValue();
         payment[5] = reason == null ? dtotal : reason.addSignum(dtotal);
 // JG Added July 2011
         String snotes = "";

@@ -101,7 +101,7 @@ public class JPaymentCheque extends javax.swing.JPanel implements JPaymentInterf
 
     private void printState() {
         
-        Double value = m_jTendered.getDoubleValue();
+        Double value = m_jTendered.getValue();
         if (value == null) {
             m_dPaid = m_dTotal;
         } else {

@@ -129,7 +129,7 @@ public class JPaymentCashPos extends javax.swing.JPanel implements JPaymentInter
     
     private void printState() {
 
-        Double value = m_jTendered.getDoubleValue();
+        Double value = m_jTendered.getValue();
         if (value == null || value == 0.0) {
             m_dPaid = m_dTotal;
         } else {            
@@ -215,7 +215,7 @@ public class JPaymentCashPos extends javax.swing.JPanel implements JPaymentInter
         }
         @Override
         public void actionPerformed(ActionEvent e) {
-            Double tendered = m_jTendered.getDoubleValue();
+            Double tendered = m_jTendered.getValue();
  
             if (tendered == null) {
                  m_jTendered.setDoubleValue(amount);

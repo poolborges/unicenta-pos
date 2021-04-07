@@ -22,11 +22,7 @@ import com.openbravo.format.Formats;
  *
  * @author JG uniCenta
  */
-public class JEditorCurrencyPositive extends JEditorNumber {
-    
-    /** Creates a new instance of JEditorCurrencyPositive */
-    public JEditorCurrencyPositive() {
-    }
+public class JEditorCurrencyPositive extends JEditorDoublePositive {
     
     /**
      *
@@ -36,14 +32,5 @@ public class JEditorCurrencyPositive extends JEditorNumber {
     protected Formats getFormat() {
         return Formats.CURRENCY;
 
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    protected int getMode() {
-        return EditorKeys.MODE_DOUBLE_POSITIVE;
-    }      
+    }     
 }

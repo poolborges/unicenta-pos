@@ -194,7 +194,7 @@ public class DinerNumber extends javax.swing.JDialog {
     private void jcmdOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcmdOKActionPerformed
 
 
-        m_value = m_jnumber.getDoubleValue();
+        m_value = m_jnumber.getValue();
         setVisible(false);
         dispose();
 

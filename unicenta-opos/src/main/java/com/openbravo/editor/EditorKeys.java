@@ -25,6 +25,11 @@ public interface EditorKeys {
     /**
      *
      */
+    public final static int MODE_UNDEFINED = -1;
+    
+    /**
+     *
+     */
     public final static int MODE_STRING = 0;
 
     /**

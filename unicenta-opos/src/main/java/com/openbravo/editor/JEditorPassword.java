@@ -25,32 +25,22 @@ import com.openbravo.basic.BasicException;
 public class JEditorPassword extends JEditorText {
     
     private static final char ECHO_CHAR = '*';
-    
-    /** Creates a new instance of JEditorPassword */
+
     public JEditorPassword() {
         super();
     }
-    
-    /**
-     *
-     * @return
-     */
+
+    @Override
     protected final int getMode() {
         return EditorKeys.MODE_STRING;
     }
-        
-    /**
-     *
-     * @return
-     */
+
+    @Override
     protected int getStartMode() {
         return MODE_Abc1;
     }
-    
-    /**
-     *
-     * @return
-     */
+
+    @Override
     protected String getTextEdit() {
         
         StringBuilder s = new StringBuilder();
@@ -65,23 +55,13 @@ public class JEditorPassword extends JEditorText {
 
         return s.toString(); 
     }
-    
-    /**
-     *
-     * @return
-     */
+
     public final String getPassword() {
-        
-        // como clave nunca devolvemos null
         String sPassword = getText();
         return sPassword == null ? "" : sPassword;     
     }
 
-    /**
-     *
-     * @return
-     * @throws BasicException
-     */
+    @Override
     protected String getTextFormat() throws BasicException {
         return "<html>" + getEcho(m_svalue);
     }    

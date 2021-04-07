@@ -26,7 +26,7 @@ import com.alee.managers.notification.NotificationIcon;
 import com.alee.managers.notification.NotificationManager;
 import com.alee.managers.notification.WebNotification;
 import com.openbravo.basic.BasicException;
-import com.openbravo.beans.JNumberPop;
+import com.openbravo.beans.JIntegerDialog;
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.ListKeyed;
 import com.openbravo.data.gui.MessageInf;
@@ -295,7 +295,7 @@ public class JTicketsBagRestaurant extends javax.swing.JPanel {
 
             if (m_App.getProperties().getProperty("override.check").equals("true")) {
                 Integer secret = Integer.parseInt(m_App.getProperties().getProperty("override.pin"));
-                Integer iValue = JNumberPop.showEditNumber(this, AppLocal.getIntString("title.override.enterpin")); 
+                Integer iValue = JIntegerDialog.showComponent(this, AppLocal.getIntString("title.override.enterpin")); 
 
                 if (iValue == null ? secret == null : iValue.equals(secret)) {
                     pinOK = true;

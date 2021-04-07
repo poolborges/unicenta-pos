@@ -198,7 +198,7 @@ public class JTicketsBagTicket extends JTicketsBag {
     private void readTicket(int iTicketid, int iTickettype) {
         Integer findTicket=0;    
         try {
-                findTicket = m_jTicketEditor.getValueInteger();
+                findTicket = m_jTicketEditor.getValue();
             }catch (Exception e){ 
                 LOGGER.log(Level.WARNING, null, e); 
                 

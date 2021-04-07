@@ -104,11 +104,11 @@ public class ProductFilterSales extends javax.swing.JPanel implements EditorCrea
         }
         
         // Precio de compra
-        afilter[3] = m_jPriceBuy.getDoubleValue();
+        afilter[3] = m_jPriceBuy.getValue();
         afilter[2] = afilter[3] == null ? QBFCompareEnum.COMP_NONE : m_jCboPriceBuy.getSelectedItem();
 
         // Precio de venta
-        afilter[5] = m_jPriceSell.getDoubleValue();
+        afilter[5] = m_jPriceSell.getValue();
         afilter[4] = afilter[5] == null ? QBFCompareEnum.COMP_NONE : m_jCboPriceSell.getSelectedItem();
         
         // Categoria

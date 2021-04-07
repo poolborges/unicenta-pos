@@ -16,7 +16,7 @@
 
 package com.openbravo.pos.scale;
 
-import com.openbravo.beans.JNumberDialog;
+import com.openbravo.beans.JDoubleDialog;
 import com.openbravo.pos.forms.AppLocal;
 import java.awt.Component;
 import javax.swing.ImageIcon;
@@ -27,7 +27,7 @@ import javax.swing.ImageIcon;
  */
 public class ScaleDialog implements Scale {
 
-    private Component parent;
+    private final Component parent;
 
     /**
      *
@@ -46,7 +46,7 @@ public class ScaleDialog implements Scale {
     public Double readWeight() throws ScaleException {
         
         // Set title for grams Kilos, ounzes, pounds, ...
-        return JNumberDialog.showEditNumber(parent, 
+        return JDoubleDialog.showComponent(parent, 
                 AppLocal.getIntString("label.scale"), 
                 AppLocal.getIntString("label.scaleinput"), 
                 new ImageIcon(ScaleDialog.class.getResource("/com/openbravo/images/ark2.png")));

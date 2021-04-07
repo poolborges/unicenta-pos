@@ -22,24 +22,14 @@ import com.openbravo.format.Formats;
  *
  * @author JG uniCenta
  */
-public class JEditorDoublePositive extends JEditorNumber {
-    
-    /** Creates a new instance of JEditorDoublePositive */
-    public JEditorDoublePositive() {
-    }
-    
-    /**
-     *
-     * @return
-     */
+public class JEditorDoublePositive extends JEditorDouble {
+
+    @Override
     protected Formats getFormat() {
         return Formats.DOUBLE;
     }
 
-    /**
-     *
-     * @return
-     */
+    @Override
     protected int getMode() {
         return EditorKeys.MODE_DOUBLE_POSITIVE;
     }       

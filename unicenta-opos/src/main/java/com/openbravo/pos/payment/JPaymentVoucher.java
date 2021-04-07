@@ -149,7 +149,7 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
     
     private void printState() {
 
-        Double value = m_jTendered.getDoubleValue();
+        Double value = m_jTendered.getValue();
         if (value == null) {
             m_dTicket = 0.0;
         } else {

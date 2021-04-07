@@ -278,7 +278,7 @@ public class JTicketsBagRestaurantRes extends javax.swing.JPanel implements Edit
         res[4] = customer.getTaxid();
         res[5] = customer.getSearchkey();
         res[6] = customer.getName();
-        res[7] = m_jtxtChairs.getValueInteger();
+        res[7] = m_jtxtChairs.getValue();
         res[8] = m_bReceived;
         res[9] = m_jtxtDescription.getText();
 

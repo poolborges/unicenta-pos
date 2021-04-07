@@ -32,8 +32,7 @@ public abstract class JEditorAbstract extends javax.swing.JPanel implements Edit
     private boolean m_bActive;
     private final Border m_borderactive =  new javax.swing.border.CompoundBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("TextField.selectionBackground")), new javax.swing.border.EmptyBorder(new java.awt.Insets(1, 4, 1, 4)));
     private final Border m_borderinactive =  new javax.swing.border.CompoundBorder(new javax.swing.border.LineBorder(javax.swing.UIManager.getDefaults().getColor("Button.darkShadow")), new javax.swing.border.EmptyBorder(new java.awt.Insets(1, 4, 1, 4)));
-    
-    /** Creates new form JPanelNumber */
+
     public JEditorAbstract() {
         
         initComponents();
@@ -43,100 +42,49 @@ public abstract class JEditorAbstract extends javax.swing.JPanel implements Edit
         m_jText.setBorder(m_borderinactive);
     }
 
-    /**
-     *
-     * @return
-     */
     protected abstract int getMode();    
 
-    /**
-     *
-     * @return
-     */
     protected abstract int getAlignment();  
 
-    /**
-     *
-     * @return
-     */
     protected abstract String getEditMode();
 
-    /**
-     *
-     * @return
-     */
     protected abstract String getTextEdit();
 
-    /**
-     *
-     * @return
-     * @throws BasicException
-     */
     protected abstract String getTextFormat() throws BasicException;
 
-    /**
-     *
-     * @param c
-     */
     protected abstract void typeCharInternal(char c);    
 
-    /**
-     *
-     * @param c
-     */
     protected abstract void transCharInternal(char c);
-    
-    /**
-     *
-     * @param c
-     */
+
     @Override
     public void typeChar(char c) {
         typeCharInternal(c);
         reprintText();
         firePropertyChange("Edition", null, null);
     }
-    
-    /**
-     *
-     * @param c
-     */
+
     @Override
     public void transChar(char c) {
         transCharInternal(c);
         reprintText();
         firePropertyChange("Edition", null, null);
     }
-    
-    /**
-     *
-     * @param ed
-     */
+
     @Override
     public void addEditorKeys(EditorKeys ed) {
         editorkeys = ed;
     }
 
-    /**
-     *
-     */
     @Override
     public void deactivate() {
         setActive(false);
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public Component getComponent() {
         return this;
     }
 
-    /**
-     *
-     */
     public void activate() {
         if (isEnabled()) {
             editorkeys.setActive(this, getMode());        
@@ -149,10 +97,7 @@ public abstract class JEditorAbstract extends javax.swing.JPanel implements Edit
         m_jText.setBorder(m_bActive ? m_borderactive : m_borderinactive);
         reprintText();
     }
-            
-    /**
-     *
-     */
+
     protected void reprintText() {
         
         m_jText.setHorizontalAlignment(getAlignment());

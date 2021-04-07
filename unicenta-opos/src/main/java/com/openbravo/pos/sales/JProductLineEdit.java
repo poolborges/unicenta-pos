@@ -138,7 +138,7 @@ public class JProductLineEdit extends javax.swing.JDialog {
     private class RecalculateUnits implements PropertyChangeListener {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            Double value = m_jUnits.getDoubleValue();
+            Double value = m_jUnits.getValue();
             if (value == null || value == 0.0) {
                 m_bunitsok = false;
             } else {
@@ -154,7 +154,7 @@ public class JProductLineEdit extends javax.swing.JDialog {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
 
-            Double value = m_jPrice.getDoubleValue();
+            Double value = m_jPrice.getValue();
             if (value == null || value == 0.0) {
                 m_bpriceok = false;
             } else {
@@ -172,7 +172,7 @@ public class JProductLineEdit extends javax.swing.JDialog {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
 
-            Double value = m_jPriceTax.getDoubleValue();
+            Double value = m_jPriceTax.getValue();
             if (value == null || value == 0.0) {
                 m_bpriceok = false;
             } else {
@@ -521,7 +521,7 @@ public class JProductLineEdit extends javax.swing.JDialog {
 
             pstmt = con.prepareStatement(
                     "UPDATE PRODUCTS SET PRICESELL = ? WHERE ID = ?");
-            pstmt.setDouble(1, m_jPrice.getDoubleValue());
+            pstmt.setDouble(1, m_jPrice.getValue());
             pstmt.setString(2, productID);
             pstmt.executeUpdate();
 

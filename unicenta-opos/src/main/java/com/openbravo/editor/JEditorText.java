@@ -95,8 +95,7 @@ public abstract class JEditorText extends JEditorAbstract {
     private static final char[] CHAR_ABC1_8 = {'T', 'U', 'V', '8', '\u00da', '\u00dc'};
     private static final char[] CHAR_ABC1_9 = {'W', 'X', 'Y', 'Z', '9'};
     private static final char[] CHAR_ABC1_0 = {' ', '0'};   
-    
-    /** Creates a new instance of JEditorString */
+ 
     public JEditorText() {
         m_svalue = null;
         
@@ -107,21 +106,12 @@ public abstract class JEditorText extends JEditorAbstract {
         m_iMode = getStartMode(); //MODE_Abc1;
         m_jtimer.start();
     }
-    
-    /**
-     *
-     * @return
-     */
+
     protected abstract int getStartMode();
 
-    /**
-     *
-     */
     public final void reset() {
         
         String sOldText = getText();
-        
-        // Los hemos borrado todos.
         m_iMode = getStartMode(); //MODE_Abc1;
         m_svalue = null;
         m_iTicks = 0;
@@ -132,10 +122,6 @@ public abstract class JEditorText extends JEditorAbstract {
         firePropertyChange("Text", sOldText, getText());
     }
 
-    /**
-     *
-     * @param sText
-     */
     public final void setText(String sText) {
         
         String sOldText = getText();
@@ -148,11 +134,7 @@ public abstract class JEditorText extends JEditorAbstract {
         
         firePropertyChange("Text", sOldText, getText());
     }
-    
-    /**
-     *
-     * @param iMode
-     */
+
     public final void setEditModeEnum(int iMode) {
         
         m_iMode = iMode;
@@ -162,10 +144,6 @@ public abstract class JEditorText extends JEditorAbstract {
         reprintText();
     }
 
-    /**
-     *
-     * @return
-     */
     public final String getText() {
         if (m_cLastChar == '\u0000') {
             return m_svalue;
@@ -173,19 +151,13 @@ public abstract class JEditorText extends JEditorAbstract {
             return appendChar2Value(getKeyChar());
         }        
     }
-      
-    /**
-     *
-     * @return
-     */
+
+    @Override
     protected final int getAlignment() {
         return javax.swing.SwingConstants.LEFT;
     }
-       
-    /**
-     *
-     * @return
-     */
+
+    @Override
     protected final String getEditMode() {
         switch (m_iMode) {
         case MODE_Abc1: return "Abc1";
@@ -195,11 +167,8 @@ public abstract class JEditorText extends JEditorAbstract {
         default: return null;
         }
     }
-    
-    /**
-     *
-     * @return
-     */
+
+    @Override
     protected String getTextEdit() {
         
         StringBuilder s = new StringBuilder();
@@ -218,22 +187,15 @@ public abstract class JEditorText extends JEditorAbstract {
 
         return s.toString(); 
     }
-    
-    /**
-     *
-     * @return
-     * @throws BasicException
-     */
+
+    @Override
     protected String getTextFormat() throws BasicException {
         return (m_svalue == null)
                 ? "<html>"
                 : "<html>" + m_svalue;
     }
-    
-    /**
-     *
-     * @param c
-     */
+
+    @Override
     protected void typeCharInternal(char c) {
         
         String sOldText = getText();
@@ -270,11 +232,8 @@ public abstract class JEditorText extends JEditorAbstract {
         
         firePropertyChange("Text", sOldText, getText());
     }
-    
-    /**
-     *
-     * @param c
-     */
+
+    @Override
     protected void transCharInternal(char c) {
         
         String sOldText = getText();
@@ -331,11 +290,7 @@ public abstract class JEditorText extends JEditorAbstract {
             m_iMode = MODE_Abc1;
         }
     }
-    
-    /**
-     *
-     * @return
-     */
+
     protected char getKeyChar() {
         
         char[] clist = null;
@@ -379,6 +334,7 @@ public abstract class JEditorText extends JEditorAbstract {
     }
      
     private class TimerAction implements ActionListener {
+        @Override
         public void actionPerformed(ActionEvent evt) {
             if (m_cLastChar != '\u0000') {
                 // This method does not modify the "Text" property.

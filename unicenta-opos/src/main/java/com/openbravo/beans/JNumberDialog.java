@@ -16,22 +16,20 @@
 
 package com.openbravo.beans;
 
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Frame;
-import java.awt.Window;
+import com.openbravo.editor.JEditorNumber;
 import javax.swing.Icon;
-import javax.swing.SwingUtilities;
 
 /**
  *
  * @author  adrian
+ * @param <T>
  */
-public class JNumberDialog extends javax.swing.JDialog {
+public abstract class JNumberDialog<T extends Number> extends javax.swing.JDialog {
     
     private static LocaleResources m_resources;
     
-    private Double m_value;
+    protected JEditorNumber<T> m_jnumber;
+    private T m_value;
     
     /** Creates new form JNumberDialog
      * @param parent
@@ -49,10 +47,6 @@ public class JNumberDialog extends javax.swing.JDialog {
         init();
     }
 
-    public JNumberDialog() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
     private void init() {
         
         if (m_resources == null) {
@@ -62,66 +56,33 @@ public class JNumberDialog extends javax.swing.JDialog {
         
         initComponents();        
         getRootPane().setDefaultButton(jcmdOK);   
-        
-        m_jnumber.addEditorKeys(m_jKeys);
-        m_jnumber.reset();
-        m_jnumber.setDoubleValue(0.0);
-        m_jnumber.activate();
-        
         m_jPanelTitle.setBorder(RoundedBorder.createGradientBorder());
+    }
+    
+    protected void setup(){
+   
+        m_jnumber.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        m_jnumber.setMinimumSize(new java.awt.Dimension(100, 20));
+        m_jnumber.setPreferredSize(new java.awt.Dimension(132, 20));
+        m_jnumber.reset();
+        m_jnumber.activate();
+        m_jnumber.setVisible(false);
+        m_jnumber.addEditorKeys(m_jKeys);
+        
+        jInputPanel.removeAll();
+        jInputPanel.add(m_jnumber, java.awt.BorderLayout.PAGE_START);
 
         m_value = null;
     }
     
-    private void setTitle(String title, String message, Icon icon) {
+    protected void setTitle(String title, String message, Icon icon) {
         setTitle(title);
         m_lblMessage.setText(message);
         m_lblMessage.setIcon(icon);
     }
-    
-    /**
-     *
-     * @param parent
-     * @param title
-     * @return
-     */
-    public static Double showEditNumber(Component parent, String title) {
-        return showEditNumber(parent, title, null, null);
-    }
 
-    /**
-     *
-     * @param parent
-     * @param title
-     * @param message
-     * @return
-     */
-    public static Double showEditNumber(Component parent, String title, String message) {
-        return showEditNumber(parent, title, message, null);
-    }
-
-    /**
-     *
-     * @param parent
-     * @param title
-     * @param message
-     * @param icon
-     * @return
-     */
-    public static Double showEditNumber(Component parent, String title, String message, Icon icon) {
-        
-        Window window = SwingUtilities.windowForComponent(parent);
-        
-        JNumberDialog myMsg;
-        if (window instanceof Frame) { 
-            myMsg = new JNumberDialog((Frame) window, true);
-        } else {
-            myMsg = new JNumberDialog((Dialog) window, true);
-        }
-        
-        myMsg.setTitle(title, message, icon);
-        myMsg.setVisible(true);
-        return myMsg.m_value;
+    public T getValue(){
+        return m_value;
     }
     
     /** This method is called from within the constructor to
@@ -139,8 +100,7 @@ public class JNumberDialog extends javax.swing.JDialog {
         jPanelGrid = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         m_jKeys = new com.openbravo.editor.JEditorKeys();
-        jPanel4 = new javax.swing.JPanel();
-        m_jnumber = new com.openbravo.editor.JEditorDoublePositive();
+        jInputPanel = new javax.swing.JPanel();
         m_jPanelTitle = new javax.swing.JPanel();
         m_lblMessage = new javax.swing.JLabel();
 
@@ -193,17 +153,11 @@ public class JNumberDialog extends javax.swing.JDialog {
         });
         jPanel3.add(m_jKeys);
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        jPanel4.setMinimumSize(new java.awt.Dimension(110, 30));
-        jPanel4.setPreferredSize(new java.awt.Dimension(142, 30));
-        jPanel4.setLayout(new java.awt.BorderLayout());
-
-        m_jnumber.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jnumber.setMinimumSize(new java.awt.Dimension(100, 20));
-        m_jnumber.setPreferredSize(new java.awt.Dimension(132, 20));
-        jPanel4.add(m_jnumber, java.awt.BorderLayout.PAGE_START);
-
-        jPanel3.add(jPanel4);
+        jInputPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        jInputPanel.setMinimumSize(new java.awt.Dimension(110, 30));
+        jInputPanel.setPreferredSize(new java.awt.Dimension(142, 30));
+        jInputPanel.setLayout(new java.awt.BorderLayout());
+        jPanel3.add(jInputPanel);
 
         javax.swing.GroupLayout jPanelGridLayout = new javax.swing.GroupLayout(jPanelGrid);
         jPanelGrid.setLayout(jPanelGridLayout);
@@ -253,8 +207,7 @@ public class JNumberDialog extends javax.swing.JDialog {
 
     private void jcmdOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcmdOKActionPerformed
 
-
-        m_value = m_jnumber.getDoubleValue();
+        //m_value = m_jnumber.getValue();
         setVisible(false);
         dispose();
 
@@ -281,16 +234,15 @@ public class JNumberDialog extends javax.swing.JDialog {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel jInputPanel;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanelGrid;
     private javax.swing.JButton jcmdCancel;
     private javax.swing.JButton jcmdOK;
     private com.openbravo.editor.JEditorKeys m_jKeys;
     private javax.swing.JPanel m_jPanelTitle;
-    private com.openbravo.editor.JEditorDoublePositive m_jnumber;
     private javax.swing.JLabel m_lblMessage;
     // End of variables declaration//GEN-END:variables
     
