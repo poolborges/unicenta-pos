@@ -45,7 +45,6 @@ public class DataLogicPresenceManagement extends BeanFactoryDataSingle {
     private SentenceExec m_endbreak;
 
     private SentenceFind m_isonbreak;
-    private SentenceFind m_isonleave;
     private SentenceFind m_shiftid;
 
     private SentenceFind m_lastcheckin;
@@ -139,10 +138,6 @@ public class DataLogicPresenceManagement extends BeanFactoryDataSingle {
             , SerializerWriteString.INSTANCE
             , SerializerReadString.INSTANCE);
         
-        m_isonleave = new StaticSentence(s
-            , "SELECT COUNT(*) FROM leaves WHERE STARTDATE < ? AND ENDDATE > ? AND PPLID = ?"
-            , new SerializerWriteBasic(new Datas[] {Datas.TIMESTAMP, Datas.TIMESTAMP, Datas.STRING})
-            , SerializerReadString.INSTANCE);
 
         m_lastcheckin = new StaticSentence(s
             , "SELECT STARTSHIFT FROM shifts WHERE ENDSHIFT IS NULL AND PPLID = ?"
@@ -363,7 +358,12 @@ public class DataLogicPresenceManagement extends BeanFactoryDataSingle {
      */
     public final boolean IsOnLeave(String user) throws BasicException {
         Object[] value = new Object[] {new Date(), new Date(), user};
-        String Data = (String) m_isonleave.find(value);
+        
+        SentenceFind m_isonleave = new StaticSentence(s
+            , "SELECT COUNT(*) FROM leaves WHERE STARTDATE < ? AND ENDDATE > ? AND PPLID = ?"
+            , new SerializerWriteBasic(new Datas[] {Datas.TIMESTAMP, Datas.TIMESTAMP, Datas.STRING})
+            , SerializerReadInteger.INSTANCE);
+        Integer Data = (Integer) m_isonleave.find(value);
         // "0" rows shows user is not on leave
         if (Data.equals("0")) {
             return false;

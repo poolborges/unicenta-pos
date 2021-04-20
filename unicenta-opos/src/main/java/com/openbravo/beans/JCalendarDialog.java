@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.beans;
 
 import java.awt.*;
@@ -24,42 +23,31 @@ import java.util.*;
 
 /**
  *
- * @author  Adrian
+ * @author Adrian
  */
-public class JCalendarDialog extends javax.swing.JDialog {
-    
+public class JCalendarDialog extends JDialog {
+
     // private static ResourceBundle m_Intl;
     private static LocaleResources m_resources;
-    
+
     private Date m_date;
     private JCalendarPanel myCalendar = null;
     private JTimePanel myTime = null;
-    
-    /** Creates new form JCalendarDialog
-     * @param parent
-     * @param modal */
+
     public JCalendarDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        
-        if (m_resources == null) {
-            m_resources = new LocaleResources();
-            m_resources.addBundleName("beans_messages");
-        } else {
-        }
+
+        m_resources = new LocaleResources();
+        m_resources.addBundleName("beans_messages");
     }
-    /** Creates new form JCalendarDialog
-     * @param parent
-     * @param modal */
+
     public JCalendarDialog(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
-        
-        if (m_resources != null) {
-        } else {
-            m_resources = new LocaleResources();
-            m_resources.addBundleName("beans_messages");
-        }
-    }    
-    
+
+        m_resources = new LocaleResources();
+        m_resources.addBundleName("beans_messages");
+    }
+
     private static Window getWindow(Component parent) {
         if (parent == null) {
             return new JFrame();
@@ -79,7 +67,7 @@ public class JCalendarDialog extends javax.swing.JDialog {
     public static Date showCalendarTimeHours(Component parent, Date date) {
         return internalCalendarTime(parent, date == null ? DateUtils.getToday() : date, true);
     }
-    
+
     /**
      *
      * @param parent
@@ -89,7 +77,7 @@ public class JCalendarDialog extends javax.swing.JDialog {
     public static Date showCalendarTime(Component parent, Date date) {
         return internalCalendarTime(parent, date == null ? DateUtils.getTodayMinutes() : date, true);
     }
-    
+
     /**
      *
      * @param parent
@@ -99,71 +87,77 @@ public class JCalendarDialog extends javax.swing.JDialog {
     public static Date showCalendar(Component parent, Date date) {
         return internalCalendarTime(parent, date == null ? DateUtils.getTodayMinutes() : date, false);
     }
-    
+
     private static Date internalCalendarTime(Component parent, Date date, boolean bTimePanel) {
-        
-        Window window = getWindow(parent);      
-        
+
+        Window window = getWindow(parent);
+
         JCalendarDialog myMsg;
-        if (window instanceof Frame) { 
+        if (window instanceof Frame) {
             myMsg = new JCalendarDialog((Frame) window, true);
         } else {
             myMsg = new JCalendarDialog((Dialog) window, true);
         }
-        
+
         myMsg.initComponents();
-        
+
         Date d = date;
         int dialogwidth = 400;
-        
-        myMsg.myCalendar = new JCalendarPanel(d);     
+
+        myMsg.myCalendar = new JCalendarPanel(d);
         myMsg.myCalendar.addPropertyChangeListener("Date", new JPanelCalendarChange(myMsg));
         myMsg.jPanelGrid.add(myMsg.myCalendar);
-        
+
         if (bTimePanel) {
             myMsg.myTime = new JTimePanel(d);
-            myMsg.myTime.addPropertyChangeListener("Date", new JPanelTimeChange(myMsg)); 
+            myMsg.myTime.addPropertyChangeListener("Date", new JPanelTimeChange(myMsg));
             myMsg.jPanelGrid.add(myMsg.myTime);
             dialogwidth += 400;
         }
-        
-        myMsg.getRootPane().setDefaultButton(myMsg.jcmdOK);        
-        
+
+        myMsg.getRootPane().setDefaultButton(myMsg.jcmdOK);
+
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         myMsg.setBounds((screenSize.width - dialogwidth) / 2, (screenSize.height - 359) / 2, dialogwidth, 359);
-        
+
         //myMsg.show();
         myMsg.m_date = null;
         myMsg.setVisible(true);
         return myMsg.m_date;
     }
-      
+
     private static class JPanelTimeChange implements PropertyChangeListener {
+
         private final JCalendarDialog m_me;
+
         public JPanelTimeChange(JCalendarDialog me) {
             m_me = me;
         }
+
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             m_me.myCalendar.setDate(m_me.myTime.getDate());
-        }        
+        }
     }
-      
+
     private static class JPanelCalendarChange implements PropertyChangeListener {
+
         private final JCalendarDialog m_me;
+
         public JPanelCalendarChange(JCalendarDialog me) {
             m_me = me;
         }
+
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             m_me.myTime.setDate(m_me.myCalendar.getDate());
-        }        
+        }
     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -221,10 +215,10 @@ public class JCalendarDialog extends javax.swing.JDialog {
     private void jcmdOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcmdOKActionPerformed
 
         GregorianCalendar dateresult;
-        
+
         GregorianCalendar date1 = new GregorianCalendar();
         date1.setTime(myCalendar.getDate());
-        
+
         if (myTime == null) {
             dateresult = new GregorianCalendar(
                     date1.get(GregorianCalendar.YEAR),
@@ -241,17 +235,17 @@ public class JCalendarDialog extends javax.swing.JDialog {
                     date2.get(GregorianCalendar.HOUR_OF_DAY),
                     date2.get(GregorianCalendar.MINUTE));
         }
-        
+
         m_date = dateresult.getTime();
-                
+
         setVisible(false);
-        dispose();        
+        dispose();
     }//GEN-LAST:event_jcmdOKActionPerformed
 
     private void jcmdCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcmdCancelActionPerformed
 
         setVisible(false);
-        dispose();        
+        dispose();
     }//GEN-LAST:event_jcmdCancelActionPerformed
 
     private void closeWindow(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_closeWindow
@@ -259,7 +253,7 @@ public class JCalendarDialog extends javax.swing.JDialog {
         setVisible(false);
         dispose();
     }//GEN-LAST:event_closeWindow
-       
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -267,5 +261,5 @@ public class JCalendarDialog extends javax.swing.JDialog {
     private javax.swing.JButton jcmdCancel;
     private javax.swing.JButton jcmdOK;
     // End of variables declaration//GEN-END:variables
-    
+
 }

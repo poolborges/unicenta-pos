@@ -23,14 +23,14 @@ import java.util.List;
  *
  * @author JG uniCenta
  */
-public interface SentenceList {
+public interface SentenceList<T> {
     
     /**
      *
      * @return
      * @throws BasicException
      */
-    public List list() throws BasicException;
+    public List<T> list() throws BasicException;
 
     /**
      *
@@ -38,7 +38,7 @@ public interface SentenceList {
      * @return
      * @throws BasicException
      */
-    public List list(Object... params) throws BasicException;
+    public List<T> list(Object... params) throws BasicException;
 
     /**
      *
@@ -46,7 +46,7 @@ public interface SentenceList {
      * @return
      * @throws BasicException
      */
-    public List list(Object params) throws BasicException;
+    public List<T> list(Object params) throws BasicException;
     
     /**
      *
@@ -55,7 +55,7 @@ public interface SentenceList {
      * @return
      * @throws BasicException
      */
-    public List listPage(int offset, int length) throws BasicException;
+    public List<T> listPage(int offset, int length) throws BasicException;
 
     /**
      *
@@ -65,5 +65,5 @@ public interface SentenceList {
      * @return
      * @throws BasicException
      */
-    public List listPage(Object params, int offset, int length) throws BasicException;    
+    public List<T> listPage(Object params, int offset, int length) throws BasicException;    
 }

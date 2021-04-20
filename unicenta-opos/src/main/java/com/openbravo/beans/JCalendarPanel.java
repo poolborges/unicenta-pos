@@ -30,11 +30,9 @@ import javax.swing.border.LineBorder;
  */
 public class JCalendarPanel extends javax.swing.JPanel {
     
-    // private static ResourceBundle m_Intl;
-    private static LocaleResources m_resources;
+    private final LocaleResources m_resources;
 
-    private static GregorianCalendar m_CalendarHelper = new GregorianCalendar(); // solo de ayuda
-    
+
     private Date m_date;    
     private JButtonDate[] m_ListDates;
     private JLabel[] m_jDays;
@@ -48,7 +46,6 @@ public class JCalendarPanel extends javax.swing.JPanel {
     
     private DateFormat fmtMonthYear = new SimpleDateFormat("MMMMM yyyy");
     
-    /** Creates new form JCalendarPanel2 */
     public JCalendarPanel() {
         this(new Date());
     }
@@ -58,22 +55,16 @@ public class JCalendarPanel extends javax.swing.JPanel {
      * @param dDate
      */
     public JCalendarPanel(Date dDate) {
-        
         super();
     
-        if (m_resources == null) {
-            m_resources = new LocaleResources();
-            m_resources.addBundleName("beans_messages");
-        }
+        m_resources = new LocaleResources();
+        m_resources.addBundleName("beans_messages");
         
         initComponents();
         initComponents2();
-        
-//        m_CalendarHelper = new GregorianCalendar();            
-//        m_CalendarHelper.setTime(dDate);
+
         m_date = dDate;
         
-        // pintamos
         renderMonth();
         renderDay();
     }
@@ -117,6 +108,8 @@ public class JCalendarPanel extends javax.swing.JPanel {
         
 //        GregorianCalendar oCalRender = new GregorianCalendar();
 //        oCalRender.setTime(m_CalendarHelper.getTime());
+
+        GregorianCalendar m_CalendarHelper = new GregorianCalendar();
                 
         for (int j = 0; j < 7; j++) {
             m_jDays[j].setEnabled(isEnabled());
@@ -160,6 +153,8 @@ public class JCalendarPanel extends javax.swing.JPanel {
     }
 
     private void renderDay() {
+        
+        GregorianCalendar m_CalendarHelper = new GregorianCalendar();
         
         m_jBtnToday.setEnabled(isEnabled());
         

@@ -11,14 +11,14 @@ import java.util.List;
 
 public class ValidateBuilder {
     
-    public static int IS_NOT_EMPTY = 1;
-    public static int IS_INT = 2;
-    public static int IS_DOUBLE = 3;
-    public static int IS_CURRENCY = 4;
-    public static int IS_DOUBLE_NULL = 5 ;
+    public static final int IS_NOT_EMPTY = 1;
+    public static final int IS_INT = 2;
+    public static final int IS_DOUBLE = 3;
+    public static final int IS_CURRENCY = 4;
+    public static final int IS_DOUBLE_NULL = 5 ;
     
-    private List<String> listMessage ;
-    private Component parent;
+    private final List<String> listMessage ;
+    private final Component parent;
     
     public ValidateBuilder(Component _parent) {
         parent = _parent;

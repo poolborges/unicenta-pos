@@ -178,16 +178,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         dlSystem = (DataLogicSystem) m_App.getBean("com.openbravo.pos.forms.DataLogicSystem");
         dlSales = (DataLogicSales) m_App.getBean("com.openbravo.pos.forms.DataLogicSales");
         dlCustomers = (DataLogicCustomers) m_App.getBean("com.openbravo.pos.customers.DataLogicCustomers");
-        dlReceipts = (DataLogicReceipts) app.getBean("com.openbravo.pos.sales.DataLogicReceipts");
-        
-
-/* uniCenta Feb 2018
- * Changed for 4.3
- * Set up main toolbar area with two rows to add cater for additional scripts 
- * else over-crowding and some dynamic buttons off screen/not visible
- * m_jPanelScripts contains m_jButtonsExt panel for buttons Enabled/Disabled in
- * Resources>Menu.Root
-*/        
+        dlReceipts = (DataLogicReceipts) app.getBean("com.openbravo.pos.sales.DataLogicReceipts"); 
         
 // Set Configuration>General>Tickets toolbar simple : standard : restaurant option
         m_ticketsbag = getJTicketsBag();    
@@ -199,9 +190,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         m_jButtonsExt.add(m_jbtnconfig);   
 
 // Configuration>Peripheral options        
-        if (!m_App.getDeviceScale().existsScale()) {
-            m_jbtnScale.setVisible(false);
-        }
+        m_jbtnScale.setVisible(m_App.getDeviceScale().existsScale());
         jbtnMooring.setVisible(Boolean.valueOf(m_App.getProperties().getProperty("till.marineoption")));
         m_jPanelScripts.setVisible(false);
         m_jButtonsExt.setVisible(false);           
@@ -287,12 +276,9 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         String currentTicket =(String)m_oTicketExt;
         if (currentTicket != null) {
             try {
-                dlReceipts.updateSharedTicket(currentTicket, m_oTicket,m_oTicket.getPickupId());
-//            } catch (BasicException e) {
-//                new MessageInf(e).show(this);
-//            }  
+                dlReceipts.updateSharedTicket(currentTicket, m_oTicket,m_oTicket.getPickupId()); 
             } catch (BasicException ex) {
-                Logger.getLogger(JPanelTicket.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, "Exception on save current ticket: ", ex);
             }                    
         }    
     }
@@ -1726,7 +1712,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                                 MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE, AppLocal.getIntString("message.nosaveticket"), eData);
                                 msg.show(this);
                             } catch (IOException ex) {
-                                Logger.getLogger(JPanelTicket.class.getName()).log(Level.SEVERE, null, ex);
+                                LOGGER.log(Level.SEVERE, null, ex);
                             }
 
                             executeEvent(ticket, ticketext, "ticket.close", 
@@ -2108,7 +2094,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                         jCheckStock.setText(null);
                     }
                 } catch (BasicException ex) {
-                    Logger.getLogger(JPanelTicket.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                 }                    
             } 
         }
@@ -3022,7 +3008,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                     jCheckStock.setText(null);
                 }
             } catch (BasicException ex) {
-                    Logger.getLogger(JPanelTicket.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }        
         }       
        
@@ -3100,7 +3086,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                             JOptionPane.INFORMATION_MESSAGE);
                     }
                 } catch (BasicException ex) {
-                    Logger.getLogger(JPanelTicket.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                 }
             }       
       
@@ -3151,7 +3137,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                     m_oTicket.setCustomer(dlSales.loadCustomerExt
                         (dialog.getSelectedCustomer().getId()));
                 } catch (BasicException ex) {
-                    Logger.getLogger(JPanelTicket.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                 }
             }
         }        
@@ -3318,12 +3304,9 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     public void remoteOrderDisplay(String id, Integer display, boolean primary) {
 
         try {
-            // may use later if/when external order injection
-            // String orderUUID = UUID.randomUUID().toString();
-
             dlSystem.deleteOrder(id);
         } catch (BasicException ex) {
-            Logger.getLogger(JPanelTicket.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
         for (int i = 0; i < m_oTicket.getLinesCount(); i++) {           
@@ -3363,7 +3346,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
 */                
                 
             } catch (BasicException ex) {
-                Logger.getLogger(JPanelTicket.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
     }    

@@ -144,11 +144,11 @@ public class VoucherInfo implements IKeyed {
         this.status = status;
     }
 
-    public static SerializerRead getSerializerRead() {
-        return new SerializerRead() 
+    public static SerializerRead<VoucherInfo> getSerializerRead() {
+        return new SerializerRead<VoucherInfo>() 
         {
             @Override
-        public Object readValues(DataRead dr) throws BasicException {
+        public VoucherInfo readValues(DataRead dr) throws BasicException {
             return new VoucherInfo(dr.getString(1), 
                     dr.getString(2), 
                     dr.getString(3),

@@ -48,9 +48,8 @@ public class SerializerReadClass implements SerializerRead {
         try {
             sr = (SerializableRead) m_clazz.getDeclaredConstructor().newInstance();
             sr.readValues(dr);
-// JG 16 May 12 use multicatch
         } catch (java.lang.InstantiationException | IllegalAccessException | ClassCastException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
-            LOGGER.log(Level.WARNING, "Cannot found readvalues ", ex);
+            LOGGER.log(Level.WARNING, "Exception on casting or read value ", ex);
         }
         
         return sr;

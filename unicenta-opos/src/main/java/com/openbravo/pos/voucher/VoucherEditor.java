@@ -122,7 +122,7 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
             m_jStatus.setText(Formats.STRING.formatValue(attr[4]));
             m_jStatus.setEnabled(false);
             
-                jButtonPrint.setEnabled(false);
+            jButtonPrint.setEnabled(false);
         } catch (BasicException ex) {
             Logger.getLogger(VoucherEditor.class.getName()).log(Level.SEVERE, null, ex);
         }

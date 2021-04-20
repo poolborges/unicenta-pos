@@ -13,17 +13,16 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
 
 /**
  *
- * @author  adrian
+ * @author adrian
  */
 public interface DataRead {
-    
+
     /**
      *
      * @param columnIndex
@@ -65,6 +64,13 @@ public interface DataRead {
     public java.util.Date getTimestamp(int columnIndex) throws BasicException;
 
     //public java.io.InputStream getBinaryStream(int columnIndex) throws DataException;
+    /**
+     *
+     * @param columnIndex
+     * @return
+     * @throws BasicException
+     */
+    public byte[] getBytes(int columnIndex) throws BasicException;
 
     /**
      *
@@ -72,22 +78,12 @@ public interface DataRead {
      * @return
      * @throws BasicException
      */
-        public byte[] getBytes(int columnIndex) throws BasicException;
+    public Object getObject(int columnIndex) throws BasicException;
 
-    /**
-     *
-     * @param columnIndex
-     * @return
-     * @throws BasicException
-     */
-    public Object getObject(int columnIndex) throws BasicException ;
-    
 //    public int getColumnCount() throws DataException;
-
     /**
      *
-     * @return
-     * @throws BasicException
+     * @return @throws BasicException
      */
-        public DataField[] getDataField() throws BasicException;
+    public DataField[] getDataField() throws BasicException;
 }

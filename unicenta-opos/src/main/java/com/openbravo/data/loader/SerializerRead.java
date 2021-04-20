@@ -23,7 +23,7 @@ import com.openbravo.basic.BasicException;
  * @author  adrian
  */
 @FunctionalInterface
-public interface SerializerRead {
+public interface SerializerRead<T> {
 
     /**
      *
@@ -31,5 +31,5 @@ public interface SerializerRead {
      * @return
      * @throws BasicException
      */
-    public Object readValues(DataRead dr) throws BasicException;     
+    public T readValues(DataRead dr) throws BasicException;     
 }

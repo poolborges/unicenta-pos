@@ -601,7 +601,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
 
         getContentPane().add(jPanel4, java.awt.BorderLayout.NORTH);
 
-        jPanel3.setNextFocusableComponent(m_jTabPayment);
+        jPanel3.setName(""); // NOI18N
         jPanel3.setLayout(new java.awt.BorderLayout());
 
         m_jTabPayment.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));

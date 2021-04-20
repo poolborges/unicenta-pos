@@ -22,14 +22,14 @@ import com.openbravo.basic.BasicException;
  *
  * @author JG uniCenta
  */
-public interface DataResultSet extends DataRead {
+public interface DataResultSet<T> extends DataRead {
     
     /**
      *
      * @return
      * @throws BasicException
      */
-    public Object getCurrent() throws BasicException;
+    public T getCurrent() throws BasicException;
 
     /**
      *

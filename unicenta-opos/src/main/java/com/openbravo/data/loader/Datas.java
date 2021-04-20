@@ -17,65 +17,67 @@
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
+import java.awt.image.BufferedImage;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *
  * @author JG uniCenta
  */
-public abstract class Datas {
+public abstract class Datas<T> {
     
     /**
      *
      */
-    public final static Datas INT = new DatasINT();
+    public final static Datas<Integer> INT = new DatasINT();
 
     /**
      *
      */
-    public final static Datas STRING = new DatasSTRING();
+    public final static Datas<String> STRING = new DatasSTRING();
 
     /**
      *
      */
-    public final static Datas DOUBLE = new DatasDOUBLE();
+    public final static Datas<Double> DOUBLE = new DatasDOUBLE();
 
     /**
      *
      */
-    public final static Datas BOOLEAN = new DatasBOOLEAN();
+    public final static Datas<Boolean> BOOLEAN = new DatasBOOLEAN();
 
     /**
      *
      */
-    public final static Datas TIMESTAMP = new DatasTIMESTAMP();
+    public final static Datas<Date> TIMESTAMP = new DatasTIMESTAMP();
 
     /**
      *
      */
-    public final static Datas BYTES = new DatasBYTES();
+    public final static Datas<byte[]> BYTES = new DatasBYTES();
 
     /**
      *
      */
-    public final static Datas IMAGE = new DatasIMAGE();
+    public final static Datas<BufferedImage> IMAGE = new DatasIMAGE();
     //public final static Datas INPUTSTREAM = new DatasINPUTSTREAM();
 
     /**
      *
      */
-        public final static Datas OBJECT = new DatasOBJECT();
+    public final static Datas<Object> OBJECT = new DatasOBJECT();
 
     /**
      *
      */
-    public final static Datas SERIALIZABLE = new DatasSERIALIZABLE();
+    public final static Datas<Object> SERIALIZABLE = new DatasSERIALIZABLE();
 
     /**
      *
      */
-    public final static Datas NULL = new DatasNULL();
+    public final static Datas<Object> NULL = new DatasNULL();
     
     private static DateFormat tsf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); 
     
@@ -90,7 +92,7 @@ public abstract class Datas {
      * @return
      * @throws BasicException
      */
-    public abstract Object getValue(DataRead dr, int i) throws BasicException;
+    public abstract T getValue(DataRead dr, int i) throws BasicException;
 
     /**
      *
@@ -99,7 +101,7 @@ public abstract class Datas {
      * @param value
      * @throws BasicException
      */
-    public abstract void setValue(DataWrite dw, int i, Object value) throws BasicException;
+    public abstract void setValue(DataWrite dw, int i, T value) throws BasicException;
 
     /**
      *
@@ -112,7 +114,7 @@ public abstract class Datas {
      * @param value
      * @return
      */
-    protected abstract String toStringAbstract(Object value);
+    protected abstract String toStringAbstract(T value);
 
     /**
      *
@@ -120,14 +122,14 @@ public abstract class Datas {
      * @param o2
      * @return
      */
-    protected abstract int compareAbstract(Object o1, Object o2);
+    protected abstract int compareAbstract(T o1, T o2);
     
     /**
      *
      * @param value
      * @return
      */
-    public String toString(Object value) {
+    public String toString(T value) {
         if (value == null) {
             return "null";
         } else {
@@ -141,7 +143,7 @@ public abstract class Datas {
      * @param o2
      * @return
      */
-    public int compare(Object o1, Object o2) {
+    public int compare(T o1, T o2) {
         if (o1 == null) {
             if (o2 == null) {
                 return 0;
@@ -155,127 +157,127 @@ public abstract class Datas {
         }
     }
     
-    private static final class DatasINT extends Datas {
-        public Object getValue(DataRead dr, int i) throws BasicException {
+    public static final class DatasINT extends Datas<Integer> {
+        public Integer getValue(DataRead dr, int i) throws BasicException {
             return dr.getInt(i);
         }
-        public void setValue(DataWrite dw, int i, Object value) throws BasicException {
-            dw.setInt(i, (Integer) value);
+        public void setValue(DataWrite dw, int i, Integer value) throws BasicException {
+            dw.setInt(i, value);
         }
         public Class getClassValue() {
             return java.lang.Integer.class;
         }
-        protected String toStringAbstract(Object value) {
-            return ((Integer) value).toString();
+        protected String toStringAbstract(Integer value) {
+            return (value).toString();
         }
-        protected int compareAbstract(Object o1, Object o2) {
-            return ((Integer) o1).compareTo((Integer) o2);
+        protected int compareAbstract(Integer o1, Integer o2) {
+            return (o1).compareTo(o2);
         }        
     }
-    private static final class DatasSTRING extends Datas {
-        public Object getValue(DataRead dr, int i) throws BasicException {
+    private static final class DatasSTRING extends Datas<String> {
+        public String getValue(DataRead dr, int i) throws BasicException {
             return dr.getString(i);
         }
-        public void setValue(DataWrite dw, int i, Object value) throws BasicException {
-            dw.setString(i, (String) value);
+        public void setValue(DataWrite dw, int i, String value) throws BasicException {
+            dw.setString(i, value);
         }
         public Class getClassValue() {
             return java.lang.String.class;
         }
-        protected String toStringAbstract(Object value) {
+        protected String toStringAbstract(String value) {
             return "\'" + DataWriteUtils.getEscaped((String) value) + "\'";
         }
-        protected int compareAbstract(Object o1, Object o2) {
-            return ((String) o1).compareTo((String) o2);
+        protected int compareAbstract(String o1, String o2) {
+            return (o1).compareTo(o2);
         }           
     }
-    private static final class DatasDOUBLE extends Datas {
-        public Object getValue(DataRead dr, int i) throws BasicException {
+    private static final class DatasDOUBLE extends Datas<Double> {
+        public Double getValue(DataRead dr, int i) throws BasicException {
             return dr.getDouble(i);
         }
-        public void setValue(DataWrite dw, int i, Object value) throws BasicException {
-            dw.setDouble(i, (Double) value);
+        public void setValue(DataWrite dw, int i, Double value) throws BasicException {
+            dw.setDouble(i, value);
         }
         public Class getClassValue() {
             return java.lang.Double.class;
         }
-        protected String toStringAbstract(Object value) {
-            return ((Double) value).toString();
+        protected String toStringAbstract(Double value) {
+            return (value).toString();
         }
-        protected int compareAbstract(Object o1, Object o2) {
-            return ((Double) o1).compareTo((Double) o2);
+        protected int compareAbstract(Double o1, Double o2) {
+            return (o1).compareTo(o2);
         }   
     }
-    private static final class DatasBOOLEAN extends Datas {
-        public Object getValue(DataRead dr, int i) throws BasicException {
+    private static final class DatasBOOLEAN extends Datas<Boolean> {
+        public Boolean getValue(DataRead dr, int i) throws BasicException {
             return dr.getBoolean(i);
         }
-        public void setValue(DataWrite dw, int i, Object value) throws BasicException {
-            dw.setBoolean(i, (Boolean) value);
+        public void setValue(DataWrite dw, int i, Boolean value) throws BasicException {
+            dw.setBoolean(i, value);
         }
         public Class getClassValue() {
             return java.lang.Boolean.class;
         }
-        protected String toStringAbstract(Object value) {
-            return ((Boolean) value).toString();
+        protected String toStringAbstract(Boolean value) {
+            return (value).toString();
         }
-        protected int compareAbstract(Object o1, Object o2) {
-            return ((Boolean) o1).compareTo((Boolean) o2);
+        protected int compareAbstract(Boolean o1, Boolean o2) {
+            return (o1).compareTo(o2);
         }   
     }
-    private static final class DatasTIMESTAMP extends Datas {
-        public Object getValue(DataRead dr, int i) throws BasicException {
+    private static final class DatasTIMESTAMP extends Datas<Date> {
+        public java.util.Date getValue(DataRead dr, int i) throws BasicException {
             return dr.getTimestamp(i);
         }
-         public void setValue(DataWrite dw, int i, Object value) throws BasicException {
-            dw.setTimestamp(i, (java.util.Date) value);
+         public void setValue(DataWrite dw, int i, Date value) throws BasicException {
+            dw.setTimestamp(i, value);
         }
         public Class getClassValue() {
             return java.util.Date.class;
         }
-        protected String toStringAbstract(Object value) {
+        protected String toStringAbstract(Date value) {
             return tsf.format(value);
         }
-        protected int compareAbstract(Object o1, Object o2) {
-            return ((java.util.Date) o1).compareTo((java.util.Date) o2);
+        protected int compareAbstract(Date o1, Date o2) {
+            return (o1).compareTo(o2);
         }   
     }
-    private static final class DatasBYTES extends Datas {
-        public Object getValue(DataRead dr, int i) throws BasicException {
+    private static final class DatasBYTES extends Datas<byte[]> {
+        public byte[] getValue(DataRead dr, int i) throws BasicException {
             return dr.getBytes(i);
         }
-        public void setValue(DataWrite dw, int i, Object value) throws BasicException {
-            dw.setBytes(i, (byte[]) value);
+        public void setValue(DataWrite dw, int i, byte[] value) throws BasicException {
+            dw.setBytes(i, value);
         }
         public Class getClassValue() {
             return byte[].class;
         }
-        protected String toStringAbstract(Object value) {
-            return "0x" + ImageUtils.bytes2hex((byte[]) value);
+        protected String toStringAbstract(byte[] value) {
+            return "0x" + ImageUtils.bytes2hex(value);
         }
-        protected int compareAbstract(Object o1, Object o2) {
+        protected int compareAbstract(byte[] o1, byte[] o2) {
             throw new UnsupportedOperationException();
         }   
     }    
-    private static final class DatasIMAGE extends Datas {
+    private static final class DatasIMAGE extends Datas<BufferedImage> {
         @Override
-        public Object getValue(DataRead dr, int i) throws BasicException {
+        public BufferedImage getValue(DataRead dr, int i) throws BasicException {
             return ImageUtils.readImage(dr.getBytes(i));
         }
         @Override
-        public void setValue(DataWrite dw, int i, Object value) throws BasicException {
-            dw.setBytes(i, ImageUtils.writeImage((java.awt.image.BufferedImage) value));
+        public void setValue(DataWrite dw, int i, BufferedImage value) throws BasicException {
+            dw.setBytes(i, ImageUtils.writeImage( value));
         }
         @Override
         public Class getClassValue() {
             return java.awt.image.BufferedImage.class;
         }
         @Override
-        protected String toStringAbstract(Object value) {
-            return "0x" + ImageUtils.bytes2hex(ImageUtils.writeImage((java.awt.image.BufferedImage) value));
+        protected String toStringAbstract(BufferedImage value) {
+            return "0x" + ImageUtils.bytes2hex(ImageUtils.writeImage(value));
         }
         @Override
-        protected int compareAbstract(Object o1, Object o2) {
+        protected int compareAbstract(BufferedImage o1, BufferedImage o2) {
             throw new UnsupportedOperationException();
         }   
     }  
@@ -287,7 +289,7 @@ public abstract class Datas {
 //        public void setValue(DataWrite dw, int i, Object value) throws DataException {
 //        }
 //    }  
-    private static final class DatasOBJECT extends Datas {
+    private static final class DatasOBJECT extends Datas<Object> {
         public Object getValue(DataRead dr, int i) throws BasicException {
             return dr.getObject(i);
         }
@@ -305,7 +307,8 @@ public abstract class Datas {
         }   
     }
     
-    private static final class DatasSERIALIZABLE extends Datas {
+    private static final class DatasSERIALIZABLE extends Datas<Object> {
+        
         public Object getValue(DataRead dr, int i) throws BasicException {
             return ImageUtils.readSerializable(dr.getBytes(i));
         }
@@ -323,7 +326,8 @@ public abstract class Datas {
         }   
     }       
     
-    private static final class DatasNULL extends Datas {
+    private static final class DatasNULL extends Datas<Object> {
+        
         public Object getValue(DataRead dr, int i) throws BasicException {
             return null;
         }

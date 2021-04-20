@@ -22,7 +22,7 @@ import com.openbravo.basic.BasicException;
  *
  * @author JG uniCenta
  */
-public class SerializerReadInteger implements SerializerRead {
+public class SerializerReadInteger implements SerializerRead<Integer> {
     
     /**
      *
@@ -39,7 +39,7 @@ public class SerializerReadInteger implements SerializerRead {
      * @return
      * @throws BasicException
      */
-    public Object readValues(DataRead dr) throws BasicException {
+    public Integer readValues(DataRead dr) throws BasicException {
         return Datas.INT.getValue(dr,1);
     }    
 }

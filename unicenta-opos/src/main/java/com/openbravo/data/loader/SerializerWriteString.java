@@ -43,12 +43,13 @@ public class SerializerWriteString implements SerializerWrite<Object> {
      */
     public void writeValues(DataWrite dp, Object obj) throws BasicException {
         if (obj instanceof Object[]){
-            for (int i = 0 ; i < ((Object[]) obj).length ; i++) {
-                Datas.STRING.setValue(dp, i+1, ((Object[]) obj)[i]);
+            Object[] objectos = (Object[]) obj;
+            for (int i = 0 ; i < objectos.length ; i++) {
+                Datas.STRING.setValue(dp, i+1, (String)objectos[i]);
             }
         }
         else {
-            Datas.STRING.setValue(dp, 1, obj);
+            Datas.STRING.setValue(dp, 1, (String)obj);
         }
 
     }

@@ -22,14 +22,14 @@ import com.openbravo.basic.BasicException;
  *
  * @author JG uniCenta
  */
-public interface SentenceFind {
+public interface SentenceFind<T> {
     
     /**
      *
      * @return
      * @throws BasicException
      */
-    public Object find() throws BasicException;
+    public T find() throws BasicException;
 
     /**
      *
@@ -37,7 +37,7 @@ public interface SentenceFind {
      * @return
      * @throws BasicException
      */
-    public Object find(Object params) throws BasicException;
+    public T find(Object params) throws BasicException;
 
     /**
      *
@@ -45,5 +45,5 @@ public interface SentenceFind {
      * @return
      * @throws BasicException
      */
-    public Object find(Object... params) throws BasicException;
+    public T find(Object... params) throws BasicException;
 }

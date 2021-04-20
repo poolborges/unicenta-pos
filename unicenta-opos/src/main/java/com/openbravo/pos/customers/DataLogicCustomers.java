@@ -338,13 +338,7 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
         return new PreparedSentence(s,
                 "SELECT SUBSTRING(MAX(VOUCHER_NUMBER),10,3) AS LAST_NUMBER FROM vouchers "
                 + "WHERE SUBSTRING(VOUCHER_NUMBER,1,8) = ?",
-                SerializerWriteString.INSTANCE,
-                new SerializerRead() {
-            @Override
-            public Object readValues(DataRead dr) throws BasicException {
-                return dr.getString(1);
-            }
-        });
+                SerializerWriteString.INSTANCE, (SerializerRead<String>) (DataRead dr) -> dr.getString(1));
     }
 
     public final VoucherInfo getVoucherInfo(String id) throws BasicException {
@@ -356,7 +350,7 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
                 + "WHERE STATUS='A' AND vouchers.ID=?" //"WHERE STATUS='A' "                         
                 ,
                  SerializerWriteString.INSTANCE,
-                VoucherInfo.getSerializerRead()).find(id);
+                VoucherInfo.getSerializerRead()).<VoucherInfo>find(id);
     }
 
     public final VoucherInfo getVoucherInfoAll(String id) throws BasicException {
@@ -367,7 +361,7 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
                 + "JOIN customers ON customers.id = vouchers.CUSTOMER  "
                 + "WHERE vouchers.ID=?",
                 SerializerWriteString.INSTANCE,
-                VoucherInfo.getSerializerRead()).find(id);
+                VoucherInfo.getSerializerRead()).<VoucherInfo>find(id);
     }
 
 }
