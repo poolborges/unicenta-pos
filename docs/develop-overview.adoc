@@ -1,0 +1,19 @@
+= Development Overview
+
+
+
+== Quality assurance
+
+Tools
+
+* PMD
+* SpotBug
+* Checkstyle
+* JaCoCo
+
+.Java Code Annotations
+----
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+----

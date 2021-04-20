@@ -135,5 +135,46 @@ Modularity of code base (impl should provide default implementation)
 
 .Run MySQL database for Developer Env 
 ----
- docker run --name unicenta -p 3306:3306 -d -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=unicenta -e MYSQL_USER=unicenta -e MYSQL_PASSWORD=unicenta mysql:5.6
+docker run --name unicenta -p 3306:3306 -d -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=unicenta -e MYSQL_USER=unicenta -e MYSQL_PASSWORD=unicenta mysql:5.6
 ----
+
+== GUI 
+
+Currently GUI is Swing based on __Netbeans GUI Designer__ which use XML to create UI and generate Swing Java code.
+
+GUI Framework 
+
+* Swing
+* Eclipse SWT 
+* JavaFX 
+* TornadoFX - Build on top of JavaFX
+* Jetbrains Compose for Desktop
+
+
+== Tools 
+
+* Do Test Coverage with JaCoCo
+* Do Static Source Code Analysis with PMD
+* Do Bytecode Analysis with SpotBugs and Find Security Bugs
+* Do project has strict code style guidelines with Checkstyle
+** maven-checkstyle-plugin 
+* Do Scan your Dependencies for Vulnerabilities with OWASP Dependency Check 
+** Dependency-Check is a Software Composition Analysis (SCA) tool suite 
+** https://owasp.org/www-project-dependency-check/
+
+
+----
+mvn org.owasp:dependency-check-maven:check -Dformat=CSV
+mvn org.owasp:dependency-check-maven:aggregate -Dformat=CSV
+----
+
+
+----
+mvn clean install jacoco:prepare-agent jacoco:report
+mvn clean jacoco:prepare-agent install jacoco:report
+----
+
+== GUI Test 
+
+
+* FEST (Deprecate) use AssertJ (Swing Module)

@@ -31,10 +31,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        
+        <kotlin.version>1.3.50</kotlin.version>
+        <liquibase.version>4.1.1</liquibase.version>
+
         <jacoco.plugin.version>0.8.5</jacoco.plugin.version>
-        <dependency.check.version>6.0.2</dependency.check.version>
+        <jacoco.plugin.reportPath>${project.build.directory}/jacoco.exec</jacoco.plugin.reportPath>
+        <dependency.check.version>6.1.5</dependency.check.version>
         <asciidoclet.version>1.5.6</asciidoclet.version>
         <project.github-url>http://Kriolos.github.io/krospos</project.github-url>
+        
+        <spotbug.version>4.2.0</spotbug.version>
+        
+        <javadoc.excluded.packages />
+        <checkstyle.excludes />
     </properties>
     
     <organization>
@@ -85,6 +95,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>unicenta-installer</module>
     </modules>
     
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.gitub.kriolsolutions.krospos</groupId>
+                <artifactId>kriolos-pos</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    
     <build>
         <pluginManagement>
             <plugins>
@@ -118,6 +138,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>com.github.spotbugs</groupId>
+                    <artifactId>spotbugs-maven-plugin</artifactId>
+                    <version>${spotbug.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <version>${dependency.check.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>3.1.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version>
+                    <configuration>
+                        <compilerArgs>
+                            <arg>-Xlint:all</arg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+
             </plugins>
         </pluginManagement>
         
@@ -148,172 +199,88 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     </execution>
                 </executions>
             </plugin>
+            
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-site</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report-aggregate</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     
-    <profiles>
-        <profile>
-            <id>qa</id>
-            <build>
-                <plugins>
-                    
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>${jacoco.plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>jacoco-initialize</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                                <configuration>
-                                    <destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile>
-                                    <propertyName>surefireArgLine</propertyName>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>jacoco-site</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>report</goal>
-                                </goals>
-                                <configuration>
-                                    <dataFile>${project.build.directory}/coverage-reports/jacoco.exec</dataFile>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>default-report</id>
-                                <goals>
-                                </goals>
-                                <configuration>
-                                    <dataFile>${project.build.directory}/jacoco.exec</dataFile>
-                                    <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
-                                </configuration>
-                            </execution>
-                            <!-- Threshold -->
-                            <execution>
-                                <id>coverage-check</id>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <rule>
-                                            <element>CLASS</element>
-                                            <excludes>
-                                                <exclude>com.example.demo.Application</exclude>
-                                            </excludes>
-                                            <limits>
-                                                <limit>
-                                                    <counter>LINE</counter>
-                                                    <value>COVEREDRATIO</value>
-                                                    <minimum>80%</minimum>
-                                                </limit>
-                                            </limits>
-                                        </rule>
-                                    </rules>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.owasp</groupId>
-                        <artifactId>dependency-check-maven</artifactId>
-                        <version>${dependency.check.version}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>license</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.mycila</groupId>
-                        <artifactId>license-maven-plugin</artifactId>
-                        <version>4.0.rc2</version>
-                        <configuration>
-                            <header>com/mycila/maven/plugin/license/templates/GPL-3.txt</header>
-                            <properties>
-                                <inceptionYear>${project.inceptionYear}</inceptionYear>
-                            </properties>
-                            <includes>
-                                <include>src/**/*.java</include>
-                                <include>src/**/*.xml</include>
-                            </includes>
-                            <excludes>
-                                <exclude>**/logback.xml</exclude>
-                                <exclude>**/logback-test.xml</exclude>
-                                <exclude>**/src/test/resources/**</exclude>
-                            </excludes>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>check-license</id>
-                                <phase>initialize</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>doc</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.2.0</version>
-                        <configuration>
-                            <source>${maven.compiler.source}</source>
-                            <doclet>org.asciidoctor.Asciidoclet</doclet>
-                            <docletArtifact>
-                                <groupId>org.asciidoctor</groupId>
-                                <artifactId>asciidoclet</artifactId>
-                                <!--suppress UnresolvedMavenProperty -->
-                                <version>${asciidoclet.version}</version>
-                            </docletArtifact>
-                            <overview>src/main/adoc/overview.adoc</overview>
-                            <additionalparam>
-                                --base-dir ${project.basedir}
-                                --attribute "name=${project.name}"
-                                --attribute "version=${project.version}"
-                                --attribute "title-link=${project.github-url}/[${project.version}]"
-                            </additionalparam>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-    
-    
     <reporting>
+        
         <plugins>
+            <!-- Generate Reports Information about the project. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>3.1.1</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>index</report>              
+                            <report>dependencies</report>
+                            <report>team</report>
+                            <report>mailing-lists</report>
+                            <report>ci-management</report>
+                            <report>issue-management</report>
+                            <report>licenses</report>
+                            <report>scm</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            
+            <!-- Produce a cross-reference of the project's source. (Self Aggregating). -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>3.0.0</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            
+            <!-- Code coverage -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <reportSets>
                     <reportSet>
                         <reports>
-                            <!-- select: report, aggregate -->
-                            <report>report</report>
+                            <!-- report, aggregate(for multi-module project) -->
+                            <report>aggregate</report>
                         </reports>
                     </reportSet>
                 </reportSets>
             </plugin>
+
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
@@ -321,10 +288,149 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <reportSets>
                     <reportSet>
                         <reports>
+                            <!-- report, aggregate(for multi-module project) -->
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            
+            <!-- Generate the Checkstyle report. (Self Aggregating) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <skip>false</skip>
+                    <!--
+                   <configLocation>codestyle/checkstyle.xml</configLocation>
+                    -->
+                    <excludes>${checkstyle.excludes}</excludes>
+                    <headerFile />
+                    <!--
+                   <configLocation>codestyle/checkstyle.xml</configLocation>
+                    -->
+                    <failOnErrors>false</failOnErrors>
+                    <failOnViolation>false</failOnViolation>
+                    <consoleOutput>true</consoleOutput>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>checkstyle-aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            
+            <!-- PMD and CPD Reports (Aggregate Parameter). -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.14.0</version>
+                <configuration>
+                    <skip>false</skip>
+                    <aggregate>true</aggregate>
+                    <failurePriority>5</failurePriority>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>pmd</report>
+                            <report>cpd</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            
+            <!-- Generate test results in HTML (Aggregate Parameter) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <configuration>
+                    <aggregate>true</aggregate>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
                             <report>report</report>
                         </reports>
                     </reportSet>
                 </reportSets>
+            </plugin>
+            
+            <!-- Generate Javadoc. (Self Aggregating)-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    
+                    <charset>UTF-8</charset>
+                    <encoding>UTF-8</encoding>
+                    <docencoding>UTF-8</docencoding>
+                    <breakiterator>true</breakiterator>
+                    <version>true</version>
+                    <keywords>true</keywords>
+                    <excludePackageNames>${javadoc.excluded.packages}</excludePackageNames>
+                    
+                    <source>${maven.compiler.source}</source>
+                    <doclet>org.asciidoctor.Asciidoclet</doclet>
+                    <docletArtifact>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoclet</artifactId>
+                        <!--suppress UnresolvedMavenProperty -->
+                        <version>${asciidoclet.version}</version>
+                    </docletArtifact>
+                    <overview>src/main/adoc/overview.adoc</overview>
+                    <additionalparam>
+                        --base-dir ${project.basedir}
+                        --attribute "name=${project.name}"
+                        --attribute "version=${project.version}"
+                        --attribute "title-link=${project.github-url}/[${project.version}]"
+                    </additionalparam>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <id>aggregate</id>
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>4.0.rc2</version>
+                <configuration>
+                    <header>com/mycila/maven/plugin/license/templates/GPL-3.txt</header>
+                    <properties>
+                        <inceptionYear>${project.inceptionYear}</inceptionYear>
+                    </properties>
+                    <includes>
+                        <include>src/**/*.java</include>
+                        <include>src/**/*.xml</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/logback.xml</exclude>
+                        <exclude>**/logback-test.xml</exclude>
+                        <exclude>**/src/test/resources/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            
+            
+                    
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <configuration>
+                    <findbugsXmlOutput>true</findbugsXmlOutput>
+                    <failOnError>false</failOnError>
+                </configuration>
             </plugin>
         </plugins>
     </reporting>

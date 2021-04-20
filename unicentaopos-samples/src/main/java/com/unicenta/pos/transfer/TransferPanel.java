@@ -21,12 +21,12 @@ package com.unicenta.pos.transfer;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.pos.forms.AppConfig;
-import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppProperties;
 import com.openbravo.pos.forms.JRootFrame;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
@@ -48,9 +48,11 @@ public class TransferPanel extends javax.swing.JFrame {
                 .class.getResourceAsStream("/com/openbravo/images/app_logo_48x48.png")));
         } catch (IOException e) {
         }   
+        /*
         setTitle(AppLocal.APP_NAME + " - " 
                 + AppLocal.APP_VERSION + " - " 
                 + AppLocal.getIntString("Menu.Configuration"));
+        */
         
         addWindowListener(new MyFrameListener()); 
         
@@ -99,7 +101,7 @@ public class TransferPanel extends javax.swing.JFrame {
             @Override
             public void run() {
                 
-                AppConfig config = new AppConfig(args);
+                AppConfig config = new AppConfig(new File(args[0]));
                 config.load();    
 
                 new TransferPanel(config).setVisible(true);                

@@ -1,0 +1,163 @@
+= Database Schema
+
+
+
+== Physical Schema 
+
+This section provide information about POS's database schema
+
+
+.List of tables
+[%header]
+|====
+|Table                      |Description
+
+|application                |Name and version number of the POS
+|attribute                  |Product attribute (eg: size, color, etc.)
+|attributeinstance          |
+|attributeset               |Attribute set (To define a product attributes)
+|attributesetinstance       |
+|attributeuse               |
+|breaks                     |List of default People Sessions 
+|categories                 |
+|closedcash                 |
+|csvimport                  |
+|customers                  |
+|draweropened               |Log of all cash register opening
+|floors                     |physical/virtual areas of the establishment 
+|lineremoved                |List of deleted ticketlines from the sales screen 
+|leaves                     |List of entrances/exits of people 
+|locations                  |Warehouses or Physical locations
+|moorers                    |
+|orders                     |Dynamic list of incomplete orders sent to remote printer 
+|payments                   |List of ALL payments received 
+|people                     |System User
+|pickup_number              |Incremental order number applied to boleto
+|places                     |Positioning of the physical object on the floor, as well as the current state 
+|products                   |
+|products_bundle            |
+|products_cat               |
+|products_com               |
+|receipts                   |Detail of the settlement of the tickets 
+|reservation_customers      |
+|revervations               |
+|resources                  |
+|roles                      |
+|sharedtickets              |
+|shift_breaks               |Breaks that occur in shifts 
+|shifts                     |Shift
+|stockcurrent               |
+|stockdiary                 |
+|stocklevel                 |
+|suppliers                  |
+|taxcategories              |
+|taxcustcategories          |
+|taxes                      |
+|taxeslines                 |
+|taxsuppcategories          |
+|thirdparties               |
+|ticketlines                |
+|tickets                    |
+|ticketsnum                 |
+|ticketsnum_payment         |
+|ticketsnum_refund          |
+|uom                        |Unity Of Measure
+|vouches                    |Vouches, Coupons
+|====
+
+=== Tables details
+
+
+.categories Table
+[%header]
+|====
+|Column |Type   |Description
+
+|id             |varchar(255)   |Indentify
+|name           |varchar(255)   |Name 
+|parentid       |varchar(255)   |Parent
+|image          |MEDIUMBLOB()
+|texttip        |varchar(255)   |
+|catshowname    |SMALLINT       |
+|catorder       |varchar(255)   |
+|====
+
+
+Cash Register (Drawer)
+
+* closedcash
+* draweropened
+
+
+Master Data 
+
+* Customers
+* Product 
+** (products, products_cat, products_bundle, categories) 
+** tax, taxline, taxsuppcategories, taxcustcategories
+** attribute, attributeinstane, attributeset, attributesetinstane, attributeuse, attributevalue
+* Supplier
+* People (people, roles
+* Misc (csvimport)
+* System (application, resources, 
+
+RH
+
+* Work (leave, shift, shift_breaks, breaks)
+
+
+Order
+
+* 
+
+POS
+
+* Ticket (sharedtickets, lineremoved) 
+* Receipt
+* Reservation (reservation, reservation_customers)
+
+
+Payment
+
+Wareshouse (Inventory, Storage of products)
+
+* Stock (stockcurrent, stocklevel, stockdiary 
+
+
+Wareshouse
+
+* floors
+* locations
+
+Space/Shop/Store/Restaurant
+
+* Table 
+
+Delivery
+
+* pickup_number
+
+Maritme
+
+* Moorers (mooers, vessel
+
+
+
+== Database Dataypes references
+
+
+.Datatype
+|====
+|Name           |Max size
+|MEDIUMBLOB     |16,777,215 (224 – 1) bytes 
+|LONGVARBINARY = 16777215 bits
+|====
+
+Links
+
+* https://mariadb.com/kb/en/silent-column-changes/
+* https://wiki.ispirer.com/sqlways/mysql/data-types/mediumblob
+* https://www.cmi.ac.in/~madhavan/courses/databases10/mysql-5.0-reference-manual/data-types.html
+* https://federico-razzoli.com/text-and-blob-good-practices
+* http://www.h2database.com/html/datatypes.html
+

@@ -23,9 +23,8 @@
     
     <dependencies>
         <dependency>
-            <groupId>com.unicenta</groupId>  
-            <artifactId>unicentaopos</artifactId>  
-            <version>4.5</version> 
+            <groupId>io.gitub.kriolsolutions.krospos</groupId>
+            <artifactId>kriolos-pos</artifactId>
         </dependency>
     </dependencies>
     
