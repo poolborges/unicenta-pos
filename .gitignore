@@ -1,7 +1,7 @@
 /target/
 /nbactions.xml
 /nb-configuration.xml
-/unicentaopos.iml
+/**/*.iml
 /.settings/
 /.idea/
 *.prefs
