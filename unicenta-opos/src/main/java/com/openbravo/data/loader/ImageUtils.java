@@ -81,25 +81,16 @@ public class ImageUtils {
 
     /**
      *
-     * @param filePath
-     * @return
-     */
-    public static BufferedImage readImageFromResource(String filePath) {
-        return readImage(getBytesFromResource(filePath));
-    }
-
-    /**
-     *
      * @param urlString
      * @return
      */
     public static BufferedImage readImage(String urlString) {
         //TODO improve null checking Objects.requireNonNull(urlString, "urlString should not be null");
-        BufferedImage image = generateImage128x128();;
+        BufferedImage image = generateImage();;
         try {
             image = readImage(new URL(urlString));
         } catch (MalformedURLException ex) {
-            LOGGER.log(Level.SEVERE, "readImage", ex);
+            LOGGER.log(Level.SEVERE, "ReadImage from string url: "+urlString, ex);
         }
         return image;
     }
@@ -111,7 +102,7 @@ public class ImageUtils {
      */
     public static BufferedImage readImage(URL url) {
         //TODO improve null checking Objects.requireNonNull(url, "url should not be null");
-        BufferedImage image = generateImage128x128();
+        BufferedImage image = generateImage();
         if (url != null) {
             try {
                 URLConnection urlConnection = url.openConnection();
@@ -119,7 +110,7 @@ public class ImageUtils {
                     image = readImage(readStream(in));
                 }
             } catch (IOException ex) {
-                LOGGER.log(Level.SEVERE, "readImage", ex);
+                LOGGER.log(Level.SEVERE, "ReadImage from url: "+url, ex);
             }
         }
         return image;
@@ -132,12 +123,12 @@ public class ImageUtils {
      */
     public static BufferedImage readImage(byte[] imageByteArray) {
         //TODO improve null checking Objects.requireNonNull(imageByteArray, "imageByteArray should not be null");
-        BufferedImage image = generateImage128x128();
+        BufferedImage image = generateImage();
         if (imageByteArray != null) {
             try (ByteArrayInputStream input = new ByteArrayInputStream(imageByteArray)) {
                 image = ImageIO.read(input);
             } catch (IOException ex) {
-                LOGGER.log(Level.SEVERE, "readImage", ex);
+                LOGGER.log(Level.SEVERE, "ReadImage from byte array", ex);
             }
         }
         return image;
@@ -158,7 +149,7 @@ public class ImageUtils {
                 byteOutputStream.close();
                 imageByte = byteOutputStream.toByteArray();
             } catch (IOException ex) {
-                LOGGER.log(Level.SEVERE, "writeImage", ex);
+                LOGGER.log(Level.SEVERE, "Write Image to byte array", ex);
             }
         }
         return imageByte;
@@ -248,7 +239,7 @@ public class ImageUtils {
         return new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB);
     }
 
-    public static BufferedImage generateImage128x128() {
-        return generateImage(128, 128);
+    private static BufferedImage generateImage() {
+        return null; //generateImage(1, 1);
     }
 }
