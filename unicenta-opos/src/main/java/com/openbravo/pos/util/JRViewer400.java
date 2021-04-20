@@ -55,15 +55,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.MessageFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -75,35 +67,20 @@ import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
-import net.sf.jasperreports.engine.DefaultJasperReportsContext;
-import net.sf.jasperreports.engine.JRConstants;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRPrintAnchorIndex;
-import net.sf.jasperreports.engine.JRPrintElement;
-import net.sf.jasperreports.engine.JRPrintFrame;
-import net.sf.jasperreports.engine.JRPrintHyperlink;
-import net.sf.jasperreports.engine.JRPrintImage;
-import net.sf.jasperreports.engine.JRPrintImageAreaHyperlink;
-import net.sf.jasperreports.engine.JRPrintPage;
-import net.sf.jasperreports.engine.JRPropertiesUtil;
-import net.sf.jasperreports.engine.JRRuntimeException;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperPrintManager;
-import net.sf.jasperreports.engine.JasperReportsContext;
-import net.sf.jasperreports.engine.PrintPageFormat;
-import net.sf.jasperreports.engine.PrintPart;
-import net.sf.jasperreports.engine.PrintParts;
+import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.export.JRGraphics2DExporter;
 import net.sf.jasperreports.engine.type.HyperlinkTypeEnum;
 import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.engine.util.LocalJasperReportsContext;
-import net.sf.jasperreports.engine.util.SimpleFileResolver;
 import net.sf.jasperreports.engine.xml.JRPrintXmlLoader;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleGraphics2DExporterOutput;
 import net.sf.jasperreports.export.SimpleGraphics2DReportConfiguration;
 import net.sf.jasperreports.renderers.AreaHyperlinksRenderable;
 import net.sf.jasperreports.renderers.Renderable;
+import net.sf.jasperreports.repo.FileRepositoryPersistenceServiceFactory;
+import net.sf.jasperreports.repo.FileRepositoryService;
+import net.sf.jasperreports.repo.PersistenceServiceFactory;
+import net.sf.jasperreports.repo.RepositoryService;
 import net.sf.jasperreports.view.JRHyperlinkListener;
 import net.sf.jasperreports.view.JRSaveContributor;
 import net.sf.jasperreports.view.SaveContributorUtils;
@@ -179,8 +156,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
 	protected float realZoom;
 
 	private DecimalFormat zoomDecimalFormat;
-	protected JasperReportsContext jasperReportsContext;
-	protected LocalJasperReportsContext localJasperReportsContext;
+	protected SimpleJasperReportsContext jasperReportsContext;
 	private ResourceBundle resourceBundle;
 
 	private int downX;
@@ -218,7 +194,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
 	protected JRSaveContributor lastSaveContributor;
 
     /**
-	 * @see #JRViewer(JasperReportsContext, String, boolean, Locale, ResourceBundle)
+	 * @see #JRViewer400(JasperReportsContext, String, boolean, Locale, ResourceBundle)
      */
 	public JRViewer400(String fileName, boolean isXML) throws JRException
 	{
@@ -227,7 +203,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
 
 
 	/**
-	 * @see #JRViewer(JasperReportsContext, InputStream, boolean, Locale, ResourceBundle)
+	 * @see #JRViewer400(JasperReportsContext, InputStream, boolean, Locale, ResourceBundle)
 	 */
 	public JRViewer400(InputStream is, boolean isXML) throws JRException
 	{
@@ -236,7 +212,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
 
 
 	/**
-	 * @see #JRViewer(JasperReportsContext, JasperPrint, Locale, ResourceBundle)
+	 * @see #JRViewer400(JasperReportsContext, JasperPrint, Locale, ResourceBundle)
 	 */
 	public JRViewer400(JasperPrint jrPrint)
 	{
@@ -245,7 +221,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
 
 
 	/**
-	 * @see #JRViewer(JasperReportsContext, String, boolean, Locale, ResourceBundle)
+	 * @see #JRViewer400(JasperReportsContext, String, boolean, Locale, ResourceBundle)
 	 */
 	public JRViewer400(String fileName, boolean isXML, Locale locale) throws JRException
 	{
@@ -254,7 +230,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
 
 
 	/**
-	 * @see #JRViewer(JasperReportsContext, InputStream, boolean, Locale, ResourceBundle)
+	 * @see #JRViewer400(JasperReportsContext, InputStream, boolean, Locale, ResourceBundle)
 	 */
 	public JRViewer400(InputStream is, boolean isXML, Locale locale) throws JRException
 	{
@@ -272,7 +248,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
 
 
 	/**
-	 * @see #JRViewer(JasperReportsContext, String, boolean, Locale, ResourceBundle)
+	 * @see #JRViewer400(JasperReportsContext, String, boolean, Locale, ResourceBundle)
 	 */
 	public JRViewer400(String fileName, boolean isXML, Locale locale, ResourceBundle resBundle) throws JRException
 	{
@@ -287,7 +263,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
 
 
 	/**
-	 * @see #JRViewer(JasperReportsContext, InputStream, boolean, Locale, ResourceBundle)
+	 * @see #JRViewer400(JasperReportsContext, InputStream, boolean, Locale, ResourceBundle)
 	 */
 	public JRViewer400(InputStream is, boolean isXML, Locale locale, ResourceBundle resBundle) throws JRException
 	{
@@ -302,7 +278,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
 
 
 	/**
-	 * @see #JRViewer(JasperReportsContext, JasperPrint, Locale, ResourceBundle)
+	 * @see #JRViewer400(JasperReportsContext, JasperPrint, Locale, ResourceBundle)
 	 */
 	public JRViewer400(JasperPrint jrPrint, Locale locale, ResourceBundle resBundle)
 	{
@@ -313,11 +289,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
 			resBundle
 			);
 	}
-
-
-	/**
-	 * 
-	 */
+	
 	public JRViewer400(
 		JasperReportsContext jasperReportsContext, 
 		String fileName, 
@@ -326,7 +298,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
 		ResourceBundle resBundle
 		) throws JRException
 	{
-		this.jasperReportsContext = jasperReportsContext;
+		this.jasperReportsContext = new SimpleJasperReportsContext(jasperReportsContext);
 		
 		initResources(locale, resBundle);
 
@@ -357,7 +329,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
 		ResourceBundle resBundle
 		) throws JRException
 	{
-		this.jasperReportsContext = jasperReportsContext;
+		this.jasperReportsContext = new SimpleJasperReportsContext(jasperReportsContext);
 		
 		initResources(locale, resBundle);
 
@@ -387,7 +359,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
 		ResourceBundle resBundle
 		)
 	{
-		this.jasperReportsContext = jasperReportsContext;
+		this.jasperReportsContext = new SimpleJasperReportsContext(jasperReportsContext);
 		
 		initResources(locale, resBundle);
 
@@ -1561,17 +1533,24 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
 
 		type = TYPE_FILE_NAME;
 		this.isXML = isXmlReport;
-		reportFileName = fileName;
-		
+		this.reportFileName = fileName;
+
+		/*
 		SimpleFileResolver fileResolver = new SimpleFileResolver(Arrays.asList(new File[]{new File(fileName).getParentFile(), new File(".")}));
 		fileResolver.setResolveAbsolutePath(true);
 		if (localJasperReportsContext == null)
 		{
-			localJasperReportsContext = new LocalJasperReportsContext(jasperReportsContext);
-			jasperReportsContext = localJasperReportsContext;
+			localJasperReportsContext.setFileResolver(fileResolver);
 		}
-		localJasperReportsContext.setFileResolver(fileResolver);
-		
+		*/
+
+		FileRepositoryService fileRepository = new FileRepositoryService(jasperReportsContext, new File(reportFileName).getParentFile().getAbsolutePath(), true);
+		FileRepositoryService currentRepository = new FileRepositoryService(jasperReportsContext, new File(".").getAbsolutePath(), true);
+		jasperReportsContext.setExtensions(RepositoryService.class, Collections.singletonList(fileRepository));
+		jasperReportsContext.setExtensions(PersistenceServiceFactory.class,
+				Collections.singletonList(FileRepositoryPersistenceServiceFactory.getInstance()));
+
+
 		btnReload.setEnabled(true);
 		setPageIndex(0);
 	}
