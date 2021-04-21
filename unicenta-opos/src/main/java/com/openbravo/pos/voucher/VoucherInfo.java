@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.voucher;
 
 import com.openbravo.basic.BasicException;
@@ -21,8 +20,8 @@ import com.openbravo.data.loader.DataRead;
 import com.openbravo.data.loader.IKeyed;
 import com.openbravo.data.loader.SerializerRead;
 
-
 public class VoucherInfo implements IKeyed {
+
     private String id;
     private String voucherNumber;
     private String customerId;
@@ -33,13 +32,12 @@ public class VoucherInfo implements IKeyed {
     public VoucherInfo() {
     }
 
-    public VoucherInfo(String id, 
-        String voucherNumber, 
-        String customerId, 
-        String customerName,
-        double amount, 
-        String status) 
-    {
+    public VoucherInfo(String id,
+            String voucherNumber,
+            String customerId,
+            String customerName,
+            double amount,
+            String status) {
         this.id = id;
         this.voucherNumber = voucherNumber;
         this.customerId = customerId;
@@ -47,7 +45,6 @@ public class VoucherInfo implements IKeyed {
         this.amount = amount;
         this.status = status;
     }
-      
 
     @Override
     public Object getKey() {
@@ -123,13 +120,12 @@ public class VoucherInfo implements IKeyed {
     public void setAmount(double amount) {
         this.amount = amount;
     }
-    
-    
-     @Override
+
+    @Override
     public String toString() {
         return voucherNumber;
     }
-    
+
     /**
      * @return the status
      */
@@ -145,16 +141,17 @@ public class VoucherInfo implements IKeyed {
     }
 
     public static SerializerRead<VoucherInfo> getSerializerRead() {
-        return new SerializerRead<VoucherInfo>() 
-        {
+        return new SerializerRead<VoucherInfo>() {
             @Override
-        public VoucherInfo readValues(DataRead dr) throws BasicException {
-            return new VoucherInfo(dr.getString(1), 
-                    dr.getString(2), 
-                    dr.getString(3),
-                    dr.getString(4),
-                    dr.getDouble(5),
-                    dr.getString(6));
-        }};
-    }    
+            public VoucherInfo readValues(DataRead dr) throws BasicException {
+                return new VoucherInfo(
+                        dr.getString(1),
+                        dr.getString(2),
+                        dr.getString(3),
+                        dr.getString(4),
+                        dr.getDouble(5),
+                        dr.getString(6));
+            }
+        };
+    }
 }
