@@ -36,12 +36,15 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author  adrianromero
  */
 public class CustomersPayment extends javax.swing.JPanel implements JPanelView, BeanFactoryApp {
+
+    private static final long serialVersionUID = 1L;
 
     private AppView app;
     private DataLogicCustomers dlcustomers;
@@ -51,9 +54,8 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
     private JPaymentSelect paymentdialog;
     
     private CustomerInfoExt customerext;
-    private DirtyManager dirty;
+    private final DirtyManager dirty;
 
-    /** Creates new form CustomersPayment */
     public CustomersPayment() {
 
         initComponents();
@@ -67,11 +69,6 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         txtPrePay.addPropertyChangeListener("Number", dirty);
     }
 
-    /**
-     *
-     * @param app
-     * @throws BeanFactoryException
-     */
     @Override
     public void init(AppView app) throws BeanFactoryException {
 
@@ -82,28 +79,16 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         ttp = new TicketParser(app.getDeviceTicket(), dlsystem);
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public Object getBean() {
         return this;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public String getTitle() {
         return AppLocal.getIntString("Menu.CustomersPayment");
     }
 
-    /**
-     *
-     * @throws BasicException
-     */
     @Override
     public void activate() throws BasicException {
 
@@ -116,10 +101,6 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         editorcard.activate();
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public boolean deactivate() {
         if (dirty.isDirty()) {
@@ -160,7 +141,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         txtMaxdebt.setText(Formats.CURRENCY.formatValue(customer.getMaxdebt()));
         txtCurdebt.setText(Formats.CURRENCY.formatValue(customer.getAccdebt()));
         txtCurdate.setText(Formats.DATE.formatValue(customer.getCurdate()));
-        txtPrePay.setText(null);
+        txtPrePay.setValue(null);
         
         txtNotes.setEnabled(true);
         txtPrePay.setEnabled(true);
@@ -169,10 +150,18 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
 
         btnSave.setEnabled(true);    
         btnPay.setEnabled(true);
+        btnPay.setEnabled(enablePay());
+        
         btnPrePay.setEnabled(true);
         
-//        btnPay.setEnabled(customer.getCurdebt() != null && customer.getCurdebt().doubleValue() > 0.0);
-        
+    }
+    
+    /**
+     * Enable Pay only if Debt is more than 0.0
+     * @return true is pay is enabled, otherwich false
+     */
+    private boolean enablePay(){
+        return customerext != null && customerext.getCurDebt() != null && customerext.getCurDebt() > 0.0;
     }
 
     private void resetCustomer() {
@@ -186,7 +175,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         txtMaxdebt.setText(null);
         txtCurdebt.setText(null);
         txtCurdate.setText(null);
-        txtPrePay.setText(null);
+        txtPrePay.setValue(null);
 
         txtNotes.setEnabled(false);
         txtPrePay.setEnabled(false);        
@@ -246,7 +235,6 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                 script.put("ticket", ticket);
                 script.put("customer", customer);
                 ttp.printTicket(script.eval(resource).toString());
-// JG 6 May use multicatch
             } catch (    ScriptException | TicketPrinterException e) {
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotprintticket"), e);
                 msg.show(this);
@@ -288,10 +276,10 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         jLabel6 = new javax.swing.JLabel();
         txtName = new javax.swing.JTextField();
         txtMaxdebt = new javax.swing.JTextField();
-        txtPrePay = new com.openbravo.editor.JEditorString();
+        txtPrePay = new com.openbravo.editor.JEditorCurrency();
         txtTaxId = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        lblPrePay = new javax.swing.JLabel();
         txtNotes = new com.openbravo.editor.JEditorString();
 
         setLayout(new java.awt.BorderLayout());
@@ -488,9 +476,9 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         jLabel7.setText(AppLocal.getIntString("label.taxid")); // NOI18N
         jLabel7.setPreferredSize(new java.awt.Dimension(150, 30));
 
-        jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel4.setText(AppLocal.getIntString("label.prepay")); // NOI18N
-        jLabel4.setPreferredSize(new java.awt.Dimension(120, 30));
+        lblPrePay.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblPrePay.setText(AppLocal.getIntString("label.prepay")); // NOI18N
+        lblPrePay.setPreferredSize(new java.awt.Dimension(120, 30));
 
         txtNotes.setToolTipText(bundle.getString("tooltip.customerpay.notes")); // NOI18N
         txtNotes.setEnabled(false);
@@ -521,11 +509,11 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(lblPrePay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtPrePay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtNotes, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtNotes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtPrePay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -541,7 +529,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtCurdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -564,7 +552,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                     .addComponent(txtNotes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPrePay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPrePay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -622,7 +610,8 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
 
         paymentdialog.setPrintSelected(true);
         
-        if (paymentdialog.showDialog(customerext.getAccdebt(), null)) {
+        //Check if Pay is enabled
+        if (enablePay() && paymentdialog.showDialog(customerext.getAccdebt(), null)) {
 
             // Save the ticket
             TicketInfo ticket = new TicketInfo();
@@ -668,10 +657,8 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                 msg.show(this);
             }
 
-            printTicket(paymentdialog.isPrintSelected()
-                    ? "Printer.CustomerPaid"
-                    : "Printer.CustomerPaid2",
-                    ticket, c);
+            String ptinerSelected = paymentdialog.isPrintSelected() ? "Printer.CustomerPaid" : "Printer.CustomerPaid2";
+            printTicket(ptinerSelected, ticket, c);
         }
         
         editorcard.reset();
@@ -695,7 +682,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         txtPrePay.setFocusable(true);
         txtPrePay.requestFocusInWindow();
 
-        if (txtPrePay.getText() != null) {
+        if (!StringUtils.isNumeric(txtPrePay.getText())) {
             double prepay = Double.parseDouble(txtPrePay.getText());        
             Formats.CURRENCY.formatValue(RoundUtils.getValue(prepay));
             paymentdialog.setPrintSelected(true);
@@ -729,7 +716,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                     msg.show(this);
                 }
 
-                CustomerInfoExt c;
+                CustomerInfoExt c = null;;
                 try {
                     c = dlsales.loadCustomerExt(customerext.getId());
                     if (c == null) {
@@ -739,7 +726,6 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                         editCustomer(c);
                     }
                 } catch (BasicException ex) {
-                    c = null;
                     MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotfindcustomer"), ex);
                     msg.show(this);
                 }
@@ -752,6 +738,8 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         
             editorcard.reset();
             editorcard.activate();
+        }else{
+            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("customerspayment.prepay.empty"));
         }
     }//GEN-LAST:event_btnPrePayActionPerformed
 
@@ -766,7 +754,6 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -777,6 +764,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblPrePay;
     private com.openbravo.editor.JEditorKeys m_jKeys;
     private javax.swing.JTextField txtCard;
     private javax.swing.JTextField txtCurdate;
@@ -784,7 +772,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
     private javax.swing.JTextField txtMaxdebt;
     private javax.swing.JTextField txtName;
     private com.openbravo.editor.JEditorString txtNotes;
-    private com.openbravo.editor.JEditorString txtPrePay;
+    private com.openbravo.editor.JEditorCurrency txtPrePay;
     private javax.swing.JTextField txtTaxId;
     // End of variables declaration//GEN-END:variables
 }

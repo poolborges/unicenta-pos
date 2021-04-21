@@ -28,6 +28,8 @@ import java.util.Date;
  */
 public class CustomerInfoExt extends CustomerInfo {
 
+    private static final long serialVersionUID = 1L;
+
     protected String taxcustomerid;
     protected String taxcustcategoryid;
     protected String card;
@@ -54,18 +56,11 @@ public class CustomerInfoExt extends CustomerInfo {
     protected String prepay;
     protected String memodate;    
 
-    /** Creates a new instance of UserInfoBasic
-     * @param id */
     public CustomerInfoExt(String id) {
         super(id);
     }
 
-    /**
-     *
-     * @return customer's tax category
-     */
     public String getTaxCustCategoryID() {
-//        return taxcustomerid;
         return taxcustcategoryid;        
     }
     public void setTaxCustCategoryID(String taxcustcategoryid) {
@@ -93,12 +88,7 @@ public class CustomerInfoExt extends CustomerInfo {
     public String printTaxid() {       
         return Formats.STRING.formatValue(taxid);
     }    
-    
-      
-    /**
-     *
-     * @return notes string
-     */
+
     public String getNotes() {
         return notes;
     }
@@ -120,7 +110,8 @@ public class CustomerInfoExt extends CustomerInfo {
     
 
     /**
-     *
+     * Get Customer hashed member/loyalty card string
+     * 
      * @return customer's hashed member/loyalty card string
      */
     public String getCard() {

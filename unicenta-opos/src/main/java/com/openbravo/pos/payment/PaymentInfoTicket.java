@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.payment;
 
 import com.openbravo.basic.BasicException;
@@ -21,108 +20,114 @@ import com.openbravo.data.loader.DataRead;
 import com.openbravo.data.loader.SerializableRead;
 import com.openbravo.format.Formats;
 
-public class PaymentInfoTicket extends PaymentInfo implements SerializableRead  {
-    
+public class PaymentInfoTicket extends PaymentInfo implements SerializableRead {
+
     private static final long serialVersionUID = 8865238639097L;
+    
     private double m_dTicket;
     private String m_sName;
     private String m_transactionID;
     private double m_dTendered;
-    private double m_change;
-    private String m_dCardName =null;
-    private double m_dTip;
-    private boolean m_isProcessed;
-    private String m_returnMessage;    
+    private String m_dCardName;
     private String m_sVoucher;
-            
-    /** Creates a new instance of PaymentInfoTicket
+
+    /**
+     * Used by with: Cheque, Bank , Slip
+     *
      * @param dTicket
-     * @param sName */
-    
-// call by Cheque, Bank , Slip
+     * @param sName
+     */
     public PaymentInfoTicket(double dTicket, String sName) {
-        m_sName = sName;
-        m_dTicket = dTicket;
+        this(0.0, sName, null, null);
     }
-    
+
+    /**
+     * Used by with: Voucher
+     *
+     * @param dTicket
+     * @param sName
+     * @param transactionID
+     * @param sVoucher
+     */
     public PaymentInfoTicket(double dTicket, String sName, String transactionID, String sVoucher) {
         m_sName = sName;
         m_dTicket = dTicket;
         m_transactionID = transactionID;
         m_sVoucher = sVoucher;
-        
-    }
-    
-// call by Voucher    
-    public PaymentInfoTicket(double dTicket, String sName, String sVoucher) {
-        m_sName = sName;
-        m_dTicket = dTicket;
-//        m_transactionID = transactionID;
-        m_sVoucher = sVoucher;
-        
-    }    
-    
-    public PaymentInfoTicket() {
-        m_sName = null;
-        m_dTicket = 0.0;
-        m_transactionID = null;
+        m_dCardName = null;
         m_dTendered = 0.00;
-     }
-    
+
+    }
+
+    /**
+     * Used by with: Voucher
+     *
+     * @param dTicket
+     * @param sName
+     * @param sVoucher
+     */
+    public PaymentInfoTicket(double dTicket, String sName, String sVoucher) {
+        this(dTicket, sName, null, sVoucher);
+    }
+
+    public PaymentInfoTicket() {
+        this(0.0, null, null, null);
+    }
+
     @Override
     public void readValues(DataRead dr) throws BasicException {
         m_sName = dr.getString(1);
         m_dTicket = dr.getDouble(2);
         m_transactionID = dr.getString(3);
         if (dr.getDouble(4) != null) {
-            m_dTendered = dr.getDouble(4);}
-            m_dCardName = dr.getString(5);
-//        m_dTip = dr.getDouble(6).doubleValue();
-//        m_isProcessed = dr.getBoolean(7).booleanValue(); 
-//        m_returnMessage = dr.getString(8);        
-     }
-    
+            m_dTendered = dr.getDouble(4);
+        }
+        m_dCardName = dr.getString(5);    
+    }
+
     @Override
-    public PaymentInfo copyPayment(){
+    public PaymentInfo copyPayment() {
         return new PaymentInfoTicket(m_dTicket, m_sName);
     }
+
     @Override
     public String getName() {
         return m_sName;
-    }   
+    }
+
     @Override
     public double getTotal() {
         return m_dTicket;
     }
-    @Override
-    public String getTransactionID(){
-        return m_transactionID;
-    }   
 
     @Override
-    public double getPaid() {
-        return (0.0); 
+    public String getTransactionID() {
+        return m_transactionID;
     }
 
     @Override
-    public double getChange(){
-       return m_dTendered - m_dTicket;
-   }
-    
+    public double getPaid() {
+        return (0.0);
+    }
+
+    @Override
+    public double getChange() {
+        return m_dTendered - m_dTicket;
+    }
+
     @Override
     public double getTendered() {
-        return (0.0); 
+        return (0.0);
     }
 
     @Override
     public String getCardName() {
-       return m_dCardName;
-   } 
-   
+        return m_dCardName;
+    }
+
     public String printPaid() {
         return Formats.CURRENCY.formatValue(m_dTicket);
     }
-    
 
     public String printVoucherTotal() {
         return Formats.CURRENCY.formatValue(-m_dTicket);
@@ -134,14 +139,13 @@ public class PaymentInfoTicket extends PaymentInfo implements SerializableRead  
 
     public String printTendered() {
         return Formats.CURRENCY.formatValue(m_dTendered);
-    } 
+    }
 
-    
     @Override
     public String getVoucher() {
-       return m_sVoucher;
-    } 
-    
+        return m_sVoucher;
+    }
+
     public String printVoucher() {
         return m_sVoucher;
     }
