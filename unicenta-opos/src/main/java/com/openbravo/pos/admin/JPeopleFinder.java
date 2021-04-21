@@ -32,8 +32,10 @@ import javax.swing.JFrame;
  */
 public class JPeopleFinder extends javax.swing.JDialog implements EditorCreator {
 
+    private static final long serialVersionUID = 1L;
+
     private PeopleInfo selectedPeople;
-    private ListProvider lpr;
+    private ListProvider<PeopleInfo> lpr;
 
     /** Creates new form JPeopleFinder */
     private JPeopleFinder(java.awt.Frame parent, boolean modal) {
@@ -90,15 +92,9 @@ public class JPeopleFinder extends javax.swing.JDialog implements EditorCreator 
         selectedPeople = null;
     }
 
-    /**
-     *
-     * @param people
-     */
     public void search(PeopleInfo people) {
 
-        if (people == null 
-                || people.getName() == null 
-                || people.getName().equals("")) {
+        if (people == null  || people.getName() == null  || people.getName().equals("")) {
             m_jtxtName.reset();
             cleanSearch();
         } else {
@@ -108,15 +104,12 @@ public class JPeopleFinder extends javax.swing.JDialog implements EditorCreator 
     }
 
     private void cleanSearch() {
-        jListPeople.setModel(new MyListData(new ArrayList()));
+        jListPeople.setModel(new PeopleListModel(new ArrayList()));
     }
 
-    /**
-     * This method actions the User data search
-     */
     public void executeSearch() {
         try {
-            jListPeople.setModel(new MyListData(lpr.loadData()));
+            jListPeople.setModel(new PeopleListModel(lpr.loadData()));
             if (jListPeople.getModel().getSize() > 0) {
                 jListPeople.setSelectedIndex(0);
                 }
@@ -156,16 +149,16 @@ public class JPeopleFinder extends javax.swing.JDialog implements EditorCreator 
         }
     }
 
-    private static class MyListData extends javax.swing.AbstractListModel {
+    private static class PeopleListModel extends javax.swing.AbstractListModel<PeopleInfo> {
 
-        private final java.util.List m_data;
+        private final java.util.List<PeopleInfo> m_data;
 
-        public MyListData(java.util.List data) {
+        public PeopleListModel(java.util.List<PeopleInfo> data) {
             m_data = data;
         }
 
         @Override
-        public Object getElementAt(int index) {
+        public PeopleInfo getElementAt(int index) {
             return m_data.get(index);
         }
 

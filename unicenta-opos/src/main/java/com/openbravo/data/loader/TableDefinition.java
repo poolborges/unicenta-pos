@@ -22,7 +22,7 @@ import com.openbravo.format.Formats;
  *
  * @author JG uniCenta
  */
-public class TableDefinition {
+public class TableDefinition<T> {
     
     private Session m_s;
     private String tablename;
@@ -180,7 +180,7 @@ public class TableDefinition {
      *
      * @return
      */
-    public SentenceList getListSentence() {
+    public SentenceList<T> getListSentence() {
         return getListSentence(getSerializerReadBasic());
     }
     
@@ -189,7 +189,7 @@ public class TableDefinition {
      * @param sr
      * @return
      */
-    public SentenceList getListSentence(SerializerRead sr) {
+    public SentenceList<T> getListSentence(SerializerRead sr) {
         return new PreparedSentence(m_s, getListSQL(), null,  sr);
     }
     

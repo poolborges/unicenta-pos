@@ -35,26 +35,20 @@ import javax.swing.ListCellRenderer;
  */
 public class ResourcesPanel extends JPanelTable {
 
-    private TableDefinition tresources;
+    private static final long serialVersionUID = 1L;
+
+    private TableDefinition<ResourceInfo> tresources;
     private ResourcesView jeditor;
-    
-    /** Creates a new instance of JPanelResources */
-    public ResourcesPanel() {
-    }
-    
-    /**
-     *
-     */
+
+    public ResourcesPanel() {}
+
+    @Override
     protected void init() {
         DataLogicAdmin dlAdmin = (DataLogicAdmin) app.getBean("com.openbravo.pos.admin.DataLogicAdmin"); 
         tresources = dlAdmin.getTableResources();         
         jeditor = new ResourcesView(dirty);           
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public boolean deactivate() {
         if (super.deactivate()) {
@@ -65,62 +59,37 @@ public class ResourcesPanel extends JPanelTable {
             return false;
         }    
     }
-    
-    /**
-     *
-     * @return
-     */
-    public ListProvider getListProvider() {
+
+    @Override
+    public ListProvider<ResourceInfo> getListProvider() {
         return new ListProviderCreator(tresources);
     }
-    
-    /**
-     *
-     * @return
-     */
+
+    @Override
     public SaveProvider getSaveProvider() {
         return new SaveProvider(tresources);        
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @Override
     public Vectorer getVectorer() {
         return tresources.getVectorerBasic(new int[] {1});
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @Override
     public ComparatorCreator getComparatorCreator() {
         return tresources.getComparatorCreator(new int[] {1, 2});
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @Override
     public ListCellRenderer getListCellRenderer() {
         return new ListCellRendererBasic(tresources.getRenderStringBasic(new int[] {1}));
     }
-    
-    /**
-     *
-     * @return
-     */
+
     public EditorRecord getEditor() {
         return jeditor;
     }
-    
-    /**
-     *
-     * @return
-     */
+ 
+    @Override
     public String getTitle() {
         return AppLocal.getIntString("Menu.Resources");
     }        

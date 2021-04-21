@@ -23,11 +23,5 @@ import com.openbravo.basic.BasicException;
  * @author JG uniCenta
  */
 public interface EditorCreator<T> {
-
-    /**
-     *
-     * @return
-     * @throws BasicException
-     */
     public T createValue() throws BasicException;
 }

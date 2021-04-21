@@ -45,7 +45,10 @@ import org.fife.ui.rtextarea.RTextScrollPane;
  * @author adrianromero
  */
 public final class ResourcesView extends JPanel implements EditorRecord {
+    
     private static final Logger LOGGER = Logger.getLogger(ResourcesView.class.getName());
+    
+    private static final long serialVersionUID = 1L;
     private Object m_oId;
     private final ComboBoxValModel m_ResourceModel;
     

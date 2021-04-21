@@ -157,9 +157,7 @@ public class BrowsableData implements ListModel {
      */
     public void refreshData() throws BasicException {
         
-        putNewData(m_dataprov == null
-                ? null 
-                : m_dataprov.refreshData());
+        putNewData(m_dataprov == null ? null  : m_dataprov.refreshData());
     }    
 
     /**
@@ -168,9 +166,7 @@ public class BrowsableData implements ListModel {
      */
     public void loadData() throws BasicException {
         
-        putNewData(m_dataprov == null
-                ? null 
-                : m_dataprov.loadData());
+        putNewData(m_dataprov == null ? null  : m_dataprov.loadData());
     }
 
     /**

@@ -1,5 +1,5 @@
 //    KrOS POS  - Open Source Point Of Sale
-//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    Copyright (c) 2021 poolborges
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -23,49 +23,45 @@ import com.openbravo.data.loader.SerializableRead;
 
 /**
  *
- * @author adrianromero
- * Created on 27 de febrero de 2007, 23:27
- *
+ * @author pauloborges
  */
-public class PeopleInfo implements SerializableRead, IKeyed {
+public class ResourceInfo implements SerializableRead, IKeyed {
     
     private static final long serialVersionUID = 9110127845966L;
-    private String m_sID;
-    protected String m_sName;
     
-    public PeopleInfo() {
-        m_sID = null;
-        m_sName = null;
+    private String id;
+    private String name;
+    private int restype;
+    private byte[] content;
+
+    @Override
+    public void readValues(DataRead dr) throws BasicException {
+        id = dr.getString(1);
+        name = dr.getString(2);
+        restype = dr.getInt(3);
+        content = dr.getBytes(4);
     }
 
     @Override
     public Object getKey() {
-        return m_sID;
+        return id;
     }
 
-    @Override
-    public void readValues(DataRead dr) throws BasicException {
-        m_sID = dr.getString(1);
-        m_sName = dr.getString(2);
-    }
-
-    public String getID() {
-        return m_sID;
-    }
-    public void setID(String sID) {
-        m_sID = sID;
+    public String getId() {
+        return id;
     }
 
     public String getName() {
-        return m_sName;
+        return name;
     }
 
-    public void setName(String sValue) {
-        m_sName = sValue;
-    }    
-    
-    @Override
-    public String toString() {
-        return m_sName;
+    public int getRestype() {
+        return restype;
     }
+
+    public byte[] getContent() {
+        return content;
+    }
+    
+    
 }
