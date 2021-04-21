@@ -142,11 +142,11 @@ public class SupplierTransaction {
      *
      * @return stockdiary for this supplier
      */
-    public static SerializerRead getSerializerRead() {
-        return new SerializerRead() {
+    public static SerializerRead<SupplierTransaction> getSerializerRead() {
+        return new SerializerRead<SupplierTransaction>() {
 
             @Override
-            public Object readValues(DataRead dr) throws BasicException {
+            public SupplierTransaction readValues(DataRead dr) throws BasicException {
 
                 String dateValue = dr.getString(1);
                 String productName = dr.getString(2);

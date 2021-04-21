@@ -33,9 +33,7 @@ public class JPaymentBank extends javax.swing.JPanel implements JPaymentInterfac
 
     private double m_dPaid;
     private double m_dTotal;
-    
-    /** Creates new form JPaymentCash
-     * @param notifier */
+
     public JPaymentBank(JPaymentNotifier notifier) {
         
         m_notifier = notifier;
@@ -44,23 +42,12 @@ public class JPaymentBank extends javax.swing.JPanel implements JPaymentInterfac
         
         m_jTendered.addPropertyChangeListener("Edition", new RecalculateState());
         m_jTendered.addEditorKeys(m_jKeys);
-        
-        
-        
     }
-    
-    /**
-     *
-     * @param customerext
-     * @param dTotal
-     * @param transID
-     */
+
     @Override
     public void activate(CustomerInfoExt customerext, double dTotal, String transID) {
         
         m_dTotal = dTotal;
-        
-        
         m_jTendered.reset();
         m_jTendered.activate();
         
@@ -68,19 +55,11 @@ public class JPaymentBank extends javax.swing.JPanel implements JPaymentInterfac
         
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public PaymentInfo executePayment() {
         return new PaymentInfoTicket(m_dPaid, "bank");      
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public Component getComponent() {
         return this;
@@ -149,7 +128,7 @@ public class JPaymentBank extends javax.swing.JPanel implements JPaymentInterfac
         jPanel4.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jPanel4.setLayout(null);
 
-        jLabel8.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        jLabel8.setFont(jLabel8.getFont());
         jLabel8.setText(AppLocal.getIntString("label.InputCash")); // NOI18N
         jLabel8.setPreferredSize(new java.awt.Dimension(100, 30));
         jPanel4.add(jLabel8);

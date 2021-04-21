@@ -25,33 +25,16 @@ import java.util.logging.Logger;
  *
  * @author adrianromero
  */
-public class PreparedSentence extends JDBCSentence {
+public class PreparedSentence<T> extends JDBCSentence<T> {
 
     private static final Logger LOGGER = Logger.getLogger(PreparedSentence.class.getName());
 
     private String m_sentence;
-
-    /**
-     *
-     */
-    protected SerializerWrite m_SerWrite = null;
-
-    /**
-     *
-     */
-    protected SerializerRead m_SerRead = null;
-
-    // Estado
+    protected SerializerWrite<Object> m_SerWrite;
+    protected SerializerRead<T> m_SerRead;
     private PreparedStatement m_Stmt;
 
-    /**
-     *
-     * @param s
-     * @param sentence
-     * @param serwrite
-     * @param serread
-     */
-    public PreparedSentence(Session s, String sentence, SerializerWrite serwrite, SerializerRead serread) {
+    public PreparedSentence(Session s, String sentence, SerializerWrite<Object> serwrite, SerializerRead<T> serread) {
         super(s);
         m_sentence = sentence;
         m_SerWrite = serwrite;
@@ -65,7 +48,7 @@ public class PreparedSentence extends JDBCSentence {
      * @param sentence
      * @param serwrite
      */
-    public PreparedSentence(Session s, String sentence, SerializerWrite serwrite) {
+    public PreparedSentence(Session s, String sentence, SerializerWrite<Object> serwrite) {
         this(s, sentence, serwrite, null);
     }
 
@@ -168,21 +151,18 @@ public class PreparedSentence extends JDBCSentence {
      * @throws BasicException
      */
     @Override
-    public DataResultSet openExec(Object params) throws BasicException {
-        // true -> un resultset
-        // false -> un updatecount (si -1 entonces se acabo)
-
+    public DataResultSet<T> openExec(Object params) throws BasicException {
         closeExec();
 
-        DataResultSet result = null;
+        DataResultSet<T> result;
 
         try {
 
             LOGGER.log(Level.INFO, "Prepared statement show SQL: " + m_sentence);
 
-            if (params != null && LOGGER.isLoggable(Level.INFO)) {
+            if (params != null && LOGGER.isLoggable(Level.FINER)) {
 
-                Object[] objectsArray = null;
+                Object[] objectsArray;
 
                 if (params instanceof Collection) {
                     Collection objectsCollection = (Collection) params;
@@ -204,26 +184,24 @@ public class PreparedSentence extends JDBCSentence {
                         sb.append((objectsArray[count] != null ? objectsArray[count].toString() : "null"));
                         sb.append("} ");
 
-                        //Enquando for menor
                         if (count < objectsArray.length-1) {
                             sb.append(",");
                         }
                     }
                 }
 
-                LOGGER.log(Level.INFO, "Prepared statement show Paramters: " + sb.toString());
+                LOGGER.log(Level.FINER, "Prepared statement show Parameters: " + sb.toString());
             }
 
             m_Stmt = m_s.getConnection().prepareStatement(m_sentence);
 
             if (m_SerWrite != null) {
-                // si m_SerWrite fuera null deberiamos cascar.
                 PreparedSentencePars preparedSentencePars = new PreparedSentencePars(m_Stmt);
                 m_SerWrite.writeValues(preparedSentencePars, params);
             }
 
             if (m_Stmt.execute()) {
-                result = new JDBCDataResultSet(m_Stmt.getResultSet(), m_SerRead);
+                result = new JDBCDataResultSet<T>(m_Stmt.getResultSet(), m_SerRead);
             } else {
                 int iUC = m_Stmt.getUpdateCount();
                 if (iUC < 0) {
@@ -245,7 +223,7 @@ public class PreparedSentence extends JDBCSentence {
      * @return @throws BasicException
      */
     @Override
-    public final DataResultSet moreResults() throws BasicException {
+    public final DataResultSet<T> moreResults() throws BasicException {
         // true -> un resultset
         // false -> un updatecount (si -1 entonces se acabo)
 

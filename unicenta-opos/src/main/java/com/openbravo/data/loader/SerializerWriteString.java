@@ -25,22 +25,10 @@ import java.lang.reflect.Array;
  * @author JG uniCenta
  */
 public class SerializerWriteString implements SerializerWrite<Object> {
-    
-    /**
-     *
-     */
+
     public static final SerializerWrite INSTANCE = new SerializerWriteString();
-    
-    /** Creates a new instance of SerializerWriteString */
-    private SerializerWriteString() {
-    }
-    
-    /**
-     *
-     * @param dp
-     * @param obj
-     * @throws BasicException
-     */
+    private SerializerWriteString() {}
+
     public void writeValues(DataWrite dp, Object obj) throws BasicException {
         if (obj instanceof Object[]){
             Object[] objectos = (Object[]) obj;

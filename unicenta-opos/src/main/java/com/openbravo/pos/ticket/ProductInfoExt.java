@@ -317,11 +317,7 @@ public class ProductInfoExt {
     public final void setUomID(String sUomID) {
 	uomid = sUomID;
     }    
-    
-    /**
-     *
-     * @return memo date string
-     */
+
     public String getMemoDate() {
         return memodate;
     }
@@ -332,10 +328,6 @@ public class ProductInfoExt {
         return Formats.STRING.formatValue(memodate);
     }    
 
-    /**
-     *
-     * @return
-     */
     public static SerializerRead getSerializerRead() {
         return new SerializerRead() {
             @Override

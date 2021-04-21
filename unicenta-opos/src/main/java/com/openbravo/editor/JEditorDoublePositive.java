@@ -24,6 +24,8 @@ import com.openbravo.format.Formats;
  */
 public class JEditorDoublePositive extends JEditorDouble {
 
+    private static final long serialVersionUID = 1L;
+
     @Override
     protected Formats getFormat() {
         return Formats.DOUBLE;

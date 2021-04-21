@@ -27,6 +27,8 @@ import javax.swing.border.Border;
  */
 public abstract class JEditorAbstract extends javax.swing.JPanel implements EditorComponent {
 
+    private static final long serialVersionUID = 1L;
+
     private EditorKeys editorkeys;
     
     private boolean m_bActive;
@@ -147,7 +149,7 @@ public abstract class JEditorAbstract extends javax.swing.JPanel implements Edit
         panBackground.setLayout(new java.awt.BorderLayout());
 
         m_jText.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.background"));
-        m_jText.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        m_jText.setFont(m_jText.getFont());
         m_jText.setContentAreaFilled(false);
         m_jText.setFocusPainted(false);
         m_jText.setFocusable(false);

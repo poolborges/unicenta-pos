@@ -18,32 +18,18 @@ package com.openbravo.pos.payment;
 
 import java.awt.*;
 
-/**
- *
- * @author adrianromero
- */
 public class JPaymentSelectReceipt extends JPaymentSelect {
-    
-    /** Creates new form JPaymentSelect
-     * @param parent
-     * @param modal
-     * @param o */
+
+    private static final long serialVersionUID = 1L;
+
     protected JPaymentSelectReceipt(java.awt.Frame parent, boolean modal, ComponentOrientation o) {
         super(parent, modal, o);
     }
-    /** Creates new form JPaymentSelect
-     * @param parent
-     * @param o
-     * @param modal */
+
     protected JPaymentSelectReceipt(java.awt.Dialog parent, boolean modal, ComponentOrientation o) {
         super(parent, modal, o);
     }
 
-    /**
-     *
-     * @param parent
-     * @return
-     */
     public static JPaymentSelect getDialog(Component parent) {
          
         Window window = getWindow(parent);
@@ -55,9 +41,6 @@ public class JPaymentSelectReceipt extends JPaymentSelect {
         }
     }
 
-    /**
-     *
-     */
     @Override
     protected void addTabs() {
         
@@ -67,31 +50,19 @@ public class JPaymentSelectReceipt extends JPaymentSelect {
         addTabPayment(new JPaymentSelect.JPaymentMagcardCreator());                
         addTabPayment(new JPaymentSelect.JPaymentFreeCreator());                
         addTabPayment(new JPaymentSelect.JPaymentDebtCreator());
-// JG Added 1 Dec 13 
         addTabPayment(new JPaymentSelect.JPaymentBankCreator());        
         addTabPayment(new JPaymentSelect.JPaymentSlipCreator());  
     }
-    
-    /**
-     *
-     * @param isPositive
-     * @param isComplete
-     */
+
     @Override
     protected void setStatusPanel(boolean isPositive, boolean isComplete) {
         
         setAddEnabled(isPositive && !isComplete);
         setOKEnabled(isComplete);
     }
-    
-    /**
-     *
-     * @param total
-     * @return
-     */
+
     @Override
     protected PaymentInfo getDefaultPayment(double total) {
-//        return new PaymentInfoCash_original(total, total);
         return new PaymentInfoCash(total, total);        
     }
 }

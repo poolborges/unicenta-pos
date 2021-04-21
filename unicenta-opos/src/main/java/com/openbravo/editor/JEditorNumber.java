@@ -32,6 +32,7 @@ public abstract class JEditorNumber<T extends Number> extends JEditorAbstract {
     protected final static int NUMBER_INT = 1;
     protected final static int NUMBER_DEC = 2;
     protected final static char DECIMAL_SEPARATOR = '.';
+    private static final long serialVersionUID = 1L;
 
     private int m_iNumberStatus;
     private String m_sNumber;
@@ -43,11 +44,7 @@ public abstract class JEditorNumber<T extends Number> extends JEditorAbstract {
 
     public JEditorNumber() {
         m_fmt = getFormat();
-
-        AppConfig m_config = AppConfig.getInstance();
-        m_config.load();
-        priceWith00 = ("true".equals(m_config.getProperty("till.pricewith00")));
-        m_config = null;
+        priceWith00 = ("true".equals(AppConfig.getInstance().getProperty("till.pricewith00")));
         reset();
     }
 
@@ -195,4 +192,7 @@ public abstract class JEditorNumber<T extends Number> extends JEditorAbstract {
 
         firePropertyChange("Text", sOldText, getText());
     }
+
+    @Override
+    protected abstract int getMode();
 }

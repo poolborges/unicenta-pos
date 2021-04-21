@@ -44,8 +44,7 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
     private DataLogicSales dlSales;
     private DataLogicCustomers dlCustomers;    
     private ComboBoxValModel m_VoucherModel;
-    private SentenceList m_sentvouch;
-    private VoucherInfo m_voucherInfo;    
+    private SentenceList m_sentvouch;  
     
     private double m_dTicket;
     private double m_dTotal;  
@@ -66,7 +65,7 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
         init(app);
 
         m_jTendered.addPropertyChangeListener("Edition", new RecalculateState());
-//        m_jTendered.addEditorKeys(m_jKeys);
+        m_jTendered.addEditorKeys(m_jKeys);
 
     }
     private void init(AppView app) {
@@ -101,10 +100,7 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
     public void activate(CustomerInfoExt customerext, double dTotal,String transID) {
     
             m_dTotal = dTotal;
-            
             m_jTendered.reset();
-//            m_jTendered.activate();
-
             m_jKeys.setEnabled(false);
             m_jTendered.setEnabled(false);            
             
@@ -196,7 +192,7 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
 
         setLayout(new java.awt.BorderLayout());
 
-        jLabel5.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        jLabel5.setFont(jLabel5.getFont());
         jLabel5.setLabelFor(m_jVoucher);
         jLabel5.setText(AppLocal.getIntString("label.voucher")); // NOI18N
         jLabel5.setPreferredSize(new java.awt.Dimension(100, 30));
@@ -209,20 +205,21 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        jLabel1.setFont(jLabel1.getFont());
         jLabel1.setText(AppLocal.getIntString("label.voucherValue")); // NOI18N
         jLabel1.setPreferredSize(new java.awt.Dimension(100, 30));
 
         m_jMoneyEuros.setBackground(new java.awt.Color(204, 255, 51));
-        m_jMoneyEuros.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        m_jMoneyEuros.setFont(m_jMoneyEuros.getFont());
         m_jMoneyEuros.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        m_jMoneyEuros.setAlignmentX(0.5F);
         m_jMoneyEuros.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(javax.swing.UIManager.getDefaults().getColor("Button.darkShadow")), javax.swing.BorderFactory.createEmptyBorder(1, 4, 1, 4)));
         m_jMoneyEuros.setOpaque(true);
         m_jMoneyEuros.setPreferredSize(new java.awt.Dimension(180, 30));
 
         webLblCustomer.setText(AppLocal.getIntString("label.customer")); // NOI18N
         webLblCustomer.setToolTipText("");
-        webLblCustomer.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        webLblCustomer.setFont(webLblCustomer.getFont());
         webLblCustomer.setPreferredSize(new java.awt.Dimension(100, 30));
 
         webLblcustomerName.setText(AppLocal.getIntString("label.customer")); // NOI18N
@@ -241,25 +238,23 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(webLblCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(webLblcustomerName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(webLblCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(m_jMoneyEuros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(voucherID, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(webLblcustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(m_jVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(120, 120, 120)
-                .addComponent(voucherID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(m_jVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(m_jMoneyEuros, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(4, 4, 4)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -290,10 +285,7 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         jPanel1.setLayout(new java.awt.BorderLayout());
-
-        m_jTendered.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        m_jTendered.setPreferredSize(new java.awt.Dimension(130, 30));
-        jPanel1.add(m_jTendered, java.awt.BorderLayout.CENTER);
+        jPanel1.add(m_jTendered, java.awt.BorderLayout.PAGE_START);
 
         jPanel12.add(jPanel1);
 

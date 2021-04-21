@@ -18,7 +18,6 @@ package com.openbravo.data.loader;
 
 import java.sql.*;
 import java.util.*; 
-import javax.sql.DataSource;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.JDBCSentence.JDBCDataResultSet;
 
@@ -29,22 +28,9 @@ import com.openbravo.data.loader.JDBCSentence.JDBCDataResultSet;
 public class MetaSentence extends JDBCSentence {
     
     private String m_sSentence;
-
-    /**
-     *
-     */
     protected SerializerRead m_SerRead = null;
-
-    /**
-     *
-     */
     protected SerializerWrite m_SerWrite = null;
 
-    /** Creates a new instance of MetaDataSentence
-     * @param s
-     * @param sSentence
-     * @param serwrite
-     * @param serread */
     public MetaSentence(Session s, String sSentence, SerializerWrite serwrite, SerializerRead serread) {
         super(s);
         m_sSentence = sSentence;
@@ -52,24 +38,15 @@ public class MetaSentence extends JDBCSentence {
         m_SerRead = serread;
     }
 
-    /**
-     *
-     * @param s
-     * @param sSentence
-     * @param serread
-     */
     public MetaSentence(Session s, String sSentence, SerializerRead serread) {
         this(s, sSentence, null, serread);
     }
     
     private static class MetaParameter implements DataWrite {
 
-        private ArrayList m_aParams;
+        private final ArrayList<Object> m_aParams = new ArrayList<>();;
 
-        /** Creates a new instance of MetaParameter */
-        public MetaParameter() {
-            m_aParams = new ArrayList();
-        }
+        public MetaParameter() {}
         
         public void setDouble(int paramIndex, Double dValue) throws BasicException {
             throw new BasicException(LocalRes.getIntString("exception.noparamtype"));
@@ -196,8 +173,7 @@ public class MetaSentence extends JDBCSentence {
      *
      * @throws BasicException
      */
-    public void closeExec() throws BasicException {
-    }
+    public void closeExec() throws BasicException {}
     
     /**
      *

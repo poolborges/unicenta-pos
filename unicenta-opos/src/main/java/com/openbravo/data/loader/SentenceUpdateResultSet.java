@@ -22,7 +22,7 @@ import com.openbravo.basic.BasicException;
  *
  * @author  adrian
  */
-public class SentenceUpdateResultSet implements DataResultSet {
+public class SentenceUpdateResultSet<Object> implements DataResultSet<Object> {
     
     private int m_iUpdateCount;
     

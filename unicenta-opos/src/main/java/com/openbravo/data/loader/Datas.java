@@ -27,108 +27,33 @@ import java.util.Date;
  * @author JG uniCenta
  */
 public abstract class Datas<T> {
-    
-    /**
-     *
-     */
-    public final static Datas<Integer> INT = new DatasINT();
 
-    /**
-     *
-     */
-    public final static Datas<String> STRING = new DatasSTRING();
-
-    /**
-     *
-     */
     public final static Datas<Double> DOUBLE = new DatasDOUBLE();
-
-    /**
-     *
-     */
+    public final static Datas<Integer> INT = new DatasINT();
+    public final static Datas<String> STRING = new DatasSTRING();
     public final static Datas<Boolean> BOOLEAN = new DatasBOOLEAN();
-
-    /**
-     *
-     */
     public final static Datas<Date> TIMESTAMP = new DatasTIMESTAMP();
-
-    /**
-     *
-     */
     public final static Datas<byte[]> BYTES = new DatasBYTES();
-
-    /**
-     *
-     */
     public final static Datas<BufferedImage> IMAGE = new DatasIMAGE();
     //public final static Datas INPUTSTREAM = new DatasINPUTSTREAM();
-
-    /**
-     *
-     */
     public final static Datas<Object> OBJECT = new DatasOBJECT();
-
-    /**
-     *
-     */
     public final static Datas<Object> SERIALIZABLE = new DatasSERIALIZABLE();
-
-    /**
-     *
-     */
     public final static Datas<Object> NULL = new DatasNULL();
-    
-    private static DateFormat tsf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); 
-    
-    /** Creates a new instance of Datas */
-    private Datas() {
-    }
-    
-    /**
-     *
-     * @param dr
-     * @param i
-     * @return
-     * @throws BasicException
-     */
+
+    private final static DateFormat tsf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+    private Datas() {}
+
     public abstract T getValue(DataRead dr, int i) throws BasicException;
 
-    /**
-     *
-     * @param dw
-     * @param i
-     * @param value
-     * @throws BasicException
-     */
     public abstract void setValue(DataWrite dw, int i, T value) throws BasicException;
 
-    /**
-     *
-     * @return
-     */
-    public abstract Class getClassValue();
+    public abstract Class<T> getClassValue();
 
-    /**
-     *
-     * @param value
-     * @return
-     */
     protected abstract String toStringAbstract(T value);
 
-    /**
-     *
-     * @param o1
-     * @param o2
-     * @return
-     */
     protected abstract int compareAbstract(T o1, T o2);
-    
-    /**
-     *
-     * @param value
-     * @return
-     */
+
     public String toString(T value) {
         if (value == null) {
             return "null";
@@ -136,13 +61,7 @@ public abstract class Datas<T> {
             return toStringAbstract(value);
         }
     }
-    
-    /**
-     *
-     * @param o1
-     * @param o2
-     * @return
-     */
+
     public int compare(T o1, T o2) {
         if (o1 == null) {
             if (o2 == null) {
@@ -156,15 +75,15 @@ public abstract class Datas<T> {
             return compareAbstract(o1, o2);
         }
     }
-    
-    public static final class DatasINT extends Datas<Integer> {
+
+    private static final class DatasINT extends Datas<Integer> {
         public Integer getValue(DataRead dr, int i) throws BasicException {
             return dr.getInt(i);
         }
         public void setValue(DataWrite dw, int i, Integer value) throws BasicException {
             dw.setInt(i, value);
         }
-        public Class getClassValue() {
+        public Class<Integer> getClassValue() {
             return java.lang.Integer.class;
         }
         protected String toStringAbstract(Integer value) {
@@ -174,6 +93,7 @@ public abstract class Datas<T> {
             return (o1).compareTo(o2);
         }        
     }
+
     private static final class DatasSTRING extends Datas<String> {
         public String getValue(DataRead dr, int i) throws BasicException {
             return dr.getString(i);
@@ -181,16 +101,17 @@ public abstract class Datas<T> {
         public void setValue(DataWrite dw, int i, String value) throws BasicException {
             dw.setString(i, value);
         }
-        public Class getClassValue() {
+        public Class<String> getClassValue() {
             return java.lang.String.class;
         }
         protected String toStringAbstract(String value) {
-            return "\'" + DataWriteUtils.getEscaped((String) value) + "\'";
+            return "\'" + DataWriteUtils.getEscaped(value) + "\'";
         }
         protected int compareAbstract(String o1, String o2) {
             return (o1).compareTo(o2);
         }           
     }
+
     private static final class DatasDOUBLE extends Datas<Double> {
         public Double getValue(DataRead dr, int i) throws BasicException {
             return dr.getDouble(i);
@@ -198,7 +119,7 @@ public abstract class Datas<T> {
         public void setValue(DataWrite dw, int i, Double value) throws BasicException {
             dw.setDouble(i, value);
         }
-        public Class getClassValue() {
+        public Class<Double> getClassValue() {
             return java.lang.Double.class;
         }
         protected String toStringAbstract(Double value) {
@@ -208,6 +129,7 @@ public abstract class Datas<T> {
             return (o1).compareTo(o2);
         }   
     }
+
     private static final class DatasBOOLEAN extends Datas<Boolean> {
         public Boolean getValue(DataRead dr, int i) throws BasicException {
             return dr.getBoolean(i);
@@ -215,7 +137,7 @@ public abstract class Datas<T> {
         public void setValue(DataWrite dw, int i, Boolean value) throws BasicException {
             dw.setBoolean(i, value);
         }
-        public Class getClassValue() {
+        public Class<Boolean> getClassValue() {
             return java.lang.Boolean.class;
         }
         protected String toStringAbstract(Boolean value) {
@@ -225,6 +147,7 @@ public abstract class Datas<T> {
             return (o1).compareTo(o2);
         }   
     }
+
     private static final class DatasTIMESTAMP extends Datas<Date> {
         public java.util.Date getValue(DataRead dr, int i) throws BasicException {
             return dr.getTimestamp(i);
@@ -232,7 +155,7 @@ public abstract class Datas<T> {
          public void setValue(DataWrite dw, int i, Date value) throws BasicException {
             dw.setTimestamp(i, value);
         }
-        public Class getClassValue() {
+        public Class<Date> getClassValue() {
             return java.util.Date.class;
         }
         protected String toStringAbstract(Date value) {
@@ -242,6 +165,7 @@ public abstract class Datas<T> {
             return (o1).compareTo(o2);
         }   
     }
+
     private static final class DatasBYTES extends Datas<byte[]> {
         public byte[] getValue(DataRead dr, int i) throws BasicException {
             return dr.getBytes(i);
@@ -249,7 +173,7 @@ public abstract class Datas<T> {
         public void setValue(DataWrite dw, int i, byte[] value) throws BasicException {
             dw.setBytes(i, value);
         }
-        public Class getClassValue() {
+        public Class<byte[]> getClassValue() {
             return byte[].class;
         }
         protected String toStringAbstract(byte[] value) {
@@ -258,7 +182,8 @@ public abstract class Datas<T> {
         protected int compareAbstract(byte[] o1, byte[] o2) {
             throw new UnsupportedOperationException();
         }   
-    }    
+    }
+
     private static final class DatasIMAGE extends Datas<BufferedImage> {
         @Override
         public BufferedImage getValue(DataRead dr, int i) throws BasicException {
@@ -269,7 +194,7 @@ public abstract class Datas<T> {
             dw.setBytes(i, ImageUtils.writeImage( value));
         }
         @Override
-        public Class getClassValue() {
+        public Class<BufferedImage> getClassValue() {
             return java.awt.image.BufferedImage.class;
         }
         @Override
@@ -288,7 +213,8 @@ public abstract class Datas<T> {
 //        }
 //        public void setValue(DataWrite dw, int i, Object value) throws DataException {
 //        }
-//    }  
+//    }
+
     private static final class DatasOBJECT extends Datas<Object> {
         public Object getValue(DataRead dr, int i) throws BasicException {
             return dr.getObject(i);
@@ -296,7 +222,7 @@ public abstract class Datas<T> {
         public void setValue(DataWrite dw, int i, Object value) throws BasicException {
             dw.setObject(i, value);
         }
-        public Class getClassValue() {
+        public Class<Object> getClassValue() {
             return java.lang.Object.class;
         }
         protected String toStringAbstract(Object value) {
@@ -315,7 +241,7 @@ public abstract class Datas<T> {
         public void setValue(DataWrite dw, int i, Object value) throws BasicException {
             dw.setBytes(i, ImageUtils.writeSerializable(value));
         }
-        public Class getClassValue() {
+        public Class<Object> getClassValue() {
             return java.lang.Object.class;
         }
         protected String toStringAbstract(Object value) {
@@ -334,7 +260,7 @@ public abstract class Datas<T> {
         public void setValue(DataWrite dw, int i, Object value) throws BasicException {
             // No asigno null, no asigno nada.
         }
-        public Class getClassValue() {
+        public Class<Object> getClassValue() {
             return java.lang.Object.class;
         }
         protected String toStringAbstract(Object value) {

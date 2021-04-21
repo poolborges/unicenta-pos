@@ -22,6 +22,8 @@ import java.awt.image.*;
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.text.AttributedString;
 import javax.imageio.ImageIO;
 import net.coobird.thumbnailator.Thumbnailator;
@@ -66,7 +68,24 @@ public class ThumbNailBuilder {
     public ThumbNailBuilder(int width, int height, String img) {
 
         try {
-            init(width, height, ImageIO.read(getClass().getClassLoader().getResourceAsStream(img)));
+
+            InputStream inStrem = getClass().getClassLoader().getResourceAsStream(img);
+
+            if (inStrem != null) {
+                init(width, height, ImageIO.read(inStrem));
+            } else {
+                URL imageUrl = getClass().getClassLoader().getResource(img);
+
+                if (imageUrl != null) {
+                    init(width, height, ImageIO.read(imageUrl));
+                } else {
+                    imageUrl = getClass().getResource(img);
+                    if (imageUrl != null) {
+                        init(width, height, ImageIO.read(imageUrl));
+                    }
+                }
+            }
+
         } catch (IOException fnfe) {
             init(width, height, null);
         }
@@ -112,28 +131,28 @@ public class ThumbNailBuilder {
      * @return
      */
     public Image getThumbNailText(Image img, String text) {
-        
+
         BufferedImage imageBuf = toBufferedImage(getThumbNail(img));
 
         Font font = new Font("Arial", Font.BOLD, 18);
 
-	AttributedString attributedText = new AttributedString(text);
-	attributedText.addAttribute(TextAttribute.FONT, font);
-	attributedText.addAttribute(TextAttribute.FOREGROUND, Color.BLACK);
-	 
-	Graphics g = imageBuf.getGraphics();
-        
+        AttributedString attributedText = new AttributedString(text);
+        attributedText.addAttribute(TextAttribute.FONT, font);
+        attributedText.addAttribute(TextAttribute.FOREGROUND, Color.BLACK);
+
+        Graphics g = imageBuf.getGraphics();
+
         FontMetrics metrics = g.getFontMetrics(font);
-        
+
         //Center
-	//int positionX = (imageBuf.getWidth() - metrics.stringWidth(text)) / 2;
-	//int positionY = (imageBuf.getHeight() - metrics.getHeight()) / 2 + metrics.getAscent();
+        //int positionX = (imageBuf.getWidth() - metrics.stringWidth(text)) / 2;
+        //int positionY = (imageBuf.getHeight() - metrics.getHeight()) / 2 + metrics.getAscent();
         //Top Left
         int positionX = 0;
-	int positionY = metrics.getAscent();
-        
-	g.drawString(attributedText.getIterator(), positionX, positionY);
-  
+        int positionY = metrics.getAscent();
+
+        g.drawString(attributedText.getIterator(), positionX, positionY);
+
         return imageBuf;
     }
 

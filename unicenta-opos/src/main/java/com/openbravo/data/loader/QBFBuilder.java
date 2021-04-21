@@ -24,10 +24,9 @@ import com.openbravo.basic.BasicException;
  */
 public class QBFBuilder implements ISQLBuilderStatic {
    
-    private final String m_sSentNullFilter;   // la sentencia que se devuelve cuando el filtro es vacio
-    private final String m_sSentBeginPart;  // La sentencia que se devuelve es m_sSentBeginPart + ( filtro ) + m_sSentEndPart
+    private final String m_sSentNullFilter;     // la sentencia que se devuelve cuando el filtro es vacio
+    private final String m_sSentBeginPart;      // La sentencia que se devuelve es m_sSentBeginPart + ( filtro ) + m_sSentEndPart
     private final String m_sSentEndPart;
-    
     private final String[] m_asFindFields;    
     
 //    /** Creates a new instance of QBFBuilder */

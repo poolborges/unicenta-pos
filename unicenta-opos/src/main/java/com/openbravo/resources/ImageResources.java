@@ -51,6 +51,11 @@ public enum ImageResources {
         return getIcon(resourcePath);
     }
 
+    /**
+     * Get ImageIcon with default size 32x32
+     * @param resourcePath
+     * @return ImageIcon
+     */
     public static ImageIcon getIcon(String resourcePath){
         ThumbNailBuilder tnbcat = new ThumbNailBuilder(32, 32, resourcePath);
         ImageIcon icon = new ImageIcon(tnbcat.getThumbNail(null));

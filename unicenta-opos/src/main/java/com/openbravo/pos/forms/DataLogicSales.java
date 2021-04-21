@@ -2457,21 +2457,11 @@ public class DataLogicSales extends BeanFactoryDataSingle {
             , new int[] {0}
         );
     }
-        
 
-    /**
-     *
-     */
-    protected static class CustomerExtRead implements SerializerRead {
+    protected static class CustomerExtRead implements SerializerRead<CustomerInfoExt> {
 
-        /**
-         *
-         * @param dr
-         * @return
-         * @throws BasicException
-         */
         @Override
-        public Object readValues(DataRead dr) throws BasicException {
+        public CustomerInfoExt readValues(DataRead dr) throws BasicException {
             CustomerInfoExt c = new CustomerInfoExt(dr.getString(1));
             c.setSearchkey(dr.getString(2));
             c.setTaxid(dr.getString(3));
@@ -2496,7 +2486,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
             c.setVisible(dr.getBoolean(21));
             c.setCurdate(dr.getTimestamp(22));
             c.setAccdebt(dr.getDouble(23));
-            c.setImage(ImageUtils.readImage(dr.getString(24)));
+            c.setImage(ImageUtils.readImage(dr.getBytes(24)));
             c.setisVIP(dr.getBoolean(25));
             c.setDiscount(dr.getDouble(26));
             c.setMemoDate(dr.getString(27));
@@ -2528,11 +2518,11 @@ public class DataLogicSales extends BeanFactoryDataSingle {
         );
     }    
 
-    public final SentenceList getUomList() {
+    public final SentenceList<UomInfo> getUomList() {
         return new StaticSentence(s, "SELECT ID, NAME  FROM uom ORDER BY NAME", null, UomInfo.getSerializerRead());
     }       
     
-    public final SentenceList getVoucherList() {
+    public final SentenceList<VoucherInfo> getVoucherList() {
         return new StaticSentence(s,
             "SELECT " +
                 "vouchers.ID,vouchers.VOUCHER_NUMBER,vouchers.CUSTOMER, " +

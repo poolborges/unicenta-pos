@@ -26,16 +26,15 @@ import javax.swing.JComponent;
  *
  * @author adrianromero
  */
-public class PaymentPanelType extends javax.swing.JPanel implements PaymentPanel {
+public class PaymentPanelKeyboard extends javax.swing.JPanel implements PaymentPanel {
+
+    private static final long serialVersionUID = 1L;
     
     private double m_dTotal;
     private String m_sTransactionID;
-    private JPaymentNotifier m_notifier;
-    
-    /**
-     * Creates new form JPaymentCash
-     */
-    public PaymentPanelType(JPaymentNotifier notifier) {
+    private final JPaymentNotifier m_notifier;
+
+    public PaymentPanelKeyboard(JPaymentNotifier notifier) {
         
         m_notifier = notifier;
         
@@ -52,10 +51,12 @@ public class PaymentPanelType extends javax.swing.JPanel implements PaymentPanel
 
     }
     
+    @Override
     public JComponent getComponent() {
         return this;
     }
     
+    @Override
     public void activate(String sTransaction, double dTotal) {
         
         m_sTransactionID = sTransaction;
@@ -75,6 +76,7 @@ public class PaymentPanelType extends javax.swing.JPanel implements PaymentPanel
         m_jExpirationDate.setText(null);
     }
     
+    @Override
     public PaymentInfoMagcard getPaymentInfoMagcard() {
         
         if (m_dTotal > 0.0) {
@@ -106,6 +108,7 @@ public class PaymentPanelType extends javax.swing.JPanel implements PaymentPanel
     
     private class RecalculateName implements PropertyChangeListener {
 
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             boolean isvalid = isValidHolder() && isValidCardNumber() && isValidExpirationDate();
             m_notifier.setStatus(isvalid, isvalid);
@@ -205,8 +208,7 @@ public class PaymentPanelType extends javax.swing.JPanel implements PaymentPanel
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(m_jExpirationDate, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -240,7 +242,7 @@ public class PaymentPanelType extends javax.swing.JPanel implements PaymentPanel
 
         jPanel5.setPreferredSize(new java.awt.Dimension(350, 45));
 
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        jLabel1.setFont(jLabel1.getFont().deriveFont(jLabel1.getFont().getStyle() | java.awt.Font.BOLD));
         jLabel1.setText(AppLocal.getIntString("message.paymentgatewaytype")); // NOI18N
         jPanel5.add(jLabel1);
 

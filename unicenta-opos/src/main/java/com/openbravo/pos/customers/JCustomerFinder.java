@@ -39,24 +39,14 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
     private CustomerInfo m_ReturnCustomer;
     private ListProvider lpr;
     private AppView appView;
-    
-    public class Global {
-//        public static String s = "(new SearchKey)";
-//        public static String n = m_jtxtName;
-
-    }
-    
-    /*    Keyboard Events
-     */
 
     public void searchKey() {
         jbtnExecute.setMnemonic(KeyEvent.VK_E); // Jack 
         executeSearch();
-        
-
     }
 
     public void resetKey() {
+
         jbtnReset.setMnemonic(KeyEvent.VK_R); // Jack
         m_jtxtTaxID.reset();
         m_jtxtSearchKey.reset();
@@ -64,11 +54,9 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
         m_jtxtPostal.reset();
         m_jtxtPhone.reset();
         m_jtxtName2.reset();
-
         m_jtxtTaxID.activate();
 
         cleanSearch();
-
     }
 
     public void setAppView(AppView appView) {
@@ -87,12 +75,6 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
         super(parent, modal);
     }
 
-    /**
-     *
-     * @param parent
-     * @param dlCustomers
-     * @return
-     */
     public static JCustomerFinder getCustomerFinder(Component parent, DataLogicCustomers dlCustomers) {
         Window window = getWindow(parent);
 
@@ -108,10 +90,6 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
         return myMsg;
     }
 
-    /**
-     *
-     * @return
-     */
     public CustomerInfo getSelectedCustomer() {
         return m_ReturnCustomer;
     }
@@ -149,10 +127,6 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
 
     }
 
-    /**
-     *
-     * @param customer
-     */
     public void search(CustomerInfo customer) {
 
         if (customer == null || customer.getName() == null || customer.getName().equals("")) {
@@ -183,13 +157,12 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
     }
 
     private void cleanSearch() {
-            m_jtxtTaxID.setText("");
-            m_jtxtSearchKey.setText("");
-            m_jtxtName.setText("");
-            m_jtxtPostal.setText("");
-            m_jtxtPhone.setText("");
-            m_jtxtName2.setText("");
-            
+        m_jtxtTaxID.setText("");
+        m_jtxtSearchKey.setText("");
+        m_jtxtName.setText("");
+        m_jtxtPostal.setText("");
+        m_jtxtPhone.setText("");
+        m_jtxtName2.setText("");
         jListCustomers.setModel(new MyListData(new ArrayList()));
     }
 
@@ -226,11 +199,6 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
         }
     }
 
-    /**
-     *
-     * @return creates object for search method
-     * @throws BasicException
-     */
     @Override
     public Object createValue() throws BasicException {
 
@@ -263,7 +231,6 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
             afilter[5] = "%" + m_jtxtName.getText() + "%";
         }
 
-// Added JG 20 Sept 12
         // Postal
         if (m_jtxtPostal.getText() == null || m_jtxtPostal.getText().equals("")) {
             afilter[6] = QBFCompareEnum.COMP_NONE;
@@ -273,7 +240,6 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
             afilter[7] = "%" + m_jtxtPostal.getText() + "%";
         }
 
-// Added JG 20 Sept 12
         // Phone
         if (m_jtxtPhone.getText() == null || m_jtxtPhone.getText().equals("")) {
             afilter[8] = QBFCompareEnum.COMP_NONE;
@@ -283,8 +249,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
             afilter[9] = "%" + m_jtxtPhone.getText() + "%";
         }
 
-// Added JG 20 Sept 12
-        // Email
+        //
         if (m_jtxtName2.getText() == null || m_jtxtName2.getText().equals("")) {
             afilter[10] = QBFCompareEnum.COMP_NONE;
             afilter[11] = null;
@@ -649,7 +614,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
 
     }//GEN-LAST:event_jListCustomersMouseClicked
 
-private void jbtnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnResetActionPerformed
+    private void jbtnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnResetActionPerformed
  
         m_jtxtTaxID.reset();
         m_jtxtSearchKey.reset();

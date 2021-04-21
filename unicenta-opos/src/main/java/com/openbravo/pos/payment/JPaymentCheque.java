@@ -72,8 +72,6 @@ public class JPaymentCheque extends javax.swing.JPanel implements JPaymentInterf
     public void activate(CustomerInfoExt customerext, double dTotal, String transID) {
         
         m_dTotal = dTotal;
-        
-        
         m_jTendered.reset();
         m_jTendered.activate();
         
@@ -162,7 +160,7 @@ public class JPaymentCheque extends javax.swing.JPanel implements JPaymentInterf
 
         jPanel4.setLayout(null);
 
-        jLabel8.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        jLabel8.setFont(jLabel8.getFont());
         jLabel8.setText(AppLocal.getIntString("label.InputCash")); // NOI18N
         jLabel8.setPreferredSize(new java.awt.Dimension(100, 30));
         jPanel4.add(jLabel8);

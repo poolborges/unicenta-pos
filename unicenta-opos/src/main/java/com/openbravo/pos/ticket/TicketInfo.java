@@ -25,7 +25,6 @@ import com.openbravo.data.loader.SerializableRead;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.pos.forms.AppConfig;
-import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.payment.PaymentInfo;
 import com.openbravo.pos.payment.PaymentInfoMagcard;
 import com.openbravo.pos.payment.PaymentInfoTicket;
@@ -83,7 +82,7 @@ public final class TicketInfo implements SerializableRead, Externalizable {
     public TicketInfo() {
         m_sId = UUID.randomUUID().toString();
         tickettype = RECEIPT_NORMAL;
-        m_iTicketId = 0; // incrementamos
+        m_iTicketId = 0;
         m_dDate = new Date();
         attributes = new Properties();
         m_User = null;

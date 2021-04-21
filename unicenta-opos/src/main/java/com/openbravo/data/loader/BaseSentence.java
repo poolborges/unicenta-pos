@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author JG uniCenta
  */
-public abstract class BaseSentence<T> implements SentenceList, SentenceFind, SentenceExec {
+public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T>, SentenceExec {
 
     // Funciones de bajo nivel
     /**

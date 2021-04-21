@@ -28,6 +28,8 @@ import java.beans.PropertyChangeListener;
  * @author JG uniCenta
  */
 public class JPaymentSlip extends javax.swing.JPanel implements JPaymentInterface {
+
+    private static final long serialVersionUID = 1L;
     
     private final JPaymentNotifier m_notifier;
 
@@ -144,7 +146,7 @@ public class JPaymentSlip extends javax.swing.JPanel implements JPaymentInterfac
         jPanel4.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jPanel4.setLayout(null);
 
-        jLabel8.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        jLabel8.setFont(jLabel8.getFont());
         jLabel8.setText(AppLocal.getIntString("label.InputCash")); // NOI18N
         jLabel8.setPreferredSize(new java.awt.Dimension(100, 30));
         jPanel4.add(jLabel8);

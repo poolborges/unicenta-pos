@@ -23,6 +23,8 @@ import com.openbravo.format.Formats;
  * @author JG uniCenta
  */
 public class JEditorDouble extends JEditorNumber<Double> {
+
+    private static final long serialVersionUID = 1L;
     
     
     @Override

@@ -11,6 +11,8 @@ import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.pos.inventory.TaxCustCategoryInfo;
+
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;
@@ -25,9 +27,6 @@ public class JDialogNewCustomer extends javax.swing.JDialog {
     private DataLogicCustomers dlCustomer;
     private DataLogicSales dlSales;
     private ComboBoxValModel m_CategoryModel;
-    private SentenceList m_sentcat;
-    private SentenceExec m_sentinsert;
-    private TableDefinition tcustomers;
     private CustomerInfoExt selectedCustomer;
     private Object m_oId;
     
@@ -48,16 +47,13 @@ public class JDialogNewCustomer extends javax.swing.JDialog {
         try {
             dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
             dlCustomer = (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
-            m_sentcat = dlSales.getTaxCustCategoriesList();
-            tcustomers = dlCustomer.getTableCustomers();
 
             initComponents();        
 
-            m_CategoryModel = new ComboBoxValModel();
-            List a = m_sentcat.list();
-            a.add(0, null);
+            List customerList = dlSales.getTaxCustCategoriesList().list();
+            customerList.add(0, null);
 
-            m_CategoryModel = new ComboBoxValModel(a);
+            m_CategoryModel = new ComboBoxValModel(customerList);
             m_jCategory.setModel(m_CategoryModel);      
             
             getRootPane().setDefaultButton(m_jBtnOK);
@@ -100,11 +96,10 @@ public class JDialogNewCustomer extends javax.swing.JDialog {
     }
 
     
-      private void selectedVip(boolean  value){
+    private void selectedVip(boolean  value){
         m_jVip.setSelected(value);
         jLblDiscountpercent.setVisible(value);
         txtDiscount.setVisible(value);
-        
     }
       
     public static JDialogNewCustomer getDialog(Component parent,AppView app) {
@@ -443,8 +438,7 @@ public class JDialogNewCustomer extends javax.swing.JDialog {
 
     private void m_jBtnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jBtnOKActionPerformed
 
-        if ("".equals(m_jSearchkey.getText())
-                || "".equals(m_jName.getText())) {
+        if ("".equals(m_jSearchkey.getText()) || "".equals(m_jName.getText())) {
             JOptionPane.showMessageDialog(
                 null, 
                     AppLocal.getIntString("message.customercheck"), 
@@ -455,7 +449,7 @@ public class JDialogNewCustomer extends javax.swing.JDialog {
                 m_oId = UUID.randomUUID().toString();
                 Object customer = createValue();
 
-                int status = tcustomers.getInsertSentence().exec(customer);
+                int status = dlCustomer.getTableCustomers().getInsertSentence().exec(customer);
             
                 if (status>0){
                     selectedCustomer =  dlSales.loadCustomerExt(m_oId.toString());
@@ -480,9 +474,9 @@ public class JDialogNewCustomer extends javax.swing.JDialog {
         
     }//GEN-LAST:event_m_jBtnCancelActionPerformed
 
-private void m_jVipnone(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_jVipnone
+    private void m_jVipnone(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_jVipnone
 
-}//GEN-LAST:event_m_jVipnone
+    }//GEN-LAST:event_m_jVipnone
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

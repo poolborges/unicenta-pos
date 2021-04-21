@@ -24,20 +24,12 @@ import com.openbravo.basic.BasicException;
  */
 public class SerializerWriteBasic implements SerializerWrite<Object[]> {
     
-    private Datas[] m_classes;
+    private final Datas<Object>[] m_classes;
 
-    /** Creates a new instance of SerializerWriteBasic
-     * @param classes */
     public SerializerWriteBasic(Datas... classes) {
         m_classes = classes;
     }
-    
-    /**
-     *
-     * @param dp
-     * @param obj
-     * @throws BasicException
-     */
+
     @Override
     public void writeValues(DataWrite dp, Object[] obj) throws BasicException {
 

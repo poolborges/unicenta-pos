@@ -25,17 +25,6 @@ import java.util.List;
  */
 public interface ListProvider {
 
-    /**
-     *
-     * @return
-     * @throws BasicException
-     */
-    public List loadData() throws BasicException;    
-
-    /**
-     *
-     * @return
-     * @throws BasicException
-     */
+    public List loadData() throws BasicException;
     public List refreshData() throws BasicException; 
 }

@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  *
  * @author JG uniCenta
  */
-public abstract class JDBCSentence extends BaseSentence {
+public abstract class JDBCSentence<T> extends BaseSentence<T> {
     
     private static final Logger LOGGER = Logger.getLogger(JDBCSentence.class.getName());
 
@@ -35,20 +35,17 @@ public abstract class JDBCSentence extends BaseSentence {
         m_s = s;
     }
 
-    /**
-     *
-     */
-    protected static final class JDBCDataResultSet implements DataResultSet {
+    protected static final class JDBCDataResultSet<T> implements DataResultSet<T> {
 
         private final ResultSet m_rs;
-        private final SerializerRead m_serread;
+        private final SerializerRead<T> m_serread;
 
         /**
          *
          * @param rs
          * @param serread
          */
-        public JDBCDataResultSet(ResultSet rs, SerializerRead serread) {
+        public JDBCDataResultSet(ResultSet rs, SerializerRead<T> serread) {
             m_rs = rs;
             m_serread = serread;
         }
@@ -196,7 +193,7 @@ public abstract class JDBCSentence extends BaseSentence {
          * @return @throws BasicException
          */
         @Override
-        public Object getCurrent() throws BasicException {
+        public T getCurrent() throws BasicException {
             return m_serread.readValues(this);
         }
 

@@ -21,24 +21,24 @@ import com.openbravo.data.loader.DataRead;
 import com.openbravo.data.loader.DataWrite;
 import com.openbravo.data.loader.SerializableRead;
 import com.openbravo.data.loader.SerializableWrite;
+import com.openbravo.pos.ticket.TicketInfo;
 
 public class SharedTicketInfo implements SerializableRead, SerializableWrite {
     
     private static final long serialVersionUID = 7640633837719L;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
     private String id;
     private String name;
     private String UserName;
-    private String status;    
-    
-    /** Creates a new instance of SharedTicketInfo */
-    public SharedTicketInfo() {
-    }
-    
-    /**
-     *
-     * @param dr
-     * @throws BasicException
-     */
+    private String status;
+    private Integer pickupId;
+    private TicketInfo ticketInfo;
+
+    public SharedTicketInfo() {}
+
     @Override
     public void readValues(DataRead dr) throws BasicException {
         id = dr.getString(1);
@@ -48,23 +48,16 @@ public class SharedTicketInfo implements SerializableRead, SerializableWrite {
 
     }   
 
-    /**
-     *
-     * @param dp
-     * @throws BasicException
-     */
     @Override
     public void writeValues(DataWrite dp) throws BasicException {
         dp.setString(1, id);
         dp.setString(2, name);
         dp.setString(3, UserName);
-        dp.setString(4, status);        
+        dp.setString(4, status);  
+        dp.setInt(5, pickupId);  
+        dp.setObject(6, ticketInfo);
     }
-    
-    /**
-     *
-     * @return
-     */
+
     public String getId() {
         return id;
     }
@@ -79,5 +72,17 @@ public class SharedTicketInfo implements SerializableRead, SerializableWrite {
     
     public String getStatus() {
         return status;  
+    }
+
+    public String getUserName() {
+        return UserName;
+    }
+
+    public Integer getPickupId() {
+        return pickupId;
+    }
+
+    public TicketInfo getTicketInfo() {
+        return ticketInfo;
     }
 }

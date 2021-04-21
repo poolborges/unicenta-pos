@@ -40,12 +40,6 @@ public class CategoryInfo implements IKeyed {
     private BufferedImage m_Image;
     private Boolean m_bCatShowName;
 
-    /** Creates new CategoryInfo
-     * @param id
-     * @param name
-     * @param image
-     * @param texttip
-     * @param catshowname */
     public CategoryInfo(String id, String name, BufferedImage image, String texttip, Boolean catshowname) {
         m_sID = id;
         m_sName = name;
@@ -54,99 +48,47 @@ public class CategoryInfo implements IKeyed {
         m_bCatShowName = catshowname;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public Object getKey() {
         return m_sID;
     }
 
-    /**
-     *
-     * @param sID
-     */
     public void setID(String sID) {
         m_sID = sID;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getID() {
         return m_sID;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getName() {
         return m_sName;
     }
 
-    /**
-     *
-     * @param sName
-     */
     public void setName(String sName) {
         m_sName = sName;
     }
 
-
-    /**
-     *
-     * @return
-     */
-        public String getTextTip() {
+    public String getTextTip() {
         return m_sTextTip;
     }
 
-    /**
-     *
-     * @param sName
-     */
     public void setTextTip(String sName) {
         m_sTextTip = sName;
     }
- 
-    /**
-     *
-     * @return
-     */
+
     public Boolean getCatShowName() {
         return m_bCatShowName;
     }
 
-    /**
-     *
-     * @param bcatshowname
-     */
     public void setCatShowName(Boolean bcatshowname) {
         m_bCatShowName = bcatshowname;
     }
-    
-    
-    
-    
-    
-    // *******************************
-    
-    /**
-     *
-     * @return
-     */
-        
+
     public BufferedImage getImage() {
         return m_Image;
     }
 
-    /**
-     *
-     * @param img
-     */
     public void setImage(BufferedImage img) {
         m_Image = img;
     }
@@ -156,10 +98,6 @@ public class CategoryInfo implements IKeyed {
         return m_sName;
     }
 
-    /**
-     *
-     * @return
-     */
     public static SerializerRead getSerializerRead() {
         return new SerializerRead() {
             @Override

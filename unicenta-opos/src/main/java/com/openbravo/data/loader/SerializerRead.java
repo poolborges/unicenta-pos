@@ -24,12 +24,5 @@ import com.openbravo.basic.BasicException;
  */
 @FunctionalInterface
 public interface SerializerRead<T> {
-
-    /**
-     *
-     * @param dr
-     * @return
-     * @throws BasicException
-     */
     public T readValues(DataRead dr) throws BasicException;     
 }

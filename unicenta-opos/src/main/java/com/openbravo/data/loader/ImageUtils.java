@@ -34,11 +34,7 @@ public class ImageUtils {
     private final static Logger LOGGER = Logger.getLogger(ImageUtils.class.getName());
     private final static char[] HEXCHARS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
-    /**
-     * Creates a new instance of ImageUtils
-     */
-    private ImageUtils() {
-    }
+    private ImageUtils() {}
 
     private static byte[] readStream(InputStream inputstream) throws IOException {
         //TODO improve null checking Objects.requireNonNull(inputstream, "inputstream should not be null");
@@ -57,20 +53,14 @@ public class ImageUtils {
         return resource;
     }
 
-    /**
-     *
-     * @param filePath
-     * @return
-     */
     public static byte[] getBytesFromResource(String filePath) {
 
         byte[] image = new byte[0];
         if (filePath != null) {
             //TODO improve null checking Objects.requireNonNull(filePath, "filePath should not be null");
             InputStream in = ImageUtils.class.getResourceAsStream(filePath);
-
             try {
-                return ImageUtils.readStream(in);
+                image = ImageUtils.readStream(in);
             } catch (IOException e) {
                 LOGGER.log(Level.SEVERE, "getBytesFromResource", e);
             }
@@ -79,11 +69,10 @@ public class ImageUtils {
 
     }
 
-    /**
-     *
-     * @param urlString
-     * @return
-     */
+    public static BufferedImage readImageFronResource(String urlString) {
+        return readImage(getBytesFromResource(urlString));
+    }
+
     public static BufferedImage readImage(String urlString) {
         //TODO improve null checking Objects.requireNonNull(urlString, "urlString should not be null");
         BufferedImage image = generateImage();;
@@ -95,11 +84,6 @@ public class ImageUtils {
         return image;
     }
 
-    /**
-     *
-     * @param url
-     * @return
-     */
     public static BufferedImage readImage(URL url) {
         //TODO improve null checking Objects.requireNonNull(url, "url should not be null");
         BufferedImage image = generateImage();
@@ -116,11 +100,6 @@ public class ImageUtils {
         return image;
     }
 
-    /**
-     *
-     * @param imageByteArray
-     * @return
-     */
     public static BufferedImage readImage(byte[] imageByteArray) {
         //TODO improve null checking Objects.requireNonNull(imageByteArray, "imageByteArray should not be null");
         BufferedImage image = generateImage();

@@ -127,7 +127,7 @@ public class DataLogicSuppliers extends BeanFactoryDataSingle {
      *
      * @return supplier data
      */
-        public SentenceList getSupplierList() {
+        public SentenceList<SupplierInfo> getSupplierList() {
         return new StaticSentence(s
             , new QBFBuilder("SELECT "
                     + "ID, SEARCHKEY, TAXID, NAME, "
@@ -158,7 +158,7 @@ public class DataLogicSuppliers extends BeanFactoryDataSingle {
      *
      * @return supplier data
      */
-        public SentenceList getSuppList() {
+        public SentenceList<SupplierInfo> getSuppList() {
         return new StaticSentence(s
             , new QBFBuilder("SELECT "
                     + "ID, SEARCHKEY, TAXID, NAME, "
@@ -214,7 +214,6 @@ public class DataLogicSuppliers extends BeanFactoryDataSingle {
      * @return
      * @throws BasicException
      */
-        @SuppressWarnings("unchecked")
     public final List<SupplierTransaction> getSuppliersTransactionList(String sId) throws BasicException {
                     
         return new PreparedSentence(s,               
@@ -237,6 +236,6 @@ public class DataLogicSuppliers extends BeanFactoryDataSingle {
                         + "stockdiary.reason "
                 + "ORDER BY stockdiary.datenew DESC",
                     SerializerWriteString.INSTANCE,                
-                        SupplierTransaction.getSerializerRead()).list(sId);
+                    SupplierTransaction.getSerializerRead()).list(sId);
     }    
 }

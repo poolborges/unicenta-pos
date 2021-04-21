@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.payment;
 
 import com.openbravo.format.Formats;
@@ -23,39 +22,48 @@ import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.forms.DataLogicSystem;
+import com.openbravo.resources.ImageResources;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.Icon;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import javax.swing.plaf.metal.MetalTabbedPaneUI;
+import javax.swing.text.View;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author adrianromero
  */
-public abstract class JPaymentSelect extends javax.swing.JDialog 
-                            implements JPaymentNotifier {
-    
+public abstract class JPaymentSelect extends javax.swing.JDialog implements JPaymentNotifier {
+
+    private static final long serialVersionUID = 1L;
+
     private PaymentInfoList m_aPaymentInfo;
     private boolean printselected;
-    
+
     private boolean accepted;
-    
+
     private AppView app;
-    private double m_dTotal; 
+    private double m_dTotal;
     private CustomerInfoExt customerext;
     private DataLogicSystem dlSystem;
-    private DataLogicCustomers dlCustomers    ;
-    DataLogicSales dlSales;
-    
-// JG 16 May 12 use diamond inference
-    private Map<String, JPaymentInterface> payments = new HashMap<>();
+    private DataLogicCustomers dlCustomers;
+    private DataLogicSales dlSales;
+
+    private final Map<String, JPaymentInterface> payments = new HashMap<>();
     private String m_sTransactionID;
     private static PaymentInfo returnPayment = null;
-    
+
     public static PaymentInfo getReturnPayment() {
         return returnPayment;
     }
@@ -63,59 +71,47 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
     public static void setReturnPayment(PaymentInfo returnPayment) {
         JPaymentSelect.returnPayment = returnPayment;
     }
-     
 
-    /**
-     * Creates new form JPaymentSelect
-     *
-     * @param parent
-     * @param modal
-     * @param o
-     */
     protected JPaymentSelect(java.awt.Frame parent, boolean modal, ComponentOrientation o) {
         super(parent, modal);
-        initComponents();    
+        initComponents();
         this.applyComponentOrientation(o);
-        getRootPane().setDefaultButton(m_jButtonOK); 
-   
+        getRootPane().setDefaultButton(m_jButtonOK);
+
     }
-    
-    /** Creates new form JPaymentSelect
-     * @param parent
-     * @param modal
-     * @param o */
+
     protected JPaymentSelect(java.awt.Dialog parent, boolean modal, ComponentOrientation o) {
         super(parent, modal);
-        initComponents();    
-        
+        initComponents();
+
         m_jButtonPrint.setVisible(true);
         this.applyComponentOrientation(o);
         if (printselected) {
-            jlblPrinterStatus.setText("Printer ON");            
+            jlblPrinterStatus.setText("Printer ON");
         } else {
             jlblPrinterStatus.setText("Printer OFF");
-        }         
+        }
     }
 
     public void init(AppView app) {
         this.app = app;
         dlSystem = (DataLogicSystem) app.getBean("com.openbravo.pos.forms.DataLogicSystem");
-        dlCustomers= (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
-        dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");  
+        dlCustomers = (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
+        dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
 
         printselected = false;
         if (printselected) {
-            jlblPrinterStatus.setText("Printer ON");            
+            jlblPrinterStatus.setText(AppLocal.getIntString("jpaymentselect.printer.on", "Printer on"));
         } else {
-            jlblPrinterStatus.setText("Printer OFF");
-        }        
+            jlblPrinterStatus.setText(AppLocal.getIntString("jpaymentselect.printer.off", "Printer off"));
+        }
 
     }
-    
+
     public void setPrintSelected(boolean value) {
         printselected = value;
     }
-    
+
     public boolean isPrintSelected() {
         return printselected;
     }
@@ -123,50 +119,49 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
     public List<PaymentInfo> getSelectedPayments() {
         return m_aPaymentInfo.getPayments();
     }
-            
-      public boolean showDialog(double total, CustomerInfoExt customerext,double deposit) {
+
+    public boolean showDialog(double total, CustomerInfoExt customerext, double deposit) {
         m_aPaymentInfo = new PaymentInfoList();
         accepted = false;
         total -= deposit;
         m_dTotal = total;
-        
-        this.customerext = customerext;        
-        m_jButtonPrint.setVisible(true);        
+
+        this.customerext = customerext;
+        m_jButtonPrint.setVisible(true);
         m_jButtonPrint.setSelected(printselected);
         m_jTotalEuros.setText(Formats.CURRENCY.formatValue(m_dTotal));
-        
+
         addTabs();
-                
+
         // gets the print button state
         printselected = m_jButtonPrint.isSelected();
 
         // remove all tabs        
         m_jTabPayment.removeAll();
-        
+
         return accepted;
-      }
-  
+    }
+
     public boolean showDialog(double total, CustomerInfoExt customerext) {
-        
+
         m_aPaymentInfo = new PaymentInfoList();
         accepted = false;
-        
+
         m_dTotal = total;
-        
-        this.customerext = customerext;        
+
+        this.customerext = customerext;
 
         setPrintSelected(!Boolean.parseBoolean(app.getProperties().getProperty("till.receiptprintoff")));
         m_jButtonPrint.setSelected(printselected);
         m_jTotalEuros.setText(Formats.CURRENCY.formatValue(m_dTotal));
-        
+
         if (printselected) {
-            jlblPrinterStatus.setText("Printer ON");            
+            jlblPrinterStatus.setText("Printer ON");
         } else {
             jlblPrinterStatus.setText("Printer OFF");
-        }         
-        
- //       m_jPayTotal.setText(Formats.CURRENCY.formatValue(m_dTotal));
-        
+        }
+
+        //       m_jPayTotal.setText(Formats.CURRENCY.formatValue(m_dTotal));
 // N. Deppe 08/11/2018
 // Fix issue where dialog keeps moving lower and lower on the screen
 // Get the size of the screen, and center the dialog in the window
@@ -174,301 +169,382 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
         Dimension thisDim = this.getSize();
         int x = (screenDim.width - thisDim.width) / 2;
         int y = (screenDim.height - thisDim.height) / 2;
-        this.setLocation(x, y);        
+        this.setLocation(x, y);
 
         addTabs();
 
         if (m_jTabPayment.getTabCount() == 0) {
             // No payment panels available            
             m_aPaymentInfo.add(getDefaultPayment(total));
-            accepted = true;            
+            accepted = true;
         } else {
             getRootPane().setDefaultButton(m_jButtonOK);
             printState();
             setVisible(true);
         }
-        
+
         // gets the print button state
         printselected = m_jButtonPrint.isSelected();
-        
+
         // remove all tabs        
         m_jTabPayment.removeAll();
-        
+
         return accepted;
     }
 
     protected abstract void addTabs();
+
     protected abstract void setStatusPanel(boolean isPositive, boolean isComplete);
+
     protected abstract PaymentInfo getDefaultPayment(double total);
-    
+
     protected void setOKEnabled(boolean value) {
-        m_jButtonOK.setEnabled(value);        
+        m_jButtonOK.setEnabled(value);
     }
-    
+
     protected void setAddEnabled(boolean value) {
         m_jButtonAdd.setEnabled(value);
     }
-        
+
     protected void addTabPayment(JPaymentCreator jpay) {
         if (app.getAppUserView().getUser().hasPermission(jpay.getKey())) {
-            
+
             JPaymentInterface jpayinterface = payments.get(jpay.getKey());
             if (jpayinterface == null) {
                 jpayinterface = jpay.createJPayment();
                 payments.put(jpay.getKey(), jpayinterface);
             }
-            
+
             jpayinterface.getComponent().applyComponentOrientation(getComponentOrientation());
+
+            String title = AppLocal.getIntString(jpay.getLabelKey());
+            
+
             m_jTabPayment.addTab(
-                    AppLocal.getIntString(jpay.getLabelKey()),
-                    new javax.swing.ImageIcon(getClass().getResource(jpay.getIconKey())),
-                    jpayinterface.getComponent());
+                    fixedStringRithPad(AppLocal.getIntString(jpay.getLabelKey())),
+                    ImageResources.getIcon(jpay.getIconKey()),
+                    jpayinterface.getComponent(),
+                    title);
         }
     }
 
     
+    private String fixedStringRithPad(final String text) {
+        return fixedStringRithPad(text, 10);
+    }
+    
+    private String fixedStringRithPad(String text, int length) {
+        
+        if(text.length() > length){
+            text = text.substring(0, length-1);
+        }
+        return StringUtils.rightPad(text, length, "");
+    }
+
     public interface JPaymentCreator {
+
         public JPaymentInterface createJPayment();
+
         public String getKey();
+
         public String getLabelKey();
+
         public String getIconKey();
     }
 
     public class JPaymentCashCreator implements JPaymentCreator {
+
         @Override
         public JPaymentInterface createJPayment() {
             return new JPaymentCashPos(JPaymentSelect.this, dlSystem);
         }
+
         @Override
-        public String getKey() { 
-            return "payment.cash"; }
+        public String getKey() {
+            return "payment.cash";
+        }
+
         @Override
-        public String getLabelKey() { 
-            return "tab.cash"; }
+        public String getLabelKey() {
+            return "tab.cash";
+        }
+
         @Override
-        public String getIconKey() { 
-            return "/com/openbravo/images/cash.png"; }
+        public String getIconKey() {
+            return "/com/openbravo/images/cash.png";
+        }
     }
-        
+
     public class JPaymentChequeCreator implements JPaymentCreator {
+
         @Override
         public JPaymentInterface createJPayment() {
             return new JPaymentCheque(JPaymentSelect.this);
         }
+
         @Override
-        public String getKey() { 
-            return "payment.cheque"; }
+        public String getKey() {
+            return "payment.cheque";
+        }
+
         @Override
-        public String getLabelKey() { 
-            return "tab.cheque"; }
+        public String getLabelKey() {
+            return "tab.cheque";
+        }
+
         @Override
-        public String getIconKey() { 
-            return "/com/openbravo/images/cheque.png"; }
+        public String getIconKey() {
+            return "/com/openbravo/images/cheque.png";
+        }
     }
 
     public class JPaymentVoucherCreator implements JPaymentCreator {
+
         @Override
         public JPaymentInterface createJPayment() {
-            return new JPaymentVoucher(app, JPaymentSelect.this, "voucherin");            
+            return new JPaymentVoucher(app, JPaymentSelect.this, "voucherin");
         }
+
         @Override
-        public String getKey() { 
-            return "payment.voucher"; }
+        public String getKey() {
+            return "payment.voucher";
+        }
+
         @Override
-        public String getLabelKey() { 
-            return "tab.voucher"; }
+        public String getLabelKey() {
+            return "tab.voucher";
+        }
+
         @Override
-        public String getIconKey() { 
-            return "/com/openbravo/images/voucher.png"; }
+        public String getIconKey() {
+            return "/com/openbravo/images/voucher.png";
+        }
     }
-   
+
     public class JPaymentMagcardCreator implements JPaymentCreator {
+
         @Override
         public JPaymentInterface createJPayment() {
             return new JPaymentMagcard(app, JPaymentSelect.this);
         }
+
         @Override
-        public String getKey() { 
-            return "payment.magcard"; }
+        public String getKey() {
+            return "payment.magcard";
+        }
+
         @Override
-        public String getLabelKey() { 
-            return "tab.magcard"; }
+        public String getLabelKey() {
+            return "tab.magcard";
+        }
+
         @Override
-        public String getIconKey() { 
-            return "/com/openbravo/images/ccard.png"; }
+        public String getIconKey() {
+            return "/com/openbravo/images/ccard.png";
+        }
     }
-      
-        
-            
+
     public class JPaymentFreeCreator implements JPaymentCreator {
+
         @Override
         public JPaymentInterface createJPayment() {
             return new JPaymentFree(JPaymentSelect.this);
         }
+
         @Override
-        public String getKey() { 
-            return "payment.free"; 
+        public String getKey() {
+            return "payment.free";
         }
+
         @Override
-        public String getLabelKey() { 
-            return "tab.free"; 
+        public String getLabelKey() {
+            return "tab.free";
         }
+
         @Override
-        public String getIconKey() { 
-            return "/com/openbravo/images/wallet.png"; 
+        public String getIconKey() {
+            return "/com/openbravo/images/wallet.png";
         }
     }
-        
+
     public class JPaymentDebtCreator implements JPaymentCreator {
+
         @Override
         public JPaymentInterface createJPayment() {
             return new JPaymentDebt(JPaymentSelect.this);
         }
+
         @Override
-        public String getKey() { 
-            return "payment.debt"; 
+        public String getKey() {
+            return "payment.debt";
         }
+
         @Override
-        public String getLabelKey() { 
-            return "tab.debt"; 
+        public String getLabelKey() {
+            return "tab.debt";
         }
+
         @Override
-        public String getIconKey() { 
-            return "/com/openbravo/images/customer.png"; 
+        public String getIconKey() {
+            return "/com/openbravo/images/customer.png";
         }
     }
 
     public class JPaymentCashRefundCreator implements JPaymentCreator {
+
         @Override
         public JPaymentInterface createJPayment() {
             return new JPaymentRefund(JPaymentSelect.this, "cashrefund");
         }
+
         @Override
-        public String getKey() { 
-            return "refund.cash"; 
+        public String getKey() {
+            return "refund.cash";
         }
+
         @Override
-        public String getLabelKey() { 
-            return "tab.cashrefund"; 
+        public String getLabelKey() {
+            return "tab.cashrefund";
         }
+
         @Override
-        public String getIconKey() { 
-            return "/com/openbravo/images/cash.png"; 
+        public String getIconKey() {
+            return "/com/openbravo/images/cash.png";
         }
     }
-        
+
     public class JPaymentChequeRefundCreator implements JPaymentCreator {
+
         @Override
         public JPaymentInterface createJPayment() {
             return new JPaymentRefund(JPaymentSelect.this, "chequerefund");
         }
+
         @Override
-        public String getKey() { 
-            return "refund.cheque"; 
+        public String getKey() {
+            return "refund.cheque";
         }
+
         @Override
-        public String getLabelKey() { 
-            return "tab.chequerefund"; 
+        public String getLabelKey() {
+            return "tab.chequerefund";
         }
+
         @Override
-        public String getIconKey() { 
-            return "/com/openbravo/images/cheque.png"; 
+        public String getIconKey() {
+            return "/com/openbravo/images/cheque.png";
         }
     }
-       
+
     public class JPaymentVoucherRefundCreator implements JPaymentCreator {
+
         @Override
         public JPaymentInterface createJPayment() {
             return new JPaymentRefund(JPaymentSelect.this, "voucherout");
         }
+
         @Override
-        public String getKey() { 
-            return "refund.voucher"; 
+        public String getKey() {
+            return "refund.voucher";
         }
+
         @Override
-        public String getLabelKey() { 
-            return "tab.voucher"; 
+        public String getLabelKey() {
+            return "tab.voucher";
         }
+
         @Override
-        public String getIconKey() { 
-            return "/com/openbravo/images/voucher.png"; 
+        public String getIconKey() {
+            return "/com/openbravo/images/voucher.png";
         }
     }
 
     public class JPaymentMagcardRefundCreator implements JPaymentCreator {
+
         @Override
-       public JPaymentInterface createJPayment() {     
+        public JPaymentInterface createJPayment() {
             return new JPaymentMagcard(app, JPaymentSelect.this);
         }
+
         @Override
-        public String getKey() { 
-            return "refund.magcard"; 
+        public String getKey() {
+            return "refund.magcard";
         }
+
         @Override
-        public String getLabelKey() { 
-            return "tab.magcard"; 
+        public String getLabelKey() {
+            return "tab.magcard";
         }
+
         @Override
-        public String getIconKey() { 
-            return "/com/openbravo/images/ccard.png"; 
+        public String getIconKey() {
+            return "/com/openbravo/images/ccard.png";
         }
     }
 
     public class JPaymentBankCreator implements JPaymentCreator {
+
         @Override
         public JPaymentInterface createJPayment() {
             return new JPaymentBank(JPaymentSelect.this);
         }
+
         @Override
-        public String getKey() { 
-            return "payment.bank"; 
+        public String getKey() {
+            return "payment.bank";
         }
+
         @Override
-        public String getLabelKey() { 
-            return "tab.bank"; 
+        public String getLabelKey() {
+            return "tab.bank";
         }
+
         @Override
-        public String getIconKey() { 
-            return "/com/openbravo/images/bank.png"; 
+        public String getIconKey() {
+            return "/com/openbravo/images/bank.png";
         }
     }
 
     public class JPaymentSlipCreator implements JPaymentCreator {
+
         @Override
         public JPaymentInterface createJPayment() {
             return new JPaymentSlip(JPaymentSelect.this);
         }
+
         @Override
-        public String getKey() { 
-            return "payment.slip"; 
+        public String getKey() {
+            return "payment.slip";
         }
+
         @Override
-        public String getLabelKey() { 
-            return "tab.slip"; 
+        public String getLabelKey() {
+            return "tab.slip";
         }
+
         @Override
-        public String getIconKey() { 
-            return "/com/openbravo/images/slip.png"; 
+        public String getIconKey() {
+            return "/com/openbravo/images/slip.png";
         }
     }
-    
+
     private void printState() {
-        
+
         m_jRemaininglEuros.setText(Formats.CURRENCY.formatValue(
                 m_dTotal - m_aPaymentInfo.getTotal()));
         m_jButtonRemove.setEnabled(!m_aPaymentInfo.isEmpty());
-        m_jTabPayment.setSelectedIndex(0); 
+        m_jTabPayment.setSelectedIndex(0);
         ((JPaymentInterface) m_jTabPayment.getSelectedComponent())
-                .activate(customerext, 
-                m_dTotal - m_aPaymentInfo.getTotal()
-                , m_sTransactionID);
+                .activate(customerext,
+                        m_dTotal - m_aPaymentInfo.getTotal(),
+                        m_sTransactionID);
     }
-    
+
     protected static Window getWindow(Component parent) {
         if (parent == null) {
             return new JFrame();
         } else if (parent instanceof Frame || parent instanceof Dialog) {
-            return (Window)parent;
+            return (Window) parent;
         } else {
             return getWindow(parent.getParent());
         }
@@ -476,18 +552,18 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
 
     @Override
     public void setStatus(boolean isPositive, boolean isComplete) {
-        
+
         setStatusPanel(isPositive, isComplete);
     }
-    
-    public void setTransactionID(String tID){
+
+    public void setTransactionID(String tID) {
         this.m_sTransactionID = tID;
     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -531,7 +607,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
         m_jLblRemainingEuros.setText(AppLocal.getIntString("label.remainingcash")); // NOI18N
         m_jLblRemainingEuros.setPreferredSize(new java.awt.Dimension(120, 30));
 
-        m_jRemaininglEuros.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        m_jRemaininglEuros.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
         m_jRemaininglEuros.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         m_jRemaininglEuros.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(javax.swing.UIManager.getDefaults().getColor("Button.darkShadow")), javax.swing.BorderFactory.createEmptyBorder(1, 4, 1, 4)));
         m_jRemaininglEuros.setOpaque(true);
@@ -540,8 +616,9 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
 
         jPanel6.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 0));
 
+        m_jButtonRemove.setFont(m_jButtonRemove.getFont());
         m_jButtonRemove.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/btnminus.png"))); // NOI18N
-        m_jButtonRemove.setToolTipText("Delete Part Payment");
+        m_jButtonRemove.setToolTipText(AppLocal.getIntString("jpaymentselect.payment.delpartial")); // NOI18N
         m_jButtonRemove.setPreferredSize(new java.awt.Dimension(80, 45));
         m_jButtonRemove.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -549,8 +626,9 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
             }
         });
 
+        m_jButtonAdd.setFont(m_jButtonAdd.getFont());
         m_jButtonAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/btnplus.png"))); // NOI18N
-        m_jButtonAdd.setToolTipText("Add Part Payment");
+        m_jButtonAdd.setToolTipText(AppLocal.getIntString("jpaymentselect.payment.addpartial")); // NOI18N
         m_jButtonAdd.setPreferredSize(new java.awt.Dimension(80, 45));
         m_jButtonAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -624,9 +702,10 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
 
         jPanel5.setLayout(new java.awt.BorderLayout());
 
-        m_jButtonCancel.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        m_jButtonCancel.setFont(m_jButtonCancel.getFont());
         m_jButtonCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/cancel.png"))); // NOI18N
         m_jButtonCancel.setText(AppLocal.getIntString("button.cancel")); // NOI18N
+        m_jButtonCancel.setToolTipText(m_jButtonCancel.getText());
         m_jButtonCancel.setFocusPainted(false);
         m_jButtonCancel.setFocusable(false);
         m_jButtonCancel.setMargin(new java.awt.Insets(8, 16, 8, 16));
@@ -638,9 +717,10 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
         });
         jPanel2.add(m_jButtonCancel);
 
-        m_jButtonOK.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        m_jButtonOK.setFont(m_jButtonOK.getFont());
         m_jButtonOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
         m_jButtonOK.setText(AppLocal.getIntString("button.ok")); // NOI18N
+        m_jButtonOK.setToolTipText(m_jButtonOK.getText());
         m_jButtonOK.setFocusPainted(false);
         m_jButtonOK.setFocusable(false);
         m_jButtonOK.setMargin(new java.awt.Insets(8, 16, 8, 16));
@@ -658,7 +738,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
 
         m_jButtonPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/printer24_off.png"))); // NOI18N
         m_jButtonPrint.setSelected(true);
-        m_jButtonPrint.setToolTipText("Print Receipt");
+        m_jButtonPrint.setToolTipText(AppLocal.getIntString("jpaymentselect.printer.tooltip")); // NOI18N
         m_jButtonPrint.setFocusPainted(false);
         m_jButtonPrint.setFocusable(false);
         m_jButtonPrint.setMargin(new java.awt.Insets(8, 16, 8, 16));
@@ -687,44 +767,43 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
     private void m_jButtonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jButtonRemoveActionPerformed
 
         m_aPaymentInfo.removeLast();
-        printState();        
-        
+        printState();
+
     }//GEN-LAST:event_m_jButtonRemoveActionPerformed
 
     private void m_jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jButtonAddActionPerformed
 
-        PaymentInfo returnPayment = (
-                (JPaymentInterface) m_jTabPayment.getSelectedComponent())
+        PaymentInfo returnPayment = ((JPaymentInterface) m_jTabPayment.getSelectedComponent())
                 .executePayment();
         if (returnPayment != null) {
             m_aPaymentInfo.add(returnPayment);
             printState();
-        }        
-        
+        }
+
     }//GEN-LAST:event_m_jButtonAddActionPerformed
 
     private void m_jTabPaymentStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_jTabPaymentStateChanged
 
         if (m_jTabPayment.getSelectedComponent() != null) {
             ((JPaymentInterface) m_jTabPayment.getSelectedComponent())
-                    .activate(customerext
-                    , m_dTotal - m_aPaymentInfo.getTotal()
-                    , m_sTransactionID);
+                    .activate(customerext,
+                            m_dTotal - m_aPaymentInfo.getTotal(),
+                            m_sTransactionID);
             m_jRemaininglEuros.setText(
-                Formats.CURRENCY.formatValue(
-                m_dTotal - m_aPaymentInfo.getTotal()));
+                    Formats.CURRENCY.formatValue(
+                            m_dTotal - m_aPaymentInfo.getTotal()));
         }
-        
+
     }//GEN-LAST:event_m_jTabPaymentStateChanged
 
     private void m_jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jButtonOKActionPerformed
-        
+
         SwingWorker worker = new SwingWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                 setReturnPayment(
-                    ((JPaymentInterface) m_jTabPayment.getSelectedComponent())
-                    .executePayment());
+                setReturnPayment(
+                        ((JPaymentInterface) m_jTabPayment.getSelectedComponent())
+                                .executePayment());
                 return null;
             }
 
@@ -736,22 +815,22 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
                     m_aPaymentInfo.add(returnPayment);
                     accepted = true;
                     dispose();
-                }           
+                }
             }
         };
- 
+
         worker.execute();
     }//GEN-LAST:event_m_jButtonOKActionPerformed
 
     private void m_jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jButtonCancelActionPerformed
 
         dispose();
-        
+
     }//GEN-LAST:event_m_jButtonCancelActionPerformed
 
     private void m_jButtonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jButtonPrintActionPerformed
         if (!m_jButtonPrint.isSelected()) {
-            jlblPrinterStatus.setText("Printer OFF");            
+            jlblPrinterStatus.setText("Printer OFF");
         } else {
             jlblPrinterStatus.setText("Printer ON");
         }
@@ -759,13 +838,13 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
 
     private void m_jTabPaymentKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_m_jTabPaymentKeyPressed
 
-        if( evt.getKeyCode() == KeyEvent.VK_F1 ) {
+        if (evt.getKeyCode() == KeyEvent.VK_F1) {
 
-        } else if ( evt.getKeyCode() == KeyEvent.VK_F2 ) {
+        } else if (evt.getKeyCode() == KeyEvent.VK_F2) {
 //            m_jEditLine.doClick();
-        }        
+        }
     }//GEN-LAST:event_m_jTabPaymentKeyPressed
-   
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -784,4 +863,48 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
     private javax.swing.JTabbedPane m_jTabPayment;
     private javax.swing.JLabel m_jTotalEuros;
     // End of variables declaration//GEN-END:variables
+}
+
+//tabbedPane.setUI(new MyTabbedPaneUI());
+class MyTabbedPaneUI extends MetalTabbedPaneUI {
+
+    private final JTabbedPane tabPane;
+
+    public MyTabbedPaneUI(JTabbedPane tabbedPane) {
+        this.tabPane = tabbedPane;
+    }
+
+    @Override
+    protected void layoutLabel(int tabPlacement,
+            FontMetrics metrics, int tabIndex,
+            String title, Icon icon,
+            Rectangle tabRect, Rectangle iconRect,
+            Rectangle textRect, boolean isSelected) {
+
+        textRect.x = textRect.y = iconRect.x = iconRect.y = 0;
+        View v = getTextViewForTab(tabIndex);
+        if (v != null) {
+            tabPane.putClientProperty("html", v);
+        }
+        SwingUtilities.layoutCompoundLabel((JComponent) tabPane,
+                metrics, title, icon,
+                SwingUtilities.CENTER,
+                SwingUtilities.LEFT, //CENTER, &lt;----
+                SwingUtilities.CENTER,
+                SwingUtilities.TRAILING,
+                tabRect,
+                iconRect,
+                textRect,
+                textIconGap);
+        tabPane.putClientProperty("html", null);
+        textRect.translate(tabInsets.left, 0); //&lt;----
+        //textRect.width -= tabInsets.left+tabInsets.right;
+
+        int xNudge = getTabLabelShiftX(tabPlacement, tabIndex, isSelected);
+        int yNudge = getTabLabelShiftY(tabPlacement, tabIndex, isSelected);
+        iconRect.x += xNudge;
+        iconRect.y += yNudge;
+        textRect.x += xNudge;
+        textRect.y += yNudge;
+    }
 }

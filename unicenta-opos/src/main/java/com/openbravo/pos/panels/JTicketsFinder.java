@@ -677,28 +677,28 @@ public class JTicketsFinder extends javax.swing.JDialog implements EditorCreator
 
         jcmdOK.setEnabled(jListTickets.getSelectedValue() != null);
         
-}//GEN-LAST:event_jListTicketsValueChanged
+    }//GEN-LAST:event_jListTicketsValueChanged
 
     private void jListTicketsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListTicketsMouseClicked
         
         if (evt.getClickCount() == 2) {
             selectedTicket = (FindTicketsInfo) jListTickets.getSelectedValue();
             dispose();
-    }
+        }
         
-}//GEN-LAST:event_jListTicketsMouseClicked
+    }//GEN-LAST:event_jListTicketsMouseClicked
 
-private void jbtnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnResetActionPerformed
+    private void jbtnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnResetActionPerformed
 
-    defaultValues();
-}//GEN-LAST:event_jbtnResetActionPerformed
+        defaultValues();
+    }//GEN-LAST:event_jbtnResetActionPerformed
 
-private void btnDateStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDateStartActionPerformed
+    private void btnDateStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDateStartActionPerformed
     
-    jLblTicketCount.setVisible(false);
-    jLblReturnCount.setVisible(false);  
+        jLblTicketCount.setVisible(false);
+        jLblReturnCount.setVisible(false);
     
-    Date date;
+        Date date;
         try {
             date = (Date) Formats.TIMESTAMP.parseValue(jTxtStartDate.getText());
         } catch (BasicException e) {
@@ -708,13 +708,13 @@ private void btnDateStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         if (date != null) {
             jTxtStartDate.setText(Formats.TIMESTAMP.formatValue(date));
         }
-}//GEN-LAST:event_btnDateStartActionPerformed
+    }//GEN-LAST:event_btnDateStartActionPerformed
 
-private void btnDateEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDateEndActionPerformed
-    jLblTicketCount.setVisible(false);
-    jLblReturnCount.setVisible(false);  
+    private void btnDateEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDateEndActionPerformed
+        jLblTicketCount.setVisible(false);
+        jLblReturnCount.setVisible(false);
     
-    Date date;
+        Date date;
         try {
             date = (Date) Formats.TIMESTAMP.parseValue(jTxtEndDate.getText());
         } catch (BasicException e) {
@@ -724,13 +724,13 @@ private void btnDateEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         if (date != null) {
             jTxtEndDate.setText(Formats.TIMESTAMP.formatValue(date));
         }
-}//GEN-LAST:event_btnDateEndActionPerformed
+    }//GEN-LAST:event_btnDateEndActionPerformed
 
-private void btnCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCustomerActionPerformed
-    jLblTicketCount.setVisible(false);
-    jLblReturnCount.setVisible(false);      
+    private void btnCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCustomerActionPerformed
+        jLblTicketCount.setVisible(false);
+        jLblReturnCount.setVisible(false);
     
-    JCustomerFinder finder = JCustomerFinder.getCustomerFinder(this, dlCustomers);
+        JCustomerFinder finder = JCustomerFinder.getCustomerFinder(this, dlCustomers);
         finder.search(null);
         finder.setVisible(true);
         
@@ -743,7 +743,7 @@ private void btnCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             msg.show(this);            
         }
 
-}//GEN-LAST:event_btnCustomerActionPerformed
+    }//GEN-LAST:event_btnCustomerActionPerformed
 
     private void m_jKeysActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jKeysActionPerformed
 

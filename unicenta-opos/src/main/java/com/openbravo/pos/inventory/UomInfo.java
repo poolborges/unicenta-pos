@@ -48,11 +48,13 @@ public class UomInfo implements IKeyed {
         return m_sName;
     }
 
-    public static SerializerRead getSerializerRead() {
-        return new SerializerRead() {@Override
- public Object readValues(DataRead dr) throws BasicException {
-            return new UomInfo(dr.getString(1), dr.getString(2));
-        }};
+    public static SerializerRead<UomInfo> getSerializerRead() {
+        return new SerializerRead<UomInfo>() {
+            @Override
+            public UomInfo readValues(DataRead dr) throws BasicException {
+                return new UomInfo(dr.getString(1), dr.getString(2));
+            }
+        };
     }
     
     
