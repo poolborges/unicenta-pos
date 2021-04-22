@@ -26,44 +26,23 @@ public class SequenceForMySQL extends BaseSentence {
     private final BaseSentence sent1;
     private final BaseSentence sent2;
 
-    /**
-     * Creates a new instance of SequenceForMySQL
-     *
-     * @param s
-     * @param sSeqTable
-     */
     public SequenceForMySQL(Session s, String sSeqTable) {
 
         sent1 = new StaticSentence(s, "UPDATE " + sSeqTable + " SET ID = LAST_INSERT_ID(ID + 1)");
         sent2 = new StaticSentence(s, "SELECT LAST_INSERT_ID()", null, SerializerReadInteger.INSTANCE);
     }
 
-    // Funciones de bajo nivel
-    /**
-     *
-     * @param params
-     * @return
-     * @throws BasicException
-     */
     @Override
     public DataResultSet openExec(Object params) throws BasicException {
         sent1.exec();
         return sent2.openExec(null);
     }
 
-    /**
-     *
-     * @return @throws BasicException
-     */
     @Override
     public DataResultSet moreResults() throws BasicException {
         return sent2.moreResults();
     }
 
-    /**
-     *
-     * @throws BasicException
-     */
     @Override
     public void closeExec() throws BasicException {
         sent2.closeExec();

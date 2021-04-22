@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
@@ -28,9 +27,6 @@ public class SequenceForDerby extends BaseSentence {
     private BaseSentence sent2;
     private BaseSentence sent3;
 
-    /** Creates a new instance of SequenceForMySQL
-     * @param s
-     * @param sSeqTable */
     public SequenceForDerby(Session s, String sSeqTable) {
 
         sent1 = new StaticSentence(s, "DELETE FROM  " + sSeqTable);
@@ -38,36 +34,18 @@ public class SequenceForDerby extends BaseSentence {
         sent3 = new StaticSentence(s, "SELECT IDENTITY_VAL_LOCAL() FROM " + sSeqTable, null, SerializerReadInteger.INSTANCE);
     }
 
-       
-    // Funciones de bajo nivel
-
-    /**
-     *
-     * @param params
-     * @return
-     * @throws BasicException
-     */
-        @Override
+    @Override
     public DataResultSet openExec(Object params) throws BasicException {
         sent1.exec();
         sent2.exec();
         return sent3.openExec(null);
     }
 
-    /**
-     *
-     * @return
-     * @throws BasicException
-     */
     @Override
     public DataResultSet moreResults() throws BasicException {
         return sent3.moreResults();
     }
 
-    /**
-     *
-     * @throws BasicException
-     */
     @Override
     public void closeExec() throws BasicException {
         sent3.closeExec();
