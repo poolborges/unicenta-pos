@@ -37,10 +37,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         <jacoco.plugin.version>0.8.5</jacoco.plugin.version>
         <jacoco.plugin.reportPath>${project.build.directory}/jacoco.exec</jacoco.plugin.reportPath>
-        <dependency.check.version>6.1.5</dependency.check.version>
+        <owasp.dependency.check.version>6.1.5</owasp.dependency.check.version>
+        <checkstyle.plugin.version>3.1.2</checkstyle.plugin.version>
         <asciidoclet.version>1.5.6</asciidoclet.version>
         <project.github-url>http://Kriolos.github.io/krospos</project.github-url>
-        
+        <clover-maven-plugin.version>4.4.1</clover-maven-plugin.version>
         <spotbug.version>4.2.0</spotbug.version>
         
         <javadoc.excluded.packages />
@@ -51,6 +52,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <name>Paulo Borges</name> <!-- To be Chnge for a Organization Name -->
     </organization>
     <inceptionYear>2020</inceptionYear>
+    
+    <scm>
+        <connection>scm:git:https://github.com/poolborges/unicenta-pos.git</connection>
+        <developerConnection>scm:git:https://github.com/poolborges/unicenta-pos.git</developerConnection>
+    </scm>
+    
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/poolborges/unicenta-pos/issues</url>
+    </issueManagement>
+    
+    <distributionManagement>
+        <site>
+            <id>https://poolborges.github.io/unicenta-pos</id>
+        </site>
+    </distributionManagement>
+    
+    <ciManagement>
+        <system>Travis</system>
+        <url>https://travis-ci.org/poolborges/unicenta-pos</url>
+    </ciManagement>
 
     <licenses>
         <license>
@@ -106,6 +128,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </dependencyManagement>
     
     <build>
+        <defaultGoal>install</defaultGoal>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -122,116 +145,323 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <artifactId>maven-dependency-plugin</artifactId>
                     <version>3.1.2</version>
                 </plugin>
+                <!-- Test Coverage reports -->
                 <plugin>
                     <groupId>com.atlassian.maven.plugins</groupId>
                     <artifactId>clover-maven-plugin</artifactId>
-                    <version>4.1.1</version>
-                    <configuration>
-                        <targetPercentage>50%</targetPercentage>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
+                    <version>${clover-maven-plugin.version}</version>
                 </plugin>
-                <plugin>
-                    <groupId>com.github.spotbugs</groupId>
-                    <artifactId>spotbugs-maven-plugin</artifactId>
-                    <version>${spotbug.version}</version>
-                </plugin>
+
+                <!-- Generating test coverage reports -->
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${jacoco.plugin.version}</version>
                 </plugin>
+                <!-- Common Vulnerabilyt and Expose (CVE) -->
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>${dependency.check.version}</version>
+                    <version>${owasp.dependency.check.version}</version>
                 </plugin>
+                <!-- Coding Style -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>${checkstyle.plugin.version}</version>
                 </plugin>
+                
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.1</version>
                     <configuration>
+                        <showWarnings>true</showWarnings>
+                        <showDeprecation>true</showDeprecation>
                         <compilerArgs>
                             <arg>-Xlint:all</arg>
                         </compilerArgs>
                     </configuration>
                 </plugin>
-
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.2</version>
+                </plugin>
             </plugins>
         </pluginManagement>
-        
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
-                <configuration>
-                    <reuseForks>true</reuseForks>
-                    <argLine>${argLine} -Xmx2048m</argLine>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0-M5</version>
-                <configuration>
-                    <reuseForks>true</reuseForks>
-                    <argLine>${argLine} -Xmx4096m -XX:MaxPermSize=512M ${itCoverageAgent}</argLine>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>jacoco-initialize</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>jacoco-site</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>report-aggregate</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report-aggregate</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>report-aggregate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+
     </build>
+    
+    <profiles>
+        <profile>
+            <id>qa</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    
+                    <!-- License -->
+                    <plugin>
+                        <groupId>com.mycila</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>4.0.rc2</version>
+                        <configuration>
+                            <header>com/mycila/maven/plugin/license/templates/GPL-3.txt</header>
+                            <properties>
+                                <inceptionYear>${project.inceptionYear}</inceptionYear>
+                            </properties>
+                            <includes>
+                                <include>src/**/*.java</include>
+                                <include>src/**/*.xml</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/logback.xml</exclude>
+                                <exclude>**/logback-test.xml</exclude>
+                                <exclude>**/src/test/resources/**</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                    <!-- Static Analyzer -->
+                    <plugin>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs-maven-plugin</artifactId>
+                        <version>${spotbug.version}</version>
+                        <configuration>
+                            <effort>Max</effort>
+                            <threshold>High</threshold>
+                            <xmlOutput>true</xmlOutput>
+                            <failOnError>false</failOnError>
+                            <maxHeap>2048</maxHeap>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>krpos-spotbugs</id>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>3.14.0</version>
+                        <configuration>
+                            <failOnViolation>false</failOnViolation>
+                            <skip>false</skip>
+                            <aggregate>true</aggregate>
+                            <failurePriority>5</failurePriority>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>krpos-pmd</id>
+                                <goals>
+                                    <goal>check</goal>
+                                    <goal>cpd-check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- mvn test -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.0.0-M5</version>
+                        <configuration>
+                            <reuseForks>true</reuseForks>
+                            <!-- Sets the VM argument line used when unit tests are run. -->
+                            <argLine>${surefire.jacoco.args}</argLine>
+                            <argLine>${argLine} -Xmx2048m</argLine>
+                        </configuration>
+                    </plugin>
+                    <!-- mvn verify -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>3.0.0-M5</version>
+                        <configuration>
+                            <reuseForks>true</reuseForks>
+                            <argLine>${failsafe.jacoco.args}</argLine>
+                            <argLine>${argLine} -Xmx2048m -XX:MaxPermSize=512M</argLine>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.plugin.version}</version>
+                        <executions>
+                            <!-- Prepares the property pointing to the JaCoCo runtime agent which
+                            is passed as VM argument when Maven the Surefire plugin is executed. -->
+                            <execution>
+                                <id>pre-unit-test</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                                <configuration>
+                                    <destFile>${project.build.directory}/jacoco-output/jacoco-unit-tests.exec</destFile>
+                                    <!-- Sets the name of the property containing 
+                                    the settings for JaCoCo runtime agent. -->
+                                    <propertyName>surefire.jacoco.args</propertyName>
+                                </configuration>
+                            </execution>
+                            <!-- Ensures that the code coverage report for unit tests 
+                            is created after unit tests have been run. -->
+                            <execution>
+                                <id>post-unit-test</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>report-aggregate</goal>
+                                </goals>
+                        
+                                <configuration>
+                                    <dataFile>${project.build.directory}/jacoco-output/jacoco-unit-tests.exec</dataFile>
+                                    <!-- Sets the output directory for the code coverage report. -->
+                                    <outputDirectory>${project.reporting.outputDirectory}/jacoco-unit-test-coverage-report</outputDirectory>
+                                </configuration>
+                            </execution>
+                    
+                            <execution>
+                                <id>pre-integration-test-execution</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                                <configuration>
+                                    <destFile>${project.build.directory}/jacoco-output/jacoco-integration-tests.exec</destFile>
+                                    <propertyName>failsafe.jacoco.args</propertyName>
+                                </configuration>
+                            </execution>
+                    
+                            <execution>
+                                <id>post-integration-test-execution</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                    <dataFile>${project.build.directory}/jacoco-output/jacoco-integration-tests.exec</dataFile>
+                                    <outputDirectory>${project.reporting.outputDirectory}/jacoco-integration-test-coverage-report</outputDirectory>
+                                </configuration>
+                            </execution>
+                    
+                            <!-- MERGE unit and integration test data -->
+                            <execution>
+                                <id>merge-unit-and-integration</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>merge</goal>
+                                </goals>
+                                <configuration>
+                                    <fileSets>
+                                        <fileSet>
+                                            <directory>${project.build.directory}/jacoco-output/</directory>
+                                            <includes>
+                                                <include>*.exec</include>
+                                            </includes>
+                                        </fileSet>
+                                    </fileSets>
+                                    <destFile>${project.build.directory}/jacoco-output/merged.exec</destFile>
+                                </configuration>
+                            </execution>
+                            <!-- Generate merge report of unit and integration test coverage -->
+                            <execution>
+                                <id>create-merged-report</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                    <dataFile>${project.build.directory}/jacoco-output/merged.exec</dataFile>
+                                    <outputDirectory>${project.reporting.outputDirectory}/jacoco-merged-test-coverage-report</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
+                    <plugin>
+                        <groupId>org.openclover</groupId>
+                        <artifactId>clover-maven-plugin</artifactId>
+                        <version>${clover-maven-plugin.version}</version>
+                        <configuration>
+                            <flushPolicy>threaded</flushPolicy>
+                            <flushInterval>100</flushInterval>
+                            <targetPercentage>0%</targetPercentage>
+                            <generateHtml>true</generateHtml>
+                            <generateXml>true</generateXml>
+                            <generateHistorical>true</generateHistorical>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>main</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>instrument</goal>
+                                    <goal>aggregate</goal>
+                                    <goal>check</goal>
+                                    <goal>log</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>site</id>
+                                <phase>pre-site</phase>
+                                <goals>
+                                    <goal>instrument</goal>
+                                    <goal>aggregate</goal>
+                                    <!-- We save a history point in order to have data to generate a historical report -->
+                                    <goal>save-history</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
+                    <!-- Generate the Checkstyle report. (Self Aggregating) -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${checkstyle.plugin.version}</version>
+                        <configuration>
+                            <encoding>UTF-8</encoding>
+                            <skip>false</skip>
+                            <headerFile />
+                            <failOnErrors>false</failOnErrors>
+                            <failsOnError>true</failsOnError>
+                            <failOnViolation>true</failOnViolation>
+                            <violationSeverity>warning</violationSeverity>
+                            <consoleOutput>true</consoleOutput>
+                            
+                            <excludes>${checkstyle.excludes}</excludes>
+                            <includes>src/**\/*.java</includes>
+                            <configLocation>google_checks.xml</configLocation>
+                            <!--
+                           <configLocation>codestyle/checkstyle.xml</configLocation>
+                            -->
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     
     <reporting>
         
         <plugins>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.9.1</version>
+            </plugin>
             <!-- Generate Reports Information about the project. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -284,7 +514,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>${dependency.check.version}</version>
+                <version>${owasp.dependency.check.version}</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -294,35 +524,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     </reportSet>
                 </reportSets>
             </plugin>
-            
-            <!-- Generate the Checkstyle report. (Self Aggregating) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.1.1</version>
-                <configuration>
-                    <skip>false</skip>
-                    <!--
-                   <configLocation>codestyle/checkstyle.xml</configLocation>
-                    -->
-                    <excludes>${checkstyle.excludes}</excludes>
-                    <headerFile />
-                    <!--
-                   <configLocation>codestyle/checkstyle.xml</configLocation>
-                    -->
-                    <failOnErrors>false</failOnErrors>
-                    <failOnViolation>false</failOnViolation>
-                    <consoleOutput>true</consoleOutput>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>checkstyle-aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-            
+
             <!-- PMD and CPD Reports (Aggregate Parameter). -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -330,6 +532,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <version>3.14.0</version>
                 <configuration>
                     <skip>false</skip>
+                    <skipEmptyReport>false</skipEmptyReport>
+                    <printFailingErrors>true</printFailingErrors>
                     <aggregate>true</aggregate>
                     <failurePriority>5</failurePriority>
                 </configuration>
@@ -405,33 +609,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <version>4.0.rc2</version>
-                <configuration>
-                    <header>com/mycila/maven/plugin/license/templates/GPL-3.txt</header>
-                    <properties>
-                        <inceptionYear>${project.inceptionYear}</inceptionYear>
-                    </properties>
-                    <includes>
-                        <include>src/**/*.java</include>
-                        <include>src/**/*.xml</include>
-                    </includes>
-                    <excludes>
-                        <exclude>**/logback.xml</exclude>
-                        <exclude>**/logback-test.xml</exclude>
-                        <exclude>**/src/test/resources/**</exclude>
-                    </excludes>
-                </configuration>
             </plugin>
-            
-            
-                    
+    
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbug.version}</version>
                 <configuration>
-                    <findbugsXmlOutput>true</findbugsXmlOutput>
                     <failOnError>false</failOnError>
+                    <threshold>Low</threshold><!-- High|Normal|Low|Exp|Ignore -->
+                    <effort>Default</effort><!-- Min|Default|Max -->
                 </configuration>
             </plugin>
+            
         </plugins>
     </reporting>
 </project>

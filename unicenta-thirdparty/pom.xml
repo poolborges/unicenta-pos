@@ -4,25 +4,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.gitub.kriolsolutions.krospos</groupId>
+    <parent>
+        <groupId>io.gitub.kriolsolutions.krospos</groupId>
+        <artifactId>kropos-parent</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../</relativePath>  
+    </parent>  
     <artifactId>unicenta-thirdparty</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>krPOS :: Unicenta.Thirdparty</name>
-    
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-    </properties>
-
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
-                <version>2.5.2</version>
                 <executions>
                     
                     <execution>

@@ -2,12 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
     <parent>
         <groupId>io.gitub.kriolsolutions.krospos</groupId>
         <artifactId>kropos-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <artifactId>unicentaopos-samples</artifactId>
     <packaging>jar</packaging>
@@ -15,23 +16,10 @@
     <description>Open Source POS Samples</description>  
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>11</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-
         <javafx.version>11</javafx.version>
         <auto-service.version>1.0-rc7</auto-service.version>
-        
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-        <code.coverage.min>0.95</code.coverage.min>
     </properties>
     
-    <organization>
-        <name>Paulo Borges</name> <!-- To be Chnge for a Organization Name -->
-    </organization>
-    <inceptionYear>2020</inceptionYear>
-
     <licenses>
         <license>
             <name>GNU General Public License, version 3</name>
@@ -40,33 +28,6 @@
         </license>
     </licenses>
 
-    <developers>
-        <developer>
-            <id>poolborges</id>
-            <name>Paulo Borges</name>
-            <organization>Kriol Solutions, Cabo Verde</organization>
-            <roles>
-                <role>Project Manager</role>
-                <role>Developer</role>
-                <role>Despot</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>keviborges</id>
-            <name>Kevin Borges</name>
-            <organization>Kriol Solutions, Cabo Verde</organization>
-            <roles>
-                <role>Developer</role>
-            </roles>
-        </developer>
-    </developers>
-    
-    <contributors>
-        <contributor>
-            <name>Maria Semedo</name>
-        </contributor>
-    </contributors>
-  
     <dependencies>
         
         <dependency>
@@ -144,7 +105,6 @@
             <version>RELEASE121</version>
         </dependency>
         
-        
         <!-- org.scijava/scripting-java -->
         <dependency>
             <groupId>org.patrodyne</groupId>
@@ -159,7 +119,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
                 <configuration>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
@@ -177,13 +136,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.17</version>
                 <executions>
                     <execution>
                         <id>validate</id>
                         <phase>process-sources</phase>
                         <configuration>
+                            <!-- https://checkstyle.sourceforge.io/google_style.html -->
+                            <configLocation>google_checks.xml</configLocation>
+                            <!--
                             <configLocation>buildConfig/checkstyle-krpos.xml</configLocation>
+                            -->
                             <encoding>UTF-8</encoding>
                             <consoleOutput>true</consoleOutput>
                             <failsOnError>false</failsOnError>
@@ -195,80 +157,8 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.5</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>jacoco-check</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <rules>
-                                    <rule>
-                                        <element>PACKAGE</element>
-                                        <excludes>*Test</excludes>
-                                        <limits>
-                                            <limit>
-                                                <counter>LINE</counter>
-                                                <value>COVEREDRATIO</value>
-                                                <minimum>${code.coverage.min}</minimum>
-                                            </limit>
-                                        </limits>
-                                    </rule>
-                                </rules>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <configuration>
-                    <configLocation>config/sun_checks.xml</configLocation>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
     
     <profiles>
         <profile>
