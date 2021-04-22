@@ -20,7 +20,8 @@ report.setTitleKey("Menu.Customers.Reports.Diary");
 report.setReport("/com/openbravo/reports/customers_diary");
 report.setResourceBundle("com/openbravo/reports/customers_messages");
 
-report.setSentence("SELECT " +
+report.setSentence(
+        "SELECT " +
             "receipts.DATENEW, " +
             "tickets.TICKETID, " +
             "payments.PAYMENT, " +
@@ -39,9 +40,7 @@ report.addParameter("receipts.DATENEW");
 report.addParameter("receipts.DATENEW");
 
 paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
-
 paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
-// JG - 8 Jan 14 paramdates.setEndDate(com.openbravo.beans.DateUtils.getToday());
 paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
 
 report.addQBFFilter(paramdates);

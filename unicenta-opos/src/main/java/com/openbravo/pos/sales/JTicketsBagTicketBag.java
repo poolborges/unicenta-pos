@@ -27,9 +27,7 @@ import javax.swing.JOptionPane;
 public class JTicketsBagTicketBag extends javax.swing.JPanel {
     
     private final JTicketsBagTicket m_ticketsbagticket;
-    
-    /** Creates new form JTicketsBagTicketBag
-     * @param ticketsbagticket */
+
     public JTicketsBagTicketBag(JTicketsBagTicket ticketsbagticket) {
         m_ticketsbagticket = ticketsbagticket;
         initComponents();
@@ -74,8 +72,8 @@ public class JTicketsBagTicketBag extends javax.swing.JPanel {
 
         m_jBtnDelete.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         m_jBtnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/sale_delete.png"))); // NOI18N
-        m_jBtnDelete.setText(AppLocal.getIntString("button.deleteticket")); // NOI18N
-        m_jBtnDelete.setToolTipText("Delete current Ticket");
+        m_jBtnDelete.setText(AppLocal.getIntString("Button.DeleteTicket")); // NOI18N
+        m_jBtnDelete.setToolTipText(AppLocal.getIntString("Button.DeleteTicket")); // NOI18N
         m_jBtnDelete.setFocusPainted(false);
         m_jBtnDelete.setFocusable(false);
         m_jBtnDelete.setMargin(new java.awt.Insets(0, 4, 0, 4));
@@ -93,7 +91,7 @@ public class JTicketsBagTicketBag extends javax.swing.JPanel {
         m_jBtnCancel.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         m_jBtnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/cancel.png"))); // NOI18N
         m_jBtnCancel.setText(AppLocal.getIntString("button.cancel")); // NOI18N
-        m_jBtnCancel.setToolTipText("Cancel Action");
+        m_jBtnCancel.setToolTipText(AppLocal.getIntString("button.cancel")); // NOI18N
         m_jBtnCancel.setFocusPainted(false);
         m_jBtnCancel.setFocusable(false);
         m_jBtnCancel.setMargin(new java.awt.Insets(0, 4, 0, 4));

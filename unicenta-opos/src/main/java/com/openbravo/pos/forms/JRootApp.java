@@ -104,6 +104,10 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
     private String m_clock;
     private String m_date;
 
+    private final static int UNIQUE_KEY_FAMILY = 0x01;
+    
+    private DSPortAdapter m_oneWireAdapter;
+    private DeviceMonitor m_oneWireMonitor;
 
 
     static {
@@ -139,11 +143,9 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
 
         initComponents();
         jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(30, 30));
-        serverMonitor.setVisible(false);
+        serverMonitor.setVisible(true);
         webMemoryBar1.setShowMaximumMemory(true);
     }
-    private DSPortAdapter m_oneWireAdapter;
-    private DeviceMonitor m_oneWireMonitor;
 
     private void initIButtonMonitor() {
 
@@ -154,10 +156,7 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
             m_oneWireAdapter.targetFamily(0x01);
             m_oneWireAdapter.setSpeed(DSPortAdapter.SPEED_REGULAR);
             m_oneWireMonitor = new DeviceMonitor(m_oneWireAdapter);
-// Normal state
-            m_oneWireMonitor.setMaxStateCount(5);
-// Use for testing
-//            m_oneWireMonitor.setMaxStateCount(100);                        
+            m_oneWireMonitor.setMaxStateCount(5);                       
             m_oneWireMonitor.addDeviceMonitorEventListener(this);
             new Thread(m_oneWireMonitor).start();
         } catch (OneWireException e) {
@@ -182,7 +181,6 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
         shutdownIButtonMonitor();
     }
 
-    final static int UNIQUE_KEY_FAMILY = 0x01;
 
     private boolean isDeviceRelevant(OneWireContainer container) {
         String iButtonId = container.getAddressAsString();
@@ -418,7 +416,7 @@ public class JRootApp extends JPanel implements AppView, DeviceMonitorEventListe
 
         m_Scanner = DeviceScannerFactory.createInstance(m_props);
 
-        new javax.swing.Timer(1000, new PrintTimeAction()).start();
+        new javax.swing.Timer(10000, new PrintTimeAction()).start();
 
         String sWareHouse;
 

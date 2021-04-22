@@ -103,10 +103,13 @@ public class JProductAttListItem extends javax.swing.JPanel implements JProductA
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel1.setText("jLabel1");
-        jLabel1.setPreferredSize(new java.awt.Dimension(110, 30));
+        jLabel1.setMaximumSize(new java.awt.Dimension(100, 30));
+        jLabel1.setMinimumSize(new java.awt.Dimension(100, 30));
+        jLabel1.setPreferredSize(new java.awt.Dimension(100, 30));
 
         jValues.setEditable(true);
         jValues.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jValues.setMinimumSize(new java.awt.Dimension(100, 30));
         jValues.setPreferredSize(new java.awt.Dimension(200, 30));
         jValues.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -123,7 +126,7 @@ public class JProductAttListItem extends javax.swing.JPanel implements JProductA
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jValues, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addContainerGap(76, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

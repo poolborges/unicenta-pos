@@ -55,8 +55,6 @@ public class JPanelButtons extends javax.swing.JPanel {
     private Properties props;
     private Map<String, String> events;
     
-    private ThumbNailBuilder tnbmacro;
-    
     private JPanelTicket panelticket;
     
     /** Creates new form JPanelButtons
@@ -64,9 +62,7 @@ public class JPanelButtons extends javax.swing.JPanel {
      * @param panelticket */
     public JPanelButtons(String sConfigKey, JPanelTicket panelticket) {
         initComponents();
-        
-        // Load categories default thumbnail
-        tnbmacro = new ThumbNailBuilder(42, 36, "com/openbravo/images/run_script.png");               
+                     
         
         this.panelticket = panelticket;
         
@@ -197,6 +193,11 @@ public class JPanelButtons extends javax.swing.JPanel {
     }  
         
     private class JButtonFunc extends JButton {
+
+        private static final long serialVersionUID = 1L;
+        
+        // Load categories default thumbnail
+        final ThumbNailBuilder tnbmacro = new ThumbNailBuilder(42, 36, "com/openbravo/images/run_script.png");  
        
         public JButtonFunc(String sKey, String sImage, String title) {
             

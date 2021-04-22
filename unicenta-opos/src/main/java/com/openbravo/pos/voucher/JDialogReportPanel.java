@@ -16,7 +16,6 @@
  */
 package com.openbravo.pos.voucher;
 
-import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.loader.BaseSentence;
 import com.openbravo.data.loader.Datas;
@@ -32,13 +31,9 @@ import com.openbravo.pos.util.JRViewer400;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
-import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Window;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,15 +42,12 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import javax.swing.*;
-import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 public abstract class JDialogReportPanel extends javax.swing.JDialog {
 
@@ -107,9 +99,9 @@ public abstract class JDialogReportPanel extends javax.swing.JDialog {
 
     protected BaseSentence getSentence() {
         return new StaticSentence(m_App.getSession(),
-                 new QBFBuilder(sentence, paramnames.toArray(new String[paramnames.size()])),
-                 null,
-                 new SerializerReadBasic(fielddatas.toArray(new Datas[fielddatas.size()])));
+                new QBFBuilder(sentence, paramnames.toArray(new String[paramnames.size()])),
+                null,
+                new SerializerReadBasic(fielddatas.toArray(new Datas[fielddatas.size()])));
     }
 
     protected ReportFields getReportFields() {
@@ -124,11 +116,6 @@ public abstract class JDialogReportPanel extends javax.swing.JDialog {
                 // Archivo de recursos
                 String res = "com/openbravo/reports/voucher_messages";//getResourceBundle();  
 
-                // Parametros y los datos
-//                Object params = (editor == null) ? null : editor.createValue();                
-//                BaseSentence sql= getSentence() ; 
-//                JRDataSource data = new JRDataSourceBasic(sql, getReportFields(), null);
-                // Construyo el mapa de los parametros.
                 Map reportparams = new HashMap();
                 reportparams.put("CUSTOMER_NAME", voucherInfo.getCustomerName());
                 reportparams.put("LOGO", image);
@@ -139,13 +126,8 @@ public abstract class JDialogReportPanel extends javax.swing.JDialog {
                     reportparams.put("REPORT_RESOURCE_BUNDLE", ResourceBundle.getBundle(res));
                 }
 
-//                if (paramsreport.size()>0){
-//                    for (Map.Entry<String, String> entry : paramsreport.entrySet()) {
-//                        reportparams.put(entry.getKey(), entry.getValue()); 
-//                    }
-//                }
                 JasperPrint jp = JasperFillManager.fillReport(jr, reportparams, new JREmptyDataSource());
-//               JasperExportManager.exportReportToPdfFile(jp,"E:\\report7.pdf"); 
+//              JasperExportManager.exportReportToPdfFile(jp,"report7.pdf"); 
                 reportviewer.loadJasperPrint(jp);
 
             } catch (MissingResourceException e) {
@@ -155,10 +137,6 @@ public abstract class JDialogReportPanel extends javax.swing.JDialog {
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotfillreport"), e);
                 msg.show(this);
             }
-//            catch (BasicException e) {
-//                MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadreportdata"), e);
-//                msg.show(this);
-//            }
         }
     }
 
@@ -215,7 +193,6 @@ public abstract class JDialogReportPanel extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jcmdCancel = new javax.swing.JButton();
         jcmdOK = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(AppLocal.getIntString("form.customertitle")); // NOI18N
@@ -258,9 +235,6 @@ public abstract class JDialogReportPanel extends javax.swing.JDialog {
 
         jPanel8.add(jPanel1, java.awt.BorderLayout.LINE_END);
 
-        jButton1.setText("jButton1");
-        jPanel8.add(jButton1, java.awt.BorderLayout.CENTER);
-
         jPanel3.add(jPanel8, java.awt.BorderLayout.SOUTH);
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.CENTER);
@@ -281,7 +255,6 @@ public abstract class JDialogReportPanel extends javax.swing.JDialog {
     }//GEN-LAST:event_jcmdCancelActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;

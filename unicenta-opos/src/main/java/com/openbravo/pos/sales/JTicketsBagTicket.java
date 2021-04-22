@@ -343,8 +343,7 @@ public class JTicketsBagTicket extends JTicketsBag {
 
         jButton2.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/search24.png"))); // NOI18N
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages"); // NOI18N
-        jButton2.setToolTipText(bundle.getString("tooltip.ticketsearch")); // NOI18N
+        jButton2.setToolTipText(AppLocal.getIntString("tooltip.ticketsearch")); // NOI18N
         jButton2.setFocusPainted(false);
         jButton2.setFocusable(false);
         jButton2.setMargin(new java.awt.Insets(0, 4, 0, 4));
@@ -360,7 +359,7 @@ public class JTicketsBagTicket extends JTicketsBag {
 
         m_jEdit.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         m_jEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/sale_editline.png"))); // NOI18N
-        m_jEdit.setToolTipText(bundle.getString("tooltip.ticketedit")); // NOI18N
+        m_jEdit.setToolTipText(AppLocal.getIntString("tooltip.ticketedit")); // NOI18N
         m_jEdit.setFocusPainted(false);
         m_jEdit.setFocusable(false);
         m_jEdit.setMargin(new java.awt.Insets(0, 4, 0, 4));
@@ -376,7 +375,7 @@ public class JTicketsBagTicket extends JTicketsBag {
 
         m_jRefund.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         m_jRefund.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/inbox.png"))); // NOI18N
-        m_jRefund.setToolTipText(bundle.getString("tooltip.ticketrefund")); // NOI18N
+        m_jRefund.setToolTipText(AppLocal.getIntString("tooltip.ticketrefund")); // NOI18N
         m_jRefund.setFocusPainted(false);
         m_jRefund.setFocusable(false);
         m_jRefund.setMargin(new java.awt.Insets(0, 4, 0, 4));
@@ -392,7 +391,7 @@ public class JTicketsBagTicket extends JTicketsBag {
 
         m_jPrint.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         m_jPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/printer24.png"))); // NOI18N
-        m_jPrint.setToolTipText(bundle.getString("tooltip.ticketreprint")); // NOI18N
+        m_jPrint.setToolTipText(AppLocal.getIntString("tooltip.ticketreprint")); // NOI18N
         m_jPrint.setFocusPainted(false);
         m_jPrint.setFocusable(false);
         m_jPrint.setMargin(new java.awt.Insets(0, 4, 0, 4));
@@ -413,7 +412,7 @@ public class JTicketsBagTicket extends JTicketsBag {
             .add(m_jButtonsLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(m_jTicketId, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 12, Short.MAX_VALUE)
                 .add(jButton2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(5, 5, 5)
                 .add(m_jEdit, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -423,22 +422,17 @@ public class JTicketsBagTicket extends JTicketsBag {
                 .add(m_jPrint, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
         m_jButtonsLayout.setVerticalGroup(
-            m_jButtonsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(m_jButtonsLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(m_jTicketId, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+            m_jButtonsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
             .add(m_jButtonsLayout.createSequentialGroup()
                 .add(5, 5, 5)
-                .add(jButton2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(m_jButtonsLayout.createSequentialGroup()
-                .add(5, 5, 5)
-                .add(m_jEdit, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(m_jButtonsLayout.createSequentialGroup()
-                .add(5, 5, 5)
-                .add(m_jRefund, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .add(m_jButtonsLayout.createSequentialGroup()
-                .add(5, 5, 5)
-                .add(m_jPrint, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(m_jButtonsLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jButton2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(m_jEdit, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(m_jRefund, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(m_jPrint, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, m_jButtonsLayout.createSequentialGroup()
+                        .add(m_jTicketId, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         m_jOptions.add(m_jButtons);
@@ -468,7 +462,7 @@ public class JTicketsBagTicket extends JTicketsBag {
         jPanel5.setLayout(new java.awt.GridBagLayout());
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
-        jButton1.setToolTipText(bundle.getString("tooltip.edit.findticket")); // NOI18N
+        jButton1.setToolTipText(AppLocal.getIntString("tooltip.edit.findticket")); // NOI18N
         jButton1.setFocusPainted(false);
         jButton1.setFocusable(false);
         jButton1.setMargin(new java.awt.Insets(8, 14, 8, 14));
@@ -489,6 +483,7 @@ public class JTicketsBagTicket extends JTicketsBag {
         jPanel5.add(jButton1, gridBagConstraints);
 
         m_jTicketEditor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        m_jTicketEditor.setMinimumSize(new java.awt.Dimension(100, 30));
         m_jTicketEditor.setPreferredSize(new java.awt.Dimension(130, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -502,7 +497,7 @@ public class JTicketsBagTicket extends JTicketsBag {
         buttonGroup1.add(jrbSales);
         jrbSales.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jrbSales.setText(AppLocal.getIntString("label.sales")); // NOI18N
-        jrbSales.setToolTipText(bundle.getString("tooltip.edit.salesopt")); // NOI18N
+        jrbSales.setToolTipText(AppLocal.getIntString("tooltip.edit.salesopt")); // NOI18N
         jrbSales.setFocusPainted(false);
         jrbSales.setFocusable(false);
         jrbSales.setRequestFocusEnabled(false);
@@ -512,7 +507,7 @@ public class JTicketsBagTicket extends JTicketsBag {
         jrbRefunds.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jrbRefunds.setForeground(new java.awt.Color(255, 0, 0));
         jrbRefunds.setText(AppLocal.getIntString("label.refunds")); // NOI18N
-        jrbRefunds.setToolTipText(bundle.getString("tooltip.edit.refundopt")); // NOI18N
+        jrbRefunds.setToolTipText(AppLocal.getIntString("tooltip.edit.refundopt")); // NOI18N
         jrbRefunds.setFocusPainted(false);
         jrbRefunds.setFocusable(false);
         jrbRefunds.setRequestFocusEnabled(false);

@@ -35,9 +35,11 @@
               <Image iconType="3" name="/com/openbravo/images/sale_delete.png"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="pos_messages.properties" key="button.deleteticket" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="pos_messages.properties" key="Button.DeleteTicket" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
             </Property>
-            <Property name="toolTipText" type="java.lang.String" value="Delete current Ticket"/>
+            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="pos_messages.properties" key="Button.DeleteTicket" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
+            </Property>
             <Property name="focusPainted" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
@@ -69,7 +71,9 @@
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="pos_messages.properties" key="button.cancel" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
             </Property>
-            <Property name="toolTipText" type="java.lang.String" value="Cancel Action"/>
+            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="pos_messages.properties" key="button.cancel" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
+            </Property>
             <Property name="focusPainted" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">

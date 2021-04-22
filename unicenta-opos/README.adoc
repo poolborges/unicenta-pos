@@ -1,4 +1,4 @@
-
+= krPOS (Point of Sales)
 
 
 == Execute from Maven (mvn) 

@@ -81,18 +81,28 @@ public JRefundLines(DataLogicSystem dlSystem, JPanelTicketEdits jTicketEdit) {
         m_jbtnAddAll = new javax.swing.JButton();
 
         setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        setPreferredSize(new java.awt.Dimension(15, 200));
+        setMinimumSize(new java.awt.Dimension(150, 200));
+        setPreferredSize(new java.awt.Dimension(150, 200));
+        setRequestFocusEnabled(false);
         setLayout(new java.awt.BorderLayout());
 
+        jPanel3.setMinimumSize(new java.awt.Dimension(0, 0));
+        jPanel3.setPreferredSize(new java.awt.Dimension(150, 200));
         jPanel3.setLayout(new java.awt.BorderLayout());
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
+        jPanel1.setPreferredSize(new java.awt.Dimension(150, 200));
         jPanel1.setLayout(new java.awt.BorderLayout());
+
+        jPanel2.setPreferredSize(new java.awt.Dimension(150, 200));
 
         webLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages"); // NOI18N
         webLabel1.setText(bundle.getString("label.refunds")); // NOI18N
         webLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        webLabel1.setMaximumSize(new java.awt.Dimension(100, 30));
+        webLabel1.setMinimumSize(new java.awt.Dimension(100, 30));
+        webLabel1.setPreferredSize(new java.awt.Dimension(100, 30));
 
         m_jbtnAddOne.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         m_jbtnAddOne.setText(AppLocal.getIntString("button.refundone")); // NOI18N
@@ -100,7 +110,9 @@ public JRefundLines(DataLogicSystem dlSystem, JPanelTicketEdits jTicketEdit) {
         m_jbtnAddOne.setFocusPainted(false);
         m_jbtnAddOne.setFocusable(false);
         m_jbtnAddOne.setMargin(new java.awt.Insets(8, 14, 8, 14));
-        m_jbtnAddOne.setPreferredSize(new java.awt.Dimension(110, 45));
+        m_jbtnAddOne.setMaximumSize(new java.awt.Dimension(100, 30));
+        m_jbtnAddOne.setMinimumSize(new java.awt.Dimension(100, 30));
+        m_jbtnAddOne.setPreferredSize(new java.awt.Dimension(100, 50));
         m_jbtnAddOne.setRequestFocusEnabled(false);
         m_jbtnAddOne.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -114,7 +126,9 @@ public JRefundLines(DataLogicSystem dlSystem, JPanelTicketEdits jTicketEdit) {
         m_jbtnAddLine.setFocusPainted(false);
         m_jbtnAddLine.setFocusable(false);
         m_jbtnAddLine.setMargin(new java.awt.Insets(8, 14, 8, 14));
-        m_jbtnAddLine.setPreferredSize(new java.awt.Dimension(110, 45));
+        m_jbtnAddLine.setMaximumSize(new java.awt.Dimension(100, 50));
+        m_jbtnAddLine.setMinimumSize(new java.awt.Dimension(100, 50));
+        m_jbtnAddLine.setPreferredSize(new java.awt.Dimension(100, 50));
         m_jbtnAddLine.setRequestFocusEnabled(false);
         m_jbtnAddLine.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -128,7 +142,9 @@ public JRefundLines(DataLogicSystem dlSystem, JPanelTicketEdits jTicketEdit) {
         m_jbtnAddAll.setFocusPainted(false);
         m_jbtnAddAll.setFocusable(false);
         m_jbtnAddAll.setMargin(new java.awt.Insets(8, 14, 8, 14));
-        m_jbtnAddAll.setPreferredSize(new java.awt.Dimension(110, 45));
+        m_jbtnAddAll.setMaximumSize(new java.awt.Dimension(100, 50));
+        m_jbtnAddAll.setMinimumSize(new java.awt.Dimension(100, 50));
+        m_jbtnAddAll.setPreferredSize(new java.awt.Dimension(100, 50));
         m_jbtnAddAll.setRequestFocusEnabled(false);
         m_jbtnAddAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,7 +156,7 @@ public JRefundLines(DataLogicSystem dlSystem, JPanelTicketEdits jTicketEdit) {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(webLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(webLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(m_jbtnAddOne, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(m_jbtnAddLine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(m_jbtnAddAll, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -149,7 +165,7 @@ public JRefundLines(DataLogicSystem dlSystem, JPanelTicketEdits jTicketEdit) {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(1, 1, 1)
-                .addComponent(webLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(webLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(m_jbtnAddOne, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)

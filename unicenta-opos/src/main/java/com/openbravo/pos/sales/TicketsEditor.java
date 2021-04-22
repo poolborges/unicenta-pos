@@ -25,11 +25,11 @@ import com.openbravo.pos.ticket.TicketInfo;
 public interface TicketsEditor {
     
     /**
-     *
-     * @param oTicket
-     * @param oTicketExt
+     * Ticket
+     * @param oTicket Ticket
+     * @param oTicketExt extra information of ticket
      */
-    public void setActiveTicket(TicketInfo oTicket, Object oTicketExt); // el ticket mas informacion extra...
+    public void setActiveTicket(TicketInfo oTicket, Object oTicketExt);
 
     /**
      *

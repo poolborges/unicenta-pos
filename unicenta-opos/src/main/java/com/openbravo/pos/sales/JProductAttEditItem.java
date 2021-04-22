@@ -20,18 +20,13 @@ import com.openbravo.editor.JEditorKeys;
 import java.awt.Component;
 
 /**
- *
+ * Product Attribute Editor
  * @author adrian
  */
 public class JProductAttEditItem extends javax.swing.JPanel implements JProductAttEditI {
 
     private String attid;
 
-    /** Creates new form JProductAttEditItem
-     * @param attid
-     * @param label
-     * @param value
-     * @param keys */
     public JProductAttEditItem(String attid, String label, String value, JEditorKeys keys) {
 
         this.attid = attid;
@@ -44,33 +39,18 @@ public class JProductAttEditItem extends javax.swing.JPanel implements JProductA
         jValue.setText(value);
     }
 
-    /**
-     *
-     */
     public void assignSelection() {
         jValue.activate();
     }
 
-    /**
-     *
-     * @return
-     */
     public String getAttribute() {
         return attid;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getValue() {
         return jValue.getText();
     }
 
-    /**
-     *
-     * @return
-     */
     public Component getComponent() {
         return this;
     }
@@ -91,10 +71,11 @@ public class JProductAttEditItem extends javax.swing.JPanel implements JProductA
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel1.setText("jLabel1");
-        jLabel1.setPreferredSize(new java.awt.Dimension(110, 30));
+        jLabel1.setPreferredSize(new java.awt.Dimension(100, 30));
 
         jValue.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jValue.setPreferredSize(new java.awt.Dimension(0, 30));
+        jValue.setMinimumSize(new java.awt.Dimension(100, 30));
+        jValue.setPreferredSize(new java.awt.Dimension(200, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -104,8 +85,8 @@ public class JProductAttEditItem extends javax.swing.JPanel implements JProductA
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jValue, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addComponent(jValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

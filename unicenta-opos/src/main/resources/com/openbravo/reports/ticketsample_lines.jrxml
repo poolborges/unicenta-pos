@@ -1,5 +1,4 @@
- <!-- Created with iReport - A designer for JasperReports -->
- <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- 
     KrOS POS - Open Source Point Of Sale
     Copyright (c) 2009-2018 uniCenta.
@@ -18,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
  
-<jasperReport
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" uuid="e4815fa6-4211-4036-b5d8-8e0203f22ea1"
  		 name="ticketsample_lines"
  		 columnCount="1"
  		 printOrder="Vertical"

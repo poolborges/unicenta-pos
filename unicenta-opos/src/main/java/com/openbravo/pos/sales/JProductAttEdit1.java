@@ -337,9 +337,10 @@ public class JProductAttEdit1 extends javax.swing.JDialog {
 
         m_jButtonOK.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         m_jButtonOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
-        m_jButtonOK.setText(AppLocal.getIntString("button.ok")); // NOI18N
+        m_jButtonOK.setText(AppLocal.getIntString("button.OK")); // NOI18N
         m_jButtonOK.setFocusPainted(false);
         m_jButtonOK.setFocusable(false);
+        m_jButtonOK.setLabel(AppLocal.getIntString("button.ok")); // NOI18N
         m_jButtonOK.setMargin(new java.awt.Insets(8, 16, 8, 16));
         m_jButtonOK.setPreferredSize(new java.awt.Dimension(110, 45));
         m_jButtonOK.setRequestFocusEnabled(false);

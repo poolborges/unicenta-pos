@@ -43,11 +43,7 @@ public class TableDefinition<T> {
      * @param fieldtran
      * @param idinx
      * @param fielddata */
-    public TableDefinition(
-            Session s,
-            String tablename, 
-            String[] fieldname, String[] fieldtran, Datas[] fielddata, Formats[] fieldformat,
-            int[] idinx) {
+    public TableDefinition(Session s, String tablename, String[] fieldname, String[] fieldtran, Datas[] fielddata, Formats[] fieldformat,int[] idinx) {
         
         m_s = s;
         this.tablename = tablename;       
@@ -69,11 +65,7 @@ public class TableDefinition<T> {
      * @param fieldformat
      * @param idinx
      */
-    public TableDefinition(
-            Session s,
-            String tablename, 
-            String[] fieldname, Datas[] fielddata, Formats[] fieldformat,
-            int[] idinx) {
+    public TableDefinition(Session s,String tablename, String[] fieldname, Datas[] fielddata, Formats[] fieldformat,int[] idinx) {
         this(s, tablename, fieldname, fieldname, fielddata, fieldformat, idinx);
     }
 
@@ -110,20 +102,11 @@ public class TableDefinition<T> {
     public IRenderString getRenderStringBasic(int[] aiFields) {
         return new RenderStringBasic(fieldformat, aiFields);
     }
-    
-    /**
-     *
-     * @param aiOrders
-     * @return
-     */
+
     public ComparatorCreator getComparatorCreator(int [] aiOrders) {
         return new ComparatorCreatorBasic(fieldtran, fielddata, aiOrders);
     }
-    
-    /**
-     *
-     * @return
-     */
+
     public IKeyGetter getKeyGetterBasic() {
         if (idinx.length == 1) {
             return new KeyGetterFirst(idinx);
@@ -132,36 +115,18 @@ public class TableDefinition<T> {
         }
     }
 
-    /**
-     *
-     * @return
-     */
     public SerializerRead getSerializerReadBasic() {
         return new SerializerReadBasic(fielddata);
     }
 
-    /**
-     *
-     * @param fieldindx
-     * @return
-     */
     public SerializerWrite getSerializerInsertBasic(int[] fieldindx) {
         return new SerializerWriteBasicExt(fielddata, fieldindx);
     }
 
-    /**
-     *
-     * @return
-     */
     public SerializerWrite getSerializerDeleteBasic() {     
         return new SerializerWriteBasicExt(fielddata, idinx);
     }
 
-    /**
-     *
-     * @param fieldindx
-     * @return
-     */
     public SerializerWrite getSerializerUpdateBasic(int[] fieldindx) {
         
         int[] aindex = new int[fieldindx.length + idinx.length];
@@ -175,28 +140,15 @@ public class TableDefinition<T> {
  
         return new SerializerWriteBasicExt(fielddata, aindex);
     }
-    
-    /**
-     *
-     * @return
-     */
+
     public SentenceList<T> getListSentence() {
         return getListSentence(getSerializerReadBasic());
     }
-    
-    /**
-     *
-     * @param sr
-     * @return
-     */
+
     public SentenceList<T> getListSentence(SerializerRead sr) {
         return new PreparedSentence(m_s, getListSQL(), null,  sr);
     }
-    
-    /**
-     *
-     * @return
-     */
+
     public String getListSQL() {
         
         StringBuilder sent = new StringBuilder();
@@ -214,29 +166,17 @@ public class TableDefinition<T> {
         
         return sent.toString();    
     }
-   
-    /**
-     *
-     * @return
-     */
+
     public SentenceExec getDeleteSentence() {
         return getDeleteSentence(getSerializerDeleteBasic());
     }
-    
-    /**
-     *
-     * @param sw
-     * @return
-     */
+
     public SentenceExec getDeleteSentence(SerializerWrite sw) {
         return new PreparedSentence(m_s, getDeleteSQL(), sw, null);
     }
     
-    /**
-     *
-     * @return
-     */
-    public String getDeleteSQL() {
+
+    private String getDeleteSQL() {
         
         StringBuilder sent = new StringBuilder();
         sent.append("delete from ");
@@ -250,20 +190,11 @@ public class TableDefinition<T> {
         
         return sent.toString();     
     }
-   
-    /**
-     *
-     * @return
-     */
+
     public SentenceExec getInsertSentence() {
         return getInsertSentence(getAllFields());
     }
     
-    /**
-     *
-     * @param fieldindx
-     * @return
-     */
     public SentenceExec getInsertSentence(int[] fieldindx) {
         return new PreparedSentence(m_s, getInsertSQL(fieldindx), getSerializerInsertBasic(fieldindx), null);
     }
@@ -301,20 +232,11 @@ public class TableDefinition<T> {
         }
         return fieldindx;        
     }
-   
-    /**
-     *
-     * @return
-     */
+
     public SentenceExec getUpdateSentence() {
         return getUpdateSentence(getAllFields());
     }
-    
-    /**
-     *
-     * @param fieldindx
-     * @return
-     */
+
     public SentenceExec getUpdateSentence(int[] fieldindx) {
         return new PreparedSentence(m_s, getUpdateSQL(fieldindx), getSerializerUpdateBasic(fieldindx), null);
     }

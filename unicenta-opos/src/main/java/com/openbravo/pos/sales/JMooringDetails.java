@@ -161,6 +161,9 @@ public class JMooringDetails extends javax.swing.JDialog {
         jbtnCreateTicket.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages"); // NOI18N
         jbtnCreateTicket.setText(bundle.getString("label.mooringcreatebtn")); // NOI18N
+        jbtnCreateTicket.setMaximumSize(new java.awt.Dimension(100, 30));
+        jbtnCreateTicket.setMinimumSize(new java.awt.Dimension(100, 30));
+        jbtnCreateTicket.setPreferredSize(new java.awt.Dimension(100, 30));
         jbtnCreateTicket.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbtnCreateTicketActionPerformed(evt);
@@ -169,43 +172,47 @@ public class JMooringDetails extends javax.swing.JDialog {
 
         jTableSelector.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jTableSelector.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null}
-                },
-                new String[]{
-                        "Vessel Name", "Size", "Days", "Power"
-                }
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Vessel Name", "Size", "Days", "Power"
+            }
         ) {
-            boolean[] canEdit = new boolean[]{
-                    false, false, false, false
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
+                return canEdit [columnIndex];
             }
         });
-        jTableSelector.setRowHeight(25);
+        jTableSelector.setRowHeight(30);
         jTableSelector.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTableSelectorMouseClicked(evt);
             }
         });
         jScrollPane2.setViewportView(jTableSelector);
-        jTableSelector.getColumnModel().getColumn(1).setResizable(false);
-        jTableSelector.getColumnModel().getColumn(1).setPreferredWidth(50);
-        jTableSelector.getColumnModel().getColumn(2).setResizable(false);
-        jTableSelector.getColumnModel().getColumn(2).setPreferredWidth(50);
-        jTableSelector.getColumnModel().getColumn(3).setResizable(false);
-        jTableSelector.getColumnModel().getColumn(3).setPreferredWidth(70);
+        if (jTableSelector.getColumnModel().getColumnCount() > 0) {
+            jTableSelector.getColumnModel().getColumn(1).setResizable(false);
+            jTableSelector.getColumnModel().getColumn(1).setPreferredWidth(50);
+            jTableSelector.getColumnModel().getColumn(2).setResizable(false);
+            jTableSelector.getColumnModel().getColumn(2).setPreferredWidth(50);
+            jTableSelector.getColumnModel().getColumn(3).setResizable(false);
+            jTableSelector.getColumnModel().getColumn(3).setPreferredWidth(70);
+        }
 
         jText.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jText.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jText.setEnabled(false);
+        jText.setMinimumSize(new java.awt.Dimension(100, 30));
+        jText.setPreferredSize(new java.awt.Dimension(11, 30));
         jText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextActionPerformed(evt);
@@ -214,40 +221,43 @@ public class JMooringDetails extends javax.swing.JDialog {
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel1.setText(bundle.getString("label.mooringscreatefor")); // NOI18N
+        jLabel1.setMaximumSize(new java.awt.Dimension(85, 30));
+        jLabel1.setMinimumSize(new java.awt.Dimension(85, 30));
+        jLabel1.setPreferredSize(new java.awt.Dimension(85, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 508, Short.MAX_VALUE)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGap(10, 10, 10)
-                                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jText, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jbtnCreateTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(0, 0, Short.MAX_VALUE)))
-                                .addContainerGap())
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 508, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jText, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jbtnCreateTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel1)
-                                        .addComponent(jbtnCreateTicket))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jbtnCreateTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width - 536) / 2, (screenSize.height - 274) / 2, 536, 274);
+        setSize(new java.awt.Dimension(536, 274));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbtnCreateTicketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCreateTicketActionPerformed
