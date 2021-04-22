@@ -153,14 +153,19 @@ GUI Framework
 
 == Tools 
 
-* Do Test Coverage with JaCoCo
-* Do Static Source Code Analysis with PMD
-* Do Bytecode Analysis with SpotBugs and Find Security Bugs
-* Do project has strict code style guidelines with Checkstyle
-** maven-checkstyle-plugin 
-* Do Scan your Dependencies for Vulnerabilities with OWASP Dependency Check 
-** Dependency-Check is a Software Composition Analysis (SCA) tool suite 
-** https://owasp.org/www-project-dependency-check/
+* Do Test Coverage with
+** JaCoCo coverage tool, used to measure how many lines of our code are tested.
+** OpenClover (code coverage tool for Java, Groovy and AspectJ)
+* Do Static Source Code Analysis with 
+** PMD
+* Do Bytecode Analysis with
+** SpotBugs (Alternative to FindBug) and Find Security Bugs
+* Do project has strict code style guidelines with
+** Checkstyle maven-checkstyle-plugin 
+* Do Scan your Dependencies for Vulnerabilities with
+** OWASP Dependency Check 
+*** Dependency-Check is a Software Composition Analysis (SCA) tool suite 
+*** https://owasp.org/www-project-dependency-check/
 
 
 ----
