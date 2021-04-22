@@ -31,21 +31,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        
-        <kotlin.version>1.3.50</kotlin.version>
-        <liquibase.version>4.1.1</liquibase.version>
+        <project.github-url>http://Kriolos.github.io/krospos</project.github-url>
 
+        <!-- MISC config-->
         <jacoco.plugin.version>0.8.5</jacoco.plugin.version>
         <jacoco.plugin.reportPath>${project.build.directory}/jacoco.exec</jacoco.plugin.reportPath>
-        <owasp.dependency.check.version>6.1.5</owasp.dependency.check.version>
-        <checkstyle.plugin.version>3.1.2</checkstyle.plugin.version>
-        <asciidoclet.version>1.5.6</asciidoclet.version>
-        <project.github-url>http://Kriolos.github.io/krospos</project.github-url>
         <clover-maven-plugin.version>4.4.1</clover-maven-plugin.version>
         <spotbug.version>4.2.0</spotbug.version>
+        <maven-pmd-plugin.version>3.14.0</maven-pmd-plugin.version>
         
+        <!-- Javadoc config -->
         <javadoc.excluded.packages />
+        <asciidoclet.version>1.5.6</asciidoclet.version>
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+        
+        <!-- checkstyle config -->
+        <checkstyle.plugin.version>3.1.2</checkstyle.plugin.version>
         <checkstyle.excludes />
+        
+        <!-- owasp config -->
+        <owasp.dependency.check.version>6.1.5</owasp.dependency.check.version>
+        <owasp>none</owasp> <!-- owasp phase verify or use 'none' for disable -->
+        <owasp.plugin.version>6.1.5</owasp.plugin.version>
+        <owasp.plugin.autoUpdate>false</owasp.plugin.autoUpdate> <!-- definir como false quando houver problema com repository NIST -->
+        <owasp.plugin.failBuildOnAnyVulnerability>false</owasp.plugin.failBuildOnAnyVulnerability>
+        
+        <!-- surefire config --> 
+        <failIfNoTests>false</failIfNoTests>
+        
+        <!-- dependencies/library version --> 
+        <kotlin.version>1.3.50</kotlin.version>
+        <liquibase.version>4.1.1</liquibase.version>
     </properties>
     
     <organization>
@@ -115,6 +131,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>unicenta-opos</module>
         <module>unicentaopos-samples</module>
         <module>unicenta-installer</module>
+        <module>krpos-buildtools</module>
     </modules>
     
     <dependencyManagement>
@@ -163,6 +180,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
                     <version>${owasp.dependency.check.version}</version>
+                    
+                    <configuration>
+                        <autoUpdate>${owasp.plugin.autoUpdate}</autoUpdate>
+                        <failBuildOnAnyVulnerability>${owasp.plugin.failBuildOnAnyVulnerability}</failBuildOnAnyVulnerability>
+                        <format>ALL</format>
+                    </configuration>
                 </plugin>
                 <!-- Coding Style -->
                 <plugin>
@@ -188,6 +211,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <artifactId>maven-install-plugin</artifactId>
                     <version>2.5.2</version>
                 </plugin>
+                
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.9.1</version>
+                </plugin>
+            
             </plugins>
         </pluginManagement>
 
@@ -248,7 +278,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-pmd-plugin</artifactId>
-                        <version>3.14.0</version>
+                        <version>${maven-pmd-plugin.version}</version>
                         <configuration>
                             <failOnViolation>false</failOnViolation>
                             <skip>false</skip>
@@ -451,177 +481,180 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </plugins>
             </build>
         </profile>
-    </profiles>
-    
-    <reporting>
         
-        <plugins>
+        
+        <profile>
+            <id>reporting</id>
+            <reporting>
+                <plugins>
+                    <!-- Generate Reports Information about the project. -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-project-info-reports-plugin</artifactId>
+                        <version>3.1.1</version>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>index</report>              
+                                    <report>dependencies</report>
+                                    <report>team</report>
+                                    <report>mailing-lists</report>
+                                    <report>ci-management</report>
+                                    <report>issue-management</report>
+                                    <report>licenses</report>
+                                    <report>scm</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
             
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.9.1</version>
-            </plugin>
-            <!-- Generate Reports Information about the project. -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.1.1</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>index</report>              
-                            <report>dependencies</report>
-                            <report>team</report>
-                            <report>mailing-lists</report>
-                            <report>ci-management</report>
-                            <report>issue-management</report>
-                            <report>licenses</report>
-                            <report>scm</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
+                    <!-- Produce a cross-reference of the project's source. (Self Aggregating). -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jxr-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <reportSets>
+                            <reportSet>
+                                <id>aggregate</id>
+                                <inherited>false</inherited>
+                                <reports>
+                                    <report>aggregate</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
             
-            <!-- Produce a cross-reference of the project's source. (Self Aggregating). -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
-                <version>3.0.0</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
+                    <!-- Code coverage -->
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <!-- report, report-aggregate(for multi-module project) -->
+                                    <report>report-aggregate</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
             
-            <!-- Code coverage -->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <!-- report, aggregate(for multi-module project) -->
-                            <report>aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
+                    <!-- OWASP Top10-->
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>${owasp.dependency.check.version}</version>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <!-- report, aggregate(for multi-module project) -->
+                                    <report>aggregate</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
 
-            <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <version>${owasp.dependency.check.version}</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <!-- report, aggregate(for multi-module project) -->
-                            <report>aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-
-            <!-- PMD and CPD Reports (Aggregate Parameter). -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.14.0</version>
-                <configuration>
-                    <skip>false</skip>
-                    <skipEmptyReport>false</skipEmptyReport>
-                    <printFailingErrors>true</printFailingErrors>
-                    <aggregate>true</aggregate>
-                    <failurePriority>5</failurePriority>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>pmd</report>
-                            <report>cpd</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
+                    <!-- PMD and CPD Reports (Aggregate Parameter). -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>${maven-pmd-plugin.version}</version>
+                    </plugin>
             
-            <!-- Generate test results in HTML (Aggregate Parameter) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>3.0.0-M5</version>
-                <configuration>
-                    <aggregate>true</aggregate>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
+                    <!-- Generate test results in HTML (Aggregate Parameter) -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-report-plugin</artifactId>
+                        <version>3.0.0-M5</version>
+                        <configuration>
+                            <aggregate>true</aggregate>
+                        </configuration>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>report</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
             
-            <!-- Generate Javadoc. (Self Aggregating)-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
+                    <!-- Generate Javadoc. (Self Aggregating)-->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.2.0</version>
+                        <configuration>
                     
-                    <charset>UTF-8</charset>
-                    <encoding>UTF-8</encoding>
-                    <docencoding>UTF-8</docencoding>
-                    <breakiterator>true</breakiterator>
-                    <version>true</version>
-                    <keywords>true</keywords>
-                    <excludePackageNames>${javadoc.excluded.packages}</excludePackageNames>
+                            <charset>UTF-8</charset>
+                            <encoding>UTF-8</encoding>
+                            <docencoding>UTF-8</docencoding>
+                            <breakiterator>true</breakiterator>
+                            <version>true</version>
+                            <keywords>true</keywords>
                     
-                    <source>${maven.compiler.source}</source>
-                    <doclet>org.asciidoctor.Asciidoclet</doclet>
-                    <docletArtifact>
-                        <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoclet</artifactId>
-                        <!--suppress UnresolvedMavenProperty -->
-                        <version>${asciidoclet.version}</version>
-                    </docletArtifact>
-                    <overview>src/main/adoc/overview.adoc</overview>
-                    <additionalparam>
-                        --base-dir ${project.basedir}
-                        --attribute "name=${project.name}"
-                        --attribute "version=${project.version}"
-                        --attribute "title-link=${project.github-url}/[${project.version}]"
-                    </additionalparam>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <id>aggregate</id>
-                        <reports>
-                            <report>aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
+                            <source>${maven.compiler.source}</source>
+                            <excludePackageNames>${javadoc.excluded.packages}</excludePackageNames>
+                            
+                            <!-- Doclet configuration
+                            <doclet>org.asciidoctor.Asciidoclet</doclet>
+                            <docletArtifact>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoclet</artifactId>
+                                <version>${asciidoclet.version}</version>
+                            </docletArtifact>
+                            -->
+                            <overview>src/main/adoc/overview.adoc</overview>
+                            
+                            <additionalparam>
+                                --base-dir ${project.basedir}
+                                --attribute "name=${project.name}"
+                                --attribute "version=${project.version}"
+                                --attribute "title-link=${project.github-url}/[${project.version}]"
+                            </additionalparam>
+                        </configuration>
+                        <reportSets>
+                            <reportSet>
+                                <id>aggregate</id>
+                                <reports>
+                                    <report>aggregate</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
             
-            <plugin>
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>4.0.rc2</version>
-            </plugin>
+                    <plugin>
+                        <groupId>com.mycila</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>4.0.rc2</version>
+                    </plugin>
     
-            <plugin>
-                <groupId>com.github.spotbugs</groupId>
-                <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>${spotbug.version}</version>
-                <configuration>
-                    <failOnError>false</failOnError>
-                    <threshold>Low</threshold><!-- High|Normal|Low|Exp|Ignore -->
-                    <effort>Default</effort><!-- Min|Default|Max -->
-                </configuration>
-            </plugin>
-            
-        </plugins>
-    </reporting>
+                    <plugin>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs-maven-plugin</artifactId>
+                        <version>${spotbug.version}</version>
+                        <configuration>
+                            <failOnError>false</failOnError>
+                            <threshold>Low</threshold><!-- High|Normal|Low|Exp|Ignore -->
+                            <effort>Default</effort><!-- Min|Default|Max -->
+                        </configuration>
+                    </plugin>
+                    
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-changes-plugin</artifactId>
+                        <version>2.12.1</version>
+                        <configuration>
+                            <!-- For JIRA-report -->
+                            <columnNames>Type,Priority,Key,Summary,Resolution</columnNames>
+                            <onlyCurrentVersion>true</onlyCurrentVersion>
+                            <resolutionIds>Fixed</resolutionIds>
+                            <sortColumnNames>type DESC,Priority DESC,Key</sortColumnNames>
+                            <maxEntries>1000</maxEntries>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+    </profiles>
+
 </project>
