@@ -33,10 +33,7 @@ public class JEditorKeys extends javax.swing.JPanel implements EditorKeys {
     private final static char[] SET_DOUBLE_POSITIVE = {'\u007f', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'};
     private final static char[] SET_INTEGER = {'\u007f', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-'};
     private final static char[] SET_INTEGER_POSITIVE = {'\u007f', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-    
-    /**
-     *
-     */
+
     protected EventListenerList listeners = new EventListenerList();
     
     private EditorComponent editorcurrent ;
@@ -45,16 +42,7 @@ public class JEditorKeys extends javax.swing.JPanel implements EditorKeys {
     private boolean m_bMinus;
     private boolean m_bKeyDot;
     private JCustomerFinder customerFinder;
-       
-    /*
-    HS KeyShortcuts
-     */
 
-    /**
-     *
-     * @return
-     */
-    
     public JCustomerFinder getCustomerFinder() {
         return customerFinder;
     }
