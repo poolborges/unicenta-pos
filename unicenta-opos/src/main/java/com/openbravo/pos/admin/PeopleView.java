@@ -24,7 +24,6 @@ import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.util.Hashcypher;
 import com.openbravo.pos.util.StringUtils;
-import com.openbravo.pos.util.uOWWatch;
 import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -425,7 +424,7 @@ public class PeopleView extends JPanel implements EditorRecord {
                 JOptionPane.INFORMATION_MESSAGE) == JOptionPane.OK_OPTION) 
 
             {  
-                m_jcard.setText( uOWWatch.getibuttonid() );
+                m_jcard.setText("TODO_SHOULD_PROVIDE_CODE_FROM_IBUTTON");
                 jLblCardID.setText(AppLocal.getIntString("label.ibutton"));
                 m_Dirty.setDirty(true);
             }
