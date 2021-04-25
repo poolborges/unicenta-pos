@@ -40,7 +40,7 @@ import javax.swing.filechooser.FileFilter;
  *
  * @author JG uniCenta
  */
-public class JImageViewerProduct extends javax.swing.JPanel {
+public class JImageViewer extends javax.swing.JPanel {
     
     private Dimension m_maxsize;
     private final ZoomIcon m_icon;
@@ -49,7 +49,7 @@ public class JImageViewerProduct extends javax.swing.JPanel {
     private static File m_fCurrentDirectory = null;
     private static final NumberFormat m_percentformat = new DecimalFormat("#,##0.##%");
     
-    public JImageViewerProduct() {
+    public JImageViewer() {
         initComponents();
         
         m_Img = null;

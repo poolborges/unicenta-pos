@@ -164,7 +164,7 @@ public class JProductFinder extends javax.swing.JDialog {
         jcmdCancel = new javax.swing.JButton();
         jcmdOK = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
-        jImageViewerProduct = new com.openbravo.data.gui.JImageViewerProduct();
+        jImageViewerProduct = new com.openbravo.data.gui.JImageViewer();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(AppLocal.getIntString("form.productslist")); // NOI18N
@@ -351,7 +351,7 @@ public class JProductFinder extends javax.swing.JDialog {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton3;
-    private com.openbravo.data.gui.JImageViewerProduct jImageViewerProduct;
+    private com.openbravo.data.gui.JImageViewer jImageViewerProduct;
     private javax.swing.JList jListProducts;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

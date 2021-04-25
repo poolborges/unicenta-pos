@@ -336,7 +336,7 @@ public class JSupplierFinder extends javax.swing.JDialog implements EditorCreato
         jPanel1 = new javax.swing.JPanel();
         jcmdCancel = new javax.swing.JButton();
         jcmdOK = new javax.swing.JButton();
-        jImageViewerSupplier = new com.openbravo.data.gui.JImageViewerCustomer();
+        jImageViewerSupplier = new com.openbravo.data.gui.JImageViewer();
         jPanel3 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
@@ -660,7 +660,7 @@ private void jbtnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
 }//GEN-LAST:event_jbtnResetActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.openbravo.data.gui.JImageViewerCustomer jImageViewerSupplier;
+    private com.openbravo.data.gui.JImageViewer jImageViewerSupplier;
     private javax.swing.JLabel jLblEmail;
     private javax.swing.JLabel jLblName;
     private javax.swing.JLabel jLblPhone;

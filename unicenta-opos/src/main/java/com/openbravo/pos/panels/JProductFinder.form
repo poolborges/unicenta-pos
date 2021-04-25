@@ -270,7 +270,7 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="com.openbravo.data.gui.JImageViewerProduct" name="jImageViewerProduct">
+            <Component class="com.openbravo.data.gui.JImageViewer" name="jImageViewerProduct">
             </Component>
           </SubComponents>
         </Container>

@@ -304,7 +304,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
         jPanel1 = new javax.swing.JPanel();
         jcmdCancel = new javax.swing.JButton();
         jcmdOK = new javax.swing.JButton();
-        jImageViewerCustomer = new com.openbravo.data.gui.JImageViewerCustomer();
+        jImageViewerCustomer = new com.openbravo.data.gui.JImageViewer();
         jPanel3 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
@@ -629,7 +629,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
 }//GEN-LAST:event_jbtnResetActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.openbravo.data.gui.JImageViewerCustomer jImageViewerCustomer;
+    private com.openbravo.data.gui.JImageViewer jImageViewerCustomer;
     private javax.swing.JLabel jLblEmail;
     private javax.swing.JLabel jLblName;
     private javax.swing.JLabel jLblPhone;
