@@ -27,9 +27,6 @@ public class SharedTicketInfo implements SerializableRead, SerializableWrite {
     
     private static final long serialVersionUID = 7640633837719L;
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
     private String id;
     private String name;
     private String UserName;
@@ -37,7 +34,6 @@ public class SharedTicketInfo implements SerializableRead, SerializableWrite {
     private Integer pickupId;
     private TicketInfo ticketInfo;
 
-    public SharedTicketInfo() {}
 
     @Override
     public void readValues(DataRead dr) throws BasicException {

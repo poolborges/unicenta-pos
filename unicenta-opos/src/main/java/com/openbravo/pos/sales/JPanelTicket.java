@@ -179,11 +179,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         dlSales = (DataLogicSales) m_App.getBean("com.openbravo.pos.forms.DataLogicSales");
         dlCustomers = (DataLogicCustomers) m_App.getBean("com.openbravo.pos.customers.DataLogicCustomers");
         dlReceipts = (DataLogicReceipts) app.getBean("com.openbravo.pos.sales.DataLogicReceipts"); 
-        
-// Set Configuration>General>Tickets toolbar simple : standard : restaurant option
-        m_ticketsbag = getJTicketsBag();    
-        m_jPanelBag.add(m_ticketsbag.getBagComponent(), BorderLayout.LINE_START);
-        add(m_ticketsbag.getNullComponent(), "null");   
+
 
 // Script event buttons
         m_jbtnconfig = new JPanelButtons("Ticket.Buttons", this);
@@ -212,7 +208,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         m_ticketlines = new JTicketLines(dlSystem.getResourceAsXML("Ticket.Line"));
         m_jPanelCentral.add(m_ticketlines, java.awt.BorderLayout.CENTER);
         m_TTP = new TicketParser(m_App.getDeviceTicket(), dlSystem);
-        catcontainer.add(getSouthComponent(), BorderLayout.CENTER);
         
         senttax = dlSales.getTaxList();
         senttaxcategories = dlSales.getTaxCategoriesList();       
@@ -223,7 +218,18 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         m_oTicket = null;
         m_oTicketExt = null; 
         jCheckStock.setText(AppLocal.getIntString("message.title.checkstock"));
+        
+        initComponentFromChild();
+    }
+    
+    private void initComponentFromChild(){
 
+        // Set Configuration>General>Tickets toolbar simple : standard : restaurant option
+        m_ticketsbag = getJTicketsBag();    
+        m_jPanelBag.add(m_ticketsbag.getBagComponent(), BorderLayout.LINE_START);
+        add(m_ticketsbag.getNullComponent(), "null");   
+        
+        catcontainer.add(getSouthComponent(), BorderLayout.CENTER);
     }
 
     @Override
@@ -240,6 +246,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
 
         public logout() {
         }
+        
         @Override
         public void actionPerformed(ActionEvent ae){
             closeAllDialogs();
