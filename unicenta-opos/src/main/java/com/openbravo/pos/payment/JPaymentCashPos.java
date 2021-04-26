@@ -146,25 +146,22 @@ public class JPaymentCashPos extends javax.swing.JPanel implements JPaymentInter
         private final AppConfig m_config;
 
         public ScriptPaymentCash(DataLogicSystem dlSystem) {
-            AppConfig m_config = AppConfig.getInstance();
-            m_config.load();
-            this.m_config = m_config;
-
+            
+            this.m_config = AppConfig.getInstance();
             this.dlSystem = dlSystem;
-            tnbbutton = new ThumbNailBuilder(64, 50, "com/openbravo/images/cash.png");
+            tnbbutton = new ThumbNailBuilder(64, 48, "com/openbravo/images/cash.png");
         }
 
         public void addButton(String image, double amount) {
             JButton btn = new JButton();
-//added 19.04.13 JDL removal of text on payment buttons if required.   
             try {
                 if ((m_config.getProperty("payments.textoverlay")).equals("false")) {
-                    btn.setIcon(new ImageIcon(tnbbutton.getThumbNailText(dlSystem.getResourceAsImage(image), "")));
+                    btn.setIcon(new ImageIcon(tnbbutton.getThumbNail(dlSystem.getResourceAsImage(image))));
                 } else {
-                    btn.setIcon(new ImageIcon(tnbbutton.getThumbNailText(dlSystem.getResourceAsImage(image), Formats.CURRENCY.formatValue(amount))));
+                    btn.setIcon(new ImageIcon(tnbbutton.getThumbNail(dlSystem.getResourceAsImage(image), Formats.CURRENCY.formatValue(amount))));
                 }
             } catch (Exception e) {
-                btn.setIcon(new ImageIcon(tnbbutton.getThumbNailText(dlSystem.getResourceAsImage(image), Formats.CURRENCY.formatValue(amount))));
+                btn.setIcon(new ImageIcon(tnbbutton.getThumbNail(dlSystem.getResourceAsImage(image), Formats.CURRENCY.formatValue(amount))));
             }
 
             btn.setFocusPainted(false);
