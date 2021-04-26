@@ -26,22 +26,8 @@ import java.awt.Component;
  * @author adrianromero
  */
 public interface ReportEditorCreator extends FilterEditorCreator {
-    
-    /**
-     *
-     * @param app
-     */
+
     public void init(AppView app);
-
-    /**
-     *
-     * @throws BasicException
-     */
     public void activate() throws BasicException;
-
-    /**
-     *
-     * @return
-     */
     public Component getComponent();
 }

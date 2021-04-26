@@ -113,7 +113,7 @@ public class JParamsSuppliers extends javax.swing.JPanel implements ReportEditor
                 return new Object[] {QBFCompareEnum.COMP_NONE, null, QBFCompareEnum.COMP_RE, jTextField1.getText()};
             }
         } else {
-            return new Object[] {QBFCompareEnum.COMP_EQUALS, currentsupplier.getID(), QBFCompareEnum.COMP_NONE, null};
+            return new Object[] {QBFCompareEnum.COMP_EQUALS, currentsupplier.getId(), QBFCompareEnum.COMP_NONE, null};
         }
     }     
     
