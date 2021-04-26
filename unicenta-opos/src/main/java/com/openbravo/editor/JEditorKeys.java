@@ -41,20 +41,7 @@ public class JEditorKeys extends javax.swing.JPanel implements EditorKeys {
     private char[] keysavailable;    
     private boolean m_bMinus;
     private boolean m_bKeyDot;
-    private JCustomerFinder customerFinder;
 
-    public JCustomerFinder getCustomerFinder() {
-        return customerFinder;
-    }
-
-    /**
-     *
-     * @param customerFinder
-     */
-    public void setCustomerFinder(JCustomerFinder customerFinder) {
-        this.customerFinder = customerFinder;
-    }
-       
     
     /** Creates new form JEditorKeys */
     public JEditorKeys() {

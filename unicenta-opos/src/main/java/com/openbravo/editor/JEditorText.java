@@ -177,12 +177,10 @@ public abstract class JEditorText extends JEditorAbstract {
             s.append(m_svalue);
         }
         if (m_cLastChar != '\u0000') {
-//                s.append("<font color=\"#a0a0a0\">");
                 s.append("<font size=+1><font color=\"#a0a0a0\">");            
                 s.append(getKeyChar());
                 s.append("</font>");
         }
-//        s.append("<font color=\"#a0a0a0\">_</font>");
         s.append("<font size=+1><font color=\"#a0a0a0\">_</font>");        
 
         return s.toString(); 
