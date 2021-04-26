@@ -18,13 +18,15 @@
 //    along with KrOS POS.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.util;
 
+import com.openbravo.data.loader.ImageUtils;
+import com.openbravo.pos.config.JPanelConfigGeneral;
 import java.awt.image.*;
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.text.AttributedString;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import net.coobird.thumbnailator.Thumbnailator;
 
@@ -34,105 +36,70 @@ import net.coobird.thumbnailator.Thumbnailator;
  */
 public class ThumbNailBuilder {
 
-    private Image m_imgdefault;
-    private int m_width;
-    private int m_height;
+    private static final Logger LOGGER = Logger.getLogger(JPanelConfigGeneral.class.getName());
 
-    /**
-     * Creates a new instance of ThumbNailBuilder
-     *
-     * @param width
-     * @param height
-     */
-    public ThumbNailBuilder(int width, int height) {
-        init(width, height, null);
-    }
+    private Image defaultImage;
+    private int thumbWidth;
+    private int thumbHeight;
 
-    /**
-     *
-     * @param width
-     * @param height
-     * @param imgdef
-     */
     public ThumbNailBuilder(int width, int height, Image imgdef) {
         init(width, height, imgdef);
-
     }
 
-    /**
-     *
-     * @param width
-     * @param height
-     * @param img
-     */
     public ThumbNailBuilder(int width, int height, String img) {
-
         try {
+            URL imageUrl = getClass().getResource(img);
 
-            InputStream inStrem = getClass().getClassLoader().getResourceAsStream(img);
-
-            if (inStrem != null) {
-                init(width, height, ImageIO.read(inStrem));
-            } else {
-                URL imageUrl = getClass().getClassLoader().getResource(img);
-
-                if (imageUrl != null) {
-                    init(width, height, ImageIO.read(imageUrl));
-                } else {
-                    imageUrl = getClass().getResource(img);
-                    if (imageUrl != null) {
-                        init(width, height, ImageIO.read(imageUrl));
-                    }
+            if (imageUrl == null) {
+                imageUrl = getClass().getClassLoader().getResource(img);
+                
+                if (imageUrl == null) {
+                    imageUrl = ClassLoader.getSystemResource(img);
                 }
             }
 
+            if (imageUrl != null) {
+                init(width, height, ImageIO.read(imageUrl));
+            }
+
         } catch (IOException fnfe) {
-            init(width, height, null);
+            //TODO should log
         }
+
     }
 
     private void init(int width, int height, Image imgdef) {
-        m_width = width;
-        m_height = height;
+        thumbWidth = width;
+        thumbHeight = height;
         if (imgdef == null) {
-            m_imgdefault = null;
+            defaultImage = ImageUtils.generateColorImage(Color.WHITE, width, height);
         } else {
-            m_imgdefault = createThumbNail(imgdef);
+            defaultImage = createThumb(imgdef);
         }
     }
 
-    /**
-     *
-     * @param img
-     * @return
-     */
-    public Image getThumbNail(Image img) {
-
-        if (img == null) {
-            return m_imgdefault;
-        } else {
-            return createThumbNail(img);
-        }
-    }
-
-    /**
-     * get Thumbnail Image
-     *
-     * @return
-     */
     public Image getThumbNail() {
-        return m_imgdefault;
+        return defaultImage;
+    }
+    
+    public Image getThumbNail(Image img) {
+        if(img != null)
+            return createThumb(img);
+        else 
+            return defaultImage;
     }
 
-    /**
-     *
-     * @param img
-     * @param text
-     * @return
-     */
-    public Image getThumbNailText(Image img, String text) {
-
-        BufferedImage imageBuf = toBufferedImage(getThumbNail(img));
+    public Image getThumbNail(Image img, String text) {
+        if(img != null)
+            return createThumb(img, text);
+        else{
+            return createThumb(defaultImage, text);
+        }
+    }
+    
+    private Image createThumb(Image img, String text){
+        
+        BufferedImage imageBuf = ImageUtils.toBufferedImage(createThumb(img));
 
         Font font = new Font("Arial", Font.BOLD, 18);
 
@@ -156,36 +123,13 @@ public class ThumbNailBuilder {
         return imageBuf;
     }
 
-    private Image createThumbNail(Image img) {
+    private Image createThumb(Image img) {
 
         //Image is already in size or too small
-        if (img.getHeight(null) <= m_height && img.getWidth(null) <= m_width) {
+        if (img.getHeight(null) <= thumbHeight && img.getWidth(null) <= thumbWidth) {
             return img;
         }
 
-        return Thumbnailator.createThumbnail(img, m_width, m_width);
-    }
-
-    /**
-     * Converts a given Image into a BufferedImage
-     *
-     * @param img The Image to be converted
-     * @return The converted BufferedImage
-     */
-    private static BufferedImage toBufferedImage(Image img) {
-        if (img instanceof BufferedImage) {
-            return (BufferedImage) img;
-        }
-
-        // Create a buffered image with transparency
-        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-
-        // Draw the image on to the buffered image
-        Graphics2D bGr = bimage.createGraphics();
-        bGr.drawImage(img, 0, 0, null);
-        bGr.dispose();
-
-        // Return the buffered image
-        return bimage;
+        return Thumbnailator.createThumbnail(img, thumbWidth, thumbWidth);
     }
 }
