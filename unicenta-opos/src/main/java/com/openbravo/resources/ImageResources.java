@@ -41,6 +41,9 @@ public enum ImageResources {
     ICON_CANCEL("com/openbravo/images/cancel.png"),
     ICON_PACKAGE("com/openbravo/images/package.png");
 
+    private static final int WIDTH = 64;
+    private static final int HEIGHT = 48;
+    
     private final String resourcePath;
 
     private ImageResources(String resourcePath){
@@ -57,14 +60,14 @@ public enum ImageResources {
      * @return ImageIcon
      */
     public static ImageIcon getIcon(String resourcePath){
-        ThumbNailBuilder tnbcat = new ThumbNailBuilder(32, 32, resourcePath);
-        ImageIcon icon = new ImageIcon(tnbcat.getThumbNail(null));
+        ThumbNailBuilder tnbcat = new ThumbNailBuilder(WIDTH, HEIGHT, resourcePath);
+        ImageIcon icon = new ImageIcon(tnbcat.getThumbNail());
         return icon;
     }
     
     public static ImageIcon getIcon(String resourcePath, int width, int height){
         ThumbNailBuilder tnbcat = new ThumbNailBuilder(width, height, resourcePath);
-        ImageIcon icon = new ImageIcon(tnbcat.getThumbNail(null));
+        ImageIcon icon = new ImageIcon(tnbcat.getThumbNail());
         return icon;
     }
     
@@ -75,5 +78,4 @@ public enum ImageResources {
     public URL getRsourceURL(){
         return getClass().getResource(resourcePath);
     }
-
 }
