@@ -38,73 +38,54 @@ import javax.swing.JPanel;
 public class Floor implements SerializableRead {
     
     private static final long serialVersionUID = 8694154682897L;
-    private String m_sID;
-    private String m_sName;
-    private Container m_container;
-    private Icon m_icon;
-    
-    /** Creates a new instance of Floor */
-    public Floor() {
+    private String id;
+    private String name;
+    private Container container;
+    private Icon icon;
 
-    }
-
-    /**
-     *
-     * @param dr
-     * @throws BasicException
-     */
     @Override
     public void readValues(DataRead dr) throws BasicException {
-        m_sID = dr.getString(1);
-        m_sName = dr.getString(2);
+        id = dr.getString(1);
+        name = dr.getString(2);
         BufferedImage img = ImageUtils.readImage(dr.getBytes(3));
-        m_container = new JPanelDrawing(img);
+        container = new DrawingJPanel(img);
 
         if(img == null){
-            m_icon = ImageResources.ICON_FLOORS.getIcon();
+            icon = ImageResources.ICON_FLOORS.getIcon();
         }else{
             ThumbNailBuilder tnbcat = new ThumbNailBuilder(32, 32, img);
-            m_icon = new ImageIcon(tnbcat.getThumbNail(null));
+            icon = new ImageIcon(tnbcat.getThumbNail());
         }
     }
 
-    /**
-     *
-     * @return
-     */
     public String getID() {
-        return m_sID;
+        return id;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getName() {
-        return m_sName;
+        return name;
     }
 
-    /**
-     *
-     * @return
-     */
     public Icon getIcon() {
-        return m_icon;
+        return icon;
     }    
 
-    /**
-     *
-     * @return
-     */
     public Container getContainer() {
-        return m_container;
+        return container;
     }    
     
-    private static class JPanelDrawing extends JPanel {
-        private Image img;
+    private static class DrawingJPanel extends JPanel {
+
+        private static final long serialVersionUID = 1L;
         
-        public JPanelDrawing(Image img) {
+        private final Image img;
+        
+        public DrawingJPanel(Image img) {
             this.img = img;
+            initComponents();
+        }
+        
+        private void initComponents(){
             setLayout(null);
         }
         
@@ -119,7 +100,6 @@ public class Floor implements SerializableRead {
         @Override
         public Dimension getPreferredSize() {
             return (img == null) 
-//                ? new Dimension(640, 480) 
                 ? new Dimension(950, 560)                     
                 : new Dimension(img.getWidth(this), img.getHeight(this));
         }
