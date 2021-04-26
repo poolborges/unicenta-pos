@@ -67,7 +67,7 @@ public class JMessageDialog extends javax.swing.JDialog {
         
         myMsg.jlblIcon.setIcon(inf.getSignalWordIcon());
         myMsg.jlblErrorCode.setText(inf.getErrorCodeMsg());
-        myMsg.jlblMessage.setText("<html>" + inf.getMessageMsg());
+        myMsg.jlblMessage.setText(inf.getMessageMsg());
         
         // Capturamos el texto de la excepcion...
         if (inf.getCause() == null) {
