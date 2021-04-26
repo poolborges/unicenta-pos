@@ -98,10 +98,10 @@ public class CategoryInfo implements IKeyed {
         return m_sName;
     }
 
-    public static SerializerRead getSerializerRead() {
-        return new SerializerRead() {
+    public static SerializerRead<CategoryInfo> getSerializerRead() {
+        return new SerializerRead<CategoryInfo>() {
             @Override
-            public Object readValues(DataRead dr) throws BasicException {
+            public CategoryInfo readValues(DataRead dr) throws BasicException {
             return new CategoryInfo(dr.getString(1), 
                 dr.getString(2), ImageUtils.readImage(dr.getBytes(3)),
                 dr.getString(4),dr.getBoolean(5));

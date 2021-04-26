@@ -31,15 +31,8 @@ import javax.swing.*;
  */
 public class ProductRenderer extends DefaultListCellRenderer {
                 
-    ThumbNailBuilder tnbprod;
-
-    /** Creates a new instance of ProductRenderer */
-    public ProductRenderer() {   
-//        tnbprod = new ThumbNailBuilder(48,48, "com/openbravo/images/package.png");
-        tnbprod = new ThumbNailBuilder(48,48, "com/openbravo/images/null.png");        
-      
-       
-    }
+    private static final int PROD_DEFAULT_WIDTH = 64;
+    private static final int PROD_DEFAULT_HEIGHT = 54;
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -48,15 +41,26 @@ public class ProductRenderer extends DefaultListCellRenderer {
         ProductInfoExt prod = (ProductInfoExt) value;
        
         if (prod != null) {
-                        
-            setText("<html><center>" 
-                    + prod.getReference() 
-                    + " - " 
-                    + prod.getName() + " - " + Formats.CURRENCY.formatValue(prod.getPriceSell())
-//                    + "<br>" + prod.getStockUnits() + " | " + Formats.DATE.formatValue(prod.getMemoDate()) + " | " + prod.getPriceSellTax(tax)
-                    );
             
-            Image img = tnbprod.getThumbNail(prod.getImage());
+            String prodLabe = "<html><center>" 
+                    + prod.getReference()  
+                    +  "<br>" + prod.getName() 
+                    +  "<br>" + Formats.CURRENCY.formatValue(prod.getPriceSell())
+                    + "</center></html>";
+            
+            String toolTip = ""+ prod.getReference()  
+                    +  "|" + prod.getName() 
+                    +  " = " + Formats.CURRENCY.formatValue(prod.getPriceSell());
+            
+            setText(prodLabe);
+            setToolTipText(toolTip);
+            ThumbNailBuilder tnbprod = null;
+            if(prod.getImage() != null) {
+                tnbprod = new ThumbNailBuilder(PROD_DEFAULT_WIDTH,PROD_DEFAULT_HEIGHT,prod.getImage());
+            }else{
+                tnbprod = new ThumbNailBuilder(PROD_DEFAULT_WIDTH,PROD_DEFAULT_HEIGHT, "com/openbravo/images/null.png");
+            }
+            Image img = tnbprod.getThumbNail();
             setIcon(img == null ? null :new ImageIcon(img));
         }
         return this;
