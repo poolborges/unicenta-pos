@@ -25,57 +25,26 @@ import java.util.List;
  */
 public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T>, SentenceExec {
 
-    // Funciones de bajo nivel
-    /**
-     *
-     * @param params
-     * @return
-     * @throws BasicException
-     */
-    public abstract DataResultSet openExec(Object params) throws BasicException;
 
-    /**
-     *
-     * @return @throws BasicException
-     */
-    public abstract DataResultSet moreResults() throws BasicException;
+    public abstract DataResultSet<T> openExec(Object params) throws BasicException;
 
-    /**
-     *
-     * @throws BasicException
-     */
+    public abstract DataResultSet<T> moreResults() throws BasicException;
+
     public abstract void closeExec() throws BasicException;
 
-    // Funciones
-    /**
-     *
-     * @return @throws BasicException
-     */
     @Override
     public final int exec() throws BasicException {
         return exec((Object) null);
     }
 
-    /**
-     *
-     * @param params
-     * @return
-     * @throws BasicException
-     */
     @Override
     public final int exec(Object... params) throws BasicException {
         return exec((Object) params);
     }
 
-    /**
-     *
-     * @param params
-     * @return
-     * @throws BasicException
-     */
     @Override
     public final int exec(Object params) throws BasicException {
-        DataResultSet SRS = openExec(params);
+        DataResultSet<T> SRS = openExec(params);
         if (SRS == null) {
             throw new BasicException(LocalRes.getIntString("exception.noupdatecount"));
         }
@@ -85,139 +54,76 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
         return iResult;
     }
 
-    /**
-     *
-     * @return @throws BasicException
-     */
     @Override
     public final List<T> list() throws BasicException {
         return list((Object) null);
     }
 
-    /**
-     *
-     * @param params
-     * @return
-     * @throws BasicException
-     */
     @Override
     public final List<T> list(Object... params) throws BasicException {
         return list((Object) params);
     }
 
-    /**
-     *
-     * @param params
-     * @return
-     * @throws BasicException
-     */
     @Override
     public final List<T> list(Object params) throws BasicException {
         // En caso de error o lanza un pepinazo en forma de DataException 
-        DataResultSet SRS = openExec(params);
-        List aSO = fetchAll(SRS);
+        DataResultSet<T> SRS = openExec(params);
+        List<T> aSO = fetchAll(SRS);
         SRS.close();
         closeExec();
         return aSO;
     }
 
-    /**
-     *
-     * @param offset
-     * @param length
-     * @return
-     * @throws BasicException
-     */
     @Override
     public final List<T> listPage(int offset, int length) throws BasicException {
         return listPage(null, offset, length);
     }
 
-    /**
-     *
-     * @param params
-     * @param offset
-     * @param length
-     * @return
-     * @throws BasicException
-     */
     @Override
     public final List<T> listPage(Object params, int offset, int length) throws BasicException {
         // En caso de error o lanza un pepinazo en forma de DataException         
-        DataResultSet SRS = openExec(params);
-        List aSO = fetchPage(SRS, offset, length);
-        SRS.close();
+        DataResultSet<T> resultSet = openExec(params);
+        List<T> aSO = fetchPage(resultSet, offset, length);
+        resultSet.close();
         closeExec();
         return aSO;
     }
 
-    /**
-     *
-     * @return @throws BasicException
-     */
     @Override
     public final T find() throws BasicException {
         return find((Object) null);
     }
 
-    /**
-     *
-     * @param params
-     * @return
-     * @throws BasicException
-     */
     @Override
     public final T find(Object... params) throws BasicException {
         return find((Object) params);
     }
 
-    /**
-     *
-     * @param params
-     * @return
-     * @throws BasicException
-     */
     @Override
     public final T find(Object params) throws BasicException {
         // En caso de error o lanza un pepinazo en forma de SQLException          
-        DataResultSet SRS = openExec(params);
-        Object obj = fetchOne(SRS);
-        SRS.close();
+        DataResultSet<T> resultSet = openExec(params);
+        Object obj = fetchOne(resultSet);
+        resultSet.close();
         closeExec();
         return (T)obj;
     }
 
-    // Utilidades
-    /**
-     *
-     * @param SRS
-     * @return
-     * @throws BasicException
-     */
-    public final List<T> fetchAll(DataResultSet SRS) throws BasicException {
-        if (SRS == null) {
+    public final List<T> fetchAll(DataResultSet<T> resultSet) throws BasicException {
+        if (resultSet == null) {
             throw new BasicException(LocalRes.getIntString("exception.nodataset"));
         }
 
-        List aSO = new ArrayList();
-        while (SRS.next()) {
-            aSO.add(SRS.getCurrent());
+        List<T> aSO = new ArrayList<>();
+        while (resultSet.next()) {
+            aSO.add(resultSet.getCurrent());
         }
         return aSO;
     }
 
-    // Utilidades
-    /**
-     *
-     * @param SRS
-     * @param offset
-     * @param length
-     * @return
-     * @throws BasicException
-     */
-    public final List<T> fetchPage(DataResultSet SRS, int offset, int length) throws BasicException {
+    public final List<T> fetchPage(DataResultSet<T> resultSet, int offset, int length) throws BasicException {
 
-        if (SRS == null) {
+        if (resultSet == null) {
             throw new BasicException(LocalRes.getIntString("exception.nodataset"));
         }
 
@@ -226,35 +132,29 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
         }
 
         // Skip los primeros que no me importan
-        while (offset > 0 && SRS.next()) {
+        while (offset > 0 && resultSet.next()) {
             offset--;
         }
 
         // me traigo tantos como me han dicho
-        List aSO = new ArrayList();
+        List<T> aSO = new ArrayList<>();
         if (offset == 0) {
-            while (length > 0 && SRS.next()) {
+            while (length > 0 && resultSet.next()) {
                 length--;
-                aSO.add(SRS.getCurrent());
+                aSO.add(resultSet.getCurrent());
             }
         }
         return aSO;
     }
 
-    /**
-     *
-     * @param SRS
-     * @return
-     * @throws BasicException
-     */
-    public final T fetchOne(DataResultSet<T> SRS) throws BasicException {
+    public final T fetchOne(DataResultSet<T> resultSet) throws BasicException {
 
-        if (SRS == null) {
+        if (resultSet == null) {
             throw new BasicException(LocalRes.getIntString("exception.nodataset"));
         }
 
-        if (SRS.next()) {
-            return SRS.getCurrent();
+        if (resultSet.next()) {
+            return resultSet.getCurrent();
         } else {
             return null;
         }

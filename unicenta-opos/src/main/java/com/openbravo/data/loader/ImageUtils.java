@@ -15,6 +15,10 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.data.loader;
 
+import com.openbravo.resources.ImageResources;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.io.*;
 import javax.imageio.ImageIO;
 import java.awt.image.*;
@@ -34,7 +38,8 @@ public class ImageUtils {
     private final static Logger LOGGER = Logger.getLogger(ImageUtils.class.getName());
     private final static char[] HEXCHARS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
-    private ImageUtils() {}
+    private ImageUtils() {
+    }
 
     private static byte[] readStream(InputStream inputstream) throws IOException {
         //TODO improve null checking Objects.requireNonNull(inputstream, "inputstream should not be null");
@@ -75,18 +80,18 @@ public class ImageUtils {
 
     public static BufferedImage readImage(String urlString) {
         //TODO improve null checking Objects.requireNonNull(urlString, "urlString should not be null");
-        BufferedImage image = generateImage();;
+        BufferedImage image = generateDefaultImage();;
         try {
             image = readImage(new URL(urlString));
         } catch (MalformedURLException ex) {
-            LOGGER.log(Level.SEVERE, "ReadImage from string url: "+urlString, ex);
+            LOGGER.log(Level.SEVERE, "ReadImage from string url: " + urlString, ex);
         }
         return image;
     }
 
     public static BufferedImage readImage(URL url) {
         //TODO improve null checking Objects.requireNonNull(url, "url should not be null");
-        BufferedImage image = generateImage();
+        BufferedImage image = generateDefaultImage();
         if (url != null) {
             try {
                 URLConnection urlConnection = url.openConnection();
@@ -94,7 +99,7 @@ public class ImageUtils {
                     image = readImage(readStream(in));
                 }
             } catch (IOException ex) {
-                LOGGER.log(Level.SEVERE, "ReadImage from url: "+url, ex);
+                LOGGER.log(Level.SEVERE, "ReadImage from url: " + url, ex);
             }
         }
         return image;
@@ -102,7 +107,7 @@ public class ImageUtils {
 
     public static BufferedImage readImage(byte[] imageByteArray) {
         //TODO improve null checking Objects.requireNonNull(imageByteArray, "imageByteArray should not be null");
-        BufferedImage image = generateImage();
+        BufferedImage image = generateDefaultImage();
         if (imageByteArray != null) {
             try (ByteArrayInputStream input = new ByteArrayInputStream(imageByteArray)) {
                 image = ImageIO.read(input);
@@ -208,17 +213,43 @@ public class ImageUtils {
                 s.append(HEXCHARS[(b & 0xF0) >> 4]);
                 s.append(HEXCHARS[b & 0x0F]);
             }
-            
+
             result = s.toString();
         }
         return result;
     }
 
-    public static BufferedImage generateImage(int width, int heigth) {
-        return new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB);
+    public static BufferedImage generateColorImage(Color color, int width, int heigth) {
+        BufferedImage bImage = new BufferedImage(width, heigth, BufferedImage.TYPE_INT_RGB);
+
+        Graphics2D g = bImage.createGraphics();
+        g.setColor(color);
+        g.fillRect(0, 0, bImage.getWidth(), bImage.getHeight());
+        // draw other things on g
+        g.dispose();
+
+        return bImage;
+        
     }
 
-    private static BufferedImage generateImage() {
-        return null; //generateImage(1, 1);
+    private static BufferedImage generateDefaultImage() {
+        return generateColorImage(Color.WHITE, 128,128);
+    }
+
+    public static BufferedImage toBufferedImage(Image img) {
+        if (img instanceof BufferedImage) {
+            return (BufferedImage) img;
+        }
+
+        // Create a buffered defaultImage with transparency
+        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+        // Draw the defaultImage on to the buffered defaultImage
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        // Return the buffered defaultImage
+        return bimage;
     }
 }

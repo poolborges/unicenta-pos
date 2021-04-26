@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
@@ -31,214 +30,106 @@ import java.util.regex.Pattern;
  * @author JG uniCenta
  */
 public abstract class BatchSentence extends BaseSentence {
-    
-    /**
-     *
-     */
-    protected Session m_s;    
 
-    /**
-     *
-     */
-    protected HashMap<String, String> m_parameters;
-    
-    /** Creates a new instance of BatchSentence
-     * @param s */
-    public BatchSentence(Session s) {
-        m_s = s;
-        m_parameters = new HashMap<>();
+    private static final String L10N_EXCEPTION_NODATASET = "exception.nodataset";
+
+    protected Session session;
+    protected HashMap<String, String> parameters;
+
+    public BatchSentence(Session session) {
+        this.session = session;
+        this.parameters = new HashMap<>();
     }
-    
-    /**
-     *
-     * @param name
-     * @param replacement
-     */
+
     public void putParameter(String name, String replacement) {
-        m_parameters.put(name, replacement);
+        parameters.put(name, replacement);
     }
-    
-    /**
-     *
-     * @return
-     * @throws BasicException
-     */
+
     protected abstract Reader getReader() throws BasicException;
-    
-    /**
-     *
-     */
-    public class ExceptionsResultSet implements DataResultSet {
-        
-        List l;
-        int m_iIndex;
-        
-        /**
-         *
-         * @param l
-         */
-        public ExceptionsResultSet(List l) {
-            this.l = l;
+
+    public class ExceptionsResultSet implements DataResultSet<BasicException> {
+
+        private List<BasicException> excepList;
+        private int m_iIndex;
+
+        public ExceptionsResultSet(List<BasicException> excepList) {
+            this.excepList = excepList;
             m_iIndex = -1;
         }
-        
-        /**
-         *
-         * @param columnIndex
-         * @return
-         * @throws BasicException
-         */
+
         @Override
         public Integer getInt(int columnIndex) throws BasicException {
-            throw new BasicException(LocalRes.getIntString("exception.nodataset"));
+            throw new BasicException(LocalRes.getIntString(L10N_EXCEPTION_NODATASET));
         }
 
-        /**
-         *
-         * @param columnIndex
-         * @return
-         * @throws BasicException
-         */
         @Override
         public String getString(int columnIndex) throws BasicException {
-            throw new BasicException(LocalRes.getIntString("exception.nodataset"));
+            throw new BasicException(LocalRes.getIntString(L10N_EXCEPTION_NODATASET));
         }
 
-        /**
-         *
-         * @param columnIndex
-         * @return
-         * @throws BasicException
-         */
         @Override
         public Double getDouble(int columnIndex) throws BasicException {
-            throw new BasicException(LocalRes.getIntString("exception.nodataset"));
+            throw new BasicException(LocalRes.getIntString(L10N_EXCEPTION_NODATASET));
         }
 
-        /**
-         *
-         * @param columnIndex
-         * @return
-         * @throws BasicException
-         */
         @Override
         public Boolean getBoolean(int columnIndex) throws BasicException {
-            throw new BasicException(LocalRes.getIntString("exception.nodataset"));
+            throw new BasicException(LocalRes.getIntString(L10N_EXCEPTION_NODATASET));
         }
 
-        /**
-         *
-         * @param columnIndex
-         * @return
-         * @throws BasicException
-         */
         @Override
         public java.util.Date getTimestamp(int columnIndex) throws BasicException {
-            throw new BasicException(LocalRes.getIntString("exception.nodataset"));
+            throw new BasicException(LocalRes.getIntString(L10N_EXCEPTION_NODATASET));
         }
 
-        //public java.io.InputStream getBinaryStream(int columnIndex) throws DataException;
-
-        /**
-         *
-         * @param columnIndex
-         * @return
-         * @throws BasicException
-         */
-                @Override
+        @Override
         public byte[] getBytes(int columnIndex) throws BasicException {
-            throw new BasicException(LocalRes.getIntString("exception.nodataset"));
+            throw new BasicException(LocalRes.getIntString(L10N_EXCEPTION_NODATASET));
         }
 
-        /**
-         *
-         * @param columnIndex
-         * @return
-         * @throws BasicException
-         */
         @Override
-        public Object getObject(int columnIndex) throws BasicException  {
-            throw new BasicException(LocalRes.getIntString("exception.nodataset"));
+        public Object getObject(int columnIndex) throws BasicException {
+            throw new BasicException(LocalRes.getIntString(L10N_EXCEPTION_NODATASET));
         }
 
-    //    public int getColumnCount() throws DataException;
-
-        /**
-         *
-         * @return
-         * @throws BasicException
-         */
-                @Override
+        @Override
         public DataField[] getDataField() throws BasicException {
-            throw new BasicException(LocalRes.getIntString("exception.nodataset"));
+            throw new BasicException(LocalRes.getIntString(L10N_EXCEPTION_NODATASET));
         }
 
-        /**
-         *
-         * @return
-         * @throws BasicException
-         */
         @Override
-        public Object getCurrent() throws BasicException {
-            if (m_iIndex < 0 || m_iIndex >= l.size()) {
+        public BasicException getCurrent() throws BasicException {
+            if (m_iIndex < 0 || m_iIndex >= excepList.size()) {
                 throw new BasicException(LocalRes.getIntString("exception.outofbounds"));
             } else {
-                return l.get(m_iIndex);
+                return excepList.get(m_iIndex);
             }
         }
-        
-        /**
-         *
-         * @return
-         * @throws BasicException
-         */
+
         @Override
         public boolean next() throws BasicException {
-            return ++m_iIndex < l.size();
+            return ++m_iIndex < excepList.size();
         }
 
-        /**
-         *
-         * @throws BasicException
-         */
         @Override
         public void close() throws BasicException {
         }
 
-        /**
-         *
-         * @return
-         */
         @Override
         public int updateCount() {
             return 0;
         }
     }
-    
-    /**
-     *
-     * @throws BasicException
-     */
+
     @Override
     public final void closeExec() throws BasicException {
     }
-    
-    /**
-     *
-     * @return
-     * @throws BasicException
-     */
+
     @Override
     public final DataResultSet moreResults() throws BasicException {
         return null;
     }
-    
-    /**
-     *
-     * @param params
-     * @return
-     * @throws BasicException
-     */
+
     @Override
     public DataResultSet openExec(Object params) throws BasicException {
 
@@ -246,7 +137,7 @@ public abstract class BatchSentence extends BaseSentence {
 
         String sLine;
         StringBuffer sSentence = new StringBuffer();
-        List aExceptions = new ArrayList();
+        List<BasicException> aExceptions = new ArrayList<>();
 
         try {
             while ((sLine = br.readLine()) != null) {
@@ -255,12 +146,12 @@ public abstract class BatchSentence extends BaseSentence {
                     // No es un comentario ni linea vacia
                     if (sLine.endsWith(";")) {
                         // ha terminado la sentencia
-                        sSentence.append(sLine.substring(0, sLine.length() - 1));                             
+                        sSentence.append(sLine.substring(0, sLine.length() - 1));
 
                         // File parameters
                         Pattern pattern = Pattern.compile("\\$(\\w+)\\{([^}]*)\\}");
                         Matcher matcher = pattern.matcher(sSentence.toString());
-                        List paramlist = new ArrayList();
+                        List<Object> paramlist = new ArrayList<>();
 
                         // Replace all occurrences of pattern in input
                         StringBuffer buf = new StringBuffer();
@@ -269,7 +160,7 @@ public abstract class BatchSentence extends BaseSentence {
                                 paramlist.add(ImageUtils.getBytesFromResource(matcher.group(2)));
                                 matcher.appendReplacement(buf, "?");
                             } else {
-                                String replacement = m_parameters.get(matcher.group(1));
+                                String replacement = parameters.get(matcher.group(1));
                                 if (replacement == null) {
                                     matcher.appendReplacement(buf, Matcher.quoteReplacement(matcher.group(0)));
                                 } else {
@@ -278,16 +169,16 @@ public abstract class BatchSentence extends BaseSentence {
                                 }
                             }
                         }
-                        matcher.appendTail(buf); 
-                        
+                        matcher.appendTail(buf);
+
                         // La disparo
                         try {
                             BaseSentence sent;
                             if (paramlist.isEmpty()) {
-                                sent = new StaticSentence(m_s, buf.toString());
+                                sent = new StaticSentence(session, buf.toString());
                                 sent.exec();
                             } else {
-                                sent = new PreparedSentence(m_s, buf.toString(), SerializerWriteBuilder.INSTANCE);
+                                sent = new PreparedSentence(session, buf.toString(), SerializerWriteBuilder.INSTANCE);
                                 sent.exec(new VarParams(paramlist));
                             }
                         } catch (BasicException eD) {
@@ -311,30 +202,30 @@ public abstract class BatchSentence extends BaseSentence {
         if (sSentence.length() > 0) {
             // ha quedado una sentencia inacabada
             aExceptions.add(new BasicException(LocalRes.getIntString("exception.nofinishedfile")));
-        }   
+        }
 
         return new ExceptionsResultSet(aExceptions);
-    }    
-       
+    }
+
     private static class VarParams implements SerializableWrite {
-        
-        private List l;
-        
-        public VarParams(List l) {
-            this.l = l;
+
+        private List<Object> paramList;
+
+        public VarParams(List<Object> paramList) {
+            this.paramList = paramList;
         }
-        
+
         @Override
         public void writeValues(DataWrite dp) throws BasicException {
-            for (int i = 0; i < l.size(); i++) {
-                Object v = l.get(i);
+            for (int i = 0; i < paramList.size(); i++) {
+                Object v = paramList.get(i);
                 if (v instanceof String) {
                     dp.setString(i + 1, (String) v);
                 } else if (v instanceof byte[]) {
-                    dp.setBytes(i + 1, (byte[]) l.get(i));
+                    dp.setBytes(i + 1, (byte[]) paramList.get(i));
                 } else {
                     dp.setObject(i + 1, v);
-                }                
+                }
             }
         }
     }

@@ -24,95 +24,51 @@ import java.util.Date;
  * @author adrianromero
  */
 public abstract class DataParams implements DataWrite {
-    
-    /**
-     *
-     */
-    protected DataWrite dw;
-    
-    /**
-     *
-     * @throws BasicException
-     */
+
+    protected DataWrite datawrite;
+
     public abstract void writeValues() throws BasicException;
 
-    /**
-     *
-     * @param paramIndex
-     * @param iValue
-     * @throws BasicException
-     */
+    @Override
     public void setInt(int paramIndex, Integer iValue) throws BasicException {
-        dw.setInt(paramIndex, iValue);
+        datawrite.setInt(paramIndex, iValue);
     }
 
+    @Override
     public void setString(int paramIndex, String sValue) throws BasicException {
-        dw.setString(paramIndex, sValue);
+        datawrite.setString(paramIndex, sValue);
     }
 
-    /**
-     *
-     * @param paramIndex
-     * @param dValue
-     * @throws BasicException
-     */
+    @Override
     public void setDouble(int paramIndex, Double dValue) throws BasicException {
-        dw.setDouble(paramIndex, dValue);
+        datawrite.setDouble(paramIndex, dValue);
     }
 
-    /**
-     *
-     * @param paramIndex
-     * @param bValue
-     * @throws BasicException
-     */
+    @Override
     public void setBoolean(int paramIndex, Boolean bValue) throws BasicException {
-        dw.setBoolean(paramIndex, bValue);
+        datawrite.setBoolean(paramIndex, bValue);
     }
 
-    /**
-     *
-     * @param paramIndex
-     * @param dValue
-     * @throws BasicException
-     */
+    @Override
     public void setTimestamp(int paramIndex, Date dValue) throws BasicException {
-        dw.setTimestamp(paramIndex, dValue);
+        datawrite.setTimestamp(paramIndex, dValue);
     }
 
-    /**
-     *
-     * @param paramIndex
-     * @param value
-     * @throws BasicException
-     */
+    @Override
     public void setBytes(int paramIndex, byte[] value) throws BasicException {
-        dw.setBytes(paramIndex, value);
+        datawrite.setBytes(paramIndex, value);
     }
 
-    /**
-     *
-     * @param paramIndex
-     * @param value
-     * @throws BasicException
-     */
+    @Override
     public void setObject(int paramIndex, Object value) throws BasicException {
-        dw.setObject(paramIndex, value);
+        datawrite.setObject(paramIndex, value);
     }
 
-    /**
-     *
-     * @return
-     */
     public DataWrite getDataWrite() {
-        return dw;
+        return datawrite;
     }
 
-    /**
-     *
-     * @param dw
-     */
     public void setDataWrite(DataWrite dw) {
-        this.dw = dw;
+        this.datawrite = dw;
     }
 }
