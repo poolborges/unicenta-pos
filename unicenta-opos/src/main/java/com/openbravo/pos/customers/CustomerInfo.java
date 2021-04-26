@@ -16,97 +16,21 @@
 
 package com.openbravo.pos.customers;
 
-import com.openbravo.pos.util.StringUtils;
+import com.openbravo.pos.domain.entity.businesspartner.BusinessPartner;
 import java.awt.image.BufferedImage;
-import java.io.Serializable;
 
 /** @author jack gerrard, adrianromero */
-public class CustomerInfo implements Serializable {
+public class CustomerInfo extends BusinessPartner {
     
     private static final long serialVersionUID = 9083257536541L;
 
-    protected String id;
-    protected String searchkey;
-    protected String taxid;
-    protected String name;
-    protected String postal;
-    protected String phone;
-    protected String email;
     protected BufferedImage image; 
     protected Double curdebt;     
 
     public CustomerInfo(String id) {
-        this.id = id;
-        this.searchkey = null;
-        this.taxid = null;
-        this.name = null;
-        this.postal = null;
-        this.phone = null;
-        this.email = null;
-        this.image = null;
-        this.curdebt = null;
+        super(id);
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public String getSearchkey() {
-        return searchkey;
-    }
-
-    public void setSearchkey(String searchkey) {
-        this.searchkey = searchkey;
-    }
-
-    public String getTaxid() {
-        return taxid;
-    }
-
-    public void setTaxid(String taxid) {
-        this.taxid = taxid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPcode() {
-        return postal;
-    }
-
-    public void setPcode(String postal) {
-        this.postal = postal;
-    }
-
-    public String getPhone1() {
-        return phone;
-    }
-
-    public void setPhone1(String phone) {
-        this.phone = phone;
-    }
-
-    public String getCemail() {
-        return email;
-    }
-
-    public void setCemail(String email) {
-        this.email = email;
-    }
-
-    public String printName() {
-        return StringUtils.encodeXML(name);
-    }
-    
-    @Override
-    public String toString() {
-        return getName();        
-    }
 
     public BufferedImage getImage() {
         return image;

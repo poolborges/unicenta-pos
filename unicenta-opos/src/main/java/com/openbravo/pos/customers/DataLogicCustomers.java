@@ -319,18 +319,17 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
     }
     // </editor-fold>
 
-    protected static class CustomerInfoRead implements SerializerRead {
+    protected static class CustomerInfoRead implements SerializerRead<CustomerInfo> {
         @Override
         public CustomerInfo readValues(DataRead dr) throws BasicException {
             CustomerInfo c = new CustomerInfo(dr.getString(1));
             c.setTaxid(dr.getString(2));
             c.setSearchkey(dr.getString(3));
             c.setName(dr.getString(4));
-            c.setPcode(dr.getString(5));
-            c.setPhone1(dr.getString(6));
-            c.setCemail(dr.getString(7));
+            c.setPostal(dr.getString(5));
+            c.setPhone(dr.getString(6));
+            c.setEmail(dr.getString(7));
             c.setImage(ImageUtils.readImage(dr.getBytes(8)));
-            //c.setCurDebt(dr.getDouble(9));
             return c;
         }
     }

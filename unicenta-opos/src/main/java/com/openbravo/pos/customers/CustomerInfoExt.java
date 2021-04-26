@@ -36,21 +36,18 @@ public class CustomerInfoExt extends CustomerInfo {
     protected Double maxdebt;
     protected String address;
     protected String address2;
-    protected String pcode;
     protected String city;
     protected String region;
     protected String country;    
     protected String firstname;
     protected String lastname;
-    protected String cemail;
-    protected String phone1;
     protected String phone2;
     protected String fax;
     protected String notes;
     protected boolean visible;
     protected Date curdate;
     protected Double accdebt;
-    protected BufferedImage m_Image;
+    protected BufferedImage image;
     protected boolean isvip;
     protected Double discount;
     protected String prepay;
@@ -233,38 +230,17 @@ public class CustomerInfoExt extends CustomerInfo {
 
     /**
      *
-     * @return customer's cemail string
-     */
-    @Override
-    public String getCemail() {
-        return cemail;
-    }
-
-    /**
-     *
-     * @param cemail
-     */
-    @Override
-    public void setCemail(String cemail) {
-        this.cemail = cemail;
-    }
-
-    /**
-     *
      * @return customer's Primary telephone string
      */
-    @Override
     public String getPhone1() {
-        return phone1;
+        return phone;
     }
-    @Override
-    public void setPhone1(String phone1) {
-        this.phone1 = phone1;
-    }
-    public String printPhone() {       
-        return Formats.STRING.formatValue(phone1);
-    } 
 
+    
+    public void setPhone1(String phone1) {
+        this.phone = phone1;
+    }
+    
     /**
      *
      * @return customer's Secondary telephone string
@@ -321,25 +297,7 @@ public class CustomerInfoExt extends CustomerInfo {
     public void setAddress2(String address2) {
         this.address2 = address2;
     }
-    public String printAddress2() {       
-        return Formats.STRING.formatValue(address2);
-    } 
 
-    /**
-     *
-     * @return customer's pcode/zip code string
-     */
-    @Override
-    public String getPcode() {
-        return pcode;
-    }
-    @Override
-    public void setPcode(String pcode) {
-        this.pcode = pcode;
-    }
-    public String printPostal() {       
-        return Formats.STRING.formatValue(pcode);
-    }     
 
     /**
      *
@@ -392,7 +350,7 @@ public class CustomerInfoExt extends CustomerInfo {
      */
     @Override
     public BufferedImage getImage() {
-        return m_Image;
+        return image;
     }
     /**
      *
@@ -400,7 +358,7 @@ public class CustomerInfoExt extends CustomerInfo {
      */
     @Override
     public void setImage(BufferedImage img) {
-        this.m_Image = img;
+        this.image = img;
     }
     
     /**
@@ -425,10 +383,6 @@ public class CustomerInfoExt extends CustomerInfo {
     public void setDiscount(Double discount) {
         this.discount = discount;
     }
-    public String printDiscount() {       
-        return Formats.CURRENCY.formatValue(RoundUtils.getValue(getDiscount()));
-    }  
-    
     /**
      *
      * @return memo date string
@@ -439,6 +393,23 @@ public class CustomerInfoExt extends CustomerInfo {
     public void setMemoDate(String memodate) {
         this.memodate = memodate;
     }
+    
+    
+    public String printAddress2() {       
+        return Formats.STRING.formatValue(address2);
+    } 
+    
+    public String printDiscount() {       
+        return Formats.CURRENCY.formatValue(RoundUtils.getValue(getDiscount()));
+    }  
+
+    public String printPostal() {       
+        return Formats.STRING.formatValue(postal);
+    }  
+    
+    public String printPhone() {       
+        return Formats.STRING.formatValue(phone);
+    } 
     public String printMemoDate() {       
         return Formats.STRING.formatValue(memodate);
     }        

@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.customers;
 
 import com.openbravo.basic.BasicException;
@@ -47,70 +46,34 @@ import javax.swing.event.EventListenerList;
  */
 public class OrderCustomerList extends JPanel implements TicketSelector {
 
-    /**
-     * Source origin and Ticket
-     */
+    protected static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.customers.CustomersList");
+    private static final long serialVersionUID = 1L;
+
     protected AppView application;
     private String currentTicket;
-
-    /**
-     * This instance interface
-     */
     protected TicketsEditor panelticket;
-
-    /**
-     * Set listeners for new/change Customer/Receipt events
-     */
     protected EventListenerList listeners = new EventListenerList();
     private final DataLogicCustomers dataLogicCustomers;
     private final DataLogicReceipts dataLogicReceipts;
-    private final ThumbNailBuilder tnbbutton;
 
-    /**
-     * Logging / Monitor
-     */
-    protected static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.customers.CustomersList");
-
-    /**
-     * Creates new form CustomersList
-     * @param dlCustomers
-     * @param app
-     * @param panelticket
-     */
     public OrderCustomerList(DataLogicCustomers dlCustomers, AppView app, TicketsEditor panelticket) {
         this.application = app;
         this.panelticket = panelticket;
         this.dataLogicCustomers = dlCustomers;
         this.dataLogicReceipts = (DataLogicReceipts) application.getBean("com.openbravo.pos.sales.DataLogicReceipts");
-        tnbbutton = new ThumbNailBuilder(90, 98);
-
-//        orderSynchroniseHelper = new OrdersSynchroniseHelper(application, dataLogicReceipts, panelticket.getActiveTicket());
 
         initComponents();
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public Component getComponent() {
         return this;
     }
 
-    /**
-     *
-     * @throws BasicException
-     */
     public void reloadCustomers() throws BasicException {
-//        synchroniseData();
         loadCustomers();
     }
 
-    /**
-     *
-     * @throws BasicException
-     */
     @Override
     public void loadCustomers() throws BasicException {
 
@@ -118,28 +81,25 @@ public class OrderCustomerList extends JPanel implements TicketSelector {
 
             @Override
             public void run() {
+                final JCatalogTab flowTab = new JCatalogTab();
 
-                long time = System.currentTimeMillis();
                 jPanelCustomers.removeAll();
-
-                JCatalogTab flowTab = new JCatalogTab();
                 jPanelCustomers.add(flowTab);
 
                 List<CustomerInfoExt> customers = null;
                 List<SharedTicketInfo> ticketList = null;
+                
+                long currentTime = System.currentTimeMillis();
                 try {
-
-//                    customers = dataLogicCustomers.getCustomers();
-                    LOGGER.log(Level.INFO, "Time of getCustomersWithOutImage {0}", (System.currentTimeMillis() - time));
-                    time = System.currentTimeMillis();
+                    LOGGER.log(Level.INFO, "Time of getCustomersWithOutImage {0}", (System.currentTimeMillis() - currentTime));
+                    currentTime = System.currentTimeMillis();
 
                     ticketList = dataLogicReceipts.getSharedTicketList();
-                    LOGGER.log(Level.INFO, "Time of getSharedTicketList {0}", (System.currentTimeMillis() - time));
-                    time = System.currentTimeMillis();
-
+                    LOGGER.log(Level.INFO, "Time of getSharedTicketList {0}", (System.currentTimeMillis() - currentTime));
+                    currentTime = System.currentTimeMillis();
 
                 } catch (BasicException ex) {
-                    Logger.getLogger(OrderCustomerList.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, null, ex);
                 }
                 HashMap<SharedTicketInfo, CustomerInfoExt> orderMap = new HashMap<>();
 
@@ -153,7 +113,7 @@ public class OrderCustomerList extends JPanel implements TicketSelector {
                         if (ticketName.startsWith("[")) {
                             // order without customer
                             orderMap.put(sharedTicketInfo, null);
-                        } else if (!customers.isEmpty()) {
+                        } else if (customers != null && !customers.isEmpty()) {
                             // find customer to ticket
                             for (CustomerInfoExt customer : customers) {
                                 if (customer != null) {
@@ -172,48 +132,33 @@ public class OrderCustomerList extends JPanel implements TicketSelector {
                 TreeMap<SharedTicketInfo, CustomerInfoExt> sortedMap = new TreeMap<>(bvc);
                 sortedMap.putAll(orderMap);
 
-                LOGGER.log(Level.INFO, "Time of orderMap {0}", (System.currentTimeMillis() - time));
-                time = System.currentTimeMillis();
+                currentTime = System.currentTimeMillis();
 
                 // set button list
                 for (Map.Entry<SharedTicketInfo, CustomerInfoExt> entry : sortedMap.entrySet()) {
                     SharedTicketInfo ticket = entry.getKey();
                     CustomerInfoExt customer = entry.getValue();
 
-                    String name = ticket.getName();
-                    BufferedImage image = null;
+                    if (customer != null) {
 
-//                    if (customer != null) {
-//                        try {
-//                            image = dataLogicCustomers.getCustomerImage(customer.getId());
-//                        } catch (BasicException ex) {
-//                            Logger.getLogger(OrderCustomerList.class.getName()).log(Level.SEVERE, null, ex);
-//                        }
-//                    }
-                    if (image == null) {
+                        String ticketName = ticket.getName();
+                        BufferedImage image = null;
+                        ThumbNailBuilder tnbbutton = new ThumbNailBuilder(90, 98, "/com/openbravo/images/no_image.png");;
                         try {
-                            InputStream is = getClass().getResourceAsStream("/com/openbravo/images/no_image.png");
-                            if (is != null) {
-                                image = ImageIO.read(is);
+                            image = dataLogicCustomers.getCustomerInfo(customer.getId()).getImage();
+                            if (image != null) {
+                                tnbbutton = new ThumbNailBuilder(90, 98, image);
                             }
-                        } catch (IOException ex) {
-                            Logger.getLogger(OrderCustomerList.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (BasicException ex) {
+                            LOGGER.log(Level.WARNING, "Exception on getting entity image", ex);
                         }
-                    }
-                    String username;
-                    if (name.indexOf("[") != 0) {
-                        username = name.substring(0, name.indexOf("[") - 1);
-                        username = username.replace("-", "");
-                    } else {
-                        username = "unknown";
-                    }
-                    String orderId = name.substring(name.indexOf("["), name.indexOf("]") + 1);
-                    String text = "<html><center>" + username.trim() + "<br/>" + orderId.trim() + "</center></html>";
 
-                    ImageIcon icon = new ImageIcon(tnbbutton.getThumbNailText(image, text));
-//                    flowTab.addButton(icon, new SelectedCustomerAction(ticket.getId()));
+                        ImageIcon icon = new ImageIcon(tnbbutton.getThumbNail());
+                        flowTab.addButton(icon, new SelectedCustomerAction(ticket.getId()), ticketName);
+                    }
+
                 }
-                LOGGER.log(Level.INFO, "Time of finished loadCustomerOrders {0}", (System.currentTimeMillis() - time));
+                LOGGER.log(Level.INFO, "Time of finished loadCustomerOrders {0}", (System.currentTimeMillis() - currentTime));
             }
         });
     }
@@ -282,14 +227,13 @@ public class OrderCustomerList extends JPanel implements TicketSelector {
 
 //    private void synchroniseData() {
 //        try {
-            // get tickets only from selected customer or show all
-            // add newest tickets from provider
+    // get tickets only from selected customer or show all
+    // add newest tickets from provider
 //            orderSynchroniseHelper.synchSharedTickets(panelticket.getActiveTicket());
 //        } catch (Exception e) {
 //            LOGGER.log(Level.WARNING, "Error synchronise orders", e);
 //        }
 //    }
-
     private void fireTicketSelectionChanged(String ticketId) {
         EventListener[] l = listeners.getListeners(ActionListener.class);
         ActionEvent e = null;

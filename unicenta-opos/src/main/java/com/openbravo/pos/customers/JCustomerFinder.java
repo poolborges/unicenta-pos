@@ -123,7 +123,6 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
         getRootPane().setDefaultButton(jcmdOK);
 
         m_ReturnCustomer = null;
-        m_jKeys.setCustomerFinder(this);
 
     }
 
@@ -146,9 +145,9 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
             m_jtxtTaxID.setText(customer.getTaxid());
             m_jtxtSearchKey.setText(customer.getSearchkey());
             m_jtxtName.setText(customer.getName());
-            m_jtxtPostal.setText(customer.getPcode());
-            m_jtxtPhone.setText(customer.getPhone1());
-            m_jtxtName2.setText(customer.getCemail());
+            m_jtxtPostal.setText(customer.getPostal());
+            m_jtxtPhone.setText(customer.getPhone());
+            m_jtxtName2.setText(customer.getEmail());
 
             m_jtxtTaxID.activate();
 
