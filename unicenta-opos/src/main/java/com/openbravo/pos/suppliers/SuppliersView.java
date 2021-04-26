@@ -386,26 +386,24 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         refresh();    
     }
     
-public void resetTranxTable() {
+    public void resetTranxTable() {
 
-    jTableSupplierTransactions.getColumnModel().getColumn(0).setPreferredWidth(100);               
-    jTableSupplierTransactions.getColumnModel().getColumn(1).setPreferredWidth(225);
-    jTableSupplierTransactions.getColumnModel().getColumn(2).setPreferredWidth(30);
-    jTableSupplierTransactions.getColumnModel().getColumn(3).setPreferredWidth(50);
-    jTableSupplierTransactions.getColumnModel().getColumn(4).setPreferredWidth(55);
-    
-    // set font for headers
-    Font f = new Font("Arial", Font.BOLD, 14);
-    JTableHeader header = jTableSupplierTransactions.getTableHeader();
-    header.setFont(f);
-      
-    jTableSupplierTransactions.getTableHeader().setReorderingAllowed(true); 
-    jTableSupplierTransactions.setAutoCreateRowSorter(true);        
+        jTableSupplierTransactions.getColumnModel().getColumn(0).setPreferredWidth(100);               
+        jTableSupplierTransactions.getColumnModel().getColumn(1).setPreferredWidth(225);
+        jTableSupplierTransactions.getColumnModel().getColumn(2).setPreferredWidth(30);
+        jTableSupplierTransactions.getColumnModel().getColumn(3).setPreferredWidth(50);
+        jTableSupplierTransactions.getColumnModel().getColumn(4).setPreferredWidth(55);
 
-    jTableSupplierTransactions.repaint();
-    
-    
-}
+        // set font for headers
+        Font f = new Font("Arial", Font.BOLD, 14);
+        JTableHeader header = jTableSupplierTransactions.getTableHeader();
+        header.setFont(f);
+
+        jTableSupplierTransactions.getTableHeader().setReorderingAllowed(true); 
+        jTableSupplierTransactions.setAutoCreateRowSorter(true);        
+
+        jTableSupplierTransactions.repaint();
+    }
 
     
     /**
@@ -653,7 +651,7 @@ String rsn = AppLocal.getIntString("label.suptblHeaderCol5");
 
         jLabel7.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/info.png"))); // NOI18N
-        jLabel7.setText(AppLocal.getIntString("label.suppliertaxid")); // NOI18N
+        jLabel7.setText(AppLocal.getIntString("label.taxid")); // NOI18N
         jLabel7.setMaximumSize(new java.awt.Dimension(150, 30));
         jLabel7.setMinimumSize(new java.awt.Dimension(140, 25));
         jLabel7.setPreferredSize(new java.awt.Dimension(150, 30));
@@ -1092,7 +1090,7 @@ String rsn = AppLocal.getIntString("label.suptblHeaderCol5");
                         .addComponent(jBtnShowTrans, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLblTranCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

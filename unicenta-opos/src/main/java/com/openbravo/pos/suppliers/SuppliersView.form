@@ -132,7 +132,7 @@
           <Image iconType="3" name="/com/openbravo/images/info.png"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="pos_messages.properties" key="label.suppliertaxid" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="pos_messages.properties" key="label.taxid" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
         </Property>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[150, 30]"/>

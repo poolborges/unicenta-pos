@@ -50,67 +50,32 @@ import javax.swing.event.EventListenerList;
  */
 public class OrderSupplierList extends JPanel implements SupplierTicketSelector {
 
-    /**
-     * Source origin and Ticket
-     */
+    protected static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.suppliers.SuppliersList");
+    private static final long serialVersionUID = 1L;
+
     protected AppView application;
     private String currentTicket;
-
-    /**
-     * This instance interface
-     */
     protected TicketsEditor panelticket;
-
-    /**
-     * Set listeners for new/change Supplier/Receipt events
-     */
     protected EventListenerList listeners = new EventListenerList();
     private final DataLogicSuppliers dataLogicSuppliers;
     private final DataLogicReceipts dataLogicReceipts;
-    private final ThumbNailBuilder tnbbutton;
 
-    /**
-     * Logging / Monitor
-     */
-    protected static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.suppliers.SuppliersList");
-
-    /**
-     * Creates new form SuppliersList
-     * @param dlSuppliers
-     * @param app
-     * @param panelticket
-     */
     public OrderSupplierList(DataLogicSuppliers dlSuppliers, AppView app, TicketsEditor panelticket) {
         this.application = app;
         this.panelticket = panelticket;
         this.dataLogicSuppliers = dlSuppliers;
         this.dataLogicReceipts = (DataLogicReceipts) application.getBean("com.openbravo.pos.sales.DataLogicReceipts");
-        tnbbutton = new ThumbNailBuilder(90, 98);
-
+        
         initComponents();
     }
 
-    /**
-     *
-     * @return
-     */
     public Component getComponent() {
         return this;
     }
 
-    /**
-     *
-     * @throws BasicException
-     */
     public void reloadSuppliers() throws BasicException {
-//        synchroniseData();
         loadSuppliers();
     }
-
-    /**
-     *
-     * @throws BasicException
-     */
 
     public void loadSuppliers() throws BasicException {
 
@@ -118,25 +83,23 @@ public class OrderSupplierList extends JPanel implements SupplierTicketSelector 
 
             @Override
             public void run() {
-
-                long time = System.currentTimeMillis();
-                jPanelSuppliers.removeAll();
-
                 JCatalogTab flowTab = new JCatalogTab();
+                
+                jPanelSuppliers.removeAll();
                 jPanelSuppliers.add(flowTab);
 
                 List<SupplierInfoExt> suppliers = null;
                 List<SharedTicketInfo> ticketList = null;
-                try {
 
+                long time = System.currentTimeMillis();
+                
+                try {
                     LOGGER.log(Level.INFO, "Time of getSuppliersWithOutImage {0}", (System.currentTimeMillis() - time));
                     time = System.currentTimeMillis();
 
                     ticketList = dataLogicReceipts.getSharedTicketList();
                     LOGGER.log(Level.INFO, "Time of getSharedTicketList {0}", (System.currentTimeMillis() - time));
                     time = System.currentTimeMillis();
-
-
                 } catch (BasicException ex) {
                     Logger.getLogger(OrderSupplierList.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -151,7 +114,7 @@ public class OrderSupplierList extends JPanel implements SupplierTicketSelector 
                         // found order
                         if (ticketName.startsWith("[")) {
                             orderMap.put(sharedTicketInfo, null);
-                        } else if (!suppliers.isEmpty()) {
+                        } else if (suppliers != null && !suppliers.isEmpty()) {
                             for (SupplierInfoExt supplier : suppliers) {
                                 if (supplier != null) {
                                     String name = supplier.getName().trim();
@@ -198,10 +161,11 @@ public class OrderSupplierList extends JPanel implements SupplierTicketSelector 
                         username = "unknown";
                     }
                     String orderId = name.substring(name.indexOf("["), name.indexOf("]") + 1);
-                    String text = "<html><center>" + username.trim() + "<br/>" + orderId.trim() + "</center></html>";
+                    String text = username.trim() + " : " + orderId.trim();
 
-                    ImageIcon icon = new ImageIcon(tnbbutton.getThumbNailText(image, text));
-//                    flowTab.addButton(icon, new SelectedSupplierAction(ticket.getId()));
+                    final ThumbNailBuilder tnbbutton = new ThumbNailBuilder(90, 98, image);
+                    ImageIcon icon = new ImageIcon(tnbbutton.getThumbNail());
+                    flowTab.addButton(icon, new SelectedSupplierAction(ticket.getId()), text);
                 }
                 LOGGER.log(Level.INFO, "Time of finished loadSupplierOrders {0}", (System.currentTimeMillis() - time));
             }
@@ -225,22 +189,13 @@ public class OrderSupplierList extends JPanel implements SupplierTicketSelector 
         this.setEnabled(value);
     }
 
-    /**
-     *
-     * @param l
-     */
 
-    public void addActionListener(ActionListener l) {
-        listeners.add(ActionListener.class, l);
+    public void addActionListener(ActionListener actionListener) {
+        listeners.add(ActionListener.class, actionListener);
     }
 
-    /**
-     *
-     * @param l
-     */
-
-    public void removeActionListener(ActionListener l) {
-        listeners.remove(ActionListener.class, l);
+    public void removeActionListener(ActionListener actionListener) {
+        listeners.remove(ActionListener.class, actionListener);
     }
 
     private void setActiveTicket(String id) throws BasicException {

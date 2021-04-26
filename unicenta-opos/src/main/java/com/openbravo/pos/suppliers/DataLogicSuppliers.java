@@ -80,7 +80,7 @@ public class DataLogicSuppliers extends BeanFactoryDataSingle {
             , new String[] { 
                 "ID", 
                 AppLocal.getIntString("label.searchkey"),
-                AppLocal.getIntString("label.suppliertaxid"),
+                AppLocal.getIntString("label.taxid"),
                 AppLocal.getIntString("label.name"),
 
                 AppLocal.getIntString("label.maxdebt"),
@@ -200,7 +200,7 @@ public class DataLogicSuppliers extends BeanFactoryDataSingle {
                 @Override
                     public void writeValues() throws BasicException {
                         setString(1, supplier.getNotes());
-                        setString(2, supplier.getID());
+                        setString(2, supplier.getId());
                     }
                 });        
     }
