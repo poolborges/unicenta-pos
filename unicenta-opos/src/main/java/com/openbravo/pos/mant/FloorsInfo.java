@@ -30,13 +30,14 @@ import com.openbravo.data.loader.SerializableRead;
 public class FloorsInfo implements SerializableRead, IKeyed {
     
     private static final long serialVersionUID = 8906929819402L;
-    private String m_sID;
-    private String m_sName;
+    
+    private String id;
+    private String name;
     
     /** Creates a new instance of FloorsInfo */
     public FloorsInfo() {
-        m_sID = null;
-        m_sName = null;
+        id = null;
+        name = null;
     }
    
     /**
@@ -45,54 +46,33 @@ public class FloorsInfo implements SerializableRead, IKeyed {
      */
     @Override
     public Object getKey() {
-        return m_sID;
+        return id;
     }
-    
-    /**
-     *
-     * @param dr
-     * @throws BasicException
-     */
+
     @Override
     public void readValues(DataRead dr) throws BasicException {
-        m_sID = dr.getString(1);
-        m_sName = dr.getString(2);
+        id = dr.getString(1);
+        name = dr.getString(2);
     }
 
-    /**
-     *
-     * @param sID
-     */
     public void setID(String sID) {
-        m_sID = sID;
-    }
-    
-    /**
-     *
-     * @return
-     */
-    public String getID() {
-        return m_sID;
+        id = sID;
     }
 
-    /**
-     *
-     * @return
-     */
-    public String getName() {
-        return m_sName;
+    public String getID() {
+        return id;
     }
-    
-    /**
-     *
-     * @param sName
-     */
+
+    public String getName() {
+        return name;
+    }
+
     public void setName(String sName) {
-        m_sName = sName;
+        name = sName;
     } 
     
     @Override
     public String toString(){
-        return m_sName;
+        return name;
     }       
 }
