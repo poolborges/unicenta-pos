@@ -1489,17 +1489,31 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 , "SELECT "
                 + "ID, "
                 + "SEARCHKEY, "
-                + "TAXID, " 
+                + "TAXID, "
                 + "NAME, "
                 + "TAXCATEGORY, "
-                + "MAXDEBT, "        
+                + "CARD, "
+                + "MAXDEBT, "
+                + "ADDRESS, "
+                + "ADDRESS2, "
+                + "POSTAL, "
+                + "CITY, "
+                + "REGION, "
+                + "COUNTRY, "
                 + "FIRSTNAME, "
                 + "LASTNAME, "
                 + "EMAIL, "
                 + "PHONE, "
                 + "PHONE2, "
-                + "ISVIP, "        
-                + "DISCOUNT "
+                + "FAX, "
+                + "NOTES, "
+                + "VISIBLE, "
+                + "CURDATE, "
+                + "CURDEBT, " 
+                + "IMAGE, "
+                + "ISVIP, "
+                + "DISCOUNT, "
+                + "MEMODATE "
                 + "FROM customers WHERE ID = ?"
                 , SerializerWriteString.INSTANCE
                 , new CustomerExtRead()).find(id);
@@ -2472,13 +2486,13 @@ public class DataLogicSales extends BeanFactoryDataSingle {
             c.setMaxdebt(dr.getDouble(7));
             c.setAddress(dr.getString(8));
             c.setAddress2(dr.getString(9));
-            c.setPcode(dr.getString(10));
+            c.setPostal(dr.getString(10));
             c.setCity(dr.getString(11));
             c.setRegion(dr.getString(12));
             c.setCountry(dr.getString(13));
             c.setFirstname(dr.getString(14));
             c.setLastname(dr.getString(15));
-            c.setCemail(dr.getString(16));
+            c.setEmail(dr.getString(16));
             c.setPhone1(dr.getString(17));
             c.setPhone2(dr.getString(18));
             c.setFax(dr.getString(19));

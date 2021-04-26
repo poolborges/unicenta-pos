@@ -60,7 +60,7 @@ import java.time.Instant;
  *
  * @author adrianromero
  */
-public class JRootApp extends JPanel implements AppView{
+public class JRootApp extends JPanel implements AppView {
 
     private static final Logger LOGGER = Logger.getLogger(JRootApp.class.getName());
 
@@ -99,7 +99,6 @@ public class JRootApp extends JPanel implements AppView{
 
     private final static int UNIQUE_KEY_FAMILY = 0x01;
 
-
     static {
         initOldClasses();
     }
@@ -130,7 +129,6 @@ public class JRootApp extends JPanel implements AppView{
         //TODO load Windows Title 
         //m_jLblTitle.setText(m_dlSystem.getResourceAsText("Window.Title"));
         //m_jLblTitle.repaint();
-
         initComponents();
         jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(30, 30));
         serverMonitor.setVisible(true);
@@ -143,8 +141,7 @@ public class JRootApp extends JPanel implements AppView{
 
     public boolean initApp() {
 
-        
-        m_jPanelDown.setVisible(!(Boolean.valueOf(m_props.getProperty("till.hideinfo"))));
+        statusBarPanel.setVisible(!(Boolean.valueOf(m_props.getProperty("till.hideinfo"))));
 
         applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 
@@ -298,23 +295,23 @@ public class JRootApp extends JPanel implements AppView{
         } catch (SQLException e) {
             url = "";
         }
-        m_jHost.setText("<html>" + m_props.getHost() + " - " + sWareHouse + "<br>" + url);
+        m_jHost.setText("<html>" + m_props.getHost() + " - " + sWareHouse + "<br>" + url + "</html>");
 
         String newLogo = m_props.getProperty("start.logo");
         if (newLogo != null) {
             if ("".equals(newLogo)) {
-                jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/logo.png")));
+                copyRightLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/logo.png")));
             } else {
-                jLabel1.setIcon(new javax.swing.ImageIcon(newLogo));
+                copyRightLabel.setIcon(new javax.swing.ImageIcon(newLogo));
             }
         }
 
         String newText = m_props.getProperty("start.text");
         if (newText != null) {
             if (newText.equals("")) {
-                jLabel1.setText("<html><center>KrOS POS - Open Source Point Of Sale<br>"
-                        + "Copyright \u00A9 KrOS POS <br>"
-                        + "More info on official <href a=\"https://github.com/poolborges/unicenta-pos\">site</a><br>"
+                copyRightLabel.setText("<html><center>"
+                        + "<h1>KrOS POS - Open Source Point Of Sale</h1>"
+                        + "<p>More info on official <href a=\"https://github.com/poolborges/unicenta-pos\">site</a></p>"
                         + "</center>"
                         + "<br><br>"
                         + "<h2>License: GPL v3</h2>"
@@ -324,26 +321,25 @@ public class JRootApp extends JPanel implements AppView{
                         + " This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br>"
                         + "<br>"
                         + "You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/<br>"
+                        + "</html>"
                 );
 
             } else {
                 try {
-                    String newTextCode = new Scanner(new File(newText),
-                            "UTF-8").useDelimiter("\\A").next();
-                    jLabel1.setText(newTextCode);
+                    String newTextCode = new Scanner(new File(newText), "UTF-8").useDelimiter("\\A").next();
+                    copyRightLabel.setText(newTextCode);
                 } catch (FileNotFoundException e) {
                 }
 
-                jLabel1.setAlignmentX(0.5F);
-                jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-                jLabel1.setMaximumSize(new java.awt.Dimension(800, 1024));
-                jLabel1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+                copyRightLabel.setAlignmentX(0.5F);
+                copyRightLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+                copyRightLabel.setMaximumSize(new java.awt.Dimension(800, 1024));
+                copyRightLabel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
             }
         }
 
         showLogin();
 
-        
         return true;
     }
 
@@ -762,7 +758,7 @@ public class JRootApp extends JPanel implements AppView{
         m_jPanelContainer = new javax.swing.JPanel();
         m_jPanelLogin = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        copyRightLabel = new javax.swing.JLabel();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 0));
         jPanel5 = new javax.swing.JPanel();
         m_jLogonName = new javax.swing.JPanel();
@@ -772,7 +768,7 @@ public class JRootApp extends JPanel implements AppView{
         jPanel1 = new javax.swing.JPanel();
         m_txtKeys = new javax.swing.JTextField();
         m_jClose = new javax.swing.JButton();
-        m_jPanelDown = new javax.swing.JPanel();
+        statusBarPanel = new javax.swing.JPanel();
         panelTask = new javax.swing.JPanel();
         m_jHost = new javax.swing.JLabel();
         webMemoryBar1 = new com.alee.extended.statusbar.WebMemoryBar();
@@ -812,24 +808,15 @@ public class JRootApp extends JPanel implements AppView{
 
         jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.Y_AXIS));
 
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/logo_320×320.png"))); // NOI18N
-        jLabel1.setText("<html><center>uniCenta oPOS - Touch Friendly Point of Sale<br>" +
-            "Copyright \u00A9 2009-2017 uniCenta <br>" +
-            "https://unicenta.com<br>" +
-            "<br>" +
-            "uniCenta oPOS is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br>" +
-            "<br>" +
-            "uniCenta oPOS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br>" +
-            "<br>" +
-            "You should have received a copy of the GNU General Public License along with uniCenta oPOS.  If not, see http://www.gnu.org/licenses/<br>" +
-            "</center>");
-        jLabel1.setAlignmentX(0.5F);
-        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jLabel1.setMaximumSize(new java.awt.Dimension(800, 1024));
-        jLabel1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jPanel4.add(jLabel1);
+        copyRightLabel.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        copyRightLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        copyRightLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/logo_320×320.png"))); // NOI18N
+        copyRightLabel.setText("<<COPYRIGHT>>");
+        copyRightLabel.setAlignmentX(0.5F);
+        copyRightLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        copyRightLabel.setMaximumSize(new java.awt.Dimension(800, 1024));
+        copyRightLabel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jPanel4.add(copyRightLabel);
         jPanel4.add(filler2);
 
         m_jPanelLogin.add(jPanel4, java.awt.BorderLayout.CENTER);
@@ -927,17 +914,22 @@ public class JRootApp extends JPanel implements AppView{
 
         add(m_jPanelContainer, java.awt.BorderLayout.CENTER);
 
-        m_jPanelDown.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, javax.swing.UIManager.getDefaults().getColor("Button.darkShadow")));
-        m_jPanelDown.setLayout(new java.awt.BorderLayout());
+        statusBarPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, javax.swing.UIManager.getDefaults().getColor("Button.darkShadow")));
+        statusBarPanel.setLayout(new java.awt.BorderLayout());
 
         m_jHost.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         m_jHost.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/display.png"))); // NOI18N
         m_jHost.setText("*Hostname");
+        m_jHost.setMaximumSize(new java.awt.Dimension(200, 32));
+        m_jHost.setMinimumSize(new java.awt.Dimension(200, 32));
+        m_jHost.setPreferredSize(new java.awt.Dimension(200, 32));
         panelTask.add(m_jHost);
 
         webMemoryBar1.setBackground(new java.awt.Color(153, 153, 153));
         webMemoryBar1.setText("");
         webMemoryBar1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        webMemoryBar1.setMaximumSize(new java.awt.Dimension(150, 30));
+        webMemoryBar1.setMinimumSize(new java.awt.Dimension(150, 30));
         webMemoryBar1.setPreferredSize(new java.awt.Dimension(150, 30));
         webMemoryBar1.setUsedBorderColor(new java.awt.Color(0, 204, 204));
         webMemoryBar1.setUsedFillColor(new java.awt.Color(0, 204, 255));
@@ -953,10 +945,10 @@ public class JRootApp extends JPanel implements AppView{
         serverMonitor.setStringPainted(true);
         panelTask.add(serverMonitor);
 
-        m_jPanelDown.add(panelTask, java.awt.BorderLayout.LINE_START);
-        m_jPanelDown.add(jPanel3, java.awt.BorderLayout.LINE_END);
+        statusBarPanel.add(panelTask, java.awt.BorderLayout.LINE_START);
+        statusBarPanel.add(jPanel3, java.awt.BorderLayout.LINE_END);
 
-        add(m_jPanelDown, java.awt.BorderLayout.SOUTH);
+        add(statusBarPanel, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
 
@@ -973,8 +965,8 @@ public class JRootApp extends JPanel implements AppView{
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel copyRightLabel;
     private javax.swing.Box.Filler filler2;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -988,13 +980,13 @@ public class JRootApp extends JPanel implements AppView{
     private javax.swing.JLabel m_jLblTitle;
     private javax.swing.JPanel m_jLogonName;
     private javax.swing.JPanel m_jPanelContainer;
-    private javax.swing.JPanel m_jPanelDown;
     private javax.swing.JPanel m_jPanelLogin;
     private javax.swing.JPanel m_jPanelTitle;
     private javax.swing.JTextField m_txtKeys;
     private javax.swing.JPanel panelTask;
     private javax.swing.JLabel poweredby;
     private com.alee.laf.progressbar.WebProgressBar serverMonitor;
+    private javax.swing.JPanel statusBarPanel;
     private com.alee.extended.statusbar.WebMemoryBar webMemoryBar1;
     // End of variables declaration//GEN-END:variables
 }
