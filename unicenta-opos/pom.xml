@@ -6,20 +6,13 @@
         <groupId>io.gitub.kriolsolutions.krospos</groupId>
         <artifactId>kropos-parent</artifactId>
         <version>1.0.0</version>
-        <relativePath>../</relativePath>  
+        <relativePath>../</relativePath>
     </parent>  
     <artifactId>kriolos-pos</artifactId>  
     <version>1.0.0-SNAPSHOT</version>  
     <packaging>jar</packaging>
     <name>krPOS :: krPOS.oPOS</name> 
-    
-    <properties>
-        <!-- Versions -->
-        <javax.activation.version>1.2.0</javax.activation.version>
-        <jaxb.api.version>2.3.0</jaxb.api.version>
-        <lombok.version>1.18.6</lombok.version>
-    </properties>
-    
+
     <dependencies>
         <!-- Dependency of JasperReports(jfreecart/1.0.x)
         <dependency> 
@@ -284,13 +277,12 @@
             <version>1.3.4</version> 
         </dependency>  
      
-        <!-- Kotlin 
+        <!-- Kotlin -->
         <dependency> 
             <groupId>org.jetbrains.kotlin</groupId>  
-            <artifactId>kotlin-stdlib</artifactId>  
-            <version>${kotlin.version}</version> 
+            <artifactId>kotlin-stdlib</artifactId> 
         </dependency>
-        -->  
+
         <!-- Substance - Swing LookAndFeel (LaF)
            <dependency>
                 <groupId>org.pushing-pixels</groupId>
@@ -341,18 +333,15 @@
         <dependency>
             <groupId>com.sun.activation</groupId>
             <artifactId>javax.activation</artifactId>
-            <version>${javax.activation.version}</version>
         </dependency>        
 
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>${jaxb.api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
-            <version>2.3.0</version>
             <scope>runtime</scope>
             <exclusions>
                 <exclusion>
@@ -365,7 +354,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
     
@@ -373,34 +361,6 @@
     <build>
         <finalName>kriolos-pos</finalName> 
         <plugins> 
-            <!-- Kotlin PB_NOTE - NOT Compile 
-             <plugin> 
-               <artifactId>kotlin-maven-plugin</artifactId>  
-               <groupId>org.jetbrains.kotlin</groupId>  
-               <version>${kotlin.version}</version>  
-               <executions> 
-                 <execution> 
-                   <id>compile</id>  
-                   <phase>process-sources</phase>  
-                   <goals> 
-                     <goal>compile</goal> 
-                   </goals> 
-                 </execution>  
-                 <execution> 
-                   <id>test-compile</id>  
-                   <phase>process-test-sources</phase>  
-                   <goals> 
-                     <goal>test-compile</goal> 
-                   </goals> 
-                 </execution> 
-               </executions> 
-             </plugin>  
-            --> 
-            <plugin> 
-                <groupId>org.apache.maven.plugins</groupId>  
-                <artifactId>maven-compiler-plugin</artifactId> 
-            </plugin>
-            
             <plugin> 
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>

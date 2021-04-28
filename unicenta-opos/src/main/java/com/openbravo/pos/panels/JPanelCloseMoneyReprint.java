@@ -454,7 +454,7 @@ public class JPanelCloseMoneyReprint extends JPanel implements JPanelView, BeanF
         m_jSalesTotal.setPreferredSize(new java.awt.Dimension(150, 30));
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel4.setText(AppLocal.getIntString("label.Money")); // NOI18N
+        jLabel4.setText(AppLocal.getIntString("label.money")); // NOI18N
         jLabel4.setPreferredSize(new java.awt.Dimension(150, 30));
 
         m_jCash.setEditable(false);

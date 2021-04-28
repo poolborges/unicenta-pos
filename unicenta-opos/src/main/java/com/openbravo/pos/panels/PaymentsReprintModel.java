@@ -67,7 +67,7 @@ public class PaymentsReprintModel {
     
     private java.util.List<DrawerOpenedLines> m_ldraweropenedlines;    
     
-    private final static String[] PAYMENTHEADERS = {"label.Payment", "label.Money"};
+    private final static String[] PAYMENTHEADERS = {"label.Payment", "label.money"};
     
     private Integer m_iSales;
     private Double m_dSalesBase;
