@@ -11,9 +11,10 @@
         <authors>
             <author name="Paulo Borges" email="poolborges@example.com" />
         </authors>
-        <javaversion>1.6</javaversion>
+        <javaversion>11</javaversion>
         <requiresjdk>no</requiresjdk>
         <url>https://www.github.com/poolborges</url>
+        <summarylogfilepath>$INSTALL_PATH/installinfo/Summary.htm</summarylogfilepath>
     </info>
  
     <locale>
@@ -58,11 +59,13 @@
         <panel classname="FinishPanel"/>
     </panels>
  
-    <packs>
+    <packs> 
+        <!--
         <pack name="App Core" required="yes">
             <description>Application Core</description>
-            <file src="unicentaopos.jar" targetdir="$INSTALL_PATH" override="true"/>
+            <file src="@{app.jar}" targetdir="$INSTALL_PATH" override="true"/>
         </pack>
+        -->
         <pack name="App Libs" required="yes">
             <description>Application libraries</description>
             <fileset dir="lib" targetdir="${INSTALL_PATH}/lib" override="true"/>

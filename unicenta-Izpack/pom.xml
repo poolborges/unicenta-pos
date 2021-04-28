@@ -6,10 +6,10 @@
         <artifactId>kropos-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>unicenta-izpack</artifactId>
-    <version>4.5</version>
+    <artifactId>kriolos-pos-izpack</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>izpack-jar</packaging>
-    <name>krPOS :: Unicenta.Izpack</name>
+    <name>krPOS :: krPOS.Izpack</name>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,13 +21,15 @@
         <izpack.dir.app>${basedir}/src/main/izpack</izpack.dir.app>
         <izpack.version>5.1.3</izpack.version>
         <installer-output-filename>krpos-installer.jar</installer-output-filename>
+        
+        <app.main.class>com.openbravo.pos.forms.StartPOS</app.main.class>
+        <app.jar>kriolos-pos.jar</app.jar>
     </properties>
     
     <dependencies>
         <dependency>
-            <groupId>com.unicenta</groupId>  
-            <artifactId>unicentaopos</artifactId>  
-            <version>4.5</version> 
+            <groupId>io.gitub.kriolsolutions.krospos</groupId>  
+            <artifactId>kriolos-pos</artifactId>  
         </dependency>
     </dependencies>
     
@@ -50,28 +52,7 @@
                             <overWriteReleases>false</overWriteReleases>  
                             <overWriteSnapshots>false</overWriteSnapshots>  
                             <overWriteIfNewer>true</overWriteIfNewer> 
-                            <excludeArtifactIds>unicentaopos</excludeArtifactIds>
                         </configuration> 
-                    </execution>
-                    <execution>
-                        <id>copy-artifact</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>com.unicenta</groupId>  
-                                    <artifactId>unicentaopos</artifactId>  
-                                    <version>4.5</version> 
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${staging.dir}</outputDirectory>
-                                    <destFileName>unicentaopos.jar</destFileName>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
                     </execution>
                 </executions> 
             </plugin>
@@ -103,7 +84,8 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>   
+            </plugin> 
+            <!--  
             <plugin> 
                 <groupId>org.apache.maven.plugins</groupId>  
                 <artifactId>maven-jar-plugin</artifactId>  
@@ -113,11 +95,12 @@
                         <manifest> 
                             <addClasspath>true</addClasspath>  
                             <classpathPrefix>lib/</classpathPrefix>  
-                            <mainClass>com.openbravo.pos.forms.StartPOS</mainClass> 
+                            <mainClass>${app.main.class}</mainClass> 
                         </manifest> 
                     </archive> 
                 </configuration> 
-            </plugin>  
+            </plugin> 
+            --> 
             <plugin>
                 <groupId>org.codehaus.izpack</groupId>
                 <artifactId>izpack-maven-plugin</artifactId>
@@ -154,46 +137,56 @@
                     </dependency>
                 </dependencies>
             </plugin>
-            <plugin>
-                <groupId>com.akathist.maven.plugins.launch4j</groupId>
-                <artifactId>launch4j-maven-plugin</artifactId>
-                <version>1.7.15</version>
-                <executions>
-                    <execution>
-                        <id>l4j-gui</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>launch4j</goal>
-                        </goals>
-                        <configuration>
-                            <headerType>gui</headerType>
-                            <jar>target/${installer-output-filename}</jar>
-                            <outfile>target/${project.artifactId}.exe</outfile>
-                            <classPath>
-                                <mainClass>com.izforge.izpack.installer.bootstrap.Installer</mainClass>
-                            </classPath>
-                            <jre>
-                                <bundledJre64Bit>false</bundledJre64Bit>
-                                <bundledJreAsFallback>false</bundledJreAsFallback>
-                                <minVersion>1.8.0</minVersion>
-                                <jdkPreference>preferJre</jdkPreference>
-                                <runtimeBits>64</runtimeBits>
-                            </jre>
-                            <versionInfo>
-                                <fileVersion>1.0.0.0</fileVersion>
-                                <txtFileVersion>${project.version}</txtFileVersion>
-                                <fileDescription>${project.name}</fileDescription>
-                                <copyright>C</copyright>
-                                <productVersion>1.0.0.0</productVersion>
-                                <txtProductVersion>1.0.0.0</txtProductVersion>
-                                <productName>${project.name}</productName>
-                                <internalName>AppName</internalName>
-                                <originalFilename>${project.artifactId}.exe</originalFilename>
-                            </versionInfo>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
+    
+    <profiles>
+        <profile>
+            <id>windows</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                        <artifactId>launch4j-maven-plugin</artifactId>
+                        <version>2.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>l4j-gui</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>launch4j</goal>
+                                </goals>
+                                <configuration>
+                                    <headerType>gui</headerType>
+                                    <jar>${project.build.directory}/${installer-output-filename}</jar>
+                                    <outfile>${project.build.directory}/${project.artifactId}.exe</outfile>
+                                    <classPath>
+                                        <mainClass>com.izforge.izpack.installer.bootstrap.Installer</mainClass>
+                                    </classPath>
+                                    <jre>
+                                        <bundledJre64Bit>false</bundledJre64Bit>
+                                        <bundledJreAsFallback>false</bundledJreAsFallback>
+                                        <minVersion>11.0.0</minVersion>
+                                        <jdkPreference>preferJre</jdkPreference>
+                                        <runtimeBits>64</runtimeBits>
+                                    </jre>
+                                    <versionInfo>
+                                        <fileVersion>1.0.0.0</fileVersion>
+                                        <txtFileVersion>${project.version}</txtFileVersion>
+                                        <fileDescription>${project.name}</fileDescription>
+                                        <copyright>C</copyright>
+                                        <productVersion>1.0.0.0</productVersion>
+                                        <txtProductVersion>1.0.0.0</txtProductVersion>
+                                        <productName>${project.name}</productName>
+                                        <internalName>AppName</internalName>
+                                        <originalFilename>${project.artifactId}.exe</originalFilename>
+                                    </versionInfo>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
