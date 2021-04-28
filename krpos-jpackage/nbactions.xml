@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+    <action>
+        <actionName>CUSTOM-JPackage</actionName>
+        <displayName>JPackage</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>package</goal>
+            <goal>jpackage:jpackage</goal>
+        </goals>
+    </action>
+</actions>
