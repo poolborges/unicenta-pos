@@ -19,12 +19,12 @@ This section provide information about POS's database schema
 |attributesetinstance       |
 |attributeuse               |
 |breaks                     |List of default People Sessions 
-|categories                 |
+|categories                 |Product Categories
 |closedcash                 |
 |csvimport                  |
-|customers                  |
+|customers                  |Customer Record
 |draweropened               |Log of all cash register opening
-|floors                     |physical/virtual areas of the establishment 
+|floors                     |Physical/virtual areas of the establishment 
 |lineremoved                |List of deleted ticketlines from the sales screen 
 |leaves                     |List of entrances/exits of people 
 |locations                  |Warehouses or Physical locations
@@ -34,10 +34,10 @@ This section provide information about POS's database schema
 |people                     |System User
 |pickup_number              |Incremental order number applied to boleto
 |places                     |Positioning of the physical object on the floor, as well as the current state 
-|products                   |
-|products_bundle            |
-|products_cat               |
-|products_com               |
+|products                   |Product Information
+|products_bundle            |Composite Product
+|products_cat               |Categories of product
+|products_com               |Product companiam 
 |receipts                   |Detail of the settlement of the tickets 
 |reservation_customers      |
 |revervations               |
