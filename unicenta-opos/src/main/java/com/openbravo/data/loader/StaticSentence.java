@@ -17,7 +17,10 @@
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
-import java.sql.*;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Collection;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,14 +28,14 @@ import java.util.logging.Logger;
  *
  * @author  adrianromero
  */
-public class StaticSentence<T> extends JDBCSentence<T> {
+public class StaticSentence<T> extends JDBCBaseSentence<T> {
 
-    private static final Logger logger = Logger.getLogger("com.openbravo.data.loader.StaticSentence");
+    protected static final Logger LOGGER = Logger.getLogger(StaticSentence.class.getName());
     
-    private ISQLBuilderStatic m_sentence;
+    protected ISQLBuilderStatic m_sentence;
     protected SerializerWrite<Object> m_SerWrite = null;
     protected SerializerRead<T> m_SerRead = null;
-    private Statement m_Stmt;
+    protected Statement m_Stmt;
 
     public StaticSentence(Session s, ISQLBuilderStatic sentence, SerializerWrite<Object> serwrite, SerializerRead<T> serread) {
         super(s);
@@ -64,33 +67,53 @@ public class StaticSentence<T> extends JDBCSentence<T> {
 
     @Override
     public DataResultSet<T> openExec(Object params) throws BasicException {
-        // true -> un resultset
-        // false -> un updatecount (si -1 entonces se acabo)
-        
         closeExec();
+        
+        DataResultSet<T> result;
             
         try {
-            m_Stmt = m_s.getConnection().createStatement();
-
             String sentence = m_sentence.getSQL(m_SerWrite, params);
             
-           logger.log(Level.INFO, "Executing static SQL: {0}", sentence);
-
+           LOGGER.log(Level.INFO, "Executing static SQL: {0}", sentence);
+           log(params);
+           
+            m_Stmt = session.getConnection().createStatement();
+            
             if (m_Stmt.execute(sentence)) {
-                return new JDBCDataResultSet(m_Stmt.getResultSet(), m_SerRead);
+                result = new JDBCDataResultSet(m_Stmt.getResultSet(), m_SerRead);
             } else { 
                 int iUC = m_Stmt.getUpdateCount();
                 if (iUC < 0) {
-                    return null;
+                    result = null;
                 } else {
-                    return new SentenceUpdateResultSet(iUC);
+                    result= new UpdateDataResultSet(iUC);
                 }
             }
         } catch (SQLException eSQL) {
             throw new BasicException(eSQL);
         }
+        return result;
     }
 
+    @Override
+    public DataResultSet<T> moreResults() throws BasicException {
+
+        try {
+            if (m_Stmt.getMoreResults()){
+                return new JDBCDataResultSet(m_Stmt.getResultSet(), m_SerRead);
+            } else {
+                int iUC = m_Stmt.getUpdateCount();
+                if (iUC < 0) {
+                    return null;
+                } else {
+                    return new UpdateDataResultSet(iUC);
+                }
+            }
+        } catch (SQLException eSQL) {
+            throw new BasicException(eSQL);
+        }
+    }    
+    
     @Override
     public void closeExec() throws BasicException {
         
@@ -105,25 +128,43 @@ public class StaticSentence<T> extends JDBCSentence<T> {
         }
     }
 
-    @Override
-    public DataResultSet<T> moreResults() throws BasicException {
+    
 
-        try {
-            if (m_Stmt.getMoreResults()){
-                // tenemos resultset
-                return new JDBCDataResultSet(m_Stmt.getResultSet(), m_SerRead);
+    private void log(Object params) {
+        
+        LOGGER.log(Level.INFO, "Prepared statement show SQL parameters: " + m_sentence);
+
+        if (params != null && LOGGER.isLoggable(Level.FINER)) {
+
+            Object[] objectsArray;
+
+            if (params instanceof Collection) {
+                Collection objectsCollection = (Collection) params;
+
+                objectsArray = objectsCollection.toArray();
+
+            } else if (params instanceof Object[]) {
+                objectsArray = (Object[]) params;
             } else {
-                // tenemos updatecount o si devuelve -1 ya no hay mas
-                int iUC = m_Stmt.getUpdateCount();
-                if (iUC < 0) {
-                    return null;
-                } else {
-                    return new SentenceUpdateResultSet(iUC);
+                objectsArray = new Object[]{params};
+            }
+
+            StringBuilder sb = new StringBuilder();
+            if (objectsArray != null) {
+                for (int count = 0; count < objectsArray.length; count++) {
+                    sb.append("{pos: ");
+                    sb.append(count);
+                    sb.append(", val: ");
+                    sb.append((objectsArray[count] != null ? objectsArray[count].toString() : "null"));
+                    sb.append("} ");
+
+                    if (count < objectsArray.length - 1) {
+                        sb.append(",");
+                    }
                 }
             }
-        } catch (SQLException eSQL) {
-            throw new BasicException(eSQL);
+
+            LOGGER.log(Level.FINER, "Prepared statement show Parameters: " + sb.toString());
         }
-    }    
-    
+    }
 }

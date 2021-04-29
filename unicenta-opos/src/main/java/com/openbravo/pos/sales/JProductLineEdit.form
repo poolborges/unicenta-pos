@@ -57,19 +57,6 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="m_jSubtotal" min="-2" pref="120" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="m_jBtnPriceUpdate" min="-2" max="-2" attributes="0"/>
-                                  <Component id="m_jTotal" min="-2" pref="120" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -81,19 +68,40 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="m_jTaxrate" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
-                                  <Component id="m_jPriceTax" alignment="0" min="-2" pref="150" max="-2" attributes="0"/>
-                                  <Component id="m_jPrice" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="m_jUnits" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="m_jUnits" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="m_jPrice" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="m_jPriceTax" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="m_jTaxrate" min="-2" pref="249" max="-2" attributes="0"/>
+                                      <EmptySpace min="0" pref="31" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="m_jName" min="-2" max="-2" attributes="0"/>
+                              <Component id="m_jName" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="m_jBtnPriceUpdate" min="-2" max="-2" attributes="0"/>
+                                          <Component id="m_jTotal" max="32767" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="m_jSubtotal" min="-2" pref="249" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -168,9 +176,6 @@
                   <Dimension value="[110, 30]"/>
                 </Property>
               </Properties>
-              <AccessibilityProperties>
-                <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Item"/>
-              </AccessibilityProperties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>

@@ -15,7 +15,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.data.loader;
 
-import com.openbravo.resources.ImageResources;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -41,8 +40,7 @@ public class ImageUtils {
     private ImageUtils() {
     }
 
-    private static byte[] readStream(InputStream inputstream) throws IOException {
-        //TODO improve null checking Objects.requireNonNull(inputstream, "inputstream should not be null");
+    private static byte[] getBytesFromInputStream(InputStream inputstream) throws IOException {
         byte[] buffer = new byte[1024];
         byte[] resource = new byte[0];
         int n;
@@ -58,45 +56,69 @@ public class ImageUtils {
         return resource;
     }
 
-    public static byte[] getBytesFromResource(String filePath) {
+    private static BufferedImage getImageFromInputStream(InputStream inputstream) {
+        BufferedImage image = null;
+        try {
+            if (inputstream != null) {
+                image = ImageIO.read(inputstream);
+            }
+        } catch (IOException ex) {
+            LOGGER.log(Level.WARNING, "Exception on get image: " + inputstream, ex);
+        }
+        return image;
+    }
+
+    public static byte[] getBytesFromClasspath(String classPath) {
 
         byte[] image = new byte[0];
-        if (filePath != null) {
-            //TODO improve null checking Objects.requireNonNull(filePath, "filePath should not be null");
-            InputStream in = ImageUtils.class.getResourceAsStream(filePath);
+        if (classPath != null) {
+            InputStream in = ImageUtils.class.getResourceAsStream(classPath);
             try {
-                image = ImageUtils.readStream(in);
-            } catch (IOException e) {
-                LOGGER.log(Level.SEVERE, "getBytesFromResource", e);
+                image = ImageUtils.getBytesFromInputStream(in);
+            } catch (IOException ex) {
+                LOGGER.log(Level.WARNING, "Exception on get image: " + classPath, ex);
             }
         }
         return image;
 
     }
 
-    public static BufferedImage readImageFronResource(String urlString) {
-        return readImage(getBytesFromResource(urlString));
+    public static BufferedImage getImageFromClasspath(String classpathFile) {
+
+        BufferedImage image = null;
+
+        if (classpathFile == null) {
+            try {
+                InputStream is = ImageUtils.class.getResourceAsStream(classpathFile);
+                if (is != null) {
+                    image = ImageIO.read(is);
+                }
+            } catch (IOException ex) {
+                LOGGER.log(Level.WARNING, "Exception on get image: " + classpathFile, ex);
+            }
+        }
+
+        return image;
     }
 
-    public static BufferedImage readImage(String urlString) {
-        //TODO improve null checking Objects.requireNonNull(urlString, "urlString should not be null");
+    public static BufferedImage getImageFromUrl(String urlString) {
         BufferedImage image = generateDefaultImage();;
         try {
-            image = readImage(new URL(urlString));
+            image = getImageFromUrl(new URL(urlString));
         } catch (MalformedURLException ex) {
             LOGGER.log(Level.SEVERE, "ReadImage from string url: " + urlString, ex);
         }
         return image;
     }
 
-    public static BufferedImage readImage(URL url) {
+    public static BufferedImage getImageFromUrl(URL url) {
         //TODO improve null checking Objects.requireNonNull(url, "url should not be null");
         BufferedImage image = generateDefaultImage();
         if (url != null) {
             try {
                 URLConnection urlConnection = url.openConnection();
                 try (InputStream in = urlConnection.getInputStream()) {
-                    image = readImage(readStream(in));
+                    image = readImage(getBytesFromInputStream(in));
                 }
             } catch (IOException ex) {
                 LOGGER.log(Level.SEVERE, "ReadImage from url: " + url, ex);
@@ -229,11 +251,11 @@ public class ImageUtils {
         g.dispose();
 
         return bImage;
-        
+
     }
 
     private static BufferedImage generateDefaultImage() {
-        return generateColorImage(Color.WHITE, 128,128);
+        return generateColorImage(Color.WHITE, 128, 128);
     }
 
     public static BufferedImage toBufferedImage(Image img) {

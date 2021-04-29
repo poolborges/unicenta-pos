@@ -16,29 +16,14 @@
 
 package com.openbravo.data.loader;
 
-import java.util.*;
-import com.openbravo.basic.BasicException;
+import java.util.logging.Logger;
 
 /**
  *
- * @author JG uniCenta
+ * @author pauloborges
  */
-public class NormalBuilder implements ISQLBuilderStatic {
+public final class PreparedSentenceDataWrite {
     
-    private String m_sSentence;
-
-    public NormalBuilder(String sSentence) {
-        m_sSentence = sSentence;
-    }
+    private static final Logger LOGGER = Logger.getLogger(PreparedSentenceDataWrite.class.getName());
     
-
-    @Override
-    public String getSQL(SerializerWrite sw, Object params) throws BasicException {
-        
-        NormalParameter mydw = new NormalParameter(m_sSentence);
-        if (sw != null) {
-            sw.writeValues(mydw, params);
-        }
-        return mydw.getSentence();
-    }   
 }

@@ -89,7 +89,7 @@ public class StockManagement extends JPanel implements JPanelView {
     private static final int DECIMAL = 2;
     
     private List<ProductStock> productStockList;
-    private aStockTableModel stockModel;   
+    private ProductStockTableModel stockModel;   
     
     private final static int NUMBERZERO = 0;
     private final static int NUMBERVALID = 1;
@@ -327,7 +327,7 @@ public class StockManagement extends JPanel implements JPanelView {
     
     public void clearStockTable() {
 
-        aStockTableModel model =(aStockTableModel)jTableProductStock.getModel();
+        ProductStockTableModel model =(ProductStockTableModel)jTableProductStock.getModel();
         
         while(model.getRowCount() > 0) {
             for (int i = 0; i < model.getRowCount(); ++i){
@@ -352,7 +352,7 @@ public class StockManagement extends JPanel implements JPanelView {
             pId = line.getProductID();
         }
         if (pId != null) {
-            stockModel = new StockManagement.aStockTableModel(getProductOfName(pId));
+            stockModel = new StockManagement.ProductStockTableModel(getProductOfName(pId));
             
             jTableProductStock.setModel((TableModel) stockModel);
             if (stockModel.getRowCount()> 0){
@@ -396,8 +396,7 @@ public class StockManagement extends JPanel implements JPanelView {
         if(reason == MovementReason.OUT_BREAK 
             || reason==MovementReason.OUT_FREE || reason==MovementReason.OUT_REFUND
             || reason==MovementReason.OUT_SALE || reason==MovementReason.OUT_SAMPLE 
-            || reason==MovementReason.OUT_SAMPLE || reason==MovementReason.OUT_SUBTRACT 
-            || reason==MovementReason.OUT_USED) {
+            || reason==MovementReason.OUT_SUBTRACT || reason==MovementReason.OUT_USED) {
             lblTotalQtyValue.setText(Double.toString(totalQty -= lQty));
             lbTotalValue.setText(Double.toString(totalVal -= lVal));                         
         } else {
@@ -605,7 +604,7 @@ public class StockManagement extends JPanel implements JPanelView {
         }
     }
 
-    class aStockTableModel extends AbstractTableModel {
+    class ProductStockTableModel extends AbstractTableModel {
         
         String loc = AppLocal.getIntString("label.tblProdHeaderCol1");
         String qty = AppLocal.getIntString("label.tblProdHeaderCol2");
@@ -619,7 +618,7 @@ public class StockManagement extends JPanel implements JPanelView {
         String[] columnNames = {loc, qty, max, min, buy, val};
         
         
-        public aStockTableModel(List<ProductStock> list) {
+        public ProductStockTableModel(List<ProductStock> list) {
             stockList = list;
         }
         
@@ -799,7 +798,8 @@ public class StockManagement extends JPanel implements JPanelView {
         setLayout(new java.awt.BorderLayout());
 
         jPanel8.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jPanel8.setPreferredSize(new java.awt.Dimension(1020, 320));
+        jPanel8.setMinimumSize(new java.awt.Dimension(0, 320));
+        jPanel8.setPreferredSize(new java.awt.Dimension(0, 320));
         jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -890,6 +890,7 @@ public class StockManagement extends JPanel implements JPanelView {
 
         jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         jPanel5.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jPanel5.setMinimumSize(new java.awt.Dimension(455, 245));
         jPanel5.setPreferredSize(new java.awt.Dimension(455, 245));
         jPanel5.setLayout(new java.awt.BorderLayout());
         jPanel8.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 5, -1, 190));

@@ -50,26 +50,35 @@ public class JCatalogTab extends javax.swing.JPanel {
         super.setEnabled(value);
     }
 
-    public void addButton(Icon icon, ActionListener actionListener, String textTip) {
+    public void addButton(Icon icon, ActionListener actionListener, String text, String textTip) {
         JButton btn = new JButton();
-        btn.applyComponentOrientation(getComponentOrientation());
-        btn.setIcon(icon);
-        addButton(btn, actionListener, textTip);
+        if(icon != null){
+            btn.setIcon(icon);
+        }
+        addButton(btn, actionListener, text, textTip);
     }
     
-    public void addButton(JButton btn, ActionListener actionListener, String textTip){
+    public void addButton(JButton btn, ActionListener actionListener, String text,  String textTip){
         
-        btn.setFocusPainted(false);
-        btn.setFocusable(false);
-
         if (textTip != null) {
             btn.setToolTipText(textTip);
         }
+        
+        if(text != null){
+            btn.setText(text);
+        }
 
+        btn.setFocusPainted(false);
+        btn.setFocusable(false);
         btn.setRequestFocusEnabled(false);
         btn.setHorizontalTextPosition(SwingConstants.CENTER);
-        btn.setVerticalTextPosition(SwingConstants.BOTTOM);
+        btn.setVerticalTextPosition(SwingConstants.CENTER);
+        btn.setFont(new java.awt.Font("Arial Bold", 0, 12));
         btn.setMargin(new Insets(2, 2, 2, 2));
+        btn.setMaximumSize(new java.awt.Dimension(96, 82));
+        btn.setMinimumSize(new java.awt.Dimension(96, 82));
+        btn.setPreferredSize(new java.awt.Dimension(96, 82));
+        btn.applyComponentOrientation(getComponentOrientation());
         btn.addActionListener(actionListener);
 
         flowpanel.add(btn);

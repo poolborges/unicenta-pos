@@ -157,7 +157,7 @@ public abstract class BatchSentence extends BaseSentence {
                         StringBuffer buf = new StringBuffer();
                         while (matcher.find()) {
                             if ("FILE".equals(matcher.group(1))) {
-                                paramlist.add(ImageUtils.getBytesFromResource(matcher.group(2)));
+                                paramlist.add(ImageUtils.getBytesFromClasspath(matcher.group(2)));
                                 matcher.appendReplacement(buf, "?");
                             } else {
                                 String replacement = parameters.get(matcher.group(1));

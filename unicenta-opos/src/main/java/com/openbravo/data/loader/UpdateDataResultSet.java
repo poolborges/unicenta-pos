@@ -13,138 +13,77 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
+import java.util.Date;
 
 /**
  *
- * @author  adrian
+ * @author adrian
  */
-public class SentenceUpdateResultSet<Object> implements DataResultSet<Object> {
-    
-    private int m_iUpdateCount;
-    
-    /** Creates a new instance of UpdateResultSet
-     * @param iUpdateCount */
-    public SentenceUpdateResultSet(int iUpdateCount) {
+public class UpdateDataResultSet<T> implements DataResultSet<T> {
+
+    private final int m_iUpdateCount;
+
+    public UpdateDataResultSet(int iUpdateCount) {
         m_iUpdateCount = iUpdateCount;
     }
-    
-    /**
-     *
-     * @param columnIndex
-     * @return
-     * @throws BasicException
-     */
+
+    @Override
     public Integer getInt(int columnIndex) throws BasicException {
         throw new BasicException(LocalRes.getIntString("exception.nodataset"));
     }
 
-    /**
-     *
-     * @param columnIndex
-     * @return
-     * @throws BasicException
-     */
+    @Override
     public String getString(int columnIndex) throws BasicException {
         throw new BasicException(LocalRes.getIntString("exception.nodataset"));
     }
 
-    /**
-     *
-     * @param columnIndex
-     * @return
-     * @throws BasicException
-     */
+    @Override
     public Double getDouble(int columnIndex) throws BasicException {
         throw new BasicException(LocalRes.getIntString("exception.nodataset"));
     }
 
-    /**
-     *
-     * @param columnIndex
-     * @return
-     * @throws BasicException
-     */
+    @Override
     public Boolean getBoolean(int columnIndex) throws BasicException {
         throw new BasicException(LocalRes.getIntString("exception.nodataset"));
     }
 
-    /**
-     *
-     * @param columnIndex
-     * @return
-     * @throws BasicException
-     */
-    public java.util.Date getTimestamp(int columnIndex) throws BasicException {
+    @Override
+    public Date getTimestamp(int columnIndex) throws BasicException {
         throw new BasicException(LocalRes.getIntString("exception.nodataset"));
     }
 
-    //public java.io.InputStream getBinaryStream(int columnIndex) throws DataException;
-
-    /**
-     *
-     * @param columnIndex
-     * @return
-     * @throws BasicException
-     */
-        public byte[] getBytes(int columnIndex) throws BasicException {
+    @Override
+    public byte[] getBytes(int columnIndex) throws BasicException {
         throw new BasicException(LocalRes.getIntString("exception.nodataset"));
     }
 
-    /**
-     *
-     * @param columnIndex
-     * @return
-     * @throws BasicException
-     */
-    public Object getObject(int columnIndex) throws BasicException  {
+    @Override
+    public T getObject(int columnIndex) throws BasicException {
         throw new BasicException(LocalRes.getIntString("exception.nodataset"));
     }
 
-//    public int getColumnCount() throws DataException;
-
-    /**
-     *
-     * @return
-     * @throws BasicException
-     */
-        public DataField[] getDataField() throws BasicException {
+    @Override
+    public DataField[] getDataField() throws BasicException {
         throw new BasicException(LocalRes.getIntString("exception.nodataset"));
     }
 
-    /**
-     *
-     * @return
-     * @throws BasicException
-     */
-    public Object getCurrent() throws BasicException {
+    @Override
+    public T getCurrent() throws BasicException {
         throw new BasicException(LocalRes.getIntString("exception.nodataset"));
     }
-    
-    /**
-     *
-     * @return
-     * @throws BasicException
-     */
+
+    @Override
     public boolean next() throws BasicException {
         throw new BasicException(LocalRes.getIntString("exception.nodataset"));
     }
-     
-    /**
-     *
-     * @throws BasicException
-     */
-    public void close() throws BasicException {
-    }
-   
-    /**
-     *
-     * @return
-     * @throws BasicException
-     */
+
+    @Override
+    public void close() throws BasicException {}
+
+    @Override
     public int updateCount() throws BasicException {
         return m_iUpdateCount;
     }

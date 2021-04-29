@@ -38,23 +38,9 @@ public class ProductStock {
     Double pricesell;
     Date memodate;    
 
-    /**
-     * Main method to return a product's "live" stock position 
-     */
-    public ProductStock() {
-    }
 
-    /**
-     *
-     * @param pId
-     * @param location
-     * @param units
-     * @param minimum
-     * @param maximum
-     * @param pricebuy
-     * @param pricesell 
-     * @param memodate 
-     */
+    public ProductStock() {}
+
     public ProductStock(String pId, String location, Double units, Double minimum, 
             Double maximum, Double pricebuy, Double pricesell, Date memodate) {
 
@@ -68,21 +54,14 @@ public class ProductStock {
         this.memodate = memodate;
     }
 
-    /**
-     *
-     * @return product id string
-     */
     public String getProductId() {
         return pId;
     }
+    
     public void setProductId(String pId) {
         this.pId = pId;
     }
 
-    /**
-     *
-     * @return product's location string 
-     */
     public String getLocation() {
         return location;
     }
@@ -90,10 +69,6 @@ public class ProductStock {
         this.location = location;
     }    
 
-    /**
-     *
-     * @return product's quantity string value
-     */
     public Double getUnits() {
         return units;
     }
@@ -101,10 +76,6 @@ public class ProductStock {
         this.units = units;
     }
 
-    /**
-     *
-     * @return 
-     */
     public Double getMinimum() {
         return minimum;
     }
@@ -112,10 +83,6 @@ public class ProductStock {
         this.minimum = minimum;
     }
 
-    /**
-     *
-     * @return maximum value
-     */
     public Double getMaximum() {
         return maximum;
     }
@@ -123,31 +90,20 @@ public class ProductStock {
         this.maximum = maximum;
     }
 
-    /**
-     *
-     * @return price buy
-     */
     public Double getPriceBuy() {
         return pricebuy;
     }
     public void setPriceBuy(Double pricebuy) {
         this.pricebuy = pricebuy;
     }
-    
-    /**
-     *
-     * @return price sell
-     */
+
     public Double getPriceSell() {
         return pricesell;
     }
     public void setPriceSell(Double pricesell) {
         this.pricesell = pricesell;
     }
-    /**
-     *
-     * @return memodate Date value
-     */
+
     public Date getMemoDate() {
         return memodate;
     }
@@ -155,11 +111,6 @@ public class ProductStock {
         this.memodate = memodate;
     }    
 
-    
-    /**
-     *
-     * @return stock for this product
-     */
     public static SerializerRead getSerializerRead() {
         return new SerializerRead() {
 

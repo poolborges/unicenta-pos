@@ -24,15 +24,15 @@ import java.util.logging.Logger;
  *
  * @author JG uniCenta
  */
-public abstract class JDBCSentence<T> extends BaseSentence<T> {
+public abstract class JDBCBaseSentence<T> extends BaseSentence<T> {
     
-    private static final Logger LOGGER = Logger.getLogger(JDBCSentence.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JDBCBaseSentence.class.getName());
 
-    protected Session m_s;
+    protected Session session;
 
-    public JDBCSentence(Session s) {
+    public JDBCBaseSentence(Session s) {
         super();
-        m_s = s;
+        session = s;
     }
 
     protected static final class JDBCDataResultSet<T> implements DataResultSet<T> {
@@ -40,22 +40,11 @@ public abstract class JDBCSentence<T> extends BaseSentence<T> {
         private final ResultSet m_rs;
         private final SerializerRead<T> m_serread;
 
-        /**
-         *
-         * @param rs
-         * @param serread
-         */
         public JDBCDataResultSet(ResultSet rs, SerializerRead<T> serread) {
             m_rs = rs;
             m_serread = serread;
         }
 
-        /**
-         *
-         * @param columnIndex
-         * @return
-         * @throws BasicException
-         */
         @Override
         public Integer getInt(int columnIndex) throws BasicException {
             try {
@@ -67,12 +56,6 @@ public abstract class JDBCSentence<T> extends BaseSentence<T> {
             }
         }
 
-        /**
-         *
-         * @param columnIndex
-         * @return
-         * @throws BasicException
-         */
         @Override
         public String getString(int columnIndex) throws BasicException {
             try {
@@ -83,12 +66,6 @@ public abstract class JDBCSentence<T> extends BaseSentence<T> {
             }
         }
 
-        /**
-         *
-         * @param columnIndex
-         * @return
-         * @throws BasicException
-         */
         @Override
         public Double getDouble(int columnIndex) throws BasicException {
             try {
@@ -100,12 +77,6 @@ public abstract class JDBCSentence<T> extends BaseSentence<T> {
             }
         }
 
-        /**
-         *
-         * @param columnIndex
-         * @return
-         * @throws BasicException
-         */
         @Override
         public Boolean getBoolean(int columnIndex) throws BasicException {
             try {
@@ -117,12 +88,7 @@ public abstract class JDBCSentence<T> extends BaseSentence<T> {
             }
         }
 
-        /**
-         *
-         * @param columnIndex
-         * @return
-         * @throws BasicException
-         */
+
         @Override
         public java.util.Date getTimestamp(int columnIndex) throws BasicException {
             try {
@@ -134,12 +100,6 @@ public abstract class JDBCSentence<T> extends BaseSentence<T> {
             }
         }
 
-        /**
-         *
-         * @param columnIndex
-         * @return
-         * @throws BasicException
-         */
         @Override
         public byte[] getBytes(int columnIndex) throws BasicException {
             try {
@@ -150,12 +110,6 @@ public abstract class JDBCSentence<T> extends BaseSentence<T> {
             }
         }
 
-        /**
-         *
-         * @param columnIndex
-         * @return
-         * @throws BasicException
-         */
         @Override
         public Object getObject(int columnIndex) throws BasicException {
             try {
@@ -166,10 +120,6 @@ public abstract class JDBCSentence<T> extends BaseSentence<T> {
             }
         }
 
-        /**
-         *
-         * @return @throws BasicException
-         */
         @Override
         public DataField[] getDataField() throws BasicException {
             try {
@@ -188,19 +138,11 @@ public abstract class JDBCSentence<T> extends BaseSentence<T> {
             }
         }
 
-        /**
-         *
-         * @return @throws BasicException
-         */
         @Override
         public T getCurrent() throws BasicException {
             return m_serread.readValues(this);
         }
 
-        /**
-         *
-         * @return @throws BasicException
-         */
         @Override
         public boolean next() throws BasicException {
             try {
@@ -211,10 +153,6 @@ public abstract class JDBCSentence<T> extends BaseSentence<T> {
             }
         }
 
-        /**
-         *
-         * @throws BasicException
-         */
         @Override
         public void close() throws BasicException {
             try {
@@ -225,10 +163,6 @@ public abstract class JDBCSentence<T> extends BaseSentence<T> {
             }
         }
 
-        /**
-         *
-         * @return @throws BasicException
-         */
         @Override
         public int updateCount() throws BasicException {
             return -1; // es decir somos datos.

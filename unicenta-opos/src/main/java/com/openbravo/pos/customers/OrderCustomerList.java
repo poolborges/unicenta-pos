@@ -154,7 +154,11 @@ public class OrderCustomerList extends JPanel implements TicketSelector {
                         }
 
                         ImageIcon icon = new ImageIcon(tnbbutton.getThumbNail());
-                        flowTab.addButton(icon, new SelectedCustomerAction(ticket.getId()), ticketName);
+                        flowTab.addButton(
+                                icon, 
+                                new SelectedCustomerAction(ticket.getId()), 
+                                ticketName,
+                                ticketName);
                     }
 
                 }

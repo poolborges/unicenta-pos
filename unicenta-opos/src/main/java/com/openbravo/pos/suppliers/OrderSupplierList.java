@@ -16,11 +16,11 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with KrOS POS.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.suppliers;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
+import com.openbravo.data.loader.ImageUtils;
 import com.openbravo.pos.catalog.JCatalogTab;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
@@ -65,7 +65,7 @@ public class OrderSupplierList extends JPanel implements SupplierTicketSelector 
         this.panelticket = panelticket;
         this.dataLogicSuppliers = dlSuppliers;
         this.dataLogicReceipts = (DataLogicReceipts) application.getBean("com.openbravo.pos.sales.DataLogicReceipts");
-        
+
         initComponents();
     }
 
@@ -84,7 +84,7 @@ public class OrderSupplierList extends JPanel implements SupplierTicketSelector 
             @Override
             public void run() {
                 JCatalogTab flowTab = new JCatalogTab();
-                
+
                 jPanelSuppliers.removeAll();
                 jPanelSuppliers.add(flowTab);
 
@@ -92,7 +92,7 @@ public class OrderSupplierList extends JPanel implements SupplierTicketSelector 
                 List<SharedTicketInfo> ticketList = null;
 
                 long time = System.currentTimeMillis();
-                
+
                 try {
                     LOGGER.log(Level.INFO, "Time of getSuppliersWithOutImage {0}", (System.currentTimeMillis() - time));
                     time = System.currentTimeMillis();
@@ -103,30 +103,9 @@ public class OrderSupplierList extends JPanel implements SupplierTicketSelector 
                 } catch (BasicException ex) {
                     Logger.getLogger(OrderSupplierList.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                HashMap<SharedTicketInfo, SupplierInfoExt> orderMap = new HashMap<>();
 
-                for (SharedTicketInfo sharedTicketInfo : ticketList) {
-
-                    String ticketName = sharedTicketInfo.getName().trim();
-
-                    if (ticketName.contains("[") && ticketName.contains("]")) {
-
-                        // found order
-                        if (ticketName.startsWith("[")) {
-                            orderMap.put(sharedTicketInfo, null);
-                        } else if (suppliers != null && !suppliers.isEmpty()) {
-                            for (SupplierInfoExt supplier : suppliers) {
-                                if (supplier != null) {
-                                    String name = supplier.getName().trim();
-                                    if (ticketName.startsWith(name)) {
-                                        orderMap.put(sharedTicketInfo, supplier);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                HashMap<SharedTicketInfo, SupplierInfoExt> orderMap = 
+                        mapSharedTicket(ticketList, suppliers);
                 // sort
                 SupplierComparator bvc = new SupplierComparator(orderMap);
                 TreeMap<SharedTicketInfo, SupplierInfoExt> sortedMap = new TreeMap<>(bvc);
@@ -141,18 +120,7 @@ public class OrderSupplierList extends JPanel implements SupplierTicketSelector 
                     SupplierInfoExt supplier = entry.getValue();
 
                     String name = ticket.getName();
-                    BufferedImage image = null;
-
-                    if (image == null) {
-                        try {
-                            InputStream is = getClass().getResourceAsStream("/com/openbravo/images/no_image.png");
-                            if (is != null) {
-                                image = ImageIO.read(is);
-                            }
-                        } catch (IOException ex) {
-                            Logger.getLogger(OrderSupplierList.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
+                    BufferedImage image = ImageUtils.getImageFromClasspath("/com/openbravo/images/no_image.png");
                     String username;
                     if (name.indexOf("[") != 0) {
                         username = name.substring(0, name.indexOf("[") - 1);
@@ -162,21 +130,54 @@ public class OrderSupplierList extends JPanel implements SupplierTicketSelector 
                     }
                     String orderId = name.substring(name.indexOf("["), name.indexOf("]") + 1);
                     String text = username.trim() + " : " + orderId.trim();
+                    String htmltext = "<html><center>" + username.trim() + "<br> " + orderId.trim() + "</center></html>";
 
                     final ThumbNailBuilder tnbbutton = new ThumbNailBuilder(90, 98, image);
                     ImageIcon icon = new ImageIcon(tnbbutton.getThumbNail());
-                    flowTab.addButton(icon, new SelectedSupplierAction(ticket.getId()), text);
+                    flowTab.addButton(
+                            icon,
+                            new SelectedSupplierAction(ticket.getId()),
+                            htmltext,
+                            text);
                 }
                 LOGGER.log(Level.INFO, "Time of finished loadSupplierOrders {0}", (System.currentTimeMillis() - time));
             }
         });
     }
 
+    private HashMap<SharedTicketInfo, SupplierInfoExt> mapSharedTicket(List<SharedTicketInfo> ticketList, List<SupplierInfoExt> suppliers) {
+        HashMap<SharedTicketInfo, SupplierInfoExt> orderMap = new HashMap<>();
+
+        for (SharedTicketInfo sharedTicketInfo : ticketList) {
+
+            String ticketName = sharedTicketInfo.getName().trim();
+
+            if (ticketName.contains("[") && ticketName.contains("]")) {
+
+                // found order
+                if (ticketName.startsWith("[")) {
+                    orderMap.put(sharedTicketInfo, null);
+                } else if (suppliers != null && !suppliers.isEmpty()) {
+                    for (SupplierInfoExt supplier : suppliers) {
+                        if (supplier != null) {
+                            String name = supplier.getName().trim();
+                            if (ticketName.startsWith(name)) {
+                                orderMap.put(sharedTicketInfo, supplier);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return orderMap;
+    }
+
     /**
      *
      * @param value
      */
-
     public void setComponentEnabled(boolean value) {
         jPanelSuppliers.setEnabled(value);
 
@@ -188,7 +189,6 @@ public class OrderSupplierList extends JPanel implements SupplierTicketSelector 
         }
         this.setEnabled(value);
     }
-
 
     public void addActionListener(ActionListener actionListener) {
         listeners.add(ActionListener.class, actionListener);

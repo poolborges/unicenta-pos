@@ -19,13 +19,13 @@ package com.openbravo.data.loader;
 import java.sql.*;
 import java.util.*; 
 import com.openbravo.basic.BasicException;
-import com.openbravo.data.loader.JDBCSentence.JDBCDataResultSet;
+import com.openbravo.data.loader.JDBCBaseSentence.JDBCDataResultSet;
 
 /**
  *
  * @author JG uniCenta
  */
-public class MetaSentence extends JDBCSentence {
+public class MetaSentence extends JDBCBaseSentence {
     
     private String m_sSentence;
     protected SerializerRead m_SerRead = null;
@@ -97,7 +97,7 @@ public class MetaSentence extends JDBCSentence {
         closeExec();
         
         try {
-            DatabaseMetaData db = m_s.getConnection().getMetaData();
+            DatabaseMetaData db = session.getConnection().getMetaData();
 
             MetaParameter mp = new MetaParameter();               
             if (params != null) {
