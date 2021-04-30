@@ -38,79 +38,45 @@ public class RolesPanel extends JPanelTable {
     private TableDefinition trolesmenu;
     private RolesView jeditor;
 
-    
-    /** Creates a new instance of RolesPanel */
-    public RolesPanel() {
-     }
-    
-    /**
-     *
-     */
+    public RolesPanel() {}
+
     @Override
     protected void init() {
         DataLogicAdmin dlAdmin  = (DataLogicAdmin) app.getBean("com.openbravo.pos.admin.DataLogicAdmin");        
         troles = dlAdmin.getTableRoles();         
         jeditor = new RolesView(dirty);    
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @Override
     public ListProvider getListProvider() {
         return new ListProviderCreator(troles);
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @Override
     public SaveProvider getSaveProvider() {
         return new SaveProvider(troles);        
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @Override
     public Vectorer getVectorer() {
         return troles.getVectorerBasic(new int[] {1});
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @Override
     public ComparatorCreator getComparatorCreator() {
         return troles.getComparatorCreator(new int[] {1});
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @Override
     public ListCellRenderer getListCellRenderer() {
         return new ListCellRendererBasic(troles.getRenderStringBasic(new int[] {1}));
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @Override
     public EditorRecord getEditor() {
         return jeditor;
     }
-    
-    /**
-     *
-     * @return
-     */
+ 
     @Override
     public String getTitle() {
         return AppLocal.getIntString("Menu.Roles");

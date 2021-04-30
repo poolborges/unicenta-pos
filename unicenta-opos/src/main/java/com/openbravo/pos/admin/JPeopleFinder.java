@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.admin;
 
 import com.openbravo.basic.BasicException;
@@ -37,7 +36,9 @@ public class JPeopleFinder extends javax.swing.JDialog implements EditorCreator 
     private PeopleInfo selectedPeople;
     private ListProvider<PeopleInfo> lpr;
 
-    /** Creates new form JPeopleFinder */
+    /**
+     * Creates new form JPeopleFinder
+     */
     private JPeopleFinder(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
     }
@@ -94,7 +95,7 @@ public class JPeopleFinder extends javax.swing.JDialog implements EditorCreator 
 
     public void search(PeopleInfo people) {
 
-        if (people == null  || people.getName() == null  || people.getName().equals("")) {
+        if (people == null || people.getName() == null || people.getName().equals("")) {
             m_jtxtName.reset();
             cleanSearch();
         } else {
@@ -112,7 +113,7 @@ public class JPeopleFinder extends javax.swing.JDialog implements EditorCreator 
             jListPeople.setModel(new PeopleListModel(lpr.loadData()));
             if (jListPeople.getModel().getSize() > 0) {
                 jListPeople.setSelectedIndex(0);
-                }
+            }
         } catch (BasicException e) {
         }
     }
@@ -127,7 +128,7 @@ public class JPeopleFinder extends javax.swing.JDialog implements EditorCreator 
 
         Object[] afilter = new Object[12];
 
-        if (m_jtxtName.getText() == null 
+        if (m_jtxtName.getText() == null
                 || m_jtxtName.getText().equals("")) {
             afilter[0] = QBFCompareEnum.COMP_NONE;
             afilter[1] = null;
@@ -352,7 +353,7 @@ public class JPeopleFinder extends javax.swing.JDialog implements EditorCreator 
     }//GEN-LAST:event_jcmdOKActionPerformed
 
     private void jcmdCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcmdCancelActionPerformed
-        
+
         dispose();
 
     }//GEN-LAST:event_jcmdCancelActionPerformed
@@ -360,7 +361,7 @@ public class JPeopleFinder extends javax.swing.JDialog implements EditorCreator 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
 
         executeSearch();
-        
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jListPeopleValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListPeopleValueChanged
@@ -379,10 +380,10 @@ public class JPeopleFinder extends javax.swing.JDialog implements EditorCreator 
     }//GEN-LAST:event_jListPeopleMouseClicked
 
 private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
- 
-        m_jtxtName.reset();
-        
-        cleanSearch();
+
+    m_jtxtName.reset();
+
+    cleanSearch();
 }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

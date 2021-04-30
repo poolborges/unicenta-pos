@@ -62,6 +62,4 @@ public class ResourceInfo implements SerializableRead, IKeyed {
     public byte[] getContent() {
         return content;
     }
-    
-    
 }
