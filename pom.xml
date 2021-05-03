@@ -41,13 +41,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <maven-pmd-plugin.version>3.14.0</maven-pmd-plugin.version>
         
         <!-- Javadoc config -->
-        <javadoc.excluded.packages />
+        <javadoc.excluded.packages/>
         <asciidoclet.version>1.5.6</asciidoclet.version>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         
         <!-- checkstyle config -->
         <checkstyle.plugin.version>3.1.2</checkstyle.plugin.version>
-        <checkstyle.excludes />
+        <checkstyle.excludes/>
         
         <!-- owasp config -->
         <owasp.dependency.check.version>6.1.5</owasp.dependency.check.version>
@@ -64,7 +64,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         
         <!-- dependencies/library version --> 
-        <liquibase.version>4.1.1</liquibase.version>
+        <liquibase.version>4.3.2</liquibase.version>
         
         <javax.activation.version>1.2.0</javax.activation.version>
         <jaxb.api.version>2.3.0</jaxb.api.version>
@@ -642,7 +642,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <configuration>
                             <encoding>UTF-8</encoding>
                             <skip>false</skip>
-                            <headerFile />
+                            <headerFile/>
                             <failOnErrors>false</failOnErrors>
                             <failsOnError>true</failsOnError>
                             <failOnViolation>true</failOnViolation>
