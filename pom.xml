@@ -64,7 +64,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         
         <!-- dependencies/library version --> 
-        <liquibase.version>4.3.2</liquibase.version>
+        <liquibase.version>4.3.3</liquibase.version>
         
         <javax.activation.version>1.2.0</javax.activation.version>
         <jaxb.api.version>2.3.4</jaxb.api.version>
