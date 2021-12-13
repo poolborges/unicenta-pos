@@ -30,16 +30,16 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
 
     protected Session s;
     private static final Datas[] RESERVATION_DATA = new Datas[]{
-        Datas.STRING,
-        Datas.TIMESTAMP,
-        Datas.TIMESTAMP,
-        Datas.STRING,
-        Datas.STRING,
-        Datas.STRING,
-        Datas.STRING,
-        Datas.INT,
-        Datas.BOOLEAN,
-        Datas.STRING
+        Datas.STRING,       //R.ID 
+        Datas.TIMESTAMP,    //R.CREATED
+        Datas.TIMESTAMP,    //R.DATENEW
+        Datas.STRING,       //C.CUSTOMER
+        Datas.STRING,       //customers.TAXID
+        Datas.STRING,       //customers.SEARCHKEY
+        Datas.STRING,       //COALESCE(customers.NAME, R.TITLE)
+        Datas.INT,          //R.CHAIRS
+        Datas.BOOLEAN,      //R.ISDONE
+        Datas.STRING        //R.DESCRIPTION
     };
 
     private static final Datas[] CUSTOMER_DATA = new Datas[]{
