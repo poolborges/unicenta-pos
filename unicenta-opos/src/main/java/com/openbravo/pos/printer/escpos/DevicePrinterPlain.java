@@ -31,15 +31,13 @@ public class DevicePrinterPlain implements DevicePrinter  {
       
     private final PrinterWritter out;
     private final UnicodeTranslator trans;
-    
-    // Creates new TicketPrinter
 
     /**
      *
      * @param CommOutputPrinter
      * @throws TicketPrinterException
      */
-        public DevicePrinterPlain(PrinterWritter CommOutputPrinter) throws TicketPrinterException {
+    public DevicePrinterPlain(PrinterWritter CommOutputPrinter) throws TicketPrinterException {
 
         out = CommOutputPrinter;
         trans = new UnicodeTranslatorStar(); // The star translator stands for the 437 int char page
