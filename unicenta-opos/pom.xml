@@ -216,13 +216,14 @@
         <dependency> 
             <groupId>net.sf.jasperreports</groupId>  
             <artifactId>jasperreports</artifactId>  
-            <version>6.16.0</version> 
+            <version>6.18.1</version> 
         </dependency>  
         <dependency> 
             <groupId>net.sf.jasperreports</groupId>  
             <artifactId>jasperreports-fonts</artifactId>  
-            <version>6.16.0</version> 
-        </dependency>  
+            <version>6.18.1</version> 
+            <scope>runtime</scope>
+        </dependency>
         <!-- Eclipse Compiler - (ECJ deps of JasperReports)
         <dependency>
             <groupId>org.eclipse.jdt</groupId>
