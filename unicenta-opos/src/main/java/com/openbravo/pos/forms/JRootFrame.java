@@ -73,6 +73,8 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
             } else {
                 modeWindow();
             }
+            
+             sendInitEnvent();
 
         } else {
             int opionRes = JOptionPane.showConfirmDialog(this,
@@ -80,10 +82,10 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
                     "Connection", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
             if(opionRes == JOptionPane.YES_OPTION){
                 new JFrmConfig(m_props).setVisible(true); // Show the configuration window.
+            }else{
+                System.exit(0);
             }
         }
-
-        sendInitEnvent();
     }
 
     private void modeWindow() {
