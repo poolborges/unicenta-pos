@@ -64,7 +64,8 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
             setTitle(AppLocal.APP_NAME + " - " + AppLocal.APP_VERSION);
             try {
                 this.setIconImage(ImageIO.read(JRootFrame.class.getResourceAsStream("/com/openbravo/images/app_logo_48x48.png")));
-            } catch (IOException e) {
+            } catch (IOException ex) {
+                LOGGER.log(Level.WARNING, "Exception on session ", ex);
             }
 
             if (kioskMode) {
@@ -74,10 +75,12 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
             }
 
         } else {
-            JOptionPane.showMessageDialog(this,
+            int opionRes = JOptionPane.showConfirmDialog(this,
                     AppLocal.getIntString("message.databasechange"),
-                    "Connection", JOptionPane.INFORMATION_MESSAGE);
-            new JFrmConfig(m_props).setVisible(true); // Show the configuration window.
+                    "Connection", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            if(opionRes == JOptionPane.YES_OPTION){
+                new JFrmConfig(m_props).setVisible(true); // Show the configuration window.
+            }
         }
 
         sendInitEnvent();
@@ -119,23 +122,18 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
     }
 
     private void sendInitEnvent() {
+       /** 
         String scriptId = "application.started";
         try {
-            /*
-            Event Listener
-             */
-            AltEncrypter cypher = new AltEncrypter("cypherkey" + m_props.getProperty("db.user"));
             ScriptEngine scriptEngine = ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
-            DataLogicSystem dataLogicSystem = (DataLogicSystem) m_rootapp.getBean("com.openbravo.pos.forms.DataLogicSystem");
-            String script = dataLogicSystem.getResourceAsXML(scriptId);
+            
+            String script = ;
             scriptEngine.put("device", m_props.getHost());
-            scriptEngine.put("dbURL", m_props.getProperty("db.URL") + m_props.getProperty("db.schema"));
-            scriptEngine.put("dbUser", m_props.getProperty("db.user"));
-            scriptEngine.put("dbPassword", cypher.decrypt(m_props.getProperty("db.password")));
             scriptEngine.eval(script);
         } catch (BeanFactoryException | ScriptException e) {
             LOGGER.log(Level.WARNING, "Exception on executing scriptId: " + scriptId, e);
         }
+        */
     }
 
     /**
