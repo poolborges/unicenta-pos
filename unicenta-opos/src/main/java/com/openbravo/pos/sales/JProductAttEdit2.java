@@ -16,6 +16,7 @@
 
 package com.openbravo.pos.sales;
 
+import com.openbravo.pos.inventory.DataLogicAttribute;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.DataRead;
 import com.openbravo.data.loader.Datas;
@@ -29,6 +30,7 @@ import com.openbravo.data.loader.SerializerWriteBasic;
 import com.openbravo.data.loader.SerializerWriteString;
 import com.openbravo.data.loader.Session;
 import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.inventory.AttributeInstInfo;
 import com.openbravo.pos.inventory.AttributeSetInfo;
 import java.awt.Component;
 import java.awt.Dialog;
@@ -45,21 +47,14 @@ import javax.swing.SwingUtilities;
  */
 public class JProductAttEdit2 extends javax.swing.JDialog {
 
-    private SentenceFind attsetSent;
-    private SentenceList attvaluesSent;
-    private SentenceList attinstSent;
-    private SentenceList attinstSent2;
-    private SentenceFind attsetinstExistsSent;
-
-    private SentenceExec attsetSave;
-    private SentenceExec attinstSave;
-
     private List<JProductAttEditI> itemslist;
     private String attsetid;
     private String attInstanceId;
     private String attInstanceDescription;
 
     private boolean ok;
+    
+    private DataLogicAttribute dlProdAttribute;
 
     /** Creates new form JProductAttEdit */
     private JProductAttEdit2(java.awt.Frame parent, boolean modal) {
@@ -74,46 +69,9 @@ public class JProductAttEdit2 extends javax.swing.JDialog {
     private void init(Session s) {
 
         initComponents();
-
-        attsetSave = new PreparedSentence(s,
-                "INSERT INTO attributesetinstance (ID, ATTRIBUTESET_ID, DESCRIPTION) VALUES (?, ?, ?)",
-                new SerializerWriteBasic(Datas.STRING, Datas.STRING, Datas.STRING));
-        
-        attinstSave = new PreparedSentence(s,
-                "INSERT INTO attributeinstance(ID, ATTRIBUTESETINSTANCE_ID, ATTRIBUTE_ID, VALUE) VALUES (?, ?, ?, ?)",
-                new SerializerWriteBasic(Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING));
-
-        attsetSent = new PreparedSentence(s,
-                "SELECT ID, NAME FROM attributeset WHERE ID = ?",
-                SerializerWriteString.INSTANCE,
-                (DataRead dr) -> new AttributeSetInfo(dr.getString(1), dr.getString(2)));
-        
-        attsetinstExistsSent = new PreparedSentence(s,
-//                "SELECT ID FROM attributesetinstance WHERE ATTRIBUTESET_ID = ? AND DESCRIPTION = ?",
-                "SELECT ID, DESCRIPTION FROM attributesetinstance WHERE ATTRIBUTESET_ID = ? AND DESCRIPTION = ?",                
-                new SerializerWriteBasic(Datas.STRING, Datas.STRING),
-                SerializerReadString.INSTANCE);
-
-        attinstSent = new PreparedSentence(s, "SELECT A.ID, A.NAME, " + s.DB.CHAR_NULL() + ", " + s.DB.CHAR_NULL() + " " +
-                "FROM attributeuse AU JOIN attribute A ON AU.ATTRIBUTE_ID = A.ID " +
-                "WHERE AU.ATTRIBUTESET_ID = ? " +
-                "ORDER BY AU.LINENO",
-            SerializerWriteString.INSTANCE,
-                (DataRead dr) -> new AttributeInstInfo(dr.getString(1), dr.getString(2), dr.getString(3), dr.getString(4)));
-        
-        attinstSent2 = new PreparedSentence(s, "SELECT A.ID, A.NAME, AI.ID, AI.VALUE " +
-                "FROM attributeuse AU JOIN attribute A ON AU.ATTRIBUTE_ID = A.ID " + 
-                "LEFT OUTER JOIN attributeinstance AI ON AI.ATTRIBUTE_ID = A.ID " +
-                "WHERE AU.ATTRIBUTESET_ID = ? AND AI.ATTRIBUTESETINSTANCE_ID = ?" +
-                "ORDER BY AU.LINENO",
-            new SerializerWriteBasic(Datas.STRING, Datas.STRING),
-                (DataRead dr) -> new AttributeInstInfo(dr.getString(1), dr.getString(2), dr.getString(3), dr.getString(4)));
-        
-        attvaluesSent = new PreparedSentence(s, "SELECT VALUE FROM attributevalue WHERE ATTRIBUTE_ID = ? ORDER BY VALUE",
-                SerializerWriteString.INSTANCE,
-                SerializerReadString.INSTANCE);
-
         getRootPane().setDefaultButton(m_jButtonOK);
+        dlProdAttribute = new DataLogicAttribute();
+        dlProdAttribute.init(s);
     }
 
     /**
@@ -157,7 +115,7 @@ public class JProductAttEdit2 extends javax.swing.JDialog {
             this.ok = false;
 
             // get attsetinst values
-            AttributeSetInfo asi = (AttributeSetInfo) attsetSent.find(attsetid);
+            AttributeSetInfo asi = (AttributeSetInfo) dlProdAttribute.attsetSent.find(attsetid);
 
             if (asi == null) {
 //                throw new BasicException(AppLocal.getIntString("message.attsetnotexists"));
@@ -167,8 +125,8 @@ public class JProductAttEdit2 extends javax.swing.JDialog {
             setTitle(asi.getName());
 
             List<AttributeInstInfo> attinstinfo = attsetinstid == null
-                    ? attinstSent.list(attsetid)
-                    : attinstSent2.list(attsetid, attsetinstid);
+                    ? dlProdAttribute.attinstSent.list(attsetid)
+                    : dlProdAttribute.attinstSent2.list(attsetid, attsetinstid);
 
             itemslist = new ArrayList<>();
 
@@ -176,7 +134,7 @@ public class JProductAttEdit2 extends javax.swing.JDialog {
 
                 JProductAttEditI item;
 
-                List<String> values = attvaluesSent.list(aii.getAttid());
+                List<String> values = dlProdAttribute.attvaluesSent.list(aii.getAttid());
                 if (values.isEmpty()) {
                     // Does not exist a list of values then a textfield
                     item = new JProductAttEditItem(aii.getAttid(),  aii.getAttname(), aii.getValue(), m_jKeys);
@@ -219,63 +177,7 @@ public class JProductAttEdit2 extends javax.swing.JDialog {
         return attInstanceDescription;
     }
 
-    private static class AttributeInstInfo {
-        
-        private final String attid;
-        private final String attname;
-        private String id;
-        private String value;
-
-        public AttributeInstInfo(String attid, String attname, String id, String value) {
-            this.attid = attid;
-            this.attname = attname;
-            this.id = id;
-            this.value = value;
-        }
-
-        /**
-         * @return the attid
-         */
-        public String getAttid() {
-            return attid;
-        }
-
-        /**
-         * @return the attname
-         */
-        public String getAttname() {
-            return attname;
-        }
-
-        /**
-         * @return the id
-         */
-        public String getId() {
-            return id;
-        }
-
-        /**
-         * @param id the id to set
-         */
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        /**
-         * @return the value
-         */
-        public String getValue() {
-            return value;
-        }
-
-        /**
-         * @param value the value to set
-         */
-        public void setValue(String value) {
-            this.value = value;
-        }
-    }
-
+ 
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -373,9 +275,9 @@ public class JProductAttEdit2 extends javax.swing.JDialog {
 
             try {
                 
-                id = (String) attsetinstExistsSent.find(attsetid, description.toString());
+                id = (String) dlProdAttribute.attsetinstExistsSent.find(attsetid, description.toString());
            
-            } catch (BasicException ex) {
+            } catch (Exception ex) {
                 return;
             }            
 
@@ -387,10 +289,10 @@ public class JProductAttEdit2 extends javax.swing.JDialog {
                 id = UUID.randomUUID().toString();
 
                 try {
-                    attsetSave.exec(id, attsetid, description.toString());
+                    dlProdAttribute.attsetSave.exec(id, attsetid, description.toString());
 
                     for (JProductAttEditI item : itemslist) {
-                        attinstSave.exec(UUID.randomUUID().toString(), id, item.getAttribute(), item.getValue());
+                        dlProdAttribute.attinstSave.exec(UUID.randomUUID().toString(), id, item.getAttribute(), item.getValue());
                     }
 
                 } catch (BasicException ex) {
