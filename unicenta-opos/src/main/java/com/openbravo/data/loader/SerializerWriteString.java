@@ -24,21 +24,13 @@ import java.lang.reflect.Array;
  *
  * @author JG uniCenta
  */
-public class SerializerWriteString implements SerializerWrite<Object> {
+public class SerializerWriteString implements SerializerWrite<String> {
 
     public static final SerializerWrite INSTANCE = new SerializerWriteString();
     private SerializerWriteString() {}
 
-    public void writeValues(DataWrite dp, Object obj) throws BasicException {
-        if (obj instanceof Object[]){
-            Object[] objectos = (Object[]) obj;
-            for (int i = 0 ; i < objectos.length ; i++) {
-                Datas.STRING.setValue(dp, i+1, (String)objectos[i]);
-            }
-        }
-        else {
-            Datas.STRING.setValue(dp, 1, (String)obj);
-        }
+    public void writeValues(DataWrite dp, String obj) throws BasicException {
+        Datas.STRING.setValue(dp, 1, (String)obj);
 
     }
 }

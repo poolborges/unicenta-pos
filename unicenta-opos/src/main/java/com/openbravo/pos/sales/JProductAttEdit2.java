@@ -78,6 +78,7 @@ public class JProductAttEdit2 extends javax.swing.JDialog {
         attsetSave = new PreparedSentence(s,
                 "INSERT INTO attributesetinstance (ID, ATTRIBUTESET_ID, DESCRIPTION) VALUES (?, ?, ?)",
                 new SerializerWriteBasic(Datas.STRING, Datas.STRING, Datas.STRING));
+        
         attinstSave = new PreparedSentence(s,
                 "INSERT INTO attributeinstance(ID, ATTRIBUTESETINSTANCE_ID, ATTRIBUTE_ID, VALUE) VALUES (?, ?, ?, ?)",
                 new SerializerWriteBasic(Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING));
@@ -86,6 +87,7 @@ public class JProductAttEdit2 extends javax.swing.JDialog {
                 "SELECT ID, NAME FROM attributeset WHERE ID = ?",
                 SerializerWriteString.INSTANCE,
                 (DataRead dr) -> new AttributeSetInfo(dr.getString(1), dr.getString(2)));
+        
         attsetinstExistsSent = new PreparedSentence(s,
 //                "SELECT ID FROM attributesetinstance WHERE ATTRIBUTESET_ID = ? AND DESCRIPTION = ?",
                 "SELECT ID, DESCRIPTION FROM attributesetinstance WHERE ATTRIBUTESET_ID = ? AND DESCRIPTION = ?",                
@@ -98,13 +100,16 @@ public class JProductAttEdit2 extends javax.swing.JDialog {
                 "ORDER BY AU.LINENO",
             SerializerWriteString.INSTANCE,
                 (DataRead dr) -> new AttributeInstInfo(dr.getString(1), dr.getString(2), dr.getString(3), dr.getString(4)));
+        
         attinstSent2 = new PreparedSentence(s, "SELECT A.ID, A.NAME, AI.ID, AI.VALUE " +
-            "FROM attributeuse AU JOIN attribute A ON AU.ATTRIBUTE_ID = A.ID LEFT OUTER JOIN attributeinstance AI ON AI.ATTRIBUTE_ID = A.ID " +
-            "WHERE AU.ATTRIBUTESET_ID = ? AND AI.ATTRIBUTESETINSTANCE_ID = ?" +
-            "ORDER BY AU.LINENO",
+                "FROM attributeuse AU JOIN attribute A ON AU.ATTRIBUTE_ID = A.ID " + 
+                "LEFT OUTER JOIN attributeinstance AI ON AI.ATTRIBUTE_ID = A.ID " +
+                "WHERE AU.ATTRIBUTESET_ID = ? AND AI.ATTRIBUTESETINSTANCE_ID = ?" +
+                "ORDER BY AU.LINENO",
             new SerializerWriteBasic(Datas.STRING, Datas.STRING),
                 (DataRead dr) -> new AttributeInstInfo(dr.getString(1), dr.getString(2), dr.getString(3), dr.getString(4)));
-                attvaluesSent = new PreparedSentence(s, "SELECT VALUE FROM attributevalue WHERE ATTRIBUTE_ID = ? ORDER BY VALUE",
+        
+        attvaluesSent = new PreparedSentence(s, "SELECT VALUE FROM attributevalue WHERE ATTRIBUTE_ID = ? ORDER BY VALUE",
                 SerializerWriteString.INSTANCE,
                 SerializerReadString.INSTANCE);
 
