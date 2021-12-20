@@ -832,4 +832,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </profile>
     </profiles>
 
+    <repositories>
+        <!-- Because Jasper use own "itext" of com.lowagie:itext:2.1.7.js9 -->
+        <repository>
+            <id>jaspersoft-third-party</id>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/</url>
+        </repository>
+    </repositories>
 </project>
