@@ -372,9 +372,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <mainClass>${execute.mainClass}</mainClass>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -398,13 +395,21 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <execute.mainClass>com.openbravo.pos.forms.StartPOS</execute.mainClass>
+                <exec.mainClass>com.openbravo.pos.forms.StartPOS</exec.mainClass>
             </properties>
         </profile>
         <profile>
             <id>run-JFrmConfig</id>
             <properties>
-                <execute.mainClass>com.openbravo.pos.config.JFrmConfig</execute.mainClass>
+                <exec.mainClass>com.openbravo.pos.config.JFrmConfig</exec.mainClass>
+            </properties>
+        </profile>
+        
+        <profile>
+            <id>run-JasperDesignViewer</id>
+            <properties>
+                <exec.mainClass>net.sf.jasperreports.view.JasperDesignViewer</exec.mainClass>
+                <exec.args>-XML -Fsrc/main/resources/com/openbravo/reports/products.jrxml</exec.args>
             </properties>
         </profile>
         <profile>
