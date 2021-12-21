@@ -33,7 +33,6 @@ module io.github.kriolos.krpos {
     requires commons.cli;
     requires commons.collections;
     requires commons.digester;
-    requires commons.lang;
     requires commons.logging;
     requires ecj;
     requires itext;

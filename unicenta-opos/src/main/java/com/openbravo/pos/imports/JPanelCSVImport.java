@@ -39,7 +39,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import com.alee.laf.optionpane.WebOptionPane;
 import com.openbravo.data.loader.Datas;
 import com.openbravo.data.loader.PreparedSentence;

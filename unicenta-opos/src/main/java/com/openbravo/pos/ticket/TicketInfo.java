@@ -259,7 +259,7 @@ public final class TicketInfo implements SerializableRead, Externalizable {
             name.add(m_Customer.getName());            
         }
 
-        return org.apache.commons.lang.StringUtils.join(name, " - ");        
+        return org.apache.commons.lang3.StringUtils.join(name, " - ");        
     }
     
     public String getName() {
