@@ -24,11 +24,5 @@ import com.openbravo.basic.BasicException;
  */
 @FunctionalInterface
 public interface SerializableWrite {
-    
-    /**
-     *
-     * @param dp
-     * @throws BasicException
-     */
     public void writeValues(DataWrite dp) throws BasicException;   
 }

@@ -100,10 +100,10 @@ public class CategoryStock {
      *
      * @return products for this category
      */
-    public static SerializerRead getSerializerRead() {
-        return new SerializerRead() {
+    public static SerializerRead<CategoryStock> getSerializerRead() {
+        return new SerializerRead<CategoryStock>() {
             @Override
-            public Object readValues(DataRead dr) throws BasicException {
+            public CategoryStock readValues(DataRead dr) throws BasicException {
                 String productId = dr.getString(1);
                 String productName = dr.getString(2);
                 String productCode = dr.getString(3);                

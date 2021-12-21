@@ -328,10 +328,10 @@ public class ProductInfoExt {
         return Formats.STRING.formatValue(memodate);
     }    
 
-    public static SerializerRead getSerializerRead() {
-        return new SerializerRead() {
+    public static SerializerRead<ProductInfoExt> getSerializerRead() {
+        return new SerializerRead<ProductInfoExt>() {
             @Override
-            public Object readValues(DataRead dr) throws BasicException {
+            public ProductInfoExt readValues(DataRead dr) throws BasicException {
                 ProductInfoExt product = new ProductInfoExt();
                 product.m_ID = dr.getString(1);                                 
                 product.m_sRef = dr.getString(2);                               

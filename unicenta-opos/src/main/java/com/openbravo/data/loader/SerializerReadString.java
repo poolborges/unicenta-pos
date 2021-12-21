@@ -22,12 +22,12 @@ import com.openbravo.basic.BasicException;
  *
  * @author JG uniCenta
  */
-public class SerializerReadString implements SerializerRead {
+public class SerializerReadString implements SerializerRead<String> {
     
     /**
      *
      */
-    public static final SerializerRead INSTANCE = new SerializerReadString();
+    public static final SerializerRead<String> INSTANCE = new SerializerReadString();
     
     /** Creates a new instance of SerializerReadImage */
     private SerializerReadString() {
@@ -39,7 +39,7 @@ public class SerializerReadString implements SerializerRead {
      * @return
      * @throws BasicException
      */
-    public Object readValues(DataRead dr) throws BasicException {
+    public String readValues(DataRead dr) throws BasicException {
         return Datas.STRING.getValue(dr,1);
     }
 }

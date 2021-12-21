@@ -16,6 +16,8 @@ ifdef::env-github[]
 :important-caption: :heavy_exclamation_mark:
 :caution-caption: :fire:
 :warning-caption: :warning:
+:badges:
+:doc-dir: https://github.com/poolborges/unicenta-pos/master/docs
 endif::[]
 
 [[doc]]
@@ -25,10 +27,13 @@ endif::[]
 :revdate: {last-update-label} {docdatetime}
 :version-label!:
 
-image:https://travis-ci.org/poolborges/unicenta-pos.svg?branch=master["Build Status", link="https://travis-ci.org/poolborges/unicenta-pos"]
+
+ifdef::badges[]
+image:https://github.com/poolborges/unicenta-pos/actions/workflows/build.yml/badge.svg["Build Status", link="https://github.com/poolborges/unicenta-pos/actions/workflows/build.yml"]
 image:https://codecov.io/github/poolborges/unicenta-pos/coverage.svg["Code Coverage", link="https://codecov.io/gh/poolborges/unicenta-pos"]
 image:https://img.shields.io/badge/license-GPL%202.0-brightgreen.svg?style=flat["License", link="http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html"]
 image:https://badges.crowdin.net/krpos/localized.svg["Crowdin/Translation Status", link="https://crowdin.com/project/krpos"]
+endif::[]
 
 == About
 
@@ -191,3 +196,7 @@ mvn clean jacoco:prepare-agent install jacoco:report
 * Gatlin 
 * JMeter
 * Locust (Python Based)
+
+== Reference
+
+* link:{doc-dir}/[App Docs]

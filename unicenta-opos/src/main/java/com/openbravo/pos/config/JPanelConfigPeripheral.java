@@ -504,7 +504,7 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
 
 // new printers add jdl 10.11.12
         
-                p = new StringParser(config.getProperty("machine.printer.4"));
+        p = new StringParser(config.getProperty("machine.printer.4"));
         sparam = unifySerialInterface(p.nextToken(':'));
         switch (sparam) {
             case "serial":
@@ -638,160 +638,47 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
     @Override
     public void saveProperties(AppConfig config) {
 
-// JG 6 May 2013 to switch
+// 2021-12-14
         String sMachinePrinter = comboValue(jcboMachinePrinter.getSelectedItem());
-        switch (sMachinePrinter) {
-            case "epson":
-            case "tmu220":
-            case "star":
-            case "ODP1000":
-            case "ithaca":
-            case "surepos":
-                config.setProperty("machine.printer", sMachinePrinter + ":" + 
-                        comboValue(jcboConnPrinter.getSelectedItem()) + "," + 
-                        comboValue(jcboSerialPrinter.getSelectedItem()));
-                break;
-            case "javapos":
-                config.setProperty("machine.printer", sMachinePrinter + ":" + 
-                        m_jtxtJPOSPrinter.getText() + "," + 
-                        m_jtxtJPOSDrawer.getText());
-                break;
-            case "printer":
-                config.setProperty("machine.printer", sMachinePrinter + ":" + 
-                        printer1printerparams.getParameters());
-                break;
-            default:
-                config.setProperty("machine.printer", sMachinePrinter);
-                break;
-        }
-// JG 6 May 2013 to switch
+        savePrinterConf(config, "machine.printer", sMachinePrinter,
+            comboValue(jcboConnPrinter.getSelectedItem()) + "," +  comboValue(jcboSerialPrinter.getSelectedItem()), 
+            m_jtxtJPOSPrinter.getText() + "," +  m_jtxtJPOSDrawer.getText(), 
+            printer1printerparams.getParameters());
+        
+// 2021-12-14
         String sMachinePrinter2 = comboValue(jcboMachinePrinter2.getSelectedItem());
-        switch (sMachinePrinter2) {
-            case "epson":
-            case "tmu220":
-            case "star":
-            case "ODP1000":
-            case "ithaca":
-            case "surepos":
-                config.setProperty("machine.printer.2", sMachinePrinter2 + ":" + 
-                        comboValue(jcboConnPrinter2.getSelectedItem()) + "," + 
-                        comboValue(jcboSerialPrinter2.getSelectedItem()));
-                break;
-            case "javapos":
-                config.setProperty("machine.printer.2", sMachinePrinter2 + ":" + 
-                        m_jtxtJPOSPrinter2.getText() + "," + 
-                        m_jtxtJPOSDrawer2.getText());
-                break;
-            case "printer":
-                config.setProperty("machine.printer.2", sMachinePrinter2 + ":" + 
-                        printer2printerparams.getParameters());
-                break;
-            default:
-                config.setProperty("machine.printer.2", sMachinePrinter2);
-                break;
-        }
+        savePrinterConf(config, "machine.printer.2", sMachinePrinter2,
+            comboValue(jcboConnPrinter2.getSelectedItem()) + "," +  comboValue(jcboSerialPrinter2.getSelectedItem()), 
+            m_jtxtJPOSPrinter2.getText() + "," +  m_jtxtJPOSDrawer2.getText(), 
+            printer2printerparams.getParameters());
 
-// JG 6 May 2013 to switch
+// 2021-12-14
         String sMachinePrinter3 = comboValue(jcboMachinePrinter3.getSelectedItem());
-        switch (sMachinePrinter3) {
-            case "epson":
-            case "tmu220":
-            case "star":
-            case "ODP1000":    
-            case "ithaca":
-            case "surepos":
-                config.setProperty("machine.printer.3", sMachinePrinter3 + ":" + 
-                        comboValue(jcboConnPrinter3.getSelectedItem()) + "," + 
-                        comboValue(jcboSerialPrinter3.getSelectedItem()));
-                break;
-            case "javapos":
-                config.setProperty("machine.printer.3", sMachinePrinter3 + ":" + 
-                        m_jtxtJPOSPrinter3.getText() + "," + m_jtxtJPOSDrawer3.getText());
-                break;
-            case "printer":
-                config.setProperty("machine.printer.3", sMachinePrinter3 + ":" + 
-                        printer3printerparams.getParameters());
-                break;
-            default:
-                config.setProperty("machine.printer.3", sMachinePrinter3);
-                break;
-        }
-// new printers added 10.11.12
-                String sMachinePrinter4 = comboValue(jcboMachinePrinter4.getSelectedItem());
-        switch (sMachinePrinter4) {
-            case "epson":
-            case "tmu220":
-            case "star":
-            case "ODP1000":
-            case "ithaca":
-            case "surepos":
-                config.setProperty("machine.printer.4", sMachinePrinter4 + ":" + 
-                        comboValue(jcboConnPrinter4.getSelectedItem()) + "," + 
-                        comboValue(jcboSerialPrinter4.getSelectedItem()));
-                break;
-            case "javapos":
-                config.setProperty("machine.printer.4", sMachinePrinter4 + ":" + 
-                        m_jtxtJPOSPrinter4.getText() + "," + m_jtxtJPOSDrawer4.getText());
-                break;
-            case "printer":
-                config.setProperty("machine.printer.4", sMachinePrinter4 + ":" + 
-                        printer4printerparams.getParameters());
-                break;
-            default:
-                config.setProperty("machine.printer.4", sMachinePrinter4);
-                break;
-        }
+        savePrinterConf(config, "machine.printer.3", sMachinePrinter3,
+            comboValue(jcboConnPrinter3.getSelectedItem()) + "," +  comboValue(jcboSerialPrinter3.getSelectedItem()), 
+            m_jtxtJPOSPrinter3.getText() + "," +  m_jtxtJPOSDrawer3.getText(), 
+            printer3printerparams.getParameters());
 
+// 2021-12-14
+        String sMachinePrinter4 = comboValue(jcboMachinePrinter4.getSelectedItem());
+        savePrinterConf(config, "machine.printer.4", sMachinePrinter4,
+            comboValue(jcboConnPrinter4.getSelectedItem()) + "," +  comboValue(jcboSerialPrinter4.getSelectedItem()), 
+            m_jtxtJPOSPrinter4.getText() + "," +  m_jtxtJPOSDrawer4.getText(), 
+            printer4printerparams.getParameters());
+        
+// 2021-12-14
         String sMachinePrinter5 = comboValue(jcboMachinePrinter5.getSelectedItem());
-        switch (sMachinePrinter5) {
-            case "epson":
-            case "tmu220":
-            case "star":
-            case "ODP1000":    
-            case "ithaca":
-            case "surepos":
-                config.setProperty("machine.printer.5", sMachinePrinter5 + ":" + 
-                        comboValue(jcboConnPrinter5.getSelectedItem()) + "," + 
-                        comboValue(jcboSerialPrinter5.getSelectedItem()));
-                break;
-            case "javapos":
-                config.setProperty("machine.printer.5", sMachinePrinter5 + ":" + 
-                        m_jtxtJPOSPrinter5.getText() + "," + m_jtxtJPOSDrawer5.getText());
-                break;
-            case "printer":
-                config.setProperty("machine.printer.5", sMachinePrinter5 + ":" + 
-                        printer5printerparams.getParameters());
-                break;
-            default:
-                config.setProperty("machine.printer.5", sMachinePrinter5);
-                break;
-        }
+        savePrinterConf(config, "machine.printer.5", sMachinePrinter5,
+            comboValue(jcboConnPrinter5.getSelectedItem()) + "," +  comboValue(jcboSerialPrinter5.getSelectedItem()), 
+            m_jtxtJPOSPrinter5.getText() + "," +  m_jtxtJPOSDrawer5.getText(), 
+            printer5printerparams.getParameters());
 
-
+// 2021-12-14
         String sMachinePrinter6 = comboValue(jcboMachinePrinter6.getSelectedItem());
-        switch (sMachinePrinter6) {
-            case "epson":
-            case "tmu220":
-            case "star":
-            case "ODP1000":    
-            case "ithaca":
-            case "surepos":
-                config.setProperty("machine.printer.6", sMachinePrinter6 + ":" + 
-                        comboValue(jcboConnPrinter6.getSelectedItem()) + "," + 
-                        comboValue(jcboSerialPrinter6.getSelectedItem()));
-                break;
-            case "javapos":
-                config.setProperty("machine.printer.6", sMachinePrinter6 + ":" + 
-                        m_jtxtJPOSPrinter6.getText() + "," + m_jtxtJPOSDrawer6.getText());
-                break;
-            case "printer":
-                config.setProperty("machine.printer.6", sMachinePrinter6 + ":" + 
-                        printer6printerparams.getParameters());
-                break;
-            default:
-                config.setProperty("machine.printer.6", sMachinePrinter6);
-                break;
-        }
+        savePrinterConf(config, "machine.printer.6", sMachinePrinter6,
+            comboValue(jcboConnPrinter6.getSelectedItem()) + "," +  comboValue(jcboSerialPrinter6.getSelectedItem()), 
+            m_jtxtJPOSPrinter6.getText() + "," +  m_jtxtJPOSDrawer6.getText(), 
+            printer6printerparams.getParameters());
 
         
 // JG 6 May 2013 to switch
@@ -814,17 +701,19 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
 
 // acompc100 + averyberkel6720 scales added Feb 2017
         String sMachineScale = comboValue(jcboMachineScale.getSelectedItem());
-        if ("casiopd1".equals(sMachineScale) || 
-                "dialog1".equals(sMachineScale) || 
-                "samsungesp".equals(sMachineScale) ||
-                "caspdii".equals(sMachineScale) ||
-                "acompc100".equals(sMachineScale) ||                
-                "averyberkel6720".equals(sMachineScale) ||                                
-                "mtind221".equals(sMachineScale)) {
-            config.setProperty("machine.scale", sMachineScale + ":" + 
-                    comboValue(jcboSerialScale.getSelectedItem()));
-        } else {
-            config.setProperty("machine.scale", sMachineScale);
+        switch (sMachineScale) {
+            case "casiopd1":
+            case "dialog1":
+            case "samsungesp":
+            case "caspdii":
+            case "acompc100":
+            case "averyberkel6720":
+            case "mtind221":
+                config.setProperty("machine.scale", sMachineScale + ":" + comboValue(jcboSerialScale.getSelectedItem()));
+                break;
+            default:
+                config.setProperty("machine.scale", sMachineScale);
+                break;
         }
 
         // El scanner
@@ -843,6 +732,31 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         config.setProperty("machine.iButtonResponse",Integer.toString(webSlider.getValue()));
 
         dirty.setDirty(false);
+    }
+    
+    private void savePrinterConf(AppConfig config, String configK, String mchPrinter,
+            String sureParameter, String javaposParameter, String printerParameter){
+    
+        String sMachinePrinter = mchPrinter;
+        switch (sMachinePrinter) {
+            case "epson":
+            case "tmu220":
+            case "star":
+            case "ODP1000":
+            case "ithaca":
+            case "surepos":
+                config.setProperty(configK, sMachinePrinter + ":" + sureParameter);
+                break;
+            case "javapos":
+                config.setProperty(configK, sMachinePrinter + ":" + javaposParameter);
+                break;
+            case "printer":
+                config.setProperty(configK, sMachinePrinter + ":" + printerParameter);
+                break;
+            default:
+                config.setProperty(configK, sMachinePrinter);
+                break;
+        }
     }
 
     private String unifySerialInterface(String sparam) {
