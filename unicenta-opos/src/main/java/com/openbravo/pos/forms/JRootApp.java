@@ -34,6 +34,7 @@ import java.awt.CardLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -88,20 +89,13 @@ public class JRootApp extends JPanel implements AppView {
     private DeviceTicket m_TP;
     private TicketParser m_TTP;
 
-    private final Map<String, BeanFactory> m_aBeanFactories;
 
     private JPrincipalApp m_principalapp = null;
-
-    private static HashMap<String, String> m_oldclasses;
-
     private String m_clock;
     private String m_date;
 
     private final static int UNIQUE_KEY_FAMILY = 0x01;
 
-    static {
-        initOldClasses();
-    }
 
     private class PrintTimeAction implements ActionListener {
 
@@ -124,7 +118,7 @@ public class JRootApp extends JPanel implements AppView {
 
     public JRootApp(AppProperties props) {
         m_props = props;
-        m_aBeanFactories = new HashMap<>();
+    
 
         //TODO load Windows Title 
         //m_jLblTitle.setText(m_dlSystem.getResourceAsText("Window.Title"));
@@ -141,33 +135,69 @@ public class JRootApp extends JPanel implements AppView {
 
     public boolean initApp() {
 
-        statusBarPanel.setVisible(!(Boolean.valueOf(m_props.getProperty("till.hideinfo"))));
-
         applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 
         try {
             session = AppViewConnection.createSession(m_props);
 
         } catch (BasicException e) {
-            LOGGER.log(Level.WARNING, "Exception: ", e);
+            LOGGER.log(Level.WARNING, "Exception on DB createSession", e);
             JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_DANGER, e.getMessage(), e));
             return false;
         }
 
         m_dlSystem = (DataLogicSystem) getBean("com.openbravo.pos.forms.DataLogicSystem");
 
+        if (checkDBVersion()){
+            return false;
+        }
+
+        logStartup();
+
+        m_propsdb = m_dlSystem.getResourceAsProperties(m_props.getHost() + "/properties");
+
+        if (checkActiveCash()) {
+            return false;
+        }
+
+        setInventoryLocation();
+
+        initPeripheral();
+
+        initClockTimer();
+
+        setHomePanel();
+
+        showLogin();
+
+        return true;
+    }
+
+    private void initClockTimer() {
+        new javax.swing.Timer(1000, new PrintTimeAction()).start();
+    }
+
+    private void setInventoryLocation() {
+        m_sInventoryLocation = m_propsdb.getProperty("location");
+        if (m_sInventoryLocation == null) {
+            m_sInventoryLocation = "0";
+            m_propsdb.setProperty("location", m_sInventoryLocation);
+            m_dlSystem.setResourceAsProperties(m_props.getHost() + "/properties", m_propsdb);
+        }
+    }
+
+    private boolean checkDBVersion() throws HeadlessException {
         String sDBVersion = readDataBaseVersion();
         if (!AppLocal.APP_VERSION.equals(sDBVersion)) {
             String sScript = sDBVersion == null
                     ? m_dlSystem.getInitScript() + "-create.sql"
                     : m_dlSystem.getInitScript() + "-upgrade-" + sDBVersion + ".sql";
-
             if (JRootApp.class.getResource(sScript) == null) {
                 JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_DANGER, sDBVersion == null
                         ? AppLocal.getIntString("message.databasenotsupported", session.DB.getName() + " " + sDBVersion)
                         : AppLocal.getIntString("message.noupdatescript")));
                 session.close();
-                return false;
+                return true;
             } else {
                 if (JOptionPane.showConfirmDialog(this,
                         AppLocal.getIntString(sDBVersion == null
@@ -190,99 +220,29 @@ public class JRootApp extends JPanel implements AppView {
                                         l.toArray(new Throwable[l.size()])));
                             }
                         } catch (BasicException e) {
-
                             LOGGER.log(Level.WARNING, "Exception: ", e);
                             JMessageDialog.showMessage(this,
                                     new MessageInf(MessageInf.SGN_DANGER,
                                             AppLocal.getIntString("database.scripterror"), e));
                             session.close();
-                            return false;
+                            return true;
                         }
                     }
                 } else {
                     session.close();
-                    return false;
+                    return true;
                 }
             }
         }
+        return false;
+    }
 
-// create the filename
-        String sUserPath = AppConfig.getInstance().getAppDataDirectory();
+    private void setHomePanel() {
 
-        Instant machineTimestamp = Instant.now();
-        String sContent = sUserPath + ","
-                + machineTimestamp + ","
-                + AppLocal.APP_ID + ","
-                + AppLocal.APP_NAME + ","
-                + AppLocal.APP_VERSION + "\n";
-
-        try {
-            Files.write(new File(sUserPath, AppLocal.getLogFileName()).toPath(), sContent.getBytes(),
-                    StandardOpenOption.APPEND, StandardOpenOption.CREATE);
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            Files.write(new File(sUserPath, AppLocal.getLockFileName()).toPath(), sContent.getBytes(),
-                    StandardOpenOption.CREATE);
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        }
-
-        /**
-         * TODO Send Logging file to remote server, Ping remote server
-         */
-        m_propsdb = m_dlSystem.getResourceAsProperties(m_props.getHost() + "/properties");
-
-        try {
-            String sActiveCashIndex = m_propsdb.getProperty("activecash");
-            Object[] valcash = sActiveCashIndex == null
-                    ? null
-                    : m_dlSystem.findActiveCash(sActiveCashIndex);
-            if (valcash == null || !m_props.getHost().equals(valcash[0])) {
-                setActiveCash(UUID.randomUUID().toString(),
-                        m_dlSystem.getSequenceCash(m_props.getHost()) + 1, new Date(), null);
-                m_dlSystem.execInsertCash(
-                        new Object[]{getActiveCashIndex(), m_props.getHost(),
-                            getActiveCashSequence(),
-                            getActiveCashDateStart(),
-                            getActiveCashDateEnd()});
-            } else {
-                setActiveCash(sActiveCashIndex,
-                        (Integer) valcash[1],
-                        (Date) valcash[2],
-                        (Date) valcash[3]);
-            }
-        } catch (BasicException e) {
-            MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE,
-                    AppLocal.getIntString("message.cannotclosecash"), e);
-            msg.show(this);
-            session.close();
-            return false;
-        }
-
-        m_sInventoryLocation = m_propsdb.getProperty("location");
-        if (m_sInventoryLocation == null) {
-            m_sInventoryLocation = "0";
-            m_propsdb.setProperty("location", m_sInventoryLocation);
-            m_dlSystem.setResourceAsProperties(m_props.getHost() + "/properties",
-                    m_propsdb);
-        }
-
-        m_TP = new DeviceTicket(this, m_props);
-
-        m_TTP = new TicketParser(getDeviceTicket(), m_dlSystem);
-        printerStart();
-
-        m_Scale = new DeviceScale(this, m_props);
-
-        m_Scanner = DeviceScannerFactory.createInstance(m_props);
-
-        new javax.swing.Timer(10000, new PrintTimeAction()).start();
+        statusBarPanel.setVisible(!(Boolean.valueOf(m_props.getProperty("till.hideinfo"))));
 
         String sWareHouse;
-
+        
         try {
             sWareHouse = m_dlSystem.findLocationName(m_sInventoryLocation);
         } catch (BasicException e) {
@@ -337,10 +297,66 @@ public class JRootApp extends JPanel implements AppView {
                 copyRightLabel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
             }
         }
+    }
 
-        showLogin();
+    private void initPeripheral() {
+        m_TP = new DeviceTicket(this, m_props);
+        
+        m_TTP = new TicketParser(getDeviceTicket(), m_dlSystem);
+        printerStart();
+        
+        m_Scale = new DeviceScale(this, m_props);
+        
+        m_Scanner = DeviceScannerFactory.createInstance(m_props);
+    }
 
-        return true;
+    private boolean checkActiveCash() {
+        try {
+            String sActiveCashIndex = m_propsdb.getProperty("activecash");
+            Object[] valcash = sActiveCashIndex == null
+                    ? null
+                    : m_dlSystem.findActiveCash(sActiveCashIndex);
+            if (valcash == null || !m_props.getHost().equals(valcash[0])) {
+                setActiveCash(UUID.randomUUID().toString(),
+                        m_dlSystem.getSequenceCash(m_props.getHost()) + 1, new Date(), null);
+                m_dlSystem.execInsertCash(
+                        new Object[]{getActiveCashIndex(), m_props.getHost(),
+                            getActiveCashSequence(),
+                            getActiveCashDateStart(),
+                            getActiveCashDateEnd()});
+            } else {
+                setActiveCash(sActiveCashIndex,
+                        (Integer) valcash[1],
+                        (Date) valcash[2],
+                        (Date) valcash[3]);
+            }
+        } catch (BasicException e) {
+            MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE,
+                    AppLocal.getIntString("message.cannotclosecash"), e);
+            msg.show(this);
+            session.close();
+            return true;
+        }
+        return false;
+    }
+
+    private void logStartup() {
+        // create the filename
+        String sUserPath = AppConfig.getInstance().getAppDataDirectory();
+        
+        Instant machineTimestamp = Instant.now();
+        String sContent = sUserPath + ","
+                + machineTimestamp + ","
+                + AppLocal.APP_ID + ","
+                + AppLocal.APP_NAME + ","
+                + AppLocal.APP_VERSION + "\n";
+        
+        try {
+            Files.write(new File(sUserPath, AppLocal.getLogFileName()).toPath(), sContent.getBytes(),
+                    StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
     }
 
     private String readDataBaseVersion() {
@@ -462,71 +478,9 @@ public class JRootApp extends JPanel implements AppView {
 
     @Override
     public Object getBean(String beanfactory) throws BeanFactoryException {
-
-        beanfactory = mapNewClass(beanfactory);
-        BeanFactory bf = m_aBeanFactories.get(beanfactory);
-
-        if (bf == null) {
-
-            if (beanfactory.startsWith("/")) {
-                bf = new BeanFactoryScript(beanfactory);
-            } else {
-                try {
-                    Class bfclass = Class.forName(beanfactory);
-
-                    if (BeanFactory.class.isAssignableFrom(bfclass)) {
-                        bf = (BeanFactory) bfclass.getDeclaredConstructor().newInstance();
-                    } else {
-                        Constructor constMyView = bfclass.getConstructor(new Class[]{AppView.class});
-                        Object bean = constMyView.newInstance(new Object[]{this});
-                        bf = new BeanFactoryObj(bean);
-                    }
-
-                } catch (ClassNotFoundException | InstantiationException
-                        | IllegalAccessException | NoSuchMethodException
-                        | SecurityException | IllegalArgumentException | InvocationTargetException e) {
-                    LOGGER.log(Level.WARNING, "Cannot found Bean: " + beanfactory, e);
-                    throw new BeanFactoryException(e);
-                }
-            }
-
-            m_aBeanFactories.put(beanfactory, bf);
-
-            if (bf instanceof BeanFactoryApp) {
-                ((BeanFactoryApp) bf).init(this);
-            }
-        }
-        return bf.getBean();
+        return BeanContainer.geBean(beanfactory, this);
     }
 
-    private static String mapNewClass(String classname) {
-        String newclass = m_oldclasses.get(classname);
-        return newclass == null
-                ? classname
-                : newclass;
-    }
-
-    private static void initOldClasses() {
-        m_oldclasses = new HashMap<>();
-
-        m_oldclasses.put("com.openbravo.pos.reports.JReportCustomers", "/com/openbravo/reports/customers.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportCustomersB", "/com/openbravo/reports/customersb.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportClosedPos", "/com/openbravo/reports/closedpos.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportClosedProducts", "/com/openbravo/reports/closedproducts.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JChartSales", "/com/openbravo/reports/chartsales.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportInventory", "/com/openbravo/reports/inventory.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportInventory2", "/com/openbravo/reports/inventoryb.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportInventoryBroken", "/com/openbravo/reports/inventorybroken.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportInventoryDiff", "/com/openbravo/reports/inventorydiff.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportPeople", "/com/openbravo/reports/people.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportTaxes", "/com/openbravo/reports/taxes.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportUserSales", "/com/openbravo/reports/usersales.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportProducts", "/com/openbravo/reports/products.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportCatalog", "/com/openbravo/reports/productscatalog.bs");
-
-        m_oldclasses.put("com.openbravo.pos.panels.JPanelTax", "com.openbravo.pos.inventory.TaxPanel");
-
-    }
 
     @Override
     public void waitCursorBegin() {
@@ -989,4 +943,78 @@ public class JRootApp extends JPanel implements AppView {
     private javax.swing.JPanel statusBarPanel;
     private com.alee.extended.statusbar.WebMemoryBar webMemoryBar1;
     // End of variables declaration//GEN-END:variables
+}
+
+class BeanContainer {
+
+    private static final Logger LOGGER = Logger.getLogger(BeanContainer.class.getName());
+    private static final Map<String, BeanFactory> m_aBeanFactories =  new HashMap<>();
+    private static final HashMap<String, String> m_oldclasses = new HashMap<>();;
+    
+    private static String mapNewClass(String classname) {
+        String newclass = m_oldclasses.get(classname);
+        return newclass == null
+                ? classname
+                : newclass;
+    }
+
+    static{
+
+        m_oldclasses.put("com.openbravo.pos.reports.JReportCustomers", "/com/openbravo/reports/customers.bs");
+        m_oldclasses.put("com.openbravo.pos.reports.JReportCustomersB", "/com/openbravo/reports/customersb.bs");
+        m_oldclasses.put("com.openbravo.pos.reports.JReportClosedPos", "/com/openbravo/reports/closedpos.bs");
+        m_oldclasses.put("com.openbravo.pos.reports.JReportClosedProducts", "/com/openbravo/reports/closedproducts.bs");
+        m_oldclasses.put("com.openbravo.pos.reports.JChartSales", "/com/openbravo/reports/chartsales.bs");
+        m_oldclasses.put("com.openbravo.pos.reports.JReportInventory", "/com/openbravo/reports/inventory.bs");
+        m_oldclasses.put("com.openbravo.pos.reports.JReportInventory2", "/com/openbravo/reports/inventoryb.bs");
+        m_oldclasses.put("com.openbravo.pos.reports.JReportInventoryBroken", "/com/openbravo/reports/inventorybroken.bs");
+        m_oldclasses.put("com.openbravo.pos.reports.JReportInventoryDiff", "/com/openbravo/reports/inventorydiff.bs");
+        m_oldclasses.put("com.openbravo.pos.reports.JReportPeople", "/com/openbravo/reports/people.bs");
+        m_oldclasses.put("com.openbravo.pos.reports.JReportTaxes", "/com/openbravo/reports/taxes.bs");
+        m_oldclasses.put("com.openbravo.pos.reports.JReportUserSales", "/com/openbravo/reports/usersales.bs");
+        m_oldclasses.put("com.openbravo.pos.reports.JReportProducts", "/com/openbravo/reports/products.bs");
+        m_oldclasses.put("com.openbravo.pos.reports.JReportCatalog", "/com/openbravo/reports/productscatalog.bs");
+
+        m_oldclasses.put("com.openbravo.pos.panels.JPanelTax", "com.openbravo.pos.inventory.TaxPanel");
+
+    }
+    
+    public static Object geBean(String beanfactory, AppView appView){
+        
+        beanfactory = mapNewClass(beanfactory);
+        BeanFactory bf = m_aBeanFactories.get(beanfactory);
+
+        if (bf == null) {
+
+            if (beanfactory.startsWith("/")) {
+                bf = new BeanFactoryScript(beanfactory);
+            } else {
+                try {
+                    Class bfclass = Class.forName(beanfactory);
+
+                    if (BeanFactory.class.isAssignableFrom(bfclass)) {
+                        bf = (BeanFactory) bfclass.getDeclaredConstructor().newInstance();
+                    } else {
+                        Constructor constMyView = bfclass.getConstructor(new Class[]{AppView.class});
+                        Object bean = constMyView.newInstance(new Object[]{appView});
+                        bf = new BeanFactoryObj(bean);
+                    }
+
+                } catch (ClassNotFoundException | InstantiationException
+                        | IllegalAccessException | NoSuchMethodException
+                        | SecurityException | IllegalArgumentException | InvocationTargetException e) {
+                    LOGGER.log(Level.WARNING, "Cannot found Bean: " + beanfactory, e);
+                    throw new BeanFactoryException(e);
+                }
+            }
+
+            m_aBeanFactories.put(beanfactory, bf);
+
+            if (bf instanceof BeanFactoryApp) {
+                ((BeanFactoryApp) bf).init(appView);
+            }
+        }
+        return bf.getBean();
+    
+    }
 }

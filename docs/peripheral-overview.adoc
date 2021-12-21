@@ -1,0 +1,74 @@
+= Peripheral
+
+== About
+
+=== Common 
+
+
+* Serial/COM Por 
+** rfc2217 https://datatracker.ietf.org/doc/html/rfc2217
+
+=== Scale 
+
+.Config
+----
+machine.scale=caspdii:
+----
+
+Scale
+|====
+|AcomPC100
+
+|averyberkel6720
+
+|casiopd1
+
+|dialog1
+
+|samsungesp
+
+|caspdii
+
+|screen
+
+|MTIND221
+|====
+
+
+
+
+----
+speed: 9600
+Paridad:None
+stop bit: 1
+data bit: 8.
+----
+
+.Neptuno_56PPI
+----
+samsungesp $ (Hex 0x24) 4800,8,1,odd kilos
+----
+
+=== Scanner
+
+----
+machine.scanner=scanpal2
+----
+
+
+=== 
+
+----
+machine.printername
+----
+
+=== Displa 
+
+
+* file 
+* serial
+* javapos
+
+----
+machine.display=javapos:
+----

@@ -27,6 +27,7 @@ import java.util.logging.Logger;
  * @author Nicholas Fritz - changes by JG
  */
 public class ScaleMTIND221 implements Scale, SerialPortEventListener {
+    private final static Logger LOGGER = Logger.getLogger(ScaleMTIND221.class.getName());
     
     private CommPortIdentifier m_PortIdPrinter;
     private SerialPort m_CommPortPrinter;  
@@ -68,7 +69,7 @@ public class ScaleMTIND221 implements Scale, SerialPortEventListener {
                 try {
                     wait(1000);
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(ScaleMTIND221.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(Level.SEVERE, "Exception while wait: ", ex);
                 }
                 if (m_iStatusScale != SCALE_READY) {
                     // bascula tonta.
@@ -81,14 +82,14 @@ public class ScaleMTIND221 implements Scale, SerialPortEventListener {
             try {
                 write(new byte[] {0x50}); // P
             } catch (TooManyListenersException ex) {
-                Logger.getLogger(ScaleMTIND221.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, "Exception", ex);
             }
             flush();             
             
             try {
                 wait(1000);
             } catch (InterruptedException ex) {
-                Logger.getLogger(ScaleMTIND221.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, "Exception while wait: ", ex);
             }
             
             if (m_iStatusScale == SCALE_READY) {
@@ -129,6 +130,7 @@ public class ScaleMTIND221 implements Scale, SerialPortEventListener {
             }
             m_out.write(data);
         } catch (NoSuchPortException | PortInUseException | UnsupportedCommOperationException | IOException e) {
+            LOGGER.log(Level.SEVERE, "Exception while write: ", e);
         }        
     }
     
@@ -186,7 +188,9 @@ public class ScaleMTIND221 implements Scale, SerialPortEventListener {
                         }
                     }
 
-                } catch (IOException eIO) {}
+                } catch (IOException eIO) {
+                    LOGGER.log(Level.SEVERE, "Exception on DATA_AVAILABLE: ", e);
+                }
                 break;
         }
     }       

@@ -22,7 +22,7 @@ import com.openbravo.basic.BasicException;
  *
  * @author JG uniCenta
  */
-public class SerializerWriteBasic implements SerializerWrite<Object[]> {
+public class SerializerWriteBasic implements SerializerWrite<Object> {
     
     private final Datas<Object>[] m_classes;
 
@@ -31,10 +31,15 @@ public class SerializerWriteBasic implements SerializerWrite<Object[]> {
     }
 
     @Override
-    public void writeValues(DataWrite dp, Object[] obj) throws BasicException {
+    public void writeValues(DataWrite dp, Object obj) throws BasicException {
 
-        for (int i = 0; i < m_classes.length; i++) {
-            m_classes[i].setValue(dp, i + 1, obj[i]);
+        if (obj instanceof Object[]){
+            Object[] objectos = (Object[]) obj;
+            for (int i = 0; i < m_classes.length; i++) {
+                m_classes[i].setValue(dp, i + 1, objectos[i]);
+            }
+        }else {
+            m_classes[0].setValue(dp, 1, obj);
         }
     }
     

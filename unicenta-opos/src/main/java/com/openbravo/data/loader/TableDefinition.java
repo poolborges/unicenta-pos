@@ -149,7 +149,7 @@ public class TableDefinition<T> {
         return new PreparedSentence(m_s, getListSQL(), null,  sr);
     }
 
-    public String getListSQL() {
+    private String getListSQL() {
         
         StringBuilder sent = new StringBuilder();
         sent.append("select ");

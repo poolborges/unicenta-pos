@@ -56,6 +56,9 @@ public class DeviceScale {
             case "caspdii":
                 m_scale = new ScaleCASPDII(sScaleParam1);
                 break;
+            case "mtind221":
+                m_scale = new ScaleMTIND221(sScaleParam1);
+                break;
             case "fake":
                 // a fake scale for debugging purposes
                 m_scale = new ScaleFake();

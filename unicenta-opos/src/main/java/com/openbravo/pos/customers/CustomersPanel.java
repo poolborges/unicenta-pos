@@ -33,19 +33,21 @@ import javax.swing.ListCellRenderer;
  * @author adrianromero
  */
 public class CustomersPanel extends JPanelTable {
+
+    private static final long serialVersionUID = 1L;
     
-    private final DataLogicCustomers dlCustomers;
-    private final CustomersView jeditor;
+    private DataLogicCustomers dlCustomers;
+    private CustomersView jeditor;
     
     /** Creates a new instance of CustomersPanel */
-    public CustomersPanel() {    
-//        CustomerInfoGlobal.getInstance().setEditableData(bd);
+    public CustomersPanel() {}
+
+    @Override
+    protected void init() {
+        //CustomerInfoGlobal.getInstance().setEditableData(bd);
         this.jeditor = new CustomersView(app, dirty);
         this.dlCustomers  = (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
     }
-
-    @Override
-    protected void init() {}
 
     @Override
     public void activate() throws BasicException { 

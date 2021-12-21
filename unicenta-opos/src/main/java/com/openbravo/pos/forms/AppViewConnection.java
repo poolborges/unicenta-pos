@@ -21,6 +21,8 @@ import com.openbravo.pos.util.AltEncrypter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -30,6 +32,7 @@ import javax.swing.JOptionPane;
  */
 public class AppViewConnection {
 
+    private static final Logger LOGGER = Logger.getLogger(AppViewConnection.class.getName());
     private static final int MAX_BD = 10;
 
     private AppViewConnection() {
@@ -43,40 +46,35 @@ public class AppViewConnection {
             String sDBPassword = "";
             DBProperties dbProperties = null;
 
-            /* Check Locking
-            File filePath = new File(AppConfig.getInstance().getAppDataDirectory(), AppLocal.getLockFileName());
-            if (!filePath.exists()) {
-            }
-             */
+            String dbID = "db";
             if ("true".equals(props.getProperty("db.multi"))) {
                 
                 List<String> dbNames = findAllDB(props);
 
-                String chosedDbName = choseDB(props, dbNames.toArray(), "db.name");
-
-                String[] dbNameParts = chosedDbName.split(".");
-                String dbID = "";
-                //get Default
-                if (dbNameParts != null && dbNameParts.length == 2) {
-                    String[] dbIdSlit = dbNameParts[0].split("db");
-                    if (dbIdSlit != null && dbIdSlit.length == 2) {
-                        dbID = dbIdSlit[1];
+                //expec db.name=DBMain or db1.name=DBSecond
+                String chosedDbName = choseDB(props, dbNames.toArray());
+                LOGGER.log(Level.INFO, "Database Selected: "+chosedDbName);
+                if(chosedDbName !=  null){
+                    String[] dbNameParts = chosedDbName.split("[.]", 0);
+                    //get prefix
+                    if (dbNameParts != null && dbNameParts.length >= 2) {
+                        dbID = dbNameParts[0];
                     }
                 }
-                dbProperties = getDBProperties(props, dbID);
-
-            } else {
-                dbProperties = getDBProperties(props, "");
             }
+            dbProperties = getDBProperties(props, dbID);
 
             sDBUser = dbProperties.sDBUser;
             sDBPassword = dbProperties.sDBPassword;
             dbURL = dbProperties.dbURL;
+            
+            LOGGER.log(Level.INFO, "Creae session for DB: "+dbURL);
 
             return new Session(dbURL, sDBUser, sDBPassword);
 
-        } catch (SQLException eSQL) {
-            throw new BasicException(AppLocal.getIntString("message.databaseconnectionerror"), eSQL);
+        } catch (SQLException ex) {
+            LOGGER.log(Level.WARNING, "Exception on session ", ex);
+            throw new BasicException(AppLocal.getIntString("message.databaseconnectionerror"), ex);
         }
     }
 
@@ -84,32 +82,33 @@ public class AppViewConnection {
 
         List<String> dbNames = new ArrayList<>();
 
-        dbNames.add("db.name"); // Add defaul Data base
+        var defaulName = props.getProperty("db.name");
+        dbNames.add("db.name="+defaulName); // Add defaul Data base
 
-        for (int count = 1; count < 10; count++) {
+        for (int count = 1; count < MAX_BD; count++) {
 
             String curDbKey = "db" + count + ".name";
             String curName = props.getProperty(curDbKey);
 
             if (curName != null) {
-                dbNames.add(curDbKey);
+                dbNames.add(curDbKey+"="+curName);
             }
         }
 
         return dbNames;
     }
 
-    private static String choseDB(AppProperties props, Object[] dbs, String defaultDb) {
+    private static String choseDB(AppProperties props, Object[] dbs) {
 
         ImageIcon icon = new ImageIcon("/com/openbravo/images/app_logo_48x48");
         Object chosedDbName = JOptionPane.showInputDialog(
                 null,
                 AppLocal.getIntString("message.databasechoose"),
-                "Selection",
+                "Database Selection",
                 JOptionPane.OK_OPTION,
                 icon,
                 dbs,
-                defaultDb);
+                dbs[0]);
 
         return (String) chosedDbName;
     }
@@ -118,16 +117,16 @@ public class AppViewConnection {
 
         final DBProperties dbProps = new DBProperties();
 
-        dbProps.sDBUser = props.getProperty("db" + dbID + ".user");
-        dbProps.sDBPassword = props.getProperty("db" + dbID + ".password");
+        dbProps.sDBUser = props.getProperty(dbID + ".user");
+        dbProps.sDBPassword = props.getProperty(dbID + ".password");
         if (dbProps.sDBUser != null && dbProps.sDBPassword != null && dbProps.sDBPassword.startsWith("crypt:")) {
             AltEncrypter cypher = new AltEncrypter("cypherkey" + dbProps.sDBUser);
             dbProps.sDBPassword = cypher.decrypt(dbProps.sDBPassword.substring(6));
         }
 
-        dbProps.dbURL = props.getProperty("db" + dbID + ".URL")
-                + props.getProperty("db" + dbID + ".schema")
-                + props.getProperty("db" + dbID + ".options");
+        dbProps.dbURL = props.getProperty(dbID + ".URL")
+                + props.getProperty(dbID + ".schema")
+                + props.getProperty(dbID + ".options");
 
         return dbProps;
     }

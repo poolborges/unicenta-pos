@@ -60,11 +60,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <failIfNoTests>false</failIfNoTests>
         
         <!-- Kotlin -->
-        <kotlin.version>1.4.30</kotlin.version>
+        <kotlin.version>1.4.32</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         
         <!-- dependencies/library version --> 
-        <liquibase.version>4.3.2</liquibase.version>
+        <liquibase.version>4.3.3</liquibase.version>
         
         <javax.activation.version>1.2.0</javax.activation.version>
         <jaxb.api.version>2.3.4</jaxb.api.version>
@@ -832,4 +832,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </profile>
     </profiles>
 
+    <repositories>
+        <!-- Because Jasper use own "itext" of com.lowagie:itext:2.1.7.js9 -->
+        <repository>
+            <id>jaspersoft-third-party</id>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/</url>
+        </repository>
+    </repositories>
 </project>

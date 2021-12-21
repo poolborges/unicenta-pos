@@ -130,6 +130,7 @@ public final class PrinterWritterRaw extends PrinterWritter {
                 Doc doc = new SimpleDoc(m_printData, m_docFlavor, docattributes);
                 pj.print(doc, jobattributes);
             } catch (PrintException ex) {
+                LOGGER.log(Level.WARNING, "Exception on print: ", ex);
             } finally {
                 m_printData = null;
             }
@@ -157,6 +158,7 @@ public final class PrinterWritterRaw extends PrinterWritter {
                 try {
                     wait();
                 } catch (InterruptedException e) {
+                    LOGGER.log(Level.WARNING, "Exception on wait: ", e);
                 }
             }
             notifyAll();

@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import jpos.CashDrawer;
 import jpos.JposException;
@@ -35,6 +37,8 @@ import jpos.POSPrinterConst;
  * @author JG uniCenta
  */
 public class DevicePrinterJavaPOS  implements DevicePrinter {
+    
+    private static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.printer.javapos");
     
     private static final String JPOS_SIZE0 = "\u001b|1C";
     private static final String JPOS_SIZE1 = "\u001b|2C";
@@ -70,6 +74,7 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
             m_printer.setDeviceEnabled(true);
             m_printer.setMapMode(POSPrinterConst.PTR_MM_METRIC);  // unit = 1/100 mm - i.e. 1 cm = 10 mm = 10 * 100 units
         } catch (JposException e) {
+            LOGGER.log(Level.SEVERE, "Excepion on init POSPrinter: ",e);
             // cannot live without the printer.
             throw new TicketPrinterException(e.getMessage(), e);
         } 
@@ -80,6 +85,7 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
             m_drawer.claim(10000);
             m_drawer.setDeviceEnabled(true);
         } catch (JposException e) {
+            LOGGER.log(Level.WARNING, "Excepion on init CashDrawer: ",e);
             // can live without the drawer;
             m_drawer = null;
         }
@@ -127,6 +133,7 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
         try {
             m_printer.transactionPrint(POSPrinterConst.PTR_S_RECEIPT, POSPrinterConst.PTR_TP_TRANSACTION);
         } catch (JposException e) {
+            LOGGER.log(Level.WARNING, "Excepion on beginReceipt: ",e);
         }
     }
     
@@ -146,8 +153,8 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
                 
                 m_printer.printBitmap(POSPrinterConst.PTR_S_RECEIPT, f.getAbsolutePath(), POSPrinterConst.PTR_BM_ASIS, POSPrinterConst.PTR_BM_CENTER);
             }
-// JG 16 May 12 use multicatch
-        } catch (IOException | JposException eIO) {
+        } catch (IOException | JposException e) {
+            LOGGER.log(Level.WARNING, "Excepion on printImage: ",e);
         }
     }
     
@@ -175,6 +182,7 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
                 }
             }
         } catch (JposException e) {
+            LOGGER.log(Level.WARNING, "Excepion on printBarCode: ",e);
         }
     }
     
@@ -225,6 +233,7 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
         try {
             m_printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, m_sline.toString());
         } catch (JposException e) {
+            LOGGER.log(Level.WARNING, "Excepion on print endLine: ",e);
         }
         m_sline = null;
     }
@@ -241,6 +250,7 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
             // end of the transaction
             m_printer.transactionPrint(POSPrinterConst.PTR_S_RECEIPT, POSPrinterConst.PTR_TP_NORMAL);
         } catch (JposException e) {
+            LOGGER.log(Level.WARNING, "Excepion on print endReceipt: ",e);
         }
     }
 
@@ -255,6 +265,7 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
             try {
                 m_drawer.openDrawer();
             } catch (JposException e) {
+                LOGGER.log(Level.WARNING, "Excepion on openDrawer: ",e);
             }
         }
     }
