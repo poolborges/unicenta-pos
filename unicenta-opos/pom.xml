@@ -148,7 +148,7 @@
         <dependency> 
             <groupId>org.javapos</groupId>  
             <artifactId>javapos</artifactId>  
-            <version>1.14.2</version>
+            <version>1.14.3</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
