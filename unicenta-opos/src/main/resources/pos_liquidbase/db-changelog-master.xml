@@ -10,7 +10,7 @@
                     http://www.liquibase.org/xml/ns/dbchangelog 
                     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
      
-    <include file="pos_liquidbase/db-changelog-20201028.xml"/>
-    <include file="pos_liquidbase/db-changelog-1.4.0.xml"/>
+    <include file="pos_liquidbase/db-changelog-v4_5.xml"/>
+    <!-- <include file="pos_liquidbase/db-changelog-v4_5-.xml"/> -->
     
 </databaseChangeLog>

@@ -100,7 +100,7 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueBoolean="true" name="visible" type="BIT(1)">
+            <column defaultValueBoolean="true" name="visible" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column name="notes" type="VARCHAR(255)"/>
@@ -115,9 +115,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="parentid" type="VARCHAR(255)"/>
-            <column name="image" type="MEDIUMBLOB"/>
+            <column name="image" type="BLOB"/>
             <column name="texttip" type="VARCHAR(255)"/>
-            <column defaultValueNumeric="1" name="catshowname" type="SMALLINT">
+            <column defaultValueNumeric="true" name="catshowname" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column name="catorder" type="VARCHAR(255)"/>
@@ -192,13 +192,13 @@
             <column name="phone2" type="VARCHAR(255)"/>
             <column name="fax" type="VARCHAR(255)"/>
             <column name="notes" type="VARCHAR(255)"/>
-            <column defaultValueBoolean="true" name="visible" type="BIT(1)">
+            <column defaultValueBoolean="true" name="visible" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column name="curdate" type="datetime"/>
             <column defaultValueNumeric="0.0" name="curdebt" type="DOUBLE"/>
-            <column name="image" type="MEDIUMBLOB"/>
-            <column defaultValueBoolean="false" name="isvip" type="BIT(1)">
+            <column name="image" type="BLOB"/>
+            <column defaultValueBoolean="false" name="isvip" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0.0" name="discount" type="DOUBLE"/>
@@ -222,7 +222,7 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="image" type="MEDIUMBLOB"/>
+            <column name="image" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-15">
@@ -275,14 +275,14 @@
             <column name="vesselname" type="VARCHAR(255)"/>
             <column name="size" type="INT"/>
             <column name="days" type="INT"/>
-            <column defaultValueBoolean="false" name="power" type="BIT(1)">
+            <column defaultValueBoolean="false" name="power" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-19">
         <createTable tableName="orders">
-            <column autoIncrement="true" name="id" type="MEDIUMINT">
+            <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="orderid" type="VARCHAR(50)"/>
@@ -315,8 +315,8 @@
             </column>
             <column defaultValueNumeric="0.0" name="tip" type="DOUBLE"/>
             <column name="transid" type="VARCHAR(255)"/>
-            <column defaultValueBoolean="false" name="isprocessed" type="BIT(1)"/>
-            <column name="returnmsg" type="MEDIUMBLOB"/>
+            <column defaultValueBoolean="false" name="isprocessed" type="BOOLEAN"/>
+            <column name="returnmsg" type="BLOB"/>
             <column name="notes" type="VARCHAR(255)"/>
             <column name="tendered" type="DOUBLE"/>
             <column name="cardname" type="VARCHAR(255)"/>
@@ -336,10 +336,10 @@
             <column name="role" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="visible" type="BIT(1)">
+            <column name="visible" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
-            <column name="image" type="MEDIUMBLOB"/>
+            <column name="image" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-22">
@@ -372,7 +372,7 @@
             <column name="customer" type="VARCHAR(255)"/>
             <column name="waiter" type="VARCHAR(255)"/>
             <column name="ticketid" type="VARCHAR(255)"/>
-            <column defaultValueNumeric="0" name="tablemoved" type="SMALLINT">
+            <column defaultValueNumeric="false" name="tablemoved" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -411,35 +411,35 @@
             <column defaultValueNumeric="0.0" name="stockvolume" type="DOUBLE">
                 <constraints nullable="false"/>
             </column>
-            <column name="image" type="MEDIUMBLOB"/>
-            <column defaultValueBoolean="false" name="iscom" type="BIT(1)">
+            <column name="image" type="BLOB"/>
+            <column defaultValueBoolean="false" name="iscom" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueBoolean="false" name="isscale" type="BIT(1)">
+            <column defaultValueBoolean="false" name="isscale" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueBoolean="false" name="isconstant" type="BIT(1)">
+            <column defaultValueBoolean="false" name="isconstant" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueBoolean="false" name="printkb" type="BIT(1)">
+            <column defaultValueBoolean="false" name="printkb" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueBoolean="false" name="sendstatus" type="BIT(1)">
+            <column defaultValueBoolean="false" name="sendstatus" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueBoolean="false" name="isservice" type="BIT(1)">
+            <column defaultValueBoolean="false" name="isservice" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
-            <column name="attributes" type="MEDIUMBLOB"/>
+            <column name="attributes" type="BLOB"/>
             <column name="display" type="VARCHAR(255)"/>
-            <column defaultValueNumeric="0" name="isvprice" type="SMALLINT">
+            <column defaultValueNumeric="false" name="isvprice" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="isverpatrib" type="SMALLINT">
+            <column defaultValueNumeric="false" name="isverpatrib" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column name="texttip" type="VARCHAR(255)"/>
-            <column defaultValueNumeric="0" name="warranty" type="SMALLINT">
+            <column defaultValueNumeric="false" name="warranty" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0.0" name="stockunits" type="DOUBLE">
@@ -499,7 +499,7 @@
             <column name="datenew" type="datetime">
                 <constraints nullable="false"/>
             </column>
-            <column name="attributes" type="MEDIUMBLOB"/>
+            <column name="attributes" type="BLOB"/>
             <column name="person" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
@@ -530,7 +530,7 @@
             <column name="chairs" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="isdone" type="BIT(1)">
+            <column name="isdone" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="VARCHAR(255)"/>
@@ -547,7 +547,7 @@
             <column name="restype" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="content" type="MEDIUMBLOB"/>
+            <column name="content" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-32">
@@ -558,7 +558,7 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="permissions" type="MEDIUMBLOB"/>
+            <column name="permissions" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-33">
@@ -569,9 +569,9 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="content" type="MEDIUMBLOB"/>
+            <column name="content" type="BLOB"/>
             <column name="appuser" type="VARCHAR(255)"/>
-            <column defaultValueNumeric="0" name="pickupid" type="SMALLINT">
+            <column defaultValueNumeric="0" name="pickupid" type="INT">
                 <constraints nullable="false"/>
             </column>
             <column name="locked" type="VARCHAR(20)"/>
@@ -696,7 +696,7 @@
             <column name="phone2" type="VARCHAR(255)"/>
             <column name="fax" type="VARCHAR(255)"/>
             <column name="notes" type="VARCHAR(255)"/>
-            <column defaultValueBoolean="true" name="visible" type="BIT(1)">
+            <column defaultValueBoolean="true" name="visible" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column name="curdate" type="datetime"/>
@@ -740,7 +740,7 @@
             <column defaultValueNumeric="0.0" name="rate" type="DOUBLE">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueBoolean="false" name="ratecascade" type="BIT(1)">
+            <column defaultValueBoolean="false" name="ratecascade" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column name="rateorder" type="INT"/>
@@ -817,7 +817,7 @@
             <column name="taxid" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="attributes" type="MEDIUMBLOB"/>
+            <column name="attributes" type="BLOB"/>
         </createTable>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-47">

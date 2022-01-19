@@ -19,6 +19,8 @@ package com.openbravo.data.loader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  *
@@ -27,6 +29,7 @@ import java.sql.SQLException;
  *
  */
 public final class Session {
+    private final static Logger LOGGER = Logger.getLogger(Session.class.getName());
     
     private final String m_surl;
     private final String m_sappuser;
@@ -187,7 +190,9 @@ public final class Session {
 
     private SessionDB getDiff() throws SQLException {
 
+        String dbDriver = getConnection().getMetaData().getDriverName();
         String sdbmanager = getConnection().getMetaData().getDatabaseProductName();
+        LOGGER.log(Level.INFO, "DB Session for DatabaseProductName: "+sdbmanager + "; Driver: "+dbDriver);
         switch (sdbmanager) {
             case "HSQL Database Engine":
                 return new SessionDBHSQLDB();

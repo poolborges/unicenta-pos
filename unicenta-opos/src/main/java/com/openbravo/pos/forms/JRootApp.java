@@ -148,8 +148,9 @@ public class JRootApp extends JPanel implements AppView {
 
         m_dlSystem = (DataLogicSystem) getBean("com.openbravo.pos.forms.DataLogicSystem");
 
-        if (checkDBVersion()){
-            return false;
+        if (com.openbravo.pos.data.DBMigrator.execDBMigration(session)){
+            //return false;
+            LOGGER.log(Level.INFO, "DB Migration: ");
         }
 
         logStartup();
