@@ -1,0 +1,611 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" 
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro" 
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext 
+                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd 
+                    http://www.liquibase.org/xml/ns/pro 
+                    http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.7.xsd 
+                    http://www.liquibase.org/xml/ns/dbchangelog 
+                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.7.xsd">
+    
+    <changeSet author="pauloborges (manual)" id="20210131-1300">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) FROM people
+            </sqlCheck>
+        </preConditions>
+        
+        <insert tableName="roles">
+            <column name="id" value="1"/>
+            <column name="name" value="ADMIN"/>
+            <column name="permissions" valueBlobFile="../com/openbravo/pos/templates/Role.Administrator.xml" />
+        </insert>
+        
+        <insert tableName="roles">
+            <column name="id" value="2"/>
+            <column name="name" value="MANAGER"/>
+            <column name="permissions" valueBlobFile="../com/openbravo/pos/templates/Role.Manager.xml" />
+        </insert>
+        
+        <insert tableName="roles">
+            <column name="id" value="3"/>
+            <column name="name" value="Employee"/>
+            <column name="permissions" valueBlobFile="../com/openbravo/pos/templates/Role.Employee.xml" />
+        </insert>
+        
+        <insert tableName="people">
+            <column name="id" value="1"/>
+            <column name="name" value="admin"/>
+            <column name="apppassword" value="admin"/>
+            <column name="card" value=""/>
+            <column name="role" value="1"/>
+            <column name="visible" valueBoolean="TRUE"/>
+            <column name="image" valueBlobFile="../com/openbravo/images/no_photo.png"/>
+        </insert>
+        
+        <insert tableName="people">
+            <column name="id" value="2"/>
+            <column name="name" value="manager"/>
+            <column name="apppassword" value="manaer"/>
+            <column name="card" value=""/>
+            <column name="role" value="2"/>
+            <column name="visible" valueBoolean="TRUE"/>
+            <column name="image" valueBlobFile="../com/openbravo/images/no_photo.png"/>
+        </insert>
+        
+        <insert tableName="people">
+            <column name="id" value="3"/>
+            <column name="name" value="empl"/>
+            <column name="apppassword" value="empl"/>
+            <column name="card" value=""/>
+            <column name="role" value="3"/>
+            <column name="visible" valueBoolean="TRUE"/>
+            <column name="image" valueBlobFile="../com/openbravo/images/no_photo.png"/>
+        </insert>
+    </changeSet>
+    
+    <changeSet author="pauloborges (manual)" id="20210131-1600">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) FROM resources
+            </sqlCheck>
+        </preConditions>
+        
+        <insert tableName="resources">
+            <column name="id" value="0"/>
+            <column name="name" value="Menu.Root"/>
+            <column name="restype" value="0"/>
+            <column name="content" valueBlobFile="..//com/openbravo/pos/templates/Menu.Root.txt" />
+        </insert>
+        
+        <insert tableName="resources">
+            <column name="id" value="1"/>
+            <column name="name" value=".01"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/.01.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="2"/>
+            <column name="name" value=".02"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/.02.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="3"/>
+            <column name="name" value=".05"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/.05.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="4"/>
+            <column name="name" value=".10"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/.10.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="5"/>
+            <column name="name" value=".20"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/.20.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="6"/>
+            <column name="name" value=".50"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/.50.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="7"/>
+            <column name="name" value="1"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/1.00.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="8"/>
+            <column name="name" value="2"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/2.00.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="9"/>
+            <column name="name" value="5"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/5.00.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="10"/>
+            <column name="name" value="10"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/10.00.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="11"/>
+            <column name="name" value="20"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/20.00.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="12"/>
+            <column name="name" value="50"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/50.00.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="13"/>
+            <column name="name" value="100"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/100.00.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="14"/>
+            <column name="name" value="200"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/200.00.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="15"/>
+            <column name="name" value="500"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/500.00.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="16"/>
+            <column name="name" value="1000"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/1000.00.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="17"/>
+            <column name="name" value="cash"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/cash.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="18"/>
+            <column name="name" value="cashdrawer"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/cashdrawer.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="19"/>
+            <column name="name" value="discount"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/discount.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="20"/>
+            <column name="name" value="discount_b"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/discount_b.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="21"/>
+            <column name="name" value="empty"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/empty.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="22"/>
+            <column name="name" value="heart"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/heart.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="23"/>
+            <column name="name" value="keyboard_48"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/keyboard_48.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="24"/>
+            <column name="name" value="kit_print"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/kit_print.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="25"/>
+            <column name="name" value="no_photo"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/no_photo.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="26"/>
+            <column name="name" value="refundit"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/refundit.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="27"/>
+            <column name="name" value="run_script"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/run_script.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="28"/>
+            <column name="name" value="ticket_print"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/ticket_print.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="29"/>
+            <column name="name" value="img.posapps"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/img.posapps.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="30"/>
+            <column name="name" value="Printer.CloseCash.Preview"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.CloseCash.Preview.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="31"/>
+            <column name="name" value="Printer.CloseCash"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.CloseCash.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="32"/>
+            <column name="name" value="Printer.CustomerPaid"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.CustomerPaid.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="33"/>
+            <column name="name" value="Printer.CustomerPaid2"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.CustomerPaid2.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="34"/>
+            <column name="name" value="Printer.FiscalTicket"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.FiscalTicket.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="35"/>
+            <column name="name" value="Printer.Inventory"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.Inventory.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="36"/>
+            <column name="name" value="Printer.OpenDrawer"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.OpenDrawer.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="37"/>
+            <column name="name" value="Printer.PartialCash"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.PartialCash.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="38"/>
+            <column name="name" value="Printer.PrintLastTicket"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.PrintLastTicket.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="39"/>
+            <column name="name" value="Printer.Product"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.Product.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="40"/>
+            <column name="name" value="Printer.ReprintTicket"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.ReprintTicket.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="41"/>
+            <column name="name" value="Printer.Start"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.Start.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="42"/>
+            <column name="name" value="Printer.Ticket.P1"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.Ticket.P1.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="43"/>
+            <column name="name" value="Printer.Ticket.P2"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.Ticket.P2.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="44"/>
+            <column name="name" value="Printer.Ticket.P3"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.Ticket.P3.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="45"/>
+            <column name="name" value="Printer.Ticket.P4"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.Ticket.P4.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="46"/>
+            <column name="name" value="Printer.Ticket.P5"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.Ticket.P5.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="47"/>
+            <column name="name" value="Printer.Ticket.P6"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.Ticket.P6.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="48"/>
+            <column name="name" value="Printer.Ticket"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.Ticket.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="49"/>
+            <column name="name" value="Printer.Ticket2"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.Ticket2.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="50"/>
+            <column name="name" value="Printer.TicketClose"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.TicketClose.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="51"/>
+            <column name="name" value="Printer.TicketRemote"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.TicketRemote.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="52"/>
+            <column name="name" value="Printer.TicketLine"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.TicketLine.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="53"/>
+            <column name="name" value="Printer.TicketNew"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.TicketLine.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="54"/>
+            <column name="name" value="Printer.TicketPreview"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.TicketPreview.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="55"/>
+            <column name="name" value="Printer.TicketTotal"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Printer.TicketTotal.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="56"/>
+            <column name="name" value="Printer.Ticket.Logo"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/app_logo_100x100.png" />
+        </insert>
+        <!-- FILE RESOURCE MISSING (2021/01/21) 
+        <insert tableName="resources">
+            <column name="id" value="57"/>
+            <column name="name" value="script.AddLineNote"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/script.AddLineNote.txt" />
+        </insert>
+        -->
+        <insert tableName="resources">
+            <column name="id" value="58"/>
+            <column name="name" value="script.Event.Total"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/script.Event.Total.txt" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="59"/>
+            <column name="name" value="script.Keyboard"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/script.Keyboard.txt" />
+        </insert>
+        <!-- FILE RESOURCE MISSING (2021/01/21) 
+        <insert tableName="resources">
+            <column name="id" value="60"/>
+            <column name="name" value="script.Linediscount"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/script.linediscount.txt" />
+        </insert>
+        -->
+        <insert tableName="resources">
+            <column name="id" value="61"/>
+            <column name="name" value="script.ReceiptConsolidate"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/script.ReceiptConsolidate.txt" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="62"/>
+            <column name="name" value="script.Refundit"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/script.Refundit.txt" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="63"/>
+            <column name="name" value="script.SendOrder"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/script.SendOrder.txt" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="64"/>
+            <column name="name" value="script.ServiceCharge"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/script.ServiceCharge.txt" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="65"/>
+            <column name="name" value="script.SetPerson"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/script.SetPerson.txt" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="66"/>
+            <column name="name" value="script.StockCurrentAdd"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/script.StockCurrentAdd.txt" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="67"/>
+            <column name="name" value="script.StockCurrentSet"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/script.StockCurrentSet.txt" />
+        </insert>
+        <!-- FILE RESOURCE MISSING (2021/01/21) 
+        <insert tableName="resources">
+            <column name="id" value="68"/>
+            <column name="name" value="script.Totaldiscount"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/script.TotalDiscount.txt" />
+        </insert>
+        -->
+        <insert tableName="resources">
+            <column name="id" value="69"/>
+            <column name="name" value="payment.cash"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/payment.cash.txt" />
+        </insert>
+        <!-- FILE RESOURCE MISSING (2021/01/21) 
+        <insert tableName="resources">
+            <column name="id" value="70"/>
+            <column name="name" value="ticket.addline"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/ticket.addline.txt" />
+        </insert>
+        -->
+        <insert tableName="resources">
+            <column name="id" value="71"/>
+            <column name="name" value="ticket.change"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/ticket.change.txt" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="72"/>
+            <column name="name" value="Ticket.Buttons"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Ticket.Buttons.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="73"/>
+            <column name="name" value="Ticket.Close"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Ticket.Close.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="74"/>
+            <column name="name" value="Ticket.Discount"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Ticket.Discount.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="75"/>
+            <column name="name" value="Ticket.Line"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Ticket.Line.xml" />
+        </insert>
+        <!-- FILE RESOURCE MISSING (2021/01/21)
+        <insert tableName="resources">
+            <column name="id" value="76"/>
+            <column name="name" value="ticket.removeline"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/ticket.removeline.txt" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="77"/>
+            <column name="name" value="ticket.setline"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/ticket.setline.txt" />
+        </insert>
+                -->
+        <insert tableName="resources">
+            <column name="id" value="78"/>
+            <column name="name" value="Ticket.TicketLineTaxesIncluded"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Ticket.TicketLineTaxesIncluded.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="79"/>
+            <column name="name" value="Window.Logo"/>
+            <column name="restype" value=" 1"/>
+            <column name="content" valueBlobFile="../com/openbravo/images/app_logo_48x48.png" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="80"/>
+            <column name="name" value="Window.Title"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Window.Title.txt" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="81"/>
+            <column name="name" value="script.posapps"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/script.posapps.txt" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="82"/>
+            <column name="name" value="Cash.Close"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/Cash.Close.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="83"/>
+            <column name="name" value="Customer.Created"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/customer.created.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="84"/>
+            <column name="name" value="Customer.Updated"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/customer.updated.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="85"/>
+            <column name="name" value="Customer.Deleted"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/customer.deleted.xml" />
+        </insert>
+        <insert tableName="resources">
+            <column name="id" value="86"/>
+            <column name="name" value="Application.Started"/>
+            <column name="restype" value=" 0"/>
+            <column name="content" valueBlobFile="../com/openbravo/pos/templates/application.started.xml" />
+        </insert>
+    </changeSet>
+    
+</databaseChangeLog>

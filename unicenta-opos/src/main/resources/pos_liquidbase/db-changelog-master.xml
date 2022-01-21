@@ -11,6 +11,6 @@
                     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
      
     <include file="pos_liquidbase/db-changelog-v4_5.xml"/>
-    <!-- <include file="pos_liquidbase/db-changelog-v4_5-.xml"/> -->
+    <include file="pos_liquidbase/db-changelog-v4_5__LOAD.xml"/>
     
 </databaseChangeLog>
