@@ -76,7 +76,7 @@ public final class CustomersView extends javax.swing.JPanel implements EditorRec
      * @param dirty */
     public CustomersView(AppView app, DirtyManager dirty) {
         try {
-            setAppView(app);
+            appView = app;
             dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
 
         
@@ -491,7 +491,7 @@ public void resetTranxTable() {
     @Override
     public Object createValue() throws BasicException {
         
-        Object[] customer = new Object[28];
+        Object[] customer = new Object[27];
         
         customer[0] = m_oId == null ? UUID.randomUUID().toString() : m_oId;
         customer[1] = m_jSearchkey.getText();
@@ -520,18 +520,8 @@ public void resetTranxTable() {
         customer[24] = m_jVip.isSelected();
         customer[25] = Formats.CURRENCY.parseValue(txtDiscount.getText(), 0.0);
         customer[26] = Formats.TIMESTAMP.parseValue(m_jdate.getText());
-        customer[27] = (Object)getAppView();
         
         return customer;
-    }
-    
-    //HS New methods to get last customer saved 06.03.2014
-    public AppView getAppView() {
-        return appView;
-    }
-
-    public void setAppView(AppView appView) {
-        this.appView = appView;
     }
     
     @Override

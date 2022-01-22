@@ -24,15 +24,6 @@ import java.awt.Component;
 import javax.swing.event.EventListenerList;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.LocalRes;
-import com.openbravo.pos.customers.CustomerInfoExt;
-import com.openbravo.pos.customers.CustomerInfoGlobal;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.BeanFactoryException;
-import com.openbravo.pos.forms.DataLogicSystem;
-import com.openbravo.pos.scripting.ScriptEngine;
-import com.openbravo.pos.scripting.ScriptException;
-import com.openbravo.pos.scripting.ScriptFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -431,41 +422,27 @@ public class BrowsableEditableData {
                     int i = m_bd.updateRecord(m_iIndex, m_editorrecord.createValue());
                     m_editorrecord.refresh();
                     baseMoveTo(i);
+                    //todo Send Event
                     break;
                 }
                 case ST_INSERT: {
                     int i = m_bd.insertRecord(m_editorrecord.createValue());
                     m_editorrecord.refresh();
                     baseMoveTo(i);
+                    //todo Send Event
                     break;
                 }
                 case ST_DELETE: {
                     int i = m_bd.removeRecord(m_iIndex);
                     m_editorrecord.refresh();
                     baseMoveTo(i);
+                    //todo Send Event
                     break;
                 }
                 default:
                     break;
             }
-        }
-        
-        //TODO should remove specific code
-        saveCustomerData();
-    }
-
-    private void triggerCustomerEvent(String event, Object[] customer, AppView appContext) {
-        try {
-            ScriptEngine scriptEngine = ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
-
-            DataLogicSystem dlSystem = (DataLogicSystem) appContext.getBean("com.openbravo.pos.forms.DataLogicSystem");
-            String script = dlSystem.getResourceAsXML(event);
-            scriptEngine.put("customer", customer);
-            scriptEngine.put("device", appContext.getProperties().getProperty("machine.hostname"));
-            scriptEngine.eval(script);
-
-        } catch (BeanFactoryException | ScriptException e) {
-            LOGGER.log(Level.WARNING, "Exception on executing script: "+event, e);
+            LOGGER.log(Level.INFO, "Executing saveData state is: {0}, class: {1}", new Object[]{m_iState, m_editorrecord.getClass().getName()});
         }
     }
 
@@ -575,59 +552,5 @@ public class BrowsableEditableData {
             m_iIndex = INX_EOF;
         }
         fireDataBrowse();
-    }
-
-    /**
-     * saveCustomerData Trigger Script Execution on event
-     * Execute only in view context of com.openbravo.pos.customers.CustomersView
-     * 
-     *   Events: customer.created, customer.updated, customer.deleted
-     * 
-     * @throws BasicException 
-     */
-    private void saveCustomerData() throws BasicException {
-   
-        if (m_editorrecord.getClass().getName().equals("com.openbravo.pos.customers.CustomersView")) {
-
-            // com.openbravo.pos.customers.CustomersView MUST return Array of 27 Objects
-            Object[] customer = (Object[]) m_editorrecord.createValue();
-            AppView appView = (AppView) customer[27];
-
-            if (m_Dirty.isDirty()) {
-                switch (m_iState) {
-                    case ST_UPDATE: {
-                        triggerCustomerEvent("customer.updated", customer, appView);
-                        break;
-                    }
-                    case ST_INSERT: {
-                        triggerCustomerEvent("customer.created", customer, appView);
-
-                        int n = JOptionPane.showConfirmDialog(
-                                null,
-                                AppLocal.getIntString("message.customerassign"),
-                                AppLocal.getIntString("title.editor"),
-                                JOptionPane.YES_NO_OPTION);
-
-                        if (n == 0) {
-                            CustomerInfoGlobal customerInfoGlobal = CustomerInfoGlobal.getInstance();
-                            CustomerInfoExt customerInfoExt = new CustomerInfoExt(customer[0].toString());
-                            customerInfoGlobal.setCustomerInfoExt(customerInfoExt);
-                            customerInfoExt.setName(customer[3].toString());
-
-                            if (appView != null) {
-                                appView.getAppUserView().showTask("com.openbravo.pos.sales.JPanelTicketSales");
-                            }
-                        }
-                        break;
-                    }
-                    case ST_DELETE: {
-                        triggerCustomerEvent("customer.deleted", customer, appView);
-                        break;
-                    }
-                    default:
-                        break;
-                }
-            }
-        }
     }
 }
