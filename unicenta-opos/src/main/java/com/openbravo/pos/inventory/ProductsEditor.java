@@ -351,8 +351,6 @@ public final class ProductsEditor extends javax.swing.JPanel implements EditorRe
     @Override
     public void writeValueInsert() {
 
-        final int selectedIndex = 0;
-
         reportlock = true;
 
         m_jTitle.setText(AppLocal.getIntString("label.recordnew"));
@@ -369,9 +367,7 @@ public final class ProductsEditor extends javax.swing.JPanel implements EditorRe
         taxcatmodel.setSelectedKey("001");
         m_UomModel.setSelectedKey("0");        
         m_jPriceBuy.setText("0");
-        setPriceSell(null);        
-//        m_SuppliersModel.setSelectedKey(0);
-        m_jSupplier.setSelectedIndex(selectedIndex);        
+        setPriceSell(null);              
         
 // Tab Stock        
         m_jInCatalog.setSelected(true);
