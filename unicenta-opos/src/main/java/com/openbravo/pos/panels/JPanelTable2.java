@@ -29,61 +29,30 @@ import javax.swing.ListCellRenderer;
  */
 public abstract class JPanelTable2 extends JPanelTable {
    
-    /**
-     *
-     */
     protected Row row;
-
-    /**
-     *
-     */
     protected ListProvider lpr;
-
-    /**
-     *
-     */
     protected SaveProvider spr;
 
-    /**
-     *
-     * @return
-     */
     @Override
     public final ListProvider getListProvider() {
         return lpr;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public final SaveProvider getSaveProvider() {
         return spr;
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @Override
     public final Vectorer getVectorer() {
         return row.getVectorer();
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @Override
     public final ComparatorCreator getComparatorCreator() {
         return row.getComparatorCreator();
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @Override
     public final ListCellRenderer getListCellRenderer() {
         return row.getListCellRenderer();

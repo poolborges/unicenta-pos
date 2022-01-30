@@ -18,6 +18,8 @@ package com.openbravo.data.loader;
 import com.openbravo.basic.BasicException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,7 +27,7 @@ import java.util.List;
  */
 public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T>, SentenceExec {
 
-
+    protected final static Logger LOGGER = Logger.getLogger(BaseSentence.class.getName());
     public abstract DataResultSet<T> openExec(Object params) throws BasicException;
 
     public abstract DataResultSet<T> moreResults() throws BasicException;
@@ -46,6 +48,7 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
     public final int exec(Object params) throws BasicException {
         DataResultSet<T> SRS = openExec(params);
         if (SRS == null) {
+            LOGGER.log(Level.WARNING, "openExec return ResultSet is NULL");
             throw new BasicException(LocalRes.getIntString("exception.noupdatecount"));
         }
         int iResult = SRS.updateCount();
@@ -101,16 +104,20 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
 
     @Override
     public final T find(Object params) throws BasicException {
-        // En caso de error o lanza un pepinazo en forma de SQLException          
+        T obj = null;        
         DataResultSet<T> resultSet = openExec(params);
-        Object obj = fetchOne(resultSet);
-        resultSet.close();
+        if (resultSet != null) {
+            obj = fetchOne(resultSet);
+            resultSet.close();
+        }
+        
         closeExec();
-        return (T)obj;
+        return obj;
     }
 
     public final List<T> fetchAll(DataResultSet<T> resultSet) throws BasicException {
         if (resultSet == null) {
+            LOGGER.log(Level.WARNING, "fetchAll param DataResultSet is NULL");
             throw new BasicException(LocalRes.getIntString("exception.nodataset"));
         }
 
@@ -124,10 +131,12 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
     public final List<T> fetchPage(DataResultSet<T> resultSet, int offset, int length) throws BasicException {
 
         if (resultSet == null) {
+            LOGGER.log(Level.WARNING, "fetchAll param DataResultSet is NULL");
             throw new BasicException(LocalRes.getIntString("exception.nodataset"));
         }
 
         if (offset < 0 || length < 0) {
+            LOGGER.log(Level.WARNING, "fetchPage param offset,length are negative");
             throw new BasicException(LocalRes.getIntString("exception.nonegativelimits"));
         }
 
@@ -150,6 +159,7 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
     public final T fetchOne(DataResultSet<T> resultSet) throws BasicException {
 
         if (resultSet == null) {
+            LOGGER.log(Level.WARNING, "fetchAll param DataResultSet is NULL");
             throw new BasicException(LocalRes.getIntString("exception.nodataset"));
         }
 

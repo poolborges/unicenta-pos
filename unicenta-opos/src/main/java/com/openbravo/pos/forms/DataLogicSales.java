@@ -679,7 +679,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      */
       
     public final SentenceList<ProductInfoExt> getProductList() {
-	return new StaticSentence<>(s
+	return new StaticSentence(s
 		, new QBFBuilder(
 		  "SELECT "
                 + "ID, "

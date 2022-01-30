@@ -16,16 +16,20 @@
 
 package com.openbravo.data.loader;
 
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author  adrian
  */
 public class DataWriteUtils {
-    
+    private final static Logger LOGGER = Logger.getLogger(DataWriteUtils.class.getName());
     private static DateFormat tsf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); 
     
     
@@ -51,7 +55,9 @@ public class DataWriteUtils {
             return getSQLValue((String) obj);
         } else if (obj instanceof Date) {
             return getSQLValue((Date) obj);
-        } else {
+        }else if (obj instanceof byte[]){
+            return getSQLValue((byte[])obj);
+        }else {
             return getSQLValue(obj.toString());
         }            
     }
@@ -148,5 +154,15 @@ public class DataWriteUtils {
             }
         }
         return sb.toString();
+    }
+
+    public static String getSQLValue(byte[] bValue) {
+        String res = "NULL";
+        if (bValue == null) {
+            return res;
+        } else {
+            res = new String(bValue, StandardCharsets.UTF_8);
+            return "'" + res + "'";
+        }
     }
  }

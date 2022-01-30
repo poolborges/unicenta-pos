@@ -113,7 +113,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      */
     public final List listPeopleVisible() throws BasicException {
         final SentenceList m_peoplevisible = new StaticSentence(this.session,
-                "SELECT ID, NAME, APPPASSWORD, CARD, ROLE, IMAGE "
+                "SELECT ID, NAME, APPPASSWORD, CARD, ROLE "
                 + "FROM people "
                 + "WHERE VISIBLE = " + this.session.DB.TRUE() + " ORDER BY NAME",
                 null,
@@ -211,10 +211,10 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                 if (resource != null) {
                     resourcescache.put(name, resource);
                 } else {
-                    LOGGER.log(Level.WARNING, "NOT found resource: {0}", name);
+                    LOGGER.log(Level.WARNING, "Resource NOT found name: {0}", name);
                 }
-            } catch (BasicException e) {
-                LOGGER.log(Level.SEVERE, "Exception on get resource: " + name, e);
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, "Exception while get resource name: " + name, e);
                 resource = null;
             }
         }
@@ -230,27 +230,36 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      */
     public final void setResource(String name, int type, byte[] data) {
 
-        SentenceExec m_resourcebytesinsert;
-        SentenceExec m_resourcebytesupdate;
-
         Datas[] resourcedata = new Datas[]{Datas.STRING, Datas.STRING, Datas.INT, Datas.BYTES};
-
-        m_resourcebytesinsert = new PreparedSentence(this.session,
+         Object[] value = new Object[]{UUID.randomUUID().toString(), name, type, data};
+         
+        SentenceExec m_resourcebytesinsert = new PreparedSentenceJDBC(this.session,
                 "INSERT INTO resources(ID, NAME, RESTYPE, CONTENT) VALUES (?, ?, ?, ?)",
-                new SerializerWriteBasic(resourcedata));
+                resourcedata,new int[]{0, 1, 2, 3});
+                /*
+                new PreparedSentence(this.session,
+                "INSERT INTO resources(ID, NAME, RESTYPE, CONTENT) VALUES (?, ?, ?, ?)",
+                new SerializerWriteBasicExt(resourcedata, new int[]{0, 1, 2, 3}));*/
 
-        m_resourcebytesupdate = new PreparedSentence(this.session,
+        SentenceExec m_resourcebytesupdate = new PreparedSentenceJDBC(this.session,
                 "UPDATE resources SET NAME = ?, RESTYPE = ?, CONTENT = ? WHERE NAME = ?",
-                new SerializerWriteBasicExt(resourcedata, new int[]{1, 2, 3, 1}));
+                resourcedata, new int[]{1, 2, 3, 1});
+                /*
+                new PreparedSentence(this.session,
+                "UPDATE resources SET NAME = ?, RESTYPE = ?, CONTENT = ? WHERE NAME = ?",
+                new SerializerWriteBasicExt(resourcedata, new int[]{1, 2, 3, 1}));*/
 
-        Object[] value = new Object[]{UUID.randomUUID().toString(), name, type, data};
+       
         try {
-            if (m_resourcebytesupdate.exec(value) == 0) {
-                m_resourcebytesinsert.exec(value);
+            if (m_resourcebytesupdate.exec(value) != 0) {
+               LOGGER.log(Level.INFO, "Resource update: " + name);
+            }else {
+               m_resourcebytesinsert.exec(value);
+               LOGGER.log(Level.INFO, "Resource insert: " + name);
             }
             resourcescache.put(name, data);
-        } catch (BasicException e) {
-            LOGGER.log(Level.SEVERE, "Exception on set resource: " + name, e);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Exception while save resource name: " + name, ex);
         }
     }
 
@@ -334,12 +343,12 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
 
         Properties p = new Properties();
         try {
-            byte[] img = getResourceAsBinary(sName);
-            if (img != null) {
-                p.loadFromXML(new ByteArrayInputStream(img));
+            byte[] xml = getResource(sName);
+            if (xml != null) {
+                p.loadFromXML(new ByteArrayInputStream(xml));
             }
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Exception on get resource: " + sName, e);
+            LOGGER.log(Level.SEVERE, "Exception on get resource as Properties, name: " + sName, e);
         }
         return p;
     }
@@ -738,12 +747,9 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
     }
 
     public final void updatePlaces(int x, int y, String id) throws BasicException {
-        final SentenceExec m_updatePlaces = new StaticSentence(this.session, "UPDATE PLACES SET X = ?, Y = ? "
-                + "WHERE ID = ?   ", new SerializerWriteBasic(new Datas[]{
-            Datas.INT,
-            Datas.INT,
-            Datas.STRING
-        }));
+        final SentenceExec m_updatePlaces = new StaticSentence(this.session, 
+                "UPDATE PLACES SET X = ?, Y = ? WHERE ID = ?", 
+                new SerializerWriteBasic(new Datas[]{Datas.INT,Datas.INT,Datas.STRING}));
         m_updatePlaces.exec(x, y, id);
     }
 

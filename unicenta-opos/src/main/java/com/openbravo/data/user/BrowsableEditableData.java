@@ -18,11 +18,11 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.data.user;
 
+import com.openbravo.basic.BasicException;
 import java.util.*;
 import javax.swing.*;
 import java.awt.Component;
 import javax.swing.event.EventListenerList;
-import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.LocalRes;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -295,7 +295,7 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public void refreshData() throws BasicException {
-        saveData();
+        confirmChanged();
         m_bd.refreshData();
         m_editorrecord.refresh();
         baseMoveTo(0);
@@ -307,7 +307,8 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public void loadData() throws BasicException {
-        saveData();
+        if(confirmChanged() ){
+        }
         m_bd.loadData();
         m_editorrecord.refresh();
         baseMoveTo(0);
@@ -319,7 +320,8 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public void unloadData() throws BasicException {
-        saveData();
+        if(confirmChanged() ){
+        }
         m_bd.unloadData();
         m_editorrecord.refresh();
         baseMoveTo(0);
@@ -332,7 +334,8 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public void sort(Comparator c) throws BasicException {
-        saveData();
+        if(confirmChanged() ){
+        }
         m_bd.sort(c);
         baseMoveTo(0);
     }
@@ -344,7 +347,8 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public void moveTo(int i) throws BasicException {
-        saveData();
+        if(confirmChanged() ){
+        };
         if (m_iIndex != i) {
             baseMoveTo(i);
         }
@@ -356,7 +360,8 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void movePrev() throws BasicException {
-        saveData();
+        if(confirmChanged() ){
+        }
         if (m_iIndex > 0) {
             baseMoveTo(m_iIndex - 1);
         }
@@ -368,7 +373,8 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void moveNext() throws BasicException {
-        saveData();
+        if(confirmChanged() ){
+        }
         if (m_iIndex < m_bd.getSize() - 1) {
             baseMoveTo(m_iIndex + 1);
         }
@@ -380,7 +386,8 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void moveFirst() throws BasicException {
-        saveData();
+        if(confirmChanged() ){
+        }
         if (m_bd.getSize() > 0) {
             baseMoveTo(0);
         }
@@ -392,7 +399,9 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void moveLast() throws BasicException {
-        saveData();
+        if(confirmChanged() ){
+            saveData();
+        }
         if (m_bd.getSize() > 0) {
             baseMoveTo(m_bd.getSize() - 1);
         }
@@ -487,9 +496,6 @@ public class BrowsableEditableData {
         }
     }
 
-    /*
-     * Metodos publicos finales (algunos protegidos que podrian ser finales
-     */
     /**
      * Instantiate data
      *
@@ -498,7 +504,7 @@ public class BrowsableEditableData {
     public final void actionLoad() throws BasicException {
         loadData();
         if (m_bd.getSize() == 0) {
-            actionInsert();
+            //actionInsert();
         }
     }
 
@@ -508,16 +514,16 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void actionInsert() throws BasicException {
-        // primero persistimos
-        saveData();
-
+        
         if (canInsertData()) {
-            // Y nos ponemos en estado de insert
             m_iState = ST_INSERT;
             m_editorrecord.writeValueInsert();
             m_Dirty.setDirty(false);
             fireStateUpdate(); // ?
+            // primero persistimos
+            saveData();
         }
+
     }
 
     /**
@@ -526,11 +532,8 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void actionDelete() throws BasicException {
-        // primero persistimos
-        saveData();
-
+        
         if (canDeleteData()) {
-
             // Y nos ponemos en estado de delete
             Object obj = getCurrentElement();
             int iIndex = getIndex();
@@ -541,16 +544,40 @@ public class BrowsableEditableData {
                 m_Dirty.setDirty(true);
                 fireStateUpdate(); // ?
             }
+
         }
     }
 
     private void baseMoveTo(int i) {
-        // Este senor y el constructor a INX_EOF, son los unicos que tienen potestad de modificar m_iIndex.
+        // Este senor y el constructor a INX_EOF
+        // son los unicos que tienen potestad de modificar m_iIndex.
         if (i >= 0 && i < m_bd.getSize()) {
             m_iIndex = i;
         } else {
             m_iIndex = INX_EOF;
         }
         fireDataBrowse();
+    }
+    
+    private boolean confirmChanged(){
+
+        if (m_Dirty.isDirty()) {
+            try {
+                
+                if(JOptionPane.showConfirmDialog(null,
+                        LocalRes.getIntString("message.changeslost"),
+                        LocalRes.getIntString("title.editor"),
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+                
+                    saveData();
+                }
+            } catch (BasicException ex) {
+                LOGGER.log(Level.SEVERE, "Exception on saveData", ex);
+            }
+            return true;
+        }
+        
+        return false;
     }
 }

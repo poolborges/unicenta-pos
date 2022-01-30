@@ -28,28 +28,19 @@ import com.openbravo.data.user.StateListener;
  * @author JG uniCenta
  */
 public class JSaver extends JPanel implements StateListener {
-    
-    /**
-     *
-     */
+
+    private static final long serialVersionUID = 1L;
+
     protected BrowsableEditableData m_bd;
-        
-    /** Creates new form JSaver
-     * @param bd */
+
     public JSaver(BrowsableEditableData bd) {
 
         initComponents();
-        
         m_bd = bd;
-        
         // m_bd.addBrowseListener(this);
         m_bd.addStateListener(this);
     }
 
-    /**
-     *
-     * @param iState
-     */
     @Override
     public void updateState(int iState) {
         switch  (iState) {
@@ -152,7 +143,6 @@ public class JSaver extends JPanel implements StateListener {
     private void jbtnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnSaveActionPerformed
         try {
             m_bd.saveData();
-          
         } catch (BasicException eD) {
             MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE, LocalRes.getIntString("message.nosave"), eD);
             msg.show(this);

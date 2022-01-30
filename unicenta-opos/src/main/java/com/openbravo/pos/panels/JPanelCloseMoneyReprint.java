@@ -50,6 +50,8 @@ import javax.swing.table.TableColumnModel;
  */
 public class JPanelCloseMoneyReprint extends JPanel implements JPanelView, BeanFactoryApp {
     
+    private static final Logger LOGGER = Logger.getLogger(JPanelCloseMoneyReprint.class.getName());
+    
     private AppView m_App;
     private DataLogicSystem m_dlSystem;
     
@@ -172,8 +174,8 @@ public class JPanelCloseMoneyReprint extends JPanel implements JPanelView, BeanF
             
         m_PaymentsClosed = PaymentsReprintModel.loadInstance(m_App);
         
-        if (m_PaymentsClosed.getPayments() > 0 
-                || m_PaymentsClosed.getSales() > 0) {
+        if (m_PaymentsClosed != null && (m_PaymentsClosed.getPayments() > 0 
+                || m_PaymentsClosed.getSales() > 0)) {
             
             m_jSequence.setText(m_PaymentsClosed.printSequence());
             m_jMinDate.setText(m_PaymentsClosed.reformDateStart());            
@@ -251,7 +253,9 @@ public class JPanelCloseMoneyReprint extends JPanel implements JPanelView, BeanF
                 s=null;                
             }
        
-            catch (SQLException e){}         
+            catch (SQLException e){
+                LOGGER.log(Level.SEVERE, "Exception loadData: ", e);
+            }         
 
             m_jLinesRemoved.setText(dresult.toString());
             m_jNoCashSales.setText(result.toString());
@@ -272,6 +276,7 @@ public class JPanelCloseMoneyReprint extends JPanel implements JPanelView, BeanF
                 script.put("nosales",result.toString());                
                 m_TTP.printTicket(script.eval(sresource).toString());
             } catch (ScriptException | TicketPrinterException e) {
+                LOGGER.log(Level.SEVERE, "Exception printPayments: ", e);
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, 
                         AppLocal.getIntString("message.cannotprintticket"), e);
                 msg.show(this);
@@ -649,7 +654,7 @@ public class JPanelCloseMoneyReprint extends JPanel implements JPanelView, BeanF
             }
             repaint();
         } catch (BasicException ex) {
-            Logger.getLogger(JPanelCloseMoneyReprint.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, "Exception BtnFindSequenceAction: ", ex);
         }
         
     }//GEN-LAST:event_webBtnFindSequenceActionPerformed

@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
@@ -26,12 +25,12 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author  adrianromero
+ * @author adrianromero
  */
 public class StaticSentence<T> extends JDBCBaseSentence<T> {
 
     protected static final Logger LOGGER = Logger.getLogger(StaticSentence.class.getName());
-    
+
     protected ISQLBuilderStatic m_sentence;
     protected SerializerWrite<Object> m_SerWrite = null;
     protected SerializerRead<T> m_SerRead = null;
@@ -43,15 +42,15 @@ public class StaticSentence<T> extends JDBCBaseSentence<T> {
         m_SerWrite = serwrite;
         m_SerRead = serread;
         m_Stmt = null;
-    }    
+    }
 
     public StaticSentence(Session s, ISQLBuilderStatic sentence) {
         this(s, sentence, null, null);
-    }     
+    }
 
     public StaticSentence(Session s, ISQLBuilderStatic sentence, SerializerWrite<Object> serwrite) {
         this(s, sentence, serwrite, null);
-    }     
+    }
 
     public StaticSentence(Session s, String sentence, SerializerWrite<Object> serwrite, SerializerRead<T> serread) {
         this(s, new NormalBuilder(sentence), serwrite, serread);
@@ -68,28 +67,30 @@ public class StaticSentence<T> extends JDBCBaseSentence<T> {
     @Override
     public DataResultSet<T> openExec(Object params) throws BasicException {
         closeExec();
-        
+
         DataResultSet<T> result;
-            
+        String sentence = "";
         try {
-            String sentence = m_sentence.getSQL(m_SerWrite, params);
-            
-           LOGGER.log(Level.INFO, "Executing static SQL: {0}", sentence);
-           log(params);
-           
+            sentence = m_sentence.getSQL(m_SerWrite, params);
+
+            LOGGER.log(Level.FINE, "Executing SQL params: {0}", params);
+            LOGGER.log(Level.FINE, "Executing SQL sentence : {0}", sentence);
+            log(params);
+
             m_Stmt = session.getConnection().createStatement();
-            
+
             if (m_Stmt.execute(sentence)) {
-                result = new JDBCDataResultSet(m_Stmt.getResultSet(), m_SerRead);
-            } else { 
+                result = new JDBCDataResultSet<>(m_Stmt.getResultSet(), m_SerRead);
+            } else {
                 int iUC = m_Stmt.getUpdateCount();
                 if (iUC < 0) {
                     result = null;
                 } else {
-                    result= new UpdateDataResultSet(iUC);
+                    result = new UpdateDataResultSet<>(iUC);
                 }
             }
-        } catch (SQLException eSQL) {
+        } catch (BasicException | SQLException eSQL) {
+            LOGGER.log(Level.SEVERE, "Exception while execute SQL: " + sentence, eSQL);
             throw new BasicException(eSQL);
         }
         return result;
@@ -99,28 +100,28 @@ public class StaticSentence<T> extends JDBCBaseSentence<T> {
     public DataResultSet<T> moreResults() throws BasicException {
 
         try {
-            if (m_Stmt.getMoreResults()){
-                return new JDBCDataResultSet(m_Stmt.getResultSet(), m_SerRead);
+            if (m_Stmt.getMoreResults()) {
+                return new JDBCDataResultSet<>(m_Stmt.getResultSet(), m_SerRead);
             } else {
                 int iUC = m_Stmt.getUpdateCount();
                 if (iUC < 0) {
                     return null;
                 } else {
-                    return new UpdateDataResultSet(iUC);
+                    return new UpdateDataResultSet<>(iUC);
                 }
             }
         } catch (SQLException eSQL) {
             throw new BasicException(eSQL);
         }
-    }    
-    
+    }
+
     @Override
     public void closeExec() throws BasicException {
-        
+
         if (m_Stmt != null) {
             try {
                 m_Stmt.close();
-           } catch (SQLException eSQL) {
+            } catch (SQLException eSQL) {
                 throw new BasicException(eSQL);
             } finally {
                 m_Stmt = null;
@@ -128,11 +129,7 @@ public class StaticSentence<T> extends JDBCBaseSentence<T> {
         }
     }
 
-    
-
     private void log(Object params) {
-        
-        LOGGER.log(Level.INFO, "Prepared statement show SQL parameters: " + m_sentence);
 
         if (params != null && LOGGER.isLoggable(Level.FINER)) {
 
@@ -164,7 +161,7 @@ public class StaticSentence<T> extends JDBCBaseSentence<T> {
                 }
             }
 
-            LOGGER.log(Level.FINER, "Prepared statement show Parameters: " + sb.toString());
+            LOGGER.log(Level.FINER, "SQL params: {0}", sb.toString());
         }
     }
 }

@@ -64,8 +64,10 @@ public class NormalParameter implements DataWrite {
     }
 
     @Override
-    public void setBytes(int paramIndex, byte[] value) throws BasicException {
-        throw new BasicException(LocalRes.getIntString("exception.noparamtype"));
+    public void setBytes(int paramIndex, byte[] bValue) throws BasicException {
+        ensurePlace(paramIndex - 1);
+        m_aParams.set(paramIndex - 1, DataWriteUtils.getSQLValue(bValue));
+        //throw new BasicException(LocalRes.getIntString("exception.noparamtype"));
     }
 
     @Override

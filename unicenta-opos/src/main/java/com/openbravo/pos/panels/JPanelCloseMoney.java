@@ -233,7 +233,7 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
             con=s.getConnection();  
             String sdbmanager = m_dlSystem.getDBVersion();           
 
-            if ("PostgreSQL".equals(sdbmanager)) {
+            if (isDBPostgre()) {
                 SQL = "SELECT * " +
                         "FROM draweropened " +
                         "WHERE TICKETID = 'No Sale' AND OPENDATE > " + "'" + m_PaymentsToClose.printDateStart() + "'";
@@ -252,7 +252,7 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
 
 // Get Ticket DELETES & Line Voids            
             dresult=0;
-            if ("PostgreSQL".equals(sdbmanager)) {
+            if (isDBPostgre()) {
                 SQL = "SELECT * " +
                         "FROM lineremoved " +
                         "WHERE REMOVEDDATE > " + "'" + m_PaymentsToClose.printDateStart() + "'";                        
@@ -371,6 +371,10 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
                 msg.show(this);
             }
         }
+    }
+    
+    private boolean isDBPostgre(){
+        return "PostgreSQL".equals(m_dlSystem.getDBVersion());
     }
 
     private class FormatsPayment extends Formats {

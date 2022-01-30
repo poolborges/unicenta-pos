@@ -22,6 +22,9 @@ package com.openbravo.pos.scripting;
 import bsh.EvalError;
 import bsh.Interpreter;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author adrianromero
@@ -29,6 +32,7 @@ import bsh.Interpreter;
  *
  */
 class ScriptEngineBeanshell implements ScriptEngine {
+    private static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.scripting.ScriptEngineBeanshell");
 
     private Interpreter i;
     
@@ -43,6 +47,7 @@ class ScriptEngineBeanshell implements ScriptEngine {
         try {
             i.set(key, value);
         } catch (EvalError e) {
+            LOGGER.log(Level.SEVERE, "Exception on put", e);
         }
     }
     
@@ -52,6 +57,7 @@ class ScriptEngineBeanshell implements ScriptEngine {
         try {
             return i.get(key);
         } catch (EvalError e) {
+            LOGGER.log(Level.SEVERE, "Exception", e);
             return null;
         }
     }
@@ -62,7 +68,8 @@ class ScriptEngineBeanshell implements ScriptEngine {
         try {
             return i.eval(src);  
         } catch (EvalError e) {
-            throw new ScriptException(e.getMessage(), e);
+            LOGGER.log(Level.SEVERE, "Exception on eval", e);
+            throw new ScriptException(e);
         }        
     }   
 }

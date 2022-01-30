@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
@@ -22,8 +21,8 @@ import com.openbravo.basic.BasicException;
  *
  * @author JG uniCenta
  */
-public class SerializerWriteBasic implements SerializerWrite<Object> {
-    
+public class SerializerWriteBasic implements SerializerWrite<Object[]> {
+
     private final Datas<Object>[] m_classes;
 
     public SerializerWriteBasic(Datas... classes) {
@@ -31,16 +30,11 @@ public class SerializerWriteBasic implements SerializerWrite<Object> {
     }
 
     @Override
-    public void writeValues(DataWrite dp, Object obj) throws BasicException {
+    public void writeValues(DataWrite dp, Object[] obj) throws BasicException {
 
-        if (obj instanceof Object[]){
-            Object[] objectos = (Object[]) obj;
-            for (int i = 0; i < m_classes.length; i++) {
-                m_classes[i].setValue(dp, i + 1, objectos[i]);
-            }
-        }else {
-            m_classes[0].setValue(dp, 1, obj);
+        for (int i = 0; i < m_classes.length; i++) {
+            m_classes[i].setValue(dp, i + 1, obj[i]);
         }
     }
-    
+
 }

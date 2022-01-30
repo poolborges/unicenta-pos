@@ -89,13 +89,11 @@ public class JRootApp extends JPanel implements AppView {
     private DeviceTicket m_TP;
     private TicketParser m_TTP;
 
-
     private JPrincipalApp m_principalapp = null;
     private String m_clock;
     private String m_date;
 
     private final static int UNIQUE_KEY_FAMILY = 0x01;
-
 
     private class PrintTimeAction implements ActionListener {
 
@@ -118,7 +116,6 @@ public class JRootApp extends JPanel implements AppView {
 
     public JRootApp(AppProperties props) {
         m_props = props;
-    
 
         //TODO load Windows Title 
         //m_jLblTitle.setText(m_dlSystem.getResourceAsText("Window.Title"));
@@ -148,14 +145,15 @@ public class JRootApp extends JPanel implements AppView {
 
         m_dlSystem = (DataLogicSystem) getBean("com.openbravo.pos.forms.DataLogicSystem");
 
-        if (com.openbravo.pos.data.DBMigrator.execDBMigration(session)){
+        LOGGER.log(Level.INFO, "DB Migration execution Starting");
+        if (com.openbravo.pos.data.DBMigrator.execDBMigration(session)) {
             //return false;
-            LOGGER.log(Level.INFO, "DB Migration: ");
+            LOGGER.log(Level.INFO, "DB Migration execution Finished: OK");
         }
 
         logStartup();
 
-        m_propsdb = m_dlSystem.getResourceAsProperties(m_props.getHost() + "/properties");
+        m_propsdb = m_dlSystem.getResourceAsProperties(getHostID());
 
         if (checkActiveCash()) {
             return false;
@@ -177,13 +175,17 @@ public class JRootApp extends JPanel implements AppView {
     private void initClockTimer() {
         new javax.swing.Timer(1000, new PrintTimeAction()).start();
     }
+    
+    private String getHostID() {
+        return m_props.getHost() + "/properties";
+    }
 
     private void setInventoryLocation() {
         m_sInventoryLocation = m_propsdb.getProperty("location");
         if (m_sInventoryLocation == null) {
             m_sInventoryLocation = "0";
             m_propsdb.setProperty("location", m_sInventoryLocation);
-            m_dlSystem.setResourceAsProperties(m_props.getHost() + "/properties", m_propsdb);
+            m_dlSystem.setResourceAsProperties(getHostID(), m_propsdb);
         }
     }
 
@@ -243,7 +245,7 @@ public class JRootApp extends JPanel implements AppView {
         statusBarPanel.setVisible(!(Boolean.valueOf(m_props.getProperty("till.hideinfo"))));
 
         String sWareHouse;
-        
+
         try {
             sWareHouse = m_dlSystem.findLocationName(m_sInventoryLocation);
         } catch (BasicException e) {
@@ -302,12 +304,12 @@ public class JRootApp extends JPanel implements AppView {
 
     private void initPeripheral() {
         m_TP = new DeviceTicket(this, m_props);
-        
+
         m_TTP = new TicketParser(getDeviceTicket(), m_dlSystem);
         printerStart();
-        
+
         m_Scale = new DeviceScale(this, m_props);
-        
+
         m_Scanner = DeviceScannerFactory.createInstance(m_props);
     }
 
@@ -344,14 +346,14 @@ public class JRootApp extends JPanel implements AppView {
     private void logStartup() {
         // create the filename
         String sUserPath = AppConfig.getInstance().getAppDataDirectory();
-        
+
         Instant machineTimestamp = Instant.now();
         String sContent = sUserPath + ","
                 + machineTimestamp + ","
                 + AppLocal.APP_ID + ","
                 + AppLocal.APP_NAME + ","
                 + AppLocal.APP_VERSION + "\n";
-        
+
         try {
             Files.write(new File(sUserPath, AppLocal.getLogFileName()).toPath(), sContent.getBytes(),
                     StandardOpenOption.APPEND, StandardOpenOption.CREATE);
@@ -439,7 +441,7 @@ public class JRootApp extends JPanel implements AppView {
         m_dActiveCashDateEnd = dEnd;
 
         m_propsdb.setProperty("activecash", m_sActiveCashIndex);
-        m_dlSystem.setResourceAsProperties(m_props.getHost() + "/properties", m_propsdb);
+        m_dlSystem.setResourceAsProperties(getHostID(), m_propsdb);
     }
 
     @Override
@@ -468,8 +470,8 @@ public class JRootApp extends JPanel implements AppView {
         m_iClosedCashSequence = iSeq;
         m_dClosedCashDateStart = dStart;
         m_dClosedCashDateEnd = dEnd;
-
-        m_dlSystem.setResourceAsProperties(m_props.getHost() + "/properties", m_propsdb);
+        m_propsdb.setProperty("closecash", m_sClosedCashIndex);
+        m_dlSystem.setResourceAsProperties(getHostID(), m_propsdb);
     }
 
     @Override
@@ -481,7 +483,6 @@ public class JRootApp extends JPanel implements AppView {
     public Object getBean(String beanfactory) throws BeanFactoryException {
         return BeanContainer.geBean(beanfactory, this);
     }
-
 
     @Override
     public void waitCursorBegin() {
@@ -496,6 +497,14 @@ public class JRootApp extends JPanel implements AppView {
     @Override
     public AppUserView getAppUserView() {
         return m_principalapp;
+    }
+    
+    @Override
+    public boolean hasPermission(String permission){
+        return Optional.ofNullable(this.getAppUserView())
+        .map(i -> i.getUser())
+        .map(u -> u.hasPermission(permission))
+        .orElse(false); 
     }
 
     private void printerStart() {
@@ -541,7 +550,8 @@ public class JRootApp extends JPanel implements AppView {
 
             jScrollPane1.getViewport().setView(jPeople);
 
-        } catch (BasicException ee) {
+        } catch (Exception ex) {
+            LOGGER.log(Level.WARNING, "Exception on listPeople: ", ex);
         }
     }
 
@@ -553,6 +563,7 @@ public class JRootApp extends JPanel implements AppView {
             m_actionuser = user;
             putValue(Action.SMALL_ICON, m_actionuser.getIcon());
             putValue(Action.NAME, m_actionuser.getName());
+            putValue(Action.SELECTED_KEY, "USER_ID_" + m_actionuser.getName());
         }
 
         public AppUser getUser() {
@@ -562,23 +573,29 @@ public class JRootApp extends JPanel implements AppView {
         @Override
         public void actionPerformed(ActionEvent evt) {
 
-            if (m_actionuser.authenticate()) {
-                openAppView(m_actionuser);
-            } else {
-                String sPassword = JPasswordDialog.showEditPassword(JRootApp.this,
-                        AppLocal.getIntString("label.Password"),
-                        m_actionuser.getName(),
-                        m_actionuser.getIcon());
-                if (sPassword != null) {
+            try {
+                if (m_actionuser.authenticate()) {
+                    openAppView(m_actionuser);
+                } else {
+                    String sPassword = JPasswordDialog.showEditPassword(JRootApp.this,
+                            AppLocal.getIntString("label.Password"),
+                            m_actionuser.getName(),
+                            m_actionuser.getIcon());
+                    if (sPassword != null) {
 
-                    if (m_actionuser.authenticate(sPassword)) {
-                        openAppView(m_actionuser);
-                    } else {
-                        MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
-                                AppLocal.getIntString("message.BadPassword"));
-                        msg.show(JRootApp.this);
+                        if (m_actionuser.authenticate(sPassword)) {
+                            LOGGER.log(Level.INFO, "Login Success, Open Main View");
+                            openAppView(m_actionuser);
+                        } else {
+                            LOGGER.log(Level.INFO, "Login failed");
+                            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
+                                    AppLocal.getIntString("message.BadPassword"));
+                            msg.show(JRootApp.this);
+                        }
                     }
                 }
+            } catch (Exception ex) {
+                LOGGER.log(Level.WARNING, "Exception on listPeople: ", ex);
             }
         }
     }
@@ -597,9 +614,9 @@ public class JRootApp extends JPanel implements AppView {
             jPanel3.add(m_principalapp.getNotificator());
             jPanel3.revalidate();
 
-            m_jPanelContainer.add(m_principalapp,
-                    "_" + m_principalapp.getUser().getId());
-            showView("_" + m_principalapp.getUser().getId());
+            String viewID = "_" + m_principalapp.getUser().getId();
+            m_jPanelContainer.add(m_principalapp, viewID);
+            showView(viewID);
 
             m_principalapp.activate();
         }
@@ -623,9 +640,6 @@ public class JRootApp extends JPanel implements AppView {
 
             m_jPanelContainer.remove(m_principalapp);
             m_principalapp = null;
-
-            showLogin();
-
             return true;
         }
     }
@@ -949,8 +963,10 @@ public class JRootApp extends JPanel implements AppView {
 class BeanContainer {
 
     private static final Logger LOGGER = Logger.getLogger(BeanContainer.class.getName());
-    private static final Map<String, BeanFactory> m_aBeanFactories =  new HashMap<>();
-    private static final HashMap<String, String> m_oldclasses = new HashMap<>();;
+    private static final Map<String, BeanFactory> m_aBeanFactories = new HashMap<>();
+    private static final HashMap<String, String> m_oldclasses = new HashMap<>();
+
+    ;
     
     private static String mapNewClass(String classname) {
         String newclass = m_oldclasses.get(classname);
@@ -959,7 +975,7 @@ class BeanContainer {
                 : newclass;
     }
 
-    static{
+    static {
 
         m_oldclasses.put("com.openbravo.pos.reports.JReportCustomers", "/com/openbravo/reports/customers.bs");
         m_oldclasses.put("com.openbravo.pos.reports.JReportCustomersB", "/com/openbravo/reports/customersb.bs");
@@ -979,9 +995,9 @@ class BeanContainer {
         m_oldclasses.put("com.openbravo.pos.panels.JPanelTax", "com.openbravo.pos.inventory.TaxPanel");
 
     }
-    
-    public static Object geBean(String beanfactory, AppView appView){
-        
+
+    public static Object geBean(String beanfactory, AppView appView) {
+
         beanfactory = mapNewClass(beanfactory);
         BeanFactory bf = m_aBeanFactories.get(beanfactory);
 
@@ -1016,6 +1032,6 @@ class BeanContainer {
             }
         }
         return bf.getBean();
-    
+
     }
 }

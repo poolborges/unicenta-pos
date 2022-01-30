@@ -27,7 +27,7 @@ import javax.swing.ImageIcon;
  */
 public class MenuPanelAction extends AbstractAction {
 
-    private final AppView m_App;
+    private final AppUserView m_App;
     private final String m_sMyView;
 
     /** Creates a new instance of MenuPanelAction
@@ -35,7 +35,7 @@ public class MenuPanelAction extends AbstractAction {
      * @param icon
      * @param keytext
      * @param sMyView */
-    public MenuPanelAction(AppView app, String icon, String keytext, String sMyView) {
+    public MenuPanelAction(AppUserView app, String icon, String keytext, String sMyView) {
         putValue(Action.SMALL_ICON, new ImageIcon(JPrincipalApp.class.getResource(icon)));
         putValue(Action.NAME, AppLocal.getIntString(keytext));
         putValue(Action.SHORT_DESCRIPTION, AppLocal.getIntString(keytext)); //used for tooltip text.
@@ -46,6 +46,6 @@ public class MenuPanelAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent evt) {
 
-        m_App.getAppUserView().showTask(m_sMyView);            
+        m_App.showTask(m_sMyView);            
     }    
 }

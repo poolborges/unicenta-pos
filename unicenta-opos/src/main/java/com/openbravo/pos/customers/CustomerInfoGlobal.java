@@ -14,9 +14,7 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-
 //    For BrowseEditableData
-
 package com.openbravo.pos.customers;
 
 import com.openbravo.data.user.BrowsableEditableData;
@@ -31,17 +29,9 @@ public class CustomerInfoGlobal {
     private CustomerInfoExt customerInfoExt;
     private BrowsableEditableData editableData;
 
-    //Singleton class
-    private CustomerInfoGlobal() {
-    }
+    private CustomerInfoGlobal() {}
 
-    //Singleton constructor
-
-    /**
-     *
-     * @return
-     */
-        public static CustomerInfoGlobal getInstance() {
+    public static CustomerInfoGlobal getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new CustomerInfoGlobal();
         }
@@ -49,37 +39,20 @@ public class CustomerInfoGlobal {
         return INSTANCE;
     }
 
-    /**
-     *
-     * @return
-     */
     public CustomerInfoExt getCustomerInfoExt() {
         return customerInfoExt;
     }
 
-    /**
-     *
-     * @param customerInfoExt
-     */
     public void setCustomerInfoExt(CustomerInfoExt customerInfoExt) {
         this.customerInfoExt = customerInfoExt;
     }
 
-    /**
-     *
-     * @return
-     */
     public BrowsableEditableData getEditableData() {
         return editableData;
-}
+    }
 
-    /**
-     *
-     * @param editableData
-     */
     public void setEditableData(BrowsableEditableData editableData) {
         this.editableData = editableData;
     }
-    
 
 }

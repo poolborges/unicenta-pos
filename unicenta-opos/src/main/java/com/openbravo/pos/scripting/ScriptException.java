@@ -39,6 +39,10 @@ public class ScriptException extends java.lang.Exception {
     public ScriptException(String msg) {
         super(msg);
     }
+    
+    public ScriptException(Throwable cause) {
+        super(cause);
+    }
 
     /**
      *

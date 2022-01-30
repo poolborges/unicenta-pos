@@ -248,6 +248,8 @@ public class JTicketLines extends javax.swing.JPanel {
     }
     
     private static class TicketCellRenderer extends DefaultTableCellRenderer {
+
+        private static final long serialVersionUID = 1L;
         
         private final ColumnTicket[] m_acolumns;        
         
@@ -271,6 +273,8 @@ public class JTicketLines extends javax.swing.JPanel {
     }
     
     private static class TicketCellRendererSent extends DefaultTableCellRenderer {
+
+        private static final long serialVersionUID = 1L;
         
         private final ColumnTicket[] m_acolumns;        
         

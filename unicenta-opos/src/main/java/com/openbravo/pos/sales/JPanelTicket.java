@@ -167,6 +167,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     @Override
     public void init(AppView app) throws BeanFactoryException {
 
+        LOGGER.info("JPanelTicket.init");
         m_config = AppConfig.getInstance();
         m_config.load();
 
@@ -179,6 +180,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         dlReceipts = (DataLogicReceipts) app.getBean("com.openbravo.pos.sales.DataLogicReceipts");
 
 // Script event buttons
+        LOGGER.info("JPanelTicket.init: criar: Ticket.Buttons");
         m_jbtnconfig = new JPanelButtons("Ticket.Buttons", this);
         m_jButtonsExt.add(m_jbtnconfig);
 
@@ -201,6 +203,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             m_jNumberKeys.dotIs00(true);
         }
 
+        LOGGER.info("JPanelTicket.init: criar: Ticket.Line");
         m_ticketlines = new JTicketLines(dlSystem.getResourceAsXML("Ticket.Line"));
         m_jPanelCentral.add(m_ticketlines, java.awt.BorderLayout.CENTER);
         m_TTP = new TicketParser(m_App.getDeviceTicket(), dlSystem);
@@ -293,6 +296,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     @Override
     public void activate() throws BasicException {
 
+        LOGGER.info("JPanelTicket.activate");
         Action logout = new logout();
         String autoLogoff = (m_App.getProperties().getProperty("till.autoLogoff"));
 
@@ -346,6 +350,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
 
     @Override
     public boolean deactivate() {
+        LOGGER.info("JPanelTicket.deactivate");
         if (listener != null) {
             listener.stop();
         }

@@ -117,8 +117,10 @@ public class ImageUtils {
         if (url != null) {
             try {
                 URLConnection urlConnection = url.openConnection();
-                try (InputStream in = urlConnection.getInputStream()) {
+                try ( InputStream in = urlConnection.getInputStream()) {
                     image = readImage(getBytesFromInputStream(in));
+                } catch (IOException ex) {
+                    LOGGER.log(Level.SEVERE, "ReadImage from url: " + url, ex);
                 }
             } catch (IOException ex) {
                 LOGGER.log(Level.SEVERE, "ReadImage from url: " + url, ex);
@@ -131,7 +133,7 @@ public class ImageUtils {
         //TODO improve null checking Objects.requireNonNull(imageByteArray, "imageByteArray should not be null");
         BufferedImage image = generateDefaultImage();
         if (imageByteArray != null) {
-            try (ByteArrayInputStream input = new ByteArrayInputStream(imageByteArray)) {
+            try ( ByteArrayInputStream input = new ByteArrayInputStream(imageByteArray)) {
                 image = ImageIO.read(input);
             } catch (IOException ex) {
                 LOGGER.log(Level.SEVERE, "ReadImage from byte array", ex);
@@ -149,7 +151,7 @@ public class ImageUtils {
         //TODO improve null checking Objects.requireNonNull(img, "img should not be null");
         byte[] imageByte = new byte[0];
         if (img != null) {
-            try (ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();) {
+            try ( ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();) {
                 ImageIO.write(img, "png", byteOutputStream);
                 byteOutputStream.flush();
                 byteOutputStream.close();
@@ -170,10 +172,10 @@ public class ImageUtils {
         //TODO improve null checking Objects.requireNonNull(objectByteArrary, "objectByteArrary should not be null");
         Object obj = null;
         if (objectByteArrary != null) {
-            try (ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(objectByteArrary))) {
+            try ( ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(objectByteArrary))) {
                 obj = in.readObject();
             } catch (IOException | ClassNotFoundException ex) {
-                LOGGER.log(Level.SEVERE, "readSerializable", ex);
+                LOGGER.log(Level.SEVERE, "Exception on readSerializable", ex);
             }
         }
         return obj;
@@ -190,13 +192,13 @@ public class ImageUtils {
         if (obj != null) {
             try {
                 ByteArrayOutputStream bOutput = new ByteArrayOutputStream();
-                try (ObjectOutputStream out = new ObjectOutputStream(bOutput)) {
+                try ( ObjectOutputStream out = new ObjectOutputStream(bOutput)) {
                     out.writeObject(obj);
                     out.flush();
                     objectSerialize = bOutput.toByteArray();
                 }
             } catch (IOException ex) {
-                LOGGER.log(Level.SEVERE, "writeSerializable", ex);
+                LOGGER.log(Level.SEVERE, "Exception on writeSerializable", ex);
             }
         }
         return objectSerialize;

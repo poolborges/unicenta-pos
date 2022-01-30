@@ -66,6 +66,8 @@ public interface AppView {
     public void waitCursorBegin();
     public void waitCursorEnd();
     public AppUserView getAppUserView();
+    
+    public boolean hasPermission(String permission);
 
 }
 
