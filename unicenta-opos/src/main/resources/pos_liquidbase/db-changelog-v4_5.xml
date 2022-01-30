@@ -6,9 +6,9 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext 
                     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd 
                     http://www.liquibase.org/xml/ns/pro 
-                    http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.7.xsd 
+                    http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd 
                     http://www.liquibase.org/xml/ns/dbchangelog 
-                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.7.xsd">
+                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
     <changeSet author="pauloborges (generated)" id="1603928315936-1">
         <createTable tableName="applications">
             <column name="id" type="VARCHAR(255)">
