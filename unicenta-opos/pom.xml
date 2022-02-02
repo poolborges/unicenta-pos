@@ -183,7 +183,7 @@
         <dependency> 
             <groupId>mysql</groupId>  
             <artifactId>mysql-connector-java</artifactId>  
-            <version>8.0.27</version> 
+            <version>8.0.28</version> 
             <scope>runtime</scope>
         </dependency>  
         <dependency> 
@@ -320,7 +320,7 @@
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
-            <version>0.4.15</version>
+            <version>0.4.16</version>
         </dependency>
         
         <!-- Migration Library -->
@@ -438,7 +438,7 @@
                             <dependency> 
                                 <groupId>mysql</groupId>  
                                 <artifactId>mysql-connector-java</artifactId>  
-                                <version>8.0.27</version> 
+                                <version>8.0.28</version> 
                             </dependency> 
                         </dependencies>               
                     </plugin> 
