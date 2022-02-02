@@ -148,11 +148,7 @@ public abstract class JPanelTable extends JPanel implements JPanelView, BeanFact
     public void activate() throws BasicException {
         startNavigation();
         bd.actionLoad();
-
-        //HS insert new customer 20.03.2014
-        if (CustomerInfoGlobal.getInstance() != null) {
-            bd.actionInsert();
-        }
+        bd.actionInsert();
     }
 
     @Override
