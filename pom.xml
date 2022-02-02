@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.kriolos.opos</groupId>
     <artifactId>kriolos-opos-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Kriolos :: POS.Parent</name>
 
@@ -142,14 +142,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>io.gitub.kriolsolutions.krospos</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>kriolos-pos</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.gitub.kriolsolutions.krospos</groupId>
-                <artifactId>unicenta-opos-i18n</artifactId>
-                <version>1.0.0</version>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-pos-i18n</artifactId>
+                <version>${project.version}</version>
             </dependency>
             
             <dependency> 
@@ -319,6 +319,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.9.1</version>
                 </plugin>
+                
+                <!-- License -->
+                    <plugin>
+                        <groupId>com.mycila</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>4.0.rc2</version>
+                        <configuration>
+                            <header>com/mycila/maven/plugin/license/templates/GPL-3.txt</header>
+                            <properties>
+                                <inceptionYear>${project.inceptionYear}</inceptionYear>
+                            </properties>
+                            <includes>
+                                <include>src/**/*.java</include>
+                                <include>src/**/*.xml</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/logback.xml</exclude>
+                                <exclude>**/logback-test.xml</exclude>
+                                <exclude>**/src/test/resources/**</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
             
             </plugins>
         </pluginManagement>
@@ -395,6 +417,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </executions>
             </plugin>
             
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+            </plugin>
+            
         </plugins>
 
     </build>
@@ -408,27 +435,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <build>
                 <plugins>
                     
-                    <!-- License -->
-                    <plugin>
-                        <groupId>com.mycila</groupId>
-                        <artifactId>license-maven-plugin</artifactId>
-                        <version>4.0.rc2</version>
-                        <configuration>
-                            <header>com/mycila/maven/plugin/license/templates/GPL-3.txt</header>
-                            <properties>
-                                <inceptionYear>${project.inceptionYear}</inceptionYear>
-                            </properties>
-                            <includes>
-                                <include>src/**/*.java</include>
-                                <include>src/**/*.xml</include>
-                            </includes>
-                            <excludes>
-                                <exclude>**/logback.xml</exclude>
-                                <exclude>**/logback-test.xml</exclude>
-                                <exclude>**/src/test/resources/**</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
+                    
                     <!-- Static Analyzer -->
                     <plugin>
                         <groupId>com.github.spotbugs</groupId>
