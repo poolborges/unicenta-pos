@@ -307,8 +307,6 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public void loadData() throws BasicException {
-        if(confirmChanged() ){
-        }
         m_bd.loadData();
         m_editorrecord.refresh();
         baseMoveTo(0);
@@ -320,8 +318,7 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public void unloadData() throws BasicException {
-        if(confirmChanged() ){
-        }
+        confirmChanged();
         m_bd.unloadData();
         m_editorrecord.refresh();
         baseMoveTo(0);
@@ -334,8 +331,7 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public void sort(Comparator c) throws BasicException {
-        if(confirmChanged() ){
-        }
+        confirmChanged();
         m_bd.sort(c);
         baseMoveTo(0);
     }
@@ -347,8 +343,7 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public void moveTo(int i) throws BasicException {
-        if(confirmChanged() ){
-        };
+        confirmChanged();
         if (m_iIndex != i) {
             baseMoveTo(i);
         }
@@ -360,8 +355,7 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void movePrev() throws BasicException {
-        if(confirmChanged() ){
-        }
+        confirmChanged();
         if (m_iIndex > 0) {
             baseMoveTo(m_iIndex - 1);
         }
@@ -373,8 +367,7 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void moveNext() throws BasicException {
-        if(confirmChanged() ){
-        }
+        confirmChanged();
         if (m_iIndex < m_bd.getSize() - 1) {
             baseMoveTo(m_iIndex + 1);
         }
@@ -386,8 +379,7 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void moveFirst() throws BasicException {
-        if(confirmChanged() ){
-        }
+        confirmChanged();
         if (m_bd.getSize() > 0) {
             baseMoveTo(0);
         }
@@ -399,9 +391,7 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void moveLast() throws BasicException {
-        if(confirmChanged() ){
-            saveData();
-        }
+        confirmChanged();
         if (m_bd.getSize() > 0) {
             baseMoveTo(m_bd.getSize() - 1);
         }
@@ -503,9 +493,6 @@ public class BrowsableEditableData {
      */
     public final void actionLoad() throws BasicException {
         loadData();
-        if (m_bd.getSize() == 0) {
-            //actionInsert();
-        }
     }
 
     /**
@@ -519,9 +506,7 @@ public class BrowsableEditableData {
             m_iState = ST_INSERT;
             m_editorrecord.writeValueInsert();
             m_Dirty.setDirty(false);
-            fireStateUpdate(); // ?
-            // primero persistimos
-            saveData();
+            fireStateUpdate();
         }
 
     }
@@ -564,12 +549,13 @@ public class BrowsableEditableData {
         if (m_Dirty.isDirty()) {
             try {
                 
-                if(JOptionPane.showConfirmDialog(null,
-                        LocalRes.getIntString("message.changeslost"),
-                        LocalRes.getIntString("title.editor"),
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+                int res = JOptionPane.showConfirmDialog(null, 
+                        LocalRes.getIntString("message.wannasave"), 
+                        LocalRes.getIntString("title.editor"), 
+                        JOptionPane.YES_NO_OPTION, 
+                        JOptionPane.QUESTION_MESSAGE);
                 
+                if(res == JOptionPane.YES_OPTION){
                     saveData();
                 }
             } catch (BasicException ex) {
