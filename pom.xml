@@ -18,20 +18,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.gitub.kriolsolutions.krospos</groupId>
-    <artifactId>kropos-parent</artifactId>
+    <groupId>io.github.kriolos.opos</groupId>
+    <artifactId>kriolos-opos-parent</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
-    <name>krPOS :: Unicenta.Parent</name>
+    <name>Kriolos :: POS.Parent</name>
 
-    <url>http://kriolsolutions.github.io/krospos</url>
-    <description>Open Source POS</description>
+    <url>https://github.com/kriolos/kriolos-opos</url>
+    <description>KriolOS.POS (Kriol Open Source Point Of Sales)</description>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <project.github-url>http://Kriolos.github.io/krospos</project.github-url>
+        <project.github-url>http://kriolos.github.io/kriolos-opos</project.github-url>
 
         <!-- MISC config-->
         <jacoco.plugin.version>0.8.5</jacoco.plugin.version>
@@ -75,7 +75,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <organization>
         <name>Paulo Borges</name> <!-- To be Chnge for a Organization Name -->
     </organization>
-    <inceptionYear>2020</inceptionYear>
+    <inceptionYear>2022</inceptionYear>
     
     <scm>
         <connection>scm:git:https://github.com/poolborges/unicenta-pos.git</connection>
