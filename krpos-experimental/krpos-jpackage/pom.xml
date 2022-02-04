@@ -2,25 +2,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>io.gitub.kriolsolutions.krospos</groupId>
-        <artifactId>kropos-parent</artifactId>
-        <version>1.0.0</version>
+        <groupId>io.github.kriolos.opos</groupId>
+        <artifactId>kriolos-opos-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>kriolos-krpos-jpackage</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>krPOS :: krPOS.JPackage</name>
     
     <properties>
-        <appModule>io.github.kriolos.krpos</appModule>
+        <appModule>io.github.kriolos.opos</appModule>
         <appMainClass>com.openbravo.pos.forms.StartPOS</appMainClass>
+        <appIcon></appIcon>
         
-        <libusb4java.classifier></libusb4java.classifier>
+        <libusb4java.classifier>win32-x86</libusb4java.classifier>
     </properties>
  
     <dependencies>
         <dependency>
-            <groupId>io.gitub.kriolsolutions.krospos</groupId>  
+            <groupId>${project.groupId}</groupId>  
             <artifactId>kriolos-pos</artifactId>  
             <scope>compile</scope>
             <exclusions>
@@ -35,6 +35,26 @@
                 <exclusion>
                     <groupId>org.osgi</groupId>
                     <artifactId>org.osgi.core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>javax.activation-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.activation</groupId>
+                    <artifactId>javax.activation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.activation</groupId>
+                    <artifactId>jakarta.activation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.xml.bind</groupId>
+                    <artifactId>jakarta.xml.bind-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -58,6 +78,7 @@
             <scope>runtime</scope>
             <classifier>${libusb4java.classifier}</classifier>
         </dependency>
+        
     </dependencies>
     
     <build>
@@ -84,19 +105,35 @@
                 <groupId>org.panteleyev</groupId>
                 <artifactId>jpackage-maven-plugin</artifactId>
                 <configuration>
-                    <name>krPOS</name>
+                    <name>kriolPOS</name>
                     <appVersion>1.0.0</appVersion>
-                    <vendor>io.github.kriolos</vendor>
+                    <copyright>Paulo Borges</copyright>
+                    <description>KriolOS.POS (Kriol Open Source Point Of Sales)</description>    
+                    <vendor>KriolOSS</vendor>
+                    
+                    <input>${project.build.directory}/mods</input>
+                    <mainClass>${appMainClass}</mainClass>
+                    <mainJar>kriolos-pos-${project.version}.jar</mainJar>
+                    
+                    <!--
                     <module>${appModule}/${appMainClass}</module>
                     <modulePaths>
                         <modulePath>${project.build.directory}/mods</modulePath>
                     </modulePaths>
+                    -->
+                    
+                    
                     <destination>${project.build.directory}/dist</destination>
                     <runtimeImage>${java.home}</runtimeImage>
                     
-                    <icon>${project.basedir}/icons/app_icon.png</icon>
+                    <!-- Change on profile for specific OS
+                    <icon>${project.basedir}/icons/app_icon.ico</icon>
+                    -->
                     <javaOptions>
                         <option>-Dfile.encoding=UTF-8</option>
+                        <option>--add-opens=java.base/java.util=ALL-UNNAMED</option>
+                        <option>--add-opens=java.base/java.lang.ref=ALL-UNNAMED</option>
+                        <option>--add-opens=java.base/java.lang=ALL-UNNAMED</option>
                     </javaOptions>
                 </configuration>
             </plugin>
@@ -141,6 +178,18 @@
             <properties>
                 <libusb4java.classifier>windows-x86_64</libusb4java.classifier>
             </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.panteleyev</groupId>
+                        <artifactId>jpackage-maven-plugin</artifactId>
+                        <configuration>
+                            <icon>${project.basedir}/icons/app_icon.ico</icon>
+                            <winMenu>true</winMenu>
+                        </configuration>
+                    </plugin>
+                </plugins> 
+            </build>
         </profile>
         
         <profile>

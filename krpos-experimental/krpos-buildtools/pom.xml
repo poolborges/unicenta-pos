@@ -2,28 +2,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>io.gitub.kriolsolutions.krospos</groupId>
-        <artifactId>kropos-parent</artifactId>
-        <version>1.0.0</version>
+        <groupId>io.github.kriolos.opos</groupId>
+        <artifactId>kriolos-opos-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>krpos-buildtools</artifactId>
     <packaging>jar</packaging>
     <name>KrPOS :: BuildTools</name>
 
-    <properties>
-        <kotlin.version>1.5.0-RC</kotlin.version>
-    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
+            <artifactId>kotlin-stdlib</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test</artifactId>
-            <version>${kotlin.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -33,7 +28,6 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
                 <executions>
                     <execution>
                         <id>compile</id>

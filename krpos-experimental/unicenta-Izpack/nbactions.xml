@@ -10,4 +10,14 @@
                 <activatedProfile>bitrock</activatedProfile>
             </activatedProfiles>
         </action>
+        <action>
+            <actionName>CUSTOM-package</actionName>
+            <displayName>package</displayName>
+            <goals>
+                <goal>package</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>windows</activatedProfile>
+            </activatedProfiles>
+        </action>
     </actions>
