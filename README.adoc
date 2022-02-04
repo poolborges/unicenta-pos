@@ -118,6 +118,7 @@ APP Resource (Customization)
 |Reladomo ORM
 |-
 |https://goldmansachs.github.io/reladomo/
+|====
 
 .Migration tools/Libs
 |====
@@ -125,7 +126,7 @@ APP Resource (Customization)
 
 |Liquidbase
 |X (CHOSED)
-|
+|-
 
 |Obevo 
 |-
