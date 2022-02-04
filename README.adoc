@@ -50,34 +50,121 @@ NOTE: WILL NOT follow future version of Unicenta oPOS
 
 * License: GPL version 3
 
-== Screenshots 
 
-image::krpos-screenshot.gif[]
+== Project's Vision
+
+* COMPAIBLE: Unicenta DB SCHEMA 4.5
+* Changes SHOULD be smoth as possible
+* FOCUS/PRIMAR: Point Of Sales (Small/Med Retail Business, On Shop,). 
+** other SHOULD be provide as integration with ERP such as: Idempiere; Apache OFBiz, 
+
+=== UI & Business Logic
+
+* Evaluate Pattern: Mode View ViewModel(MVVM), Model View Control(MVC)
+* Compose for Desktop (Kolin DSL): 
+** https://github.com/JetBrains/compose-jb
+** https://github.com/JetBrains/compose-jb/blob/master/tutorials/Swing_Integration
+* OpenJX (XML)
+** Supported on: Netbeans Platform 
 
 
-== Future of this project
+=== Context
+
+AppContext 
+
+* Provide info abou current App Instance: provide b underline infra: OSGI; Netbeans Platform
+** DI Container, etc...
+** User (Provide info about authenticated User and permission's
+** Host (Provide info about host running the POS)
 
 
 === Configuration 
 
-* Only database properties will be available from file, other properties should be saved on database
+File (Encr Password, KeyStorage, )
+
+* Abstract Config Acess (SHOULD be based on MicroProfile Config SPEC)
+* Only database properties SHOULD be available on file (Properies File)
 * database.1.url, database.1.username, database.1.password
 
+Contextual Config on Database (KVP)
+
+* AppConfig:
+* HosConfig:
+
+
 === Resource 
+
+APP Resource (Customization)
 
 * Should not be stored on database anymore, but provided on specific jar and available on classpath
 ** on OSGI those resource can be easily updated as fragment of bundle kiolos-pos-resource
 
 
-=== Database Migration 
-
-Migration tools
-
-* Liquidbase (I have Experience)
-* Obevo https://github.com/goldmansachs/obevo (No Experience)
+=== Database Access & Migration 
 
 
-=== Service Provider Interface (SPI)
+.Database Access (On Evaluation/Experimental)
+|====
+|Name |Evaluate? |Reference
+
+|JPA (JQL/HQL)
+|-
+|
+
+|JPA wih JPAStreamer: 
+|-
+|https://github.com/speedment/speedment
+
+|Reladomo ORM
+|-
+|https://goldmansachs.github.io/reladomo/
+
+.Migration tools/Libs
+|====
+|Name |Evaluate? |Reference
+
+|Liquidbase
+|X (CHOSED)
+|
+
+|Obevo 
+|-
+|https://github.com/goldmansachs/obevo
+
+|====
+
+
+=== EventSystem & ScriptEngine
+
+EventSystem Concepts: Event, EventPublisher, EventHandler
+
+* EventPublisher
+* EventHandler
+** EX: ScriptRunnerEventHandler
+
+ScriptEngine
+
+* ScriptEngine: 
+** Kotlin(kts)
+** groovy (but may not included, just for testing/evaluation)
+
+=== Modularity
+
+Frameworks
+
+* OSGI 7 (core, compendium, ...): NON-UI Componen/Modules
+* Netbeans Platform v12+(): UI Modules, Update, Distribuition
+
+Modularity of code base: API, Reference Implementation(impl)
+
+* krospos-core-api
+* krospos-core-impl 
+* krospos-gui-api
+* krospos-gui-core
+* krospos-data-api
+* krospos-data-impl
+
+==== Service Provider Interface (SPI)
 
 About Java SPI available since Java 1.5 (eg: Used in JDBC driver loading)
 
@@ -90,40 +177,6 @@ About Java SPI available since Java 1.5 (eg: Used in JDBC driver loading)
 |ResourceLoader, ResourceProvider resource:file:// resource:db:// resource:classpath://
 |PaymentGatewayProvider
 |====
-
-
-=== EventSystem & ScriptEngine
-
-
-Separate event publisher, event handling and script execution to distint component
-
-
-* EventPublisher
-* EventHandler
-* ScriptRunnerEventHandler
-* AppContext 
-** Has some Objects Generic/Global always available such: DeviceInfo (Where POS is running)
-** Has specific Context (
-
-
-=== Modularity
-
-* Modularity 
-** OSGI 7 (I have experience) core, compendium, ...
-** Netbeans Platform (I have No Experience, great UI component, but must be maven/gradle)
-** Eclipse Platform (I little experience, great UI component, but must be maven/gradle)
-* ScriptEngine: 
-** Kotlin(kts)
-** groovy (but may not included, just for testing/evaluation)
-
-Modularity of code base (impl should provide default implementation)
-
-* krospos-core-api
-* krospos-core-impl 
-* krospos-gui-api
-* krospos-gui-core
-* krospos-data-api
-* krospos-data-impl
 
 ==== OSGI 
 
@@ -143,60 +196,82 @@ Modularity of code base (impl should provide default implementation)
 docker run --name unicenta -p 3306:3306 -d -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=unicenta -e MYSQL_USER=unicenta -e MYSQL_PASSWORD=unicenta mysql:5.6
 ----
 
-== GUI 
+== GUI Libraries
 
 Currently GUI is Swing based on __Netbeans GUI Designer__ which use XML to create UI and generate Swing Java code.
 
-GUI Framework 
+GUI Framework/Toolkit
 
-* Swing
-* Eclipse SWT 
-* JavaFX 
-* TornadoFX - Build on top of JavaFX
+* Java Swing (Migra
 * Jetbrains Compose for Desktop
+* Netbeans Platform 
+** (Property Change Event and Listener)
+** Windows System API (Behaviors: Docking; floating, moving/positioning; Persist state between restart)
+** Node Explore View 
+** JFXPanel (allow to use JavaFX content)
+* JavaFX (Web View, 
+* TornadoFX (Build on top of JavaFX, But comple
+* Eclipse SWT 
+
+Swing Libraries
+
+* SwingX
+* ... (TO BE REMOVED)
+
+== Tools for improvemen of Code Quali
 
 
-== Tools 
+GUI Test 
 
-* Do Test Coverage with
-** JaCoCo coverage tool, used to measure how many lines of our code are tested.
-** OpenClover (code coverage tool for Java, Groovy and AspectJ)
-* Do Static Source Code Analysis with 
-** PMD
-* Do Bytecode Analysis with
-** SpotBugs (Alternative to FindBug) and Find Security Bugs
-* Do project has strict code style guidelines with
-** Checkstyle maven-checkstyle-plugin 
-* Do Scan your Dependencies for Vulnerabilities with
-** OWASP Dependency Check 
+** FEST (Deprecate) use AssertJ (Swing Module)
+
+Test Coverage with
+
+* JaCoCo coverage tool, used to measure how many lines of our code are tested.
+* OpenClover (code coverage tool for Java, Groovy and AspectJ)
+
+Static Source Code Analysis with 
+
+* PMD
+* SpotBugs (Alternative to FindBug) and Find Security Bugs
+
+Project has strict code style guidelines with
+
+* Checkstyle maven-checkstyle-plugin 
+
+Scan your Dependencies for Vulnerabilities with
+
+* OWASP Dependency Check 
 *** Dependency-Check is a Software Composition Analysis (SCA) tool suite 
-*** https://owasp.org/www-project-dependency-check/
+** https://owasp.org/www-project-dependency-check/
 
-
-----
-mvn org.owasp:dependency-check-maven:check -Dformat=CSV
-mvn org.owasp:dependency-check-maven:aggregate -Dformat=CSV
-----
-
-
-----
-mvn clean install jacoco:prepare-agent jacoco:report
-mvn clean jacoco:prepare-agent install jacoco:report
-----
-
-== GUI Test 
-
-
-* FEST (Deprecate) use AssertJ (Swing Module)
-
-
-== Tooling
-
+Performance and 
+ 
 * SoapUI (API Testing Tooling)
 * Gatlin 
 * JMeter
 * Locust (Python Based)
 
+.Example use dependecies check
+----
+mvn org.owasp:dependency-check-maven:check -Dformat=CSV
+mvn org.owasp:dependency-check-maven:aggregate -Dformat=CSV
+----
+
+.Example use JaCoCo
+----
+mvn clean install jacoco:prepare-agent jacoco:report
+mvn clean jacoco:prepare-agent install jacoco:report
+----
+
+
 == Reference
 
 * link:{doc-dir}/[App Docs]
+
+
+== Screenshots 
+
+image::krpos-screenshot.gif[]
+
+
