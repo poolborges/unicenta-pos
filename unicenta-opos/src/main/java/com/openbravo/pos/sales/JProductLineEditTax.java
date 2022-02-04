@@ -82,9 +82,9 @@ public class JProductLineEditTax extends javax.swing.JDialog {
         m_bunitsok = true;
         m_bpriceok = true;
 
-        m_jName.setEnabled(app.getAppUserView().getUser().hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));        
-        m_jPrice.setEnabled(app.getAppUserView().getUser().hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));
-        m_jPriceTax.setEnabled(app.getAppUserView().getUser().hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));
+        m_jName.setEnabled(app.hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));        
+        m_jPrice.setEnabled(app.hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));
+        m_jPriceTax.setEnabled(app.hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));
         
         m_jName.setText(oLine.getProductName());        
         m_jUnits.setDoubleValue(oLine.getMultiply());

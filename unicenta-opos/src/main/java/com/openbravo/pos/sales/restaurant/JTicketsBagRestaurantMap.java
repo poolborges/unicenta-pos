@@ -232,7 +232,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
         m_jreservations = new JTicketsBagRestaurantRes(app, this);
         add(m_jreservations, "res");
 
-        showLayout = m_App.getAppUserView().getUser().hasPermission("sales.Layout");
+        showLayout = m_App.hasPermission("sales.Layout");
         if (showLayout) {
             m_jbtnLayout.setVisible(true);
             m_jbtnSave.setVisible(false);            
@@ -275,7 +275,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
     @Override
     public void activate() {
 
-        showLayout = m_App.getAppUserView().getUser().hasPermission("sales.Layout");
+        showLayout = m_App.hasPermission("sales.Layout");
         if (showLayout) {
             m_jbtnLayout.setVisible(true);
             m_jbtnSave.setVisible(false);
@@ -680,7 +680,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                     if ("locked".equals(m_lockState)) {
                         JOptionPane.showMessageDialog(null, 
                             AppLocal.getIntString("message.sharedticketlock")); 
-                        if (m_App.getAppUserView().getUser().hasPermission("sales.Override")) {                    
+                        if (m_App.hasPermission("sales.Override")) {                    
                             int res = JOptionPane.showConfirmDialog(null
                                 , AppLocal.getIntString("message.sharedticketlockoverride")
                                 , AppLocal.getIntString("title.editor")
@@ -696,7 +696,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                         String m_user = m_App.getAppUserView().getUser().getName();
                         String ticketuser = m_place.getWaiter();
                         if (m_user.equals(ticketuser) ||
-                            m_App.getAppUserView().getUser().hasPermission("sales.Override")) {
+                            m_App.hasPermission("sales.Override")) {
                             m_place.setPeople(true);                                             
                             m_PlaceClipboard = null;
                             m_lockState = "locked";

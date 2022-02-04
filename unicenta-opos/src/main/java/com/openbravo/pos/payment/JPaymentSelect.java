@@ -207,7 +207,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
     }
 
     protected void addTabPayment(JPaymentCreator jpay) {
-        if (app.getAppUserView().getUser().hasPermission(jpay.getKey())) {
+        if (app.hasPermission(jpay.getKey())) {
 
             JPaymentInterface jpayinterface = payments.get(jpay.getKey());
             if (jpayinterface == null) {

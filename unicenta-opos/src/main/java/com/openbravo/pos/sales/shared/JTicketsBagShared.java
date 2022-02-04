@@ -80,8 +80,8 @@ public class JTicketsBagShared extends JTicketsBag {
         m_sCurrentTicket = null;
         selectValidTicket();
 
-        m_jDelTicket.setEnabled(m_App.getAppUserView().getUser().hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));
-        m_jDelTicket.setEnabled(m_App.getAppUserView().getUser().hasPermission("sales.DeleteTicket"));
+        m_jDelTicket.setEnabled(m_App.hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));
+        m_jDelTicket.setEnabled(m_App.hasPermission("sales.DeleteTicket"));
     }
 
     /**
@@ -205,7 +205,7 @@ public class JTicketsBagShared extends JTicketsBag {
             if (l.isEmpty()) {
                 m_jListTickets.setText("");
             } else {
-                showList = m_App.getAppUserView().getUser().hasPermission("sales.ShowList");
+                showList = m_App.hasPermission("sales.ShowList");
                 if (showList) {
                     m_jListTickets.doClick();
                 }
@@ -437,7 +437,7 @@ public class JTicketsBagShared extends JTicketsBag {
             public void run() {
 
                 try {
-                    if (!m_App.getAppUserView().getUser().hasPermission("sales.ReprintTicket")) {
+                    if (!m_App.hasPermission("sales.ReprintTicket")) {
                         JOptionPane.showMessageDialog(null,
                                 AppLocal.getIntString("message.reprintticket"),
                                 AppLocal.getIntString("message.reprinttickettitle"),
@@ -446,8 +446,8 @@ public class JTicketsBagShared extends JTicketsBag {
 
                         if ("0".equals(m_App.getAppUserView().getUser().getRole())
                                 || "1".equals(m_App.getAppUserView().getUser().getRole())
-                                || m_App.getAppUserView().getUser().hasPermission("sales.ViewSharedTicket")
-                                || m_App.getAppUserView().getUser().hasPermission("sales.Override")) {
+                                || m_App.hasPermission("sales.ViewSharedTicket")
+                                || m_App.hasPermission("sales.Override")) {
                             List<ReprintTicketInfo> l = dlSales.getReprintTicketList();
                             JTicketsReprintList listDialog = JTicketsReprintList.newJDialog(JTicketsBagShared.this);
                             String id = listDialog.showTicketsList(l, dlSales);

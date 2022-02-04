@@ -122,8 +122,6 @@ public class JRootApp extends JPanel implements AppView {
         //m_jLblTitle.repaint();
         initComponents();
         jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(30, 30));
-        serverMonitor.setVisible(true);
-        webMemoryBar1.setShowMaximumMemory(true);
     }
 
     public void releaseResources() {
@@ -684,34 +682,6 @@ public class JRootApp extends JPanel implements AppView {
         }
     }
 
-    private int getProgressBar() {
-        int rate = serverMonitor.getValue();
-        return rate;
-    }
-
-    private boolean pingServer() throws UnknownHostException {
-        /* 
-     * This method is for the future. Connects and will include both servers + backup server
-     * Tested locally on JG machine and unicenta-server   
-         */
-        serverMonitor.setString("Checking...");
-
-        InetAddress addr = InetAddress.getByName(AppLocal.getIntString("db.ip"));
-        int port = 3306;
-
-        SocketAddress sockaddr = new InetSocketAddress(addr, port);
-        Socket sock = new Socket();
-        try {
-            sock.connect(sockaddr, 2000);
-            serverMonitor.setString("Server is alive!");
-            serverMonitor.setValue(0);
-            return true;
-        } catch (IOException ex) {
-            Logger.getLogger(JRootApp.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -740,8 +710,6 @@ public class JRootApp extends JPanel implements AppView {
         statusBarPanel = new javax.swing.JPanel();
         panelTask = new javax.swing.JPanel();
         m_jHost = new javax.swing.JLabel();
-        webMemoryBar1 = new com.alee.extended.statusbar.WebMemoryBar();
-        serverMonitor = new com.alee.laf.progressbar.WebProgressBar();
         jPanel3 = new javax.swing.JPanel();
 
         setEnabled(false);
@@ -894,26 +862,6 @@ public class JRootApp extends JPanel implements AppView {
         m_jHost.setPreferredSize(new java.awt.Dimension(200, 32));
         panelTask.add(m_jHost);
 
-        webMemoryBar1.setBackground(new java.awt.Color(153, 153, 153));
-        webMemoryBar1.setText("");
-        webMemoryBar1.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        webMemoryBar1.setMaximumSize(new java.awt.Dimension(150, 30));
-        webMemoryBar1.setMinimumSize(new java.awt.Dimension(150, 30));
-        webMemoryBar1.setPreferredSize(new java.awt.Dimension(150, 30));
-        webMemoryBar1.setUsedBorderColor(new java.awt.Color(0, 204, 204));
-        webMemoryBar1.setUsedFillColor(new java.awt.Color(0, 204, 255));
-        panelTask.add(webMemoryBar1);
-
-        serverMonitor.setToolTipText("");
-        serverMonitor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        serverMonitor.setMaximumSize(new java.awt.Dimension(50, 18));
-        serverMonitor.setPreferredSize(new java.awt.Dimension(150, 30));
-        serverMonitor.setProgressBottomColor(new java.awt.Color(76, 197, 237));
-        serverMonitor.setRound(2);
-        serverMonitor.setString("Keep Alive");
-        serverMonitor.setStringPainted(true);
-        panelTask.add(serverMonitor);
-
         statusBarPanel.add(panelTask, java.awt.BorderLayout.LINE_START);
         statusBarPanel.add(jPanel3, java.awt.BorderLayout.LINE_END);
 
@@ -954,9 +902,7 @@ public class JRootApp extends JPanel implements AppView {
     private javax.swing.JTextField m_txtKeys;
     private javax.swing.JPanel panelTask;
     private javax.swing.JLabel poweredby;
-    private com.alee.laf.progressbar.WebProgressBar serverMonitor;
     private javax.swing.JPanel statusBarPanel;
-    private com.alee.extended.statusbar.WebMemoryBar webMemoryBar1;
     // End of variables declaration//GEN-END:variables
 }
 

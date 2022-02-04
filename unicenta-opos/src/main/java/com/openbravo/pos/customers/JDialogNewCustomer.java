@@ -177,7 +177,6 @@ public class JDialogNewCustomer extends javax.swing.JDialog {
         setTitle(AppLocal.getIntString("label.customer")); // NOI18N
         setPreferredSize(new java.awt.Dimension(610, 430));
         setResizable(false);
-        getContentPane().setLayout(new java.awt.BorderLayout());
 
         jPanel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
@@ -399,7 +398,7 @@ public class JDialogNewCustomer extends javax.swing.JDialog {
         getContentPane().add(jPanel3, java.awt.BorderLayout.NORTH);
         jPanel3.getAccessibleContext().setAccessibleName("");
 
-        jPanel2.setLayout(new java.awt.FlowLayout(2));
+        jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
         m_jBtnCancel.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         m_jBtnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/cancel.png"))); // NOI18N

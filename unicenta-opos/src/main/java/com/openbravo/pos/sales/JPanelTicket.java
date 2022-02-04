@@ -330,9 +330,9 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         taxcategoriesmodel.setSelectedKey(taxesid);
         taxeslogic = new TaxesLogic(taxlist);
 
-        m_jDelete.setEnabled(m_App.getAppUserView().getUser().hasPermission("sales.EditLines"));
-        m_jNumberKeys.setMinusEnabled(m_App.getAppUserView().getUser().hasPermission("sales.EditLines"));
-        m_jNumberKeys.setEqualsEnabled(m_App.getAppUserView().getUser().hasPermission("sales.Total"));
+        m_jDelete.setEnabled(m_App.hasPermission("sales.EditLines"));
+        m_jNumberKeys.setMinusEnabled(m_App.hasPermission("sales.EditLines"));
+        m_jNumberKeys.setEqualsEnabled(m_App.hasPermission("sales.Total"));
         m_jbtnconfig.setPermissions(m_App.getAppUserView().getUser());
 
         m_ticketsbag.setEnabled(false);
@@ -425,9 +425,9 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
 //            .getProperties().getProperty("machine.ticketsbag"))){
 //        }else{
 //            j_btnRemotePrt.setVisible(m_App
-//                .getAppUserView().getUser().hasPermission("sales.PrintKitchen")); 
+//                .hasPermission("sales.PrintKitchen")); 
 //        }
-        if (m_App.getAppUserView().getUser().hasPermission("sales.PrintRemote")) {
+        if (m_App.hasPermission("sales.PrintRemote")) {
             j_btnRemotePrt.setEnabled(true);
         } else {
             j_btnRemotePrt.setEnabled(false);
@@ -504,7 +504,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
 
         if (m_oTicket != null) {
             for (int i = 0; i < m_oTicket.getLinesCount(); i++) {
-                if (m_App.getAppUserView().getUser().hasPermission("sales.Total")
+                if (m_App.hasPermission("sales.Total")
                         && m_oTicket.getArticlesCount() > 1) {
                     btnSplit.setEnabled(true);
                 } else {
@@ -686,7 +686,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             m_ticketlines.removeTicketLine(i);
         } else {
             if (i < 1) {
-                if (m_App.getAppUserView().getUser().hasPermission("sales.DeleteLines")) {
+                if (m_App.hasPermission("sales.DeleteLines")) {
                     int input = JOptionPane.showConfirmDialog(this,
                             AppLocal.getIntString("message.deletelineyes"),
                             AppLocal.getIntString("label.deleteline"), JOptionPane.YES_NO_OPTION);
@@ -1311,7 +1311,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                     && m_iNumberStatusPor == NUMBERZERO) {
 
                 if (m_App.getDeviceScale().existsScale()
-                        && m_App.getAppUserView().getUser().hasPermission("sales.EditLines")) {
+                        && m_App.hasPermission("sales.EditLines")) {
                     try {
                         Double value = m_App.getDeviceScale().readWeight();
                         if (value != null) {
@@ -1395,7 +1395,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             } else if (cTrans == '-'
                     && m_iNumberStatusInput == NUMBERZERO
                     && m_iNumberStatusPor == NUMBERZERO
-                    && m_App.getAppUserView().getUser().hasPermission("sales.EditLines")) {
+                    && m_App.hasPermission("sales.EditLines")) {
 
                 int i = m_ticketlines.getSelectedIndex();
                 if (i < 0) {
@@ -1492,7 +1492,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             } else if (cTrans == '-'
                     && m_iNumberStatusInput == NUMBERZERO
                     && m_iNumberStatusPor == NUMBERVALID
-                    && m_App.getAppUserView().getUser().hasPermission("sales.EditLines")) {
+                    && m_App.hasPermission("sales.EditLines")) {
                 int i = m_ticketlines.getSelectedIndex();
 
                 if (i < 0) {
@@ -1537,7 +1537,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             } else if (cTrans == '+'
                     && m_iNumberStatusInput == NUMBERVALID
                     && m_iNumberStatusPor == NUMBERZERO
-                    && m_App.getAppUserView().getUser().hasPermission("sales.EditLines")) {
+                    && m_App.hasPermission("sales.EditLines")) {
                 ProductInfoExt product = getInputProduct();
                 addTicketLine(product, 1.0, product.getPriceSell());
                 m_jEditLine.doClick();
@@ -1545,7 +1545,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             } else if (cTrans == '-'
                     && m_iNumberStatusInput == NUMBERVALID
                     && m_iNumberStatusPor == NUMBERZERO
-                    && m_App.getAppUserView().getUser().hasPermission("sales.EditLines")) {
+                    && m_App.hasPermission("sales.EditLines")) {
                 ProductInfoExt product = getInputProduct();
                 addTicketLine(product, 1.0, -product.getPriceSell());
                 m_jEditLine.doClick();
@@ -1553,14 +1553,14 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             } else if (cTrans == '+'
                     && m_iNumberStatusInput == NUMBERVALID
                     && m_iNumberStatusPor == NUMBERVALID
-                    && m_App.getAppUserView().getUser().hasPermission("sales.EditLines")) {
+                    && m_App.hasPermission("sales.EditLines")) {
                 ProductInfoExt product = getInputProduct();
                 addTicketLine(product, getPorValue(), product.getPriceSell());
 
             } else if (cTrans == '-'
                     && m_iNumberStatusInput == NUMBERVALID
                     && m_iNumberStatusPor == NUMBERVALID
-                    && m_App.getAppUserView().getUser().hasPermission("sales.EditLines")) {
+                    && m_App.hasPermission("sales.EditLines")) {
                 ProductInfoExt product = getInputProduct();
                 addTicketLine(product, getPorValue(), -product.getPriceSell());
 
@@ -1597,7 +1597,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         }
         boolean resultok = false;
 
-        if (m_App.getAppUserView().getUser().hasPermission("sales.Total")) {
+        if (m_App.hasPermission("sales.Total")) {
 
             warrantyCheck(ticket);
 

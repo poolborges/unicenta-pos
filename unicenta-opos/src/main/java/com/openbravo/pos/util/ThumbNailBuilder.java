@@ -28,6 +28,7 @@ import java.net.URL;
 import java.text.AttributedString;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.JLabel;
 import net.coobird.thumbnailator.Thumbnailator;
 
 /**
@@ -97,11 +98,50 @@ public class ThumbNailBuilder {
         }
     }
     
+    public Image getThumbNailText(Image img, String text) {
+                
+        img = getThumbNail(img);
+        
+        BufferedImage imgtext = new BufferedImage(img.getWidth(null), img.getHeight(null),  BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = imgtext.createGraphics();
+                
+        // The text        
+        JLabel label = new JLabel();
+        Font font = label.getFont();
+        Font plainFont = new Font(font.getFontName(), Font.PLAIN,font.getSize());
+        label.setFont(plainFont);
+        label.setOpaque(false);
+        label.setText(text);
+        label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        label.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);            
+        Dimension d = label.getPreferredSize();
+        label.setBounds(0, 0, imgtext.getWidth(), d.height);
+        
+        // The background
+        Color c1 = new Color(0xff, 0xff, 0xff, 0x40);
+        Color c2 = new Color(0xff, 0xff, 0xff, 0xd0);
+
+        Paint gpaint = new GradientPaint(new Point(0,0), c1, new Point(label.getWidth() / 2, 0), c2, true);
+        
+        g2d.drawImage(img, 0, 0, null);
+        g2d.translate(0, imgtext.getHeight() - label.getHeight());
+        g2d.setPaint(gpaint);            
+        g2d.fillRect(0 , 0, imgtext.getWidth(), label.getHeight());    
+        label.paint(g2d);
+            
+        g2d.dispose();
+        
+        return imgtext;    
+    }
+
+    
     private Image createThumb(Image img, String text){
         
         BufferedImage imageBuf = ImageUtils.toBufferedImage(createThumb(img));
 
-        Font font = new Font("Arial", Font.BOLD, 18);
+        JLabel label = new JLabel();
+        Font font = label.getFont();
+        //Font font = new Font("Arial", Font.BOLD, 18);
 
         AttributedString attributedText = new AttributedString(text);
         attributedText.addAttribute(TextAttribute.FONT, font);

@@ -217,10 +217,10 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
                 for (CategoryInfo cat : categories) {
 
                     
-                    Image imageIcons = cat.getImage() != null ? cat.getImage() : tnbbutton.getThumbNail();
-        
+                    
                     if (cat.getCatShowName()) {
-                        
+                        Image imageIcons = cat.getImage() != null ? tnbsubcat.getThumbNailText(cat.getImage(), cat.getName()) : tnbbutton.getThumbNail();
+        
                         jcurrTab.addButton(
                                 new ImageIcon(imageIcons),
                                 new SelectedCategory(cat),
@@ -228,6 +228,7 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
                                 null);
                      
                     } else {
+                        Image imageIcons = cat.getImage() != null ? tnbsubcat.getThumbNailText(cat.getImage(), "") : tnbbutton.getThumbNail();
                         jcurrTab.addButton(
                                 new ImageIcon(imageIcons),
                                 new SelectedCategory(cat),
@@ -239,7 +240,7 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
                 java.util.List<ProductInfoExt> prods = m_dlSales.getProductConstant();
                 for (ProductInfoExt prod : prods) {
                     
-                    Image imageIcon = prod.getImage() != null ? prod.getImage() : tnbbutton.getThumbNail();
+                    Image imageIcon = prod.getImage() != null ? tnbbutton.getThumbNailText(prod.getImage(), "") : tnbbutton.getThumbNail();
 
                     String tooltip = ( prod.getTextTip() != null)? prod.getTextTip() : getProductLabel(prod, false);
                     
@@ -254,15 +255,15 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
                 java.util.List<ProductInfoExt> products = m_dlSales.getProductCatalog(catid);
                 for (ProductInfoExt prod : products) {
                     
-                    Image imageIcon = prod.getImage() != null ? prod.getImage() : tnbbutton.getThumbNail();
+                    Image imageIcon = prod.getImage() != null ? tnbbutton.getThumbNailText(prod.getImage(), "") : tnbbutton.getThumbNail();
 
-                    String tooltip = ( prod.getTextTip() != null)? prod.getTextTip() : null;
+                    String tooltip = prod.getTextTip() != null ? prod.getTextTip() : null;
                      
                     jcurrTab.addButton(
                             new ImageIcon(imageIcon),
                             new SelectedAction(prod),
                             getProductLabel(prod, true),
-                            null);
+                            tooltip);
                    
                 }
             }
