@@ -16,6 +16,9 @@
 package com.openbravo.pos.config;
 
 import com.openbravo.data.user.DirtyManager;
+import com.openbravo.pos.core.spi.gui.LafInfo;
+import com.openbravo.pos.core.spi.gui.DefaultLafProvider;
+import com.openbravo.pos.core.spi.gui.FlatlafProvider;
 import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
 import java.awt.Component;
@@ -74,16 +77,15 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
 //        jbtnMedia.addActionListener(new FileChooserEvent(jtxtStartupHTML));    // Coming later!          
         
         // Installed skins
-        LookAndFeelInfo[] lafs = UIManager.getInstalledLookAndFeels();
-        for (LookAndFeelInfo laf : lafs) {
-            jcboLAF.addItem(new LAFInfo(laf.getName(), laf.getClassName()));
-        }
-
+        new DefaultLafProvider()
+                .getLafInfoList()
+                .forEach(i -> jcboLAF.addItem(i));
+        
+        
         // FlatLaf - Flat Look and Feel 
-        jcboLAF.addItem(new LAFInfo("Flat Dark", com.formdev.flatlaf.FlatDarkLaf.class.getCanonicalName()));
-        jcboLAF.addItem(new LAFInfo("Flat Darcula", com.formdev.flatlaf.FlatDarculaLaf.class.getCanonicalName()));
-        jcboLAF.addItem(new LAFInfo("Flat Light", com.formdev.flatlaf.FlatLightLaf.class.getCanonicalName()));
-        jcboLAF.addItem(new LAFInfo("Flat IntelliJ", com.formdev.flatlaf.FlatIntelliJLaf.class.getCanonicalName()));
+        new FlatlafProvider()
+                .getLafInfoList()
+                .forEach(i -> jcboLAF.addItem(i));
 
         jcboLAF.addActionListener((java.awt.event.ActionEvent evt) -> {
             changeLAF();
@@ -129,7 +131,7 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
         String lafclass = config.getProperty("swing.defaultlaf");
         jcboLAF.setSelectedItem(null);
         for (int i = 0; i < jcboLAF.getItemCount(); i++) {
-            LAFInfo lafinfo = (LAFInfo) jcboLAF.getItemAt(i);
+            LafInfo lafinfo = (LafInfo) jcboLAF.getItemAt(i);
             if (lafinfo.getClassName().equals(lafclass)) {
                 jcboLAF.setSelectedIndex(i);
                 break;
@@ -165,7 +167,7 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
         config.setProperty("machine.hostname", jtxtMachineHostname.getText());
         config.setProperty("machine.department", jtxtMachineDepartment.getText());      
         
-        LAFInfo laf = (LAFInfo) jcboLAF.getSelectedItem();
+        LafInfo laf = (LafInfo) jcboLAF.getSelectedItem();
         config.setProperty("swing.defaultlaf", laf == null
                 ? System.getProperty("swing.defaultlaf", "javax.swing.plaf.metal.MetalLookAndFeel")
                 : laf.getClassName());
@@ -188,7 +190,7 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
 
     private void changeLAF() {
 
-        final LAFInfo laf = (LAFInfo) jcboLAF.getSelectedItem();
+        final LafInfo laf = (LafInfo) jcboLAF.getSelectedItem();
         if (laf != null && !laf.getClassName().equals(UIManager.getLookAndFeel().getClass().getName())) {
             // The selected look and feel is different from the current look and feel.
             SwingUtilities.invokeLater(() -> {
@@ -206,30 +208,7 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
         }
     }
 
-    private static class LAFInfo {
-
-        private final String name;
-        private final String classname;
-
-        public LAFInfo(String name, String classname) {
-            this.name = name;
-            this.classname = classname;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getClassName() {
-            return classname;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-    }
-
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is

@@ -1869,7 +1869,6 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         webSlider.setSnapToTicks(true);
         webSlider.setToolTipText("");
         webSlider.setValue(5);
-        webSlider.setAnimated(false);
         webSlider.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         webSlider.setPreferredSize(new java.awt.Dimension(270, 47));
         webSlider.addChangeListener(new javax.swing.event.ChangeListener() {
