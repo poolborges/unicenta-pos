@@ -232,7 +232,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      * @throws BasicException
      */
     public final ProductInfoExt getProductInfo(String id) throws BasicException {
-	return new PreparedSentence<ProductInfoExt>(s
+	return new PreparedSentence<String,ProductInfoExt>(s
 		, "SELECT "
                 + "ID, "
                 + "REFERENCE, "
@@ -273,7 +273,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 //        if (sCode.length() == 13 && (sCode.startsWith("2") || sCode.startsWith("02"))) 
 //            return  getProductInfoByShortCode(sCode);
 //        else {        
-            return new PreparedSentence<ProductInfoExt>(s
+            return new PreparedSentence<String, ProductInfoExt>(s
 		, "SELECT "
                 + "ID, "
                 + "REFERENCE, "
@@ -313,7 +313,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
     public final ProductInfoExt getProductInfoByShortCode(String sCode) throws BasicException {
 
-        return new PreparedSentence<ProductInfoExt>(s
+        return new PreparedSentence<String, ProductInfoExt>(s
 		, "SELECT "
                 + "ID, "
                 + "REFERENCE, "
@@ -361,7 +361,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 */    
     public final ProductInfoExt getProductInfoByUShortCode(String sCode) throws BasicException {
 
-        return new PreparedSentence<ProductInfoExt>(s
+        return new PreparedSentence<String, ProductInfoExt>(s
 		, "SELECT "
                 + "ID, "
                 + "REFERENCE, "
@@ -399,8 +399,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 //  codes that may be in use at positions 234567
 //  last digit (position 7) can be used to identify COUPON (5 or 9) - FUTURE              
             , SerializerWriteString.INSTANCE
-                , ProductInfoExt.getSerializerRead())
-                .find(sCode.substring(0, 7));
+            , ProductInfoExt.getSerializerRead()).find(sCode.substring(0, 7));
     } 
     
     /**
@@ -410,7 +409,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      * @throws BasicException
      */
     public final ProductInfoExt getProductInfoByReference(String sReference) throws BasicException {
-	return new PreparedSentence<ProductInfoExt>(s
+	return new PreparedSentence<String, ProductInfoExt>(s
 		, "SELECT "
                 + "ID, "
                 + "REFERENCE, "
@@ -453,7 +452,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      * @throws BasicException
      */
         public final List<CategoryInfo> getRootCategories() throws BasicException {
-        return new PreparedSentence<CategoryInfo>(s
+        return new PreparedSentence<Void, CategoryInfo>(s
             , "SELECT "
                 + "ID, "
                 + "NAME, "
@@ -475,7 +474,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      * @throws BasicException
      */
     public final List<CategoryInfo> getSubcategories(String category) throws BasicException  {
-        return new PreparedSentence<CategoryInfo>(s
+        return new PreparedSentence<String,CategoryInfo>(s
             , "SELECT "
                 + "ID, "
                 + "NAME, "
@@ -496,7 +495,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      * @throws BasicException
      */
     public List<ProductInfoExt> getProductCatalog(String category) throws BasicException  {
-	return new PreparedSentence<ProductInfoExt>(s
+	return new PreparedSentence<String, ProductInfoExt>(s
 		, "SELECT "
                 + "P.ID, "
                 + "P.REFERENCE, "
@@ -542,7 +541,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      * @throws BasicException
      */
     public List<ProductInfoExt> getProductComments(String id) throws BasicException {
-	return new PreparedSentence<ProductInfoExt>(s
+	return new PreparedSentence<String, ProductInfoExt>(s
 		, "SELECT "
                 + "P.ID, "
                 + "P.REFERENCE, "
@@ -590,7 +589,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      * @throws BasicException
      */
     public List<ProductInfoExt> getProductConstant() throws BasicException {
-        return new PreparedSentence<ProductInfoExt>(s
+        return new PreparedSentence<Void, ProductInfoExt>(s
 		    , "SELECT "
                     + "products.ID, "
                     + "products.REFERENCE, "
@@ -638,7 +637,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      * @throws BasicException
      */
     public final CategoryInfo getCategoryInfo(String id) throws BasicException {
-        return new PreparedSentence<CategoryInfo>(s
+        return new PreparedSentence<String, CategoryInfo>(s
                 , "SELECT "
                 + "ID, "
                 + "NAME, "
@@ -660,7 +659,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      * @throws BasicException
      */
     public final List<CategoryStock> getCategorysProductList(String pId) throws BasicException {
-        return new PreparedSentence<CategoryStock>(s,               
+        return new PreparedSentence<String,CategoryStock>(s,               
                 "SELECT products.ID, " +
                     "products.NAME AS Name, " +
                     "products.CODE AS Barcode, " +
@@ -1219,7 +1218,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      * @throws BasicException
      */
     public final CustomerInfoExt getCustomerInfo(String id) throws BasicException {
-	return new PreparedSentence<CustomerInfoExt>(s
+	return new PreparedSentence<String, CustomerInfoExt>(s
 		, "SELECT "
                 + "ID, "
                 + "SEARCHKEY, "

@@ -90,11 +90,11 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
     }
 
     public final String findVersion() throws BasicException {
-        final SentenceFind m_version = new PreparedSentence(this.session,
+        final SentenceFind<String> m_version = new PreparedSentence<String,String>(this.session,
                 "SELECT VERSION FROM applications WHERE ID = ?",
                 SerializerWriteString.INSTANCE, SerializerReadString.INSTANCE);
 
-        return (String) m_version.find(AppLocal.APP_ID);
+        return m_version.find(AppLocal.APP_ID);
     }
 
     public final String getUser() throws BasicException {
@@ -129,7 +129,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      * @throws BasicException
      */
     public final List<String> getPermissions(String role) throws BasicException {
-        final SentenceList m_permissionlist = new StaticSentence(this.session,
+        final SentenceList<String> m_permissionlist = new StaticSentence(this.session,
                 "SELECT PERMISSIONS FROM permissions WHERE ID = ?",
                 SerializerWriteString.INSTANCE,
                 new SerializerReadBasic(new Datas[]{Datas.STRING}));
@@ -145,13 +145,13 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      */
     public final AppUser findPeopleByCard(String card) throws BasicException {
         
-        final SentenceFind m_peoplebycard = new PreparedSentence(this.session,
+        final SentenceFind<AppUser> m_peoplebycard = new PreparedSentence<String, AppUser>(this.session,
                 "SELECT ID, NAME, APPPASSWORD, CARD, ROLE, IMAGE "
                 + "FROM people "
                 + "WHERE CARD = ? AND VISIBLE = " + this.session.DB.TRUE(),
                 SerializerWriteString.INSTANCE,
                 new AppuserReader());
-        return (AppUser) m_peoplebycard.find(card);
+        return m_peoplebycard.find(card);
     }
 
     /**

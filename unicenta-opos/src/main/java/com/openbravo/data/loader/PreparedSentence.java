@@ -19,9 +19,9 @@ package com.openbravo.data.loader;
  *
  * @author adrianromero
  */
-public class PreparedSentence<T> extends StaticSentence<T> {
+public class PreparedSentence<W, T> extends StaticSentence<W, T> {
 
-    public PreparedSentence(Session s, ISQLBuilderStatic sentence, SerializerWrite<Object> serwrite, SerializerRead<T> serread) {
+    public PreparedSentence(Session s, ISQLBuilderStatic sentence, SerializerWrite<W> serwrite, SerializerRead<T> serread) {
         super(s, sentence, serwrite, serread);
     }    
 
@@ -29,15 +29,15 @@ public class PreparedSentence<T> extends StaticSentence<T> {
         this(s, sentence, null, null);
     }     
 
-    public PreparedSentence(Session s, ISQLBuilderStatic sentence, SerializerWrite<Object> serwrite) {
+    public PreparedSentence(Session s, ISQLBuilderStatic sentence, SerializerWrite<W> serwrite) {
         this(s, sentence, serwrite, null);
     }
     
-    public PreparedSentence(Session s, String sentence, SerializerWrite<Object> serwrite, SerializerRead<T> serread) {
+    public PreparedSentence(Session s, String sentence, SerializerWrite<W> serwrite, SerializerRead<T> serread) {
         this(s, new NormalBuilder(sentence), serwrite, serread);
     }
 
-    public PreparedSentence(Session s, String sentence, SerializerWrite<Object> serwrite) {
+    public PreparedSentence(Session s, String sentence, SerializerWrite<W> serwrite) {
         this(s, new NormalBuilder(sentence), serwrite, null);
     }
 

@@ -26,17 +26,19 @@ import java.util.logging.Logger;
 /**
  *
  * @author adrianromero
+ * @param <W>
+ * @param <T>
  */
-public class StaticSentence<T> extends JDBCBaseSentence<T> {
+public class StaticSentence<W extends Object, T> extends JDBCBaseSentence<T> {
 
     protected static final Logger LOGGER = Logger.getLogger(StaticSentence.class.getName());
 
     protected ISQLBuilderStatic m_sentence;
-    protected SerializerWrite<Object> m_SerWrite = null;
+    protected SerializerWrite<W> m_SerWrite = null;
     protected SerializerRead<T> m_SerRead = null;
     protected Statement m_Stmt;
 
-    public StaticSentence(Session s, ISQLBuilderStatic sentence, SerializerWrite<Object> serwrite, SerializerRead<T> serread) {
+    public StaticSentence(Session s, ISQLBuilderStatic sentence, SerializerWrite<W> serwrite, SerializerRead<T> serread) {
         super(s);
         m_sentence = sentence;
         m_SerWrite = serwrite;
@@ -48,15 +50,15 @@ public class StaticSentence<T> extends JDBCBaseSentence<T> {
         this(s, sentence, null, null);
     }
 
-    public StaticSentence(Session s, ISQLBuilderStatic sentence, SerializerWrite<Object> serwrite) {
+    public StaticSentence(Session s, ISQLBuilderStatic sentence, SerializerWrite<W> serwrite) {
         this(s, sentence, serwrite, null);
     }
 
-    public StaticSentence(Session s, String sentence, SerializerWrite<Object> serwrite, SerializerRead<T> serread) {
+    public StaticSentence(Session s, String sentence, SerializerWrite<W> serwrite, SerializerRead<T> serread) {
         this(s, new NormalBuilder(sentence), serwrite, serread);
     }
 
-    public StaticSentence(Session s, String sentence, SerializerWrite<Object> serwrite) {
+    public StaticSentence(Session s, String sentence, SerializerWrite<W> serwrite) {
         this(s, new NormalBuilder(sentence), serwrite, null);
     }
 

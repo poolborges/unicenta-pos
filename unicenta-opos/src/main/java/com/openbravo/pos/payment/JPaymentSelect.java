@@ -798,7 +798,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
 
     private void m_jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jButtonOKActionPerformed
 
-        SwingWorker worker = new SwingWorker() {
+        SwingWorker<Object,Object> worker = new SwingWorker<>() {
             @Override
             protected Object doInBackground() throws Exception {
                 setReturnPayment(

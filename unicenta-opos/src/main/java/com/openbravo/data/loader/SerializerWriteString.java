@@ -26,7 +26,7 @@ import java.lang.reflect.Array;
  */
 public class SerializerWriteString implements SerializerWrite<String> {
 
-    public static final SerializerWrite INSTANCE = new SerializerWriteString();
+    public static final SerializerWrite<String> INSTANCE = new SerializerWriteString();
     private SerializerWriteString() {}
 
     public void writeValues(DataWrite dp, String obj) throws BasicException {

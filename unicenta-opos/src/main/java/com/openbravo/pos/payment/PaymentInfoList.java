@@ -32,9 +32,9 @@ public class PaymentInfoList {
     public double getTotal() {
         
         double dTotal = 0.0;
-        Iterator i = m_apayment.iterator();
+        Iterator<PaymentInfo> i = m_apayment.iterator();
         while (i.hasNext()) {
-            PaymentInfo p = (PaymentInfo) i.next();
+            PaymentInfo p = i.next();
             dTotal += p.getTotal();
         }
         
