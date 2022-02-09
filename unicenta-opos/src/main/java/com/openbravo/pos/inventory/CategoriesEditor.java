@@ -34,11 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.swing.JPanel;
-import com.alee.extended.time.ClockType;
-import com.alee.extended.time.WebClock;
-import com.alee.managers.notification.NotificationIcon;
-import com.alee.managers.notification.NotificationManager;
-import com.alee.managers.notification.WebNotification;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -342,18 +337,7 @@ public void resetTranxTable() {
     
     
     public void Notify(String msg){
-        final WebNotification notification = new WebNotification ();
-        notification.setIcon ( NotificationIcon.information );
-        notification.setDisplayTime ( 4000 );
-
-        final WebClock clock = new WebClock ();
-        clock.setClockType ( ClockType.timer );
-        clock.setTimeLeft ( 5000 );
-        clock.setTimePattern ( msg );        
-        notification.setContent ( clock );
-
-        NotificationManager.showNotification ( notification );
-        clock.start ();    
+           
     } 
     
     /** This method is called from within the constructor to
@@ -376,12 +360,12 @@ public void resetTranxTable() {
         jLblCatOrder = new javax.swing.JLabel();
         m_jCatOrder = new javax.swing.JTextField();
         jLblInCat = new javax.swing.JLabel();
-        webSwtch_InCatalog = new com.alee.extended.button.WebSwitch();
+        webSwtch_InCatalog = new javax.swing.JCheckBox();
         m_jImage = new com.openbravo.data.gui.JImageEditor();
         jBtnShowTrans = new javax.swing.JButton();
         jLblProdCount = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTableCategoryStock = new com.alee.laf.table.WebTable();
+        jTableCategoryStock = new javax.swing.JTable();
 
         jInternalFrame1.setVisible(true);
 
@@ -496,7 +480,6 @@ public void resetTranxTable() {
         jTableCategoryStock.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jTableCategoryStock.setGridColor(new java.awt.Color(102, 204, 255));
         jTableCategoryStock.setRowHeight(25);
-        jTableCategoryStock.setSelectionBackground(new java.awt.Color(0, 120, 215));
         jTableCategoryStock.setShowVerticalLines(false);
         jScrollPane2.setViewportView(jTableCategoryStock);
         if (jTableCategoryStock.getColumnModel().getColumnCount() > 0) {
@@ -593,7 +576,7 @@ public void resetTranxTable() {
                 m_sentdel.exec(param);
                 m_sentadd.exec(param);
                 jLblInCat.setText(AppLocal.getIntString("label.CatalogueStatusYes"));
-                Notify(AppLocal.getIntString("notify.added"));                                                    
+                //Notify(AppLocal.getIntString("notify.added"));                                                    
             } catch (BasicException e) {
                 JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotexecute"), e));
             }            
@@ -602,7 +585,7 @@ public void resetTranxTable() {
             try {
                 m_sentdel.exec(m_id);
                 jLblInCat.setText(AppLocal.getIntString("label.CatalogueStatusNo"));
-                Notify(AppLocal.getIntString("notify.removed"));                                                                    
+                //Notify(AppLocal.getIntString("notify.removed"));                                                                    
             } catch (BasicException e) {
                 JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotexecute"), e));
             }            
@@ -653,14 +636,14 @@ public void resetTranxTable() {
     private javax.swing.JLabel jLblProdCount;
     private javax.swing.JLabel jLblTextTip;
     private javax.swing.JScrollPane jScrollPane2;
-    private com.alee.laf.table.WebTable jTableCategoryStock;
+    private javax.swing.JTable jTableCategoryStock;
     private javax.swing.JCheckBox m_jCatNameShow;
     private javax.swing.JTextField m_jCatOrder;
     private javax.swing.JComboBox m_jCategory;
     private com.openbravo.data.gui.JImageEditor m_jImage;
     private javax.swing.JTextField m_jName;
     private javax.swing.JTextField m_jTextTip;
-    private com.alee.extended.button.WebSwitch webSwtch_InCatalog;
+    private javax.swing.JCheckBox webSwtch_InCatalog;
     // End of variables declaration//GEN-END:variables
     
 }

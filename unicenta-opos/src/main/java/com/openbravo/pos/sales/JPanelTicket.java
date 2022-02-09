@@ -15,11 +15,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.sales;
 
-import com.alee.extended.time.ClockType;
-import com.alee.extended.time.WebClock;
-import com.alee.managers.notification.NotificationIcon;
-import com.alee.managers.notification.NotificationManager;
-import com.alee.managers.notification.WebNotification;
+
 import com.openbravo.basic.BasicException;
 import com.openbravo.beans.JIntegerDialog;
 import com.openbravo.data.gui.ComboBoxValModel;
@@ -1783,18 +1779,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     }
 
     public void Notify(String msg) {
-        final WebNotification notification = new WebNotification();
-        notification.setIcon(NotificationIcon.information);
-        notification.setDisplayTime(4000);
-
-        final WebClock clock = new WebClock();
-        clock.setClockType(ClockType.timer);
-        clock.setTimeLeft(5000);
-//        clock.setTimePattern ( clock );        
-        notification.setContent(msg);
-
-        NotificationManager.showNotification(notification);
-        clock.start();
+        
     }
 
     private void printReport(String resourcefile, TicketInfo ticket, Object ticketext) {

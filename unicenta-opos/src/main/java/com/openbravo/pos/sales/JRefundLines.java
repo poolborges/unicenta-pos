@@ -75,7 +75,7 @@ public JRefundLines(DataLogicSystem dlSystem, JPanelTicketEdits jTicketEdit) {
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        webLabel1 = new com.alee.laf.label.WebLabel();
+        webLabel1 = new javax.swing.JLabel();
         m_jbtnAddOne = new javax.swing.JButton();
         m_jbtnAddLine = new javax.swing.JButton();
         m_jbtnAddAll = new javax.swing.JButton();
@@ -223,7 +223,7 @@ public JRefundLines(DataLogicSystem dlSystem, JPanelTicketEdits jTicketEdit) {
     private javax.swing.JButton m_jbtnAddAll;
     private javax.swing.JButton m_jbtnAddLine;
     private javax.swing.JButton m_jbtnAddOne;
-    private com.alee.laf.label.WebLabel webLabel1;
+    private javax.swing.JLabel webLabel1;
     // End of variables declaration//GEN-END:variables
     
 }

@@ -158,7 +158,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="com.alee.laf.label.WebLabel" name="webLblCustomer">
+        <Component class="javax.swing.JLabel" name="webLblCustomer">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="pos_messages.properties" key="label.customer" replaceFormat="AppLocal.getIntString(&quot;label.customer&quot;)"/>
@@ -176,7 +176,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="com.alee.laf.label.WebLabel" name="webLblcustomerName">
+        <Component class="javax.swing.JLabel" name="webLblcustomerName">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="pos_messages.properties" key="label.customer" replaceFormat="AppLocal.getIntString(&quot;label.customer&quot;)"/>
@@ -190,7 +190,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="com.alee.laf.label.WebLabel" name="voucherStatus">
+        <Component class="javax.swing.JLabel" name="voucherStatus">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="pos_messages.properties" key="label.voucherStatus" replaceFormat="AppLocal.getIntString(&quot;label.voucherStatus&quot;)"/>

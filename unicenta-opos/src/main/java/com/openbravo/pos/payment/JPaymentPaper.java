@@ -181,9 +181,9 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
         m_jVoucher = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
         m_jMoneyEuros = new javax.swing.JLabel();
-        webLblCustomer = new com.alee.laf.label.WebLabel();
-        webLblcustomerName = new com.alee.laf.label.WebLabel();
-        voucherID = new com.alee.laf.label.WebLabel();
+        webLblCustomer = new javax.swing.JLabel();
+        webLblcustomerName = new javax.swing.JLabel();
+        voucherID = new javax.swing.JLabel();
         jPanel11 = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
         m_jKeys = new com.openbravo.editor.JEditorKeys();
@@ -329,9 +329,9 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
     private javax.swing.JLabel m_jMoneyEuros;
     private com.openbravo.editor.JEditorCurrencyPositive m_jTendered;
     private javax.swing.JComboBox m_jVoucher;
-    private com.alee.laf.label.WebLabel voucherID;
-    private com.alee.laf.label.WebLabel webLblCustomer;
-    private com.alee.laf.label.WebLabel webLblcustomerName;
+    private javax.swing.JLabel voucherID;
+    private javax.swing.JLabel webLblCustomer;
+    private javax.swing.JLabel webLblcustomerName;
     // End of variables declaration//GEN-END:variables
     
 }

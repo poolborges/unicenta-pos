@@ -784,12 +784,12 @@ public class StockManagement extends JPanel implements JPanelView {
         jPanel1 = new javax.swing.JPanel();
         jNumberKeys = new com.openbravo.beans.JNumberKeys();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTableProductStock = new com.alee.laf.table.WebTable();
+        jTableProductStock = new javax.swing.JTable();
         m_jBtnShowStock = new javax.swing.JButton();
         lblTotalQtyValue = new javax.swing.JLabel();
         lbTotalValue = new javax.swing.JLabel();
-        webLblQty = new com.alee.laf.label.WebLabel();
-        webLblValue = new com.alee.laf.label.WebLabel();
+        webLblQty = new javax.swing.JLabel();
+        webLblValue = new javax.swing.JLabel();
         catcontainer = new javax.swing.JPanel();
 
         setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1320,7 +1320,7 @@ public class StockManagement extends JPanel implements JPanelView {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane2;
-    private com.alee.laf.table.WebTable jTableProductStock;
+    private javax.swing.JTable jTableProductStock;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lbTotalValue;
     private javax.swing.JLabel lblTotalQtyValue;
@@ -1339,8 +1339,8 @@ public class StockManagement extends JPanel implements JPanelView {
     private javax.swing.JLabel m_jcodebar;
     private javax.swing.JTextField m_jdate;
     private javax.swing.JComboBox m_jreason;
-    private com.alee.laf.label.WebLabel webLblQty;
-    private com.alee.laf.label.WebLabel webLblValue;
+    private javax.swing.JLabel webLblQty;
+    private javax.swing.JLabel webLblValue;
     // End of variables declaration//GEN-END:variables
     
 }

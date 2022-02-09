@@ -20,11 +20,6 @@
 
 package com.openbravo.pos.sales.restaurant;
 
-import com.alee.extended.time.ClockType;
-import com.alee.extended.time.WebClock;
-import com.alee.managers.notification.NotificationIcon;
-import com.alee.managers.notification.NotificationManager;
-import com.alee.managers.notification.WebNotification;
 import com.openbravo.basic.BasicException;
 import com.openbravo.beans.JIntegerDialog;
 import com.openbravo.data.gui.JMessageDialog;
@@ -180,18 +175,7 @@ public class JTicketsBagRestaurant extends javax.swing.JPanel {
  }
 
     public void printNotify(){
-        final WebNotification notificationPopup = new WebNotification ();
-        notificationPopup.setIcon ( NotificationIcon.information );
-        notificationPopup.setDisplayTime ( 4000 );
-
-        final WebClock clock = new WebClock ();
-        clock.setClockType ( ClockType.timer );
-        clock.setTimeLeft ( 5000 );
-        clock.setTimePattern ( "'Printed successfully'" );
-        notificationPopup.setContent ( clock );
-
-        NotificationManager.showNotification ( notificationPopup );
-        clock.start ();    
+          
     }  
     
     

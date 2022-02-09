@@ -191,7 +191,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="com.alee.laf.label.WebLabel" name="webLblautoRefresh">
+            <Component class="javax.swing.JLabel" name="webLblautoRefresh">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="33" green="33" red="ff" type="rgb"/>

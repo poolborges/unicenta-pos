@@ -19,7 +19,6 @@ package com.openbravo.pos.imports;
 
 import com.csvreader.CsvReader;
 import com.openbravo.basic.BasicException;
-import com.openbravo.data.gui.ComboBoxValModel;
 import com.openbravo.data.loader.Session;
 import com.openbravo.data.user.SaveProvider;
 import com.openbravo.pos.forms.*;
@@ -691,7 +690,7 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
         jtxtBad = new javax.swing.JTextField();
         jtxtNoChange = new javax.swing.JTextField();
         jComboSeparator = new javax.swing.JComboBox();
-        webPBar = new com.alee.laf.progressbar.WebProgressBar();
+        webPBar = new javax.swing.JProgressBar();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
         jComboSearchKey = new javax.swing.JComboBox();
@@ -1997,6 +1996,6 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
     private javax.swing.JTextField jtxtNoChange;
     private javax.swing.JTextField jtxtRecords;
     private javax.swing.JTextField jtxtUpdate;
-    private com.alee.laf.progressbar.WebProgressBar webPBar;
+    private javax.swing.JProgressBar webPBar;
     // End of variables declaration//GEN-END:variables
 }

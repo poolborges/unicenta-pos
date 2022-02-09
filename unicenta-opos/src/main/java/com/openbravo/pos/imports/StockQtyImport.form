@@ -344,7 +344,7 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="com.alee.laf.progressbar.WebProgressBar" name="webPBar">
+    <Component class="javax.swing.JProgressBar" name="webPBar">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Arial" size="13" style="0"/>

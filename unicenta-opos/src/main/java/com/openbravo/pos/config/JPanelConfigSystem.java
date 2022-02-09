@@ -145,23 +145,19 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
         
         if (jchkAutoLogoff.isSelected()){
                 jchkAutoLogoffToTables.setVisible(true);
-                jLabelInactiveTime.setVisible(true);
                 jLabelTimedMessage.setVisible(true);
                 jTextAutoLogoffTime.setVisible(true);
         }else{    
                 jchkAutoLogoffToTables.setVisible(false);
-                jLabelInactiveTime.setVisible(false);
                 jLabelTimedMessage.setVisible(false);
                 jTextAutoLogoffTime.setVisible(false);
         }
         
         if (jchkautoRefreshTableMap.isSelected()){
                 jLblautoRefresh.setVisible(true);
-                jLabelInactiveTime1.setVisible(true);
                 jTxtautoRefreshTimer.setVisible(true);
         }else{    
                 jLblautoRefresh.setVisible(false);
-                jLabelInactiveTime1.setVisible(false);
                 jTxtautoRefreshTimer.setVisible(false);
         }
 
@@ -250,7 +246,6 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jchkInstance = new javax.swing.JCheckBox();
-        jLabelInactiveTime = new javax.swing.JLabel();
         jTextAutoLogoffTime = new javax.swing.JTextField();
         jLabelTimedMessage = new javax.swing.JLabel();
         jchkAutoLogoff = new javax.swing.JCheckBox();
@@ -264,7 +259,6 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
         jMoveAMountBoxToTop = new javax.swing.JCheckBox();
         jchkTextOverlay = new javax.swing.JCheckBox();
         jchkautoRefreshTableMap = new javax.swing.JCheckBox();
-        jLabelInactiveTime1 = new javax.swing.JLabel();
         jTxtautoRefreshTimer = new javax.swing.JTextField();
         jLblautoRefresh = new javax.swing.JLabel();
         jchkSCOnOff = new javax.swing.JCheckBox();
@@ -275,9 +269,9 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
         jchkPriceUpdate = new javax.swing.JCheckBox();
         jchkBarcodetype = new javax.swing.JCheckBox();
         jchkTransBtn = new javax.swing.JCheckBox();
-        WaiterColour = new com.alee.extended.colorchooser.WebColorChooserField();
-        TableNameColour = new com.alee.extended.colorchooser.WebColorChooserField();
-        CustomerColour = new com.alee.extended.colorchooser.WebColorChooserField();
+        WaiterColour = new javax.swing.JButton();
+        TableNameColour = new javax.swing.JButton();
+        CustomerColour = new javax.swing.JButton();
         jchkOverride = new javax.swing.JCheckBox();
         jtxtPIN = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -311,15 +305,8 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
         jchkInstance.setOpaque(false);
         jchkInstance.setPreferredSize(new java.awt.Dimension(250, 25));
 
-        jLabelInactiveTime.setBackground(new java.awt.Color(255, 255, 255));
-        jLabelInactiveTime.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabelInactiveTime.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabelInactiveTime.setText(bundle.getString("label.autolofftime")); // NOI18N
-        jLabelInactiveTime.setMaximumSize(new java.awt.Dimension(0, 25));
-        jLabelInactiveTime.setMinimumSize(new java.awt.Dimension(0, 0));
-        jLabelInactiveTime.setPreferredSize(new java.awt.Dimension(100, 30));
-
         jTextAutoLogoffTime.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jTextAutoLogoffTime.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         jTextAutoLogoffTime.setText("0");
         jTextAutoLogoffTime.setMaximumSize(new java.awt.Dimension(0, 25));
         jTextAutoLogoffTime.setMinimumSize(new java.awt.Dimension(0, 0));
@@ -440,15 +427,8 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
             }
         });
 
-        jLabelInactiveTime1.setBackground(new java.awt.Color(255, 255, 255));
-        jLabelInactiveTime1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabelInactiveTime1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabelInactiveTime1.setText(bundle.getString("label.autolofftime")); // NOI18N
-        jLabelInactiveTime1.setMaximumSize(new java.awt.Dimension(0, 25));
-        jLabelInactiveTime1.setMinimumSize(new java.awt.Dimension(0, 0));
-        jLabelInactiveTime1.setPreferredSize(new java.awt.Dimension(100, 30));
-
         jTxtautoRefreshTimer.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jTxtautoRefreshTimer.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         jTxtautoRefreshTimer.setText("0");
         jTxtautoRefreshTimer.setMaximumSize(new java.awt.Dimension(0, 25));
         jTxtautoRefreshTimer.setMinimumSize(new java.awt.Dimension(0, 0));
@@ -479,6 +459,7 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
         jLabelSCRate.setPreferredSize(new java.awt.Dimension(190, 30));
 
         jTextSCRate.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jTextSCRate.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         jTextSCRate.setText("0");
         jTextSCRate.setMaximumSize(new java.awt.Dimension(0, 25));
         jTextSCRate.setMinimumSize(new java.awt.Dimension(0, 0));
@@ -490,7 +471,6 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
         });
 
         jLabelSCRatePerCent.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabelSCRatePerCent.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabelSCRatePerCent.setText(bundle.getString("label.SCZero")); // NOI18N
         jLabelSCRatePerCent.setMaximumSize(new java.awt.Dimension(0, 25));
         jLabelSCRatePerCent.setMinimumSize(new java.awt.Dimension(0, 0));
@@ -533,19 +513,16 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
             }
         });
 
-        WaiterColour.setToolTipText(bundle.getString("tooltip.prodhtmldisplayColourChooser")); // NOI18N
-        WaiterColour.setColorDisplayType(com.alee.extended.colorchooser.ColorDisplayType.hex);
         WaiterColour.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        WaiterColour.setToolTipText(bundle.getString("tooltip.prodhtmldisplayColourChooser")); // NOI18N
         WaiterColour.setMinimumSize(new java.awt.Dimension(51, 30));
 
-        TableNameColour.setToolTipText(bundle.getString("tooltip.prodhtmldisplayColourChooser")); // NOI18N
-        TableNameColour.setColorDisplayType(com.alee.extended.colorchooser.ColorDisplayType.hex);
         TableNameColour.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        TableNameColour.setToolTipText(bundle.getString("tooltip.prodhtmldisplayColourChooser")); // NOI18N
         TableNameColour.setMinimumSize(new java.awt.Dimension(51, 30));
 
-        CustomerColour.setToolTipText(bundle.getString("tooltip.prodhtmldisplayColourChooser")); // NOI18N
-        CustomerColour.setColorDisplayType(com.alee.extended.colorchooser.ColorDisplayType.hex);
         CustomerColour.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        CustomerColour.setToolTipText(bundle.getString("tooltip.prodhtmldisplayColourChooser")); // NOI18N
         CustomerColour.setMinimumSize(new java.awt.Dimension(51, 30));
 
         jchkOverride.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -556,6 +533,7 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
         jchkOverride.setPreferredSize(new java.awt.Dimension(200, 30));
 
         jtxtPIN.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jtxtPIN.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         jtxtPIN.setToolTipText("");
         jtxtPIN.setMaximumSize(new java.awt.Dimension(0, 25));
         jtxtPIN.setMinimumSize(new java.awt.Dimension(0, 0));
@@ -576,54 +554,47 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jchkTransBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                    .addComponent(jchkSCOnOff, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                    .addComponent(jchkautoRefreshTableMap, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabelInactiveTime1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(jchkShowCustomerDetails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jchkShowWaiterDetails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jLabelTableNameTextColour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jchkShowCustomerDetails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jchkTransBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(50, 50, 50))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jLabelSCRate, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(12, 12, 12)
-                                        .addComponent(jLabelSCRatePerCent, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jTextSCRate, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jchkSCRestaurant, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jTxtautoRefreshTimer, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLblautoRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(WaiterColour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(TableNameColour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(CustomerColour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(35, 35, 35)
+                                                .addComponent(jTextSCRate, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabelSCRatePerCent, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabelSCRate, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGap(34, 34, 34)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(TableNameColour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(WaiterColour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(CustomerColour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jchkSCOnOff, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jchkautoRefreshTableMap, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addContainerGap())
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(32, 32, 32)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(15, 15, 15)
-                                        .addComponent(jchkAutoLogoffToTables, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jchkAutoLogoff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabelInactiveTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(100, 100, 100)
                                         .addComponent(jTextAutoLogoffTime, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabelTimedMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(jLabelTimedMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jchkAutoLogoffToTables, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(33, 33, 33)
+                                .addComponent(jTxtautoRefreshTimer, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLblautoRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 654, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -638,17 +609,23 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(jchkOverride, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jtxtPIN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jLabel5)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jLabel5)))))
-                                .addGap(107, 107, 107)
+                                                .addComponent(jtxtPIN, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGap(112, 112, 112)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jCheckPrice00, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jMoveAMountBoxToTop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jCloseCashbtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jchkBarcodetype, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                    .addComponent(jchkBarcodetype, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jchkSCRestaurant, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(jchkAutoLogoff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 54, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -674,24 +651,25 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
                     .addComponent(jchkPriceUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jchkBarcodetype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jtxtPIN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jchkOverride, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jtxtPIN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jchkOverride, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jchkAutoLogoff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelInactiveTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextAutoLogoffTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelTimedMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jchkAutoLogoff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jchkAutoLogoffToTables, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jchkautoRefreshTableMap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelInactiveTime1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextAutoLogoffTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelTimedMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jchkautoRefreshTableMap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTxtautoRefreshTimer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLblautoRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -700,22 +678,24 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelSCRate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextSCRate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelSCRatePerCent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jchkSCRestaurant, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabelSCRatePerCent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jchkSCRestaurant, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jchkShowCustomerDetails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(CustomerColour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(CustomerColour, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jchkShowWaiterDetails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(WaiterColour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(TableNameColour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelTableNameTextColour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(WaiterColour, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                        .addGap(11, 11, 11)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(TableNameColour, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabelTableNameTextColour, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jchkTransBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32))
@@ -725,12 +705,10 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
     private void jchkAutoLogoffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jchkAutoLogoffActionPerformed
         if (jchkAutoLogoff.isSelected()){
                 jchkAutoLogoffToTables.setVisible(true);
-                jLabelInactiveTime.setVisible(true);
                 jLabelTimedMessage.setVisible(true);
                 jTextAutoLogoffTime.setVisible(true);
         }else{    
                 jchkAutoLogoffToTables.setVisible(false);
-                jLabelInactiveTime.setVisible(false);
                 jLabelTimedMessage.setVisible(false);
                 jTextAutoLogoffTime.setVisible(false);
         }
@@ -751,11 +729,9 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
     private void jchkautoRefreshTableMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jchkautoRefreshTableMapActionPerformed
         if (jchkautoRefreshTableMap.isSelected()){
             jLblautoRefresh.setVisible(true);
-            jLabelInactiveTime1.setVisible(true);
             jTxtautoRefreshTimer.setVisible(true);
         }else{    
             jLblautoRefresh.setVisible(false);
-            jLabelInactiveTime1.setVisible(false);
             jTxtautoRefreshTimer.setVisible(false);
         }  
     }//GEN-LAST:event_jchkautoRefreshTableMapActionPerformed
@@ -784,9 +760,9 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.alee.extended.colorchooser.WebColorChooserField CustomerColour;
-    private com.alee.extended.colorchooser.WebColorChooserField TableNameColour;
-    private com.alee.extended.colorchooser.WebColorChooserField WaiterColour;
+    private javax.swing.JButton CustomerColour;
+    private javax.swing.JButton TableNameColour;
+    private javax.swing.JButton WaiterColour;
     private javax.swing.JCheckBox jCheckPrice00;
     private javax.swing.JCheckBox jCloseCashbtn;
     private javax.swing.JLabel jLabel1;
@@ -794,8 +770,6 @@ public class JPanelConfigSystem extends javax.swing.JPanel implements PanelConfi
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabelInactiveTime;
-    private javax.swing.JLabel jLabelInactiveTime1;
     private javax.swing.JLabel jLabelSCRate;
     private javax.swing.JLabel jLabelSCRatePerCent;
     private javax.swing.JLabel jLabelTableNameTextColour;

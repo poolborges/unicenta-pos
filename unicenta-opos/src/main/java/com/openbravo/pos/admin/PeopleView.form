@@ -246,7 +246,7 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="com.alee.laf.combobox.WebComboBox" name="webCBSecurity">
+    <Component class="javax.swing.JComboBox" name="webCBSecurity">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="3">

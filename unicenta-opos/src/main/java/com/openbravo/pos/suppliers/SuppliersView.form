@@ -571,7 +571,7 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="com.alee.laf.button.WebButton" name="webBtnMail">
+            <Component class="javax.swing.JButton" name="webBtnMail">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/com/openbravo/images/mail24.png"/>

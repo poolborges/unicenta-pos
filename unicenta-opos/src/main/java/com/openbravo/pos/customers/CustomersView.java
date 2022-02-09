@@ -668,7 +668,7 @@ public void resetTranxTable() {
         txtPhone2 = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         txtFax = new javax.swing.JTextField();
-        webBtnMail = new com.alee.laf.button.WebButton();
+        webBtnMail = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         txtAddress = new javax.swing.JTextField();
@@ -1617,7 +1617,7 @@ public void resetTranxTable() {
     private javax.swing.JTextField txtPhone2;
     private javax.swing.JTextField txtPostal;
     private javax.swing.JTextField txtRegion;
-    private com.alee.laf.button.WebButton webBtnMail;
+    private javax.swing.JButton webBtnMail;
     // End of variables declaration//GEN-END:variables
     
     //ImageIcon infoIco = new ImageIcon(getClass().getResource("/com/openbravo/images/info.png"));

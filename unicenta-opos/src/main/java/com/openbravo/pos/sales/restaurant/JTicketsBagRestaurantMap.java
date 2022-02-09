@@ -828,7 +828,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
         m_jText = new javax.swing.JLabel();
         m_jbtnLayout = new javax.swing.JButton();
         m_jbtnSave = new javax.swing.JButton();
-        webLblautoRefresh = new com.alee.laf.label.WebLabel();
+        webLblautoRefresh = new javax.swing.JLabel();
 
         setLayout(new java.awt.CardLayout());
 
@@ -992,7 +992,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
     private javax.swing.JButton m_jbtnRefresh;
     private javax.swing.JButton m_jbtnReservations;
     private javax.swing.JButton m_jbtnSave;
-    private com.alee.laf.label.WebLabel webLblautoRefresh;
+    private javax.swing.JLabel webLblautoRefresh;
     // End of variables declaration//GEN-END:variables
     
 }

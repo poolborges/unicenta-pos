@@ -322,7 +322,7 @@
                       <Component id="jImport" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jbtnReset" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="16" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -1194,7 +1194,7 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="com.alee.laf.progressbar.WebProgressBar" name="webPBar">
+    <Component class="javax.swing.JProgressBar" name="webPBar">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Arial" size="13" style="0"/>

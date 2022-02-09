@@ -31,6 +31,8 @@ import javax.swing.*;
  */
 public class JPanelConfiguration extends JPanel implements JPanelView {
 
+    private static final long serialVersionUID = 1L;
+
     private List<PanelConfig> m_panelconfig;
     private CloseEventListener closeEventListener = null;
 

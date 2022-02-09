@@ -239,7 +239,7 @@ public class PeopleView extends JPanel implements EditorRecord {
         jLabel2 = new javax.swing.JLabel();
         m_jcard = new javax.swing.JTextField();
         jLblCardID = new javax.swing.JLabel();
-        webCBSecurity = new com.alee.laf.combobox.WebComboBox();
+        webCBSecurity = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
 
         setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -459,7 +459,7 @@ public class PeopleView extends JPanel implements EditorRecord {
     private javax.swing.JComboBox m_jRole;
     private javax.swing.JCheckBox m_jVisible;
     private javax.swing.JTextField m_jcard;
-    private com.alee.laf.combobox.WebComboBox webCBSecurity;
+    private javax.swing.JComboBox webCBSecurity;
     // End of variables declaration//GEN-END:variables
     
 }

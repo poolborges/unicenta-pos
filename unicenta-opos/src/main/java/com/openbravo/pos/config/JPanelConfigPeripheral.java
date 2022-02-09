@@ -923,12 +923,12 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         jcboSerialScanner = new javax.swing.JComboBox();
         jlblPrinterPort5 = new javax.swing.JLabel();
         jPanel27 = new javax.swing.JPanel();
-        webSwtch_iButton = new com.alee.extended.button.WebSwitch();
-        webLbliButton = new com.alee.laf.label.WebLabel();
-        webSlider = new com.alee.laf.slider.WebSlider();
-        webLabel1 = new com.alee.laf.label.WebLabel();
-        webLabel2 = new com.alee.laf.label.WebLabel();
-        webLabel3 = new com.alee.laf.label.WebLabel();
+        webSwtch_iButton = new javax.swing.JCheckBox();
+        webLbliButton = new javax.swing.JLabel();
+        webSlider = new javax.swing.JSlider();
+        webLabel1 = new javax.swing.JLabel();
+        webLabel2 = new javax.swing.JLabel();
+        webLabel3 = new javax.swing.JLabel();
 
         setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         setOpaque(false);
@@ -1102,7 +1102,7 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
                 .addComponent(jlblDisplayPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jcboSerialDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addContainerGap(140, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1138,7 +1138,7 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
                 .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(m_jtxtJPOSName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(224, Short.MAX_VALUE))
+                .addContainerGap(302, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1857,11 +1857,11 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
             }
         });
 
-        webLbliButton.setBackground(new java.awt.Color(240, 240, 240));
-        webLbliButton.setText(AppLocal.getIntString("label.ibutton")); // NOI18N
         webLbliButton.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        webLbliButton.setText(AppLocal.getIntString("label.ibutton")); // NOI18N
         webLbliButton.setPreferredSize(new java.awt.Dimension(150, 30));
 
+        webSlider.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         webSlider.setMajorTickSpacing(10);
         webSlider.setMinorTickSpacing(5);
         webSlider.setPaintLabels(true);
@@ -1869,7 +1869,6 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         webSlider.setSnapToTicks(true);
         webSlider.setToolTipText("");
         webSlider.setValue(5);
-        webSlider.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         webSlider.setPreferredSize(new java.awt.Dimension(270, 47));
         webSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -1877,18 +1876,17 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
             }
         });
 
-        webLabel1.setBackground(new java.awt.Color(240, 240, 240));
+        webLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         webLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages"); // NOI18N
         webLabel1.setText(bundle.getString("label.ibuttonresponsespeed")); // NOI18N
-        webLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         webLabel1.setPreferredSize(new java.awt.Dimension(150, 30));
 
-        webLabel2.setText(bundle.getString("label.fast")); // NOI18N
         webLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        webLabel2.setText(bundle.getString("label.fast")); // NOI18N
 
-        webLabel3.setText(bundle.getString("label.slow")); // NOI18N
         webLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        webLabel3.setText(bundle.getString("label.slow")); // NOI18N
 
         javax.swing.GroupLayout jPanel27Layout = new javax.swing.GroupLayout(jPanel27);
         jPanel27.setLayout(jPanel27Layout);
@@ -1897,17 +1895,17 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
             .addGroup(jPanel27Layout.createSequentialGroup()
                 .addComponent(webLbliButton, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(webSwtch_iButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(webSwtch_iButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(webLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14)
-                .addGroup(jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel27Layout.createSequentialGroup()
-                        .addComponent(webLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(194, 194, 194)
-                        .addComponent(webLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(webSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addGroup(jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel27Layout.createSequentialGroup()
+                        .addComponent(webLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(webLabel3))
+                    .addComponent(webSlider, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
         jPanel27Layout.setVerticalGroup(
             jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1918,11 +1916,11 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
                     .addComponent(webSwtch_iButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(webLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(webSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(webLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(webLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(webLabel2)
+                    .addComponent(webLabel3))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
@@ -1937,7 +1935,7 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jcboMachinePrinter2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(m_jPrinterParams2, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE))
+                        .addComponent(m_jPrinterParams2, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE))
                     .addGroup(jPanel13Layout.createSequentialGroup()
                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1998,7 +1996,7 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
                                 .addComponent(m_jScannerParams, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jPanel27, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(16, 16, 16))
+                .addContainerGap())
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2071,8 +2069,8 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, 872, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2449,11 +2447,11 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
     private javax.swing.JTextField m_jtxtJPOSPrinter4;
     private javax.swing.JTextField m_jtxtJPOSPrinter5;
     private javax.swing.JTextField m_jtxtJPOSPrinter6;
-    private com.alee.laf.label.WebLabel webLabel1;
-    private com.alee.laf.label.WebLabel webLabel2;
-    private com.alee.laf.label.WebLabel webLabel3;
-    private com.alee.laf.label.WebLabel webLbliButton;
-    private com.alee.laf.slider.WebSlider webSlider;
-    private com.alee.extended.button.WebSwitch webSwtch_iButton;
+    private javax.swing.JLabel webLabel1;
+    private javax.swing.JLabel webLabel2;
+    private javax.swing.JLabel webLabel3;
+    private javax.swing.JLabel webLbliButton;
+    private javax.swing.JSlider webSlider;
+    private javax.swing.JCheckBox webSwtch_iButton;
     // End of variables declaration//GEN-END:variables
 }

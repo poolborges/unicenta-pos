@@ -24,7 +24,6 @@ import com.openbravo.data.loader.SentenceList;
 import com.openbravo.data.loader.Session;
 import com.openbravo.data.user.SaveProvider;
 import com.openbravo.pos.forms.*;
-import com.openbravo.pos.inventory.TaxCategoryInfo;
 import com.openbravo.pos.sales.TaxesLogic;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import java.io.*;
@@ -40,12 +39,10 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.commons.lang3.StringUtils;
-import com.alee.laf.optionpane.WebOptionPane;
 import com.openbravo.data.loader.Datas;
 import com.openbravo.data.loader.PreparedSentence;
 import com.openbravo.data.loader.SerializerWriteBasicExt;
 import java.util.List;
-import com.openbravo.pos.suppliers.*;
 import java.nio.charset.Charset;
 
 
@@ -1048,7 +1045,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         jLabel19 = new javax.swing.JLabel();
         jTextBadCats = new javax.swing.JTextField();
         jComboSeparator = new javax.swing.JComboBox();
-        webPBar = new com.alee.laf.progressbar.WebProgressBar();
+        webPBar = new javax.swing.JProgressBar();
         jLblImportNotice = new javax.swing.JLabel();
 
         setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -2058,6 +2055,6 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     private javax.swing.JLabel jTextUpdates;
     private javax.swing.JButton jbtnFileChoose;
     private javax.swing.JButton jbtnReset;
-    private com.alee.laf.progressbar.WebProgressBar webPBar;
+    private javax.swing.JProgressBar webPBar;
     // End of variables declaration//GEN-END:variables
 }

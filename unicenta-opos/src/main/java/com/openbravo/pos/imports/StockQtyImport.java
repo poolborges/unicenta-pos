@@ -559,7 +559,7 @@ public class StockQtyImport extends JPanel implements JPanelView {
         jTextUpdates = new javax.swing.JLabel();
         jTextRecords = new javax.swing.JTextField();
         jTextUpdate = new javax.swing.JTextField();
-        webPBar = new com.alee.laf.progressbar.WebProgressBar();
+        webPBar = new javax.swing.JProgressBar();
         m_jLocation = new javax.swing.JLabel();
         jImport = new javax.swing.JButton();
         jbtnReset = new javax.swing.JButton();
@@ -866,6 +866,6 @@ public class StockQtyImport extends JPanel implements JPanelView {
     private javax.swing.JButton jbtnFileChoose;
     private javax.swing.JButton jbtnReset;
     private javax.swing.JLabel m_jLocation;
-    private com.alee.laf.progressbar.WebProgressBar webPBar;
+    private javax.swing.JProgressBar webPBar;
     // End of variables declaration//GEN-END:variables
 }

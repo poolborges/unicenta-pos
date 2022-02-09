@@ -275,7 +275,7 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="com.alee.extended.button.WebSwitch" name="webSwtch_InCatalog">
+    <Component class="javax.swing.JCheckBox" name="webSwtch_InCatalog">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Arial" size="14" style="0"/>
@@ -334,7 +334,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="com.alee.laf.table.WebTable" name="jTableCategoryStock">
+        <Component class="javax.swing.JTable" name="jTableCategoryStock">
           <Properties>
             <Property name="autoCreateRowSorter" type="boolean" value="true"/>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
@@ -364,9 +364,6 @@
               <Color blue="ff" green="cc" red="66" type="rgb"/>
             </Property>
             <Property name="rowHeight" type="int" value="25"/>
-            <Property name="selectionBackground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="d7" green="78" red="0" type="rgb"/>
-            </Property>
             <Property name="showVerticalLines" type="boolean" value="false"/>
             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>

@@ -310,7 +310,7 @@ public class JPanelCloseMoneyReprint extends JPanel implements JPanelView, BeanF
         jPanel1 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         m_jSequence = new javax.swing.JTextField();
-        webBtnFindSequence = new com.alee.laf.button.WebButton();
+        webBtnFindSequence = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         m_jMinDate = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -689,7 +689,7 @@ public class JPanelCloseMoneyReprint extends JPanel implements JPanelView, BeanF
     private javax.swing.JTextField m_jSequence;
     private javax.swing.JTable m_jTicketTable;
     private javax.swing.JTable m_jsalestable;
-    private com.alee.laf.button.WebButton webBtnFindSequence;
+    private javax.swing.JButton webBtnFindSequence;
     // End of variables declaration//GEN-END:variables
     
 }

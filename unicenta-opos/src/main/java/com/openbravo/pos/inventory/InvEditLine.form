@@ -58,7 +58,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="com.alee.laf.label.WebLabel" name="webLabel1">
+    <Component class="javax.swing.JLabel" name="webLabel1">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="pos_messages.properties" key="label.invline" replaceFormat="AppLocal.getIntString(&quot;button.exit&quot;)"/>
@@ -71,7 +71,7 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="com.alee.laf.text.WebTextField" name="webTxtPriceBuy">
+    <Component class="javax.swing.JTextField" name="webTxtPriceBuy">
       <Properties>
         <Property name="text" type="java.lang.String" value="webTextField1"/>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -82,7 +82,7 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="com.alee.laf.button.WebButton" name="webButtonOK">
+    <Component class="javax.swing.JButton" name="webButtonOK">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/com/openbravo/images/ok.png"/>
@@ -95,7 +95,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="webButtonOKActionPerformed"/>
       </Events>
     </Component>
-    <Component class="com.alee.laf.button.WebButton" name="webButtonCancel">
+    <Component class="javax.swing.JButton" name="webButtonCancel">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/com/openbravo/images/cancel.png"/>
