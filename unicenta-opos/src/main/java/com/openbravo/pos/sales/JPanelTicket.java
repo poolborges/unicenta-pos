@@ -81,9 +81,9 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
  *
  * @author JG uniCenta
  */
-public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFactoryApp, TicketsEditor {
+public abstract class JPanelTicket extends JPanel implements JPanelView, TicketsEditor {
 
-    private final static Logger LOGGER = Logger.getLogger(JPanelTicket.class.getName());
+    protected final static Logger LOGGER = Logger.getLogger(JPanelTicket.class.getName());
 
     private final static int NUMBERZERO = 0;
     private final static int NUMBERVALID = 1;
@@ -96,6 +96,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     private final static int NUMBER_PORZERODEC = 5;
     private final static int NUMBER_PORINT = 6;
     private final static int NUMBER_PORDEC = 7;
+    private static final long serialVersionUID = 1L;
 
     protected JTicketLines m_ticketlines;
 
@@ -150,18 +151,9 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     /**
      * Creates new form JTicketView
      */
-    public JPanelTicket() {
+    public JPanelTicket(AppView app) {
 
         initComponents();
-    }
-
-    /**
-     *
-     * @param app
-     * @throws BeanFactoryException
-     */
-    @Override
-    public void init(AppView app) throws BeanFactoryException {
 
         LOGGER.info("JPanelTicket.init");
         m_config = AppConfig.getInstance();
@@ -225,11 +217,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         add(m_ticketsbag.getNullComponent(), "null");
 
         catcontainer.add(getSouthComponent(), BorderLayout.CENTER);
-    }
-
-    @Override
-    public Object getBean() {
-        return this;
     }
 
     @Override
