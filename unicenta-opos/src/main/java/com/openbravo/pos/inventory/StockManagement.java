@@ -257,9 +257,7 @@ public class StockManagement extends JPanel implements JPanelView {
         } else {
             m_invlines.deleteLine(index); 
             clearStockTable();
-            showStockTable();             
-            lblTotalQtyValue.setText(null);
-            lbTotalValue.setText(null); 
+            showStockTable();     
            
         }        
     }
@@ -332,10 +330,11 @@ public class StockManagement extends JPanel implements JPanelView {
         while(model.getRowCount() > 0) {
             for (int i = 0; i < model.getRowCount(); ++i){
                 model.stockList.removeAll(productStockList);
-            }
-            lblTotalQtyValue.setText(null);
-            lbTotalValue.setText(null);             
+            }           
         }
+        
+        lblTotalQtyValue.setText(null);
+        lbTotalValue.setText(null);  
 
         jTableProductStock.repaint();
     }
@@ -711,9 +710,7 @@ public class StockManagement extends JPanel implements JPanelView {
         } else {
             m_invlines.deleteLine(index); 
             clearStockTable();
-            showStockTable();             
-            lblTotalQtyValue.setText(null);
-            lbTotalValue.setText(null); 
+            showStockTable();     
            
         } 
 
@@ -1059,6 +1056,7 @@ public class StockManagement extends JPanel implements JPanelView {
 
         jScrollPane2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
+        jTableProductStock.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jTableProductStock.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -1074,7 +1072,6 @@ public class StockManagement extends JPanel implements JPanelView {
                 "Location", "Current", "Maximum", "Minimum", "PriceSell", "PriceValue"
             }
         ));
-        jTableProductStock.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jTableProductStock.setRowHeight(25);
         jScrollPane2.setViewportView(jTableProductStock);
 
@@ -1285,10 +1282,7 @@ public class StockManagement extends JPanel implements JPanelView {
             }
                                      
             clearStockTable();
-            showStockTable();
-            
-            lblTotalQtyValue.setText(null);
-            lbTotalValue.setText(null);             
+            showStockTable();           
 
             jTableProductStock.repaint();             
         }    
