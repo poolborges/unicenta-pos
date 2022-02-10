@@ -136,7 +136,6 @@ public class JPanelMenu extends JPanel implements JPanelView {
         setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         setLayout(new java.awt.BorderLayout());
 
-        menucontainer.setBackground(new java.awt.Color(102, 102, 102));
         menucontainer.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         menucontainer.setLayout(new javax.swing.BoxLayout(menucontainer, javax.swing.BoxLayout.Y_AXIS));
         add(menucontainer, java.awt.BorderLayout.NORTH);
