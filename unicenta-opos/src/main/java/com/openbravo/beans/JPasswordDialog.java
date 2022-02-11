@@ -22,6 +22,8 @@ import javax.swing.*;
 public class JPasswordDialog extends javax.swing.JDialog {
     
     private static LocaleResources m_resources;
+    private com.openbravo.editor.JEditorKeys m_jKeys;
+    private com.openbravo.editor.JEditorPassword m_jpassword;
 
     private String m_sPassword;
         
@@ -41,6 +43,9 @@ public class JPasswordDialog extends javax.swing.JDialog {
     }    
     
     private void init() {
+        
+        jPanelKe.add(m_jKeys);
+        jPanelInput.add(m_jpassword);
         
         if (m_resources == null) {
             m_resources = new LocaleResources();
@@ -133,14 +138,13 @@ public class JPasswordDialog extends javax.swing.JDialog {
         jcmdOK = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanelGrid = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        m_jKeys = new com.openbravo.editor.JEditorKeys();
-        jPanel4 = new javax.swing.JPanel();
-        m_jpassword = new com.openbravo.editor.JEditorPassword();
+        jPanelKe = new javax.swing.JPanel();
+        jPanelInput = new javax.swing.JPanel();
         m_jPanelTitle = new javax.swing.JPanel();
         m_lblMessage = new javax.swing.JLabel();
 
-        setPreferredSize(new java.awt.Dimension(320, 450));
+        setMinimumSize(new java.awt.Dimension(350, 450));
+        setPreferredSize(new java.awt.Dimension(350, 450));
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -180,27 +184,14 @@ public class JPasswordDialog extends javax.swing.JDialog {
 
         jPanelGrid.setPreferredSize(new java.awt.Dimension(310, 380));
 
-        jPanel3.setPreferredSize(new java.awt.Dimension(300, 350));
-        jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.Y_AXIS));
+        jPanelKe.setPreferredSize(new java.awt.Dimension(300, 300));
+        jPanelKe.setLayout(new javax.swing.BoxLayout(jPanelKe, javax.swing.BoxLayout.Y_AXIS));
+        jPanelGrid.add(jPanelKe);
 
-        m_jKeys.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                m_jKeysActionPerformed(evt);
-            }
-        });
-        jPanel3.add(m_jKeys);
-
-        jPanel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        jPanel4.setPreferredSize(new java.awt.Dimension(120, 30));
-        jPanel4.setLayout(new java.awt.BorderLayout());
-
-        m_jpassword.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jpassword.setPreferredSize(new java.awt.Dimension(110, 30));
-        jPanel4.add(m_jpassword, java.awt.BorderLayout.CENTER);
-
-        jPanel3.add(jPanel4);
-
-        jPanelGrid.add(jPanel3);
+        jPanelInput.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        jPanelInput.setPreferredSize(new java.awt.Dimension(300, 50));
+        jPanelInput.setLayout(new java.awt.BorderLayout());
+        jPanelGrid.add(jPanelInput);
 
         jPanel2.add(jPanelGrid, java.awt.BorderLayout.CENTER);
 
@@ -249,14 +240,12 @@ public class JPasswordDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanelGrid;
+    private javax.swing.JPanel jPanelInput;
+    private javax.swing.JPanel jPanelKe;
     private javax.swing.JButton jcmdCancel;
     private javax.swing.JButton jcmdOK;
-    private com.openbravo.editor.JEditorKeys m_jKeys;
     private javax.swing.JPanel m_jPanelTitle;
-    private com.openbravo.editor.JEditorPassword m_jpassword;
     private javax.swing.JLabel m_lblMessage;
     // End of variables declaration//GEN-END:variables
     
