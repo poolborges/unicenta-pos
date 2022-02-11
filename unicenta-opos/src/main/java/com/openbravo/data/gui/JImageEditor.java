@@ -49,6 +49,8 @@ public class JImageEditor extends javax.swing.JPanel {
     private static File m_fCurrentDirectory = null;
     private static NumberFormat m_percentformat = new DecimalFormat("#,##0.##%");
     
+    private boolean viewMode = false;
+    
     /** Creates new form JImageEditor */
     public JImageEditor() {
         initComponents();
@@ -59,6 +61,11 @@ public class JImageEditor extends javax.swing.JPanel {
         m_jImage.setIcon(m_icon);
         m_jPercent.setText(m_percentformat.format(m_icon.getZoom()));
         privateSetEnabled(isEnabled());
+    }
+    
+    
+    public void setViewMode(){
+       viewMode = true; 
     }
     
     /**
@@ -85,8 +92,14 @@ public class JImageEditor extends javax.swing.JPanel {
     }
     
     private void privateSetEnabled(boolean value) {
-        m_jbtnopen.setEnabled(value);
-        m_jbtnclose.setEnabled(value && (m_Img != null));
+        //ViewMode Disable Open and Close Bu
+        if(viewMode){
+            m_jbtnopen.setEnabled(false);
+            m_jbtnclose.setEnabled(false);
+        }else{
+           m_jbtnopen.setEnabled(value);
+            m_jbtnclose.setEnabled(value && (m_Img != null));
+        }
         m_jbtnzoomin.setEnabled(value && (m_Img != null));
         m_jbtnzoomout.setEnabled(value && (m_Img != null));
         m_jPercent.setEnabled(value && (m_Img != null));
@@ -336,6 +349,9 @@ public class JImageEditor extends javax.swing.JPanel {
         m_jImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_jImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/no_photo.png"))); // NOI18N
         m_jImage.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        m_jImage.setMaximumSize(new java.awt.Dimension(200, 200));
+        m_jImage.setMinimumSize(new java.awt.Dimension(120, 120));
+        m_jImage.setPreferredSize(new java.awt.Dimension(200, 200));
         m_jScr.setViewportView(m_jImage);
 
         add(m_jScr, java.awt.BorderLayout.CENTER);
