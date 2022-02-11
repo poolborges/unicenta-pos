@@ -731,7 +731,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
         lblStatus = new javax.swing.JLabel();
 
         setMinimumSize(new java.awt.Dimension(450, 150));
-        setPreferredSize(new java.awt.Dimension(450, 150));
+        setPreferredSize(new java.awt.Dimension(1000, 600));
         setLayout(new java.awt.BorderLayout());
 
         jToolBar.setFloatable(false);

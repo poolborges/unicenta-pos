@@ -1214,6 +1214,7 @@ public final class ProductsEditor extends javax.swing.JPanel implements EditorRe
         jBtnStyle = new javax.swing.JButton();
         colourChooser = new javax.swing.JButton();
 
+        setPreferredSize(new java.awt.Dimension(1000, 600));
         setLayout(null);
 
         jTabbedPane1.setToolTipText("");
