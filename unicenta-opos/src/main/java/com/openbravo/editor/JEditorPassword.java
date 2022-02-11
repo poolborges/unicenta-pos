@@ -25,6 +25,7 @@ import com.openbravo.basic.BasicException;
 public class JEditorPassword extends JEditorText {
     
     private static final char ECHO_CHAR = '*';
+    private static final long serialVersionUID = 1L;
 
     public JEditorPassword() {
         super();

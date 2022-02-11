@@ -26,6 +26,8 @@ import com.openbravo.basic.BasicException;
  * @author JG uniCenta
  */
 public abstract class JEditorText extends JEditorAbstract {
+
+    private static final long serialVersionUID = 1L;
     
     /**
      *
