@@ -55,6 +55,11 @@ public class WebServer {
         }
         //server.st
     }
+    
+    public static void main(final String args[]) {
+    
+        new WebServer().sa();
+    }
 
     class HomeHandler implements HttpHandler {
 
