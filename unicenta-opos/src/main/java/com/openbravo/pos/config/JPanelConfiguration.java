@@ -117,7 +117,7 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
         */
     }
 
-    private void loadProperties() {
+    public void loadProperties() {
 
         config.load();
         // paneles auxiliares
