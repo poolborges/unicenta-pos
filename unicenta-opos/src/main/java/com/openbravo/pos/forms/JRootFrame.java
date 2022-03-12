@@ -44,6 +44,7 @@ import com.openbravo.pos.util.OSValidator;
 public class JRootFrame extends javax.swing.JFrame implements AppMessage {
 
     private static final Logger LOGGER = Logger.getLogger(JRootFrame.class.getName());
+    private static final long serialVersionUID = 1L;
 
     private final JRootApp m_rootapp;
     private final AppProperties m_props;

@@ -64,6 +64,7 @@ import java.time.Instant;
 public class JRootApp extends JPanel implements AppView {
 
     private static final Logger LOGGER = Logger.getLogger(JRootApp.class.getName());
+    private static final long serialVersionUID = 1L;
 
     private final AppProperties m_props;
     private Session session;

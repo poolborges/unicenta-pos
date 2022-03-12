@@ -13,15 +13,16 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.sales;
 
-import com.openbravo.data.loader.LocalRes;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppUser;
+import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.util.ThumbNailBuilder;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,48 +49,34 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class JPanelButtons extends javax.swing.JPanel {
 
-    private static final Logger logger = Logger.getLogger("com.openbravo.pos.sales.JPanelButtons");
+    private static final Logger LOGGER = Logger.getLogger(JPanelButtons.class.getName());
 
-    private static SAXParser m_sp = null;
-    
     private Properties props;
     private Map<String, String> events;
-    
-    private JPanelTicket panelticket;
-    
-    /** Creates new form JPanelButtons
-     * @param sConfigKey
-     * @param panelticket */
-    public JPanelButtons(String sConfigKey, JPanelTicket panelticket) {
+    private DataLogicSystem dlSystem;
+    private JPanelButtonListener bListener;
+
+    public JPanelButtons(AppView app, JPanelButtonListener bListener, String sConfigRes) {
         initComponents();
-                     
-        
-        this.panelticket = panelticket;
-        
         props = new Properties();
         events = new HashMap<>();
-        
-        String sConfigRes = panelticket.getResourceAsXML(sConfigKey);
-        
-        if (sConfigRes != null) {
-            try {
-                if (m_sp == null) {
-                    SAXParserFactory spf = SAXParserFactory.newInstance();
-                    m_sp = spf.newSAXParser();
-                }
-                m_sp.parse(new InputSource(new StringReader(sConfigRes)), new ConfigurationHandler());
+        this.bListener = bListener;
+        dlSystem = (DataLogicSystem) app.getBean("com.openbravo.pos.forms.DataLogicSystem");
 
-            } catch (ParserConfigurationException ePC) {
-                logger.log(Level.WARNING, LocalRes.getIntString("exception.parserconfig"), ePC);
-            } catch (SAXException eSAX) {
-                logger.log(Level.WARNING, LocalRes.getIntString("exception.xmlfile"), eSAX);
-            } catch (IOException eIO) {
-                logger.log(Level.WARNING, LocalRes.getIntString("exception.iofile"), eIO);
-            }
-        }     
-    
+        LOGGER.info("create JPanelButtons from XML");
+        try {
+            SAXParserFactory spf = SAXParserFactory.newInstance();
+            SAXParser m_sp = spf.newSAXParser();
+            m_sp.parse(new InputSource(new StringReader(sConfigRes)), new ConfigurationHandler());
+        } catch (ParserConfigurationException ePC) {
+            LOGGER.log(Level.WARNING, "exception.parserconfig", ePC);
+        } catch (SAXException eSAX) {
+            LOGGER.log(Level.WARNING, "exception.xmlfile", eSAX);
+        } catch (IOException eIO) {
+            LOGGER.log(Level.WARNING, "exception.iofile", eIO);
+        }
     }
-    
+
     /**
      *
      * @param user
@@ -104,7 +91,7 @@ public class JPanelButtons extends javax.swing.JPanel {
             }
         }
     }
-    
+
     /**
      *
      * @param key
@@ -123,55 +110,63 @@ public class JPanelButtons extends javax.swing.JPanel {
     public String getProperty(String key, String defaultvalue) {
         return props.getProperty(key, defaultvalue);
     }
-     
-    /**
-     *
-     * @param key
-     * @return
-     */
+
     public String getEvent(String key) {
         return events.get(key);
     }
-    
-    private class ConfigurationHandler extends DefaultHandler {       
+
+    private class ConfigurationHandler extends DefaultHandler {
+
         @Override
-        public void startDocument() throws SAXException {}
+        public void startDocument() throws SAXException {
+        }
+
         @Override
-        public void endDocument() throws SAXException {}    
+        public void endDocument() throws SAXException {
+        }
+
         @Override
-        public void startElement(String uri, String localName, String qName, 
-                Attributes attributes) throws SAXException{
+        public void startElement(String uri, String localName, String qName,
+                Attributes attributes) throws SAXException {
             switch (qName) {
                 case "button":
                     // The button title text
                     String titlekey = attributes.getValue("titlekey");
-                    if (titlekey == null) {
-                        titlekey = attributes.getValue("name");
-                    }
+                    
+                    titlekey = titlekey == null
+                            ? attributes.getValue("name")
+                            : null;
+                    
                     String title = titlekey == null
                             ? attributes.getValue("title")
                             : AppLocal.getIntString(titlekey);
+                    
                     // adding the button to the panel
-                    JButton btn = new JButtonFunc(attributes.getValue("key"), 
-                            attributes.getValue("image"), 
+                    JButton btn = new JButtonFunc(
+                            attributes.getValue("key"),
+                            attributes.getValue("image"),
                             title);
-                    // The template resource or the code resource
+                    
+                    //Resource is: template
                     final String template = attributes.getValue("template");
-                    if (template == null) {
-                        final String code = attributes.getValue("code");
+                    if (template != null) {
                         btn.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent evt) {
-                                panelticket.evalScriptAndRefresh(code);
+                                bListener.print(template);
                             }
                         });
                     } else {
-                        btn.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent evt) {
-                                panelticket.printTicket(template);
-                            }
-                        });     
+                        //Resource is: code 
+                        final String code = attributes.getValue("code");
+                        if (code != null) {
+                            btn.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent evt) {
+                                    bListener.eval(code);
+                                }
+                            });
+                        }
                     }
                     add(btn);
                     break;
@@ -180,51 +175,60 @@ public class JPanelButtons extends javax.swing.JPanel {
                     break;
                 default:
                     String value = attributes.getValue("value");
-                    if (value != null) {                  
+                    if (value != null) {
                         props.setProperty(qName, attributes.getValue("value"));
                     }
                     break;
             }
-        }      
+        }
+
         @Override
-        public void endElement(String uri, String localName, String qName) throws SAXException {}
+        public void endElement(String uri, String localName, String qName) throws SAXException {
+        }
+
         @Override
-        public void characters(char[] ch, int start, int length) throws SAXException {}
-    }  
-        
+        public void characters(char[] ch, int start, int length) throws SAXException {
+        }
+    }
+
     private class JButtonFunc extends JButton {
 
         private static final long serialVersionUID = 1L;
-        
+
         // Load categories default thumbnail
-        final ThumbNailBuilder tnbmacro = new ThumbNailBuilder(42, 36, "com/openbravo/images/run_script.png");  
-       
+        final ThumbNailBuilder tnbmacro = new ThumbNailBuilder(42, 36, "com/openbravo/images/run_script.png");
+
         public JButtonFunc(String sKey, String sImage, String title) {
-            
+
             setName(sKey);
             setText(title);
-            setIcon(new ImageIcon(tnbmacro.getThumbNail(panelticket.getResourceAsImage(sImage))));
+            setIcon(new ImageIcon(tnbmacro.getThumbNail(dlSystem.getResourceAsImage(sImage))));
             setFocusPainted(false);
             setFocusable(false);
             setRequestFocusEnabled(false);
             setMargin(new Insets(8, 14, 8, 14));
-            setPreferredSize(new Dimension(80,45));
-        }         
+            setPreferredSize(new Dimension(80, 45));
+        }
     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    
+}
+
+
+interface JPanelButtonListener {
+    public void eval(String resource);
+    public void print(String resource);
 }
