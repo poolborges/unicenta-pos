@@ -31,6 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        
+        <netbeans.version>RELEASE126</netbeans.version>
+        <brandingToken>kriolos_obiz</brandingToken>
+        
         <project.github-url>http://kriolos.github.io/kriolos-opos</project.github-url>
 
         <!-- MISC config-->
@@ -137,6 +141,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>unicenta-opos-i18n</module>
         <module>unicenta-thirdparty</module>
         <module>unicenta-opos</module>
+        <module>kriolos-opos-rxtxjna</module>
+        <module>kriolos-opos-base</module>
     </modules>
     
     <dependencyManagement>
@@ -201,7 +207,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <defaultGoal>install</defaultGoal>
         <pluginManagement>
             <plugins>
-                
+                <plugin>   
+                    <groupId>org.apache.netbeans.utilities</groupId>
+                    <artifactId>nbm-maven-plugin</artifactId>
+                    <version>4.6</version>
+                    <extensions>true</extensions>
+                    <configuration>   
+                        <brandingToken>${brandingToken}</brandingToken>
+                        <cluster>${brandingToken}</cluster>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.jetbrains.kotlin</groupId>
                     <artifactId>kotlin-maven-plugin</artifactId>
@@ -220,7 +235,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version> 3.2.0</version>
+                    <version>3.2.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
