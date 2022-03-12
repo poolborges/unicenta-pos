@@ -138,11 +138,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </contributors>
 
     <modules>
+        <module>kriolos-opos-rxtxjna</module>
+        <module>kriolos-opos-base</module>
         <module>unicenta-opos-i18n</module>
         <module>unicenta-thirdparty</module>
         <module>unicenta-opos</module>
-        <module>kriolos-opos-rxtxjna</module>
-        <module>kriolos-opos-base</module>
     </modules>
     
     <dependencyManagement>
