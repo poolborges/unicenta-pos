@@ -17,27 +17,16 @@
 package com.openbravo.pos.customers;
 
 import com.openbravo.pos.domain.entity.businesspartner.BusinessPartner;
-import java.awt.image.BufferedImage;
 
 /** @author jack gerrard, adrianromero */
 public class CustomerInfo extends BusinessPartner {
     
     private static final long serialVersionUID = 9083257536541L;
 
-    protected BufferedImage image; 
     protected Double curdebt;     
 
     public CustomerInfo(String id) {
         super(id);
-    }
-
-
-    public BufferedImage getImage() {
-        return image;
-    }
-
-    public void setImage(BufferedImage img) {
-        image = img;
     }
 
     public Double getCurDebt() {
