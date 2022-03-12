@@ -157,6 +157,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <artifactId>kriolos-pos-i18n</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-base</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             
             <dependency> 
                 <groupId>org.jetbrains.kotlin</groupId>  
@@ -296,32 +301,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <arg>-Xlint:all</arg>
                         </compilerArgs>
                     </configuration>
-                    <executions>
-                        <!-- Replacing default-compile as it is treated specially by maven -->
-                        <execution>
-                            <id>default-compile</id>
-                            <phase>none</phase>
-                        </execution>
-                        <!-- Replacing default-testCompile as it is treated specially by maven -->
-                        <execution>
-                            <id>default-testCompile</id>
-                            <phase>none</phase>
-                        </execution>
-                        <execution>
-                            <id>java-compile</id>
-                            <phase>compile</phase>
-                            <goals>
-                                <goal>compile</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>java-test-compile</id>
-                            <phase>test-compile</phase>
-                            <goals>
-                                <goal>testCompile</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -336,26 +315,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </plugin>
                 
                 <!-- License -->
-                    <plugin>
-                        <groupId>com.mycila</groupId>
-                        <artifactId>license-maven-plugin</artifactId>
-                        <version>4.0.rc2</version>
-                        <configuration>
-                            <header>com/mycila/maven/plugin/license/templates/GPL-3.txt</header>
-                            <properties>
-                                <inceptionYear>${project.inceptionYear}</inceptionYear>
-                            </properties>
-                            <includes>
-                                <include>src/**/*.java</include>
-                                <include>src/**/*.xml</include>
-                            </includes>
-                            <excludes>
-                                <exclude>**/logback.xml</exclude>
-                                <exclude>**/logback-test.xml</exclude>
-                                <exclude>**/src/test/resources/**</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
+                <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>4.0.rc2</version>
+                    <configuration>
+                        <header>com/mycila/maven/plugin/license/templates/GPL-3.txt</header>
+                        <properties>
+                            <inceptionYear>${project.inceptionYear}</inceptionYear>
+                        </properties>
+                        <includes>
+                            <include>src/**/*.java</include>
+                            <include>src/**/*.xml</include>
+                        </includes>
+                        <excludes>
+                            <exclude>**/logback.xml</exclude>
+                            <exclude>**/logback-test.xml</exclude>
+                            <exclude>**/src/test/resources/**</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
             
             </plugins>
         </pluginManagement>
