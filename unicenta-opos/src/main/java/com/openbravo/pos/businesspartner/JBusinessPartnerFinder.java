@@ -38,7 +38,9 @@ import java.awt.event.KeyEvent; //Jack
  */
 public class JBusinessPartnerFinder extends javax.swing.JDialog implements EditorCreator {
 
-    private CustomerInfo m_ReturnCustomer;
+    private static final long serialVersionUID = 1L;
+
+    private BusinessPartner m_ReturnBusinessPartner;
     private ListProvider lpr;
     private AppView appView;
 
@@ -77,7 +79,7 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
         super(parent, modal);
     }
 
-    public static JBusinessPartnerFinder getCustomerFinder(Component parent, DataLogicCustomers dlCustomers) {
+    public static JBusinessPartnerFinder getBusinessPartnerFinder(Component parent, DataLogicCustomers dlCustomers) {
         Window window = getWindow(parent);
 
         JBusinessPartnerFinder myMsg;
@@ -92,8 +94,8 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
         return myMsg;
     }
 
-    public CustomerInfo getSelectedCustomer() {
-        return m_ReturnCustomer;
+    public BusinessPartner getSelectedCustomer() {
+        return m_ReturnBusinessPartner;
     }
 
     private void init(DataLogicCustomers dlCustomers) {
@@ -124,11 +126,11 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
 
         getRootPane().setDefaultButton(jcmdOK);
 
-        m_ReturnCustomer = null;
+        m_ReturnBusinessPartner = null;
 
     }
 
-    public void search(CustomerInfo customer) {
+    public void search(BusinessPartner customer) {
 
         if (customer == null || customer.getName() == null || customer.getName().equals("")) {
 
@@ -186,8 +188,6 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
                         JOptionPane.YES_NO_OPTION);
 
                     if (n != 1) {
-                        CustomerInfoGlobal customerInfoGlobal = CustomerInfoGlobal.getInstance();
-                        CustomerInfoExt customerInfoExt = customerInfoGlobal.getCustomerInfoExt();
                         this.setVisible(false);
                         appView.getAppUserView().showTask("com.openbravo.pos.customers.CustomersPanel");
                         JOptionPane.showMessageDialog(null, 
@@ -567,7 +567,7 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
     }// </editor-fold>//GEN-END:initComponents
     private void jcmdOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcmdOKActionPerformed
 
-        m_ReturnCustomer = (CustomerInfo) jListCustomers.getSelectedValue();
+        m_ReturnBusinessPartner = (CustomerInfo) jListCustomers.getSelectedValue();
         dispose();
 
     }//GEN-LAST:event_jcmdOKActionPerformed
@@ -580,22 +580,18 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
 
     private void jbtnExecuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnExecuteActionPerformed
 
-        m_ReturnCustomer=null;
+        m_ReturnBusinessPartner=null;
         executeSearch();
         
     }//GEN-LAST:event_jbtnExecuteActionPerformed
 
     private void jListCustomersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListCustomersValueChanged
 
-        m_ReturnCustomer = (CustomerInfo) jListCustomers.getSelectedValue();
-            
-        if (m_ReturnCustomer != null) {
-            m_ReturnCustomer = (CustomerInfo) jListCustomers.getSelectedValue();
-
-            if (m_ReturnCustomer != null) {
-                jImageViewerCustomer.setImage(m_ReturnCustomer.getImage());
-            }
-        }         
+        m_ReturnBusinessPartner = (CustomerInfo) jListCustomers.getSelectedValue();
+        
+        if (m_ReturnBusinessPartner != null) {
+                jImageViewerCustomer.setImage(m_ReturnBusinessPartner.getImage());
+        }
         
         jcmdOK.setEnabled(jListCustomers.getSelectedValue() != null);
 
@@ -603,14 +599,10 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
 
     private void jListCustomersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListCustomersMouseClicked
 
-        m_ReturnCustomer = (CustomerInfo) jListCustomers.getSelectedValue();
-            
-        if (m_ReturnCustomer != null) {
-            m_ReturnCustomer = (CustomerInfo) jListCustomers.getSelectedValue();
-
-            if (m_ReturnCustomer != null) {
-                jImageViewerCustomer.setImage(m_ReturnCustomer.getImage());
-            }
+        m_ReturnBusinessPartner = (BusinessPartner) jListCustomers.getSelectedValue();
+        
+        if (m_ReturnBusinessPartner != null) {
+                jImageViewerCustomer.setImage(m_ReturnBusinessPartner.getImage());
         } 
 
     }//GEN-LAST:event_jListCustomersMouseClicked
