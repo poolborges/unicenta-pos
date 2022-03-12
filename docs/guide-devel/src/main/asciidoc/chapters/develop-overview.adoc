@@ -1,0 +1,66 @@
+[[gd-development]]
+== Development
+
+Chapter
+
+=== Dev Tools
+
+Quality assurance
+
+* PMD
+* SpotBug
+* Checkstyle
+* JaCoCo
+
+.Java Code Annotations
+----
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+----
+
+
+=== Libraries
+
+BeanShell (BSH)
+
+* Script Language
+
+JPOS
+
+* org.jpos.jpos
+* jPOS 2.1.6
+* http://jpos.org
+* Supppor: EMV
+
+JavaPOS
+
+* JavaPOS Library (Contracts, Controls, JCL)
+* UnifiedPOS Standard
+* Package: jpos
+* Spec Version: 1.4
+* Support: FiscalPrinter (FCP), Biometrics, MICR, POSPrinter, ToneIndicator, Scale
+* github.com/JavaPOSWorkingGroup
+
+USB-API
+
+* javax-usb (JSR-80)
+* Package: javax.usb
+
+USB4Java 
+
+* USB library for Java based on libusb and implementing javax-usb (JSR-80).
+
+Date Picker (UI)
+
+* LGoodDatePicker: https://github.com/LGoodDatePicker/LGoodDatePicker
+* JXDatePicker: SwingX project
+* JDatePicker: https://github.com/JDatePicker/
+** https://www.codejava.net/java-se/swing/how-to-use-jdatepicker-to-display-calendar-component
+* Microba DatePicker: https://github.com/tdbear/microba
+* JCalendar: http://www.toedter.com/en/jcalendar/
+
+MapDB 
+
+* https://github.com/jankotek/mapdb
+* (Deprec) https://github.com/jankotek/JDBM4

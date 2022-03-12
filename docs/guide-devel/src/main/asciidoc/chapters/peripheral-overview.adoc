@@ -1,0 +1,91 @@
+[[gd-peripheral]]
+== Peripheral
+
+Peripheral chapter Hardware/Device
+
+=== Overview
+
+<TODO> 
+
+=== Common 
+
+* Serial or COM Port 
+** rfc2217 https://datatracker.ietf.org/doc/html/rfc2217
+
+=== Scale 
+
+.POS Scale Configuration example
+[source, ini]
+----
+machine.scale=caspdii:
+----
+
+.Supported Scales
+|====
+|Name 
+
+|AcomPC100
+|averyberkel6720
+|casiopd1
+|dialog1
+|samsungesp
+|caspdii
+|screen
+|MTIND221
+|====
+
+
+
+.Serial Port Properties
+----
+speed: 9600
+Paridad:None
+stop bit: 1
+data bit: 8
+----
+
+.Neptuno_56PPI
+----
+samsungesp $ (Hex 0x24) 4800,8,1,odd kilos
+----
+
+=== Scanner
+
+.POS Scanner configuration example
+----
+machine.scanner=scanpal2
+----
+
+
+=== Printer
+
+* ESCPOS
+
+.Encoding for Devices
+|====
+|Name 
+
+|Epson
+|Ithaca
+|Star
+|SurePOS
+|TMU220
+|====
+
+.POS Printer configuration example
+----
+machine.printername
+----
+
+=== Display 
+
+Display Implemented
+
+* file 
+* serial
+* javapos
+
+.POS Printer configuration example
+----
+machine.display=javapos:
+----
