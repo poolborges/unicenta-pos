@@ -8,10 +8,20 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>  
     <artifactId>kriolos-pos</artifactId> 
-    <packaging>jar</packaging>
+    <packaging>nbm</packaging>
     <name>Kriolos :: POS.App</name> 
+    
+    <properties>
+        <netbeans.version>RELEASE126</netbeans.version>
+    </properties>
 
     <dependencies>
+        <!-- Project DEPENDENCIES -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>kriolos-opos-base</artifactId>
+        </dependency>
+        
         <!-- Dependency of JasperReports(jfreecart/1.0.x)
         <dependency> 
             <groupId>org.jfree</groupId>  
@@ -47,6 +57,10 @@
                 <exclusion>
                     <groupId>avalon-framework</groupId>
                     <artifactId>avalon-framework-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>  
@@ -254,12 +268,12 @@
             <version>2.9.7</version> 
         </dependency>  -->  
         <!-- 
-        <dependency>
-            <groupId>com.weblookandfeel</groupId>
-            <artifactId>weblaf-ui</artifactId>
-            <version>1.2.13</version>
-        </dependency>
-         -->
+       <dependency>
+           <groupId>com.weblookandfeel</groupId>
+           <artifactId>weblaf-ui</artifactId>
+           <version>1.2.13</version>
+       </dependency>
+        -->
         <!-- rsyntaxtextarea Classes inside weblaf-complete -->
         <dependency>
             <groupId>com.fifesoft</groupId>
@@ -346,8 +360,7 @@
             <artifactId>kriolos-pos-i18n</artifactId>
         </dependency>
         
-        <!-- SOLVE PROBLEM-->        
-
+        <!-- SOLVE PROBLEM
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
@@ -362,7 +375,7 @@
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
-            <scope>runtime</scope>
+            <scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.glassfish.jaxb</groupId>
@@ -373,6 +386,18 @@
                     <artifactId>jakarta.xml.bind-api</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.3.3</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -412,10 +437,120 @@
             <scope>test</scope>
         </dependency>
         
+        <!-- POS RUN DEPS FOR NBM 
+        <dependency>
+            <groupId>com.sleepycat</groupId>
+            <artifactId>je</artifactId>
+            <version>18.3.12</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>jdbm</groupId>
+            <artifactId>jdbm</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>6.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.26</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
+            <version>1.2.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.27.0-GA</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.i2p.crypto</groupId>
+            <artifactId>eddsa</artifactId>
+            <version>0.3.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbyshared</artifactId>
+            <version>10.15.2.0</version>
+            <scope>compile</scope>
+        </dependency>
+        -->
+        
+        <!-- netbeans -->
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-api-annotations-common</artifactId>
+            <version>${netbeans.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-windows</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-awt</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-dialogs</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-explorer</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util-lookup</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-modules</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-nodes</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util-ui</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-settings</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        
+        <!-- -->
     </dependencies>  
     <build>
         <finalName>kriolos-pos</finalName> 
-        <plugins> 
+        <plugins>
             <plugin> 
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -432,11 +567,44 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
+                        <!--
                         <manifestEntries>
                             <Automatic-Module-Name>io.github.kriolos.krpos</Automatic-Module-Name>
                         </manifestEntries>
+                        -->
+                        <!-- to have the jar plugin pickup the nbm generated manifest -->
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.netbeans.utilities</groupId>
+                <artifactId>nbm-maven-plugin</artifactId>
+                <configuration>
+                    <publicPackages>
+                        <publicPackage>com.openbravo.basic</publicPackage>
+                        <publicPackage>com.openbravo.beans</publicPackage>
+                        <publicPackage>com.openbravo.beans.gui</publicPackage>
+                        <publicPackage>com.openbravo.data.gui</publicPackage>
+                        <publicPackage>com.openbravo.data.loader</publicPackage>
+                        <publicPackage>com.openbravo.data.model</publicPackage>
+                        <publicPackage>com.openbravo.data.user</publicPackage>
+                        <publicPackage>com.openbravo.editor</publicPackage>
+                        <publicPackage>com.openbravo.format</publicPackage>
+                        <publicPackage>com.openbravo.pos.*</publicPackage>
+                        <publicPackage>com.openbravo.resources</publicPackage>
+                        <publicPackage>io.github.kriolos.opos.*</publicPackage>
+                    </publicPackages>
+                    <codeNameBase>${project.artifactId}</codeNameBase>
+                    <verifyRuntime>warning<!-- fail,skip,warning --></verifyRuntime>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>javax.help</groupId>
+                        <artifactId>javahelp</artifactId>
+                        <version>2.0.02</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>   
     </build>  
