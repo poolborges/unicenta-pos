@@ -1,0 +1,67 @@
+= Serial Port (Native lib)
+
+
+----
+Wed Mar  1 12:05:10 MST 2006
+We forgot to update the Mac OS X binary.  
+Previously, it was an old version (RXTX-2.1-7pre20).  
+This has now been corrected.
+----
+
+Reference
+
+* ccl.norhwesern.edu
+* rxx.qbang.org
+* svn.aaloa.org
+
+
+== Native
+
+.GCC 
+|====
+|sparc32-sun-solaris2        |sunos-sparc
+|sparc64-sun-solaris2        |sunos-sparcv9
+|i686-unknown-linux-gnu      |
+|====
+
+
+.GCC
+|====
+|i386, i586, i686
+|ia64
+|====
+
+
+.JNA OS
+|====
+|Name 
+
+|macOS
+|Android
+|AIX
+|FreeBSD
+|Linux
+|OpenBSD
+|Solaris (SunOS)
+|WIndows
+|====
+
+
+.JNA Processor
+|====
+|x86
+|x86_64
+|sparc
+|sparcv9
+|aarch64
+|arm
+|armel
+|arm_le
+|mips
+|mips64el
+|ppc
+|ppc64
+|ppc64le
+|s390x
+|====
+
