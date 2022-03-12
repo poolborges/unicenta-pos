@@ -21,10 +21,13 @@ package com.openbravo.data.gui;
  * @author JG uniCenta
  */
 public class JImageViewer extends JImageEditor {
+
+    private static final long serialVersionUID = 1L;
     
     public JImageViewer(){
         super();
         super.setViewMode();
+        super.setEnabled(false);
     }
     
     /** This method is called from within the constructor to
