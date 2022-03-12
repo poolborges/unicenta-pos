@@ -341,24 +341,23 @@ public class JTicketsFinder extends javax.swing.JDialog implements EditorCreator
         jtxtCustomer = new javax.swing.JTextField();
         btnCustomer = new javax.swing.JButton();
         jComboBoxTicket = new javax.swing.JComboBox();
-        jPanel6 = new javax.swing.JPanel();
-        jbtnReset = new javax.swing.JButton();
-        jbtnExecute = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jListTickets = new javax.swing.JList();
+        jPanel6 = new javax.swing.JPanel();
+        jbtnReset = new javax.swing.JButton();
+        jbtnExecute = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        m_jKeys = new com.openbravo.editor.JEditorKeys();
-        jPanel8 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jcmdCancel = new javax.swing.JButton();
         jcmdOK = new javax.swing.JButton();
+        m_jKeys = new com.openbravo.editor.JEditorKeys();
+        jPanel8 = new javax.swing.JPanel();
         jLblTicketCount = new javax.swing.JLabel();
         jLblReturnCount = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(AppLocal.getIntString("form.tickettitle")); // NOI18N
-        setPreferredSize(new java.awt.Dimension(568, 600));
 
         jPanel3.setLayout(new java.awt.BorderLayout());
 
@@ -524,6 +523,31 @@ public class JTicketsFinder extends javax.swing.JDialog implements EditorCreator
 
         jPanel5.add(jPanel7, java.awt.BorderLayout.CENTER);
 
+        jPanel3.add(jPanel5, java.awt.BorderLayout.PAGE_START);
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        jPanel4.setLayout(new java.awt.BorderLayout());
+
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(258, 60));
+
+        jListTickets.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jListTickets.setFocusable(false);
+        jListTickets.setRequestFocusEnabled(false);
+        jListTickets.setVisibleRowCount(6);
+        jListTickets.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jListTicketsMouseClicked(evt);
+            }
+        });
+        jListTickets.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jListTicketsValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jListTickets);
+
+        jPanel4.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
         jbtnReset.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jbtnReset.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/reload.png"))); // NOI18N
         jbtnReset.setText(AppLocal.getIntString("button.clean")); // NOI18N
@@ -551,46 +575,15 @@ public class JTicketsFinder extends javax.swing.JDialog implements EditorCreator
         });
         jPanel6.add(jbtnExecute);
 
-        jPanel5.add(jPanel6, java.awt.BorderLayout.SOUTH);
-
-        jPanel3.add(jPanel5, java.awt.BorderLayout.PAGE_START);
-
-        jPanel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        jPanel4.setLayout(new java.awt.BorderLayout());
-
-        jListTickets.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jListTickets.setFocusable(false);
-        jListTickets.setRequestFocusEnabled(false);
-        jListTickets.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jListTicketsMouseClicked(evt);
-            }
-        });
-        jListTickets.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jListTicketsValueChanged(evt);
-            }
-        });
-        jScrollPane1.setViewportView(jListTickets);
-
-        jPanel4.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        jPanel4.add(jPanel6, java.awt.BorderLayout.PAGE_START);
 
         jPanel3.add(jPanel4, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.CENTER);
 
         jPanel2.setPreferredSize(new java.awt.Dimension(300, 250));
-        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        m_jKeys.setPreferredSize(new java.awt.Dimension(290, 300));
-        m_jKeys.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                m_jKeysActionPerformed(evt);
-            }
-        });
-        jPanel2.add(m_jKeys, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 300, -1));
-
-        jPanel8.setLayout(new java.awt.BorderLayout());
+        jPanel1.setPreferredSize(new java.awt.Dimension(290, 55));
 
         jcmdCancel.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jcmdCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/cancel.png"))); // NOI18N
@@ -625,9 +618,18 @@ public class JTicketsFinder extends javax.swing.JDialog implements EditorCreator
         });
         jPanel1.add(jcmdOK);
 
-        jPanel8.add(jPanel1, java.awt.BorderLayout.LINE_END);
+        jPanel2.add(jPanel1);
 
-        jPanel2.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 536, 300, -1));
+        m_jKeys.setPreferredSize(new java.awt.Dimension(290, 300));
+        m_jKeys.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_jKeysActionPerformed(evt);
+            }
+        });
+        jPanel2.add(m_jKeys);
+
+        jPanel8.setMinimumSize(new java.awt.Dimension(250, 50));
+        jPanel8.setPreferredSize(new java.awt.Dimension(290, 60));
 
         jLblTicketCount.setBackground(new java.awt.Color(51, 204, 255));
         jLblTicketCount.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
@@ -636,14 +638,16 @@ public class JTicketsFinder extends javax.swing.JDialog implements EditorCreator
         jLblTicketCount.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 204, 255)));
         jLblTicketCount.setOpaque(true);
         jLblTicketCount.setPreferredSize(new java.awt.Dimension(80, 50));
-        jPanel2.add(jLblTicketCount, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 306, -1, -1));
+        jPanel8.add(jLblTicketCount);
 
         jLblReturnCount.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages"); // NOI18N
         jLblReturnCount.setText(bundle.getString("label.ticketsfound")); // NOI18N
         jLblReturnCount.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 204, 255)));
         jLblReturnCount.setPreferredSize(new java.awt.Dimension(80, 50));
-        jPanel2.add(jLblReturnCount, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 306, 200, -1));
+        jPanel8.add(jLblReturnCount);
+
+        jPanel2.add(jPanel8);
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.LINE_END);
 
