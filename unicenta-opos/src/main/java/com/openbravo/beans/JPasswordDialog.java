@@ -16,17 +16,20 @@
 
 package com.openbravo.beans;
 
+import com.openbravo.editor.JEditorKeys;
+import com.openbravo.editor.JEditorPassword;
 import java.awt.*;
 import javax.swing.*;
 
 public class JPasswordDialog extends javax.swing.JDialog {
     
     private static LocaleResources m_resources;
-    private com.openbravo.editor.JEditorKeys m_jKeys;
-    private com.openbravo.editor.JEditorPassword m_jpassword;
+    private static final long serialVersionUID = 1L;
+    private JEditorKeys m_jKeys = new JEditorKeys();
+    private JEditorPassword m_jpassword = new JEditorPassword();
 
     private String m_sPassword;
-        
+    
     /** Creates new form JPasswordDialog
      * @param parent
      * @param modal */
@@ -43,7 +46,7 @@ public class JPasswordDialog extends javax.swing.JDialog {
     }    
     
     private void init() {
-        
+     
         jPanelKe.add(m_jKeys);
         jPanelInput.add(m_jpassword);
         

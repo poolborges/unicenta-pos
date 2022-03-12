@@ -29,6 +29,7 @@ public class RoundedBorder extends AbstractBorder {
     private static Border blackLine;
     private static Border grayLine;
     private static Border gradientBorder;
+    private static final long serialVersionUID = 1L;
     
     /**
      *
