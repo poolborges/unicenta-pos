@@ -13,6 +13,9 @@
     
     <properties>
         <netbeans.version>RELEASE126</netbeans.version>
+        <mysql.version>8.0.28</mysql.version>
+        <derby.version>10.15.2.0</derby.version>
+        <jasperreports.version>6.19.0</jasperreports.version>
     </properties>
 
     <dependencies>
@@ -22,29 +25,6 @@
             <artifactId>kriolos-opos-base</artifactId>
         </dependency>
         
-        <!-- Dependency of JasperReports(jfreecart/1.0.x)
-        <dependency> 
-            <groupId>org.jfree</groupId>  
-            <artifactId>jcommon</artifactId>  
-            <version>1.0.24</version> 
-        </dependency>  
-        <dependency> 
-            <groupId>org.jfree</groupId>  
-            <artifactId>jfreechart</artifactId>  
-            <version>1.5.0</version> 
-        </dependency> -->
-        <!-- iText JPDF library - Dependency of JasperReports(itext/2.1.x)
-        <dependency> 
-            <groupId>com.itextpdf</groupId>  
-            <artifactId>itextpdf</artifactId>  
-            <version>5.5.6</version> 
-        </dependency>  -->
-        <!-- Apache POI - Java API To Access Microsoft Format Files 
-        <dependency> 
-            <groupId>org.apache.poi</groupId>  
-            <artifactId>poi</artifactId>  
-            <version>4.1.2</version> 
-        </dependency>  -->
         <dependency> 
             <groupId>net.sf.barcode4j</groupId>  
             <artifactId>barcode4j</artifactId>  
@@ -65,33 +45,6 @@
             </exclusions>
         </dependency>  
         
-        <!--
-        <dependency> 
-            <groupId>commons-beanutils</groupId>  
-            <artifactId>commons-beanutils</artifactId>  
-            <version>1.9.4</version> 
-        </dependency>  
-        <dependency> 
-            <groupId>commons-digester</groupId>  
-            <artifactId>commons-digester</artifactId>  
-            <version>2.1</version> 
-        </dependency> 
-        <dependency> 
-            <groupId>commons-discovery</groupId>  
-            <artifactId>commons-discovery</artifactId>  
-            <version>0.5</version> 
-        </dependency>  
-        <dependency> 
-            <groupId>commons-logging</groupId>  
-            <artifactId>commons-logging</artifactId>  
-            <version>1.2</version> 
-        </dependency>  
-        <dependency> 
-            <groupId>commons-collections</groupId>  
-            <artifactId>commons-collections</artifactId>  
-            <version>3.2.2</version> 
-        </dependency>  
-        -->
         <dependency> 
             <groupId>commons-codec</groupId>  
             <artifactId>commons-codec</artifactId>  
@@ -107,14 +60,7 @@
             <artifactId>velocity-engine-core</artifactId>  
             <version>2.3</version> 
         </dependency>  
-        <!--Apache ORO: text-processing,substitutions, splits, filtering filenames, etc. 
-        (NOTFOUND Dependency in CODE)
-       
-        <dependency> 
-            <groupId>oro</groupId>  
-            <artifactId>oro</artifactId>  
-            <version>2.0.8</version> 
-        </dependency> -->
+        
         <!-- BeanShell Script Engine -->
         <dependency> 
             <groupId>org.apache-extras.beanshell</groupId>  
@@ -122,20 +68,15 @@
             <version>2.0b6</version> 
         </dependency>  
         
+        <!-- SerialPort -->
         <dependency> 
             <groupId>org.bidib.jbidib.org.qbang.rxtx</groupId>  
             <artifactId>rxtxcomm</artifactId>  
             <version>2.2</version> 
         </dependency>
         
-        <!-- 
-        <dependency>
-            <groupId>com.github.calimero</groupId>
-            <artifactId>calimero-rxtx</artifactId>
-            <version>2.5-M1</version>
-        </dependency>
-        -->
         
+        <!-- Swing GUI -->
         <dependency> 
             <groupId>org.swinglabs.swingx</groupId>  
             <artifactId>swingx-all</artifactId>  
@@ -145,18 +86,16 @@
             <groupId>org.swinglabs</groupId>  
             <artifactId>swing-layout</artifactId>  
             <version>1.0.3</version> 
-        </dependency>  
+        </dependency> 
+        
+         <!-- CVS File Parser --> 
         <dependency> 
             <groupId>net.sourceforge.javacsv</groupId>  
             <artifactId>javacsv</artifactId>  
             <version>2.0</version> 
-        </dependency>  
-        <dependency> 
-            <groupId>org.netbeans.external</groupId>  
-            <artifactId>AbsoluteLayout</artifactId>  
-            <version>RELEASE126</version> 
-        </dependency> 
+        </dependency>
            
+        <!-- JavaPOS -->   
         <dependency> 
             <groupId>org.javapos</groupId>  
             <artifactId>javapos</artifactId>  
@@ -169,13 +108,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--
         <dependency>
             <groupId>org.javapos</groupId>
             <artifactId>javapos-contracts</artifactId>
             <version>1.14.3</version>
         </dependency>  
-        --> 
+        
         <!-- ISO 8583-1:2003 Financial transaction card originated messages-->
         <dependency>
             <groupId>org.jpos</groupId>
@@ -192,22 +130,24 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+        <!-- JDBC RUN DEPENDENCIES -->
         <dependency> 
             <groupId>mysql</groupId>  
             <artifactId>mysql-connector-java</artifactId>  
-            <version>8.0.28</version> 
+            <version>${mysql.version}</version> 
             <scope>runtime</scope>
         </dependency>  
         <dependency> 
             <groupId>org.apache.derby</groupId>  
             <artifactId>derby</artifactId>  
-            <version>10.15.2.0</version> 
+            <version>${derby.version}</version> 
             <scope>runtime</scope>
         </dependency>  
         <dependency>
             <groupId>org.apache.derby</groupId>  
             <artifactId>derbyLocale_pt_BR</artifactId>  
-            <version>10.15.2.0</version> 
+            <version>${derby.version}</version> 
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -222,59 +162,21 @@
             <version>42.3.3</version>
             <scope>runtime</scope>
         </dependency>
-        <!-- DOM, SAX, and JAXP, 
-        <dependency> 
-            <groupId>xml-apis</groupId>  
-            <artifactId>xml-apis</artifactId>  
-            <version>1.0.b2</version> 
-        </dependency>  
-        -->
         
-        <!-- Apache FOP - Multiple Output format:PDF,... (NOTFOUND Dependency in CODE)
-       <dependency> 
-           <groupId>org.apache.xmlgraphics</groupId>  
-           <artifactId>fop</artifactId>  
-           <version>2.5</version> 
-       </dependency>  
-        --> 
+        <!-- JASPER REPOR -->
         <dependency> 
             <groupId>net.sf.jasperreports</groupId>  
             <artifactId>jasperreports</artifactId>  
-            <version>6.19.0</version> 
+            <version>${jasperreports.version}</version> 
         </dependency>  
         <dependency> 
             <groupId>net.sf.jasperreports</groupId>  
             <artifactId>jasperreports-fonts</artifactId>  
-            <version>6.18.1</version> 
+            <version>${jasperreports.version}</version> 
             <scope>runtime</scope>
         </dependency>
-        <!-- Eclipse Compiler - (ECJ deps of JasperReports)
-        <dependency>
-            <groupId>org.eclipse.jdt</groupId>
-            <artifactId>ecj</artifactId>
-            <version>3.23.0</version>
-        </dependency> 
-        <dependency>
-            <groupId>org.eclipse.jdt</groupId>
-            <artifactId>org.eclipse.jdt.core</artifactId>
-            <version>3.23.0</version>
-        </dependency> 
-        -->
         
-        <!-- Joda Date Library: 
-        <dependency> 
-            <groupId>joda-time</groupId>  
-            <artifactId>joda-time</artifactId>  
-            <version>2.9.7</version> 
-        </dependency>  -->  
-        <!-- 
-       <dependency>
-           <groupId>com.weblookandfeel</groupId>
-           <artifactId>weblaf-ui</artifactId>
-           <version>1.2.13</version>
-       </dependency>
-        -->
-        <!-- rsyntaxtextarea Classes inside weblaf-complete -->
+        <!-- rsyntaxtextarea -->
         <dependency>
             <groupId>com.fifesoft</groupId>
             <artifactId>rsyntaxtextarea</artifactId>
@@ -286,7 +188,8 @@
             <artifactId>javax.persistence-api</artifactId>
             <version>2.2</version>
         </dependency>
-        <!-- 4.2.2 -->  
+        
+        <!-- USB -->  
         <dependency> 
             <groupId>org.usb4java</groupId>  
             <artifactId>usb4java</artifactId>  
@@ -297,6 +200,7 @@
             <artifactId>usb-api</artifactId>  
             <version>1.0.2</version> 
         </dependency>  
+        
         <dependency> 
             <groupId>org.jdatepicker</groupId>  
             <artifactId>jdatepicker</artifactId>  
@@ -308,14 +212,6 @@
             <groupId>org.jetbrains.kotlin</groupId>  
             <artifactId>kotlin-stdlib</artifactId> 
         </dependency>
-
-        <!-- Substance - Swing LookAndFeel (LaF)
-           <dependency>
-                <groupId>org.pushing-pixels</groupId>
-                <artifactId>radiance-substance</artifactId>
-                <version>3.5.1</version>
-            </dependency>
-        -->
         
         <!-- flatlaf - Swing LaF -->
         <dependency>
@@ -360,34 +256,7 @@
             <artifactId>kriolos-pos-i18n</artifactId>
         </dependency>
         
-        <!-- SOLVE PROBLEM
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.activation</groupId>
-                    <artifactId>javax.activation-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-runtime</artifactId>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.glassfish.jaxb</groupId>
-                    <artifactId>jaxb-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jakarta.xml.bind</groupId>
-                    <artifactId>jakarta.xml.bind-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        -->
+        <!-- JAX XML-->
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
@@ -400,95 +269,19 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- DEV/COMPILE IME ONL-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
         
+        <!-- netbeans MODULES -->
         <dependency> 
-            <groupId>com.formdev</groupId> 
-            <artifactId>flatlaf-jide-oss</artifactId> 
-            <version>2.0</version>
-            <scope>test</scope>
+            <groupId>org.netbeans.external</groupId>  
+            <artifactId>AbsoluteLayout</artifactId>  
+            <version>${netbeans.version}</version> 
         </dependency> 
-        <dependency> 
-            <groupId>net.janklab.opp</groupId> 
-            <artifactId>jide-oss</artifactId> 
-            <version>3.7.4</version>
-            <scope>test</scope>
-        </dependency> 
-        <dependency>
-            <groupId>de.richtercloud</groupId>
-            <artifactId>flexdock-perspective</artifactId>
-            <version>1.2.3</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.richtercloud</groupId>
-            <artifactId>flexdock-view</artifactId>
-            <version>1.2.3</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.richtercloud</groupId>
-            <artifactId>flexdock-core</artifactId>
-            <version>1.2.3</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <!-- POS RUN DEPS FOR NBM 
-        <dependency>
-            <groupId>com.sleepycat</groupId>
-            <artifactId>je</artifactId>
-            <version>18.3.12</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>jdbm</groupId>
-            <artifactId>jdbm</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.core</artifactId>
-            <version>6.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.26</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.activation</groupId>
-            <artifactId>jakarta.activation</artifactId>
-            <version>1.2.2</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.27.0-GA</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.i2p.crypto</groupId>
-            <artifactId>eddsa</artifactId>
-            <version>0.3.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derbyshared</artifactId>
-            <version>10.15.2.0</version>
-            <scope>compile</scope>
-        </dependency>
-        -->
-        
-        <!-- netbeans -->
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-api-annotations-common</artifactId>
@@ -545,8 +338,6 @@
             <artifactId>org-netbeans-modules-settings</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
-        
-        <!-- -->
     </dependencies>  
     <build>
         <finalName>kriolos-pos</finalName> 
@@ -567,11 +358,6 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
-                        <!--
-                        <manifestEntries>
-                            <Automatic-Module-Name>io.github.kriolos.krpos</Automatic-Module-Name>
-                        </manifestEntries>
-                        -->
                         <!-- to have the jar plugin pickup the nbm generated manifest -->
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
@@ -649,7 +435,7 @@
                             <dependency> 
                                 <groupId>mysql</groupId>  
                                 <artifactId>mysql-connector-java</artifactId>  
-                                <version>8.0.28</version> 
+                                <version>${mysql.version}</version> 
                             </dependency> 
                         </dependencies>               
                     </plugin> 
