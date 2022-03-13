@@ -68,6 +68,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         
         <!-- dependencies/library version --> 
+
         <liquibase.version>4.8.0</liquibase.version>
         
         <javax.activation.version>1.2.0</javax.activation.version>
