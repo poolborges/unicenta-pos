@@ -20,3 +20,8 @@
 /krpos-experimental/krpos-buildtools/target/
 /krpos-experimental/krpos-jpackage/target/
 /krpos-experimental/unicenta-Izpack/target/
+/unicenta-opos/derby.log
+/kriolos-opos-rxtxjna/target/
+/docs/target/
+/docs/guide-devel/target/
+/kriolos-opos-base/target/

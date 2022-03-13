@@ -104,6 +104,8 @@ public class JPanelPrinter extends JPanel implements JPanelView {
         jPanel1 = new javax.swing.JPanel();
         m_jPrinters = new javax.swing.JTabbedPane();
 
+        setPreferredSize(new java.awt.Dimension(480, 600));
+        setRequestFocusEnabled(false);
         setLayout(new java.awt.BorderLayout());
         add(m_jDisplay, java.awt.BorderLayout.NORTH);
 

@@ -575,44 +575,37 @@ public class JTicketsBagRestaurantRes extends javax.swing.JPanel implements Edit
                     .addGroup(jPanNorthLayout.createSequentialGroup()
                         .addGap(7, 7, 7)
                         .addComponent(m_jtxtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.CENTER, jPanNorthLayout.createSequentialGroup()
-                            .addGap(31, 31, 31)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(42, 42, 42)
                             .addComponent(jbtnShowCalendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.CENTER, jPanNorthLayout.createSequentialGroup()
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(m_jPanelTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanNorthLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(m_jPanelList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(m_jPanelTime, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(m_jPanelList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
-
-        jLabel5.getAccessibleContext().setAccessibleName("Select Person");
 
         add(jPanNorth, java.awt.BorderLayout.CENTER);
 
         jPanSouth.setPreferredSize(new java.awt.Dimension(1000, 350));
 
         jCalendar.setPreferredSize(new java.awt.Dimension(1000, 350));
-        jCalendar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanelTime.setPreferredSize(new java.awt.Dimension(250, 250));
         jPanelTime.setLayout(new java.awt.BorderLayout());
-        jCalendar.add(jPanelTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, -1, -1));
+        jCalendar.add(jPanelTime);
 
         jPanelDate.setPreferredSize(new java.awt.Dimension(700, 345));
         jPanelDate.setLayout(new java.awt.BorderLayout());
-        jCalendar.add(jPanelDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 5, -1, -1));
+        jCalendar.add(jPanelDate);
 
         javax.swing.GroupLayout jPanSouthLayout = new javax.swing.GroupLayout(jPanSouth);
         jPanSouth.setLayout(jPanSouthLayout);
         jPanSouthLayout.setHorizontalGroup(
             jPanSouthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1012, Short.MAX_VALUE)
+            .addGap(0, 1015, Short.MAX_VALUE)
             .addGroup(jPanSouthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanSouthLayout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)

@@ -31,6 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        
+        <netbeans.version>RELEASE126</netbeans.version>
+        <brandingToken>kriolos_obiz</brandingToken>
+        
         <project.github-url>http://kriolos.github.io/kriolos-opos</project.github-url>
 
         <!-- MISC config-->
@@ -64,7 +68,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         
         <!-- dependencies/library version --> 
-        <liquibase.version>4.7.1</liquibase.version>
+
+        <liquibase.version>4.8.0</liquibase.version>
         
         <javax.activation.version>1.2.0</javax.activation.version>
         <jaxb.api.version>2.3.4</jaxb.api.version>
@@ -134,6 +139,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </contributors>
 
     <modules>
+        <module>kriolos-opos-rxtxjna</module>
+        <module>kriolos-opos-base</module>
         <module>unicenta-opos-i18n</module>
         <module>unicenta-thirdparty</module>
         <module>unicenta-opos</module>
@@ -149,6 +156,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>kriolos-pos-i18n</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-base</artifactId>
                 <version>${project.version}</version>
             </dependency>
             
@@ -178,7 +190,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <dependency>
                 <groupId>org.glassfish.jaxb</groupId>
                 <artifactId>jaxb-runtime</artifactId>
-                <version>2.3.5</version>
+                <version>2.3.6</version>
                 <scope>runtime</scope>
                 <exclusions>
                     <exclusion>
@@ -201,7 +213,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <defaultGoal>install</defaultGoal>
         <pluginManagement>
             <plugins>
-                
+                <plugin>   
+                    <groupId>org.apache.netbeans.utilities</groupId>
+                    <artifactId>nbm-maven-plugin</artifactId>
+                    <version>4.6</version>
+                    <extensions>true</extensions>
+                    <configuration>   
+                        <brandingToken>${brandingToken}</brandingToken>
+                        <cluster>${brandingToken}</cluster>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.jetbrains.kotlin</groupId>
                     <artifactId>kotlin-maven-plugin</artifactId>
@@ -220,7 +241,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version> 3.2.0</version>
+                    <version>3.2.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -281,32 +302,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <arg>-Xlint:all</arg>
                         </compilerArgs>
                     </configuration>
-                    <executions>
-                        <!-- Replacing default-compile as it is treated specially by maven -->
-                        <execution>
-                            <id>default-compile</id>
-                            <phase>none</phase>
-                        </execution>
-                        <!-- Replacing default-testCompile as it is treated specially by maven -->
-                        <execution>
-                            <id>default-testCompile</id>
-                            <phase>none</phase>
-                        </execution>
-                        <execution>
-                            <id>java-compile</id>
-                            <phase>compile</phase>
-                            <goals>
-                                <goal>compile</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>java-test-compile</id>
-                            <phase>test-compile</phase>
-                            <goals>
-                                <goal>testCompile</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -321,26 +316,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </plugin>
                 
                 <!-- License -->
-                    <plugin>
-                        <groupId>com.mycila</groupId>
-                        <artifactId>license-maven-plugin</artifactId>
-                        <version>4.0.rc2</version>
-                        <configuration>
-                            <header>com/mycila/maven/plugin/license/templates/GPL-3.txt</header>
-                            <properties>
-                                <inceptionYear>${project.inceptionYear}</inceptionYear>
-                            </properties>
-                            <includes>
-                                <include>src/**/*.java</include>
-                                <include>src/**/*.xml</include>
-                            </includes>
-                            <excludes>
-                                <exclude>**/logback.xml</exclude>
-                                <exclude>**/logback-test.xml</exclude>
-                                <exclude>**/src/test/resources/**</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
+                <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>4.0.rc2</version>
+                    <configuration>
+                        <header>com/mycila/maven/plugin/license/templates/GPL-3.txt</header>
+                        <properties>
+                            <inceptionYear>${project.inceptionYear}</inceptionYear>
+                        </properties>
+                        <includes>
+                            <include>src/**/*.java</include>
+                            <include>src/**/*.xml</include>
+                        </includes>
+                        <excludes>
+                            <exclude>**/logback.xml</exclude>
+                            <exclude>**/logback-test.xml</exclude>
+                            <exclude>**/src/test/resources/**</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
             
             </plugins>
         </pluginManagement>

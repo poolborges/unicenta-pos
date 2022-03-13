@@ -22,6 +22,7 @@ import com.openbravo.pos.catalog.JCatalog;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.forms.DataLogicSystem;
+import com.openbravo.pos.ticket.TicketLineInfo;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
@@ -76,7 +77,7 @@ public class JTicketCatalogLines extends javax.swing.JPanel {
         m_catalog.addActionListener(l);
     }
 
-    public void showRefundLines(List aRefundLines) {
+    public void showRefundLines(List<TicketLineInfo> aRefundLines) {
         // anado las lineas de refund
         m_reflines.setLines(aRefundLines);
         showView("reflines");

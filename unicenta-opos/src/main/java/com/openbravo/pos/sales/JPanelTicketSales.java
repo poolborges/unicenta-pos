@@ -34,12 +34,11 @@ import javax.swing.event.ListSelectionListener;
  */
 public class JPanelTicketSales extends JPanelTicket {
 
-    private final static Logger LOGGER = Logger.getLogger(JPanelTicketSales.class.getName());
+    private static final long serialVersionUID = 1L;
     private CatalogSelector m_cat;
 
-    @Override
-    public void init(AppView app) {
-        super.init(app);
+    public JPanelTicketSales(AppView app) {
+        super(app);
         m_ticketlines.addListSelectionListener(new CatalogSelectionListener());
     }
 

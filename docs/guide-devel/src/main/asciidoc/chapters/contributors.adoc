@@ -1,0 +1,10 @@
+[[gd-contributors]]
+== Contributors
+
+.Contributors list
+|====
+|Name         |Active
+
+|Paulo Borges |Committer (Founder)
+|
+|====

@@ -18,7 +18,9 @@
 package com.openbravo.pos.sales;
 
 import com.openbravo.basic.BasicException;
+import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.ticket.ProductInfoExt;
+import com.openbravo.pos.ticket.TicketLineInfo;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -31,26 +33,20 @@ import java.util.List;
  * @author JG uniCenta
  */
 public class JPanelTicketEdits extends JPanelTicket {
+
+    private static final long serialVersionUID = 1L;
     
     private JTicketCatalogLines m_catandlines;
     
-    /** Creates a new instance of JPanelTicketRefunds */
-    public JPanelTicketEdits() {
+    public JPanelTicketEdits(AppView app) {
+        super(app);
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @Override
     public String getTitle() {
         return null;
     }
-    
-    /**
-     *
-     * @throws BasicException
-     */
+
     @Override
     public void activate() throws BasicException {      
         super.activate();
@@ -59,39 +55,25 @@ public class JPanelTicketEdits extends JPanelTicket {
 
     public void reLoadCatalog(){      
     }    
- 
-    /**
-     *
-     */
+
     public void showCatalog() {
         m_jbtnconfig.setVisible(true);
         m_catandlines.showCatalog();
     }
     
-    /**
-     *
-     * @param aRefundLines
-     */
-    public void showRefundLines(List aRefundLines) {
+
+    public void showRefundLines(List<TicketLineInfo> aRefundLines) {
         // anado las lineas de refund
         // m_reflines.setLines(aRefundLines);
         m_jbtnconfig.setVisible(false);
         m_catandlines.showRefundLines(aRefundLines);
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @Override
     protected JTicketsBag getJTicketsBag() {
         return new JTicketsBagTicket(m_App, this);
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     protected Component getSouthComponent() {
 
@@ -106,9 +88,6 @@ public class JPanelTicketEdits extends JPanelTicket {
         return m_catandlines;
     } 
 
-    /**
-     *
-     */
     @Override
     protected void resetSouthComponent() {
     }

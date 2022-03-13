@@ -31,7 +31,7 @@ import java.util.logging.Logger;
  */
 public class KitchenDisplay {
 
-    private final static Logger LOGGER = Logger.getLogger(JPanelTicket.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(KitchenDisplay.class.getName());
 
     private final AppView m_App;
 

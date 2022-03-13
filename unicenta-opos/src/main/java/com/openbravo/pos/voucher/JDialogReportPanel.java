@@ -1,5 +1,5 @@
-/* KrOS POS
- * Copyright (c) 2009-2017 uniCenta & previous Openbravo POS works
+/*
+ * Copyright (C) 2022 KiolOS<https://github.com/kriolos>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

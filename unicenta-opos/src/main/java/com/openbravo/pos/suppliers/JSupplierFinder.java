@@ -16,7 +16,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with KrOS POS.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.suppliers;
 
 import com.openbravo.basic.BasicException;
@@ -42,15 +41,14 @@ public class JSupplierFinder extends javax.swing.JDialog implements EditorCreato
     private SupplierInfo m_ReturnSupplier;
     private ListProvider lpr;
     private AppView appView;
-    
+
     public class Global {
 
     }
-    
+
     public void searchKey() {
         jbtnExecute.setMnemonic(KeyEvent.VK_E);
         executeSearch();
-        
 
     }
 
@@ -73,7 +71,9 @@ public class JSupplierFinder extends javax.swing.JDialog implements EditorCreato
         this.appView = appView;
     }
 
-    /** Creates new form JSupplierFinder */
+    /**
+     * Creates new form JSupplierFinder
+     */
     private JSupplierFinder(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
     }
@@ -119,7 +119,7 @@ public class JSupplierFinder extends javax.swing.JDialog implements EditorCreato
         initComponents();
 
         jImageViewerSupplier.setVisible(false);
-        
+
         jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(35, 35));
 
         m_jtxtTaxID.addEditorKeys(m_jKeys);
@@ -183,13 +183,13 @@ public class JSupplierFinder extends javax.swing.JDialog implements EditorCreato
     }
 
     private void cleanSearch() {
-            m_jtxtTaxID.setText("");
-            m_jtxtSearchKey.setText("");
-            m_jtxtName.setText("");
-            m_jtxtPostal.setText("");
-            m_jtxtPhone.setText("");
-            m_jtxtName2.setText("");
-            
+        m_jtxtTaxID.setText("");
+        m_jtxtSearchKey.setText("");
+        m_jtxtName.setText("");
+        m_jtxtPostal.setText("");
+        m_jtxtPhone.setText("");
+        m_jtxtName2.setText("");
+
         jListSuppliers.setModel(new MyListData(new ArrayList()));
     }
 
@@ -197,28 +197,28 @@ public class JSupplierFinder extends javax.swing.JDialog implements EditorCreato
      * This method actions the Supplier data search
      */
     public void executeSearch() {
-        
+
         try {
             jListSuppliers.setModel(new MyListData(lpr.loadData()));
             if (jListSuppliers.getModel().getSize() > 0) {
                 jListSuppliers.setSelectedIndex(0);
             } else {
-                if(!m_jtxtName.getText().equals("")) {
-                    
+                if (!m_jtxtName.getText().equals("")) {
+
                     int n = JOptionPane.showConfirmDialog(
-                        null,
-                        AppLocal.getIntString("message.suppliernotfound"),
-                        AppLocal.getIntString("title.editor"),
-                        JOptionPane.YES_NO_OPTION);
+                            null,
+                            AppLocal.getIntString("message.suppliernotfound"),
+                            AppLocal.getIntString("title.editor"),
+                            JOptionPane.YES_NO_OPTION);
 
                     if (n != 1) {
                         SupplierInfoGlobal supplierInfoGlobal = SupplierInfoGlobal.getInstance();
                         SupplierInfoExt supplierInfoExt = supplierInfoGlobal.getSupplierInfoExt();
                         this.setVisible(false);
                         appView.getAppUserView().showTask("com.openbravo.pos.suppliers.SuppliersPanel");
-                        JOptionPane.showMessageDialog(null, 
-                            "You must complete Account and Search Key Then Save to add to Ticket",
-                            "Create Supplier",JOptionPane.OK_OPTION);
+                        JOptionPane.showMessageDialog(null,
+                                "You must complete Account and Search Key Then Save to add to Ticket",
+                                "Create Supplier", JOptionPane.OK_OPTION);
                     }
                 }
             }
@@ -603,30 +603,26 @@ public class JSupplierFinder extends javax.swing.JDialog implements EditorCreato
     }//GEN-LAST:event_jcmdOKActionPerformed
 
     private void jcmdCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcmdCancelActionPerformed
-        
+
         dispose();
 
     }//GEN-LAST:event_jcmdCancelActionPerformed
 
     private void jbtnExecuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnExecuteActionPerformed
 
-        m_ReturnSupplier=null;
+        m_ReturnSupplier = null;
         executeSearch();
-        
+
     }//GEN-LAST:event_jbtnExecuteActionPerformed
 
     private void jListSuppliersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListSuppliersValueChanged
 
         m_ReturnSupplier = (SupplierInfo) jListSuppliers.getSelectedValue();
-            
-        if (m_ReturnSupplier != null) {
-            m_ReturnSupplier = (SupplierInfo) jListSuppliers.getSelectedValue();
 
-//            if (m_ReturnSupplier != null) {
-//                jImageViewerSupplier.setImage(m_ReturnSupplier.getImage());
-//            }
-        }         
-        
+        if (m_ReturnSupplier != null) {
+            jImageViewerSupplier.setImage(m_ReturnSupplier.getImage());
+        }
+
         jcmdOK.setEnabled(jListSuppliers.getSelectedValue() != null);
 
     }//GEN-LAST:event_jListSuppliersValueChanged
@@ -634,29 +630,25 @@ public class JSupplierFinder extends javax.swing.JDialog implements EditorCreato
     private void jListSuppliersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListSuppliersMouseClicked
 
         m_ReturnSupplier = (SupplierInfo) jListSuppliers.getSelectedValue();
-            
-        if (m_ReturnSupplier != null) {
-            m_ReturnSupplier = (SupplierInfo) jListSuppliers.getSelectedValue();
 
-//            if (m_ReturnSupplier != null) {
-//                jImageViewerSupplier.setImage(m_ReturnSupplier.getImage());
-//            }
-        } 
+        if (m_ReturnSupplier != null) {
+            jImageViewerSupplier.setImage(m_ReturnSupplier.getImage());
+        }
 
     }//GEN-LAST:event_jListSuppliersMouseClicked
 
 private void jbtnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnResetActionPerformed
- 
-        m_jtxtTaxID.reset();
-        m_jtxtSearchKey.reset();
-        m_jtxtName.reset();
-        m_jtxtPostal.reset();
-        m_jtxtPhone.reset();
-        m_jtxtName2.reset();
 
-        m_jtxtTaxID.activate(); 
-        
-        cleanSearch();
+    m_jtxtTaxID.reset();
+    m_jtxtSearchKey.reset();
+    m_jtxtName.reset();
+    m_jtxtPostal.reset();
+    m_jtxtPhone.reset();
+    m_jtxtName2.reset();
+
+    m_jtxtTaxID.activate();
+
+    cleanSearch();
 }//GEN-LAST:event_jbtnResetActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

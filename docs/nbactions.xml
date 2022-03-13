@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-package</actionName>
+            <displayName>package</displayName>
+            <goals>
+                <goal>package</goal>
+                <!--
+                <goal>-U</goal>-->
+                <goal>-X</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>docs-gen</activatedProfile>
+            </activatedProfiles>
+        </action>
+    </actions>

@@ -15,7 +15,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.sales;
 
-
 import com.openbravo.basic.BasicException;
 import com.openbravo.beans.JIntegerDialog;
 import com.openbravo.data.gui.ComboBoxValModel;
@@ -81,9 +80,9 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
  *
  * @author JG uniCenta
  */
-public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFactoryApp, TicketsEditor {
+public abstract class JPanelTicket extends JPanel implements JPanelView, TicketsEditor {
 
-    private final static Logger LOGGER = Logger.getLogger(JPanelTicket.class.getName());
+    protected final static Logger LOGGER = Logger.getLogger(JPanelTicket.class.getName());
 
     private final static int NUMBERZERO = 0;
     private final static int NUMBERVALID = 1;
@@ -96,6 +95,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     private final static int NUMBER_PORZERODEC = 5;
     private final static int NUMBER_PORINT = 6;
     private final static int NUMBER_PORDEC = 7;
+    private static final long serialVersionUID = 1L;
 
     protected JTicketLines m_ticketlines;
 
@@ -150,18 +150,9 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     /**
      * Creates new form JTicketView
      */
-    public JPanelTicket() {
+    public JPanelTicket(AppView app) {
 
         initComponents();
-    }
-
-    /**
-     *
-     * @param app
-     * @throws BeanFactoryException
-     */
-    @Override
-    public void init(AppView app) throws BeanFactoryException {
 
         LOGGER.info("JPanelTicket.init");
         m_config = AppConfig.getInstance();
@@ -175,15 +166,10 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         dlCustomers = (DataLogicCustomers) m_App.getBean("com.openbravo.pos.customers.DataLogicCustomers");
         dlReceipts = (DataLogicReceipts) app.getBean("com.openbravo.pos.sales.DataLogicReceipts");
 
-// Script event buttons
-        LOGGER.info("JPanelTicket.init: criar: Ticket.Buttons");
-        m_jbtnconfig = new JPanelButtons("Ticket.Buttons", this);
-        m_jButtonsExt.add(m_jbtnconfig);
-
 // Configuration>Peripheral options        
         m_jbtnScale.setVisible(m_App.getDeviceScale().existsScale());
         m_jPanelScripts.setVisible(false);
-        m_jButtonsExt.setVisible(false);
+
         jTBtnShow.setSelected(false);
 
         if (Boolean.valueOf(m_App.getProperties().getProperty("till.amountattop"))) {
@@ -214,7 +200,37 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         m_oTicketExt = null;
         jCheckStock.setText(AppLocal.getIntString("message.title.checkstock"));
 
+        initExtButtons();
+
         initComponentFromChild();
+    }
+
+    private void initExtButtons() {
+        // Script event buttons
+        String resourceName = "Ticket.Buttons";
+
+        String sConfigRes = getResourceAsXML(resourceName);
+
+        if (sConfigRes == null || sConfigRes.isBlank()) {
+            LOGGER.log(Level.WARNING, "No found XML resource: " + resourceName);
+            sConfigRes = "";
+        }
+
+        m_jbtnconfig = new JPanelButtons(m_App,
+                new JPanelButtonListener() {
+            @Override
+            public void eval(String resource) {
+                evalScriptAndRefresh(resource);
+            }
+
+            @Override
+            public void print(String resource) {
+                printTicket(resource);
+            }
+        }, sConfigRes);
+        
+        m_jButtonsExt.add(m_jbtnconfig);
+        m_jButtonsExt.setVisible(false);
     }
 
     private void initComponentFromChild() {
@@ -225,11 +241,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         add(m_ticketsbag.getNullComponent(), "null");
 
         catcontainer.add(getSouthComponent(), BorderLayout.CENTER);
-    }
-
-    @Override
-    public Object getBean() {
-        return this;
     }
 
     @Override
@@ -1779,7 +1790,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     }
 
     public void Notify(String msg) {
-        
+
     }
 
     private void printReport(String resourcefile, TicketInfo ticket, Object ticketext) {
@@ -1794,7 +1805,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                 JasperDesign jd = JRXmlLoader.load(getClass().getResourceAsStream(resourcefile + ".jrxml"));
                 jr = JasperCompileManager.compileReport(jd);
             } else {
-                try (ObjectInputStream oin = new ObjectInputStream(in)) {
+                try ( ObjectInputStream oin = new ObjectInputStream(in)) {
                     jr = (JasperReport) oin.readObject();
                 }
             }
@@ -1871,8 +1882,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             setSelectedIndex(scr.getSelectedIndex());
         }
     }
-
-    
 
     private Object executeEvent(TicketInfo ticket, Object ticketext, String eventkey, ScriptArg... args) {
 

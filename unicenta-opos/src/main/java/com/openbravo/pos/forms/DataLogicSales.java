@@ -25,7 +25,7 @@ import com.openbravo.pos.catalog.CategoryStock;
 import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.pos.customers.CustomerTransaction;
 import com.openbravo.pos.inventory.*;
-import com.openbravo.pos.mant.FloorsInfo;
+import com.openbravo.pos.sales.restaurant.FloorsInfo;
 import com.openbravo.pos.payment.PaymentInfo;
 import com.openbravo.pos.payment.PaymentInfoTicket;
 import com.openbravo.pos.sales.ReprintTicketInfo;

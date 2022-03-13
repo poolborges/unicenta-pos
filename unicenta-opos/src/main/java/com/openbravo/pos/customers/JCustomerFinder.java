@@ -329,7 +329,6 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(AppLocal.getIntString("form.customertitle")); // NOI18N
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setPreferredSize(new java.awt.Dimension(750, 600));
 
         jPanel2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanel2.setLayout(new java.awt.BorderLayout());
@@ -588,11 +587,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
         m_ReturnCustomer = (CustomerInfo) jListCustomers.getSelectedValue();
             
         if (m_ReturnCustomer != null) {
-            m_ReturnCustomer = (CustomerInfo) jListCustomers.getSelectedValue();
-
-            if (m_ReturnCustomer != null) {
                 jImageViewerCustomer.setImage(m_ReturnCustomer.getImage());
-            }
         }         
         
         jcmdOK.setEnabled(jListCustomers.getSelectedValue() != null);
@@ -604,11 +599,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
         m_ReturnCustomer = (CustomerInfo) jListCustomers.getSelectedValue();
             
         if (m_ReturnCustomer != null) {
-            m_ReturnCustomer = (CustomerInfo) jListCustomers.getSelectedValue();
-
-            if (m_ReturnCustomer != null) {
                 jImageViewerCustomer.setImage(m_ReturnCustomer.getImage());
-            }
         } 
 
     }//GEN-LAST:event_jListCustomersMouseClicked
