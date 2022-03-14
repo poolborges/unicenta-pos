@@ -111,7 +111,7 @@
         <dependency>
             <groupId>org.javapos</groupId>
             <artifactId>javapos-contracts</artifactId>
-            <version>1.14.3</version>
+            <version>1.14.4</version>
         </dependency>  
         
         <!-- ISO 8583-1:2003 Financial transaction card originated messages-->
