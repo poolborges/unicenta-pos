@@ -34,14 +34,16 @@ public class JPasswordDialog extends javax.swing.JDialog {
      * @param parent
      * @param modal */
     public JPasswordDialog(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);            
+        super(parent, modal); 
+        initComponents();
         init();
     }
     /** Creates new form JPasswordDialog
      * @param parent
      * @param modal */
     public JPasswordDialog(java.awt.Dialog parent, boolean modal) {
-        super(parent, modal);            
+        super(parent, modal);   
+        initComponents();
         init();
     }    
     
@@ -54,8 +56,7 @@ public class JPasswordDialog extends javax.swing.JDialog {
             m_resources = new LocaleResources();
             m_resources.addBundleName("beans_messages");
         }
-        
-        initComponents();        
+       
         getRootPane().setDefaultButton(jcmdOK);   
         
         m_jpassword.addEditorKeys(m_jKeys);
