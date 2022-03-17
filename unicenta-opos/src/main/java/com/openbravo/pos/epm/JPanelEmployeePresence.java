@@ -17,6 +17,7 @@
 
 package com.openbravo.pos.epm;
 
+import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.basic.BasicException;
 import com.openbravo.beans.JFlowPanel;
 import com.openbravo.data.gui.MessageInf;

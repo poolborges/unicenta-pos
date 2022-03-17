@@ -19,6 +19,8 @@
 
 package com.openbravo.pos.imports;
 
+import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.forms.AppProperties;
 import com.openbravo.basic.BasicException;
 import com.openbravo.pos.forms.*;
 import com.openbravo.pos.util.AltEncrypter;

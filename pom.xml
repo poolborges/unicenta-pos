@@ -141,6 +141,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <modules>
         <module>kriolos-opos-rxtxjna</module>
         <module>kriolos-opos-base</module>
+        <module>kriolos-opos-hardware</module>
         <module>unicenta-opos-i18n</module>
         <module>unicenta-thirdparty</module>
         <module>unicenta-opos</module>
@@ -161,6 +162,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>kriolos-opos-base</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-hardware</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             

@@ -18,7 +18,7 @@ package com.openbravo.pos.comm;
 
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
-import gnu.io.ParallelPort;
+//import gnu.io.ParallelPort;
 import gnu.io.SerialPort;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,7 +61,7 @@ public class CommStream {
                 if (m_PortIdPrinter.getPortType() == CommPortIdentifier.PORT_SERIAL) {
                     ((SerialPort)m_CommPortPrinter).setSerialPortParams(9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE); // Configuramos el puerto
                 } else if (m_PortIdPrinter.getPortType() == CommPortIdentifier.PORT_PARALLEL) {
-                    ((ParallelPort)m_CommPortPrinter).setMode(1);
+                    //((ParallelPort)m_CommPortPrinter).setMode(1);
                 }
             }
         } catch (Exception e) {

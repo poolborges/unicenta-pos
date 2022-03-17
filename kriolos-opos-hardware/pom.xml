@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.kriolos.opos</groupId>
+        <artifactId>kriolos-opos-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>kriolos-opos-hardware</artifactId>
+    <packaging>jar</packaging>
+    <name>Kriolos :: POS.Hardware</name> 
+    <properties>
+        <exec.mainClass>io.github.kriolos.opos.hardware.KriolosOposHardware</exec.mainClass>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>kriolos-opos-base</artifactId>
+        </dependency>
+        
+        <!-- SerialPort 
+        <dependency> 
+            <groupId>org.bidib.jbidib.org.qbang.rxtx</groupId>  
+            <artifactId>rxtxcomm</artifactId>  
+            <version>2.2</version> 
+        </dependency>-->
+        <dependency>
+            <groupId>com.neuronrobotics</groupId>
+            <artifactId>nrjavaserial</artifactId>
+            <version>5.2.1</version>
+        </dependency>
+        
+        <!-- JavaPOS -->   
+        <dependency> 
+            <groupId>org.javapos</groupId>  
+            <artifactId>javapos</artifactId>  
+            <version>1.14.3</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sleepycat</groupId>
+                    <artifactId>je</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.javapos</groupId>
+            <artifactId>javapos-contracts</artifactId>
+            <version>1.14.3</version>
+        </dependency> 
+        
+        <!-- ISO 8583-1:2003 Financial transaction card originated messages-->
+        <dependency>
+            <groupId>org.jpos</groupId>
+            <artifactId>jpos</artifactId>
+            <version>2.1.6</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.sshd</groupId>
+                    <artifactId>sshd-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <!-- BARCODE -->
+        <dependency> 
+            <groupId>net.sf.barcode4j</groupId>  
+            <artifactId>barcode4j</artifactId>  
+            <version>2.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.ant</groupId>
+                    <artifactId>ant</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>avalon-framework</groupId>
+                    <artifactId>avalon-framework-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <!-- USB -->  
+        <dependency> 
+            <groupId>org.usb4java</groupId>  
+            <artifactId>usb4java</artifactId>  
+            <version>1.3.0</version> 
+        </dependency>  
+        <dependency> 
+            <groupId>javax.usb</groupId>  
+            <artifactId>usb-api</artifactId>  
+            <version>1.0.2</version> 
+        </dependency>   
+    </dependencies>
+</project>

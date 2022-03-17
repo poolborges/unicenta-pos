@@ -40,27 +40,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <groupId>${project.groupId}</groupId>
             <artifactId>kriolos-opos-base</artifactId>
         </dependency>
-        
-        <dependency> 
-            <groupId>net.sf.barcode4j</groupId>  
-            <artifactId>barcode4j</artifactId>  
-            <version>2.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.ant</groupId>
-                    <artifactId>ant</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>avalon-framework</groupId>
-                    <artifactId>avalon-framework-impl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>  
-        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>kriolos-opos-hardware</artifactId>
+        </dependency>
+
         <dependency> 
             <groupId>commons-codec</groupId>  
             <artifactId>commons-codec</artifactId>  
@@ -84,19 +68,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <version>2.0b6</version> 
         </dependency>  
         
-        <!-- SerialPort -->
-        <dependency> 
-            <groupId>org.bidib.jbidib.org.qbang.rxtx</groupId>  
-            <artifactId>rxtxcomm</artifactId>  
-            <version>2.2</version> 
-        </dependency>
-        <dependency>
-	  <groupId>com.neuronrobotics</groupId>
-	  <artifactId>nrjavaserial</artifactId>
-	  <version>5.2.1</version>
-	</dependency>
-        
-        
+
         <!-- Swing GUI -->
         <dependency> 
             <groupId>org.swinglabs.swingx</groupId>  
@@ -109,13 +81,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <version>1.0.3</version> 
         </dependency> 
         
-         <!-- CVS File Parser --> 
+        <!-- CVS File Parser --> 
         <dependency> 
             <groupId>net.sourceforge.javacsv</groupId>  
             <artifactId>javacsv</artifactId>  
             <version>2.0</version> 
         </dependency>
-           
+        
         <!-- JavaPOS -->   
         <dependency> 
             <groupId>org.javapos</groupId>  
@@ -133,23 +105,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <groupId>org.javapos</groupId>
             <artifactId>javapos-contracts</artifactId>
             <version>1.14.3</version>
-        </dependency>  
-        
-        <!-- ISO 8583-1:2003 Financial transaction card originated messages-->
-        <dependency>
-            <groupId>org.jpos</groupId>
-            <artifactId>jpos</artifactId>
-            <version>2.1.6</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.sshd</groupId>
-                    <artifactId>sshd-core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         
         <!-- JDBC RUN DEPENDENCIES -->
@@ -209,18 +164,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <artifactId>javax.persistence-api</artifactId>
             <version>2.2</version>
         </dependency>
-        
-        <!-- USB -->  
-        <dependency> 
-            <groupId>org.usb4java</groupId>  
-            <artifactId>usb4java</artifactId>  
-            <version>1.3.0</version> 
-        </dependency>  
-        <dependency> 
-            <groupId>javax.usb</groupId>  
-            <artifactId>usb-api</artifactId>  
-            <version>1.0.2</version> 
-        </dependency>  
         
         <dependency> 
             <groupId>org.jdatepicker</groupId>  

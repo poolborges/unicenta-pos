@@ -16,6 +16,7 @@
 
 package com.openbravo.pos.sales.simple;
 
+import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.*; 
 import javax.swing.*;
 import com.openbravo.pos.sales.*;
