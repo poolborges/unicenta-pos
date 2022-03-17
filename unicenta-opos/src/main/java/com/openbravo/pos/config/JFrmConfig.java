@@ -24,6 +24,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
@@ -32,6 +34,7 @@ import javax.imageio.ImageIO;
  */
 public class JFrmConfig extends javax.swing.JFrame {
 
+    private static final Logger LOGGER = Logger.getLogger(JFrmConfig.class.getName());
     private final JPanelConfiguration config;
 
     /**
@@ -43,9 +46,11 @@ public class JFrmConfig extends javax.swing.JFrame {
 
         initComponents();
 
+        String image = "/com/openbravo/images/app_logo_48x48.png";
         try {
-            this.setIconImage(ImageIO.read(JFrmConfig.class.getResourceAsStream("/com/openbravo/images/app_logo_48x48.png")));
+            this.setIconImage(ImageIO.read(JFrmConfig.class.getResourceAsStream(image)));
         } catch (IOException e) {
+            LOGGER.log(Level.WARNING, "Exception load icon: "+image, e);
         }
         setTitle(AppLocal.APP_NAME + " - " + AppLocal.APP_VERSION + " - " + AppLocal.getIntString("Menu.Configuration"));
 
@@ -64,7 +69,8 @@ public class JFrmConfig extends javax.swing.JFrame {
 
         try {
             config.activate();
-        } catch (BasicException e) { // never thrown ;-)
+        } catch (BasicException e) {
+            LOGGER.log(Level.WARNING, "Exception config: ", e);
         }
     }
 
