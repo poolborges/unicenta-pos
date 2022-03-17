@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2022 KriolOS
 
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -12,10 +27,11 @@
     <name>Kriolos :: POS.App</name> 
     
     <properties>
-        <netbeans.version>RELEASE126</netbeans.version>
+        <netbeans.version>RELEASE130</netbeans.version>
         <mysql.version>8.0.28</mysql.version>
         <derby.version>10.15.2.0</derby.version>
         <jasperreports.version>6.19.0</jasperreports.version>
+        <flatlaf.version>2.0.2</flatlaf.version>
     </properties>
 
     <dependencies>
@@ -74,6 +90,11 @@
             <artifactId>rxtxcomm</artifactId>  
             <version>2.2</version> 
         </dependency>
+        <dependency>
+	  <groupId>com.neuronrobotics</groupId>
+	  <artifactId>nrjavaserial</artifactId>
+	  <version>5.2.1</version>
+	</dependency>
         
         
         <!-- Swing GUI -->
@@ -217,18 +238,18 @@
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
-            <version>2.0.1</version>
+            <version>${flatlaf.version}</version>
         </dependency>
         <!-- Flat Look and Feel addon for SwingX -->
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf-swingx</artifactId>
-            <version>2.0</version>
+            <version>${flatlaf.version}</version>
         </dependency>
         <dependency> 
             <groupId>com.formdev</groupId> 
             <artifactId>flatlaf-intellij-themes</artifactId> 
-            <version>2.0</version>
+            <version>${flatlaf.version}</version>
         </dependency>
         
         <dependency>
@@ -260,12 +281,10 @@
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>2.3.3</version>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
-            <version>2.3.3</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -284,13 +303,12 @@
         </dependency> 
         <dependency>
             <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-api-annotations-common</artifactId>
+            <artifactId>org-openide-windows</artifactId>
             <version>${netbeans.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-windows</artifactId>
+            <artifactId>org-openide-modules</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
         <dependency>
@@ -300,22 +318,29 @@
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-settings</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-api-annotations-common</artifactId>
+            <version>${netbeans.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-dialogs</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-explorer</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-util-lookup</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-modules</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
         <dependency>
@@ -330,14 +355,15 @@
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-util-ui</artifactId>
+            <artifactId>org-openide-util-lookup</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-modules-settings</artifactId>
+            <artifactId>org-openide-util-ui</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
+        -->
     </dependencies>  
     <build>
         <finalName>kriolos-pos</finalName> 

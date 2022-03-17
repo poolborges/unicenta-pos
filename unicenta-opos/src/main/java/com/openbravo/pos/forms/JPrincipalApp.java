@@ -19,28 +19,12 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.customers.CustomerInfo;
-import com.openbravo.pos.forms.JRootMenu.ScriptMenu;
-import com.openbravo.pos.scripting.ScriptEngine;
-import com.openbravo.pos.scripting.ScriptException;
-import com.openbravo.pos.scripting.ScriptFactory;
-import com.openbravo.pos.util.Hashcypher;
-import com.openbravo.pos.util.StringUtils;
 import java.awt.CardLayout;
-import java.awt.Color;
-// import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
-import org.jdesktop.swingx.JXTaskPane;
-import org.jdesktop.swingx.JXTaskPaneContainer;
-import org.jdesktop.swingx.painter.MattePainter;
-// import org.jdesktop.swingx.painter.MattePainter;
+
 
 /**
  *
@@ -48,7 +32,8 @@ import org.jdesktop.swingx.painter.MattePainter;
  */
 public class JPrincipalApp extends javax.swing.JPanel implements AppUserView {
 
-    private static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.forms.JPrincipalApp");
+    private static final Logger LOGGER = Logger.getLogger(JPrincipalApp.class.getName());
+    private static final long serialVersionUID = 1L;
 
     private final JRootApp m_appview;
     private final AppUser m_appuser;

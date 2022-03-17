@@ -30,12 +30,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
-import com.openbravo.pos.config.JFrmConfig;
+import com.openbravo.pos.config.JPanelConfiguration;
 import com.openbravo.pos.instance.AppMessage;
-import com.openbravo.pos.scripting.ScriptEngine;
-import com.openbravo.pos.scripting.ScriptException;
-import com.openbravo.pos.scripting.ScriptFactory;
-import com.openbravo.pos.util.AltEncrypter;
 import com.openbravo.pos.util.OSValidator;
 
 /**
@@ -46,6 +42,7 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
     private static final Logger LOGGER = Logger.getLogger(JRootFrame.class.getName());
     private static final long serialVersionUID = 1L;
 
+    private final JSplashScreen splashScreen = new JSplashScreen();
     private final JRootApp m_rootapp;
     private final AppProperties m_props;
     private final OSValidator m_OS;
@@ -57,33 +54,55 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
         m_OS = new OSValidator();
     }
 
-
     public void initFrame(boolean kioskMode) {
 
-        if (m_rootapp.initApp()) {
-            add(m_rootapp, BorderLayout.CENTER);
-            setTitle(AppLocal.APP_NAME + " - " + AppLocal.APP_VERSION);
-            try {
-                this.setIconImage(ImageIO.read(JRootFrame.class.getResourceAsStream("/com/openbravo/images/app_logo_48x48.png")));
-            } catch (IOException ex) {
-                LOGGER.log(Level.WARNING, "Exception on session ", ex);
-            }
+        setTitle(AppLocal.APP_NAME + " - " + AppLocal.APP_VERSION);
+        String image = "/com/openbravo/images/app_logo_48x48.png";
+        try {
+            this.setIconImage(ImageIO.read(JRootFrame.class.getResourceAsStream(image)));
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, "Exception load icon: " + image, e);
+        }
+        
+        //SHOW SPLASH
+        getContentPane().add(splashScreen, BorderLayout.CENTER);
 
-            if (kioskMode) {
-                modeKiosk();
-            } else {
-                modeWindow();
-            }
+        if (kioskMode) {
+            modeKiosk();
+        } else {
+            modeWindow();
+        }
+
+        //LOAD APP PANEL
+        if (m_rootapp.initApp()) {
+            getContentPane().remove(splashScreen);
             
-             sendInitEnvent();
+            getContentPane().add(m_rootapp, BorderLayout.CENTER);
+            sendInitEnvent();
 
         } else {
+        //LOAD CONFIG PANEL
             int opionRes = JOptionPane.showConfirmDialog(this,
                     AppLocal.getIntString("message.databasechange"),
                     "Connection", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            if(opionRes == JOptionPane.YES_OPTION){
-                new JFrmConfig(m_props).setVisible(true); // Show the configuration window.
-            }else{
+            if (opionRes == JOptionPane.YES_OPTION) {
+                //JFrmConfig jFrmConfig = new JFrmConfig(m_props);
+                //jFrmConfig.setVisible(true);
+
+                JPanelConfiguration config = new JPanelConfiguration(m_props);
+                config.setCloseListener(new JPanelConfiguration.CloseEventListener() {
+                    @Override
+                    public void windowClosed(JPanelConfiguration.CloseEvent e) {
+                        dispose();         //This frame
+                        System.exit(0);    //Exit JVM
+                    }
+                });
+
+                getContentPane().remove(splashScreen);
+                getContentPane().add(config, BorderLayout.CENTER);
+
+            } else {
+                dispose();
                 System.exit(0);
             }
         }
@@ -125,18 +144,16 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
     }
 
     private void sendInitEnvent() {
-       /** 
-        String scriptId = "application.started";
-        try {
-            ScriptEngine scriptEngine = ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
-            
-            String script = ;
-            scriptEngine.put("device", m_props.getHost());
-            scriptEngine.eval(script);
-        } catch (BeanFactoryException | ScriptException e) {
-            LOGGER.log(Level.WARNING, "Exception on executing scriptId: " + scriptId, e);
-        }
-        */
+        /**
+         * String scriptId = "application.started"; try { ScriptEngine
+         * scriptEngine =
+         * ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
+         *
+         * String script = ; scriptEngine.put("device", m_props.getHost());
+         * scriptEngine.eval(script); } catch (BeanFactoryException |
+         * ScriptException e) { LOGGER.log(Level.WARNING, "Exception on
+         * executing scriptId: " + scriptId, e); }
+         */
     }
 
     /**
@@ -154,7 +171,6 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
             }
         });
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.

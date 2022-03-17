@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 KiolOS<https://github.com/kriolos>
+ * Copyright (C) 2022 KriolOS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,25 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package io.github.kriolos.opos.gui;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.pos.config.JPanelConfiguration;
 import com.openbravo.pos.forms.AppConfig;
-import com.openbravo.pos.forms.AppProperties;
 import java.awt.BorderLayout;
-import java.util.Collection;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
-import org.openide.util.Lookup;
-import org.openide.util.LookupEvent;
-import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.Utilities;
 
 /**
  * Top component which displays Settings.
@@ -68,14 +61,14 @@ import org.openide.util.Utilities;
 })
 public final class SettingsTopComponent extends TopComponent {
 
-    private Lookup.Result result = null;
+    //private Lookup.Result result = null;
     private JPanelConfiguration configPanel;
 
     public SettingsTopComponent() {
         initComponents();
         setName(Bundle.CTL_SettingsTopComponent());
         setToolTipText(Bundle.HINT_SettingsTopComponent());
-        putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
+        putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.FALSE);
         setLayout(new BorderLayout());
         setVisible(true);
 

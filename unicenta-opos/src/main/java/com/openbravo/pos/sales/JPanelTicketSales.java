@@ -24,7 +24,6 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -47,10 +46,14 @@ public class JPanelTicketSales extends JPanelTicket {
         return "";
     }
 
+    /**
+     * 
+     * @return 
+     */
     @Override
     protected Component getSouthComponent() {
-        LOGGER.info("getSouthComponent");
         // Este metodo esta sendo chamado antes do init()
+        LOGGER.info("getSouthComponent");
         m_cat = new JCatalog(dlSales);
         m_cat.addActionListener(new CatalogListener());
         return m_cat.getComponent();
@@ -68,16 +71,16 @@ public class JPanelTicketSales extends JPanelTicket {
 
     @Override
     public void activate() throws BasicException {
-        super.activate();
-        m_cat.loadCatalog();
+        reLoadCatalog();
         LOGGER.info("activate");
+        super.activate();
     }
 
     public void reLoadCatalog() {
         try {
             m_cat.loadCatalog();
         } catch (BasicException ex) {
-            LOGGER.log(Level.SEVERE, "Exception on save current ticket: ", ex);
+            LOGGER.log(Level.SEVERE, "Exception on : ", ex);
         }
     }
 

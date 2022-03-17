@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Paulo Borges
+ * Copyright (C) 2022 KriolOS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import java.util.List;
  */
 public class DefaultLafProvider implements LafProvider {
 
+    @Override
     public List<LafInfo> getLafInfoList() {
         List<LafInfo> lafs = new ArrayList<>();
 

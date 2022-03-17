@@ -1112,7 +1112,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      *
      * @return
      */
-        public final SentenceList getTaxList() {
+        public final SentenceList<TaxInfo> getTaxList() {
         return new StaticSentence(s
             , "SELECT "
                 + "ID, "

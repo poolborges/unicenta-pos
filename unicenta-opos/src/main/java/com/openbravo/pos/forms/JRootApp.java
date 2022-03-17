@@ -16,12 +16,8 @@
 package com.openbravo.pos.forms;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.beans.JFlowPanel;
-import com.openbravo.beans.JPasswordDialog;
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
-import com.openbravo.data.loader.BatchSentence;
-import com.openbravo.data.loader.BatchSentenceResource;
 import com.openbravo.data.loader.Session;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.printer.DeviceTicket;
@@ -33,24 +29,14 @@ import com.openbravo.pos.scanpal2.DeviceScannerFactory;
 import java.awt.CardLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -66,45 +52,22 @@ public class JRootApp extends JPanel implements AppView {
     private static final Logger LOGGER = Logger.getLogger(JRootApp.class.getName());
     private static final long serialVersionUID = 1L;
 
-    private final AppProperties m_props;
+    private final AppProperties appFileProperties;
     private Session session;
     private DataLogicSystem m_dlSystem;
 
-    private Properties m_propsdb = null;
-    private String m_sActiveCashIndex;
-    private int m_iActiveCashSequence;
-    private Date m_dActiveCashDateStart;
-    private Date m_dActiveCashDateEnd;
-
-    private String m_sClosedCashIndex;
-    private int m_iClosedCashSequence;
-    private Date m_dClosedCashDateStart;
-    private Date m_dClosedCashDateEnd;
-
+    private Properties hostSavedProperties = null;
+    private CashDrawer activeCash = new CashDrawer();
+    private CashDrawer closedCash = new CashDrawer();
     private String m_sInventoryLocation;
-
-    private StringBuilder inputtext;
 
     private DeviceScale m_Scale;
     private DeviceScanner m_Scanner;
-    private DeviceTicket m_TP;
-    private TicketParser m_TTP;
+    private DeviceTicket m_DeviceTicket;
+    private TicketParser m_TicketParser;
 
     private JPrincipalApp m_principalapp = null;
-    private String m_clock;
-    private String m_date;
-
-    private final static int UNIQUE_KEY_FAMILY = 0x01;
-
-    private class PrintTimeAction implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent evt) {
-            m_clock = getLineTimer();
-            m_date = getLineDate();
-            jLabel2.setText("  " + m_date + " " + m_clock);
-        }
-    }
+    private JAuthPanel mAuthPanel = null;
 
     private String getLineTimer() {
         return Formats.HOURMIN.formatValue(new Date());
@@ -116,13 +79,12 @@ public class JRootApp extends JPanel implements AppView {
     }
 
     public JRootApp(AppProperties props) {
-        m_props = props;
+        initComponents();
 
+        appFileProperties = props;
         //TODO load Windows Title 
         //m_jLblTitle.setText(m_dlSystem.getResourceAsText("Window.Title"));
         //m_jLblTitle.repaint();
-        initComponents();
-        jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(30, 30));
     }
 
     public void releaseResources() {
@@ -134,7 +96,7 @@ public class JRootApp extends JPanel implements AppView {
         applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 
         try {
-            session = AppViewConnection.createSession(m_props);
+            session = AppViewConnection.createSession(this, appFileProperties);
 
         } catch (BasicException e) {
             LOGGER.log(Level.WARNING, "Exception on DB createSession", e);
@@ -152,9 +114,10 @@ public class JRootApp extends JPanel implements AppView {
 
         logStartup();
 
-        m_propsdb = m_dlSystem.getResourceAsProperties(getHostID());
+        hostSavedProperties = m_dlSystem.getResourceAsProperties(getHostID());
 
         if (checkActiveCash()) {
+            LOGGER.log(Level.WARNING, "checkActiveCash return : true");
             return false;
         }
 
@@ -164,165 +127,62 @@ public class JRootApp extends JPanel implements AppView {
 
         initClockTimer();
 
-        setHomePanel();
+        setStatusBarPanel();
 
-        showLogin();
+        showLoginPanel();
 
         return true;
     }
 
     private void initClockTimer() {
-        new javax.swing.Timer(1000, new PrintTimeAction()).start();
+        javax.swing.Timer clockTimer = new javax.swing.Timer(1000, new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                String m_clock = getLineTimer();
+                String m_date = getLineDate();
+                jLabel2.setText("  " + m_date + " " + m_clock);
+            }
+        });
+
+        clockTimer.start();
     }
-    
+
     private String getHostID() {
-        return m_props.getHost() + "/properties";
+        return appFileProperties.getHost() + "/properties";
     }
 
     private void setInventoryLocation() {
-        m_sInventoryLocation = m_propsdb.getProperty("location");
+        m_sInventoryLocation = hostSavedProperties.getProperty("location");
         if (m_sInventoryLocation == null) {
             m_sInventoryLocation = "0";
-            m_propsdb.setProperty("location", m_sInventoryLocation);
-            m_dlSystem.setResourceAsProperties(getHostID(), m_propsdb);
-        }
-    }
-
-    private boolean checkDBVersion() throws HeadlessException {
-        String sDBVersion = readDataBaseVersion();
-        if (!AppLocal.APP_VERSION.equals(sDBVersion)) {
-            String sScript = sDBVersion == null
-                    ? m_dlSystem.getInitScript() + "-create.sql"
-                    : m_dlSystem.getInitScript() + "-upgrade-" + sDBVersion + ".sql";
-            if (JRootApp.class.getResource(sScript) == null) {
-                JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_DANGER, sDBVersion == null
-                        ? AppLocal.getIntString("message.databasenotsupported", session.DB.getName() + " " + sDBVersion)
-                        : AppLocal.getIntString("message.noupdatescript")));
-                session.close();
-                return true;
-            } else {
-                if (JOptionPane.showConfirmDialog(this,
-                        AppLocal.getIntString(sDBVersion == null
-                                ? "message.createdatabase"
-                                : "message.eolupdate", session.DB.getName() + " " + sDBVersion),
-                        AppLocal.getIntString("message.title"),
-                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.OK_OPTION) {
-                    if (sScript.endsWith("MySQL-create.sql")) {
-                        try {
-                            BatchSentence bsentence = new BatchSentenceResource(session, sScript);
-                            bsentence.putParameter("APP_ID", Matcher.quoteReplacement(AppLocal.APP_ID));
-                            bsentence.putParameter("APP_NAME", Matcher.quoteReplacement(AppLocal.APP_NAME));
-                            bsentence.putParameter("APP_VERSION", Matcher.quoteReplacement(AppLocal.APP_VERSION));
-
-                            java.util.List l = bsentence.list();
-
-                            if (l.size() > 0) {
-                                JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_WARNING,
-                                        AppLocal.getIntString("database.scriptwarning"),
-                                        l.toArray(new Throwable[l.size()])));
-                            }
-                        } catch (BasicException e) {
-                            LOGGER.log(Level.WARNING, "Exception: ", e);
-                            JMessageDialog.showMessage(this,
-                                    new MessageInf(MessageInf.SGN_DANGER,
-                                            AppLocal.getIntString("database.scripterror"), e));
-                            session.close();
-                            return true;
-                        }
-                    }
-                } else {
-                    session.close();
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private void setHomePanel() {
-
-        statusBarPanel.setVisible(!(Boolean.valueOf(m_props.getProperty("till.hideinfo"))));
-
-        String sWareHouse;
-
-        try {
-            sWareHouse = m_dlSystem.findLocationName(m_sInventoryLocation);
-        } catch (BasicException e) {
-            sWareHouse = null;
-        }
-
-        String url;
-        try {
-            url = session.getURL();
-        } catch (SQLException e) {
-            url = "";
-        }
-        m_jHost.setText("<html>" + m_props.getHost() + " - " + sWareHouse + "<br>" + url + "</html>");
-
-        String newLogo = m_props.getProperty("start.logo");
-        if (newLogo != null) {
-            if ("".equals(newLogo)) {
-                copyRightLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/logo.png")));
-            } else {
-                copyRightLabel.setIcon(new javax.swing.ImageIcon(newLogo));
-            }
-        }
-
-        String newText = m_props.getProperty("start.text");
-        if (newText != null) {
-            if (newText.equals("")) {
-                copyRightLabel.setText("<html><center>"
-                        + "<h1>KrOS POS - Open Source Point Of Sale</h1>"
-                        + "<p>More info on official <href a=\"https://github.com/poolborges/unicenta-pos\">site</a></p>"
-                        + "</center>"
-                        + "<br><br>"
-                        + "<h2>License: GPL v3</h2>"
-                        + "<br>"
-                        + "This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br>"
-                        + "<br>"
-                        + " This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br>"
-                        + "<br>"
-                        + "You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/<br>"
-                        + "</html>"
-                );
-
-            } else {
-                try {
-                    String newTextCode = new Scanner(new File(newText), "UTF-8").useDelimiter("\\A").next();
-                    copyRightLabel.setText(newTextCode);
-                } catch (FileNotFoundException e) {
-                }
-
-                copyRightLabel.setAlignmentX(0.5F);
-                copyRightLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-                copyRightLabel.setMaximumSize(new java.awt.Dimension(800, 1024));
-                copyRightLabel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-            }
+            hostSavedProperties.setProperty("location", m_sInventoryLocation);
+            m_dlSystem.setResourceAsProperties(getHostID(), hostSavedProperties);
         }
     }
 
     private void initPeripheral() {
-        m_TP = new DeviceTicket(this, m_props);
+        m_DeviceTicket = new DeviceTicket(this, appFileProperties);
 
-        m_TTP = new TicketParser(getDeviceTicket(), m_dlSystem);
+        m_TicketParser = new TicketParser(getDeviceTicket(), m_dlSystem);
         printerStart();
 
-        m_Scale = new DeviceScale(this, m_props);
+        m_Scale = new DeviceScale(this, appFileProperties);
 
-        m_Scanner = DeviceScannerFactory.createInstance(m_props);
+        m_Scanner = DeviceScannerFactory.createInstance(appFileProperties);
     }
 
     private boolean checkActiveCash() {
         try {
-            String sActiveCashIndex = m_propsdb.getProperty("activecash");
+            String sActiveCashIndex = hostSavedProperties.getProperty("activecash");
             Object[] valcash = sActiveCashIndex == null
                     ? null
                     : m_dlSystem.findActiveCash(sActiveCashIndex);
-            if (valcash == null || !m_props.getHost().equals(valcash[0])) {
+            if (valcash == null || !appFileProperties.getHost().equals(valcash[0])) {
                 setActiveCash(UUID.randomUUID().toString(),
-                        m_dlSystem.getSequenceCash(m_props.getHost()) + 1, new Date(), null);
+                        m_dlSystem.getSequenceCash(appFileProperties.getHost()) + 1, new Date(), null);
                 m_dlSystem.execInsertCash(
-                        new Object[]{getActiveCashIndex(), m_props.getHost(),
+                        new Object[]{getActiveCashIndex(), appFileProperties.getHost(),
                             getActiveCashSequence(),
                             getActiveCashDateStart(),
                             getActiveCashDateEnd()});
@@ -372,16 +232,7 @@ public class JRootApp extends JPanel implements AppView {
     public void tryToClose() {
 
         if (closeAppView()) {
-            m_TP.getDeviceDisplay().clearVisor();
-
-            String sUserPath = AppConfig.getInstance().getAppDataDirectory();
-            File filePath = new File(sUserPath, "open.db");
-            try {
-                Files.deleteIfExists(filePath.toPath());
-            } catch (IOException ex) {
-                Logger.getLogger(JRootApp.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
+            m_DeviceTicket.getDeviceDisplay().clearVisor();
             session.close();
             SwingUtilities.getWindowAncestor(this).dispose();
         }
@@ -389,7 +240,7 @@ public class JRootApp extends JPanel implements AppView {
 
     @Override
     public DeviceTicket getDeviceTicket() {
-        return m_TP;
+        return m_DeviceTicket;
     }
 
     @Override
@@ -414,68 +265,68 @@ public class JRootApp extends JPanel implements AppView {
 
     @Override
     public String getActiveCashIndex() {
-        return m_sActiveCashIndex;
+        return activeCash.getCashIndex();
     }
 
     @Override
     public int getActiveCashSequence() {
-        return m_iActiveCashSequence;
+        return activeCash.getCashSequence();
     }
 
     @Override
     public Date getActiveCashDateStart() {
-        return m_dActiveCashDateStart;
+        return activeCash.getCashDateStart();
     }
 
     @Override
     public Date getActiveCashDateEnd() {
-        return m_dActiveCashDateEnd;
+        return activeCash.getCashDateEnd();
     }
 
     @Override
     public void setActiveCash(String sIndex, int iSeq, Date dStart, Date dEnd) {
-        m_sActiveCashIndex = sIndex;
-        m_iActiveCashSequence = iSeq;
-        m_dActiveCashDateStart = dStart;
-        m_dActiveCashDateEnd = dEnd;
+        activeCash.setCashIndex(sIndex);
+        activeCash.setCashSequence(iSeq);
+        activeCash.setCashDateStart(dStart);
+        activeCash.setCashDateEnd(dEnd);
 
-        m_propsdb.setProperty("activecash", m_sActiveCashIndex);
-        m_dlSystem.setResourceAsProperties(getHostID(), m_propsdb);
+        hostSavedProperties.setProperty("activecash", activeCash.getCashIndex());
+        m_dlSystem.setResourceAsProperties(getHostID(), hostSavedProperties);
     }
 
     @Override
     public String getClosedCashIndex() {
-        return m_sClosedCashIndex;
+        return closedCash.getCashIndex();
     }
 
     @Override
     public int getClosedCashSequence() {
-        return m_iClosedCashSequence;
+        return closedCash.getCashSequence();
     }
 
     @Override
     public Date getClosedCashDateStart() {
-        return m_dClosedCashDateStart;
+        return closedCash.getCashDateStart();
     }
 
     @Override
     public Date getClosedCashDateEnd() {
-        return m_dClosedCashDateEnd;
+        return closedCash.getCashDateEnd();
     }
 
     @Override
     public void setClosedCash(String sIndex, int iSeq, Date dStart, Date dEnd) {
-        m_sClosedCashIndex = sIndex;
-        m_iClosedCashSequence = iSeq;
-        m_dClosedCashDateStart = dStart;
-        m_dClosedCashDateEnd = dEnd;
-        m_propsdb.setProperty("closecash", m_sClosedCashIndex);
-        m_dlSystem.setResourceAsProperties(getHostID(), m_propsdb);
+        closedCash.setCashIndex(sIndex);
+        closedCash.setCashSequence(iSeq);
+        closedCash.setCashDateStart(dStart);
+        closedCash.setCashDateEnd(dEnd);
+        hostSavedProperties.setProperty("closecash", closedCash.getCashIndex());
+        m_dlSystem.setResourceAsProperties(getHostID(), hostSavedProperties);
     }
 
     @Override
     public AppProperties getProperties() {
-        return m_props;
+        return appFileProperties;
     }
 
     @Override
@@ -497,104 +348,25 @@ public class JRootApp extends JPanel implements AppView {
     public AppUserView getAppUserView() {
         return m_principalapp;
     }
-    
+
     @Override
-    public boolean hasPermission(String permission){
+    public boolean hasPermission(String permission) {
         return Optional.ofNullable(this.getAppUserView())
-        .map(i -> i.getUser())
-        .map(u -> u.hasPermission(permission))
-        .orElse(false); 
+                .map(i -> i.getUser())
+                .map(u -> u.hasPermission(permission))
+                .orElse(false);
     }
 
     private void printerStart() {
 
         String sresource = m_dlSystem.getResourceAsXML("Printer.Start");
         if (sresource == null) {
-            m_TP.getDeviceDisplay().writeVisor(AppLocal.APP_NAME, AppLocal.APP_VERSION);
+            m_DeviceTicket.getDeviceDisplay().writeVisor(AppLocal.APP_NAME, AppLocal.APP_VERSION);
         } else {
             try {
-                m_TTP.printTicket(sresource);
+                m_TicketParser.printTicket(sresource);
             } catch (TicketPrinterException eTP) {
-                m_TP.getDeviceDisplay().writeVisor(AppLocal.APP_NAME, AppLocal.APP_VERSION);
-            }
-        }
-    }
-
-    private void listPeople() {
-
-        try {
-
-            jScrollPane1.getViewport().setView(null);
-
-            JFlowPanel jPeople = new JFlowPanel();
-            jPeople.applyComponentOrientation(getComponentOrientation());
-
-            java.util.List people = m_dlSystem.listPeopleVisible();
-
-            for (Object people1 : people) {
-                AppUser user = (AppUser) people1;
-                JButton btn = new JButton(new AppUserAction(user));
-                btn.applyComponentOrientation(getComponentOrientation());
-                btn.setFocusPainted(false);
-                btn.setFocusable(false);
-                btn.setRequestFocusEnabled(false);
-                btn.setMaximumSize(new Dimension(110, 60));
-                btn.setPreferredSize(new Dimension(110, 60));
-                btn.setMinimumSize(new Dimension(110, 60));
-                btn.setHorizontalAlignment(SwingConstants.CENTER);
-                btn.setHorizontalTextPosition(AbstractButton.CENTER);
-                btn.setVerticalTextPosition(AbstractButton.BOTTOM);
-                jPeople.add(btn);
-            }
-
-            jScrollPane1.getViewport().setView(jPeople);
-
-        } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception on listPeople: ", ex);
-        }
-    }
-
-    class AppUserAction extends AbstractAction {
-
-        private final AppUser m_actionuser;
-
-        public AppUserAction(AppUser user) {
-            m_actionuser = user;
-            putValue(Action.SMALL_ICON, m_actionuser.getIcon());
-            putValue(Action.NAME, m_actionuser.getName());
-            putValue(Action.SELECTED_KEY, "USER_ID_" + m_actionuser.getName());
-        }
-
-        public AppUser getUser() {
-            return m_actionuser;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent evt) {
-
-            try {
-                if (m_actionuser.authenticate()) {
-                    openAppView(m_actionuser);
-                } else {
-                    String sPassword = JPasswordDialog.showEditPassword(JRootApp.this,
-                            AppLocal.getIntString("label.Password"),
-                            m_actionuser.getName(),
-                            m_actionuser.getIcon());
-                    if (sPassword != null) {
-
-                        if (m_actionuser.authenticate(sPassword)) {
-                            LOGGER.log(Level.INFO, "Login Success, Open Main View");
-                            openAppView(m_actionuser);
-                        } else {
-                            LOGGER.log(Level.INFO, "Login failed");
-                            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
-                                    AppLocal.getIntString("message.BadPassword"));
-                            msg.show(JRootApp.this);
-                        }
-                    }
-                }
-            } catch (Exception ex) {
-                LOGGER.log(Level.WARNING, "Exception on listPeople: ", ex);
+                m_DeviceTicket.getDeviceDisplay().writeVisor(AppLocal.APP_NAME, AppLocal.APP_VERSION);
             }
         }
     }
@@ -606,6 +378,7 @@ public class JRootApp extends JPanel implements AppView {
 
     private void openAppView(AppUser user) {
 
+        LOGGER.log(Level.WARNING, "INFO :: showMainAppPanel");
         if (closeAppView()) {
 
             m_principalapp = new JPrincipalApp(this, user);
@@ -623,7 +396,7 @@ public class JRootApp extends JPanel implements AppView {
 
     public void exitToLogin() {
         closeAppView();
-        showLogin();
+        showLoginPanel();
     }
 
     public boolean closeAppView() {
@@ -643,44 +416,39 @@ public class JRootApp extends JPanel implements AppView {
         }
     }
 
-    private void showLogin() {
-
-        listPeople();
+    private void showLoginPanel() {
+        LOGGER.log(Level.WARNING, "INFO :: showLoginPanel");
+        if (mAuthPanel == null) {
+            mAuthPanel = new JAuthPanel(m_dlSystem, new JAuthPanel.AuthListener() {
+                @Override
+                public void onSucess(AppUser user) {
+                    openAppView(user);
+                }
+            });
+            m_jPanelContainer.add(mAuthPanel, "login");
+        }
         showView("login");
-
         printerStart();
-
-        inputtext = new StringBuilder();
-        m_txtKeys.setText(null);
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                m_txtKeys.requestFocus();
-            }
-        });
     }
 
-    private void processKey(char c) {
+    private void setStatusBarPanel() {
+        String sWareHouse = "";
 
-        if ((c == '\n') || (c == '?')) {
-            AppUser user = null;
-            try {
-                user = m_dlSystem.findPeopleByCard(inputtext.toString());
-            } catch (BasicException e) {
-            }
-
-            if (user == null) {
-                MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
-                        AppLocal.getIntString("message.nocard"));
-                msg.show(this);
-            } else {
-                openAppView(user);
-            }
-
-            inputtext = new StringBuilder();
-        } else {
-            inputtext.append(c);
+        try {
+            sWareHouse = m_dlSystem.findLocationName(m_sInventoryLocation);
+        } catch (BasicException e) {
+            sWareHouse = "";
         }
+
+        String url = "";
+        try {
+            url = session.getURL();
+        } catch (SQLException e) {
+            url = "";
+        }
+        m_jHost.setText("<html>" + appFileProperties.getHost() + " ;WareHouse: " + sWareHouse + "<br>" + url + "</html>");
+        //statusBarPanel.setVisible(!(Boolean.valueOf(appFileProperties.getProperty("till.hideinfo"))));
+        statusBarPanel.setVisible(false);
     }
 
     /**
@@ -696,22 +464,11 @@ public class JRootApp extends JPanel implements AppView {
         poweredby = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         m_jPanelContainer = new javax.swing.JPanel();
-        m_jPanelLogin = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        copyRightLabel = new javax.swing.JLabel();
-        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 0));
-        jPanel5 = new javax.swing.JPanel();
-        m_jLogonName = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jPanel8 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel1 = new javax.swing.JPanel();
-        m_txtKeys = new javax.swing.JTextField();
-        m_jClose = new javax.swing.JButton();
         statusBarPanel = new javax.swing.JPanel();
         panelTask = new javax.swing.JPanel();
         m_jHost = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
+        m_jClose = new javax.swing.JButton();
 
         setEnabled(false);
         setPreferredSize(new java.awt.Dimension(1024, 768));
@@ -741,119 +498,12 @@ public class JRootApp extends JPanel implements AppView {
         add(m_jPanelTitle, java.awt.BorderLayout.NORTH);
 
         m_jPanelContainer.setLayout(new java.awt.CardLayout());
-
-        m_jPanelLogin.setLayout(new java.awt.BorderLayout());
-
-        jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.Y_AXIS));
-
-        copyRightLabel.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        copyRightLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        copyRightLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/logo_320×320.png"))); // NOI18N
-        copyRightLabel.setText("<<COPYRIGHT>>");
-        copyRightLabel.setAlignmentX(0.5F);
-        copyRightLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        copyRightLabel.setMaximumSize(new java.awt.Dimension(800, 1024));
-        copyRightLabel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jPanel4.add(copyRightLabel);
-        jPanel4.add(filler2);
-
-        m_jPanelLogin.add(jPanel4, java.awt.BorderLayout.CENTER);
-
-        jPanel5.setPreferredSize(new java.awt.Dimension(300, 400));
-
-        m_jLogonName.setLayout(new java.awt.BorderLayout());
-
-        jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
-        jPanel2.setPreferredSize(new java.awt.Dimension(100, 100));
-        jPanel2.setLayout(new java.awt.BorderLayout());
-
-        jPanel8.setLayout(new java.awt.GridLayout(0, 1, 5, 5));
-        jPanel2.add(jPanel8, java.awt.BorderLayout.NORTH);
-
-        m_jLogonName.add(jPanel2, java.awt.BorderLayout.LINE_END);
-
-        jScrollPane1.setBorder(null);
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-
-        m_txtKeys.setPreferredSize(new java.awt.Dimension(0, 0));
-        m_txtKeys.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                m_txtKeysKeyTyped(evt);
-            }
-        });
-
-        m_jClose.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        m_jClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/exit.png"))); // NOI18N
-        m_jClose.setText(AppLocal.getIntString("button.close")); // NOI18N
-        m_jClose.setFocusPainted(false);
-        m_jClose.setFocusable(false);
-        m_jClose.setPreferredSize(new java.awt.Dimension(100, 50));
-        m_jClose.setRequestFocusEnabled(false);
-        m_jClose.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                m_jCloseActionPerformed(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1Layout.createSequentialGroup()
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel1Layout.createSequentialGroup()
-                        .add(m_txtKeys, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(0, 0, Short.MAX_VALUE))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .add(m_jClose, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1Layout.createSequentialGroup()
-                .add(m_txtKeys, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(m_jClose, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-        );
-
-        org.jdesktop.layout.GroupLayout jPanel5Layout = new org.jdesktop.layout.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .add(jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                    .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(jScrollPane1))
-                .add(104, 104, 104)
-                .add(m_jLogonName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(0, 0, Short.MAX_VALUE))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel5Layout.createSequentialGroup()
-                .add(15, 15, 15)
-                .add(jPanel5Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel5Layout.createSequentialGroup()
-                        .add(m_jLogonName, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(434, 434, 434))
-                    .add(jPanel5Layout.createSequentialGroup()
-                        .add(jScrollPane1)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
-        );
-
-        m_jPanelLogin.add(jPanel5, java.awt.BorderLayout.EAST);
-
-        m_jPanelContainer.add(m_jPanelLogin, "login");
-
         add(m_jPanelContainer, java.awt.BorderLayout.CENTER);
 
         statusBarPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, javax.swing.UIManager.getDefaults().getColor("Button.darkShadow")));
-        statusBarPanel.setLayout(new java.awt.BorderLayout());
+        statusBarPanel.setLayout(new javax.swing.BoxLayout(statusBarPanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        panelTask.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         m_jHost.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         m_jHost.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/display.png"))); // NOI18N
@@ -863,19 +513,28 @@ public class JRootApp extends JPanel implements AppView {
         m_jHost.setPreferredSize(new java.awt.Dimension(200, 32));
         panelTask.add(m_jHost);
 
-        statusBarPanel.add(panelTask, java.awt.BorderLayout.LINE_START);
-        statusBarPanel.add(jPanel3, java.awt.BorderLayout.LINE_END);
+        statusBarPanel.add(panelTask);
+
+        jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        m_jClose.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        m_jClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/exit.png"))); // NOI18N
+        m_jClose.setText(AppLocal.getIntString("JAuthPanel.m_jClose.text")); // NOI18N
+        m_jClose.setFocusPainted(false);
+        m_jClose.setFocusable(false);
+        m_jClose.setPreferredSize(new java.awt.Dimension(100, 50));
+        m_jClose.setRequestFocusEnabled(false);
+        m_jClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_jCloseActionPerformed(evt);
+            }
+        });
+        jPanel3.add(m_jClose);
+
+        statusBarPanel.add(jPanel3);
 
         add(statusBarPanel, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
-
-
-    private void m_txtKeysKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_m_txtKeysKeyTyped
-
-        m_txtKeys.setText("0");
-        processKey(evt.getKeyChar());
-
-    }//GEN-LAST:event_m_txtKeysKeyTyped
 
     private void m_jCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jCloseActionPerformed
         tryToClose();
@@ -883,102 +542,15 @@ public class JRootApp extends JPanel implements AppView {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel copyRightLabel;
-    private javax.swing.Box.Filler filler2;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton m_jClose;
     private javax.swing.JLabel m_jHost;
     private javax.swing.JLabel m_jLblTitle;
-    private javax.swing.JPanel m_jLogonName;
     private javax.swing.JPanel m_jPanelContainer;
-    private javax.swing.JPanel m_jPanelLogin;
     private javax.swing.JPanel m_jPanelTitle;
-    private javax.swing.JTextField m_txtKeys;
     private javax.swing.JPanel panelTask;
     private javax.swing.JLabel poweredby;
     private javax.swing.JPanel statusBarPanel;
     // End of variables declaration//GEN-END:variables
-}
-
-class BeanContainer {
-
-    private static final Logger LOGGER = Logger.getLogger(BeanContainer.class.getName());
-    private static final Map<String, BeanFactory> m_aBeanFactories = new HashMap<>();
-    private static final HashMap<String, String> m_oldclasses = new HashMap<>();
-
-    ;
-    
-    private static String mapNewClass(String classname) {
-        String newclass = m_oldclasses.get(classname);
-        return newclass == null
-                ? classname
-                : newclass;
-    }
-
-    static {
-
-        m_oldclasses.put("com.openbravo.pos.reports.JReportCustomers", "/com/openbravo/reports/customers.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportCustomersB", "/com/openbravo/reports/customersb.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportClosedPos", "/com/openbravo/reports/closedpos.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportClosedProducts", "/com/openbravo/reports/closedproducts.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JChartSales", "/com/openbravo/reports/chartsales.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportInventory", "/com/openbravo/reports/inventory.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportInventory2", "/com/openbravo/reports/inventoryb.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportInventoryBroken", "/com/openbravo/reports/inventorybroken.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportInventoryDiff", "/com/openbravo/reports/inventorydiff.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportPeople", "/com/openbravo/reports/people.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportTaxes", "/com/openbravo/reports/taxes.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportUserSales", "/com/openbravo/reports/usersales.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportProducts", "/com/openbravo/reports/products.bs");
-        m_oldclasses.put("com.openbravo.pos.reports.JReportCatalog", "/com/openbravo/reports/productscatalog.bs");
-
-        m_oldclasses.put("com.openbravo.pos.panels.JPanelTax", "com.openbravo.pos.inventory.TaxPanel");
-
-    }
-
-    public static Object geBean(String beanfactory, AppView appView) {
-
-        beanfactory = mapNewClass(beanfactory);
-        BeanFactory bf = m_aBeanFactories.get(beanfactory);
-
-        if (bf == null) {
-
-            if (beanfactory.startsWith("/")) {
-                bf = new BeanFactoryScript(beanfactory);
-            } else {
-                try {
-                    Class bfclass = Class.forName(beanfactory);
-
-                    if (BeanFactory.class.isAssignableFrom(bfclass)) {
-                        bf = (BeanFactory) bfclass.getDeclaredConstructor().newInstance();
-                    } else {
-                        Constructor constMyView = bfclass.getConstructor(new Class[]{AppView.class});
-                        Object bean = constMyView.newInstance(new Object[]{appView});
-                        bf = new BeanFactoryObj(bean);
-                    }
-
-                } catch (ClassNotFoundException | InstantiationException
-                        | IllegalAccessException | NoSuchMethodException
-                        | SecurityException | IllegalArgumentException | InvocationTargetException e) {
-                    LOGGER.log(Level.WARNING, "Cannot found Bean: " + beanfactory, e);
-                    throw new BeanFactoryException(e);
-                }
-            }
-
-            m_aBeanFactories.put(beanfactory, bf);
-
-            if (bf instanceof BeanFactoryApp) {
-                ((BeanFactoryApp) bf).init(appView);
-            }
-        }
-        return bf.getBean();
-
-    }
 }

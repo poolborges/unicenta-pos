@@ -26,7 +26,7 @@ public class AppLocal {
     
 
     public static final String APP_NAME = "KrOS POS";
-    public static final String APP_ID = "unicentaopos";
+    public static final String APP_ID = "kriolos-opos";
     public static final String APP_VERSION = "4.5";
 
     private static final LocaleResources m_resources;
@@ -61,7 +61,7 @@ public class AppLocal {
     }
     
     public static String getLockFileName(){
-        return APP_ID+"_open.db";
+        return APP_ID+".lock";
     }
     
     public static String getLogFileName(){

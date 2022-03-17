@@ -18,6 +18,7 @@ package com.openbravo.pos.forms;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.Session;
 import com.openbravo.pos.util.AltEncrypter;
+import java.awt.Component;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +40,11 @@ public class AppViewConnection {
     }
 
     public static Session createSession(AppProperties props) throws BasicException {
-
-        try {
+       return  createSession(null, props);
+    }
+    
+    public static Session createSession(Component parent, AppProperties props) throws BasicException{
+    try {
             String dbURL = "";
             String sDBUser = "";
             String sDBPassword = "";
@@ -52,7 +56,7 @@ public class AppViewConnection {
                 List<String> dbNames = findAllDB(props);
 
                 //expec db.name=DBMain or db1.name=DBSecond
-                String chosedDbName = choseDB(props, dbNames.toArray());
+                String chosedDbName = choseDB(parent, props, dbNames.toArray());
                 LOGGER.log(Level.INFO, "Database Selected: "+chosedDbName);
                 if(chosedDbName !=  null){
                     String[] dbNameParts = chosedDbName.split("[.]", 0);
@@ -98,11 +102,11 @@ public class AppViewConnection {
         return dbNames;
     }
 
-    private static String choseDB(AppProperties props, Object[] dbs) {
+    private static String choseDB(Component parent, AppProperties props, Object[] dbs) {
 
         ImageIcon icon = new ImageIcon("/com/openbravo/images/app_logo_48x48");
         Object chosedDbName = JOptionPane.showInputDialog(
-                null,
+                parent,
                 AppLocal.getIntString("message.databasechoose"),
                 "Database Selection",
                 JOptionPane.OK_OPTION,
