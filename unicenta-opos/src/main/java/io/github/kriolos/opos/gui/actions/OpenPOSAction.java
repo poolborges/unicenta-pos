@@ -29,7 +29,7 @@ import org.openide.util.NbBundle.Messages;
         id = "io.github.kriolos.opos.gui.actions.OpenPOSAction"
 )
 @ActionRegistration(
-        iconBase = "com/openbravo/images/app_logo_48x48.png",
+        iconBase = "io/github/kriolos/opos/gui/icons/app_logo.png",
         displayName = "#CTL_OpenPOSAction"
 )
 @ActionReferences({
