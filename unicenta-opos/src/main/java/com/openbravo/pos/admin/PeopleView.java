@@ -71,7 +71,9 @@ public class PeopleView extends JPanel implements EditorRecord {
         m_ReasonModel = new ComboBoxValModel();
         m_ReasonModel.add(AppLocal.getIntString("cboption.generate"));
         m_ReasonModel.add(AppLocal.getIntString("cboption.clear"));              
-        m_ReasonModel.add(AppLocal.getIntString("cboption.iButton"));                      
+        /*IBUTTON DISABLE 
+        m_ReasonModel.add(AppLocal.getIntString("cboption.iButton"));  
+        */
         
         webCBSecurity.setModel(m_ReasonModel);
         
@@ -456,9 +458,11 @@ public class PeopleView extends JPanel implements EditorRecord {
                 JOptionPane.INFORMATION_MESSAGE) == JOptionPane.OK_OPTION) 
 
             {  
+                /* IBUTTON DISABLE
                 m_jcard.setText("TODO_SHOULD_PROVIDE_CODE_FROM_IBUTTON");
                 jLblCardID.setText(AppLocal.getIntString("label.ibutton"));
                 m_Dirty.setDirty(true);
+                */
             }
 
         }                
