@@ -51,7 +51,7 @@ import org.openide.util.NbBundle.Messages;
 )
 @ActionReferences({
     @ActionReference(path = "Menu/Window", position = 0),
-    //@ActionReference(path = "Toolbars/File", position = 300)
+    //@ActionReference(path = "Toolbars/KriolosPOS", position = 300)
 })
 
 @Messages({
@@ -70,7 +70,7 @@ public final class SettingsTopComponent extends TopComponent {
         setToolTipText(Bundle.HINT_SettingsTopComponent());
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.FALSE);
         setLayout(new BorderLayout());
-        setVisible(true);
+        //setVisible(true);
 
         try {
             AppConfig config = new AppConfig(null);
@@ -79,7 +79,7 @@ public final class SettingsTopComponent extends TopComponent {
             configPanel = new JPanelConfiguration(config);
 
             add(configPanel, BorderLayout.CENTER); 
-            configPanel.setVisible(true);
+            //configPanel.setVisible(true);
             configPanel.activate();
         } catch (BasicException e) {
         }
@@ -90,12 +90,13 @@ public final class SettingsTopComponent extends TopComponent {
     public void componentOpened() {
         //result = Utilities.actionsGlobalContext().lookupResult(DeviceInfo.class);
         //result.addLookupListener(this);
-        configPanel.loadProperties();
+        //configPanel.activate();
 
     }
 
     @Override
     public void componentClosed() {
+        configPanel.deactivate();
         //result.removeLookupListener(this);
         //result = null;
     }

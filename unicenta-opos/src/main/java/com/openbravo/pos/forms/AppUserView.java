@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.forms;
 
 /**
@@ -21,22 +20,22 @@ package com.openbravo.pos.forms;
  * @author adrianromero
  */
 public interface AppUserView {
-    
+
     /**
      *
      */
     public static final String ACTION_TASKNAME = "taskname";
-    
-    // Acciones de la aplicacion
 
     /**
-     *
-     * @return
+     *  Current User
+     * 
+     * @return AppUser
      */
-        public AppUser getUser(); // Usuario logado
+    public AppUser getUser();
 
     /**
-     *
+     * Show Panel
+     * 
      * @param sTaskClass
      */
     public void showTask(String sTaskClass);

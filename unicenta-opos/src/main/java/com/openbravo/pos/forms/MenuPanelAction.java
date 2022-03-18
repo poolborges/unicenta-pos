@@ -36,7 +36,7 @@ public class MenuPanelAction extends AbstractAction {
      * @param keytext
      * @param sMyView */
     public MenuPanelAction(AppUserView app, String icon, String keytext, String sMyView) {
-        putValue(Action.SMALL_ICON, new ImageIcon(JPrincipalApp.class.getResource(icon)));
+        putValue(Action.SMALL_ICON, new ImageIcon(MenuPanelAction.class.getResource(icon)));
         putValue(Action.NAME, AppLocal.getIntString(keytext));
         putValue(Action.SHORT_DESCRIPTION, AppLocal.getIntString(keytext)); //used for tooltip text.
         putValue(AppUserView.ACTION_TASKNAME, sMyView);

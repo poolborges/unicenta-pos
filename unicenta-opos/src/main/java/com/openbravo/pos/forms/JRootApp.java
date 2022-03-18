@@ -87,10 +87,6 @@ public class JRootApp extends JPanel implements AppView {
         //m_jLblTitle.repaint();
     }
 
-    public void releaseResources() {
-
-    }
-
     public boolean initApp() {
 
         applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
@@ -229,14 +225,6 @@ public class JRootApp extends JPanel implements AppView {
         }
     }
 
-    public void tryToClose() {
-
-        if (closeAppView()) {
-            m_DeviceTicket.getDeviceDisplay().clearVisor();
-            session.close();
-            SwingUtilities.getWindowAncestor(this).dispose();
-        }
-    }
 
     @Override
     public DeviceTicket getDeviceTicket() {
@@ -393,10 +381,21 @@ public class JRootApp extends JPanel implements AppView {
             m_principalapp.activate();
         }
     }
+    
+    //Release hardware,files,...
+    private void releaseResources() {
 
-    public void exitToLogin() {
-        closeAppView();
-        showLoginPanel();
+    }
+
+    public void tryToClose() {
+
+        if (closeAppView()) {
+            releaseResources();
+        
+            m_DeviceTicket.getDeviceDisplay().clearVisor();
+            session.close();
+            SwingUtilities.getWindowAncestor(this).dispose();
+        }
     }
 
     public boolean closeAppView() {
@@ -412,6 +411,8 @@ public class JRootApp extends JPanel implements AppView {
 
             m_jPanelContainer.remove(m_principalapp);
             m_principalapp = null;
+
+            //showLoginPanel();
             return true;
         }
     }

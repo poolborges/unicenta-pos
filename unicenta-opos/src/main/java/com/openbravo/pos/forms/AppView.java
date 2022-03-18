@@ -42,19 +42,14 @@ public interface AppView {
      */
     public Object getBean(String beanfactory) throws BeanFactoryException;
      
-    /**
-     *
-     * @param value
-     * @param iSeq
-     * @param dStart
-     * @param dEnd
-     */
+    /*ActiveCash*/
     public void setActiveCash(String value, int iSeq, Date dStart, Date dEnd);
     public String getActiveCashIndex();
     public int getActiveCashSequence();
     public Date getActiveCashDateStart();
     public Date getActiveCashDateEnd();
 
+    /*ClosedCash*/
     public void setClosedCash(String value, int iSeq, Date dStart, Date dEnd);    
     public String getClosedCashIndex();    
     public int getClosedCashSequence();    

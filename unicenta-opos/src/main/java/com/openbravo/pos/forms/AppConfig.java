@@ -15,12 +15,14 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>
 package com.openbravo.pos.forms;
 
+import com.openbravo.format.Formats;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -31,6 +33,9 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.LookAndFeel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  * Creation and Editing of stored settings
@@ -39,7 +44,7 @@ import java.util.logging.Logger;
  */
 public class AppConfig implements AppProperties {
 
-    private static final Logger logger = Logger.getLogger("com.openbravo.pos.forms.AppConfig");
+    private static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.forms.AppConfig");
 
     private static volatile AppConfig m_instance = null;
     private Properties m_propsconfig;
@@ -49,21 +54,19 @@ public class AppConfig implements AppProperties {
     private static final String APP_CONFIG_FILE_NAME = AppLocal.APP_ID + ".properties";
     private static final File APP_CONFIG_FILE_DEFAULT = new File(APP_CONFIG_DIRECTORY, APP_CONFIG_FILE_NAME);
 
-
     /**
      * unicenta resources file
      *
      * @param configfile resource file
      */
     public AppConfig(File configfile) {
-        if(configfile != null){
+        if (configfile != null) {
             this.configfile = configfile;
-        }else {
+        } else {
             this.configfile = getDefaultConfigFile();
         }
         this.m_propsconfig = new SortedStoreProperties();
     }
-
 
     private static File getDefaultConfigFile() {
         return APP_CONFIG_FILE_DEFAULT;
@@ -182,9 +185,9 @@ public class AppConfig implements AppProperties {
 
         //Double check locking pattern
         //Check for the first time
-        if (m_inst == null) { 
+        if (m_inst == null) {
 
-            synchronized (AppConfig.class) {   
+            synchronized (AppConfig.class) {
                 m_inst = AppConfig.m_instance;
                 //if there is no instance available... create new one
                 if (m_inst == null) {
@@ -222,17 +225,17 @@ public class AppConfig implements AppProperties {
      * Get instance settings
      */
     public void load() {
-        logger.log(Level.INFO, "Try Loading configuration file: {0}", configfile.getAbsolutePath());
+        LOGGER.log(Level.INFO, "Try Loading configuration file: {0}", configfile.getAbsolutePath());
 
-        try (InputStream in = new FileInputStream(configfile)) {
+        try ( InputStream in = new FileInputStream(configfile)) {
             m_propsconfig.load(in);
         } catch (IOException e) {
-            logger.log(Level.WARNING, "IOException on load configuration file: " + configfile.getAbsolutePath(), e);
+            LOGGER.log(Level.WARNING, "IOException on load configuration file: " + configfile.getAbsolutePath(), e);
             try {
-                logger.log(Level.INFO, "Providing default configuration: ", e);
+                LOGGER.log(Level.INFO, "Providing default configuration: ", e);
                 m_propsconfig = defaultConfig();
             } catch (Exception ex) {
-                logger.log(Level.WARNING, "Fail getting default/factory configuration", ex);
+                LOGGER.log(Level.WARNING, "Fail getting default/factory configuration", ex);
             }
         }
 
@@ -258,21 +261,21 @@ public class AppConfig implements AppProperties {
      */
     public void save() throws IOException {
 
-        logger.log(Level.INFO, "Saving configuration to file: {0}", configfile.getAbsolutePath());
-        try (OutputStream out = new FileOutputStream(configfile)) {
+        LOGGER.log(Level.INFO, "Saving configuration to file: {0}", configfile.getAbsolutePath());
+        try ( OutputStream out = new FileOutputStream(configfile)) {
             m_propsconfig.store(out, AppLocal.APP_NAME + ". Configuration file.");
         } catch (IOException ex) {
-            logger.log(Level.SEVERE, "Fail saving configuration to file: " + configfile.getAbsolutePath(), ex);
+            LOGGER.log(Level.SEVERE, "Fail saving configuration to file: " + configfile.getAbsolutePath(), ex);
         }
     }
 
     public void setFactoryConfig() {
-        this.m_propsconfig =  defaultConfig();
+        this.m_propsconfig = defaultConfig();
     }
 
     private Properties defaultConfig() {
 
-        logger.log(Level.INFO, "Default configuration");
+        LOGGER.log(Level.INFO, "Default configuration");
 
         Properties propConfig = new SortedStoreProperties();
 
@@ -371,6 +374,38 @@ public class AppConfig implements AppProperties {
 
         return propConfig;
 
+    }
+
+    public static void applySystemProperties(AppConfig config) {
+        // Set the look and feel.
+        String lafClass = config.getProperty("swing.defaultlaf");
+        try {
+            if (lafClass != null && !lafClass.isBlank()) {
+                Object laf = Class.forName(lafClass).getDeclaredConstructor().newInstance();
+                if (laf instanceof LookAndFeel) {
+                    UIManager.setLookAndFeel((LookAndFeel) laf);
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
+            LOGGER.log(Level.WARNING, "Cannot set Look and Feel: " + lafClass, e);
+        }
+
+        //Set I18n or Language 
+        String slang = config.getProperty("user.language");
+        String scountry = config.getProperty("user.country");
+        String svariant = config.getProperty("user.variant");
+        if (slang != null && !slang.equals("") && scountry != null && svariant != null) {
+            Locale.setDefault(new Locale(slang, scountry, svariant));
+        }
+
+        //Set Format/Pattern for: Number, Date, Currency 
+        Formats.setIntegerPattern(config.getProperty("format.integer"));
+        Formats.setDoublePattern(config.getProperty("format.double"));
+        Formats.setCurrencyPattern(config.getProperty("format.currency"));
+        Formats.setPercentPattern(config.getProperty("format.percent"));
+        Formats.setDatePattern(config.getProperty("format.date"));
+        Formats.setTimePattern(config.getProperty("format.time"));
+        Formats.setDateTimePattern(config.getProperty("format.datetime"));
     }
 }
 

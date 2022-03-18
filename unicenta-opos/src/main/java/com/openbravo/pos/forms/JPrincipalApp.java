@@ -18,7 +18,6 @@ package com.openbravo.pos.forms;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
-import com.openbravo.pos.customers.CustomerInfo;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.util.logging.Level;
@@ -30,28 +29,23 @@ import javax.swing.*;
  *
  * @author adrianromero
  */
-public class JPrincipalApp extends javax.swing.JPanel implements AppUserView {
+public class JPrincipalApp extends JPanel implements AppUserView {
 
     private static final Logger LOGGER = Logger.getLogger(JPrincipalApp.class.getName());
     private static final long serialVersionUID = 1L;
 
     private final JRootApp m_appview;
     private final AppUser m_appuser;
-
-    private DataLogicSystem m_dlSystem;
-
-    private JLabel m_principalnotificator;
+    private final DataLogicSystem m_dlSystem;
+    private final JLabel m_principalnotificator;
 
     private Icon menu_open;
     private Icon menu_close;
     
-    private JRootMenu rMenu;
-
-    //HS Updates
-    private CustomerInfo customerInfo;
+    private final JRootMenu rMenu;
 
     /**
-     * Creates new form JPrincipalApp
+     * Creates a JPanel
      *
      * @param appview
      * @param appuser
@@ -66,31 +60,31 @@ public class JPrincipalApp extends javax.swing.JPanel implements AppUserView {
         m_appuser.fillPermissions(m_dlSystem);
 
         initComponents();
-
-        jPanel2.add(Box.createVerticalStrut(50), 0);
-        m_jPanelLeft.getVerticalScrollBar().setPreferredSize(new Dimension(35, 35));
-
-        applyComponentOrientation(appview.getComponentOrientation());
+        applyComponentOrientation(m_appview.getComponentOrientation());
 
         m_principalnotificator = new JLabel();
         m_principalnotificator.applyComponentOrientation(getComponentOrientation());
         m_principalnotificator.setText(m_appuser.getName());
         m_principalnotificator.setIcon(m_appuser.getIcon());
 
+        //MENU SIDE
+        colapseHPanel.add(Box.createVerticalStrut(50), 0);
+        m_jPanelMenu.getVerticalScrollBar().setPreferredSize(new Dimension(35, 35));
+        rMenu = new JRootMenu(this, this);
+        rMenu.setRootMenu(m_jPanelMenu, m_dlSystem);
         setMenuIcon();
         assignMenuButtonIcon();
 
+        //MAIN 
         m_jPanelTitle.setVisible(false);
-        m_jPanelContainer.add(new JPanel(), "<NULL>");
-
+        addView(new JPanel(), "<NULL>");
         showView("<NULL>");
 
-        rMenu = new JRootMenu(this, this);
-        rMenu.setRootMenu(m_jPanelLeft, m_dlSystem);
+        
     }
 
     private void setMenuIcon() {
-    if (jButton1.getComponentOrientation().isLeftToRight()) {
+        if (colapseButton.getComponentOrientation().isLeftToRight()) {
             menu_open = new ImageIcon(getClass().getResource(
                     "/com/openbravo/images/menu-right.png"));
             menu_close = new ImageIcon(getClass().getResource(
@@ -104,13 +98,13 @@ public class JPrincipalApp extends javax.swing.JPanel implements AppUserView {
     }
 
     private void assignMenuButtonIcon() {
-        jButton1.setIcon(m_jPanelLeft.isVisible() ? menu_close : menu_open);
+        colapseButton.setIcon(m_jPanelMenu.isVisible() ? menu_close : menu_open);
     }
 
 
     private void setMenuVisible(boolean value) {
 
-        m_jPanelLeft.setVisible(value);
+        m_jPanelMenu.setVisible(value);
         assignMenuButtonIcon();
         revalidate();
     }
@@ -139,6 +133,10 @@ public class JPrincipalApp extends javax.swing.JPanel implements AppUserView {
         m_appview.closeAppView();
     }
 
+    private void addView(JComponent component, String sView) {
+        m_jPanelContainer.add(component, sView);
+    }
+    
     private void showView(String sView) {
         CardLayout cl = (CardLayout) (m_jPanelContainer.getLayout());
         cl.show(m_jPanelContainer, sView);
@@ -152,15 +150,14 @@ public class JPrincipalApp extends javax.swing.JPanel implements AppUserView {
     @Override
     public void showTask(String sTaskClass) {
 
-        customerInfo = new CustomerInfo("");
-        customerInfo.setName("");
-
         m_appview.waitCursorBegin();
+        
+        LOGGER.info("Show View for class: "+sTaskClass);
 
         if (m_appuser.hasPermission(sTaskClass)) {
 
-            JPanelView m_jMyView = (JPanelView) rMenu.getCreatedViews().get(sTaskClass);
-            LOGGER.info("Create Views for class: "+sTaskClass);
+            JPanelView m_jMyView = rMenu.getCreatedViews().get(sTaskClass);
+            
 
             if (rMenu.checkLastView(m_jMyView)) {
 
@@ -172,14 +169,14 @@ public class JPrincipalApp extends javax.swing.JPanel implements AppUserView {
 
                         try {
                             m_jMyView = (JPanelView) m_appview.getBean(sTaskClass);
-                        } catch (BeanFactoryException e) {
+                        } catch (Exception e) {
                             LOGGER.log(Level.SEVERE, "Exception on get a JPanelView Bean for class: "+sTaskClass, e);
                             m_jMyView = new JPanelNull(m_appview, e);
                         }
                     }
 
                     m_jMyView.getComponent().applyComponentOrientation(getComponentOrientation());
-                    m_jPanelContainer.add(m_jMyView.getComponent(), sTaskClass);
+                    addView(m_jMyView.getComponent(), sTaskClass);
                     rMenu.getCreatedViews().put(sTaskClass, m_jMyView);
                 }
 
@@ -197,7 +194,6 @@ public class JPrincipalApp extends javax.swing.JPanel implements AppUserView {
                 rMenu.setLastView(m_jMyView);
 
                 setMenuVisible(getBounds().width > 800);
-                setMenuVisible(false);
 
                 showView(sTaskClass);
                 String sTitle = m_jMyView.getTitle();
@@ -252,11 +248,11 @@ public class JPrincipalApp extends javax.swing.JPanel implements AppUserView {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        m_jPanelLeft = new javax.swing.JScrollPane();
-        jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        m_jPanelRight = new javax.swing.JPanel();
+        m_jPanelLefSide = new javax.swing.JPanel();
+        m_jPanelMenu = new javax.swing.JScrollPane();
+        colapseHPanel = new javax.swing.JPanel();
+        colapseButton = new javax.swing.JButton();
+        m_jPanelRightSide = new javax.swing.JPanel();
         m_jPanelTitle = new javax.swing.JPanel();
         m_jTitle = new javax.swing.JLabel();
         m_jPanelContainer = new javax.swing.JPanel();
@@ -264,55 +260,55 @@ public class JPrincipalApp extends javax.swing.JPanel implements AppUserView {
         setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         setLayout(new java.awt.BorderLayout());
 
-        jPanel1.setLayout(new java.awt.BorderLayout());
+        m_jPanelLefSide.setLayout(new java.awt.BorderLayout());
 
-        m_jPanelLeft.setBackground(new java.awt.Color(102, 102, 102));
-        m_jPanelLeft.setBorder(null);
-        m_jPanelLeft.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jPanelLeft.setPreferredSize(new java.awt.Dimension(250, 2));
-        jPanel1.add(m_jPanelLeft, java.awt.BorderLayout.LINE_START);
+        m_jPanelMenu.setBackground(new java.awt.Color(102, 102, 102));
+        m_jPanelMenu.setBorder(null);
+        m_jPanelMenu.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        m_jPanelMenu.setPreferredSize(new java.awt.Dimension(250, 2));
+        m_jPanelLefSide.add(m_jPanelMenu, java.awt.BorderLayout.LINE_START);
 
-        jPanel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jPanel2.setPreferredSize(new java.awt.Dimension(45, 45));
+        colapseHPanel.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        colapseHPanel.setPreferredSize(new java.awt.Dimension(45, 45));
 
-        jButton1.setToolTipText(AppLocal.getIntString("tooltip.menu")); // NOI18N
-        jButton1.setFocusPainted(false);
-        jButton1.setFocusable(false);
-        jButton1.setIconTextGap(0);
-        jButton1.setMargin(new java.awt.Insets(10, 2, 10, 2));
-        jButton1.setMaximumSize(new java.awt.Dimension(45, 32224661));
-        jButton1.setMinimumSize(new java.awt.Dimension(32, 32));
-        jButton1.setPreferredSize(new java.awt.Dimension(36, 45));
-        jButton1.setRequestFocusEnabled(false);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        colapseButton.setToolTipText(AppLocal.getIntString("tooltip.menu")); // NOI18N
+        colapseButton.setFocusPainted(false);
+        colapseButton.setFocusable(false);
+        colapseButton.setIconTextGap(0);
+        colapseButton.setMargin(new java.awt.Insets(10, 2, 10, 2));
+        colapseButton.setMaximumSize(new java.awt.Dimension(45, 32224661));
+        colapseButton.setMinimumSize(new java.awt.Dimension(32, 32));
+        colapseButton.setPreferredSize(new java.awt.Dimension(36, 45));
+        colapseButton.setRequestFocusEnabled(false);
+        colapseButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                colapseButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout colapseHPanelLayout = new javax.swing.GroupLayout(colapseHPanel);
+        colapseHPanel.setLayout(colapseHPanelLayout);
+        colapseHPanelLayout.setHorizontalGroup(
+            colapseHPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, colapseHPanelLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(colapseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        colapseHPanelLayout.setVerticalGroup(
+            colapseHPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(colapseHPanelLayout.createSequentialGroup()
                 .addContainerGap(88, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                .addComponent(colapseButton, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
                 .addContainerGap(188, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel2, java.awt.BorderLayout.LINE_END);
+        m_jPanelLefSide.add(colapseHPanel, java.awt.BorderLayout.LINE_END);
 
-        add(jPanel1, java.awt.BorderLayout.LINE_START);
+        add(m_jPanelLefSide, java.awt.BorderLayout.LINE_START);
 
-        m_jPanelRight.setPreferredSize(new java.awt.Dimension(200, 40));
-        m_jPanelRight.setLayout(new java.awt.BorderLayout());
+        m_jPanelRightSide.setPreferredSize(new java.awt.Dimension(200, 40));
+        m_jPanelRightSide.setLayout(new java.awt.BorderLayout());
 
         m_jPanelTitle.setLayout(new java.awt.BorderLayout());
 
@@ -324,29 +320,29 @@ public class JPrincipalApp extends javax.swing.JPanel implements AppUserView {
         m_jTitle.setPreferredSize(new java.awt.Dimension(100, 35));
         m_jPanelTitle.add(m_jTitle, java.awt.BorderLayout.NORTH);
 
-        m_jPanelRight.add(m_jPanelTitle, java.awt.BorderLayout.NORTH);
+        m_jPanelRightSide.add(m_jPanelTitle, java.awt.BorderLayout.NORTH);
 
         m_jPanelContainer.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         m_jPanelContainer.setLayout(new java.awt.CardLayout());
-        m_jPanelRight.add(m_jPanelContainer, java.awt.BorderLayout.CENTER);
+        m_jPanelRightSide.add(m_jPanelContainer, java.awt.BorderLayout.CENTER);
 
-        add(m_jPanelRight, java.awt.BorderLayout.CENTER);
+        add(m_jPanelRightSide, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+private void colapseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colapseButtonActionPerformed
 
-    setMenuVisible(!m_jPanelLeft.isVisible());
+    setMenuVisible(!m_jPanelMenu.isVisible());
 
-}//GEN-LAST:event_jButton1ActionPerformed
+}//GEN-LAST:event_colapseButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JButton colapseButton;
+    private javax.swing.JPanel colapseHPanel;
     private javax.swing.JPanel m_jPanelContainer;
-    private javax.swing.JScrollPane m_jPanelLeft;
-    private javax.swing.JPanel m_jPanelRight;
+    private javax.swing.JPanel m_jPanelLefSide;
+    private javax.swing.JScrollPane m_jPanelMenu;
+    private javax.swing.JPanel m_jPanelRightSide;
     private javax.swing.JPanel m_jPanelTitle;
     private javax.swing.JLabel m_jTitle;
     // End of variables declaration//GEN-END:variables

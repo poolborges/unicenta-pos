@@ -1,5 +1,4 @@
 Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: io/github/kriolos/opos/gui/Bundle.properties
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
-OpenIDE-Module-Install: io/github/kriolos/opos/gui/Installer.class
 Built-By: KriolOS

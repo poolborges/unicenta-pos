@@ -36,7 +36,7 @@ public class MenuExecAction extends AbstractAction {
      * @param keytext
      * @param sMyView */
     public MenuExecAction(AppUserView app, String icon, String keytext, String sMyView) {
-        putValue(Action.SMALL_ICON, new ImageIcon(JPrincipalApp.class.getResource(icon)));
+        putValue(Action.SMALL_ICON, new ImageIcon(MenuExecAction.class.getResource(icon)));
         putValue(Action.NAME, AppLocal.getIntString(keytext));
         putValue(AppUserView.ACTION_TASKNAME, sMyView);
         m_App = app;

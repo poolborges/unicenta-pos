@@ -15,18 +15,11 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>
 package com.openbravo.pos.forms;
 
-import com.openbravo.format.Formats;
 import com.openbravo.pos.instance.InstanceManager;
 import java.io.File;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.LookAndFeel;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import java.lang.reflect.InvocationTargetException;
 import java.rmi.AlreadyBoundException;
 import javax.swing.SwingUtilities;
 
@@ -48,41 +41,12 @@ public class StartPOS {
         File configFile = (args.length > 0 ? new File(args[0]) : null);
         AppConfig config = new AppConfig(configFile);
         config.load();
-
+        AppConfig.applySystemProperties(config);
+        
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
-
-                // Set the look and feel.
-                String lafClass = config.getProperty("swing.defaultlaf");
-                try {
-                    if(lafClass != null && !lafClass.isBlank()){
-                    Object laf = Class.forName(lafClass).getDeclaredConstructor().newInstance();
-                    if (laf instanceof LookAndFeel) {
-                        UIManager.setLookAndFeel((LookAndFeel) laf);
-                    }
-                    }
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
-                    LOGGER.log(Level.WARNING, "Cannot set Look and Feel: " + lafClass, e);
-                }
-
-                //Set I18n or Language 
-                String slang = config.getProperty("user.language");
-                String scountry = config.getProperty("user.country");
-                String svariant = config.getProperty("user.variant");
-                if (slang != null && !slang.equals("") && scountry != null && svariant != null) {
-                    Locale.setDefault(new Locale(slang, scountry, svariant));
-                }
-
-                //Set Format/Pattern for: Number, Date, Currency 
-                Formats.setIntegerPattern(config.getProperty("format.integer"));
-                Formats.setDoublePattern(config.getProperty("format.double"));
-                Formats.setCurrencyPattern(config.getProperty("format.currency"));
-                Formats.setPercentPattern(config.getProperty("format.percent"));
-                Formats.setDatePattern(config.getProperty("format.date"));
-                Formats.setTimePattern(config.getProperty("format.time"));
-                Formats.setDateTimePattern(config.getProperty("format.datetime"));
 
                 final JRootFrame rootframe = new JRootFrame(config);
                 if ("true".equals(config.getProperty("machine.uniqueinstance"))) {

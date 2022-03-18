@@ -303,7 +303,7 @@ public class JRootMenu {
         private ChangePasswordAction(Component parentP, AppUserView appviewP, String icon, String keytext) {
             parent = parentP;
             appview = appviewP;
-            putValue(Action.SMALL_ICON, new ImageIcon(JPrincipalApp.class.getResource(icon)));
+            putValue(Action.SMALL_ICON, new ImageIcon(JRootMenu.class.getResource(icon)));
             putValue(Action.NAME, AppLocal.getIntString(keytext));
             putValue(AppUserView.ACTION_TASKNAME, keytext);
 
@@ -336,7 +336,7 @@ public class JRootMenu {
 
         public ExitAction(Component _parent, AppUserView _appview, String icon, String keytext) {
             m_appview = _appview;
-            putValue(Action.SMALL_ICON, new ImageIcon(JPrincipalApp.class.getResource(icon)));
+            putValue(Action.SMALL_ICON, new ImageIcon(JRootMenu.class.getResource(icon)));
             putValue(Action.NAME, AppLocal.getIntString(keytext));
             putValue(AppUserView.ACTION_TASKNAME, keytext);
         }
