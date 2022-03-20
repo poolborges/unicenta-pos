@@ -49,56 +49,53 @@ import javax.swing.table.JTableHeader;
 
 /**
  *
- * @author  Jack Gerrard
+ * @author Jack Gerrard
  */
 public final class SuppliersView extends javax.swing.JPanel implements EditorRecord {
 
     private static final long serialVersionUID = 1L;
     private Object m_oId;
-    
-//    private SentenceList m_sentcat;
-    private List<SupplierTransaction> supplierTransactionList;
-    private TransactionTableModel transactionModel;
-    
-    private DirtyManager m_Dirty;
+
     private DataLogicSuppliers dlSuppliers;
-    
+
     private AppView appView;
     private SupplierInfo supplierInfo;
-        
-    /** Creates new form SuppliersView
+
+    /**
+     * Creates new form SuppliersView
+     *
      * @param app
-     * @param dirty */
+     * @param dirty
+     */
     public SuppliersView(AppView app, DirtyManager dirty) {
         try {
             setAppView(app);
             dlSuppliers = (DataLogicSuppliers) app.getBean("com.openbravo.pos.suppliers.DataLogicSuppliers");
-        
-        initComponents();
-            
-        m_Dirty = dirty;        
-        m_jTaxID.getDocument().addDocumentListener(dirty);
-        m_jVATID.getDocument().addDocumentListener(dirty);        
-        m_jSearchkey.getDocument().addDocumentListener(dirty);
-        m_jName.getDocument().addDocumentListener(dirty);
 
-        m_jNotes.getDocument().addDocumentListener(dirty);
-        txtMaxdebt.getDocument().addDocumentListener(dirty);
-        m_jVisible.addActionListener(dirty);
-        
-        txtFirstName.getDocument().addDocumentListener(dirty);
-        txtLastName.getDocument().addDocumentListener(dirty);
-        txtEmail.getDocument().addDocumentListener(dirty);
-        txtPhone.getDocument().addDocumentListener(dirty);
-        txtPhone2.getDocument().addDocumentListener(dirty);
-        txtFax.getDocument().addDocumentListener(dirty);
-        
-        txtAddress.getDocument().addDocumentListener(dirty);
-        txtAddress2.getDocument().addDocumentListener(dirty);
-        txtPostal.getDocument().addDocumentListener(dirty);
-        txtCity.getDocument().addDocumentListener(dirty);
-        txtRegion.getDocument().addDocumentListener(dirty);
-        txtCountry.getDocument().addDocumentListener(dirty);
+            initComponents();
+
+            m_jTaxID.getDocument().addDocumentListener(dirty);
+            m_jVATID.getDocument().addDocumentListener(dirty);
+            m_jSearchkey.getDocument().addDocumentListener(dirty);
+            m_jName.getDocument().addDocumentListener(dirty);
+
+            m_jNotes.getDocument().addDocumentListener(dirty);
+            txtMaxdebt.getDocument().addDocumentListener(dirty);
+            m_jVisible.addActionListener(dirty);
+
+            txtFirstName.getDocument().addDocumentListener(dirty);
+            txtLastName.getDocument().addDocumentListener(dirty);
+            txtEmail.getDocument().addDocumentListener(dirty);
+            txtPhone.getDocument().addDocumentListener(dirty);
+            txtPhone2.getDocument().addDocumentListener(dirty);
+            txtFax.getDocument().addDocumentListener(dirty);
+
+            txtAddress.getDocument().addDocumentListener(dirty);
+            txtAddress2.getDocument().addDocumentListener(dirty);
+            txtPostal.getDocument().addDocumentListener(dirty);
+            txtCity.getDocument().addDocumentListener(dirty);
+            txtRegion.getDocument().addDocumentListener(dirty);
+            txtCountry.getDocument().addDocumentListener(dirty);
 
             init();
         } catch (BeanFactoryException ex) {
@@ -107,27 +104,26 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
     }
 
     private void init() {
-            writeValueEOF(); 
+        writeValueEOF();
     }
-    
+
     /**
      * Instantiate object
+     *
      * @throws BasicException
      */
     @SuppressWarnings("unchecked")
     public void activate() throws BasicException {
-        
-        String sId = null;
     }
-    
+
     /**
      * Refresh object
      */
     @Override
     public void refresh() {
-        jLblTranCount.setText(null);         
+        jLblTranCount.setText(null);
     }
-    
+
     /**
      * Write EOF
      */
@@ -135,7 +131,7 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
     public void writeValueEOF() {
         m_oId = null;
         m_jTaxID.setText(null);
-        m_jVATID.setText(null);        
+        m_jVATID.setText(null);
         m_jSearchkey.setText(null);
         m_jName.setText(null);
         m_jNotes.setText(null);
@@ -143,7 +139,7 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         txtCurdebt.setText(null);
         txtCurdate.setText(null);
         m_jVisible.setSelected(false);
-        
+
         txtFirstName.setText(null);
         txtLastName.setText(null);
         txtEmail.setText(null);
@@ -158,7 +154,7 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         txtCountry.setText(null);
 
         m_jTaxID.setEnabled(false);
-        m_jVATID.setEnabled(false);        
+        m_jVATID.setEnabled(false);
         m_jSearchkey.setEnabled(false);
         m_jName.setEnabled(false);
         m_jNotes.setEnabled(false);
@@ -166,37 +162,37 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         txtCurdebt.setEnabled(false);
         txtCurdate.setEnabled(false);
         m_jVisible.setEnabled(false);
-        
+
         txtFirstName.setEnabled(false);
         txtLastName.setEnabled(false);
         txtEmail.setEnabled(false);
         txtPhone.setEnabled(false);
         txtPhone2.setEnabled(false);
         txtFax.setEnabled(false);
-       
+
         txtAddress.setEnabled(false);
         txtAddress2.setEnabled(false);
         txtPostal.setEnabled(false);
         txtCity.setEnabled(false);
         txtRegion.setEnabled(false);
         txtCountry.setEnabled(false);
-        
+
         jTableSupplierTransactions.setEnabled(false);
-        
+
         repaint();
-        refresh();        
-    } 
+        refresh();
+    }
 
     @Override
     public void writeValueInsert() {
         m_oId = null;
         m_jTaxID.setText(null);
-        m_jVATID.setText(null);        
+        m_jVATID.setText(null);
         m_jSearchkey.setText(null);
         m_jName.setText(null);
         txtMaxdebt.setText(null);
         txtCurdebt.setText(null);
-        txtCurdate.setText(null);        
+        txtCurdate.setText(null);
 
         txtFirstName.setText(null);
         txtLastName.setText(null);
@@ -216,10 +212,10 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         m_jVisible.setSelected(true);
 
         m_jTaxID.setEnabled(true);
-        m_jVATID.setEnabled(true);        
+        m_jVATID.setEnabled(true);
         m_jSearchkey.setEnabled(true);
         m_jName.setEnabled(true);
-              
+
         txtFirstName.setEnabled(true);
         txtLastName.setEnabled(true);
         txtEmail.setEnabled(true);
@@ -227,7 +223,7 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         txtPhone.setEnabled(true);
         txtPhone2.setEnabled(true);
         txtFax.setEnabled(true);
-      
+
         txtAddress.setEnabled(true);
         txtAddress2.setEnabled(true);
         txtPostal.setEnabled(true);
@@ -239,15 +235,16 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         txtMaxdebt.setEnabled(true);
         txtCurdebt.setEnabled(true);
         txtCurdate.setEnabled(true);
-        m_jVisible.setEnabled(true);        
+        m_jVisible.setEnabled(true);
         jTableSupplierTransactions.setEnabled(false);
-        
+
         repaint();
-        refresh();        
+        refresh();
     }
 
     /**
      * Delete from object
+     *
      * @param value
      */
     @Override
@@ -265,7 +262,7 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         txtPostal.setText(Formats.STRING.formatValue(supplier[7]));
         txtCity.setText(Formats.STRING.formatValue(supplier[8]));
         txtRegion.setText(Formats.STRING.formatValue(supplier[9]));
-        txtCountry.setText(Formats.STRING.formatValue(supplier[10]));      
+        txtCountry.setText(Formats.STRING.formatValue(supplier[10]));
 
         txtFirstName.setText(Formats.STRING.formatValue(supplier[11]));
         txtLastName.setText(Formats.STRING.formatValue(supplier[12]));
@@ -273,17 +270,17 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         txtPhone.setText(Formats.STRING.formatValue(supplier[14]));
         txtPhone2.setText(Formats.STRING.formatValue(supplier[15]));
         txtFax.setText(Formats.STRING.formatValue(supplier[16]));
-        
+
         m_jNotes.setText((String) supplier[17]);
         m_jVisible.setSelected(((Boolean) supplier[18]));
 
-        txtCurdate.setText(Formats.DATE.formatValue(supplier[19]));        
-        txtCurdebt.setText(Formats.CURRENCY.formatValue(supplier[20]));    
-       
-        m_jVATID.setText((String) supplier[21]);        
-        
+        txtCurdate.setText(Formats.DATE.formatValue(supplier[19]));
+        txtCurdebt.setText(Formats.CURRENCY.formatValue(supplier[20]));
+
+        m_jVATID.setText((String) supplier[21]);
+
         m_jTaxID.setEnabled(false);
-        m_jVATID.setEnabled(false);        
+        m_jVATID.setEnabled(false);
         m_jSearchkey.setEnabled(false);
         m_jName.setEnabled(false);
         m_jNotes.setEnabled(false);
@@ -291,33 +288,34 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         txtCurdebt.setEnabled(false);
         txtCurdate.setEnabled(false);
         m_jVisible.setEnabled(false);
-        
+
         txtFirstName.setEnabled(false);
         txtLastName.setEnabled(false);
         txtEmail.setEnabled(false);
-        webBtnMail.setEnabled(false);        
+        webBtnMail.setEnabled(false);
         txtPhone.setEnabled(false);
         txtPhone2.setEnabled(false);
         txtFax.setEnabled(false);
-       
+
         txtAddress.setEnabled(false);
         txtAddress2.setEnabled(false);
         txtPostal.setEnabled(false);
         txtCity.setEnabled(false);
         txtRegion.setEnabled(false);
         txtCountry.setEnabled(false);
-        
-        transactionModel = new TransactionTableModel(getTransactionOfName((String) m_oId));        
+
+        TransactionTableModel transactionModel = new TransactionTableModel(getTransactionOfName( m_oId.toString()));
         jTableSupplierTransactions.setModel(transactionModel);
         jTableSupplierTransactions.setEnabled(false);
-        
+
         repaint();
-        refresh();        
+        refresh();
 
     }
 
     /**
      * Edit object
+     *
      * @param value
      */
     @Override
@@ -334,7 +332,7 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         txtPostal.setText(Formats.STRING.formatValue(supplier[7]));
         txtCity.setText(Formats.STRING.formatValue(supplier[8]));
         txtRegion.setText(Formats.STRING.formatValue(supplier[9]));
-        txtCountry.setText(Formats.STRING.formatValue(supplier[10]));   
+        txtCountry.setText(Formats.STRING.formatValue(supplier[10]));
         txtFirstName.setText(Formats.STRING.formatValue(supplier[11]));
         txtLastName.setText(Formats.STRING.formatValue(supplier[12]));
         txtEmail.setText(Formats.STRING.formatValue(supplier[13]));
@@ -344,27 +342,27 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
 
         m_jNotes.setText((String) supplier[17]);
         m_jVisible.setSelected(((Boolean) supplier[18]));
-        txtCurdate.setText(Formats.DATE.formatValue(supplier[19]));        
-        txtCurdebt.setText(Formats.CURRENCY.formatValue(supplier[20])); 
-        
-        m_jVATID.setText((String) supplier[21]);                
-       
+        txtCurdate.setText(Formats.DATE.formatValue(supplier[19]));
+        txtCurdebt.setText(Formats.CURRENCY.formatValue(supplier[20]));
+
+        m_jVATID.setText((String) supplier[21]);
+
         m_jSearchkey.setEnabled(true);
         m_jTaxID.setEnabled(true);
         m_jName.setEnabled(true);
         txtMaxdebt.setEnabled(true);
-        
+
         txtAddress.setEnabled(true);
         txtAddress2.setEnabled(true);
         txtPostal.setEnabled(true);
         txtCity.setEnabled(true);
         txtRegion.setEnabled(true);
         txtCountry.setEnabled(true);
-        
+
         txtFirstName.setEnabled(true);
         txtLastName.setEnabled(true);
         txtEmail.setEnabled(true);
-        webBtnMail.setEnabled(true);        
+        webBtnMail.setEnabled(true);
         txtPhone.setEnabled(true);
         txtPhone2.setEnabled(true);
         txtFax.setEnabled(true);
@@ -373,22 +371,22 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         m_jVisible.setEnabled(true);
         txtCurdebt.setEnabled(true);
         txtCurdate.setEnabled(true);
-        m_jVATID.setEnabled(true);                       
-       
+        m_jVATID.setEnabled(true);
+
         jTableSupplierTransactions.setVisible(false);
         jTableSupplierTransactions.setEnabled(true);
         resetTranxTable();
-        
+
         txtCurdate.repaint();
-        txtCurdebt.repaint();        
+        txtCurdebt.repaint();
         jTableSupplierTransactions.repaint();
         repaint();
-        refresh();    
+        refresh();
     }
-    
+
     public void resetTranxTable() {
 
-        jTableSupplierTransactions.getColumnModel().getColumn(0).setPreferredWidth(100);               
+        jTableSupplierTransactions.getColumnModel().getColumn(0).setPreferredWidth(100);
         jTableSupplierTransactions.getColumnModel().getColumn(1).setPreferredWidth(225);
         jTableSupplierTransactions.getColumnModel().getColumn(2).setPreferredWidth(30);
         jTableSupplierTransactions.getColumnModel().getColumn(3).setPreferredWidth(50);
@@ -399,15 +397,15 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         JTableHeader header = jTableSupplierTransactions.getTableHeader();
         header.setFont(f);
 
-        jTableSupplierTransactions.getTableHeader().setReorderingAllowed(true); 
-        jTableSupplierTransactions.setAutoCreateRowSorter(true);        
+        jTableSupplierTransactions.getTableHeader().setReorderingAllowed(true);
+        jTableSupplierTransactions.setAutoCreateRowSorter(true);
 
         jTableSupplierTransactions.repaint();
     }
 
-    
     /**
      * Create object
+     *
      * @return
      * @throws BasicException
      */
@@ -424,7 +422,7 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         supplier[7] = Formats.STRING.parseValue(txtPostal.getText());
         supplier[8] = Formats.STRING.parseValue(txtCity.getText());
         supplier[9] = Formats.STRING.parseValue(txtRegion.getText());
-        supplier[10] = Formats.STRING.parseValue(txtCountry.getText()); 
+        supplier[10] = Formats.STRING.parseValue(txtCountry.getText());
         supplier[11] = Formats.STRING.parseValue(txtFirstName.getText());
         supplier[12] = Formats.STRING.parseValue(txtLastName.getText());
         supplier[13] = Formats.STRING.parseValue(txtEmail.getText());
@@ -434,17 +432,17 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         supplier[17] = m_jNotes.getText();
         supplier[18] = m_jVisible.isSelected();
         supplier[19] = Formats.TIMESTAMP.parseValue(txtCurdate.getText());
-        supplier[20] = Formats.CURRENCY.parseValue(txtCurdebt.getText()); 
-        supplier[21] = m_jVATID.getText();        
+        supplier[20] = Formats.CURRENCY.parseValue(txtCurdebt.getText());
+        supplier[21] = m_jVATID.getText();
 
-        supplier[22] = (Object)getAppView();
-        
+        supplier[22] = (Object) getAppView();
+
         repaint();
-        refresh();        
-        
+        refresh();
+
         return supplier;
     }
-    
+
     public AppView getAppView() {
         return appView;
     }
@@ -452,47 +450,38 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
     public void setAppView(AppView appView) {
         this.appView = appView;
     }
-    
+
     @Override
     public Component getComponent() {
         return this;
     }
-    
+
     private List<SupplierTransaction> getTransactionOfName(String sId) {
-
+        List<SupplierTransaction> supplierList = new ArrayList<>();
         try {
-            supplierTransactionList = dlSuppliers.getSuppliersTransactionList(sId);
+            List<SupplierTransaction> supplierTransactionList = dlSuppliers.getSuppliersTransactionList(sId);
 
+            for (SupplierTransaction supplierTransaction : supplierTransactionList) {
+                String supplierId = supplierTransaction.getSupplierId();
+                if (supplierId.equals(sId)) {
+                    supplierList.add(supplierTransaction);
+                }
+            }
 
         } catch (BasicException ex) {
             Logger.getLogger(SuppliersView.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        List<SupplierTransaction> supplierList = new ArrayList<>();
-
-        for (SupplierTransaction supplierTransaction : supplierTransactionList) {
-            String supplierId = supplierTransaction.getSupplierId();
-            if (supplierId.equals(sId)) {
-                supplierList.add(supplierTransaction);
-            }
-        }
-        
-        txtCurdate.repaint();
-        txtCurdebt.repaint();
-            
-        repaint();
-        refresh();
-
         return supplierList;
     }
 
     class TransactionTableModel extends AbstractTableModel {
-String dte = AppLocal.getIntString("label.suptblHeaderCol1");
-String prd = AppLocal.getIntString("label.suptblHeaderCol2");
-String qty = AppLocal.getIntString("label.suptblHeaderCol3");
-String pri = AppLocal.getIntString("label.suptblHeaderCol4");
-String rsn = AppLocal.getIntString("label.suptblHeaderCol5");
 
+        String dte = AppLocal.getIntString("label.suptblHeaderCol1");
+        String prd = AppLocal.getIntString("label.suptblHeaderCol2");
+        String qty = AppLocal.getIntString("label.suptblHeaderCol3");
+        String pri = AppLocal.getIntString("label.suptblHeaderCol4");
+        String rsn = AppLocal.getIntString("label.suptblHeaderCol5");
 
         List<SupplierTransaction> transactionList;
         String[] columnNames = {dte, prd, qty, pri, rsn};
@@ -516,7 +505,7 @@ String rsn = AppLocal.getIntString("label.suptblHeaderCol5");
         @Override
         public Object getValueAt(int row, int column) {
             SupplierTransaction supplierTransaction = transactionList.get(row);
-        
+
             jTableSupplierTransactions.setRowHeight(25);
 
             switch (column) {
@@ -527,12 +516,12 @@ String rsn = AppLocal.getIntString("label.suptblHeaderCol5");
                     String formattedDate = sdf.format(transactionDate);
                     return formattedDate;
                 case 1:
-                    return supplierTransaction.getProductName();                    
+                    return supplierTransaction.getProductName();
                 case 2:
                     return supplierTransaction.getUnit();
                 case 3:
                     Double price = supplierTransaction.getPrice();
-                    DecimalFormat df = new DecimalFormat("#.##");                    
+                    DecimalFormat df = new DecimalFormat("#.##");
                     String formattedAmount = df.format(price);
                     return formattedAmount;
                 case 4:
@@ -547,25 +536,25 @@ String rsn = AppLocal.getIntString("label.suptblHeaderCol5");
                     }
                     if (s.equals("4")) {
                         s = MovementReason.IN_MOVEMENT.toString();
-                    }                    
+                    }
                     if (s.equals("-1")) {
                         s = MovementReason.OUT_SALE.toString();
-                    }                    
+                    }
                     if (s.equals("-2")) {
                         s = MovementReason.OUT_REFUND.toString();
-                    }                                
+                    }
                     if (s.equals("-3")) {
                         s = MovementReason.OUT_BREAK.toString();
-                    }                               
+                    }
                     if (s.equals("-4")) {
                         s = MovementReason.OUT_MOVEMENT.toString();
-                    }                                        
+                    }
                     if (s.equals("-5")) {
                         s = MovementReason.OUT_SAMPLE.toString();
-                    } 
+                    }
                     if (s.equals("-6")) {
                         s = MovementReason.OUT_FREE.toString();
-                    } 
+                    }
                     if (s.equals("-7")) {
                         s = MovementReason.OUT_USED.toString();
                     }
@@ -573,7 +562,7 @@ String rsn = AppLocal.getIntString("label.suptblHeaderCol5");
                         s = MovementReason.OUT_SUBTRACT.toString();
                     }
                     return s;
-                
+
                 default:
                     return "";
 
@@ -584,11 +573,12 @@ String rsn = AppLocal.getIntString("label.suptblHeaderCol5");
         public String getColumnName(int col) {
             return columnNames[col];
         }
-    }    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1240,18 +1230,18 @@ String rsn = AppLocal.getIntString("label.suptblHeaderCol5");
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-       
+
     private void webBtnMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_webBtnMailActionPerformed
 
-        if(!"".equals(txtEmail.getText())) {
+        if (!"".equals(txtEmail.getText())) {
             Desktop desktop;
-    
-            if (Desktop.isDesktopSupported() 
-                && (desktop = Desktop.getDesktop()).isSupported(Desktop.Action.MAIL)) {
+
+            if (Desktop.isDesktopSupported()
+                    && (desktop = Desktop.getDesktop()).isSupported(Desktop.Action.MAIL)) {
                 URI mailto = null;
                 try {
                     mailto = new URI("mailto:"
-                    + txtEmail.getText());
+                            + txtEmail.getText());
                 } catch (URISyntaxException ex) {
                     Logger.getLogger(SuppliersView.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1261,30 +1251,33 @@ String rsn = AppLocal.getIntString("label.suptblHeaderCol5");
                     Logger.getLogger(SuppliersView.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
-                JOptionPane.showMessageDialog(this, 
-                AppLocal.getIntString("message.email"), 
-                "Email", JOptionPane.INFORMATION_MESSAGE);
-            }        
+                JOptionPane.showMessageDialog(this,
+                        AppLocal.getIntString("message.email"),
+                        "Email", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
-        
+
     }//GEN-LAST:event_webBtnMailActionPerformed
 
     private void jBtnShowTransActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnShowTransActionPerformed
         String cId = m_oId.toString();
         if (cId != null) {
-            transactionModel = new TransactionTableModel(getTransactionOfName(cId));
+            TransactionTableModel transactionModel = new TransactionTableModel(getTransactionOfName(cId));
             jTableSupplierTransactions.setModel(transactionModel);
-            if (transactionModel.getRowCount()> 0){
+            if (transactionModel.getRowCount() > 0) {
                 jTableSupplierTransactions.setVisible(true);
                 String TranCount = String.valueOf(transactionModel.getRowCount());
-                jLblTranCount.setText(TranCount + " for " + m_jName.getText());                 
-            }else{
+                jLblTranCount.setText(TranCount + " for " + m_jName.getText());
+            } else {
                 jTableSupplierTransactions.setVisible(false);
-                JOptionPane.showMessageDialog(null, 
-                AppLocal.getIntString("message.nosupptranx"), 
-                "Transactions", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null,
+                        AppLocal.getIntString("message.nosupptranx"),
+                        "Transactions", JOptionPane.INFORMATION_MESSAGE);
             }
             resetTranxTable();
+
+            repaint();
+            refresh();
         }
     }//GEN-LAST:event_jBtnShowTransActionPerformed
 
@@ -1295,12 +1288,12 @@ String rsn = AppLocal.getIntString("label.suptblHeaderCol5");
             StringSelection stringSelection = new StringSelection(uuidString);
             Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
             clpbrd.setContents(stringSelection, null);
-        
-            JOptionPane.showMessageDialog(null, 
-                AppLocal.getIntString("message.uuidcopy"));
+
+            JOptionPane.showMessageDialog(null,
+                    AppLocal.getIntString("message.uuidcopy"));
         }
     }//GEN-LAST:event_jLabel7MouseClicked
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBtnShowTrans;
     private javax.swing.JLabel jLabel1;
@@ -1356,5 +1349,5 @@ String rsn = AppLocal.getIntString("label.suptblHeaderCol5");
     private javax.swing.JTextField txtRegion;
     private javax.swing.JButton webBtnMail;
     // End of variables declaration//GEN-END:variables
-    
+
 }
