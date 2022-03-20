@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <artifactId>kriolos-opos-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Kriolos :: POS.Parent</name>
+    <name>Kriolos.POS.Parent</name>
 
     <url>https://github.com/kriolos/kriolos-opos</url>
     <description>KriolOS.POS (Kriol Open Source Point Of Sales)</description>
