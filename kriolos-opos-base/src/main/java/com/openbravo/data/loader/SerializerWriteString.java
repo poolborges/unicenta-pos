@@ -13,24 +13,39 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
-
-import java.lang.reflect.Array;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author JG uniCenta
  */
-public class SerializerWriteString implements SerializerWrite<String> {
+public class SerializerWriteString implements SerializerWrite {
 
+    private final static Logger LOGGER = Logger.getLogger(SerializerWriteString.class.getName());
     public static final SerializerWrite<String> INSTANCE = new SerializerWriteString();
+
     private SerializerWriteString() {}
 
-    public void writeValues(DataWrite dp, String obj) throws BasicException {
-        Datas.STRING.setValue(dp, 1, (String)obj);
+    public void writeValues(DataWrite dp, Object parameters) throws BasicException {
 
+        int posi = 1;
+        try {
+            if (parameters instanceof Object[]) {
+                
+                for (Object param : (Object[]) parameters) {
+                    Datas.STRING.setValue(dp, posi, (String) param);
+                }
+            } else {
+                Datas.STRING.setValue(dp, 1, (String) parameters);
+            }
+
+        } catch (Exception ex) {
+            LOGGER.log(Level.WARNING, "Exception while set value for parameter on posi: "+posi,ex);
+            throw new BasicException(ex);
+        }
     }
 }

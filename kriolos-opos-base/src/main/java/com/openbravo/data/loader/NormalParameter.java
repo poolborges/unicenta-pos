@@ -18,6 +18,7 @@ package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,6 +26,7 @@ import java.util.ArrayList;
  */
 public class NormalParameter implements DataWrite {
 
+    private final static Logger LOGGER = Logger.getLogger(NormalParameter.class.getName());
     private String m_sSentence;
     private ArrayList<Object> m_aParams;
 

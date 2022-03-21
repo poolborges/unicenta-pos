@@ -61,6 +61,10 @@ public class StaticSentence<W extends Object, T> extends JDBCBaseSentence<T> {
     public StaticSentence(Session s, String sentence, SerializerWrite<W> serwrite) {
         this(s, new NormalBuilder(sentence), serwrite, null);
     }
+    
+    public StaticSentence(Session s, String sentence, SerializerRead<T> serread) {
+        this(s, new NormalBuilder(sentence), null, serread);
+    }
 
     public StaticSentence(Session s, String sentence) {
         this(s, new NormalBuilder(sentence), null, null);

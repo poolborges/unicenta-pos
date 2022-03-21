@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T>, SentenceExec {
 
     protected final static Logger LOGGER = Logger.getLogger(BaseSentence.class.getName());
+
     public abstract DataResultSet<T> openExec(Object params) throws BasicException;
 
     public abstract DataResultSet<T> moreResults() throws BasicException;
@@ -104,14 +105,20 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
 
     @Override
     public final T find(Object params) throws BasicException {
-        T obj = null;        
-        DataResultSet<T> resultSet = openExec(params);
-        if (resultSet != null) {
-            obj = fetchOne(resultSet);
-            resultSet.close();
+        T obj = null;
+        try {
+            DataResultSet<T> resultSet = openExec(params);
+            if (resultSet != null) {
+                obj = fetchOne(resultSet);
+                resultSet.close();
+            }
+
+        } catch (Exception ex) {
+            throw new BasicException(ex);
+        } finally {
+            closeExec();
         }
-        
-        closeExec();
+
         return obj;
     }
 
