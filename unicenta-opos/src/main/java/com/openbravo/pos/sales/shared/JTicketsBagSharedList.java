@@ -72,7 +72,7 @@ public class JTicketsBagSharedList extends javax.swing.JDialog {
                 if(ticket2 != null){
                     label = " - " + ticket2.printTotal();
                 }else{
-                    LOGGER.log(Level.WARNING, "Cannot recovery TicketInfo for ticket Id: "+aticket.getId());
+                    LOGGER.log(Level.SEVERE, "Cannot recovery TicketInfo for ticket Id: "+aticket.getId());
                 }
             } catch (BasicException ex) {
                 label = "!";
