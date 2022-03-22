@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -33,6 +35,7 @@ import java.util.ResourceBundle;
  */
 public class LocaleResources {
   
+    private final static Logger LOGGER = Logger.getLogger(LocaleResources.class.getName());
     private List<ResourceBundle> m_resources;
     private ClassLoader m_localeloader;
     
@@ -72,21 +75,23 @@ public class LocaleResources {
      * @return
      */
     public String getString(String sKey) {
-        
+        String res = null;
         if (sKey == null) {
-            return null;
+            res = null;
         } else  {            
             for (ResourceBundle r : m_resources) {
                 try {
-                    return r.getString(sKey);
+                    res = r.getString(sKey);
                 } catch (MissingResourceException e) {
-                    // Next
+                    //IGONE LOOK ON NEXT
                 }
             }
             
-            // MissingResourceException in all ResourceBundle
-            return "** " + sKey + " **";
+            if (res == null){
+                LOGGER.log(Level.WARNING,"NOT FOUND i18n Key: "+sKey);
+            }
         }
+        return res;
     }
 
     /**
