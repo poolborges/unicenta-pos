@@ -96,12 +96,15 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private final static int NUMBER_PORZERODEC = 5;
     private final static int NUMBER_PORINT = 6;
     private final static int NUMBER_PORDEC = 7;
-    private static final long serialVersionUID = 1L;
+    private final static long serialVersionUID = 1L;
 
     protected JTicketLines m_ticketlines;
-
-    private TicketParser m_TTP;
-
+    protected JPanelButtons m_jbtnconfig;
+    protected AppView m_App;
+    protected DataLogicSystem dlSystem;
+    protected DataLogicSales dlSales;
+    protected DataLogicCustomers dlCustomers;
+    protected TicketsEditor m_panelticket;
     protected TicketInfo m_oTicket;
     protected Object m_oTicketExt;
 
@@ -111,38 +114,22 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private StringBuffer m_sBarcode;
 
     private JTicketsBag m_ticketsbag;
-
+    private TicketParser m_TTP;
     private SentenceList senttax;
     private ListKeyed taxcollection;
 
     private SentenceList senttaxcategories;
     //private ListKeyed taxcategoriescollection;
     private ComboBoxValModel taxcategoriesmodel;
-
     private TaxesLogic taxeslogic;
-
-    protected JPanelButtons m_jbtnconfig;
-    protected AppView m_App;
-
-    protected DataLogicSystem dlSystem;
-    protected DataLogicSales dlSales;
-    protected DataLogicCustomers dlCustomers;
-
     private JPaymentSelect paymentdialogreceipt;
     private JPaymentSelect paymentdialogrefund;
-
     private InactivityListener listener;
-
-    protected TicketsEditor m_panelticket;
     private DataLogicReceipts dlReceipts = null;
     private Boolean priceWith00;
     private RestaurantDBUtils restDB;
-
     private Boolean warrantyPrint = false;
-
-    private TicketInfo m_ticket;
-    private AppConfig m_config;
-
+    private AppProperties m_config;
     private Integer count = 0;
     private Integer oCount = 0;
     private Boolean pinOK;
@@ -155,8 +142,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         initComponents();
 
         LOGGER.info("JPanelTicket.init");
-        m_config = AppConfig.getInstance();
-        m_config.load();
+        m_config = app.getProperties();
 
         m_App = app;
         restDB = new RestaurantDBUtils(m_App);
@@ -173,9 +159,9 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         jTBtnShow.setSelected(false);
 
         if (Boolean.valueOf(m_App.getProperties().getProperty("till.amountattop"))) {
-            m_jPanEntries.remove(jPanel9);
+            m_jPanEntries.remove(jPanelScanner);
             m_jPanEntries.remove(m_jNumberKeys);
-            m_jPanEntries.add(jPanel9);
+            m_jPanEntries.add(jPanelScanner);
             m_jPanEntries.add(m_jNumberKeys);
         }
 
@@ -187,7 +173,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
         LOGGER.info("JPanelTicket.init: criar: Ticket.Line");
         m_ticketlines = new JTicketLines(dlSystem.getResourceAsXML("Ticket.Line"));
-        m_jPanelCentral.add(m_ticketlines, java.awt.BorderLayout.CENTER);
+        m_jPanelLines.add(m_ticketlines, java.awt.BorderLayout.CENTER);
         m_TTP = new TicketParser(m_App.getDeviceTicket(), dlSystem);
 
         senttax = dlSales.getTaxList();
@@ -229,8 +215,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             }
         }, sConfigRes);
 
-        m_jButtonsExt.add(m_jbtnconfig);
-        m_jButtonsExt.setVisible(false);
+        m_jPanelBagExt.add(m_jbtnconfig);
+        m_jPanelBagExt.setVisible(false);
     }
 
     private void initComponentFromChild() {
@@ -248,6 +234,10 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         return this;
     }
 
+    private String getTicketsbag(){
+        return m_App.getProperties().getProperty("machine.ticketsbag");
+    }
+            
     private class logout extends AbstractAction {
 
         public logout() {
@@ -256,7 +246,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         @Override
         public void actionPerformed(ActionEvent ae) {
             closeAllDialogs();
-            switch (m_App.getProperties().getProperty("machine.ticketsbag")) {
+            switch (getTicketsbag()) {
                 case "restaurant":
                     if ("false".equals(m_App.getProperties().getProperty("till.autoLogoffrestaurant"))) {
                         deactivate();
@@ -376,7 +366,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     @Override
     public void setActiveTicket(TicketInfo oTicket, Object oTicketExt) {
 
-        switch (m_App.getProperties().getProperty("machine.ticketsbag")) {
+        LOGGER.info("JPanelTicket setActiveTicket: "+oTicketExt);
+        switch (getTicketsbag()) {
             case "restaurant":
                 if ("true".equals(m_App.getProperties().getProperty("till.autoLogoffrestaurant"))) {
                     if (listener != null) {
@@ -393,7 +384,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             m_oTicket.setActiveCash(m_App.getActiveCashIndex());
             m_oTicket.setDate(new Date());
 
-            if ("restaurant".equals(m_App.getProperties().getProperty("machine.ticketsbag"))
+            if ("restaurant".equals(getTicketsbag())
                     && !oTicket.getOldTicket()) {
                 if (restDB.getCustomerNameInTable(oTicketExt.toString()) == null) {
                     if (m_oTicket.getCustomer() != null) {
@@ -424,7 +415,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
         executeEvent(m_oTicket, m_oTicketExt, "ticket.show");
 
-        if ("restaurant".equals(m_App.getProperties().getProperty("machine.ticketsbag"))) {
+        if ("restaurant".equals(getTicketsbag())) {
             j_btnRemotePrt.setVisible(m_App.hasPermission("sales.PrintKitchen"));
         }
 
@@ -464,7 +455,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             stateToZero();
             repaint();
 
-            cl.show(this, "null");
+            //cl.show(this, "null");
 
             if ((m_oTicket != null) && (m_oTicket.getLinesCount() == 0)) {
                 resetSouthComponent();
@@ -818,7 +809,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             try {
                 Double value = m_App.getDeviceScale().readWeight();
                 if (value != null) {
-                    incProduct(value, prod);
+                    incProduct(prod,value);
                 }
             } catch (ScaleException ex) {
                 LOGGER.log(Level.WARNING, "Exception on: ", ex);
@@ -829,7 +820,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             }
         } else {
             if (!prod.isVprice()) {
-                incProduct(1.0, prod);
+                incProduct(prod,1.0);
             } else {
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(null,
@@ -838,7 +829,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         }
     }
 
-    private void incProduct(double dPor, ProductInfoExt prod) {
+    private void incProduct(ProductInfoExt prod, double dPor) {
 
         if (prod.isVprice()) {
             addTicketLine(prod, getPorValue(), getInputValue());
@@ -856,7 +847,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         if (m_iNumberStatusInput == NUMBERZERO && m_iNumberStatusPor == NUMBERZERO) {
             incProduct(prod);
         } else if (m_iNumberStatusInput == NUMBERVALID && m_iNumberStatusPor == NUMBERZERO) {
-            incProduct(getInputValue(), prod);
+            incProduct(prod,getInputValue());
         } else if (prod.isVprice()) {
             addTicketLine(prod, getPorValue(), getInputValue());
         } else {
@@ -1580,7 +1571,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                         m_ticketsbag.deleteTicket();
                         String autoLogoff = (m_App.getProperties().getProperty("till.autoLogoff"));
                         if (autoLogoff != null && autoLogoff.equals("true")) {
-                                if ("restaurant".equals(m_App.getProperties().getProperty("machine.ticketsbag"))
+                                if ("restaurant".equals(getTicketsbag())
                                         && ("true".equals(m_App.getProperties().getProperty("till.autoLogoffrestaurant")))) {
                                     deactivate();
                                     setActiveTicket(null, null);
@@ -1641,17 +1632,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
                             try {
                                 dlSales.saveTicket(ticket, m_App.getInventoryLocation());
-                                m_config.setProperty("lastticket.number", Integer.toString(ticket.getTicketId()));
-                                m_config.setProperty("lastticket.type", Integer.toString(ticket.getTicketType()));
-                                m_config.save();
-
                             } catch (BasicException ex) {
 
                                 LOGGER.log(Level.SEVERE, "Exception on: ", ex);
                                 MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE, AppLocal.getIntString("message.nosaveticket"), ex);
                                 msg.show(this);
-                            } catch (IOException ex) {
-                                LOGGER.log(Level.SEVERE, "Exception on: ", ex);
                             }
 
                             executeEvent(ticket, ticketext, "ticket.close",
@@ -1766,6 +1751,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     public void printTicket(String resource) {
+        LOGGER.info("JPanelTicket printTicket: "+resource);
 //        printTicket(resource, m_oTicket, m_oTicketExt);
 // this method is intended to be called only from JPanelButtons.
 
@@ -1978,10 +1964,12 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     public void checkStock() {
+        
         int i = m_ticketlines.getSelectedIndex();
+        
+        LOGGER.info("SelectedIndex return: "+i);
 
-        if (i < 0) {
-        } else {
+        if (i >= 0) {
             try {
                 TicketLineInfo line = m_oTicket.getLine(i);
                 String pId = line.getProductID();
@@ -2130,21 +2118,21 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         j_btnRemotePrt = new javax.swing.JButton();
         jBtnCustomer = new javax.swing.JButton();
         m_jPanelScripts = new javax.swing.JPanel();
-        m_jButtonsExt = new javax.swing.JPanel();
+        m_jPanelBagExt = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        m_jPanTicket = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
+        m_jPanelTicket = new javax.swing.JPanel();
+        jPanelLinesToolbar = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         m_jDelete = new javax.swing.JButton();
         m_jList = new javax.swing.JButton();
         m_jEditLine = new javax.swing.JButton();
         jEditAttributes = new javax.swing.JButton();
         jCheckStock = new javax.swing.JButton();
-        m_jPanelCentral = new javax.swing.JPanel();
+        m_jPanelLines = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 32767));
         m_jTicketId = new javax.swing.JLabel();
-        m_jPanTotals = new javax.swing.JPanel();
+        m_jPanelTotals = new javax.swing.JPanel();
         m_jLblTotalEuros3 = new javax.swing.JLabel();
         m_jLblTotalEuros2 = new javax.swing.JLabel();
         m_jLblTotalEuros1 = new javax.swing.JLabel();
@@ -2153,7 +2141,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         m_jTotalEuros = new javax.swing.JLabel();
         m_jContEntries = new javax.swing.JPanel();
         m_jPanEntries = new javax.swing.JPanel();
-        jPanel9 = new javax.swing.JPanel();
+        jPanelScanner = new javax.swing.JPanel();
         m_jPrice = new javax.swing.JLabel();
         m_jPor = new javax.swing.JLabel();
         m_jEnter = new javax.swing.JButton();
@@ -2293,25 +2281,25 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         m_jPanelScripts.setPreferredSize(new java.awt.Dimension(200, 60));
         m_jPanelScripts.setLayout(new java.awt.BorderLayout());
 
-        m_jButtonsExt.setPreferredSize(new java.awt.Dimension(20, 60));
+        m_jPanelBagExt.setPreferredSize(new java.awt.Dimension(20, 60));
 
         jPanel1.setMinimumSize(new java.awt.Dimension(235, 50));
         jPanel1.setPreferredSize(new java.awt.Dimension(10, 55));
-        m_jButtonsExt.add(jPanel1);
+        m_jPanelBagExt.add(jPanel1);
 
-        m_jPanelScripts.add(m_jButtonsExt, java.awt.BorderLayout.PAGE_START);
+        m_jPanelScripts.add(m_jPanelBagExt, java.awt.BorderLayout.PAGE_START);
 
         m_jOptions.add(m_jPanelScripts, java.awt.BorderLayout.CENTER);
         m_jPanelScripts.getAccessibleContext().setAccessibleDescription("");
 
         m_jPanContainer.add(m_jOptions, java.awt.BorderLayout.NORTH);
 
-        m_jPanTicket.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        m_jPanTicket.setLayout(new java.awt.BorderLayout());
+        m_jPanelTicket.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        m_jPanelTicket.setLayout(new java.awt.BorderLayout());
 
-        jPanel5.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jPanel5.setPreferredSize(new java.awt.Dimension(75, 270));
-        jPanel5.setLayout(new java.awt.BorderLayout());
+        jPanelLinesToolbar.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jPanelLinesToolbar.setPreferredSize(new java.awt.Dimension(75, 270));
+        jPanelLinesToolbar.setLayout(new java.awt.BorderLayout());
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
         jPanel2.setPreferredSize(new java.awt.Dimension(70, 250));
@@ -2407,46 +2395,48 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         });
         jPanel2.add(jCheckStock);
 
-        jPanel5.add(jPanel2, java.awt.BorderLayout.NORTH);
+        jPanelLinesToolbar.add(jPanel2, java.awt.BorderLayout.NORTH);
 
-        m_jPanTicket.add(jPanel5, java.awt.BorderLayout.LINE_START);
+        m_jPanelTicket.add(jPanelLinesToolbar, java.awt.BorderLayout.LINE_START);
 
-        m_jPanelCentral.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jPanelCentral.setPreferredSize(new java.awt.Dimension(450, 240));
-        m_jPanelCentral.setLayout(new java.awt.BorderLayout());
+        m_jPanelLines.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        m_jPanelLines.setPreferredSize(new java.awt.Dimension(450, 240));
+        m_jPanelLines.setLayout(new java.awt.BorderLayout());
 
         jPanel4.setLayout(new java.awt.BorderLayout());
         jPanel4.add(filler2, java.awt.BorderLayout.LINE_START);
 
         m_jTicketId.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         m_jTicketId.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        m_jTicketId.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        m_jTicketId.setText("ID");
+        m_jTicketId.setToolTipText("");
+        m_jTicketId.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         m_jTicketId.setOpaque(true);
         m_jTicketId.setPreferredSize(new java.awt.Dimension(300, 40));
         m_jTicketId.setRequestFocusEnabled(false);
         m_jTicketId.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
         jPanel4.add(m_jTicketId, java.awt.BorderLayout.CENTER);
 
-        m_jPanTotals.setPreferredSize(new java.awt.Dimension(375, 60));
-        m_jPanTotals.setLayout(new java.awt.GridLayout(2, 3, 4, 0));
+        m_jPanelTotals.setPreferredSize(new java.awt.Dimension(375, 60));
+        m_jPanelTotals.setLayout(new java.awt.GridLayout(2, 3, 4, 0));
 
         m_jLblTotalEuros3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         m_jLblTotalEuros3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_jLblTotalEuros3.setLabelFor(m_jSubtotalEuros);
         m_jLblTotalEuros3.setText(AppLocal.getIntString("label.subtotalcash")); // NOI18N
-        m_jPanTotals.add(m_jLblTotalEuros3);
+        m_jPanelTotals.add(m_jLblTotalEuros3);
 
         m_jLblTotalEuros2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         m_jLblTotalEuros2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_jLblTotalEuros2.setLabelFor(m_jSubtotalEuros);
         m_jLblTotalEuros2.setText(AppLocal.getIntString("label.taxcash")); // NOI18N
-        m_jPanTotals.add(m_jLblTotalEuros2);
+        m_jPanelTotals.add(m_jLblTotalEuros2);
 
         m_jLblTotalEuros1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         m_jLblTotalEuros1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_jLblTotalEuros1.setLabelFor(m_jTotalEuros);
         m_jLblTotalEuros1.setText(AppLocal.getIntString("label.totalcash")); // NOI18N
-        m_jPanTotals.add(m_jLblTotalEuros1);
+        m_jPanelTotals.add(m_jLblTotalEuros1);
 
         m_jSubtotalEuros.setBackground(m_jEditLine.getBackground());
         m_jSubtotalEuros.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
@@ -2459,7 +2449,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         m_jSubtotalEuros.setMinimumSize(new java.awt.Dimension(80, 25));
         m_jSubtotalEuros.setPreferredSize(new java.awt.Dimension(80, 25));
         m_jSubtotalEuros.setRequestFocusEnabled(false);
-        m_jPanTotals.add(m_jSubtotalEuros);
+        m_jPanelTotals.add(m_jSubtotalEuros);
 
         m_jTaxesEuros.setBackground(m_jEditLine.getBackground());
         m_jTaxesEuros.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
@@ -2472,7 +2462,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         m_jTaxesEuros.setMinimumSize(new java.awt.Dimension(80, 25));
         m_jTaxesEuros.setPreferredSize(new java.awt.Dimension(80, 25));
         m_jTaxesEuros.setRequestFocusEnabled(false);
-        m_jPanTotals.add(m_jTaxesEuros);
+        m_jPanelTotals.add(m_jTaxesEuros);
 
         m_jTotalEuros.setBackground(m_jEditLine.getBackground());
         m_jTotalEuros.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
@@ -2485,15 +2475,15 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         m_jTotalEuros.setMinimumSize(new java.awt.Dimension(80, 25));
         m_jTotalEuros.setPreferredSize(new java.awt.Dimension(100, 25));
         m_jTotalEuros.setRequestFocusEnabled(false);
-        m_jPanTotals.add(m_jTotalEuros);
+        m_jPanelTotals.add(m_jTotalEuros);
 
-        jPanel4.add(m_jPanTotals, java.awt.BorderLayout.LINE_END);
+        jPanel4.add(m_jPanelTotals, java.awt.BorderLayout.LINE_END);
 
-        m_jPanelCentral.add(jPanel4, java.awt.BorderLayout.SOUTH);
+        m_jPanelLines.add(jPanel4, java.awt.BorderLayout.SOUTH);
 
-        m_jPanTicket.add(m_jPanelCentral, java.awt.BorderLayout.CENTER);
+        m_jPanelTicket.add(m_jPanelLines, java.awt.BorderLayout.CENTER);
 
-        m_jPanContainer.add(m_jPanTicket, java.awt.BorderLayout.CENTER);
+        m_jPanContainer.add(m_jPanelTicket, java.awt.BorderLayout.CENTER);
 
         m_jContEntries.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         m_jContEntries.setMinimumSize(new java.awt.Dimension(300, 350));
@@ -2502,7 +2492,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         m_jPanEntries.setPreferredSize(new java.awt.Dimension(300, 350));
         m_jPanEntries.setLayout(new javax.swing.BoxLayout(m_jPanEntries, javax.swing.BoxLayout.Y_AXIS));
 
-        jPanel9.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        jPanelScanner.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         m_jPrice.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
         m_jPrice.setForeground(new java.awt.Color(76, 197, 237));
@@ -2528,11 +2518,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             }
         });
 
-        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel9Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanelScannerLayout = new javax.swing.GroupLayout(jPanelScanner);
+        jPanelScanner.setLayout(jPanelScannerLayout);
+        jPanelScannerLayout.setHorizontalGroup(
+            jPanelScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelScannerLayout.createSequentialGroup()
                 .addComponent(m_jPor)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(m_jPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
@@ -2540,20 +2530,17 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 .addComponent(m_jEnter, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel9Layout.createSequentialGroup()
-                .addComponent(m_jEnter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 36, Short.MAX_VALUE))
-            .addGroup(jPanel9Layout.createSequentialGroup()
-                .addComponent(m_jPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                .addComponent(m_jPor)
-                .addGap(0, 0, Short.MAX_VALUE))
+        jPanelScannerLayout.setVerticalGroup(
+            jPanelScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelScannerLayout.createSequentialGroup()
+                .addGroup(jPanelScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(m_jEnter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(m_jPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(m_jPor))
+                .addContainerGap())
         );
 
-        m_jPanEntries.add(jPanel9);
+        m_jPanEntries.add(jPanelScanner);
 
         m_jNumberKeys.setMinimumSize(new java.awt.Dimension(300, 300));
         m_jNumberKeys.setPreferredSize(new java.awt.Dimension(250, 250));
@@ -2639,8 +2626,13 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             listener.stop();
         }
         int i = m_ticketlines.getSelectedIndex();
+        // no line selected (-1)
         if (i < 0) {
-            Toolkit.getDefaultToolkit().beep(); // no line selected
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane.showMessageDialog(this,
+                        AppLocal.getIntString("message.cannotfindattributes"),
+                        AppLocal.getIntString("message.productnotselected"),
+                        JOptionPane.INFORMATION_MESSAGE);
         } else {
             try {
                 TicketLineInfo line = m_oTicket.getLine(i);
@@ -2653,7 +2645,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     paintTicketLine(i, line);
                 }
             } catch (BasicException ex) {
-                LOGGER.log(Level.WARNING, "Exception on: ", ex);
+                LOGGER.log(Level.WARNING, "Exception while Open Product Atribute Editor: ", ex);
                 JOptionPane.showMessageDialog(this,
                         AppLocal.getIntString("message.cannotfindattributes"),
                         AppLocal.getIntString("message.title"),
@@ -2688,26 +2680,28 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }//GEN-LAST:event_j_btnRemotePrtActionPerformed
 
     private void btnReprint1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReprint1ActionPerformed
+        
+        //TODO GET LAST FROM DB (USER ID)
+        /*
         if (m_config.getProperty("lastticket.number") != null) {
             try {
-                TicketInfo ticket = dlSales.loadTicket(
+                TicketInfo ticketInfo = dlSales.loadTicket(
                         Integer.parseInt((m_config.getProperty("lastticket.type"))),
                         Integer.parseInt((m_config.getProperty("lastticket.number"))));
-                if (ticket == null) {
+                if (ticketInfo == null) {
                     JFrame frame = new JFrame();
                     JOptionPane.showMessageDialog(frame,
                             AppLocal.getIntString("message.notexiststicket"),
                             AppLocal.getIntString("message.notexiststickettitle"),
                             JOptionPane.WARNING_MESSAGE);
                 } else {
-                    m_ticket = ticket;
                     try {
-                        taxeslogic.calculateTaxes(m_ticket);
+                        taxeslogic.calculateTaxes(ticketInfo);
                         //TicketTaxInfo[] taxlist = m_ticket.getTaxLines();
                     } catch (TaxesException ex) {
                         LOGGER.log(Level.WARNING, "Exception on: ", ex);
                     }
-                    printTicket("Printer.ReprintTicket", m_ticket, null);
+                    printTicket("Printer.ReprintTicket", ticketInfo, null);
                     Notify("'Printed'");
                 }
             } catch (BasicException ex) {
@@ -2716,6 +2710,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 msg.show(this);
             }
         }
+        */
     }//GEN-LAST:event_btnReprint1ActionPerformed
 
     private void btnSplitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSplitActionPerformed
@@ -2874,10 +2869,10 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private void jTBtnShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTBtnShowActionPerformed
         if (jTBtnShow.isSelected()) {
             m_jPanelScripts.setVisible(true);
-            m_jButtonsExt.setVisible(true);
+            m_jPanelBagExt.setVisible(true);
         } else {
             m_jPanelScripts.setVisible(false);
-            m_jButtonsExt.setVisible(false);
+            m_jPanelBagExt.setVisible(false);
         }
         refreshTicket();
     }//GEN-LAST:event_jTBtnShowActionPerformed
@@ -2902,11 +2897,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             dialog.setVisible(true);
 
             CustomerInfoExt m_customerInfo = dialog.getSelectedCustomer();
-            if (dialog.getSelectedCustomer() != null) {
+            if (m_customerInfo != null) {
                 try {
-                    m_oTicket.setCustomer(dlSales.loadCustomerExt(dialog.getSelectedCustomer().getId()));
-                } catch (BasicException ex) {
-                    LOGGER.log(Level.WARNING, "Exception on: ", ex);
+                    m_oTicket.setCustomer(m_customerInfo);
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Exception on Select Customer: ", ex);
                 }
             }
         }
@@ -2923,7 +2918,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 if (finder.getSelectedCustomer() != null) {
                     try {
                         m_oTicket.setCustomer(dlSales.loadCustomerExt(finder.getSelectedCustomer().getId()));
-                        if ("restaurant".equals(m_App.getProperties().getProperty("machine.ticketsbag"))) {
+                        if ("restaurant".equals(getTicketsbag())) {
                             restDB.setCustomerNameInTableByTicketId(dlSales.loadCustomerExt(finder.getSelectedCustomer().getId()).toString(), m_oTicket.getId());
                         }
 
@@ -2957,7 +2952,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     if (finder.getSelectedCustomer() != null) {
                         try {
                             m_oTicket.setCustomer(dlSales.loadCustomerExt(finder.getSelectedCustomer().getId()));
-                            if ("restaurant".equals(m_App.getProperties().getProperty("machine.ticketsbag"))) {
+                            if ("restaurant".equals(getTicketsbag())) {
                                 restDB.setCustomerNameInTableByTicketId(dlSales.loadCustomerExt(finder.getSelectedCustomer().getId()).toString(), m_oTicket.getId());
                             }
 
@@ -2999,12 +2994,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel9;
+    private javax.swing.JPanel jPanelLinesToolbar;
+    private javax.swing.JPanel jPanelScanner;
     private javax.swing.JToggleButton jTBtnShow;
     private javax.swing.JButton j_btnRemotePrt;
     private javax.swing.JPanel m_jButtons;
-    private javax.swing.JPanel m_jButtonsExt;
     private javax.swing.JPanel m_jContEntries;
     private javax.swing.JButton m_jDelete;
     private javax.swing.JButton m_jEditLine;
@@ -3017,11 +3011,12 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private javax.swing.JPanel m_jOptions;
     private javax.swing.JPanel m_jPanContainer;
     private javax.swing.JPanel m_jPanEntries;
-    private javax.swing.JPanel m_jPanTicket;
-    private javax.swing.JPanel m_jPanTotals;
     private javax.swing.JPanel m_jPanelBag;
-    private javax.swing.JPanel m_jPanelCentral;
+    private javax.swing.JPanel m_jPanelBagExt;
+    private javax.swing.JPanel m_jPanelLines;
     private javax.swing.JPanel m_jPanelScripts;
+    private javax.swing.JPanel m_jPanelTicket;
+    private javax.swing.JPanel m_jPanelTotals;
     private javax.swing.JLabel m_jPor;
     private javax.swing.JLabel m_jPrice;
     private javax.swing.JLabel m_jSubtotalEuros;
@@ -3048,8 +3043,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     public String remoteOrderId() {
-
-        String id = "";
 
         if ((m_oTicket.getCustomer() != null)) {
             return m_oTicket.getCustomer().getName();

@@ -192,7 +192,6 @@ public class JRootApp extends JPanel implements AppView {
             MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE,
                     AppLocal.getIntString("message.cannotclosecash"), e);
             msg.show(this);
-            session.close();
             return true;
         }
         return false;
@@ -384,15 +383,15 @@ public class JRootApp extends JPanel implements AppView {
     
     //Release hardware,files,...
     private void releaseResources() {
-
+        if(m_DeviceTicket != null){
+            m_DeviceTicket.getDeviceDisplay().clearVisor();
+        }
     }
 
     public void tryToClose() {
 
         if (closeAppView()) {
             releaseResources();
-        
-            m_DeviceTicket.getDeviceDisplay().clearVisor();
             session.close();
             SwingUtilities.getWindowAncestor(this).dispose();
         }
@@ -429,11 +428,10 @@ public class JRootApp extends JPanel implements AppView {
             m_jPanelContainer.add(mAuthPanel, "login");
         }
         showView("login");
-        printerStart();
     }
 
     private void setStatusBarPanel() {
-        String sWareHouse = "";
+        String sWareHouse;
 
         try {
             sWareHouse = m_dlSystem.findLocationName(m_sInventoryLocation);
@@ -441,7 +439,7 @@ public class JRootApp extends JPanel implements AppView {
             sWareHouse = "";
         }
 
-        String url = "";
+        String url;
         try {
             url = session.getURL();
         } catch (SQLException e) {

@@ -37,7 +37,7 @@ import javax.swing.JButton;
 public class ProductsPanel extends JPanelTable2 implements EditorListener {
 
     private ProductsEditor jeditor;
-    private ProductFilter jproductfilter;         
+    private ProductFilter jproductfilter = null;        
     
     private DataLogicSales m_dlSales = null;
     
@@ -51,12 +51,13 @@ public class ProductsPanel extends JPanelTable2 implements EditorListener {
     protected void init() {   
         m_dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
         
-        jproductfilter = new ProductFilter();     
-        jproductfilter.init(app);
+        //jproductfilter = new ProductFilter();     
+        //jproductfilter.init(app);
 
         row = m_dlSales.getProductsRow();
 
-        lpr =  new ListProviderCreator(m_dlSales.getProductCatQBF(), jproductfilter);
+        //lpr =  new ListProviderCreator(m_dlSales.getProductCatQBF(), jproductfilter);
+        lpr =  new ListProviderCreator(m_dlSales.getProductCatQBF());
 
         spr = new SaveProvider(
             m_dlSales.getProductCatUpdate(),

@@ -26,6 +26,16 @@ import com.openbravo.data.loader.Session;
 import com.openbravo.data.loader.StaticSentence;
 import com.openbravo.pos.forms.BeanFactoryDataSingle;
 import com.openbravo.pos.ticket.TicketInfo;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.sql.Blob;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -62,22 +72,25 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
      * @return
      * @throws BasicException
      */
-    public final TicketInfo getSharedTicket(String Id) throws BasicException {
+    public final TicketInfo getSharedTicket(String id) throws BasicException {
         TicketInfo ticketInfo = null;
 
         try {
-            if (Id != null) {
+            if (id != null) {
                 Object[] record = (Object[]) new StaticSentence(s,
                         "SELECT CONTENT FROM sharedtickets WHERE ID = ?",
                         SerializerWriteString.INSTANCE,
-                        new SerializerReadBasic(new Datas[]{Datas.SERIALIZABLE})).find(Id);
+                        new SerializerReadBasic(new Datas[]{Datas.SERIALIZABLE})).find(id);
 
                 if (record != null && record[0] != null) {
                     ticketInfo = (TicketInfo) record[0];
                 }
+            }else {
+                LOGGER.log(Level.SEVERE, "Fail getSharedTicket id is null");
             }
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Exception getSharedTicket: " + Id, ex);
+            LOGGER.log(Level.SEVERE, "Exception getSharedTicket: " + id, ex);
+            throw new BasicException("Exception getSharedTicket id: "+ id, ex);
         }
 
         return ticketInfo;
@@ -94,12 +107,28 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
 
         List<SharedTicketInfo> lis = new ArrayList<>();
         try {
-            lis = (List<SharedTicketInfo>) new StaticSentence(s,
-                    "SELECT ID, NAME, APPUSER, LOCKED, PICKUPID, CONTENT FROM sharedtickets ORDER BY ID",
-                    null,
-                    new SerializerReadClass(SharedTicketInfo.class)).list();
-        } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception getSharedTicketList: ", ex);
+
+            String SQL = "SELECT ID, NAME, APPUSER, LOCKED, PICKUPID, CONTENT FROM sharedtickets ORDER BY ID";
+
+            try ( Statement pstmt = s.getConnection().createStatement(); ResultSet rs = pstmt.executeQuery(SQL)) {
+                while (rs.next()) {
+                    SharedTicketInfo sTicketInfo = new SharedTicketInfo();
+
+                    sTicketInfo.setId(rs.getString(1));
+                    sTicketInfo.setName(rs.getString(2));
+                    sTicketInfo.setUserName(rs.getString(3));
+                    sTicketInfo.setStatus(rs.getString(4));
+                    sTicketInfo.setPickupId(rs.getInt(5));
+
+                    Blob blob = rs.getBlob(6);
+                    ObjectInputStream bis = new ObjectInputStream(blob.getBinaryStream());
+                    TicketInfo tInfo = (TicketInfo) bis.readObject();
+                    sTicketInfo.setTicketInfo(tInfo);
+                }
+            }
+        } catch (SQLException | IOException | ClassNotFoundException ex) {
+            LOGGER.log(Level.WARNING, "Exception getSharedTicketList ", ex);
+            throw new BasicException("Exception getSharedTicketList",ex);
         }
 
         return lis;
@@ -116,44 +145,37 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
                     new SerializerReadClass<>(SharedTicketInfo.class))
                     .list();
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception getUserSharedTicketList user: ", appuser);
+            LOGGER.log(Level.WARNING, "Exception getUserSharedTicketList user: "+ appuser,ex);
+            throw new BasicException("Exception getUserSharedTicketList user: "+ appuser,ex);
         }
 
         return list;
     }
 
     public final void insertSharedTicket(final String id, final TicketInfo ticket, int pickupid) throws BasicException {
+        int rowsAffected = 0;
+        String SQL = "INSERT INTO sharedtickets (ID, NAME, CONTENT, APPUSER, PICKUPID) VALUES (?, ?, ?, ?, ?) ";
+            
+        try(PreparedStatement pstmt = s.getConnection().prepareStatement(SQL)) {
 
-        try {
-            Object[] values = new Object[]{
-                id,
-                ticket.getName(),
-                ticket,
-                ticket.getUser().getId(),
-                pickupid
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream bos = new ObjectOutputStream(baos);
+            bos.writeObject(ticket);
 
-            };
-            Datas[] datas;
-            datas = new Datas[]{
-                Datas.STRING,
-                Datas.STRING,
-                Datas.SERIALIZABLE,
-                Datas.STRING,
-                Datas.INT
+            byte[] saves = baos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(saves);
 
-            };
-            new PreparedSentence(s,
-                    "INSERT INTO sharedtickets ("
-                    + "ID, "
-                    + "NAME, "
-                    + "CONTENT, "
-                    + "APPUSER, "
-                    + "PICKUPID) "
-                    + "VALUES (?, ?, ?, ?, ?)",
-                    new SerializerWriteBasicExt(datas, new int[]{0, 1, 2, 3, 4})).exec(values);
-
-        } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception insertSharedTicket id: ", id);
+            
+            pstmt.setString(1, id);
+            pstmt.setString(2, ticket.getName());
+            pstmt.setBlob(3, bais, saves.length);
+            pstmt.setString(4, ticket.getUser().getId());
+            pstmt.setInt(5, pickupid);
+            rowsAffected = pstmt.executeUpdate();
+            s.getConnection().commit();
+        } catch (SQLException | IOException ex) {
+            LOGGER.log(Level.WARNING, "Exception Insert SharedTicket id: "+id, ex);
+            throw new BasicException("Exception Insert SharedTicket id: "+id, ex);
         }
     }
 
@@ -166,33 +188,27 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
      */
     public final void updateSharedTicket(final String id, final TicketInfo ticket, int pickupid) throws BasicException {
 
-        try {
-            Object[] values = new Object[]{
-                id,
-                ticket.getName(),
-                ticket,
-                ticket.getUser().getId(),
-                pickupid
-            };
-            Datas[] datas = new Datas[]{
-                Datas.STRING,
-                Datas.STRING,
-                Datas.SERIALIZABLE,
-                Datas.STRING,
-                Datas.INT
-            };
-            new PreparedSentence(s,
-                    "UPDATE sharedtickets SET "
-                    + "NAME = ?, "
-                    + "CONTENT = ?, "
-                    + "APPUSER = ?, "
-                    + "PICKUPID = ? "
-                    + "WHERE ID = ?",
-                    new SerializerWriteBasicExt(datas, new int[]{1, 2, 3, 4, 0})).exec(values);
-//                , new SerializerWriteBasicExt(datas, new int[] {1, 2, 3, 0})).exec(values);   
+        String SQL = "UPDATE sharedtickets SET NAME = ?, CONTENT = ?, APPUSER = ?, PICKUPID = ? WHERE ID = ?";
+        try(PreparedStatement pstmt = s.getConnection().prepareStatement(SQL)) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream bos = new ObjectOutputStream(baos);
+            bos.writeObject(ticket);
 
-        } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception updateSharedTicket id: ", id);
+            byte[] saves = baos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(saves);
+
+            
+
+            pstmt.setString(1, ticket.getName());
+            pstmt.setBlob(2, bais, saves.length);
+            pstmt.setString(3, ticket.getUser().getId());
+            pstmt.setInt(4, pickupid);
+            pstmt.setString(5, id);
+            pstmt.executeUpdate();
+            s.getConnection().commit();
+        } catch (SQLException | IOException ex) {
+            LOGGER.log(Level.WARNING, "Exception UPDATE SharedTicket id: "+id,ex);
+            throw new BasicException("Exception UPDATE SharedTicket id: "+id, ex);
         }
     }
 
@@ -205,33 +221,7 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
      */
     public final void updateRSharedTicket(final String id, final TicketInfo ticket, int pickupid) throws BasicException {
 
-        try {
-            Object[] values = new Object[]{
-                id,
-                ticket.getName(),
-                ticket,
-                //            ticket.getUser().getId(),
-                pickupid
-            };
-            Datas[] datas = new Datas[]{
-                Datas.STRING,
-                Datas.STRING,
-                Datas.SERIALIZABLE,
-                //            Datas.STRING,
-                Datas.INT
-            };
-            new PreparedSentence(s,
-                    "UPDATE sharedtickets SET "
-                    + "NAME = ?, "
-                    + "CONTENT = ?, "
-                    //                + "APPUSER = ?, "                        
-                    + "PICKUPID = ? "
-                    + "WHERE ID = ?" //                , new SerializerWriteBasicExt(datas, new int[] {1, 2, 3, 4, 0})).exec(values);
-                    ,
-                     new SerializerWriteBasicExt(datas, new int[]{1, 2, 3, 0})).exec(values);
-        } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception updateRSharedTicket id: ", id);
-        }
+        updateSharedTicket(id,  ticket,  pickupid);
     }
 
     /**
@@ -259,7 +249,8 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
                     + "WHERE ID = ?",
                     new SerializerWriteBasicExt(datas, new int[]{1, 0})).exec(values);
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception lockSharedTicket id: ", id);
+            LOGGER.log(Level.WARNING, "Exception lockSharedTicket id: "+id, ex);
+            throw new BasicException("Exception lockSharedTicket id: "+id, ex);
         }
     }
 
@@ -288,7 +279,8 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
                     + "WHERE ID = ?",
                     new SerializerWriteBasicExt(datas, new int[]{1, 0})).exec(values);
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception unlockSharedTicket id: ", id);
+            LOGGER.log(Level.WARNING, "Exception unlockSharedTicket id: "+ id, ex);
+            throw new BasicException("Exception unlockSharedTicket id: "+ id, ex);
         }
     }
 
@@ -302,37 +294,7 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
      */
     public final void insertRSharedTicket(final String id, final TicketInfo ticket, int pickupid) throws BasicException {
 
-        try {
-            Object[] values = new Object[]{
-                id,
-                ticket.getName(),
-                ticket,
-                ticket.getUser(),
-                ticket.getPickupId(),
-                ticket.getHost(),};
-            Datas[] datas;
-            datas = new Datas[]{
-                Datas.STRING,
-                Datas.STRING,
-                Datas.SERIALIZABLE,
-                Datas.STRING,
-                Datas.INT
-
-            };
-            new PreparedSentence(s,
-                    "INSERT INTO sharedtickets ("
-                    + "ID, "
-                    + "NAME, "
-                    + "CONTENT, "
-                    + "APPUSER, "
-                    + "PICKUPID) "
-                    + "VALUES (?, ?, ?, ?, ?)" //                + "VALUES (?, ?, ?, ?)"                                
-                    ,
-                     new SerializerWriteBasicExt(datas, new int[]{0, 1, 2, 3, 4})).exec(values);
-//                , new SerializerWriteBasicExt(datas, new int[] {0, 1, 2, 3})).exec(values); 
-        } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception insertRSharedTicket id: ", id);
-        }
+        insertSharedTicket(id,  ticket,  pickupid);
     }
 
     /**
@@ -343,11 +305,12 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
     public final void deleteSharedTicket(final String id) throws BasicException {
 
         try {
-        new StaticSentence(s,
-                "DELETE FROM sharedtickets WHERE ID = ?",
-                SerializerWriteString.INSTANCE).exec(id);
+            new StaticSentence(s,
+                    "DELETE FROM sharedtickets WHERE ID = ?",
+                    SerializerWriteString.INSTANCE).exec(id);
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception deleteSharedTicket id: ", id);
+            LOGGER.log(Level.WARNING, "Exception Delete SharedTicket id: "+ id,ex);
+            throw new BasicException("Exception Delete SharedTicket id: "+ id, ex);
         }
     }
 
@@ -361,19 +324,20 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
         Integer pickupId = 0;
 
         try {
-        if (id != null) {
+            if (id != null) {
 
-            Object[] record = (Object[]) new StaticSentence(s,
-                    "SELECT PICKUPID FROM sharedtickets WHERE ID = ?",
-                    SerializerWriteString.INSTANCE,
-                    new SerializerReadBasic(new Datas[]{Datas.INT})).find(id);
+                Object[] record = (Object[]) new StaticSentence(s,
+                        "SELECT PICKUPID FROM sharedtickets WHERE ID = ?",
+                        SerializerWriteString.INSTANCE,
+                        new SerializerReadBasic(new Datas[]{Datas.INT})).find(id);
 
-            if (record != null && record[0] != null) {
-                pickupId = (Integer) record[0];
+                if (record != null && record[0] != null) {
+                    pickupId = (Integer) record[0];
+                }
             }
-        }
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception getPickupId id: ", id);
+            LOGGER.log(Level.WARNING, "Exception getPickupId id: "+ id,ex);
+            throw new BasicException("Exception getPickupId id: "+ id, ex);
         }
 
         return pickupId;
@@ -383,17 +347,18 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
         String userId = null;
 
         try {
-        if (id != null) {
-            Object[] record = (Object[]) new StaticSentence(s,
-                    "SELECT APPUSER FROM sharedtickets WHERE ID = ?",
-                    SerializerWriteString.INSTANCE,
-                    new SerializerReadBasic(new Datas[]{Datas.STRING})).find(id);
-            if (record != null && record[0] != null) {
-                userId = (String) record[0];
+            if (id != null) {
+                Object[] record = (Object[]) new StaticSentence(s,
+                        "SELECT APPUSER FROM sharedtickets WHERE ID = ?",
+                        SerializerWriteString.INSTANCE,
+                        new SerializerReadBasic(new Datas[]{Datas.STRING})).find(id);
+                if (record != null && record[0] != null) {
+                    userId = (String) record[0];
+                }
             }
-        }
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception getUserId id: ", id);
+            LOGGER.log(Level.WARNING, "Exception getUserId id: "+ id,ex);
+            throw new BasicException("Exception getUserId id: "+ id, ex);
         }
 
         return userId;
@@ -403,18 +368,19 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
         String state = null;
 
         try {
-        if (id != null) {
-            Object[] record = (Object[]) new StaticSentence(s,
-                    "SELECT LOCKED FROM sharedtickets WHERE ID = ?",
-                    SerializerWriteString.INSTANCE,
-                    new SerializerReadBasic(new Datas[]{Datas.STRING})).find(id);
+            if (id != null) {
+                Object[] record = (Object[]) new StaticSentence(s,
+                        "SELECT LOCKED FROM sharedtickets WHERE ID = ?",
+                        SerializerWriteString.INSTANCE,
+                        new SerializerReadBasic(new Datas[]{Datas.STRING})).find(id);
 
-            if (record != null && record[0] != null) {
-                state = (String) record[0];
+                if (record != null && record[0] != null) {
+                    state = (String) record[0];
+                }
             }
-        }
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception getLockState id: ", id);
+            LOGGER.log(Level.WARNING, "Exception getLockState id: "+ id,ex);
+            throw new BasicException("Exception getLockState id: "+ id, ex);
         }
         return state;
     }

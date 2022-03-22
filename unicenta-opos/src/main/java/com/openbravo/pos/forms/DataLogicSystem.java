@@ -40,7 +40,6 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
     private final static Logger LOGGER = Logger.getLogger(ImageUtils.class.getName());
 
     private Session session;
-    private String m_sInitScript;
     private String m_dbVersion;
     private final Map<String, byte[]> resourcescache;
 
@@ -52,7 +51,6 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
     @Override
     public void init(Session session) {
         this.session = session;
-        this.m_sInitScript = "/com/openbravo/pos/scripts/" + this.session.DB.getName();
         this.m_dbVersion = this.session.DB.getName();
         resetResourcesCache();
 
@@ -81,10 +79,6 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
 //// </editor-fold> 
     }
 
-    public String getInitScript() {
-        return m_sInitScript;
-    }
-
     public String getDBVersion() {
         return m_dbVersion;
     }
@@ -111,12 +105,11 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      *
      * @return @throws BasicException
      */
-    public final List listPeopleVisible() throws BasicException {
+    public final List<AppUser> listPeopleVisible() throws BasicException {
         final SentenceList m_peoplevisible = new StaticSentence(this.session,
                 "SELECT ID, NAME, APPPASSWORD, CARD, ROLE "
                 + "FROM people "
                 + "WHERE VISIBLE = " + this.session.DB.TRUE() + " ORDER BY NAME",
-                null,
                 new AppuserReader());
 
         return m_peoplevisible.list();
@@ -768,6 +761,10 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
             String ordertime, Integer displayId, String auxiliary, String completetime
     ) throws BasicException {
 
+        if(ordertime == null){
+           ordertime = Long.toString(new Date().getTime()) ;
+        }
+        
         final SentenceExec m_addOrder = new StaticSentence(this.session,
                 "INSERT INTO orders (ORDERID, QTY, DETAILS, ATTRIBUTES, "
                 + "NOTES, TICKETID, ORDERTIME, DISPLAYID, AUXILIARY, "

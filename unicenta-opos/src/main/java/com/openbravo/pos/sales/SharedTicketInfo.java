@@ -81,4 +81,30 @@ public class SharedTicketInfo implements SerializableRead, SerializableWrite {
     public TicketInfo getTicketInfo() {
         return ticketInfo;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUserName(String UserName) {
+        this.UserName = UserName;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setPickupId(Integer pickupId) {
+        this.pickupId = pickupId;
+    }
+
+    public void setTicketInfo(TicketInfo ticketInfo) {
+        this.ticketInfo = ticketInfo;
+    }
+    
+    
 }

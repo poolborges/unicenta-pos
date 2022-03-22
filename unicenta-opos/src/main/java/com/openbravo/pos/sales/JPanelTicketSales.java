@@ -53,7 +53,7 @@ public class JPanelTicketSales extends JPanelTicket {
     @Override
     protected Component getSouthComponent() {
         // Este metodo esta sendo chamado antes do init()
-        LOGGER.info("getSouthComponent");
+        LOGGER.info("JPanelTicketSales :: getSouthComponent");
         m_cat = new JCatalog(dlSales);
         m_cat.addActionListener(new CatalogListener());
         return m_cat.getComponent();
@@ -71,9 +71,9 @@ public class JPanelTicketSales extends JPanelTicket {
 
     @Override
     public void activate() throws BasicException {
-        reLoadCatalog();
-        LOGGER.info("activate");
         super.activate();
+        reLoadCatalog();
+        LOGGER.info("JPanelTicketSales activate");
     }
 
     public void reLoadCatalog() {

@@ -608,4 +608,201 @@
         </insert>
     </changeSet>
     
+    <changeSet author="pauloborges (manual)" id="20210131-1700">
+        
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) FROM categories
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="categories">
+            <column name="id" value="000"/>
+            <column name="name" value="Category Standard"/>
+        </insert>
+    </changeSet>
+    
+    <changeSet author="pauloborges (manual)" id="20210131-1800">
+        
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) FROM taxcategories
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="taxcategories">
+            <column name="id" value="000"/>
+            <column name="name" value="Tax Exempt"/>
+        </insert>
+        <insert tableName="taxcategories">
+            <column name="id" value="001"/>
+            <column name="name" value="Tax Standard"/>
+        </insert>
+        <insert tableName="taxcategories">
+            <column name="id" value="002"/>
+            <column name="name" value="Tax Other"/>
+        </insert>
+    </changeSet>
+    
+    <changeSet author="pauloborges (manual)" id="20210131-1900">
+        
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) FROM taxes
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="taxes">
+            <column name="id" value="000"/>
+            <column name="name" value="Tax Exempt"/>
+            <column name="category" value="000"/>
+            <column name="custcategory" value="NULL"/>
+            <column name="parentid" value="NULL"/>
+            <column name="rate" value="0"/>
+            <column name="ratecascade" valueBoolean="FALSE"/>
+            <column name="rateorder" value="NULL"/>
+        </insert>
+        <insert tableName="taxes">
+            <column name="id" value="001"/>
+            <column name="name" value="Tax Standard"/>
+            <column name="category" value="001"/>
+            <column name="custcategory" value="NULL"/>
+            <column name="parentid" value="NULL"/>
+            <column name="rate" value="0.15"/>
+            <column name="ratecascade" valueBoolean="FALSE"/>
+            <column name="rateorder" value="NULL"/>
+        </insert>
+        <insert tableName="taxes">
+            <column name="id" value="002"/>
+            <column name="name" value="Tax Other"/>
+            <column name="category" value="002"/>
+            <column name="custcategory" value="NULL"/>
+            <column name="parentid" value="NULL"/>
+            <column name="rate" value="0"/>
+            <column name="ratecascade" valueBoolean="FALSE"/>
+            <column name="rateorder" value="NULL"/>
+        </insert>
+    </changeSet>
+    
+    <changeSet author="pauloborges (manual)" id="20210131-2000">
+        
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) FROM products
+            </sqlCheck>
+        </preConditions> 
+        
+        <insert tableName="products">
+            <column name="id" value="xxx999_999xxx_x9x9x9"/>
+            <column name="reference" value="xxx999"/>
+            <column name="code" value="xxx999"/>
+            <column name="name" value="Free Line entry"/>
+            <column name="category" value="000"/>
+            <column name="taxcat" value="001"/>
+            <column name="isservice" valueBoolean="TRUE"/>
+            <column name="display" value="Free Line entry"/>
+            <column name="printto" value="1"/>
+        </insert>
+        <insert tableName="products">
+            <column name="id" value="xxx998_998xxx_x8x8x8"/>
+            <column name="reference" value="xxx998"/>
+            <column name="code" value="xxx998"/>
+            <column name="name" value="Service Charge"/>
+            <column name="category" value="000"/>
+            <column name="taxcat" value="001"/>
+            <column name="isservice" valueBoolean="TRUE"/>
+            <column name="display" value="Service Charge"/>
+            <column name="printto" value="1"/>
+        </insert>
+    </changeSet>
+    
+    <changeSet author="pauloborges (manual)" id="20210131-2100">
+        
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) FROM products_cat
+            </sqlCheck>
+        </preConditions> 
+        
+        <insert tableName="products_cat">
+            <column name="product" value="xxx999_999xxx_x9x9x9"/>
+        </insert>
+        <insert tableName="products_cat">
+            <column name="product" value="xxx998_998xxx_x8x8x8"/>
+        </insert>
+    </changeSet>
+    
+    <changeSet author="pauloborges (manual)" id="20210131-2200">
+        
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) FROM locations
+            </sqlCheck>
+        </preConditions> 
+        
+        <insert tableName="locations">
+            <column name="id" value="0"/>
+            <column name="name" value="Location 1"/>
+            <column name="address" value="Location 1"/>
+        </insert>
+    </changeSet>
+    
+    <changeSet author="pauloborges (manual)" id="20210131-2300">
+        
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) FROM suppliers
+            </sqlCheck>
+        </preConditions> 
+        
+        <insert tableName="suppliers">
+            <column name="id" value="0"/>
+            <column name="name" value="Anonimo"/>
+            <column name="searchkey" value="Anonimo"/>
+        </insert>
+    </changeSet>
+    
+    <changeSet author="pauloborges (manual)" id="20210131-2400">
+        
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) FROM uom
+            </sqlCheck>
+        </preConditions> 
+        
+        <insert tableName="uom">
+            <column name="id" value="0"/>
+            <column name="name" value="Unidade"/>
+        </insert>
+    </changeSet>
+    
+    <!-- BUG MysqlDataTruncation: Data truncation: Data too long for column 'image'
+    <changeSet author="pauloborges (manual)" id="20210131-2500">
+        
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) FROM floors
+            </sqlCheck>
+        </preConditions> 
+        
+        <insert tableName="floors">
+            <column name="id" value="0"/>
+            <column name="name" value="Restaurant"/>
+            <column name="image" valueBlobFile="../com/openbravo/images/paperboard960_600.png" />
+        </insert>
+    </changeSet>
+    -->
+    
+    <changeSet author="pauloborges (manual)" id="20210131-2600">
+        <insert tableName="pickup_number">
+            <column name="id" value="1"/>
+        </insert>
+        <insert tableName="ticketsnum">
+            <column name="id" value="1"/>
+        </insert>
+        <insert tableName="ticketsnum_payment">
+            <column name="id" value="1"/>
+        </insert>
+        <insert tableName="ticketsnum_refund">
+            <column name="id" value="1"/>
+        </insert>
+    </changeSet>
+    
 </databaseChangeLog>

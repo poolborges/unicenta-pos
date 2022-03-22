@@ -45,7 +45,7 @@ import javax.swing.SwingUtilities;
 public class JTicketsBagShared extends JTicketsBag {
 
     private final static Logger LOGGER = Logger.getLogger(JTicketsBagShared.class.getName());
-    
+
     private String m_sCurrentTicket = null;
     private DataLogicReceipts dlReceipts = null;
     private DataLogicSales dlSales = null;
@@ -127,6 +127,8 @@ public class JTicketsBagShared extends JTicketsBag {
             } else {
                 m_jListTickets.setText("");
             }
+
+            LOGGER.log(Level.INFO, "Shared SharedTicket: " + count);
         } catch (BasicException ex) {
             LOGGER.log(Level.SEVERE, "Exception updateCount: ", ex);
             new MessageInf(ex).show(this);
@@ -154,20 +156,26 @@ public class JTicketsBagShared extends JTicketsBag {
 
     private void saveCurrentTicket() {
 
-        if (m_sCurrentTicket != null) {
+        TicketInfo ticketInfo = m_panelticket.getActiveTicket();
+        if (ticketInfo != null) {
             try {
-                dlReceipts.insertSharedTicket(m_sCurrentTicket,
-                        m_panelticket.getActiveTicket(),
-                        m_panelticket.getActiveTicket().getPickupId());
-                m_jListTickets.setText("*");
-                TicketInfo l = dlReceipts.getSharedTicket(m_sCurrentTicket);
-                if (l != null && l.getLinesCount() == 0) {
-                    dlReceipts.deleteSharedTicket(m_sCurrentTicket);
+                //SAVE Ticket with at less One line
+                if (ticketInfo.getLinesCount() >= 1) {
+                    dlReceipts.insertSharedTicket(m_sCurrentTicket,
+                            m_panelticket.getActiveTicket(),
+                            m_panelticket.getActiveTicket().getPickupId());
+
+                    m_jListTickets.setText("*");
+                    LOGGER.log(Level.INFO, "SAVED Current Ticket ID: ", m_sCurrentTicket);
+                } else {
+                    LOGGER.log(Level.INFO, "NOT SAVED Current Ticket because has no line/item, Ticket ID: ", m_sCurrentTicket);
                 }
             } catch (BasicException e) {
                 LOGGER.log(Level.SEVERE, "Exception saveCurrentTicket: ", e);
                 new MessageInf(e).show(this);
             }
+        } else {
+            LOGGER.log(Level.WARNING, "NOT SAVED Current Ticket because ActiveTicket is NULL");
         }
 
         updateCount();
@@ -178,7 +186,7 @@ public class JTicketsBagShared extends JTicketsBag {
         TicketInfo ticket = dlReceipts.getSharedTicket(id);
         if (ticket == null) {
             m_jListTickets.setText("");
-            LOGGER.log(Level.WARNING, "setActiveTicket no Ticket id: "+id);
+            LOGGER.log(Level.WARNING, "NOT FOUND Shared TICKET for id: " + id);
             throw new BasicException(AppLocal.getIntString("message.noticket"));
         } else {
             dlReceipts.getPickupId(id);
@@ -193,8 +201,8 @@ public class JTicketsBagShared extends JTicketsBag {
     }
 
     private void setActiveReprintTicket(String id) throws BasicException {
-        TicketInfo ticket = dlSales.getReprintTicket(id);
-        m_sCurrentTicket = id;
+        //TicketInfo ticket = dlSales.getReprintTicket(id);
+        LOGGER.log(Level.WARNING, "NOT IMPLEMENTED setActiveReprintTicket");
     }
 
     private void selectValidTicket() {
@@ -218,12 +226,23 @@ public class JTicketsBagShared extends JTicketsBag {
 
     private void newTicket() {
 
-        TicketInfo ticket = new TicketInfo();
-        m_sCurrentTicket = ticket.getId();
-        m_panelticket.setActiveTicket(ticket, null);
+        try {
+            //IMPORTANT TO SAVE CURRENT TICKET IF
+            saveCurrentTicket();
 
-        saveCurrentTicket();
-        updateCount();
+            //CREATE NEW
+            TicketInfo ticket = new TicketInfo();
+            LOGGER.log(Level.INFO, "newTicket has id: " + ticket.getId());
+
+            m_sCurrentTicket = ticket.getId();
+            m_panelticket.setActiveTicket(ticket, null);
+
+            saveCurrentTicket();
+            updateCount();
+
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Exception while exec newTicket: ", ex);
+        }
 
     }
 
@@ -403,10 +422,10 @@ public class JTicketsBagShared extends JTicketsBag {
                 if (iValue == null ? secret == null : iValue.equals(secret)) {
                     pinOK = true;
                     int res = JOptionPane.showConfirmDialog(this,
-                             AppLocal.getIntString("message.wannadelete"),
-                             AppLocal.getIntString("title.editor"),
-                             JOptionPane.YES_NO_OPTION,
-                             JOptionPane.QUESTION_MESSAGE);
+                            AppLocal.getIntString("message.wannadelete"),
+                            AppLocal.getIntString("title.editor"),
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
 
                     if (res == JOptionPane.YES_OPTION) {
                         deleteTicket();
@@ -439,8 +458,8 @@ public class JTicketsBagShared extends JTicketsBag {
                 try {
                     if (!m_App.hasPermission("sales.ReprintTicket")) {
                         JOptionPane.showMessageDialog(null,
-                                AppLocal.getIntString("message.reprintticket"),
-                                AppLocal.getIntString("message.reprinttickettitle"),
+                                AppLocal.getIntString("message.reprintticketnotallow"),
+                                AppLocal.getIntString("message.reprintticketnotallowtitle"),
                                 JOptionPane.INFORMATION_MESSAGE);
                     } else {
 

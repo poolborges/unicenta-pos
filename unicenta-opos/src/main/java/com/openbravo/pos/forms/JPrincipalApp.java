@@ -197,8 +197,13 @@ public class JPrincipalApp extends JPanel implements AppUserView {
 
                 showView(sTaskClass);
                 String sTitle = m_jMyView.getTitle();
-                m_jPanelTitle.setVisible(sTitle != null);
-                m_jTitle.setText(sTitle);
+                if(sTitle != null && !sTitle.isBlank()){
+                    m_jPanelTitle.setVisible(true);
+                    m_jTitle.setText(sTitle);
+                }else {
+                    m_jPanelTitle.setVisible(false);
+                    m_jTitle.setText("");
+                }
             }
         } else {
 

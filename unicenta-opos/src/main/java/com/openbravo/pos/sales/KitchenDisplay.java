@@ -67,6 +67,7 @@ public class KitchenDisplay {
             pstmt.setString(6, multiply);
             pstmt.setString(7, attributes);
             pstmt.executeUpdate();
+            m_App.getSession().getConnection().commit();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "", e);
         }
