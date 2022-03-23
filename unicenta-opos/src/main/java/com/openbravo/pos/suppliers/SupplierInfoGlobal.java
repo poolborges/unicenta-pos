@@ -25,8 +25,9 @@ package com.openbravo.pos.suppliers;
 import com.openbravo.data.user.BrowsableEditableData;
 
 /**
- *
+ * @Deprecate since 2022 (KriolOS
  * @author Jack Gerrard
+ * 
  */
 public class SupplierInfoGlobal {
 

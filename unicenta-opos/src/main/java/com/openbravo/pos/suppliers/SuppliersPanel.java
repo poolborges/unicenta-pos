@@ -37,14 +37,14 @@ import javax.swing.ListCellRenderer;
  * @author Jack Gerrard
  */
 public class SuppliersPanel extends JPanelTable {
+
+    private static final long serialVersionUID = 1L;
     
     private TableDefinition tsuppliers;
     private SuppliersView jeditor;
     
     /** Creates a new instance of SuppliersPanel */
-    public SuppliersPanel() {    
-        SupplierInfoGlobal.getInstance().setEditableData(bd);
-    }
+    public SuppliersPanel() {}
     
     /**
      *

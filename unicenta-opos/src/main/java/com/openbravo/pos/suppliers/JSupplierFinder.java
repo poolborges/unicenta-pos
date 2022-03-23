@@ -212,8 +212,6 @@ public class JSupplierFinder extends javax.swing.JDialog implements EditorCreato
                             JOptionPane.YES_NO_OPTION);
 
                     if (n != 1) {
-                        SupplierInfoGlobal supplierInfoGlobal = SupplierInfoGlobal.getInstance();
-                        SupplierInfoExt supplierInfoExt = supplierInfoGlobal.getSupplierInfoExt();
                         this.setVisible(false);
                         appView.getAppUserView().showTask("com.openbravo.pos.suppliers.SuppliersPanel");
                         JOptionPane.showMessageDialog(null,
