@@ -17,14 +17,12 @@
 package com.openbravo.pos.suppliers;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.data.loader.SentenceList;
 import com.openbravo.data.user.DirtyManager;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.BeanFactoryException;
-import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.inventory.MovementReason;
 import java.awt.Component;
 import java.awt.Desktop;
@@ -46,12 +44,14 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
+import org.netbeans.validation.api.Problem;
+import org.netbeans.validation.api.builtin.stringvalidation.StringValidators;
 
 /**
  *
  * @author Jack Gerrard
  */
-public final class SuppliersView extends javax.swing.JPanel implements EditorRecord {
+public final class SuppliersView extends com.openbravo.pos.panels.ValidationPanel implements EditorRecord {
 
     private static final long serialVersionUID = 1L;
     private Object m_oId;
@@ -68,12 +68,13 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
      * @param dirty
      */
     public SuppliersView(AppView app, DirtyManager dirty) {
+        super();
         try {
             setAppView(app);
             dlSuppliers = (DataLogicSuppliers) app.getBean("com.openbravo.pos.suppliers.DataLogicSuppliers");
 
             initComponents();
-
+            
             m_jTaxID.getDocument().addDocumentListener(dirty);
             m_jVATID.getDocument().addDocumentListener(dirty);
             m_jSearchkey.getDocument().addDocumentListener(dirty);
@@ -98,11 +99,12 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
             txtCountry.getDocument().addDocumentListener(dirty);
 
             init();
+            initValidator();
         } catch (BeanFactoryException ex) {
             Logger.getLogger(SuppliersView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     private void init() {
         writeValueEOF();
     }
@@ -411,6 +413,11 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
      */
     @Override
     public Object createValue() throws BasicException {
+        
+        if(isFatalProblem()){
+            throw new BasicException(getProblem().getMessage());
+        }
+        
         Object[] supplier = new Object[23];
         supplier[0] = m_oId == null ? UUID.randomUUID().toString() : m_oId;
         supplier[1] = m_jSearchkey.getText();
@@ -475,6 +482,13 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         return supplierList;
     }
 
+    protected void initValidator() {
+        org.netbeans.validation.api.ui.ValidationGroup valGroup = getValidationGroup();
+        valGroup.add(m_jSearchkey, StringValidators.REQUIRE_NON_EMPTY_STRING);
+        valGroup.add(m_jName, StringValidators.REQUIRE_NON_EMPTY_STRING);
+        valGroup.add(txtMaxdebt, StringValidators.REQUIRE_NON_NEGATIVE_NUMBER);
+    }
+
     class TransactionTableModel extends AbstractTableModel {
 
         String dte = AppLocal.getIntString("label.suptblHeaderCol1");
@@ -528,39 +542,11 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
                     Integer reason = supplierTransaction.getReason();
                     String s = String.valueOf(reason);
 
-                    if (s.equals("1")) {
-                        s = MovementReason.IN_PURCHASE.toString();
+                    MovementReason movReason = MovementReason.get(reason);
+                    if(movReason != null){
+                        s = movReason.toString();
                     }
-                    if (s.equals("2")) {
-                        s = MovementReason.IN_REFUND.toString();
-                    }
-                    if (s.equals("4")) {
-                        s = MovementReason.IN_MOVEMENT.toString();
-                    }
-                    if (s.equals("-1")) {
-                        s = MovementReason.OUT_SALE.toString();
-                    }
-                    if (s.equals("-2")) {
-                        s = MovementReason.OUT_REFUND.toString();
-                    }
-                    if (s.equals("-3")) {
-                        s = MovementReason.OUT_BREAK.toString();
-                    }
-                    if (s.equals("-4")) {
-                        s = MovementReason.OUT_MOVEMENT.toString();
-                    }
-                    if (s.equals("-5")) {
-                        s = MovementReason.OUT_SAMPLE.toString();
-                    }
-                    if (s.equals("-6")) {
-                        s = MovementReason.OUT_FREE.toString();
-                    }
-                    if (s.equals("-7")) {
-                        s = MovementReason.OUT_USED.toString();
-                    }
-                    if (s.equals("-8")) {
-                        s = MovementReason.OUT_SUBTRACT.toString();
-                    }
+                    
                     return s;
 
                 default:
@@ -583,15 +569,15 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        formTabbedPane = new javax.swing.JTabbedPane();
         jPanel5 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         m_jVATID = new javax.swing.JTextField();
         m_jTaxID = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
+        m_jSearchkey_Label = new javax.swing.JLabel();
         m_jSearchkey = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
+        m_jName_Label = new javax.swing.JLabel();
         m_jName = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         m_jVisible = new javax.swing.JCheckBox();
@@ -638,10 +624,11 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         m_jNotes = new javax.swing.JTextArea();
 
         setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        setPreferredSize(new java.awt.Dimension(1000, 600));
+        setPreferredSize(new java.awt.Dimension(680, 320));
+        setLayout(new java.awt.BorderLayout());
 
-        jTabbedPane1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jTabbedPane1.setPreferredSize(new java.awt.Dimension(650, 300));
+        formTabbedPane.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        formTabbedPane.setPreferredSize(new java.awt.Dimension(650, 300));
 
         jLabel7.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/info.png"))); // NOI18N
@@ -667,17 +654,17 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         m_jTaxID.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         m_jTaxID.setPreferredSize(new java.awt.Dimension(150, 30));
 
-        jLabel8.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel8.setText(AppLocal.getIntString("label.searchkeym")); // NOI18N
+        m_jSearchkey_Label.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        m_jSearchkey_Label.setText(AppLocal.getIntString("label.searchkeym")); // NOI18N
 
         m_jSearchkey.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         m_jSearchkey.setPreferredSize(new java.awt.Dimension(0, 30));
 
-        jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel3.setText(AppLocal.getIntString("label.supplier")); // NOI18N
-        jLabel3.setMaximumSize(new java.awt.Dimension(140, 25));
-        jLabel3.setMinimumSize(new java.awt.Dimension(140, 25));
-        jLabel3.setPreferredSize(new java.awt.Dimension(150, 30));
+        m_jName_Label.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        m_jName_Label.setText(AppLocal.getIntString("label.supplier")); // NOI18N
+        m_jName_Label.setMaximumSize(new java.awt.Dimension(140, 25));
+        m_jName_Label.setMinimumSize(new java.awt.Dimension(140, 25));
+        m_jName_Label.setPreferredSize(new java.awt.Dimension(150, 30));
 
         m_jName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         m_jName.setPreferredSize(new java.awt.Dimension(0, 30));
@@ -735,7 +722,7 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
                                 .addComponent(txtCurdebt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(m_jSearchkey_Label, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -762,7 +749,7 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
                                         .addComponent(m_jVATID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(txtCurdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGroup(jPanel5Layout.createSequentialGroup()
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(m_jName_Label, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(m_jName, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addContainerGap(76, Short.MAX_VALUE))))
@@ -783,11 +770,11 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
                     .addComponent(m_jVATID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(m_jName_Label, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(m_jName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(11, 11, 11)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                    .addComponent(m_jSearchkey_Label, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
                     .addComponent(m_jSearchkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -804,7 +791,7 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(AppLocal.getIntString("label.general"), jPanel5); // NOI18N
+        formTabbedPane.addTab(AppLocal.getIntString("label.general"), jPanel5); // NOI18N
 
         jPanel1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
 
@@ -926,7 +913,7 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
                 .addGap(57, 57, 57))
         );
 
-        jTabbedPane1.addTab(AppLocal.getIntString("label.contact"), jPanel1); // NOI18N
+        formTabbedPane.addTab(AppLocal.getIntString("label.contact"), jPanel1); // NOI18N
 
         jLabel13.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel13.setText(AppLocal.getIntString("label.address")); // NOI18N
@@ -990,9 +977,9 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
                     .addComponent(txtRegion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtCountry, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtPostal, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtPostal, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -1010,12 +997,12 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtCity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPostal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtRegion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPostal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtRegion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1023,7 +1010,7 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(AppLocal.getIntString("label.locationaddress"), jPanel2); // NOI18N
+        formTabbedPane.addTab(AppLocal.getIntString("label.locationaddress"), jPanel2); // NOI18N
 
         jPanel4.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jPanel4.setPreferredSize(new java.awt.Dimension(535, 0));
@@ -1151,9 +1138,8 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
         ));
         jTableSupplierTransactions.setGridColor(new java.awt.Color(102, 204, 255));
         jTableSupplierTransactions.setOpaque(false);
-        jTableSupplierTransactions.setPreferredSize(new java.awt.Dimension(375, 200));
+        jTableSupplierTransactions.setPreferredSize(new java.awt.Dimension(375, 150));
         jTableSupplierTransactions.setRowHeight(25);
-        jTableSupplierTransactions.setShowVerticalLines(false);
         jScrollPane3.setViewportView(jTableSupplierTransactions);
 
         jLblTranCount.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -1184,11 +1170,11 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
                     .addComponent(jBtnShowTrans, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLblTranCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(63, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab(bundle.getString("label.SupplierTransactions"), jPanel4); // NOI18N
+        formTabbedPane.addTab(bundle.getString("label.SupplierTransactions"), jPanel4); // NOI18N
 
         m_jNotes.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         m_jNotes.setPreferredSize(new java.awt.Dimension(0, 0));
@@ -1200,35 +1186,20 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(67, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab(AppLocal.getIntString("label.notes"), jPanel3); // NOI18N
+        formTabbedPane.addTab(AppLocal.getIntString("label.notes"), jPanel3); // NOI18N
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+        add(formTabbedPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void webBtnMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_webBtnMailActionPerformed
@@ -1295,6 +1266,7 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
     }//GEN-LAST:event_jLabel7MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTabbedPane formTabbedPane;
     private javax.swing.JButton jBtnShowTrans;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;
@@ -1310,11 +1282,9 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLblTranCount;
     private javax.swing.JPanel jPanel1;
@@ -1324,11 +1294,12 @@ public final class SuppliersView extends javax.swing.JPanel implements EditorRec
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTableSupplierTransactions;
     private javax.swing.JTextField m_jName;
+    private javax.swing.JLabel m_jName_Label;
     private javax.swing.JTextArea m_jNotes;
     private javax.swing.JTextField m_jSearchkey;
+    private javax.swing.JLabel m_jSearchkey_Label;
     private javax.swing.JTextField m_jTaxID;
     private javax.swing.JTextField m_jVATID;
     private javax.swing.JCheckBox m_jVisible;

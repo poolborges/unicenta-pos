@@ -239,6 +239,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <scope>provided</scope>
         </dependency>
         
+        <!-- 
+        <dependency>
+            <groupId>com.mastfrog</groupId> 
+            <artifactId>simplevalidation</artifactId> 
+            <version>1.14</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.mastfrog</groupId> 
+            <artifactId>simplevalidation-swing</artifactId> 
+            <version>1.14</version>
+            <scope>compile</scope>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>org.nebeans.external</groupId> 
+            <artifactId>ValidationAPI</artifactId> 
+            <version>RELEASE130</version>
+            <scope>compile</scope>
+        </dependency>
+        
         <!-- netbeans MODULES -->
         <dependency> 
             <groupId>org.netbeans.external</groupId>  
