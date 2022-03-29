@@ -195,6 +195,29 @@ public class BrowsableEditableData {
     public int getState() {
         return m_iState;
     }
+    
+    private String getStateAsString() {
+        
+        String sString = Integer.toString(m_iState);
+        switch (m_iState) {
+                case ST_UPDATE: {
+                    sString += " ST_UPDATE";
+                    break;
+                }
+                case ST_INSERT: {
+                    sString += " ST_INSERT";
+                    break;
+                }
+                case ST_DELETE: {
+                    sString += " ST_DELETE";
+                    break;
+                }
+                default:
+                    sString += " UNKNOW";
+                    break;
+            }
+        return sString;
+    }
 
     private void fireStateUpdate() {
         EventListener[] l = listeners.getListeners(StateListener.class);
@@ -441,7 +464,9 @@ public class BrowsableEditableData {
                 default:
                     break;
             }
-            LOGGER.log(Level.INFO, "Executing saveData state is: {0}, class: {1}", new Object[]{m_iState, m_editorrecord.getClass().getName()});
+            LOGGER.log(Level.INFO, "Executing saveData state is: {0}, class: {1}", 
+                    new Object[]{getStateAsString(), 
+                        m_editorrecord.getClass().getName()});
         }
     }
 
@@ -501,13 +526,10 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void actionInsert() throws BasicException {
-        
-        if (canInsertData()) {
             m_iState = ST_INSERT;
             m_editorrecord.writeValueInsert();
             m_Dirty.setDirty(false);
             fireStateUpdate();
-        }
 
     }
 
@@ -517,8 +539,7 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void actionDelete() throws BasicException {
-        
-        if (canDeleteData()) {
+
             // Y nos ponemos en estado de delete
             Object obj = getCurrentElement();
             int iIndex = getIndex();
@@ -529,8 +550,6 @@ public class BrowsableEditableData {
                 m_Dirty.setDirty(true);
                 fireStateUpdate(); // ?
             }
-
-        }
     }
 
     private void baseMoveTo(int i) {
