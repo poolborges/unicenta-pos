@@ -277,7 +277,7 @@ ORDER BY TICKETS.TICKETID]]>
 			</textField>
 			<textField>
 				<reportElement x="262" y="1" width="100" height="13" uuid="142b4048-cd7f-40d0-8ee6-d187a72aabc3"/>
-				<textFieldExpression><![CDATA[str("transpayment." + (String)field_PAYMENT.getValue())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[str("transpayment." + $F{PAYMENT})]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00" isBlankWhenNull="false">
 				<reportElement key="textField" x="375" y="1" width="100" height="13" uuid="58af8e3d-3197-4806-a0c2-7dee30c65845"/>

@@ -236,7 +236,7 @@
 				<textElement>
 					<font fontName="SansSerif"/>
 				</textElement>
-				<textFieldExpression><![CDATA[str("transpayment." + (String)field_PAYMENT.getValue())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[str("transpayment." + $F{PAYMENT})]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.000" isBlankWhenNull="true">
 				<reportElement key="textField" x="335" y="0" width="100" height="13" uuid="9b6f5322-e96a-4548-9527-3f17722066f7"/>

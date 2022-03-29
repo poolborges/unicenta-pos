@@ -269,7 +269,7 @@ ORDER BY RECEIPTS.DATENEW]]>
 				<textElement>
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[str("transpayment." + (String)field_PAYMENT.getValue())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[str("transpayment." + $F{PAYMENT})]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-25" x="90" y="0" width="80" height="13" uuid="73fa7ee8-1ddc-4578-ba26-1d4e8b41f5c5"/>

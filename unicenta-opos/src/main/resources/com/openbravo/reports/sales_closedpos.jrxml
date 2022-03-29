@@ -381,7 +381,7 @@ ORDER BY CLOSEDCASH.HOST, CLOSEDCASH.DATESTART]]>
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[str("transpayment." + (String)field_PAYMENT.getValue())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[str("transpayment." + $F{PAYMENT})]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-3" mode="Opaque" x="435" y="0" width="100" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="0e01585f-785f-4dd4-b1cb-33d78d86580f"/>
