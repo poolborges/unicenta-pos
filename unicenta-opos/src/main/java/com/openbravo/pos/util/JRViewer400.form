@@ -25,7 +25,6 @@
   <SubComponents>
     <Container class="javax.swing.JToolBar" name="jToolBar">
       <Properties>
-        <Property name="floatable" type="boolean" value="false"/>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Arial" size="12" style="0"/>
         </Property>
