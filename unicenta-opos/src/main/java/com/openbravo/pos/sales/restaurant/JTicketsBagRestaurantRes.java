@@ -107,7 +107,7 @@ public class JTicketsBagRestaurantRes extends javax.swing.JPanel implements Edit
         writeValueEOF();
         
         ListProvider lpr = new ListProviderCreator(dlCustomers.getReservationsList(), new MyDateFilter());            
-        SaveProvider spr = new SaveProvider(dlCustomers.getReservationsUpdate(), 
+        DefaultSaveProvider spr = new DefaultSaveProvider(dlCustomers.getReservationsUpdate(), 
             dlCustomers.getReservationsInsert(), dlCustomers.getReservationsDelete());        
         
         m_bd = new BrowsableEditableData(lpr, spr, new CompareReservations(), this, m_Dirty);           

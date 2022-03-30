@@ -22,7 +22,7 @@ import com.openbravo.data.model.Field;
 import com.openbravo.data.model.Row;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.data.user.ListProviderCreator;
-import com.openbravo.data.user.SaveProvider;
+import com.openbravo.data.user.DefaultSaveProvider;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.panels.JPanelTable2;
@@ -99,7 +99,7 @@ public class ProductsWarehousePanel extends JPanelTable2 {
             }
         };     
         
-        spr = new SaveProvider(updatesent, null, null);
+        spr = new DefaultSaveProvider(updatesent, null, null);
          
         jeditor = new ProductsWarehouseEditor(dirty);   
     }

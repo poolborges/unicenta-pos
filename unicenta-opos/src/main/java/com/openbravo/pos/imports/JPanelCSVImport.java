@@ -24,7 +24,7 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.ComboBoxValModel;
 import com.openbravo.data.loader.SentenceList;
 import com.openbravo.data.loader.Session;
-import com.openbravo.data.user.SaveProvider;
+import com.openbravo.data.user.DefaultSaveProvider;
 import com.openbravo.pos.forms.*;
 import com.openbravo.pos.sales.TaxesLogic;
 import com.openbravo.pos.ticket.ProductInfoExt;
@@ -79,7 +79,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     private DataLogicSales m_dlSales;
     private DataLogicSystem m_dlSystem;  
 
-    protected SaveProvider spr;
+    protected DefaultSaveProvider spr;
  
     private String Category;
     private String categoryName;
@@ -155,7 +155,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         m_dlSystem = new DataLogicSystem();
         m_dlSystem.init(s);
 
-        spr = new SaveProvider(
+        spr = new DefaultSaveProvider(
                 m_dlSales.getProductCatUpdate(),
                 m_dlSales.getProductCatInsert(),
                 m_dlSales.getProductCatDelete());

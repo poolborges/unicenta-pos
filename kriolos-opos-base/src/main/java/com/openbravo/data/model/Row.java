@@ -30,6 +30,7 @@ import com.openbravo.data.loader.SerializerRead;
 import com.openbravo.data.loader.SerializerWrite;
 import com.openbravo.data.loader.Session;
 import com.openbravo.data.loader.Vectorer;
+import com.openbravo.data.user.DefaultSaveProvider;
 import com.openbravo.data.user.FilterEditorCreator;
 import com.openbravo.data.user.ListProvider;
 import com.openbravo.data.user.ListProviderCreator;
@@ -124,7 +125,7 @@ public class Row {
      * @return
      */
     public SaveProvider getSaveProvider(Session s, Table t) {
-        return new SaveProvider(getUpdateSentence(s, t), getInsertSentence(s, t), getDeleteSentence(s, t));
+        return new DefaultSaveProvider(getUpdateSentence(s, t), getInsertSentence(s, t), getDeleteSentence(s, t));
     }
     
     /**

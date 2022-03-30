@@ -22,7 +22,7 @@ import com.openbravo.pos.forms.AppProperties;
 import com.csvreader.CsvReader;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.Session;
-import com.openbravo.data.user.SaveProvider;
+import com.openbravo.data.user.DefaultSaveProvider;
 import com.openbravo.pos.forms.*;
 import java.io.*;
 import java.sql.Connection;
@@ -64,7 +64,7 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
     private DataLogicSystem m_dlSystem;
     private DataLogicCustomers m_dlCustomer;
 
-    protected SaveProvider spr;
+    protected DefaultSaveProvider spr;
          
     private String customerSearchKey; 
     private String customerAccount;   
@@ -124,7 +124,7 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
         m_dlSystem.init(s);
 
 
-        spr = new SaveProvider(
+        spr = new DefaultSaveProvider(
                 m_dlSales.getCustomerUpdate(),
                 m_dlSales.getCustomerInsert(),
                 m_dlSales.getCustomerDelete());

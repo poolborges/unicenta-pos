@@ -19,7 +19,7 @@ package com.openbravo.pos.inventory;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.data.user.ListProvider;
-import com.openbravo.data.user.SaveProvider;
+import com.openbravo.data.user.DefaultSaveProvider;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.DataLogicSales;
 //import com.openbravo.pos.suppliers.DataLogicSuppliers;
@@ -65,8 +65,8 @@ public class StockDiaryPanel extends JPanelTable {
      * @return
      */
     @Override
-    public SaveProvider getSaveProvider() {
-        return  new SaveProvider(null
+    public DefaultSaveProvider getSaveProvider() {
+        return  new DefaultSaveProvider(null
                 , m_dlSales.getStockDiaryInsert()
                 , m_dlSales.getStockDiaryDelete());      
     }

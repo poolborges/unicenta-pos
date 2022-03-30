@@ -24,7 +24,7 @@ import com.openbravo.data.loader.Vectorer;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.data.user.ListProvider;
 import com.openbravo.data.user.ListProviderCreator;
-import com.openbravo.data.user.SaveProvider;
+import com.openbravo.data.user.DefaultSaveProvider;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.panels.JPanelTable;
 import javax.swing.ListCellRenderer;
@@ -79,8 +79,8 @@ public class BreaksPanel extends JPanelTable {
      * @return
      */
     @Override
-    public SaveProvider getSaveProvider() {
-        return new SaveProvider(tbreaks, new int[] {0, 1, 2, 3});
+    public DefaultSaveProvider getSaveProvider() {
+        return new DefaultSaveProvider(tbreaks, new int[] {0, 1, 2, 3});
     }
 
     /**

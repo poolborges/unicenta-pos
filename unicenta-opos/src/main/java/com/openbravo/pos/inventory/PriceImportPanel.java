@@ -21,7 +21,7 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.user.EditorListener;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.data.user.ListProviderCreator;
-import com.openbravo.data.user.SaveProvider;
+import com.openbravo.data.user.DefaultSaveProvider;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.panels.JPanelTable2;
@@ -61,7 +61,7 @@ public class PriceImportPanel extends JPanelTable2 implements EditorListener {
 
         lpr =  new ListProviderCreator(m_dlSales.getProductCatQBF(), jproductfilter);
 
-        spr = new SaveProvider(
+        spr = new DefaultSaveProvider(
             m_dlSales.getProductCatUpdate(),
             m_dlSales.getProductCatInsert(),
             m_dlSales.getProductCatDelete());

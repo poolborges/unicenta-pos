@@ -18,7 +18,7 @@ package com.openbravo.pos.panels;
 
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.data.user.ListProvider;
-import com.openbravo.data.user.SaveProvider;
+import com.openbravo.data.user.DefaultSaveProvider;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.DataLogicSales;
 
@@ -58,8 +58,8 @@ public class JPanelPayments extends JPanelTable {
      * @return
      */
     @Override
-    public SaveProvider getSaveProvider() {
-        return  new SaveProvider(null
+    public DefaultSaveProvider getSaveProvider() {
+        return  new DefaultSaveProvider(null
                 , m_dlSales.getPaymentMovementInsert()
                 , m_dlSales.getPaymentMovementDelete());
     }
