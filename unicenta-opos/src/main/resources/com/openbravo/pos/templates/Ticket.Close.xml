@@ -29,7 +29,7 @@ System.out.println("SCRIPT_RUN: Ticket.Close send krpos-hub");
 System.out.println("Ticket.Close: send event to KRPOS-HUB should send notification/email");  
 //KrPosHubClient.sendEvent(ticket,dbURL,dbUser,dbPassword,rootWindow,"Email");
 
-
+/*
 boolean isCash = false;
 String change = "";
 PaymentInfo p = ticket.payments.getFirst();
@@ -45,8 +45,8 @@ Font originalFont=pane.getFont();
 
 UIManager.put("OptionPane.buttonFont", new FontUIResource(new Font("ARIAL",Font.PLAIN,20)));
 message = "Change: " + change;
- JLabel FontText = new JLabel(message);
- FontText.setFont (new Font ( "Arial", Font.BOLD, 36) );
+JLabel FontText = new JLabel(message);
+FontText.setFont (new Font ( "Arial", Font.BOLD, 36) );
 
 if(isCash) {
      JOptionPane pane = new JOptionPane();
@@ -60,3 +60,4 @@ if(isCash) {
 
 // Return to default settings
 UIManager.put("OptionPane.buttonFont", new FontUIResource(new Font(originalFont.getName(),originalFont.getStyle(),originalFont.getSize())));
+*/

@@ -35,7 +35,7 @@
 		SUM( PAYMENTS.TOTAL ) AS PAYMENT_TOTAL
 		FROM RECEIPTS
 		LEFT JOIN PAYMENTS ON RECEIPTS.ID = PAYMENTS.RECEIPT
-                     GROUP BY RECEIPTS.DATENEW, PAYMENTS.PAYMENT]]>
+                     GROUP BY RECEIPTS.ID, PAYMENTS.ID]]>
 	</queryString>
 	<field name="DATENEW" class="java.util.Date"/>
 	<field name="PAYMENT" class="java.lang.String"/>

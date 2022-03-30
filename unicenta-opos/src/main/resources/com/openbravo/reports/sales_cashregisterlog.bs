@@ -29,7 +29,7 @@ report.setSentence("SELECT " +
                     "FROM receipts " +
 			"LEFT JOIN payments ON receipts.ID = payments.RECEIPT " +
                     "WHERE ?(QBF_FILTER) " +
-                    "GROUP BY receipts.DATENEW, payments.PAYMENT, payments.TENDERED");
+                    "GROUP BY receipts.ID, payments.ID");
 
 report.addParameter("receipts.DATENEW");
 report.addParameter("receipts.DATENEW");
@@ -37,7 +37,6 @@ report.addParameter("receipts.DATENEW");
 paramdates = new com.openbravo.pos.reports.JParamsDatesInterval();
 
 paramdates.setStartDate(com.openbravo.beans.DateUtils.getToday());
-// JG - 8 Jan 14 paramdates.setEndDate(com.openbravo.beans.DateUtils.getToday());
 paramdates.setEndDate(com.openbravo.beans.DateUtils.getTodayMinutes());
 
 report.addQBFFilter(paramdates);
