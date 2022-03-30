@@ -154,10 +154,9 @@ public class ImageUtils {
             try ( ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();) {
                 ImageIO.write(img, "png", byteOutputStream);
                 byteOutputStream.flush();
-                byteOutputStream.close();
                 imageByte = byteOutputStream.toByteArray();
             } catch (IOException ex) {
-                LOGGER.log(Level.SEVERE, "Write Image to byte array", ex);
+                LOGGER.log(Level.SEVERE, "Write Image(Supported: PNG) to byte array", ex);
             }
         }
         return imageByte;
