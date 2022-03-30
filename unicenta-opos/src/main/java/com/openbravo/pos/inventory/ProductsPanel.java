@@ -78,12 +78,11 @@ public class ProductsPanel extends JPanelTable2 implements EditorListener {
     
     /**
      *
-     * @return value
-     */
+     * 
     @Override
     public Component getFilter() {
         return jproductfilter.getComponent();
-    }
+    }*/
 
     /**
      *

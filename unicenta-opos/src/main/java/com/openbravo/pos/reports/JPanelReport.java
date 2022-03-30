@@ -35,6 +35,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import net.sf.jasperreports.engine.*;
@@ -46,7 +48,7 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
  * @author JG uniCenta
  */
 public abstract class JPanelReport extends JPanel implements JPanelView, BeanFactoryApp   {
-    
+    private static final Logger LOGGER = Logger.getLogger(JPanelReport.class.getName());
     private JRViewer400 reportviewer = null;          
     private JasperReport jr = null;
     private EditorCreator editor = null;
@@ -100,18 +102,16 @@ public abstract class JPanelReport extends JPanel implements JPanelView, BeanFac
             
             InputStream in = getClass().getResourceAsStream(getReport() + ".ser");
             if (in == null) {      
-                // read and compile the report
                 JasperDesign jd = JRXmlLoader.load(getClass().getResourceAsStream(getReport() + ".jrxml"));            
                 jr = JasperCompileManager.compileReport(jd);    
             } else {
-// JG 16 May 12 use try-with-resources
                 try (ObjectInputStream oin = new ObjectInputStream(in)) {
                     jr = (JasperReport) oin.readObject();
                 }
             }
-// JG 16 May 12 use multicatch
-        } catch (JRException | IOException | ClassNotFoundException e) {
-            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadreport"), e);
+        } catch (JRException | IOException | ClassNotFoundException ex) {
+            LOGGER.log(Level.SEVERE, "Exception load report file", ex);
+            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadreport"), ex);
             msg.show(this);
             jr = null;
         }  
@@ -235,12 +235,15 @@ public abstract class JPanelReport extends JPanel implements JPanelView, BeanFac
                 setVisibleFilter(false);
                 
             } catch (MissingResourceException e) {    
+                LOGGER.log(Level.SEVERE, "Exception lauch report file", e);
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadresourcedata"), e);
                 msg.show(this);
             } catch (JRException e) {
+                LOGGER.log(Level.SEVERE, "Exception lauch report file", e);
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotfillreport"), e);
                 msg.show(this);
             } catch (BasicException e) {
+                LOGGER.log(Level.SEVERE, "Exception lauch report file", e);
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadreportdata"), e);
                 msg.show(this);
             }
@@ -305,6 +308,7 @@ public abstract class JPanelReport extends JPanel implements JPanelView, BeanFac
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
+        LOGGER.log(Level.INFO, "Launch Report");
         launchreport();
         
     }//GEN-LAST:event_jButton1ActionPerformed

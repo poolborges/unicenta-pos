@@ -46,7 +46,6 @@ public class JTicketsBagShared extends JTicketsBag {
 
     private final static Logger LOGGER = Logger.getLogger(JTicketsBagShared.class.getName());
 
-    private String m_sCurrentTicket = null;
     private DataLogicReceipts dlReceipts = null;
     private DataLogicSales dlSales = null;
     private DataLogicSystem dlSystem;
@@ -76,8 +75,6 @@ public class JTicketsBagShared extends JTicketsBag {
      */
     @Override
     public void activate() {
-
-        m_sCurrentTicket = null;
         selectValidTicket();
 
         m_jDelTicket.setEnabled(m_App.hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));
@@ -92,8 +89,6 @@ public class JTicketsBagShared extends JTicketsBag {
     public boolean deactivate() {
 
         saveCurrentTicket();
-
-        m_sCurrentTicket = null;
         m_panelticket.setActiveTicket(null, null);
 
         return true;
@@ -112,8 +107,6 @@ public class JTicketsBagShared extends JTicketsBag {
                     "Ticket Deleted",
                     0.0
                 });
-
-        m_sCurrentTicket = null;
         selectValidTicket();
     }
 
@@ -158,20 +151,21 @@ public class JTicketsBagShared extends JTicketsBag {
 
         TicketInfo ticketInfo = m_panelticket.getActiveTicket();
         if (ticketInfo != null) {
+            String ticketID = m_panelticket.getActiveTicket().getId();
             try {
                 //SAVE Ticket with at less One line
                 if (ticketInfo.getLinesCount() >= 1) {
-                    dlReceipts.insertSharedTicket(m_sCurrentTicket,
+                    dlReceipts.insertSharedTicket(ticketID,
                             m_panelticket.getActiveTicket(),
                             m_panelticket.getActiveTicket().getPickupId());
 
                     m_jListTickets.setText("*");
-                    LOGGER.log(Level.INFO, "SAVED Current Ticket ID: ", m_sCurrentTicket);
+                    LOGGER.log(Level.INFO, "SAVED Current Ticket ID: ", ticketID);
                 } else {
-                    LOGGER.log(Level.INFO, "NOT SAVED Current Ticket because has no line/item, Ticket ID: ", m_sCurrentTicket);
+                    LOGGER.log(Level.INFO, "NOT SAVED Current Ticket because has no line/item, Ticket ID: ", ticketID);
                 }
             } catch (BasicException e) {
-                LOGGER.log(Level.SEVERE, "Exception saveCurrentTicket: ", e);
+                LOGGER.log(Level.SEVERE, "Exception saveCurrentTicket: "+ticketID, e);
                 new MessageInf(e).show(this);
             }
         } else {
@@ -192,7 +186,6 @@ public class JTicketsBagShared extends JTicketsBag {
             dlReceipts.getPickupId(id);
             Integer pickUp = dlReceipts.getPickupId(id);
             dlReceipts.deleteSharedTicket(id);
-            m_sCurrentTicket = id;
             m_panelticket.setActiveTicket(ticket, null);
             ticket.setPickupId(pickUp);
         }
@@ -233,8 +226,6 @@ public class JTicketsBagShared extends JTicketsBag {
             //CREATE NEW
             TicketInfo ticket = new TicketInfo();
             LOGGER.log(Level.INFO, "newTicket has id: " + ticket.getId());
-
-            m_sCurrentTicket = ticket.getId();
             m_panelticket.setActiveTicket(ticket, null);
 
             saveCurrentTicket();
@@ -413,7 +404,7 @@ public class JTicketsBagShared extends JTicketsBag {
 
         boolean pinOK = false;
 
-        if (m_sCurrentTicket != null) {
+        if (m_panelticket.getActiveTicket()!= null) {
 
             if (m_App.getProperties().getProperty("override.check").equals("true")) {
                 Integer secret = Integer.parseInt(m_App.getProperties().getProperty("override.pin"));

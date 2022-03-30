@@ -132,21 +132,21 @@ public class JPanelButtons extends javax.swing.JPanel {
                 case "button":
                     // The button title text
                     String titlekey = attributes.getValue("titlekey");
-                    
+
                     titlekey = titlekey == null
                             ? attributes.getValue("name")
                             : null;
-                    
+
                     String title = titlekey == null
                             ? attributes.getValue("title")
                             : AppLocal.getIntString(titlekey);
-                    
+
                     // adding the button to the panel
                     JButton btn = new JButtonFunc(
                             attributes.getValue("key"),
                             attributes.getValue("image"),
                             title);
-                    
+
                     //Resource is: template
                     final String template = attributes.getValue("template");
                     if (template != null) {
@@ -225,10 +225,11 @@ public class JPanelButtons extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-}
+    
+    public static interface JPanelButtonListener {
 
+        public void eval(String resource);
 
-interface JPanelButtonListener {
-    public void eval(String resource);
-    public void print(String resource);
+        public void print(String resource);
+    }
 }

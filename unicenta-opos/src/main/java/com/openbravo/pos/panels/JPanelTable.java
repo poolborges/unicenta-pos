@@ -21,7 +21,6 @@ import com.openbravo.data.gui.*;
 import com.openbravo.data.loader.ComparatorCreator;
 import com.openbravo.data.loader.Vectorer;
 import com.openbravo.data.user.*;
-import com.openbravo.pos.customers.CustomerInfoGlobal;
 import com.openbravo.pos.forms.*;
 import java.awt.BorderLayout;
 import java.awt.Component;

@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.customers;
 
 import com.openbravo.basic.BasicException;
@@ -52,106 +51,116 @@ import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.table.JTableHeader;
+import org.netbeans.validation.api.builtin.stringvalidation.StringValidators;
 
 /**
  *
- * @author  Jack Gerrard
+ * @author Jack Gerrard
  */
-public final class CustomersView extends javax.swing.JPanel implements EditorRecord {
+public final class CustomersView extends com.openbravo.pos.panels.ValidationPanel implements EditorRecord {
 
     private static final long serialVersionUID = 1L;
     private Object m_oId;
-    
+
     private SentenceList m_sentcat;
     private List<CustomerTransaction> customerTransactionList;
     private TransactionTableModel transactionModel;
     private ComboBoxValModel m_CategoryModel;
-    
+
     private DirtyManager m_Dirty;
     private DataLogicSales dlSales;
-    
+
     //HS updates to get last added Customer 06.03.2014
     private AppView appView;
     private CustomerInfo customerInfo;
-        
-    /** Creates new form CustomersView
+
+    /**
+     * Creates new form CustomersView
+     *
      * @param app
-     * @param dirty */
+     * @param dirty
+     */
     public CustomersView(AppView app, DirtyManager dirty) {
         try {
             appView = app;
             dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
 
-        
-        initComponents();
+            initComponents();
 
-        m_sentcat = dlSales.getTaxCustCategoriesList();
-        m_CategoryModel = new ComboBoxValModel();
-        
-        m_Dirty = dirty;        
-        m_jTaxID.getDocument().addDocumentListener(dirty);
-        m_jTaxID.setInputVerifier(new RequiredVerifier());
-        m_jSearchkey.getDocument().addDocumentListener(dirty);
-        m_jName.getDocument().addDocumentListener(dirty);
-        m_jName.setInputVerifier(new RequiredVerifier());
-        m_jCategory.addActionListener(dirty);
-        m_jNotes.getDocument().addDocumentListener(dirty);
-        txtMaxdebt.getDocument().addDocumentListener(dirty);
-        txtCurdebt.getDocument().addDocumentListener(dirty);
-        txtCurdate.getDocument().addDocumentListener(dirty);
-        m_jVisible.addActionListener(dirty);
-        m_jVip.addActionListener(dirty);
-        txtDiscount.getDocument().addDocumentListener(dirty);
-        
-        txtFirstName.getDocument().addDocumentListener(dirty);
-        txtLastName.getDocument().addDocumentListener(dirty);
-        txtEmail.getDocument().addDocumentListener(dirty);
-        txtPhone.getDocument().addDocumentListener(dirty);
-        txtPhone2.getDocument().addDocumentListener(dirty);
-        txtFax.getDocument().addDocumentListener(dirty);
-        m_jImage.addPropertyChangeListener(dirty);
-        
-        txtAddress.getDocument().addDocumentListener(dirty);
-        txtAddress2.getDocument().addDocumentListener(dirty);
-        txtPostal.getDocument().addDocumentListener(dirty);
-        txtCity.getDocument().addDocumentListener(dirty);
-        txtRegion.getDocument().addDocumentListener(dirty);
-        txtCountry.getDocument().addDocumentListener(dirty);
+            m_sentcat = dlSales.getTaxCustCategoriesList();
+            m_CategoryModel = new ComboBoxValModel();
 
-        m_jdate.getDocument().addDocumentListener(dirty);
+            m_Dirty = dirty;
+            m_jTaxID.getDocument().addDocumentListener(dirty);
+            m_jSearchkey.getDocument().addDocumentListener(dirty);
+            m_jName.getDocument().addDocumentListener(dirty);
+            m_jCategory.addActionListener(dirty);
+            m_jNotes.getDocument().addDocumentListener(dirty);
+            txtMaxdebt.getDocument().addDocumentListener(dirty);
+            txtCurdebt.getDocument().addDocumentListener(dirty);
+            txtCurdate.getDocument().addDocumentListener(dirty);
+            m_jVisible.addActionListener(dirty);
+            m_jVip.addActionListener(dirty);
+            txtDiscount.getDocument().addDocumentListener(dirty);
+
+            txtFirstName.getDocument().addDocumentListener(dirty);
+            txtLastName.getDocument().addDocumentListener(dirty);
+            txtEmail.getDocument().addDocumentListener(dirty);
+            txtPhone.getDocument().addDocumentListener(dirty);
+            txtPhone2.getDocument().addDocumentListener(dirty);
+            txtFax.getDocument().addDocumentListener(dirty);
+            m_jImage.addPropertyChangeListener(dirty);
+
+            txtAddress.getDocument().addDocumentListener(dirty);
+            txtAddress2.getDocument().addDocumentListener(dirty);
+            txtPostal.getDocument().addDocumentListener(dirty);
+            txtCity.getDocument().addDocumentListener(dirty);
+            txtRegion.getDocument().addDocumentListener(dirty);
+            txtCountry.getDocument().addDocumentListener(dirty);
+
+            m_jdate.getDocument().addDocumentListener(dirty);
 
             init();
+            initValidator();
         } catch (BeanFactoryException ex) {
             Logger.getLogger(CustomersView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    private void initValidator() {
+        org.netbeans.validation.api.ui.ValidationGroup valGroup = getValidationGroup();
+        valGroup.add(m_jSearchkey, StringValidators.REQUIRE_NON_EMPTY_STRING);
+        valGroup.add(m_jName, StringValidators.REQUIRE_NON_EMPTY_STRING);
+        valGroup.add(txtMaxdebt, StringValidators.REQUIRE_NON_NEGATIVE_NUMBER);
+    }
 
     private void init() {
-            writeValueEOF(); 
+        writeValueEOF();
     }
-    
+
     /**
      * Instantiate object
+     *
      * @throws BasicException
      */
     @SuppressWarnings("unchecked")
     public void activate() throws BasicException {
-        
+
         List a = m_sentcat.list();
         a.add(0, null); // The null item
         m_CategoryModel = new ComboBoxValModel(a);
-        m_jCategory.setModel(m_CategoryModel);         
+        m_jCategory.setModel(m_CategoryModel);
         String cId = null;
     }
-    
+
     /**
      * Refresh object
      */
     @Override
     public void refresh() {
-    jLblTranCount.setText(null);
+        jLblTranCount.setText(null);
     }
-    
+
     /**
      * Write EOF
      */
@@ -171,7 +180,7 @@ public final class CustomersView extends javax.swing.JPanel implements EditorRec
         m_jVip.setSelected(false);
         txtDiscount.setText(null);
         jcard.setText(null);
-        
+
         txtFirstName.setText(null);
         txtLastName.setText(null);
         txtEmail.setText(null);
@@ -179,7 +188,7 @@ public final class CustomersView extends javax.swing.JPanel implements EditorRec
         txtPhone2.setText(null);
         txtFax.setText(null);
         m_jImage.setImage(null);
-       
+
         txtAddress.setText(null);
         txtAddress2.setText(null);
         txtPostal.setText(null);
@@ -188,7 +197,7 @@ public final class CustomersView extends javax.swing.JPanel implements EditorRec
         txtCountry.setText(null);
 
         m_jdate.setText(null);
-        
+
         m_jTaxID.setEnabled(false);
         m_jSearchkey.setEnabled(false);
         m_jName.setEnabled(false);
@@ -198,10 +207,10 @@ public final class CustomersView extends javax.swing.JPanel implements EditorRec
         txtCurdebt.setEnabled(false);
         txtCurdate.setEnabled(false);
         m_jVisible.setEnabled(false);
-        m_jVip.setEnabled(false);        
+        m_jVip.setEnabled(false);
         txtDiscount.setEnabled(false);
         jcard.setEnabled(false);
-        
+
         txtFirstName.setEnabled(false);
         txtLastName.setEnabled(false);
         txtEmail.setEnabled(false);
@@ -209,14 +218,14 @@ public final class CustomersView extends javax.swing.JPanel implements EditorRec
         txtPhone2.setEnabled(false);
         txtFax.setEnabled(false);
         m_jImage.setEnabled(false);
-       
+
         txtAddress.setEnabled(false);
         txtAddress2.setEnabled(false);
         txtPostal.setEnabled(false);
         txtCity.setEnabled(false);
         txtRegion.setEnabled(false);
         txtCountry.setEnabled(false);
-        
+
         jBtnCreateCard.setEnabled(false);
         jBtnClearCard.setEnabled(false);
 
@@ -224,10 +233,10 @@ public final class CustomersView extends javax.swing.JPanel implements EditorRec
         m_jbtndate.setEnabled(false);
 
         jTableCustomerTransactions.setEnabled(false);
-        
+
         repaint();
-        refresh();        
-    } 
+        refresh();
+    }
 
     @Override
     public void writeValueInsert() {
@@ -243,25 +252,25 @@ public final class CustomersView extends javax.swing.JPanel implements EditorRec
         m_jNotes.setText(null);
         txtMaxdebt.setText(null);
         txtCurdebt.setText(null);
-        txtCurdate.setText(null);        
+        txtCurdate.setText(null);
         m_jVisible.setSelected(true);
-        m_jVip.setSelected(false);        
-        txtDiscount.setText(null);        
+        m_jVip.setSelected(false);
+        txtDiscount.setText(null);
         jcard.setText(null);
-        
+
         txtFirstName.setText(null);
         txtLastName.setText(null);
         txtPhone2.setText(null);
         txtFax.setText(null);
         m_jImage.setImage(null);
-       
+
         txtAddress.setText(null);
         txtAddress2.setText(null);
         txtPostal.setText(null);
         txtCity.setText(null);
         txtRegion.setText(null);
         txtCountry.setText(null);
-        
+
         m_jdate.setText(null);
 
         m_jTaxID.setEnabled(true);
@@ -273,10 +282,10 @@ public final class CustomersView extends javax.swing.JPanel implements EditorRec
         txtCurdebt.setEnabled(true);
         txtCurdate.setEnabled(true);
         m_jVisible.setEnabled(true);
-        m_jVip.setEnabled(true);        
-        txtDiscount.setEnabled(true);        
+        m_jVip.setEnabled(true);
+        txtDiscount.setEnabled(true);
         jcard.setEnabled(true);
-               
+
         txtFirstName.setEnabled(true);
         txtLastName.setEnabled(true);
         txtEmail.setEnabled(true);
@@ -285,28 +294,29 @@ public final class CustomersView extends javax.swing.JPanel implements EditorRec
         txtPhone2.setEnabled(true);
         txtFax.setEnabled(true);
         m_jImage.setEnabled(true);
-       
+
         txtAddress.setEnabled(true);
         txtAddress2.setEnabled(true);
         txtPostal.setEnabled(true);
         txtCity.setEnabled(true);
         txtRegion.setEnabled(true);
         txtCountry.setEnabled(true);
-        
+
         jBtnCreateCard.setEnabled(true);
         jBtnClearCard.setEnabled(true);
 
         jTableCustomerTransactions.setEnabled(false);
-        
+
         m_jdate.setEnabled(true);
-        m_jbtndate.setEnabled(true);        
+        m_jbtndate.setEnabled(true);
 
         repaint();
-        refresh();        
+        refresh();
     }
 
     /**
      * Delete from object
+     *
      * @param value
      */
     @Override
@@ -319,13 +329,13 @@ public final class CustomersView extends javax.swing.JPanel implements EditorRec
         m_jName.setText((String) customer[3]);
         m_CategoryModel.setSelectedKey(customer[4]);
         jcard.setText((String) customer[5]);
-        txtMaxdebt.setText(Formats.CURRENCY.formatValue(customer[6]));        
+        txtMaxdebt.setText(Formats.CURRENCY.formatValue(customer[6]));
         txtAddress.setText(Formats.STRING.formatValue(customer[7]));
         txtAddress2.setText(Formats.STRING.formatValue(customer[8]));
         txtPostal.setText(Formats.STRING.formatValue(customer[9]));
         txtCity.setText(Formats.STRING.formatValue(customer[10]));
         txtRegion.setText(Formats.STRING.formatValue(customer[11]));
-        txtCountry.setText(Formats.STRING.formatValue(customer[12]));      
+        txtCountry.setText(Formats.STRING.formatValue(customer[12]));
         txtFirstName.setText(Formats.STRING.formatValue(customer[13]));
         txtLastName.setText(Formats.STRING.formatValue(customer[14]));
         txtEmail.setText(Formats.STRING.formatValue(customer[15]));
@@ -334,13 +344,13 @@ public final class CustomersView extends javax.swing.JPanel implements EditorRec
         txtFax.setText(Formats.STRING.formatValue(customer[18]));
         m_jNotes.setText((String) customer[19]);
         m_jVisible.setSelected(((Boolean) customer[20]));
-        txtCurdate.setText(Formats.DATE.formatValue(customer[21]));        
-        txtCurdebt.setText(Formats.CURRENCY.formatValue(customer[22]));    
+        txtCurdate.setText(Formats.DATE.formatValue(customer[21]));
+        txtCurdebt.setText(Formats.CURRENCY.formatValue(customer[22]));
         m_jImage.setImage((BufferedImage) customer[23]);
         m_jVip.setSelected(((Boolean) customer[24]));
-        txtDiscount.setText(Formats.DOUBLE.formatValue(customer[25]));        
-        m_jdate.setText(Formats.DATE.formatValue(customer[26]));         
-        
+        txtDiscount.setText(Formats.DOUBLE.formatValue(customer[25]));
+        m_jdate.setText(Formats.DATE.formatValue(customer[26]));
+
         m_jTaxID.setEnabled(false);
         m_jSearchkey.setEnabled(false);
         m_jName.setEnabled(false);
@@ -350,44 +360,45 @@ public final class CustomersView extends javax.swing.JPanel implements EditorRec
         txtCurdate.setEnabled(false);
         m_jVisible.setEnabled(false);
         m_jVip.setEnabled(false);
-        txtDiscount.setEnabled(false);        
-        jcard.setEnabled(false);       
-        
+        txtDiscount.setEnabled(false);
+        jcard.setEnabled(false);
+
         txtFirstName.setEnabled(false);
         txtLastName.setEnabled(false);
         txtEmail.setEnabled(false);
-        webBtnMail.setEnabled(false);        
+        webBtnMail.setEnabled(false);
         txtPhone.setEnabled(false);
         txtPhone2.setEnabled(false);
         txtFax.setEnabled(false);
         m_jImage.setEnabled(true);
-       
+
         txtAddress.setEnabled(false);
         txtAddress2.setEnabled(false);
         txtPostal.setEnabled(false);
         txtCity.setEnabled(false);
         txtRegion.setEnabled(false);
         txtCountry.setEnabled(false);
-        
+
         m_jCategory.setEnabled(false);
-        
+
         jBtnCreateCard.setEnabled(false);
         jBtnClearCard.setEnabled(false);
 
 // JG 3 Oct 2013 - for Transaction List table
-        transactionModel = new TransactionTableModel(getTransactionOfName((String) m_oId));        
+        transactionModel = new TransactionTableModel(getTransactionOfName((String) m_oId));
         jTableCustomerTransactions.setModel(transactionModel);
         jTableCustomerTransactions.setEnabled(false);
 
         m_jdate.setEnabled(false);
-        m_jbtndate.setEnabled(false);        
+        m_jbtndate.setEnabled(false);
 
         repaint();
-        refresh();        
+        refresh();
     }
 
     /**
      * Edit object
+     *
      * @param value
      */
     @Override
@@ -405,7 +416,7 @@ public final class CustomersView extends javax.swing.JPanel implements EditorRec
         txtPostal.setText(Formats.STRING.formatValue(customer[9]));
         txtCity.setText(Formats.STRING.formatValue(customer[10]));
         txtRegion.setText(Formats.STRING.formatValue(customer[11]));
-        txtCountry.setText(Formats.STRING.formatValue(customer[12]));   
+        txtCountry.setText(Formats.STRING.formatValue(customer[12]));
         txtFirstName.setText(Formats.STRING.formatValue(customer[13]));
         txtLastName.setText(Formats.STRING.formatValue(customer[14]));
         txtEmail.setText(Formats.STRING.formatValue(customer[15]));
@@ -414,13 +425,13 @@ public final class CustomersView extends javax.swing.JPanel implements EditorRec
         txtFax.setText(Formats.STRING.formatValue(customer[18]));
         m_jNotes.setText((String) customer[19]);
         m_jVisible.setSelected(((Boolean) customer[20]));
-        txtCurdate.setText(Formats.DATE.formatValue(customer[21])); 
-        txtCurdebt.setText(Formats.CURRENCY.formatValue(customer[22]));    
+        txtCurdate.setText(Formats.DATE.formatValue(customer[21]));
+        txtCurdebt.setText(Formats.CURRENCY.formatValue(customer[22]));
         m_jImage.setImage((BufferedImage) customer[23]);
-        m_jVip.setSelected(((Boolean) customer[24]));        
-        txtDiscount.setText(Formats.DOUBLE.formatValue(customer[25]));        
+        m_jVip.setSelected(((Boolean) customer[24]));
+        txtDiscount.setText(Formats.DOUBLE.formatValue(customer[25]));
 
-        m_jdate.setText(Formats.DATE.formatValue(customer[26]));        
+        m_jdate.setText(Formats.DATE.formatValue(customer[26]));
 
         m_jTaxID.setEnabled(true);
         m_jSearchkey.setEnabled(true);
@@ -431,73 +442,72 @@ public final class CustomersView extends javax.swing.JPanel implements EditorRec
         txtCurdate.setEnabled(true);
         m_jVisible.setEnabled(true);
         m_jVip.setEnabled(true);
-        txtDiscount.setEnabled(true);        
+        txtDiscount.setEnabled(true);
         jcard.setEnabled(true);
-               
+
         txtFirstName.setEnabled(true);
         txtLastName.setEnabled(true);
         txtEmail.setEnabled(true);
-        webBtnMail.setEnabled(true);        
+        webBtnMail.setEnabled(true);
         txtPhone.setEnabled(true);
         txtPhone2.setEnabled(true);
         txtFax.setEnabled(true);
         m_jImage.setEnabled(true);
-       
+
         txtAddress.setEnabled(true);
         txtAddress2.setEnabled(true);
         txtPostal.setEnabled(true);
         txtCity.setEnabled(true);
         txtRegion.setEnabled(true);
         txtCountry.setEnabled(true);
-        
+
         m_jCategory.setEnabled(true);
-        
+
         m_jdate.setEnabled(true);
-        m_jbtndate.setEnabled(true);         
+        m_jbtndate.setEnabled(true);
 
         jBtnCreateCard.setEnabled(true);
         jBtnClearCard.setEnabled(true);
-        
+
         jTableCustomerTransactions.setVisible(false);
         jTableCustomerTransactions.setEnabled(true);
         resetTranxTable();
-        
+
         jTableCustomerTransactions.repaint();
         repaint();
-        refresh();    
+        refresh();
     }
-    
-public void resetTranxTable() {
 
-    jTableCustomerTransactions.getColumnModel().getColumn(0).setPreferredWidth(50);                    
-    jTableCustomerTransactions.getColumnModel().getColumn(1).setPreferredWidth(70);                            
-    jTableCustomerTransactions.getColumnModel().getColumn(2).setPreferredWidth(280);                
-    jTableCustomerTransactions.getColumnModel().getColumn(3).setPreferredWidth(30);        
-    jTableCustomerTransactions.getColumnModel().getColumn(4).setPreferredWidth(50);
-    
-    // set font for headers
-    Font f = new Font("Arial", Font.BOLD, 14);
-    JTableHeader header = jTableCustomerTransactions.getTableHeader();
-    header.setFont(f);
-      
-    jTableCustomerTransactions.getTableHeader().setReorderingAllowed(true); 
-    jTableCustomerTransactions.setAutoCreateRowSorter(true);    
-    jTableCustomerTransactions.repaint();      
-    
-    
-}
+    public void resetTranxTable() {
 
-    
+        jTableCustomerTransactions.getColumnModel().getColumn(0).setPreferredWidth(50);
+        jTableCustomerTransactions.getColumnModel().getColumn(1).setPreferredWidth(70);
+        jTableCustomerTransactions.getColumnModel().getColumn(2).setPreferredWidth(280);
+        jTableCustomerTransactions.getColumnModel().getColumn(3).setPreferredWidth(30);
+        jTableCustomerTransactions.getColumnModel().getColumn(4).setPreferredWidth(50);
+
+        // set font for headers
+        Font f = new Font("Arial", Font.BOLD, 14);
+        JTableHeader header = jTableCustomerTransactions.getTableHeader();
+        header.setFont(f);
+
+        jTableCustomerTransactions.getTableHeader().setReorderingAllowed(true);
+        jTableCustomerTransactions.setAutoCreateRowSorter(true);
+        jTableCustomerTransactions.repaint();
+
+    }
+
     /**
      * Create object
+     *
      * @return
      * @throws BasicException
      */
     @Override
     public Object createValue() throws BasicException {
-        
+
         Object[] customer = new Object[27];
-        
+
         customer[0] = m_oId == null ? UUID.randomUUID().toString() : m_oId;
         customer[1] = m_jSearchkey.getText();
         customer[2] = m_jTaxID.getText();
@@ -510,37 +520,36 @@ public void resetTranxTable() {
         customer[9] = Formats.STRING.parseValue(txtPostal.getText());
         customer[10] = Formats.STRING.parseValue(txtCity.getText());
         customer[11] = Formats.STRING.parseValue(txtRegion.getText());
-        customer[12] = Formats.STRING.parseValue(txtCountry.getText()); 
+        customer[12] = Formats.STRING.parseValue(txtCountry.getText());
         customer[13] = Formats.STRING.parseValue(txtFirstName.getText());
         customer[14] = Formats.STRING.parseValue(txtLastName.getText());
         customer[15] = Formats.STRING.parseValue(txtEmail.getText());
         customer[16] = Formats.STRING.parseValue(txtPhone.getText());
         customer[17] = Formats.STRING.parseValue(txtPhone2.getText());
-        customer[18] = Formats.STRING.parseValue(txtFax.getText());        
+        customer[18] = Formats.STRING.parseValue(txtFax.getText());
         customer[19] = m_jNotes.getText();
         customer[20] = m_jVisible.isSelected();
         customer[21] = Formats.TIMESTAMP.parseValue(txtCurdate.getText()); // not saved
         customer[22] = Formats.CURRENCY.parseValue(txtCurdebt.getText()); // not saved
-        customer[23] = m_jImage.getImage();  
+        customer[23] = m_jImage.getImage();
         customer[24] = m_jVip.isSelected();
         customer[25] = Formats.CURRENCY.parseValue(txtDiscount.getText(), 0.0);
         customer[26] = Formats.TIMESTAMP.parseValue(m_jdate.getText());
-        
+
         return customer;
     }
-    
+
     @Override
     public Component getComponent() {
         return this;
     }
-    
+
 // JG 3 Oct 2013 - Customer Transaction List
 // JG 10 April 2016 - Revision    
     private List<CustomerTransaction> getTransactionOfName(String cId) {
 
         try {
             customerTransactionList = dlSales.getCustomersTransactionList(cId);
-
 
         } catch (BasicException ex) {
             Logger.getLogger(CustomersView.class.getName()).log(Level.SEVERE, null, ex);
@@ -554,10 +563,10 @@ public void resetTranxTable() {
                 customerList.add(customerTransaction);
             }
         }
-        
+
         txtCurdate.repaint();
         txtCurdebt.repaint();
-            
+
         repaint();
         refresh();
 
@@ -565,12 +574,12 @@ public void resetTranxTable() {
     }
 
     class TransactionTableModel extends AbstractTableModel {
+
         String tkt = AppLocal.getIntString("label.tblHeaderCol1");
         String dte = AppLocal.getIntString("label.tblHeaderCol2");
         String prd = AppLocal.getIntString("label.tblHeaderCol3");
         String qty = AppLocal.getIntString("label.tblHeaderCol4");
         String ttl = AppLocal.getIntString("label.tblHeaderCol5");
-
 
         List<CustomerTransaction> transactionList;
         String[] columnNames = {tkt, dte, prd, qty, ttl};
@@ -594,13 +603,13 @@ public void resetTranxTable() {
         @Override
         public Object getValueAt(int row, int column) {
             CustomerTransaction customerTransaction = transactionList.get(row);
-        
+
             jTableCustomerTransactions.setRowHeight(25);
 
             switch (column) {
 
                 case 0:
-                    return customerTransaction.getTicketId();                    
+                    return customerTransaction.getTicketId();
                 case 1:
                     Date transactionDate = customerTransaction.getTransactionDate();
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -612,7 +621,7 @@ public void resetTranxTable() {
                     return customerTransaction.getUnit();
                 case 4:
                     Double amount = customerTransaction.getTotal();
-                    DecimalFormat df = new DecimalFormat("#.##");                    
+                    DecimalFormat df = new DecimalFormat("#.##");
                     String formattedAmount = df.format(amount);
                     return formattedAmount;
                 default:
@@ -625,11 +634,12 @@ public void resetTranxTable() {
         public String getColumnName(int col) {
             return columnNames[col];
         }
-    }    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -792,6 +802,7 @@ public void resetTranxTable() {
         jLabel10.setPreferredSize(new java.awt.Dimension(130, 30));
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel4.setText(AppLocal.getIntString("label.visible")); // NOI18N
         jLabel4.setMaximumSize(new java.awt.Dimension(140, 25));
         jLabel4.setMinimumSize(new java.awt.Dimension(140, 25));
@@ -838,7 +849,6 @@ public void resetTranxTable() {
         txtCurdate.setPreferredSize(new java.awt.Dimension(130, 30));
 
         jLabel7.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/info.png"))); // NOI18N
         jLabel7.setText(AppLocal.getIntString("label.taxid")); // NOI18N
         jLabel7.setMaximumSize(new java.awt.Dimension(150, 30));
         jLabel7.setMinimumSize(new java.awt.Dimension(140, 25));
@@ -872,7 +882,6 @@ public void resetTranxTable() {
         });
 
         jLblDiscount.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLblDiscount.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLblDiscount.setText(AppLocal.getIntString("label.discount")); // NOI18N
         jLblDiscount.setPreferredSize(new java.awt.Dimension(70, 30));
 
@@ -882,71 +891,85 @@ public void resetTranxTable() {
             jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelGeneralLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtMaxdebt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLblDiscount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(m_jCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanelGeneralLayout.createSequentialGroup()
-                        .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanelGeneralLayout.createSequentialGroup()
-                                .addComponent(m_jVisible, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(28, 28, 28)
-                                .addComponent(jLblVIP, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(m_jVip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLblDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(8, 8, 8)
-                                .addComponent(jLblDiscountpercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jcard, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanelGeneralLayout.createSequentialGroup()
-                                .addComponent(jBtnCreateCard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jBtnClearCard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtDiscount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(m_jTaxID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(m_jSearchkey, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(m_jName, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanelGeneralLayout.createSequentialGroup()
                         .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelGeneralLayout.createSequentialGroup()
-                                .addComponent(m_jdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanelGeneralLayout.createSequentialGroup()
+                                        .addComponent(m_jdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(m_jbtndate, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(m_jbtndate, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtCurdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtCurdebt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelGeneralLayout.createSequentialGroup()
+                                    .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanelGeneralLayout.createSequentialGroup()
+                                            .addComponent(txtDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jLblDiscountpercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(jPanelGeneralLayout.createSequentialGroup()
+                                            .addComponent(jcard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addGap(30, 30, 30)))
+                                    .addComponent(jBtnCreateCard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jBtnClearCard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(m_jName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(m_jCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanelGeneralLayout.createSequentialGroup()
+                        .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(m_jTaxID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(m_jSearchkey, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
                         .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtCurdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtCurdebt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(27, Short.MAX_VALUE))
+                            .addGroup(jPanelGeneralLayout.createSequentialGroup()
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(m_jVisible, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelGeneralLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLblVIP, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(m_jVip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(83, 83, 83))))
         );
         jPanelGeneralLayout.setVerticalGroup(
             jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelGeneralLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(m_jTaxID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(13, Short.MAX_VALUE)
+                .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(m_jTaxID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(m_jVisible, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(m_jSearchkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(m_jSearchkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(m_jVip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLblVIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -959,14 +982,10 @@ public void resetTranxTable() {
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(m_jVisible, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLblVIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(m_jVip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLblDiscountpercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLblDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLblDiscountpercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanelGeneralLayout.createSequentialGroup()
@@ -1083,7 +1102,7 @@ public void resetTranxTable() {
                         .addComponent(txtFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(webBtnMail, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(76, Short.MAX_VALUE))
+                .addContainerGap(90, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1346,7 +1365,6 @@ public void resetTranxTable() {
         jTableCustomerTransactions.setOpaque(false);
         jTableCustomerTransactions.setPreferredSize(new java.awt.Dimension(375, 500));
         jTableCustomerTransactions.setRowHeight(25);
-        jTableCustomerTransactions.setShowVerticalLines(false);
         jScrollPane3.setViewportView(jTableCustomerTransactions);
 
         jLblTranCount.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -1368,7 +1386,7 @@ public void resetTranxTable() {
                         .addGap(424, 424, 424))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap())))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1377,7 +1395,8 @@ public void resetTranxTable() {
                     .addComponent(jBtnShowTrans, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLblTranCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab(bundle.getString("label.Transactions"), jPanel4); // NOI18N
@@ -1394,13 +1413,10 @@ public void resetTranxTable() {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(m_jImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(m_jImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -1446,7 +1462,7 @@ public void resetTranxTable() {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 659, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1459,38 +1475,38 @@ public void resetTranxTable() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBtnCreateCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnCreateCardActionPerformed
-        if (JOptionPane.showConfirmDialog(this, 
-               AppLocal.getIntString("message.cardnew"), 
-               AppLocal.getIntString("title.editor"), 
-               JOptionPane.YES_NO_OPTION, 
-               JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {            
+        if (JOptionPane.showConfirmDialog(this,
+                AppLocal.getIntString("message.cardnew"),
+                AppLocal.getIntString("title.editor"),
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
             jcard.setText("c" + StringUtils.getCardNumber());
             m_Dirty.setDirty(true);
         }
     }//GEN-LAST:event_jBtnCreateCardActionPerformed
 
     private void jBtnClearCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnClearCardActionPerformed
-        if (JOptionPane.showConfirmDialog(this, 
-                AppLocal.getIntString("message.cardremove"), 
-                AppLocal.getIntString("title.editor"), 
-                JOptionPane.YES_NO_OPTION, 
+        if (JOptionPane.showConfirmDialog(this,
+                AppLocal.getIntString("message.cardremove"),
+                AppLocal.getIntString("title.editor"),
+                JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
             jcard.setText(null);
             m_Dirty.setDirty(true);
         }
     }//GEN-LAST:event_jBtnClearCardActionPerformed
-       
+
     private void webBtnMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_webBtnMailActionPerformed
 
-        if(!"".equals(txtEmail.getText())) {
+        if (!"".equals(txtEmail.getText())) {
             Desktop desktop;
-    
-            if (Desktop.isDesktopSupported() 
-                && (desktop = Desktop.getDesktop()).isSupported(Desktop.Action.MAIL)) {
+
+            if (Desktop.isDesktopSupported()
+                    && (desktop = Desktop.getDesktop()).isSupported(Desktop.Action.MAIL)) {
                 URI mailto = null;
                 try {
                     mailto = new URI("mailto:"
-                    + txtEmail.getText());
+                            + txtEmail.getText());
                 } catch (URISyntaxException ex) {
                     Logger.getLogger(CustomersView.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1500,12 +1516,12 @@ public void resetTranxTable() {
                     Logger.getLogger(CustomersView.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
-                JOptionPane.showMessageDialog(this, 
-                AppLocal.getIntString("message.email"), 
-                "Email", JOptionPane.INFORMATION_MESSAGE);
-            }        
+                JOptionPane.showMessageDialog(this,
+                        AppLocal.getIntString("message.email"),
+                        "Email", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
-        
+
     }//GEN-LAST:event_webBtnMailActionPerformed
 
     private void jBtnShowTransActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnShowTransActionPerformed
@@ -1513,11 +1529,11 @@ public void resetTranxTable() {
         if (cId != null) {
             transactionModel = new TransactionTableModel(getTransactionOfName(cId));
             jTableCustomerTransactions.setModel(transactionModel);
-            if (transactionModel.getRowCount()> 0){
+            if (transactionModel.getRowCount() > 0) {
                 jTableCustomerTransactions.setVisible(true);
                 String TranCount = String.valueOf(transactionModel.getRowCount());
-                jLblTranCount.setText(TranCount + " for " + m_jName.getText());                
-            }else{
+                jLblTranCount.setText(TranCount + " for " + m_jName.getText());
+            } else {
                 jTableCustomerTransactions.setVisible(false);
                 JOptionPane.showMessageDialog(null, "No Transactions for this Customer", "Transactions", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -1560,12 +1576,12 @@ public void resetTranxTable() {
             StringSelection stringSelection = new StringSelection(uuidString);
             Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
             clpbrd.setContents(stringSelection, null);
-        
-            JOptionPane.showMessageDialog(null, 
-                AppLocal.getIntString("message.uuidcopy"));
+
+            JOptionPane.showMessageDialog(null,
+                    AppLocal.getIntString("message.uuidcopy"));
         }
     }//GEN-LAST:event_jLabel7MouseClicked
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBtnClearCard;
     private javax.swing.JButton jBtnCreateCard;
@@ -1636,15 +1652,5 @@ public void resetTranxTable() {
     private javax.swing.JTextField txtRegion;
     private javax.swing.JButton webBtnMail;
     // End of variables declaration//GEN-END:variables
-    
-    //ImageIcon infoIco = new ImageIcon(getClass().getResource("/com/openbravo/images/info.png"));
-    class RequiredVerifier extends InputVerifier {
-         public boolean verify(JComponent input) {
-             JTextField tf = (JTextField) input;
-             
-            //tf.getText().isBlank() ?  tf.setIcon : infoIco
-             
-             return !tf.getText().isBlank();
-         }
-     }
+
 }

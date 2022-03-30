@@ -45,6 +45,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import org.netbeans.validation.api.builtin.stringvalidation.StringValidators;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -52,6 +53,7 @@ import org.netbeans.validation.api.builtin.stringvalidation.StringValidators;
  */
 public final class SuppliersView extends com.openbravo.pos.panels.ValidationPanel implements EditorRecord {
 
+    private static final Logger LOGGER = Logger.getLogger(SuppliersView.class.getName());
     private static final long serialVersionUID = 1L;
     private Object m_oId;
 
@@ -100,7 +102,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
             init();
             initValidator();
         } catch (BeanFactoryException ex) {
-            Logger.getLogger(SuppliersView.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
     
@@ -305,7 +307,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
         txtRegion.setEnabled(false);
         txtCountry.setEnabled(false);
 
-        TransactionTableModel transactionModel = new TransactionTableModel(getTransactionOfName( m_oId.toString()));
+        TransactionTableModel transactionModel = new TransactionTableModel(new ArrayList<>());
         jTableSupplierTransactions.setModel(transactionModel);
         jTableSupplierTransactions.setEnabled(false);
 
@@ -475,13 +477,13 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
             }
 
         } catch (BasicException ex) {
-            Logger.getLogger(SuppliersView.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
         return supplierList;
     }
 
-    protected void initValidator() {
+    private void initValidator() {
         org.netbeans.validation.api.ui.ValidationGroup valGroup = getValidationGroup();
         valGroup.add(m_jSearchkey, StringValidators.REQUIRE_NON_EMPTY_STRING);
         valGroup.add(m_jName, StringValidators.REQUIRE_NON_EMPTY_STRING);
@@ -630,7 +632,6 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
         formTabbedPane.setPreferredSize(new java.awt.Dimension(650, 300));
 
         jLabel7.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/info.png"))); // NOI18N
         jLabel7.setText(AppLocal.getIntString("label.taxid")); // NOI18N
         jLabel7.setMaximumSize(new java.awt.Dimension(150, 30));
         jLabel7.setMinimumSize(new java.awt.Dimension(140, 25));
@@ -669,6 +670,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
         m_jName.setPreferredSize(new java.awt.Dimension(0, 30));
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel4.setText(AppLocal.getIntString("label.visible")); // NOI18N
         jLabel4.setMaximumSize(new java.awt.Dimension(140, 25));
         jLabel4.setMinimumSize(new java.awt.Dimension(140, 25));
@@ -751,18 +753,17 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
                                     .addComponent(m_jName_Label, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(m_jName, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(117, Short.MAX_VALUE))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(m_jTaxID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(m_jVisible, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(m_jTaxID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(m_jVisible, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(11, 11, 11)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -937,6 +938,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
 
         jLabel22.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel22.setText(AppLocal.getIntString("label.postal")); // NOI18N
+        jLabel22.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         jLabel22.setPreferredSize(new java.awt.Dimension(110, 30));
 
         txtPostal.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -1160,7 +1162,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
                         .addComponent(jBtnShowTrans, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLblTranCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1170,7 +1172,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
                     .addComponent(jLblTranCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(63, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         formTabbedPane.addTab(bundle.getString("label.SupplierTransactions"), jPanel4); // NOI18N
@@ -1185,7 +1187,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 668, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -1193,7 +1195,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
 
         formTabbedPane.addTab(AppLocal.getIntString("label.notes"), jPanel3); // NOI18N
@@ -1208,17 +1210,11 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
 
             if (Desktop.isDesktopSupported()
                     && (desktop = Desktop.getDesktop()).isSupported(Desktop.Action.MAIL)) {
-                URI mailto = null;
                 try {
-                    mailto = new URI("mailto:"
-                            + txtEmail.getText());
-                } catch (URISyntaxException ex) {
-                    Logger.getLogger(SuppliersView.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                try {
+                    URI mailto = new URI("mailto:"+ txtEmail.getText());
                     desktop.mail(mailto);
-                } catch (IOException ex) {
-                    Logger.getLogger(SuppliersView.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException | URISyntaxException ex) {
+                    LOGGER.log(Level.SEVERE, "Exception mailto", ex);
                 }
             } else {
                 JOptionPane.showMessageDialog(this,
@@ -1230,8 +1226,9 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
     }//GEN-LAST:event_webBtnMailActionPerformed
 
     private void jBtnShowTransActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnShowTransActionPerformed
-        String cId = m_oId.toString();
-        if (cId != null) {
+        
+        if (m_oId != null) {
+            String cId = m_oId.toString();
             TransactionTableModel transactionModel = new TransactionTableModel(getTransactionOfName(cId));
             jTableSupplierTransactions.setModel(transactionModel);
             if (transactionModel.getRowCount() > 0) {

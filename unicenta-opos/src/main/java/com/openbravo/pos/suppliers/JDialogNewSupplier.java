@@ -40,8 +40,7 @@ public class JDialogNewSupplier extends javax.swing.JDialog {
     private DataLogicSales dlSales;
     private TableDefinition tsuppliers;
     private SupplierInfoExt selectedSupplier;
-    private Object m_oId;
-    SuppliersView suppliersView;
+    private SuppliersView suppliersView;
     
     /** Creates new form quick New Supplier
      * @param parent */
@@ -65,6 +64,9 @@ public class JDialogNewSupplier extends javax.swing.JDialog {
         
         DirtyManager dirty = new DirtyManager();
         suppliersView = new SuppliersView(app,dirty);
+        suppliersView.writeValueInsert();
+        jFormPanel.setLayout(new java.awt.BorderLayout());
+        jFormPanel.add(suppliersView, java.awt.BorderLayout.CENTER);
             
         getRootPane().setDefaultButton(m_jBtnOK);
 
@@ -72,7 +74,6 @@ public class JDialogNewSupplier extends javax.swing.JDialog {
     
      public Object createValue() throws BasicException {
         Object supplier = suppliersView.createValue();
-        m_oId = ((Object[] )supplier)[0];
         return supplier;
     }
 
@@ -130,18 +131,7 @@ public class JDialogNewSupplier extends javax.swing.JDialog {
 
         jFormPanel.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jFormPanel.setPreferredSize(new java.awt.Dimension(660, 310));
-
-        javax.swing.GroupLayout jFormPanelLayout = new javax.swing.GroupLayout(jFormPanel);
-        jFormPanel.setLayout(jFormPanelLayout);
-        jFormPanelLayout.setHorizontalGroup(
-            jFormPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 612, Short.MAX_VALUE)
-        );
-        jFormPanelLayout.setVerticalGroup(
-            jFormPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 310, Short.MAX_VALUE)
-        );
-
+        jFormPanel.setLayout(new java.awt.BorderLayout());
         getContentPane().add(jFormPanel, java.awt.BorderLayout.NORTH);
         jFormPanel.getAccessibleContext().setAccessibleName("");
 
@@ -185,10 +175,13 @@ public class JDialogNewSupplier extends javax.swing.JDialog {
 
     private void m_jBtnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jBtnOKActionPerformed
         try {
-            Object supplier = createValue() ;            
-           int status = tsuppliers.getInsertSentence().exec(supplier);
-            if (status>0){
-                selectedSupplier =  dlSales.loadSupplierExt(m_oId.toString());
+            Object supplier = createValue() ;  
+            String m_oId = ((Object[] )supplier)[0].toString();
+            
+            int status = tsuppliers.getInsertSentence().exec(supplier);
+            
+            if (status > 0){
+                selectedSupplier =  dlSales.loadSupplierExt(m_oId);
                 dispose();
             }else{
                 MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE, 

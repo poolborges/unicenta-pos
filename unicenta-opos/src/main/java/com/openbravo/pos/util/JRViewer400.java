@@ -56,6 +56,8 @@ import java.text.DecimalFormatSymbols;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -86,8 +88,6 @@ import net.sf.jasperreports.view.JRSaveContributor;
 import net.sf.jasperreports.view.SaveContributorUtils;
 import net.sf.jasperreports.view.save.JRPrintSaveContributor;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Represents the built-in visual component for JasperReports. This class is
@@ -104,7 +104,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlinkListener {
 
-    private static final Log log = LogFactory.getLog(JRViewer400.class);
+    private static final Logger LOGGER = Logger.getLogger(JRViewer400.class.getName());
 
     private static final long serialVersionUID = JRConstants.SERIAL_VERSION_UID;
 
@@ -1045,8 +1045,8 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
                 try {
                     contributor.save(jasperPrint, file);
                 } catch (JRException e) {
-                    if (log.isErrorEnabled()) {
-                        log.error("Save error.", e);
+                    if (LOGGER.isLoggable(Level.SEVERE)) {
+                        LOGGER.log(Level.SEVERE,"Save error.", e);
                     }
                     JOptionPane.showMessageDialog(this, getBundleString("error.saving"));
                 }
@@ -1110,8 +1110,8 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
                                 JRViewer400.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                                 JasperPrintManager.getInstance(jasperReportsContext).print(jasperPrint, true);
                             } catch (Exception ex) {
-                                if (log.isErrorEnabled()) {
-                                    log.error("Print error.", ex);
+                                if (LOGGER.isLoggable(Level.SEVERE)) {
+                                    LOGGER.log(Level.SEVERE,"Print error.", ex);
                                 }
                                 JOptionPane.showMessageDialog(JRViewer400.this, getBundleString("error.printing"));
                             } finally {
@@ -1161,8 +1161,8 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
                 try {
                     loadReport(reportFileName, isXML);
                 } catch (JRException e) {
-                    if (log.isErrorEnabled()) {
-                        log.error("Reload error.", e);
+                    if (LOGGER.isLoggable(Level.SEVERE)) {
+                        LOGGER.log(Level.SEVERE,"Reload error.", e);
                     }
                     jasperPrint = null;
                     refreshTabs();
@@ -1291,8 +1291,8 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
                 listener.gotoHyperlink(hyperlink);
             }
         } catch (JRException e) {
-            if (log.isErrorEnabled()) {
-                log.error("Hyperlink click error.", e);
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE,"Hyperlink click error.", e);
             }
             JOptionPane.showMessageDialog(this, getBundleString("error.hyperlink"));
         }
@@ -1530,8 +1530,8 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
             try {
                 image = JasperPrintManager.getInstance(jasperReportsContext).printToImage(jasperPrint, pageIndex, realZoom);
             } catch (Exception e) {
-                if (log.isErrorEnabled()) {
-                    log.error("Print page to image error.", e);
+                if (LOGGER.isLoggable(Level.SEVERE)) {
+                    LOGGER.log(Level.SEVERE,"Print page to image error.", e);
                 }
                 pageError = true;
 
@@ -1893,8 +1893,8 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
             exporter.setConfiguration(configuration);
             exporter.exportReport();
         } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Page paint error.", e);
+            if (LOGGER.isLoggable(Level.SEVERE)) {
+                LOGGER.log(Level.SEVERE,"Page paint error.", e);
             }
             pageError = true;
 
