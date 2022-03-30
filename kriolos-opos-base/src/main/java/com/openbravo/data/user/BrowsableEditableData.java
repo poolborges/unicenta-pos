@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  * @author JG uniCenta
  */
 public class BrowsableEditableData {
-    
+
     private static final Logger LOGGER = Logger.getLogger(BrowsableEditableData.class.getName());
 
     public static final int ST_NORECORD = 0;
@@ -195,27 +195,27 @@ public class BrowsableEditableData {
     public int getState() {
         return m_iState;
     }
-    
+
     private String getStateAsString() {
-        
+
         String sString = Integer.toString(m_iState);
         switch (m_iState) {
-                case ST_UPDATE: {
-                    sString += " ST_UPDATE";
-                    break;
-                }
-                case ST_INSERT: {
-                    sString += " ST_INSERT";
-                    break;
-                }
-                case ST_DELETE: {
-                    sString += " ST_DELETE";
-                    break;
-                }
-                default:
-                    sString += " UNKNOW";
-                    break;
+            case ST_UPDATE: {
+                sString += " ST_UPDATE";
+                break;
             }
+            case ST_INSERT: {
+                sString += " ST_INSERT";
+                break;
+            }
+            case ST_DELETE: {
+                sString += " ST_DELETE";
+                break;
+            }
+            default:
+                sString += " UNKNOW";
+                break;
+        }
         return sString;
     }
 
@@ -230,7 +230,11 @@ public class BrowsableEditableData {
     /**
      * Execute listener event fire
      */
-    protected void fireDataBrowse() {
+    private void fireDataBrowse() {
+        
+        LOGGER.log(Level.INFO, "Executing state is: {0}, class: {1}",
+                    new Object[]{getStateAsString(),
+                        m_editorrecord.getClass().getName()});
 
         m_bIsAdjusting = true;
         // Lanzamos los eventos...
@@ -248,6 +252,10 @@ public class BrowsableEditableData {
         }
         m_Dirty.setDirty(false);
         fireStateUpdate();
+
+        LOGGER.log(Level.INFO, "Executing state is: {0}, class: {1}",
+                new Object[]{getStateAsString(),
+                    m_editorrecord.getClass().getName()});
 
         // Invoco a los Editor Listener
         for (EventListener l1 : listeners.getListeners(EditorListener.class)) {
@@ -464,8 +472,8 @@ public class BrowsableEditableData {
                 default:
                     break;
             }
-            LOGGER.log(Level.INFO, "Executing saveData state is: {0}, class: {1}", 
-                    new Object[]{getStateAsString(), 
+            LOGGER.log(Level.INFO, "Executing saveData state is: {0}, class: {1}",
+                    new Object[]{getStateAsString(),
                         m_editorrecord.getClass().getName()});
         }
     }
@@ -526,10 +534,13 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void actionInsert() throws BasicException {
-            m_iState = ST_INSERT;
-            m_editorrecord.writeValueInsert();
-            m_Dirty.setDirty(false);
-            fireStateUpdate();
+        m_iState = ST_INSERT;
+        m_editorrecord.writeValueInsert();
+        m_Dirty.setDirty(false);
+        fireStateUpdate();
+        LOGGER.log(Level.INFO, "Executing state is: {0}, class: {1}",
+                new Object[]{getStateAsString(),
+                    m_editorrecord.getClass().getName()});
 
     }
 
@@ -539,17 +550,20 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void actionDelete() throws BasicException {
+        // Y nos ponemos en estado de delete
+        Object obj = getCurrentElement();
+        int iIndex = getIndex();
+        int iCount = m_bd.getSize();
+        if (iIndex >= 0 && iIndex < iCount) {
+            m_iState = ST_DELETE;
+            m_editorrecord.writeValueDelete(obj);
+            m_Dirty.setDirty(true);
+            fireStateUpdate(); // ?
+        }
 
-            // Y nos ponemos en estado de delete
-            Object obj = getCurrentElement();
-            int iIndex = getIndex();
-            int iCount = m_bd.getSize();
-            if (iIndex >= 0 && iIndex < iCount) {
-                m_iState = ST_DELETE;
-                m_editorrecord.writeValueDelete(obj);
-                m_Dirty.setDirty(true);
-                fireStateUpdate(); // ?
-            }
+        LOGGER.log(Level.INFO, "Executing state is: {0}, class: {1}",
+                new Object[]{getStateAsString(),
+                    m_editorrecord.getClass().getName()});
     }
 
     private void baseMoveTo(int i) {
@@ -562,19 +576,19 @@ public class BrowsableEditableData {
         }
         fireDataBrowse();
     }
-    
-    private boolean confirmChanged(){
+
+    private boolean confirmChanged() {
 
         if (m_Dirty.isDirty()) {
             try {
-                
-                int res = JOptionPane.showConfirmDialog(null, 
-                        LocalRes.getIntString("message.wannasave"), 
-                        LocalRes.getIntString("title.editor"), 
-                        JOptionPane.YES_NO_OPTION, 
+
+                int res = JOptionPane.showConfirmDialog(null,
+                        LocalRes.getIntString("message.wannasave"),
+                        LocalRes.getIntString("title.editor"),
+                        JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE);
-                
-                if(res == JOptionPane.YES_OPTION){
+
+                if (res == JOptionPane.YES_OPTION) {
                     saveData();
                 }
             } catch (BasicException ex) {
@@ -582,7 +596,7 @@ public class BrowsableEditableData {
             }
             return true;
         }
-        
+
         return false;
     }
 }
