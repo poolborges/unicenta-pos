@@ -77,12 +77,12 @@ public class JAuthPanel extends javax.swing.JPanel {
             JFlowPanel jPeople = new JFlowPanel();
             jPeople.applyComponentOrientation(getComponentOrientation());
 
-            java.util.List peoples = m_dlSystem.listPeopleVisible();
+            java.util.List<AppUser> peoples = m_dlSystem.listPeopleVisible();
             
-            LOGGER.log(Level.INFO, "List of People size: ", peoples.size());
+            LOGGER.log(Level.INFO, "Number of Peoples found is: "+peoples.size());
 
-            for (Object people1 : peoples) {
-                AppUser user = (AppUser) people1;
+            for (AppUser user : peoples) {
+                
                 JButton btn = new JButton(new AppUserAction(user));
                 btn.applyComponentOrientation(getComponentOrientation());
                 btn.setFocusPainted(false);
@@ -111,7 +111,7 @@ public class JAuthPanel extends javax.swing.JPanel {
             try {
                 user = m_dlSystem.findPeopleByCard(inputtext.toString());
             } catch (BasicException ex) {
-                LOGGER.log(Level.WARNING, "Exception on listPeople: ", ex);
+                LOGGER.log(Level.WARNING, "Exception on findPeopleByCard: ", ex);
             }
 
             if (user == null) {
