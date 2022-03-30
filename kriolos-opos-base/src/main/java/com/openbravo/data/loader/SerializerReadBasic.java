@@ -22,7 +22,7 @@ import com.openbravo.basic.BasicException;
  *
  * @author JG uniCenta
  */
-public class SerializerReadBasic implements SerializerRead {
+public class SerializerReadBasic implements SerializerRead<Object[]> {
     
     private Datas[] m_classes;
 
@@ -31,7 +31,7 @@ public class SerializerReadBasic implements SerializerRead {
     }
     
     @Override
-    public Object readValues(DataRead dr) throws BasicException {
+    public Object[] readValues(DataRead dr) throws BasicException {
         
         Object[] m_values = new Object[m_classes.length];
         for (int i = 0; i < m_classes.length; i++) {
