@@ -239,25 +239,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <scope>provided</scope>
         </dependency>
         
-        <!-- 
+        <!-- ValidationAPI and NBM WRAPPER
         <dependency>
-            <groupId>com.mastfrog</groupId> 
-            <artifactId>simplevalidation</artifactId> 
-            <version>1.14</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.mastfrog</groupId> 
-            <artifactId>simplevalidation-swing</artifactId> 
-            <version>1.14</version>
+            <groupId>org.netbeans.external</groupId> 
+            <artifactId>ValidationAPI</artifactId> 
+            <version>${netbeans.version}</version>
             <scope>compile</scope>
         </dependency>
         -->
         <dependency>
-            <groupId>org.nebeans.external</groupId> 
-            <artifactId>ValidationAPI</artifactId> 
-            <version>RELEASE130</version>
-            <scope>compile</scope>
+            <groupId>org.netbeans.modules</groupId>
+            <artifactId>org-netbeans-modules-swing-validation</artifactId>
+            <version>${netbeans.version}</version>
         </dependency>
         
         <!-- netbeans MODULES -->
@@ -291,13 +284,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <artifactId>org-netbeans-modules-settings</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
-        <!--
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-api-annotations-common</artifactId>
             <version>${netbeans.version}</version>
-            <scope>provided</scope>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-dialogs</artifactId>
