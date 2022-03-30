@@ -16,6 +16,7 @@
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.PreparedStatement;
@@ -49,8 +50,9 @@ public final class PreparedSentenceJDBC implements SentenceExec {
      *
      * @return @throws BasicException
      */
+    @Override
     public int exec() throws BasicException {
-        return exec(null);
+        return exec(null,null);
     }
 
     /**
@@ -59,8 +61,9 @@ public final class PreparedSentenceJDBC implements SentenceExec {
      * @return
      * @throws BasicException
      */
+    @Override
     public int exec(Object params) throws BasicException {
-        return exec(params);
+        return exec(new Object[]{params});
     }
 
     /**
@@ -69,6 +72,7 @@ public final class PreparedSentenceJDBC implements SentenceExec {
      * @return
      * @throws BasicException
      */
+    @Override
     public int exec(Object... params) throws BasicException {
 
         int rowsAffected = 0;
@@ -94,6 +98,10 @@ public final class PreparedSentenceJDBC implements SentenceExec {
                         preparedStatement.setTimestamp(paramPosi, new Timestamp(((Date) obj).getTime()));
                     } else if (da.getClassValue() == byte[].class) {
                         byte[] ba = (byte[]) obj;
+                        InputStream strem = new ByteArrayInputStream(ba);
+                        preparedStatement.setBinaryStream(paramPosi, strem, ba.length);
+                    }else if (da.getClassValue() == BufferedImage.class) {
+                        byte[] ba = ImageUtils.writeImage((BufferedImage) obj);
                         InputStream strem = new ByteArrayInputStream(ba);
                         preparedStatement.setBinaryStream(paramPosi, strem, ba.length);
                     }
