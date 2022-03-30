@@ -196,6 +196,7 @@ public class JAuthPanel extends javax.swing.JPanel {
         mainPanel = new javax.swing.JPanel();
         m_vendorImageLabel = new javax.swing.JLabel();
         mainScrollPanel = new javax.swing.JScrollPane();
+        jCopyRightPanel1 = new com.openbravo.pos.forms.JCopyRightPanel();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 10), new java.awt.Dimension(32767, 0));
         leftPanel = new javax.swing.JPanel();
         leftHeaderPanel = new javax.swing.JPanel();
@@ -216,6 +217,8 @@ public class JAuthPanel extends javax.swing.JPanel {
         m_vendorImageLabel.setName("m_vendorImageLabel"); // NOI18N
         mainPanel.add(m_vendorImageLabel, java.awt.BorderLayout.NORTH);
         m_vendorImageLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(JAuthPanel.class, "JAuthPanel.m_vendorImageLabel.AccessibleContext.accessibleName")); // NOI18N
+
+        mainScrollPanel.setViewportView(jCopyRightPanel1);
 
         mainPanel.add(mainScrollPanel, java.awt.BorderLayout.CENTER);
         mainPanel.add(filler2, java.awt.BorderLayout.SOUTH);
@@ -281,6 +284,7 @@ public class JAuthPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler filler2;
+    private com.openbravo.pos.forms.JCopyRightPanel jCopyRightPanel1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel leftFooterPanel;
     private javax.swing.JPanel leftHeaderPanel;
