@@ -35,14 +35,17 @@ public class TableDefinition<T> {
     private int[] idinx;
    
     
-    /** Creates a new instance of TableDefinition
+    /** 
+     * Creates a new instance of TableDefinition
+     * 
      * @param s
      * @param fieldformat
      * @param tablename
      * @param fieldname
      * @param fieldtran
+     * @param fielddata 
      * @param idinx
-     * @param fielddata */
+     */
     public TableDefinition(Session s, String tablename, String[] fieldname, String[] fieldtran, Datas[] fielddata, Formats[] fieldformat,int[] idinx) {
         
         m_s = s;
@@ -107,7 +110,7 @@ public class TableDefinition<T> {
         return new ComparatorCreatorBasic(fieldtran, fielddata, aiOrders);
     }
 
-    public IKeyGetter getKeyGetterBasic() {
+    private IKeyGetter getKeyGetterBasic() {
         if (idinx.length == 1) {
             return new KeyGetterFirst(idinx);
         } else {
@@ -115,19 +118,19 @@ public class TableDefinition<T> {
         }
     }
 
-    public SerializerRead getSerializerReadBasic() {
+    private SerializerRead getSerializerReadBasic() {
         return new SerializerReadBasic(fielddata);
     }
 
-    public SerializerWrite getSerializerInsertBasic(int[] fieldindx) {
+    private SerializerWrite getSerializerInsertBasic(int[] fieldindx) {
         return new SerializerWriteBasicExt(fielddata, fieldindx);
     }
 
-    public SerializerWrite getSerializerDeleteBasic() {     
+    private SerializerWrite getSerializerDeleteBasic() {     
         return new SerializerWriteBasicExt(fielddata, idinx);
     }
 
-    public SerializerWrite getSerializerUpdateBasic(int[] fieldindx) {
+    private SerializerWrite getSerializerUpdateBasic(int[] fieldindx) {
         
         int[] aindex = new int[fieldindx.length + idinx.length];
 
@@ -145,7 +148,7 @@ public class TableDefinition<T> {
         return getListSentence(getSerializerReadBasic());
     }
 
-    public SentenceList<T> getListSentence(SerializerRead sr) {
+    public SentenceList<T> getListSentence(SerializerRead<T> sr) {
         return new PreparedSentence(m_s, getListSQL(), null,  sr);
     }
 
@@ -171,7 +174,7 @@ public class TableDefinition<T> {
         return getDeleteSentence(getSerializerDeleteBasic());
     }
 
-    public SentenceExec getDeleteSentence(SerializerWrite sw) {
+    public SentenceExec getDeleteSentence(SerializerWrite<T> sw) {
         return new PreparedSentence(m_s, getDeleteSQL(), sw, null);
     }
     

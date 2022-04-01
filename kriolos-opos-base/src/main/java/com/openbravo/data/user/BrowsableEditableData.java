@@ -231,10 +231,10 @@ public class BrowsableEditableData {
      * Execute listener event fire
      */
     private void fireDataBrowse() {
-        
+
         LOGGER.log(Level.INFO, "Executing state is: {0}, class: {1}",
-                    new Object[]{getStateAsString(),
-                        m_editorrecord.getClass().getName()});
+                new Object[]{getStateAsString(),
+                    m_editorrecord.getClass().getName()});
 
         m_bIsAdjusting = true;
         // Lanzamos los eventos...
@@ -317,7 +317,9 @@ public class BrowsableEditableData {
      * Refresh current state
      */
     public void refreshCurrent() {
-        baseMoveTo(m_iIndex);
+        if (confirmChanged()) {
+            baseMoveTo(m_iIndex);
+        }
     }
 
     /**
@@ -326,10 +328,11 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public void refreshData() throws BasicException {
-        confirmChanged();
-        m_bd.refreshData();
-        m_editorrecord.refresh();
-        baseMoveTo(0);
+        if (confirmChanged()) {
+            m_bd.refreshData();
+            m_editorrecord.refresh();
+            baseMoveTo(0);
+        }
     }
 
     /**
@@ -338,9 +341,11 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public void loadData() throws BasicException {
-        m_bd.loadData();
-        m_editorrecord.refresh();
-        baseMoveTo(0);
+        if (confirmChanged()) {
+            m_bd.loadData();
+            m_editorrecord.refresh();
+            baseMoveTo(0);
+        }
     }
 
     /**
@@ -349,10 +354,11 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public void unloadData() throws BasicException {
-        confirmChanged();
-        m_bd.unloadData();
-        m_editorrecord.refresh();
-        baseMoveTo(0);
+        if (confirmChanged()) {
+            m_bd.unloadData();
+            m_editorrecord.refresh();
+            baseMoveTo(0);
+        }
     }
 
     /**
@@ -362,9 +368,10 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public void sort(Comparator c) throws BasicException {
-        confirmChanged();
-        m_bd.sort(c);
-        baseMoveTo(0);
+        if (confirmChanged()) {
+            m_bd.sort(c);
+            baseMoveTo(0);
+        }
     }
 
     /**
@@ -374,9 +381,10 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public void moveTo(int i) throws BasicException {
-        confirmChanged();
-        if (m_iIndex != i) {
-            baseMoveTo(i);
+        if (confirmChanged()) {
+            if (m_iIndex != i) {
+                baseMoveTo(i);
+            }
         }
     }
 
@@ -386,9 +394,10 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void movePrev() throws BasicException {
-        confirmChanged();
-        if (m_iIndex > 0) {
-            baseMoveTo(m_iIndex - 1);
+        if (confirmChanged()) {
+            if (m_iIndex > 0) {
+                baseMoveTo(m_iIndex - 1);
+            }
         }
     }
 
@@ -398,9 +407,10 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void moveNext() throws BasicException {
-        confirmChanged();
-        if (m_iIndex < m_bd.getSize() - 1) {
-            baseMoveTo(m_iIndex + 1);
+        if (confirmChanged()) {
+            if (m_iIndex < m_bd.getSize() - 1) {
+                baseMoveTo(m_iIndex + 1);
+            }
         }
     }
 
@@ -410,9 +420,10 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void moveFirst() throws BasicException {
-        confirmChanged();
-        if (m_bd.getSize() > 0) {
-            baseMoveTo(0);
+        if (confirmChanged()) {
+            if (m_bd.getSize() > 0) {
+                baseMoveTo(0);
+            }
         }
     }
 
@@ -422,9 +433,10 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public final void moveLast() throws BasicException {
-        confirmChanged();
-        if (m_bd.getSize() > 0) {
-            baseMoveTo(m_bd.getSize() - 1);
+        if (confirmChanged()) {
+            if (m_bd.getSize() > 0) {
+                baseMoveTo(m_bd.getSize() - 1);
+            }
         }
     }
 
@@ -484,12 +496,7 @@ public class BrowsableEditableData {
      * @param c
      */
     public void actionReloadCurrent(Component c) {
-        if (!m_Dirty.isDirty()
-                || JOptionPane.showConfirmDialog(c,
-                        LocalRes.getIntString("message.changeslost"),
-                        LocalRes.getIntString("title.editor"),
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+        if (confirmChanged(c)) {
             refreshCurrent();
         }
     }
@@ -502,21 +509,7 @@ public class BrowsableEditableData {
      * @throws BasicException
      */
     public boolean actionClosingForm(Component c) throws BasicException {
-        if (m_Dirty.isDirty()) {
-            int res = JOptionPane.showConfirmDialog(c, LocalRes.getIntString("message.wannasave"), LocalRes.getIntString("title.editor"), JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-            switch (res) {
-                case JOptionPane.YES_OPTION:
-                    saveData();
-                    return true;
-                case JOptionPane.NO_OPTION:
-                    refreshCurrent();
-                    return true;
-                default:
-                    return false;
-            }
-        } else {
-            return true;
-        }
+        return confirmChanged(c);
     }
 
     /**
@@ -578,25 +571,16 @@ public class BrowsableEditableData {
     }
 
     private boolean confirmChanged() {
+        return confirmChanged(null);
+    }
 
-        if (m_Dirty.isDirty()) {
-            try {
+    private boolean confirmChanged(Component c) {
 
-                int res = JOptionPane.showConfirmDialog(null,
-                        LocalRes.getIntString("message.wannasave"),
+        return !m_Dirty.isDirty()
+                || JOptionPane.showConfirmDialog(c,
+                        LocalRes.getIntString("message.changeslost"),
                         LocalRes.getIntString("title.editor"),
                         JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE);
-
-                if (res == JOptionPane.YES_OPTION) {
-                    saveData();
-                }
-            } catch (BasicException ex) {
-                LOGGER.log(Level.SEVERE, "Exception on saveData", ex);
-            }
-            return true;
-        }
-
-        return false;
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION;
     }
 }

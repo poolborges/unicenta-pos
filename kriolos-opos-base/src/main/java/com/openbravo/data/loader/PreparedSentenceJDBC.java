@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +33,7 @@ import java.util.logging.Logger;
  */
 public final class PreparedSentenceJDBC implements SentenceExec {
 
-    private static final Logger LOGGER = Logger.getLogger(PreparedSentenceJDBC.class.getName());
+    protected final static System.Logger LOGGER = System.getLogger(PreparedSentenceJDBC.class.getName());
 
     private final Session session;
     private final String sql;
@@ -52,7 +53,18 @@ public final class PreparedSentenceJDBC implements SentenceExec {
      */
     @Override
     public int exec() throws BasicException {
-        return exec(null,null);
+        int rowsAffected = 0;
+        try ( PreparedStatement preparedStatement = session.getConnection().prepareStatement(sql)) {
+            rowsAffected = preparedStatement.executeUpdate();
+        } catch (SQLException sqlex) {
+            LOGGER.log(System.Logger.Level.WARNING, "Exception while execute SQL: " + sql, sqlex);
+            throw new BasicException(sqlex);
+        } catch (Exception ex) {
+            LOGGER.log(System.Logger.Level.WARNING, "Exception while execute SQL: " + sql, ex);
+            throw new BasicException(ex);
+        }
+
+        return rowsAffected;
     }
 
     /**
@@ -63,7 +75,38 @@ public final class PreparedSentenceJDBC implements SentenceExec {
      */
     @Override
     public int exec(Object params) throws BasicException {
-        return exec(new Object[]{params});
+
+        int rowsAffected = 0;
+        if (params instanceof Object[]) {
+            rowsAffected = exec((Object[]) params);
+        } else {
+            try ( PreparedStatement preparedStatement = session.getConnection().prepareStatement(sql)) {
+                int posi = 0;
+                int pindex = indexValue[posi];
+                Datas da = paramsDatas[pindex];
+                Object obj = params;
+                int paramPosi = posi + 1;
+                
+                int parameterCount = preparedStatement.getParameterMetaData().getParameterCount();
+                LOGGER.log(System.Logger.Level.DEBUG, "VARIBLES length "
+                        + "{params: " + (params == null? "NULL" : params.getClass())
+                        + ", indexValue: " + indexValue.length
+                        + ", paramsDatas: " + paramsDatas.length 
+                        + ", parameterCount:" +parameterCount
+                        + "} "+sql);
+
+                preparedStatement(preparedStatement, da, obj, paramPosi);
+                rowsAffected = preparedStatement.executeUpdate();
+            } catch (SQLException sqlex) {
+                LOGGER.log(System.Logger.Level.WARNING, "Exception while execute SQL: " + sql, sqlex);
+                throw new BasicException(sqlex);
+            } catch (Exception ex) {
+                LOGGER.log(System.Logger.Level.WARNING, "Exception while execute SQL: " + sql, ex);
+                throw new BasicException(ex);
+            }
+        }
+
+        return rowsAffected;
     }
 
     /**
@@ -78,44 +121,100 @@ public final class PreparedSentenceJDBC implements SentenceExec {
         int rowsAffected = 0;
         try ( PreparedStatement preparedStatement = session.getConnection().prepareStatement(sql)) {
 
-            if (params != null) {
-                for (int posi = 0; posi < indexValue.length; posi++) {
+            int parameterCount = preparedStatement.getParameterMetaData().getParameterCount();
+            
 
-                    int pindex = indexValue[posi];
-                    Datas da = paramsDatas[pindex];
-                    Object obj = params[pindex];
+                LOGGER.log(System.Logger.Level.DEBUG, "VARIBLES length "
+                        + "{params: " + (params == null? "NULL" : params.length)
+                        + ", indexValue: " + indexValue.length
+                        + ", paramsDatas: " + paramsDatas.length 
+                        + ", parameterCount:" +parameterCount
+                        + "} "+sql);
+   
+            for (int posi = 0; posi < paramsDatas.length; posi++) {
 
-                    int paramPosi = posi + 1;
-                    if (da.getClassValue() == Double.class) {
-                        preparedStatement.setDouble(paramPosi, (Double) obj);
-                    } else if (da.getClassValue() == Integer.class) {
-                        preparedStatement.setInt(paramPosi, (Integer) obj);
-                    } else if (da.getClassValue() == String.class) {
-                        preparedStatement.setString(paramPosi, (String) obj);
-                    } else if (da.getClassValue() == Boolean.class) {
-                        preparedStatement.setBoolean(paramPosi, (Boolean) obj);
-                    } else if (da.getClassValue() == Date.class) {
-                        preparedStatement.setTimestamp(paramPosi, new Timestamp(((Date) obj).getTime()));
-                    } else if (da.getClassValue() == byte[].class) {
-                        byte[] ba = (byte[]) obj;
-                        InputStream strem = new ByteArrayInputStream(ba);
-                        preparedStatement.setBinaryStream(paramPosi, strem, ba.length);
-                    }else if (da.getClassValue() == BufferedImage.class) {
-                        byte[] ba = ImageUtils.writeImage((BufferedImage) obj);
-                        InputStream strem = new ByteArrayInputStream(ba);
-                        preparedStatement.setBinaryStream(paramPosi, strem, ba.length);
-                    }
+                int pindex;
+                /*
+                if(indexValue.length == 1){
+                    pindex = posi;
+                }else {
+                   pindex = indexValue[posi];
                 }
+                */
+                pindex = indexValue[posi];
+                
+                Datas da = paramsDatas[pindex];
+                Object obj = params[pindex];
+
+                int paramPosi = posi + 1;
+                preparedStatement(preparedStatement, da, obj, paramPosi);
             }
             rowsAffected = preparedStatement.executeUpdate();
         } catch (SQLException sqlex) {
-            LOGGER.log(Level.SEVERE, "Exception while execute SQL: " + sql, sqlex);
+            LOGGER.log(System.Logger.Level.WARNING, "Exception while execute SQL: " + sql, sqlex);
             throw new BasicException(sqlex);
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Exception while execute SQL: " + sql, ex);
+            LOGGER.log(System.Logger.Level.WARNING, "Exception while execute SQL: " + sql, ex);
             throw new BasicException(ex);
         }
 
         return rowsAffected;
+    }
+
+    private void preparedStatement(PreparedStatement preparedStatement, Datas da, Object obj, int paramPosi)
+            throws SQLException {
+
+        LOGGER.log(System.Logger.Level.DEBUG, "PreparedStatement :: VARIBLES{ "
+                + "paramPosi: " + paramPosi
+                + ", Datas: " + da.getClassValue()
+                + ", obj: " + (obj==null? "NULL" : obj.toString())
+                + ", obj: " + (obj==null? "UNKNOW" : obj.getClass()) + "}");
+        if (da.getClassValue() == Double.class) {
+            if(obj == null){
+                preparedStatement.setNull(paramPosi, Types.DOUBLE);
+            }else{
+                preparedStatement.setDouble(paramPosi, (Double) obj);
+            }
+        } else if (da.getClassValue() == Integer.class) {
+            if(obj == null){
+                preparedStatement.setNull(paramPosi, Types.INTEGER);
+            }else{
+                preparedStatement.setInt(paramPosi, (Integer) obj);
+            }
+        } else if (da.getClassValue() == String.class) {
+            if(obj == null){
+                preparedStatement.setNull(paramPosi, Types.VARCHAR);
+            }else{
+                preparedStatement.setString(paramPosi, (String) obj);
+            }
+        } else if (da.getClassValue() == Boolean.class) {
+            if(obj == null){
+                preparedStatement.setNull(paramPosi, Types.BOOLEAN);
+            }else{
+                preparedStatement.setBoolean(paramPosi, (Boolean) obj);
+            }
+        } else if (da.getClassValue() == Date.class) {
+            if(obj == null){
+                preparedStatement.setNull(paramPosi, Types.TIMESTAMP);
+            }else{
+                preparedStatement.setTimestamp(paramPosi, new Timestamp(((Date) obj).getTime()));
+            }
+        } else if (da.getClassValue() == byte[].class) {
+            if(obj == null){
+                preparedStatement.setNull(paramPosi, Types.BINARY);
+            }else{
+                byte[] ba = (byte[]) obj;
+                InputStream strem = new ByteArrayInputStream(ba);
+                preparedStatement.setBinaryStream(paramPosi, strem);
+            }
+        } else if (da.getClassValue() == BufferedImage.class) {
+            if(obj == null){
+                preparedStatement.setNull(paramPosi, Types.BINARY);
+            }else{
+                byte[] ba = ImageUtils.writeImage((BufferedImage) obj);
+                InputStream strem = new ByteArrayInputStream(ba);
+                preparedStatement.setBinaryStream(paramPosi, strem);
+            }
+        }
     }
 }

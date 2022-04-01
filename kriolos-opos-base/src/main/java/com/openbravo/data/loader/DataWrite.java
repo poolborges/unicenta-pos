@@ -22,7 +22,7 @@ import com.openbravo.basic.BasicException;
  *
  * @author  adrian
  */
-public interface DataWrite<T> {
+public interface DataWrite {
 
     public void setInt(int paramIndex, Integer iValue) throws BasicException;
 
@@ -36,5 +36,5 @@ public interface DataWrite<T> {
     
     public void setBytes(int paramIndex, byte[] value) throws BasicException;
 
-    public void setObject(int paramIndex, T value) throws BasicException;
+    public void setObject(int paramIndex, Object value) throws BasicException;
 }
