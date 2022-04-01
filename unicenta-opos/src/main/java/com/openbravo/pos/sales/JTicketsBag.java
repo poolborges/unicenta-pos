@@ -30,6 +30,7 @@ import javax.swing.JPanel;
  */
 public abstract class JTicketsBag extends JPanel {
     
+    protected final static System.Logger LOGGER = System.getLogger(JTicketsBag.class.getName());
     /**
      *
      */

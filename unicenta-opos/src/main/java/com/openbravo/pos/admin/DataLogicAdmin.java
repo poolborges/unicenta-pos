@@ -16,9 +16,12 @@
 package com.openbravo.pos.admin;
 
 import com.openbravo.data.loader.*;
+import com.openbravo.data.user.DefaultSaveProvider;
+import com.openbravo.data.user.SaveProvider;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.BeanFactoryDataSingle;
+import java.util.UUID;
 
 /**
  *
@@ -83,6 +86,42 @@ public class DataLogicAdmin extends BeanFactoryDataSingle {
     public final TableDefinition<ResourceInfo> getTableResources() {
         return m_tresources;
     }
+    
+
+    private SentenceExec peopleSentenceExecUpdate(){
+        Datas[] resourcedata = new Datas[]{Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING, Datas.BOOLEAN, Datas.STRING, Datas.IMAGE};
+         SentenceExec sentupdate = new PreparedSentenceJDBC(this.s,
+                 "UPDATE people SET NAME = ?, APPPASSWORD = ?, ROLE = ?, VISIBLE = ?, CARD = ?, IMAGE = ? WHERE ID = ?",
+               resourcedata,new int[]{1, 2, 3, 4, 5, 6, 0});
+         
+        return sentupdate;
+    }
+    
+    private SentenceExec peopleSentenceExecDelete(){
+        Datas[] resourcedata = new Datas[]{Datas.STRING};
+         SentenceExec sentdelete = new PreparedSentenceJDBC(this.s,
+                "DELETE FROM people WHERE ID = ?",
+                resourcedata,new int[]{0});
+         
+        return sentdelete;
+    }
+    
+    private SentenceExec peopleSentenceExecInsert(){
+        Datas[] resourcedata = new Datas[]{Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING, Datas.BOOLEAN, Datas.STRING, Datas.IMAGE};
+         SentenceExec sentinsert = new PreparedSentenceJDBC(this.s,
+                "INSERT INTO people(ID, NAME, APPPASSWORD, ROLE, VISIBLE, CARD, IMAGE) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                resourcedata,new int[]{0, 1, 2, 3, 4, 5, 6});
+         
+        return sentinsert;
+    }
+    
+    public SaveProvider<Object> getPeopleSaveProvider(){
+        return new DefaultSaveProvider(
+                peopleSentenceExecUpdate(), 
+                peopleSentenceExecDelete(), 
+                peopleSentenceExecInsert());
+    }
+            
 
     public final SentenceList<PeopleInfo> getPeopleList() {
         return new StaticSentence(s,

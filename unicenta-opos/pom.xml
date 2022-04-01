@@ -231,13 +231,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <artifactId>jaxb-impl</artifactId>
             <scope>runtime</scope>
         </dependency>
-
-        <!-- DEV/COMPILE IME ONL-->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
         
         <!-- ValidationAPI and NBM WRAPPER
         <dependency>

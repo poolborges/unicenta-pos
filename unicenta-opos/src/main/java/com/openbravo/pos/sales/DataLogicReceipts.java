@@ -85,12 +85,12 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
                 if (record != null && record[0] != null) {
                     ticketInfo = (TicketInfo) record[0];
                 }
-            }else {
+            } else {
                 LOGGER.log(Level.SEVERE, "Fail getSharedTicket id is null");
             }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Exception getSharedTicket: " + id, ex);
-            throw new BasicException("Exception getSharedTicket id: "+ id, ex);
+            throw new BasicException("Exception getSharedTicket id: " + id, ex);
         }
 
         return ticketInfo;
@@ -106,29 +106,26 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
     public final List<SharedTicketInfo> getSharedTicketList() throws BasicException {
 
         List<SharedTicketInfo> lis = new ArrayList<>();
-        try {
+        String SQL = "SELECT ID, NAME, APPUSER, LOCKED, PICKUPID, CONTENT FROM sharedtickets ORDER BY ID";
 
-            String SQL = "SELECT ID, NAME, APPUSER, LOCKED, PICKUPID, CONTENT FROM sharedtickets ORDER BY ID";
+        try ( Statement pstmt = s.getConnection().createStatement();  ResultSet rs = pstmt.executeQuery(SQL)) {
+            while (rs.next()) {
+                SharedTicketInfo sTicketInfo = new SharedTicketInfo();
 
-            try ( Statement pstmt = s.getConnection().createStatement(); ResultSet rs = pstmt.executeQuery(SQL)) {
-                while (rs.next()) {
-                    SharedTicketInfo sTicketInfo = new SharedTicketInfo();
+                sTicketInfo.setId(rs.getString(1));
+                sTicketInfo.setName(rs.getString(2));
+                sTicketInfo.setUserName(rs.getString(3));
+                sTicketInfo.setStatus(rs.getString(4));
+                sTicketInfo.setPickupId(rs.getInt(5));
 
-                    sTicketInfo.setId(rs.getString(1));
-                    sTicketInfo.setName(rs.getString(2));
-                    sTicketInfo.setUserName(rs.getString(3));
-                    sTicketInfo.setStatus(rs.getString(4));
-                    sTicketInfo.setPickupId(rs.getInt(5));
-
-                    Blob blob = rs.getBlob(6);
-                    ObjectInputStream bis = new ObjectInputStream(blob.getBinaryStream());
-                    TicketInfo tInfo = (TicketInfo) bis.readObject();
-                    sTicketInfo.setTicketInfo(tInfo);
-                }
+                Blob blob = rs.getBlob(6);
+                ObjectInputStream bis = new ObjectInputStream(blob.getBinaryStream());
+                TicketInfo tInfo = (TicketInfo) bis.readObject();
+                sTicketInfo.setTicketInfo(tInfo);
             }
         } catch (SQLException | IOException | ClassNotFoundException ex) {
             LOGGER.log(Level.WARNING, "Exception getSharedTicketList ", ex);
-            throw new BasicException("Exception getSharedTicketList",ex);
+            throw new BasicException("Exception getSharedTicketList", ex);
         }
 
         return lis;
@@ -145,8 +142,8 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
                     new SerializerReadClass<>(SharedTicketInfo.class))
                     .list();
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception getUserSharedTicketList user: "+ appuser,ex);
-            throw new BasicException("Exception getUserSharedTicketList user: "+ appuser,ex);
+            LOGGER.log(Level.WARNING, "Exception getUserSharedTicketList user: " + appuser, ex);
+            throw new BasicException("Exception getUserSharedTicketList user: " + appuser, ex);
         }
 
         return list;
@@ -155,8 +152,8 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
     public final void insertSharedTicket(final String id, final TicketInfo ticket, int pickupid) throws BasicException {
         int rowsAffected = 0;
         String SQL = "INSERT INTO sharedtickets (ID, NAME, CONTENT, APPUSER, PICKUPID) VALUES (?, ?, ?, ?, ?) ";
-            
-        try(PreparedStatement pstmt = s.getConnection().prepareStatement(SQL)) {
+
+        try ( PreparedStatement pstmt = s.getConnection().prepareStatement(SQL)) {
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream bos = new ObjectOutputStream(baos);
@@ -165,17 +162,16 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
             byte[] saves = baos.toByteArray();
             ByteArrayInputStream bais = new ByteArrayInputStream(saves);
 
-            
             pstmt.setString(1, id);
             pstmt.setString(2, ticket.getName());
             pstmt.setBlob(3, bais, saves.length);
             pstmt.setString(4, ticket.getUser().getId());
             pstmt.setInt(5, pickupid);
             rowsAffected = pstmt.executeUpdate();
-            s.getConnection().commit();
+            //s.getConnection().commit();
         } catch (SQLException | IOException ex) {
-            LOGGER.log(Level.WARNING, "Exception Insert SharedTicket id: "+id, ex);
-            throw new BasicException("Exception Insert SharedTicket id: "+id, ex);
+            LOGGER.log(Level.WARNING, "Exception Insert SharedTicket id: " + id, ex);
+            throw new BasicException("Exception Insert SharedTicket id: " + id, ex);
         }
     }
 
@@ -189,7 +185,7 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
     public final void updateSharedTicket(final String id, final TicketInfo ticket, int pickupid) throws BasicException {
 
         String SQL = "UPDATE sharedtickets SET NAME = ?, CONTENT = ?, APPUSER = ?, PICKUPID = ? WHERE ID = ?";
-        try(PreparedStatement pstmt = s.getConnection().prepareStatement(SQL)) {
+        try ( PreparedStatement pstmt = s.getConnection().prepareStatement(SQL)) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream bos = new ObjectOutputStream(baos);
             bos.writeObject(ticket);
@@ -197,18 +193,16 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
             byte[] saves = baos.toByteArray();
             ByteArrayInputStream bais = new ByteArrayInputStream(saves);
 
-            
-
             pstmt.setString(1, ticket.getName());
             pstmt.setBlob(2, bais, saves.length);
             pstmt.setString(3, ticket.getUser().getId());
             pstmt.setInt(4, pickupid);
             pstmt.setString(5, id);
             pstmt.executeUpdate();
-            s.getConnection().commit();
+            //s.getConnection().commit();
         } catch (SQLException | IOException ex) {
-            LOGGER.log(Level.WARNING, "Exception UPDATE SharedTicket id: "+id,ex);
-            throw new BasicException("Exception UPDATE SharedTicket id: "+id, ex);
+            LOGGER.log(Level.WARNING, "Exception UPDATE SharedTicket id: " + id, ex);
+            throw new BasicException("Exception UPDATE SharedTicket id: " + id, ex);
         }
     }
 
@@ -221,7 +215,7 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
      */
     public final void updateRSharedTicket(final String id, final TicketInfo ticket, int pickupid) throws BasicException {
 
-        updateSharedTicket(id,  ticket,  pickupid);
+        updateSharedTicket(id, ticket, pickupid);
     }
 
     /**
@@ -249,8 +243,8 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
                     + "WHERE ID = ?",
                     new SerializerWriteBasicExt(datas, new int[]{1, 0})).exec(values);
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception lockSharedTicket id: "+id, ex);
-            throw new BasicException("Exception lockSharedTicket id: "+id, ex);
+            LOGGER.log(Level.WARNING, "Exception lockSharedTicket id: " + id, ex);
+            throw new BasicException("Exception lockSharedTicket id: " + id, ex);
         }
     }
 
@@ -279,8 +273,8 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
                     + "WHERE ID = ?",
                     new SerializerWriteBasicExt(datas, new int[]{1, 0})).exec(values);
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception unlockSharedTicket id: "+ id, ex);
-            throw new BasicException("Exception unlockSharedTicket id: "+ id, ex);
+            LOGGER.log(Level.WARNING, "Exception unlockSharedTicket id: " + id, ex);
+            throw new BasicException("Exception unlockSharedTicket id: " + id, ex);
         }
     }
 
@@ -294,7 +288,7 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
      */
     public final void insertRSharedTicket(final String id, final TicketInfo ticket, int pickupid) throws BasicException {
 
-        insertSharedTicket(id,  ticket,  pickupid);
+        insertSharedTicket(id, ticket, pickupid);
     }
 
     /**
@@ -309,8 +303,8 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
                     "DELETE FROM sharedtickets WHERE ID = ?",
                     SerializerWriteString.INSTANCE).exec(id);
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception Delete SharedTicket id: "+ id,ex);
-            throw new BasicException("Exception Delete SharedTicket id: "+ id, ex);
+            LOGGER.log(Level.WARNING, "Exception Delete SharedTicket id: " + id, ex);
+            throw new BasicException("Exception Delete SharedTicket id: " + id, ex);
         }
     }
 
@@ -336,8 +330,8 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
                 }
             }
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception getPickupId id: "+ id,ex);
-            throw new BasicException("Exception getPickupId id: "+ id, ex);
+            LOGGER.log(Level.WARNING, "Exception getPickupId id: " + id, ex);
+            throw new BasicException("Exception getPickupId id: " + id, ex);
         }
 
         return pickupId;
@@ -357,8 +351,8 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
                 }
             }
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception getUserId id: "+ id,ex);
-            throw new BasicException("Exception getUserId id: "+ id, ex);
+            LOGGER.log(Level.WARNING, "Exception getUserId id: " + id, ex);
+            throw new BasicException("Exception getUserId id: " + id, ex);
         }
 
         return userId;
@@ -379,8 +373,8 @@ public class DataLogicReceipts extends BeanFactoryDataSingle {
                 }
             }
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Exception getLockState id: "+ id,ex);
-            throw new BasicException("Exception getLockState id: "+ id, ex);
+            LOGGER.log(Level.WARNING, "Exception getLockState id: " + id, ex);
+            throw new BasicException("Exception getLockState id: " + id, ex);
         }
         return state;
     }

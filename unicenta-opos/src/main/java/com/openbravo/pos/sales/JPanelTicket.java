@@ -457,7 +457,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             stateToZero();
             repaint();
 
-            //cl.show(this, "null");
+            cl.show(this, "null");
 
             if ((m_oTicket != null) && (m_oTicket.getLinesCount() == 0)) {
                 resetSouthComponent();
@@ -1581,7 +1581,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     refreshTicket();
                 } else {
                     Toolkit.getDefaultToolkit().beep();
-                    LOGGER.log(System.Logger.Level.WARNING, "m_oTicket: "+m_oTicket +", LinesCount: "+ (m_oTicket != null ? m_oTicket.getLinesCount() : 0));
+                    LOGGER.log(System.Logger.Level.DEBUG, "Canno close Ticket, because m_oTicket is "+m_oTicket +", and LinesCount is "+ (m_oTicket != null ? m_oTicket.getLinesCount() : 0));
                 }
             }
         }
@@ -2619,8 +2619,10 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private void m_jListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jListActionPerformed
 
         ProductInfoExt prod = JProductFinder.showMessage(JPanelTicket.this, dlSales);
-        if (prod != null) {
+        if (prod != null && m_oTicket != null) {
             buttonTransition(prod);
+        }else{
+            Toolkit.getDefaultToolkit().beep();
         }
 
     }//GEN-LAST:event_m_jListActionPerformed

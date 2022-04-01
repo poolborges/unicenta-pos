@@ -31,8 +31,6 @@ import com.openbravo.pos.sales.TicketsEditor;
 import com.openbravo.pos.ticket.TicketInfo;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -43,8 +41,6 @@ import javax.swing.SwingUtilities;
  * @author JG uniCenta
  */
 public class JTicketsBagShared extends JTicketsBag {
-
-    private final static Logger LOGGER = Logger.getLogger(JTicketsBagShared.class.getName());
 
     private DataLogicReceipts dlReceipts = null;
     private DataLogicSales dlSales = null;
@@ -121,9 +117,9 @@ public class JTicketsBagShared extends JTicketsBag {
                 m_jListTickets.setText("");
             }
 
-            LOGGER.log(Level.INFO, "Shared SharedTicket: " + count);
+            LOGGER.log(System.Logger.Level.DEBUG, "Shared SharedTicket: " + count);
         } catch (BasicException ex) {
-            LOGGER.log(Level.SEVERE, "Exception updateCount: ", ex);
+            LOGGER.log(System.Logger.Level.WARNING, "Exception updateCount: ", ex);
             new MessageInf(ex).show(this);
             m_jListTickets.setText("");
         }
@@ -160,16 +156,16 @@ public class JTicketsBagShared extends JTicketsBag {
                             m_panelticket.getActiveTicket().getPickupId());
 
                     m_jListTickets.setText("*");
-                    LOGGER.log(Level.INFO, "SAVED Current Ticket ID: ", ticketID);
+                    LOGGER.log(System.Logger.Level.DEBUG, "SAVED Current Ticket ID: ", ticketID);
                 } else {
-                    LOGGER.log(Level.INFO, "NOT SAVED Current Ticket because has no line/item, Ticket ID: ", ticketID);
+                    LOGGER.log(System.Logger.Level.DEBUG, "NOT SAVED Current Ticket because has no line/item, Ticket ID: ", ticketID);
                 }
             } catch (BasicException e) {
-                LOGGER.log(Level.SEVERE, "Exception saveCurrentTicket: "+ticketID, e);
+                LOGGER.log(System.Logger.Level.WARNING, "Exception saveCurrentTicket: "+ticketID, e);
                 new MessageInf(e).show(this);
             }
         } else {
-            LOGGER.log(Level.WARNING, "NOT SAVED Current Ticket because ActiveTicket is NULL");
+            LOGGER.log(System.Logger.Level.WARNING, "NOT SAVED Current Ticket because ActiveTicket is NULL");
         }
 
         updateCount();
@@ -180,7 +176,7 @@ public class JTicketsBagShared extends JTicketsBag {
         TicketInfo ticket = dlReceipts.getSharedTicket(id);
         if (ticket == null) {
             m_jListTickets.setText("");
-            LOGGER.log(Level.WARNING, "NOT FOUND Shared TICKET for id: " + id);
+            LOGGER.log(System.Logger.Level.WARNING, "NOT FOUND Shared TICKET for id: " + id);
             throw new BasicException(AppLocal.getIntString("message.noticket"));
         } else {
             dlReceipts.getPickupId(id);
@@ -195,7 +191,7 @@ public class JTicketsBagShared extends JTicketsBag {
 
     private void setActiveReprintTicket(String id) throws BasicException {
         //TicketInfo ticket = dlSales.getReprintTicket(id);
-        LOGGER.log(Level.WARNING, "NOT IMPLEMENTED setActiveReprintTicket");
+        LOGGER.log(System.Logger.Level.WARNING, "NOT IMPLEMENTED setActiveReprintTicket");
     }
 
     private void selectValidTicket() {
@@ -212,7 +208,7 @@ public class JTicketsBagShared extends JTicketsBag {
                 }
             }
         } catch (BasicException e) {
-            LOGGER.log(Level.SEVERE, "Exception selectValidTicket: ", e);
+            LOGGER.log(System.Logger.Level.WARNING, "Exception selectValidTicket: ", e);
             new MessageInf(e).show(this);
         }
     }
@@ -225,14 +221,14 @@ public class JTicketsBagShared extends JTicketsBag {
 
             //CREATE NEW
             TicketInfo ticket = new TicketInfo();
-            LOGGER.log(Level.INFO, "newTicket has id: " + ticket.getId());
+            LOGGER.log(System.Logger.Level.DEBUG, "newTicket has id: " + ticket.getId());
             m_panelticket.setActiveTicket(ticket, null);
 
             saveCurrentTicket();
             updateCount();
 
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "Exception while exec newTicket: ", ex);
+            LOGGER.log(System.Logger.Level.WARNING, "Exception while exec newTicket: ", ex);
         }
 
     }
@@ -392,7 +388,7 @@ public class JTicketsBagShared extends JTicketsBag {
                         }
                     }
                 } catch (BasicException e) {
-                    LOGGER.log(Level.SEVERE, "Exception selectValidTicket: ", e);
+                    LOGGER.log(System.Logger.Level.WARNING, "Exception selectValidTicket: ", e);
                     new MessageInf(e).show(JTicketsBagShared.this);
                 }
             }
@@ -478,7 +474,7 @@ public class JTicketsBagShared extends JTicketsBag {
                         }
                     }
                 } catch (BasicException e) {
-                    LOGGER.log(Level.SEVERE, "Exception ReprintTicketsAction: ", e);
+                    LOGGER.log(System.Logger.Level.WARNING, "Exception ReprintTicketsAction: ", e);
                     new MessageInf(e).show(JTicketsBagShared.this);
                 }
             }

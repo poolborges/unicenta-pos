@@ -229,18 +229,10 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         SentenceExec m_resourcebytesinsert = new PreparedSentenceJDBC(this.session,
                 "INSERT INTO resources(ID, NAME, RESTYPE, CONTENT) VALUES (?, ?, ?, ?)",
                 resourcedata,new int[]{0, 1, 2, 3});
-                /*
-                new PreparedSentence(this.session,
-                "INSERT INTO resources(ID, NAME, RESTYPE, CONTENT) VALUES (?, ?, ?, ?)",
-                new SerializerWriteBasicExt(resourcedata, new int[]{0, 1, 2, 3}));*/
 
         SentenceExec m_resourcebytesupdate = new PreparedSentenceJDBC(this.session,
                 "UPDATE resources SET NAME = ?, RESTYPE = ?, CONTENT = ? WHERE NAME = ?",
                 resourcedata, new int[]{1, 2, 3, 1});
-                /*
-                new PreparedSentence(this.session,
-                "UPDATE resources SET NAME = ?, RESTYPE = ?, CONTENT = ? WHERE NAME = ?",
-                new SerializerWriteBasicExt(resourcedata, new int[]{1, 2, 3, 1}));*/
 
        
         try {

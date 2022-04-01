@@ -22,15 +22,11 @@ import java.awt.CardLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -125,7 +121,8 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                 new SerializerReadClass(Floor.class));
             m_afloors = sent.list();
                
-        } catch (BasicException eD) {
+        } catch (BasicException ex) {
+            LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
             m_afloors = new ArrayList<>();
         }
         try {
@@ -135,7 +132,8 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                 null, 
                 new SerializerReadClass(Place.class));
             m_aplaces = sent.list();
-        } catch (BasicException eD) {
+        } catch (BasicException ex) {
+            LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
             m_aplaces = new ArrayList<>();
         } 
         
@@ -251,7 +249,8 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
             autoRefreshTimer.start();
             try {
                 Thread.sleep(1000);
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ex) {
+                LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
                 autoRefreshTimer.stop();
             } 
         } else {
@@ -313,8 +312,9 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                         m_panelticket.getActiveTicket(),
                         m_panelticket.getActiveTicket().getPickupId());
                     dlReceipts.unlockSharedTicket(m_PlaceCurrent.getId(),null);
-                } catch (BasicException e) {
-                    new MessageInf(e).show(this);
+                } catch (BasicException ex) {
+                    LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
+                    new MessageInf(ex).show(this);
                 }                                  
  
                 m_PlaceCurrent = null;
@@ -364,8 +364,9 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
             try {
                 dlReceipts.updateRSharedTicket(m_PlaceCurrent.getId(), 
                     m_panelticket.getActiveTicket(),m_panelticket.getActiveTicket().getPickupId());
-            } catch (BasicException e) {
-                new MessageInf(e).show(this);
+            } catch (BasicException ex) {
+                LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
+                new MessageInf(ex).show(this);
             }      
             
             m_PlaceClipboard = m_PlaceCurrent;    
@@ -429,7 +430,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                         , JOptionPane.INFORMATION_MESSAGE);                        
                 }
             } catch (BasicException ex) {
-                Logger.getLogger(JTicketsBagRestaurantMap.class.getName()).log(Level.SEVERE, null,ex);
+                LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
             }
         }
         
@@ -471,8 +472,9 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
             String id = m_PlaceCurrent.getId();
             try {
                 dlReceipts.deleteSharedTicket(id);
-            } catch (BasicException e) {
-                new MessageInf(e).show(this);
+            } catch (BasicException ex) {
+                LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
+                new MessageInf(ex).show(this);
             }       
             
             m_PlaceCurrent.setPeople(false);
@@ -504,8 +506,9 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
             l.stream().forEach((ticket) -> {
                 atickets.add(ticket.getId());
             });
-        } catch (BasicException e) {
-            new MessageInf(e).show(this);
+        } catch (BasicException ex) {
+            LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
+            new MessageInf(ex).show(this);
         }            
             
         m_aplaces.stream().forEach((table) -> {
@@ -622,13 +625,16 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
     }
     
     private TicketInfo getTicketInfo(Place place) {
-
+        TicketInfo ticketInfo = null;
+        
         try {
-            return dlReceipts.getSharedTicket(place.getId());
-        } catch (BasicException e) {
-            new MessageInf(e).show(JTicketsBagRestaurantMap.this);
-            return null;
+            ticketInfo= dlReceipts.getSharedTicket(place.getId());
+        } catch (BasicException ex) {
+            LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
+            new MessageInf(ex).show(JTicketsBagRestaurantMap.this);
         }
+        
+        return ticketInfo;
     }
     
     private void setActivePlace(Place place, TicketInfo ticket) {
@@ -668,8 +674,9 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                 ticket.setUser(m_App.getAppUserView().getUser().getUserInfo());
                 try {
                     dlReceipts.insertSharedTicket(m_place.getId(), ticket, ticket.getPickupId());               
-                } catch (BasicException e) {
-                    new MessageInf(e).show(JTicketsBagRestaurantMap.this);
+                } catch (BasicException ex) {
+                    LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
+                    new MessageInf(ex).show(JTicketsBagRestaurantMap.this);
                 }
                 m_place.setPeople(true);                   
                 setActivePlace(m_place, ticket);   
@@ -709,7 +716,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                         }
                     }
                 } catch (BasicException ex) {
-                    Logger.getLogger(JTicketsBagRestaurantMap.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
                 }
             }    
         }
@@ -742,8 +749,9 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                                 dlReceipts.updateRSharedTicket(m_place.getId(), 
                                     ticket, ticket.getPickupId());
                                 dlReceipts.deleteSharedTicket(m_PlaceClipboard.getId());   
-                            } catch (BasicException e) {
-                                new MessageInf(e).show(JTicketsBagRestaurantMap.this);
+                            } catch (BasicException ex) {
+                                LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
+                                new MessageInf(ex).show(JTicketsBagRestaurantMap.this);
                             }
                             m_PlaceClipboard = null;
                             customer = null;
@@ -775,8 +783,9 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                             m_place.setPeople(true);                              
                             dlReceipts.deleteSharedTicket(m_PlaceClipboard.getId());
                             m_PlaceClipboard.setPeople(false);
-                        } catch (BasicException e) {
-                            new MessageInf(e).show(JTicketsBagRestaurantMap.this);
+                        } catch (BasicException ex) {
+                            LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
+                            new MessageInf(ex).show(JTicketsBagRestaurantMap.this);
                         }
                         m_PlaceClipboard = null;
                         customer = null;
@@ -977,7 +986,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
             try {
                 dlSystem.updatePlaces(pl.getX(), pl.getY(), pl.getId());
             } catch (BasicException ex) {
-                Logger.getLogger(JTicketsBagRestaurantMap.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
             }
         }
     }//GEN-LAST:event_m_jbtnSaveActionPerformed

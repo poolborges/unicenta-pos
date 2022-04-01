@@ -46,7 +46,7 @@ public class AppConfig implements AppProperties {
 
     private static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.forms.AppConfig");
 
-    private static volatile AppConfig m_instance = null;
+    private static volatile AppConfig m_instance;
     private Properties m_propsconfig;
     private File configfile;
 
@@ -180,23 +180,23 @@ public class AppConfig implements AppProperties {
         }
     }
 
-    public static AppConfig getInstance() {
-        AppConfig m_inst = AppConfig.m_instance;
+    public synchronized static AppConfig getInstance() {
+        AppConfig m_inst = m_instance;
 
         //Double check locking pattern
         //Check for the first time
         if (m_inst == null) {
 
             synchronized (AppConfig.class) {
-                m_inst = AppConfig.m_instance;
+                m_inst = m_instance;
                 //if there is no instance available... create new one
                 if (m_inst == null) {
-                    AppConfig.m_instance = m_inst = new AppConfig(getDefaultConfigFile());
+                    m_instance = m_inst = new AppConfig(getDefaultConfigFile());
                 }
             }
         }
 
-        return m_inst;
+        return m_instance;
     }
 
     public Boolean getBoolean(String sKey) {

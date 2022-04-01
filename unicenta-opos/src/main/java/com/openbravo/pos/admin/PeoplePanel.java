@@ -25,6 +25,7 @@ import com.openbravo.data.user.EditorRecord;
 import com.openbravo.data.user.ListProvider;
 import com.openbravo.data.user.ListProviderCreator;
 import com.openbravo.data.user.DefaultSaveProvider;
+import com.openbravo.data.user.SaveProvider;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.panels.JPanelTable;
 import javax.swing.ListCellRenderer;
@@ -35,6 +36,7 @@ import javax.swing.ListCellRenderer;
  */
 public class PeoplePanel extends JPanelTable {
     
+    private DataLogicAdmin dlAdmin;
     private TableDefinition tpeople;
     private PeopleView jeditor;
     
@@ -47,7 +49,7 @@ public class PeoplePanel extends JPanelTable {
      */
     @Override
     protected void init() {      
-        DataLogicAdmin dlAdmin = (DataLogicAdmin) app.getBean("com.openbravo.pos.admin.DataLogicAdmin");        
+        dlAdmin = (DataLogicAdmin) app.getBean("com.openbravo.pos.admin.DataLogicAdmin");        
         tpeople = dlAdmin.getTablePeople();           
         jeditor = new PeopleView(dlAdmin, dirty);    
     }
@@ -66,8 +68,9 @@ public class PeoplePanel extends JPanelTable {
      * @return
      */
     @Override
-    public DefaultSaveProvider getSaveProvider() {
-        return new DefaultSaveProvider(tpeople);        
+    public SaveProvider getSaveProvider() {
+        return dlAdmin.getPeopleSaveProvider();
+        //return new DefaultSaveProvider(tpeople);        
     }
     
     /**
