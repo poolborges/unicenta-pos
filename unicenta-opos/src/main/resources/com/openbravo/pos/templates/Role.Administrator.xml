@@ -156,8 +156,8 @@
     <class name="com.openbravo.pos.admin.RolesPanel"/>
     <class name="com.openbravo.pos.admin.ResourcesPanel"/>
     <class name="com.openbravo.pos.inventory.LocationsPanel"/>
-    <class name="com.openbravo.sales.restaurant.JPanelFloors"/>
-    <class name="com.openbravo.sales.restaurant.JPanelPlaces"/>
+    <class name="com.openbravo.pos.sales.restaurant.JPanelFloors"/>
+    <class name="com.openbravo.pos.sales.restaurant.JPanelPlaces"/>
     <class name="com.openbravo.pos.voucher.VoucherPanel"/>    
     <class name="/com/openbravo/reports/users.bs"/>
     <class name="/com/openbravo/reports/usersales.bs"/>
