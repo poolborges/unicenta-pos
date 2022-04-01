@@ -172,8 +172,7 @@ public class TableDefinition<T> {
     }
 
     public SentenceExec getDeleteSentence(SerializerWrite sw) {
-        //return new PreparedSentence(m_s, getDeleteSQL(), sw, null);
-        return new PreparedSentenceJDBC(m_s, getDeleteSQL(),this.fielddata, this.idinx);
+        return new PreparedSentence(m_s, getDeleteSQL(), sw, null);
     }
     
 
@@ -197,8 +196,7 @@ public class TableDefinition<T> {
     }
     
     public SentenceExec getInsertSentence(int[] fieldindx) {
-        //return new PreparedSentence(m_s, getInsertSQL(fieldindx), getSerializerInsertBasic(fieldindx), null);
-        return new PreparedSentenceJDBC(m_s, getInsertSQL(fieldindx),this.fielddata, this.idinx);
+        return new PreparedSentence(m_s, getInsertSQL(fieldindx), getSerializerInsertBasic(fieldindx), null);
     }
     
     private String getInsertSQL(int[] fieldindx) {
@@ -240,8 +238,7 @@ public class TableDefinition<T> {
     }
 
     public SentenceExec getUpdateSentence(int[] fieldindx) {
-        //return new PreparedSentence(m_s, getUpdateSQL(fieldindx), getSerializerUpdateBasic(fieldindx), null);
-        return new PreparedSentenceJDBC(m_s, getUpdateSQL(fieldindx),this.fielddata, this.idinx);
+        return new PreparedSentence(m_s, getUpdateSQL(fieldindx), getSerializerUpdateBasic(fieldindx), null);
     }
     
     private String getUpdateSQL(int[] fieldindx) {
