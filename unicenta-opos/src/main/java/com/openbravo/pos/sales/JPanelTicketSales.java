@@ -23,7 +23,6 @@ import com.openbravo.pos.ticket.ProductInfoExt;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Level;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -53,7 +52,7 @@ public class JPanelTicketSales extends JPanelTicket {
     @Override
     protected Component getSouthComponent() {
         // Este metodo esta sendo chamado antes do init()
-        LOGGER.info("JPanelTicketSales :: getSouthComponent");
+        LOGGER.log(System.Logger.Level.DEBUG,"JPanelTicketSales :: getSouthComponent");
         m_cat = new JCatalog(dlSales);
         m_cat.addActionListener(new CatalogListener());
         return m_cat.getComponent();
@@ -73,14 +72,14 @@ public class JPanelTicketSales extends JPanelTicket {
     public void activate() throws BasicException {
         super.activate();
         reLoadCatalog();
-        LOGGER.info("JPanelTicketSales activate");
+        LOGGER.log(System.Logger.Level.DEBUG,"JPanelTicketSales activate");
     }
 
     public void reLoadCatalog() {
         try {
             m_cat.loadCatalog();
         } catch (BasicException ex) {
-            LOGGER.log(Level.SEVERE, "Exception on : ", ex);
+            LOGGER.log(System.Logger.Level.ERROR, "Exception on : ", ex);
         }
     }
 
