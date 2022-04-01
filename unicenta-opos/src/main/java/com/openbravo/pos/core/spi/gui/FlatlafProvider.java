@@ -30,7 +30,6 @@ public class FlatlafProvider {
     public List<LafInfo> getLafInfoList() {
         List<LafInfo> lafs = new ArrayList<>();
 
-        try {
         // FlatLaf - Flat Look and Feel 
         lafs.add(new LafInfo("Flat Dark", com.formdev.flatlaf.FlatDarkLaf.class.getCanonicalName()));
         lafs.add(new LafInfo("Flat Darcula", com.formdev.flatlaf.FlatDarculaLaf.class.getCanonicalName()));
@@ -102,9 +101,6 @@ public class FlatlafProvider {
         lafs.addItem(new LafInfo("Solarized Light (Material)",com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatSolarizedLightIJTheme.class.getCanonicalName()));
         lafs.addItem(new LafInfo("Solarized Light Contrast (Material)",com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatSolarizedLightContrastIJTheme.class.getCanonicalName()));
         */
-        } catch (Exception ex) {
-            Logger.getLogger(FlatlafProvider.class.getName()).log(Level.WARNING,"Erro load com.formdev.flatlaf", ex);
-        }
         return lafs;
     }
 }
