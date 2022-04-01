@@ -143,11 +143,11 @@ public class TicketParser extends DefaultHandler {
             m_sp.parse(new InputSource(in), this);
 
         } catch (ParserConfigurationException ePC) {
-            throw new TicketPrinterException(LocalRes.getIntString("exception.parserconfig"), ePC);
+            throw new TicketPrinterException("exception.parserconfig", ePC);
         } catch (SAXException eSAX) {
-            throw new TicketPrinterException(LocalRes.getIntString("exception.xmlfile"), eSAX);
+            throw new TicketPrinterException("exception.xmlfile", eSAX);
         } catch (IOException eIO) {
-            throw new TicketPrinterException(LocalRes.getIntString("exception.iofile"), eIO);
+            throw new TicketPrinterException("exception.iofile", eIO);
         }
     }
 
