@@ -457,7 +457,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             stateToZero();
             repaint();
 
-            cl.show(this, "null");
+            //Present ticket PANEL
+            cl.show(this, "ticket");
 
             if ((m_oTicket != null) && (m_oTicket.getLinesCount() == 0)) {
                 resetSouthComponent();
