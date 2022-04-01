@@ -129,6 +129,7 @@ public class JPrincipalApp extends JPanel implements AppUserView {
 
     }
 
+    @Override
     public void exitToLogin() {
         m_appview.closeAppView();
     }

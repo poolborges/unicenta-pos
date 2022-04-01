@@ -45,4 +45,6 @@ public interface AppUserView {
      * @param sTaskClass
      */
     public void executeTask(String sTaskClass);
+    
+    public void exitToLogin();
 }

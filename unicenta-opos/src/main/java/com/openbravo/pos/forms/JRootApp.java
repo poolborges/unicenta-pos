@@ -121,7 +121,7 @@ public class JRootApp extends JPanel implements AppView {
 
         initPeripheral();
 
-        initClockTimer();
+        setTitlePanel();
 
         setStatusBarPanel();
 
@@ -130,7 +130,9 @@ public class JRootApp extends JPanel implements AppView {
         return true;
     }
 
-    private void initClockTimer() {
+    private void setTitlePanel() {
+
+        /*Timer show Date Hour:min:seg
         javax.swing.Timer clockTimer = new javax.swing.Timer(1000, new ActionListener() {
 
             @Override
@@ -141,7 +143,11 @@ public class JRootApp extends JPanel implements AppView {
             }
         });
 
-        clockTimer.start();
+        clockTimer.start();*/
+        
+        //Remove Panel Title
+        remove(m_jPanelTitle);
+        
     }
 
     private String getHostID() {

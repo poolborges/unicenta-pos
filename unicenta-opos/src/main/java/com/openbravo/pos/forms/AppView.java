@@ -63,6 +63,8 @@ public interface AppView {
     public AppUserView getAppUserView();
     
     public boolean hasPermission(String permission);
+    
+    public boolean closeAppView();
 
 }
 

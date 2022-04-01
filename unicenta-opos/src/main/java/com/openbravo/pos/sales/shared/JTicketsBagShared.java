@@ -434,7 +434,7 @@ public class JTicketsBagShared extends JTicketsBag {
 
     private void m_jHoldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jHoldActionPerformed
         deactivate();
-        ((JRootApp) m_App).closeAppView();
+        m_App.closeAppView();
     }//GEN-LAST:event_m_jHoldActionPerformed
 
     private void m_jReprintTicketsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jReprintTicketsActionPerformed

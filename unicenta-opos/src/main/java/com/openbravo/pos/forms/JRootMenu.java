@@ -15,7 +15,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.forms;
 
-import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.scripting.ScriptEngine;
@@ -33,11 +32,9 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
-import org.jdesktop.swingx.painter.MattePainter;
 // import org.jdesktop.swingx.painter.MattePainter;
 
 /**
@@ -54,8 +51,8 @@ public class JRootMenu {
     private JPanelView m_jLastView;
     private Action m_actionfirst;
     
-        private final Component parent;
-        private final AppUserView appview;
+    private final Component parent;
+    private final AppUserView appview;
 
     public JRootMenu(Component _parent, AppUserView _appview){
         m_aPreparedViews = new HashMap<>();
@@ -343,7 +340,7 @@ public class JRootMenu {
 
         @Override
         public void actionPerformed(ActionEvent evt) {
-//            m_appview.closeAppView();
+            appview.exitToLogin();
         }
     }
 
