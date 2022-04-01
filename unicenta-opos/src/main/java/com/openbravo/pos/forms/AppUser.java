@@ -15,12 +15,10 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.forms;
 
-import com.openbravo.data.loader.LocalRes;
 import com.openbravo.pos.ticket.UserInfo;
 import com.openbravo.pos.util.Hashcypher;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -162,11 +160,11 @@ public class AppUser {
                 m_sp.parse(new InputSource(new StringReader(sRolePermisions)), new ConfigurationHandler());
 
             } catch (ParserConfigurationException ePC) {
-                logger.log(Level.WARNING, LocalRes.getIntString("exception.parserconfig"), ePC);
+                logger.log(Level.WARNING, "exception.parserconfig", ePC);
             } catch (SAXException eSAX) {
-                logger.log(Level.WARNING, LocalRes.getIntString("exception.xmlfile"), eSAX);
+                logger.log(Level.WARNING, "exception.xmlfile", eSAX);
             } catch (IOException eIO) {
-                logger.log(Level.WARNING, LocalRes.getIntString("exception.iofile"), eIO);
+                logger.log(Level.WARNING, "exception.iofile", eIO);
             }
         }
 
