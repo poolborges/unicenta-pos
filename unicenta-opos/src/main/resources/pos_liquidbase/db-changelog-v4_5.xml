@@ -6,9 +6,9 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext 
                     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd 
                     http://www.liquibase.org/xml/ns/pro 
-                    http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd 
+                    http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.8.xsd 
                     http://www.liquibase.org/xml/ns/dbchangelog 
-                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
     <changeSet author="pauloborges (generated)" id="1603928315936-1">
         <createTable tableName="applications">
             <column name="id" type="VARCHAR(255)">
@@ -117,11 +117,14 @@
             <column name="parentid" type="VARCHAR(255)"/>
             <column name="image" type="BLOB"/>
             <column name="texttip" type="VARCHAR(255)"/>
-            <column defaultValueNumeric="true" name="catshowname" type="BOOLEAN">
+            <column defaultValueBoolean="true" name="catshowname" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column name="catorder" type="VARCHAR(255)"/>
         </createTable>
+        <modifySql dbms="mysql">
+            <replace replace="BLOB" with="MEDIUMBLOB"/>
+        </modifySql>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-10">
         <createTable tableName="closedcash">
@@ -202,8 +205,11 @@
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0.0" name="discount" type="DOUBLE"/>
-            <column defaultValueDate="1900-01-01T00:00:01" name="memodate" type="datetime"/>
+            <column defaultValueDate="2022-01-01T00:00:01" name="memodate" type="datetime"/>
         </createTable>
+        <modifySql dbms="mysql">
+            <replace replace="BLOB" with="MEDIUMBLOB"/>
+        </modifySql>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-13">
         <createTable tableName="draweropened">
@@ -224,6 +230,9 @@
             </column>
             <column name="image" type="BLOB"/>
         </createTable>
+        <modifySql dbms="mysql">
+            <replace replace="BLOB" with="MEDIUMBLOB"/>
+        </modifySql>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-15">
         <createTable tableName="leaves">
@@ -322,6 +331,9 @@
             <column name="cardname" type="VARCHAR(255)"/>
             <column name="voucher" type="VARCHAR(255)"/>
         </createTable>
+        <modifySql dbms="mysql">
+            <replace replace="BLOB" with="MEDIUMBLOB"/>
+        </modifySql>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-21">
         <createTable tableName="people">
@@ -341,6 +353,9 @@
             </column>
             <column name="image" type="BLOB"/>
         </createTable>
+        <modifySql dbms="mysql">
+            <replace replace="BLOB" with="MEDIUMBLOB"/>
+        </modifySql>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-22">
         <createTable tableName="pickup_number">
@@ -448,8 +463,11 @@
             <column defaultValue="1" name="printto" type="VARCHAR(255)"/>
             <column name="supplier" type="VARCHAR(255)"/>
             <column defaultValue="0" name="uom" type="VARCHAR(255)"/>
-            <column defaultValueDate="1900-01-01T00:00:01" name="memodate" type="datetime"/>
+            <column defaultValueDate="2022-01-01T00:00:01" name="memodate" type="datetime"/>
         </createTable>
+        <modifySql dbms="mysql">
+            <replace replace="BLOB" with="MEDIUMBLOB"/>
+        </modifySql>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-25">
         <createTable tableName="products_bundle">
@@ -502,6 +520,9 @@
             <column name="attributes" type="BLOB"/>
             <column name="person" type="VARCHAR(255)"/>
         </createTable>
+        <modifySql dbms="mysql">
+            <replace replace="BLOB" with="MEDIUMBLOB"/>
+        </modifySql>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-29">
         <createTable tableName="reservation_customers">
@@ -521,7 +542,7 @@
             <column name="created" type="datetime">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueDate="2017-01-01T00:00:00" name="datenew" type="datetime">
+            <column defaultValueDate="2022-01-01T00:00:01" name="datenew" type="datetime">
                 <constraints nullable="false"/>
             </column>
             <column name="title" type="VARCHAR(255)">
@@ -549,6 +570,9 @@
             </column>
             <column name="content" type="BLOB"/>
         </createTable>
+        <modifySql dbms="mysql">
+            <replace replace="BLOB" with="MEDIUMBLOB"/>
+        </modifySql>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-32">
         <createTable tableName="roles">
@@ -560,6 +584,9 @@
             </column>
             <column name="permissions" type="BLOB"/>
         </createTable>
+        <modifySql dbms="mysql">
+            <replace replace="BLOB" with="MEDIUMBLOB"/>
+        </modifySql>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-33">
         <createTable tableName="sharedtickets">
@@ -576,6 +603,9 @@
             </column>
             <column name="locked" type="VARCHAR(20)"/>
         </createTable>
+        <modifySql dbms="mysql">
+            <replace replace="BLOB" with="MEDIUMBLOB"/>
+        </modifySql>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-34">
         <createTable tableName="shift_breaks">
@@ -819,6 +849,9 @@
             </column>
             <column name="attributes" type="BLOB"/>
         </createTable>
+        <modifySql dbms="mysql">
+            <replace replace="BLOB" with="MEDIUMBLOB"/>
+        </modifySql>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-47">
         <createTable tableName="tickets">
@@ -1071,7 +1104,7 @@
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-90">
         <createIndex indexName="reservations_inx_1" tableName="reservations">
-            <column defaultValueDate="2017-01-01T00:00:00" name="datenew"/>
+            <column defaultValueDate="2022-01-01T00:00:01" name="datenew"/>
         </createIndex>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-91">

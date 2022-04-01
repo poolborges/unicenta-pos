@@ -6,11 +6,11 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext 
                     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd 
                     http://www.liquibase.org/xml/ns/pro 
-                    http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd 
+                    http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.8.xsd 
                     http://www.liquibase.org/xml/ns/dbchangelog 
-                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
     
-    <changeSet author="pauloborges (manual)" id="20210131-1300">
+    <changeSet author="pauloborges (manual)" id="1603928315936-1300">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
                 SELECT count(*) FROM people
@@ -66,7 +66,7 @@
         </insert>
     </changeSet>
     
-    <changeSet author="pauloborges (manual)" id="20210131-1600">
+    <changeSet author="pauloborges (manual)" id="1603928315936-1600">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
                 SELECT count(*) FROM resources
@@ -608,7 +608,7 @@
         </insert>
     </changeSet>
     
-    <changeSet author="pauloborges (manual)" id="20210131-1700">
+    <changeSet author="pauloborges (manual)" id="1603928315936-1700">
         
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
@@ -621,7 +621,7 @@
         </insert>
     </changeSet>
     
-    <changeSet author="pauloborges (manual)" id="20210131-1800">
+    <changeSet author="pauloborges (manual)" id="1603928315936-1800">
         
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
@@ -642,7 +642,7 @@
         </insert>
     </changeSet>
     
-    <changeSet author="pauloborges (manual)" id="20210131-1900">
+    <changeSet author="pauloborges (manual)" id="1603928315936-1900">
         
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
@@ -681,7 +681,7 @@
         </insert>
     </changeSet>
     
-    <changeSet author="pauloborges (manual)" id="20210131-2000">
+    <changeSet author="pauloborges (manual)" id="1603928315936-2000">
         
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
@@ -713,7 +713,7 @@
         </insert>
     </changeSet>
     
-    <changeSet author="pauloborges (manual)" id="20210131-2100">
+    <changeSet author="pauloborges (manual)" id="1603928315936-2100">
         
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
@@ -729,7 +729,7 @@
         </insert>
     </changeSet>
     
-    <changeSet author="pauloborges (manual)" id="20210131-2200">
+    <changeSet author="pauloborges (manual)" id="1603928315936-2200">
         
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
@@ -744,7 +744,7 @@
         </insert>
     </changeSet>
     
-    <changeSet author="pauloborges (manual)" id="20210131-2300">
+    <changeSet author="pauloborges (manual)" id="1603928315936-2300">
         
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
@@ -759,7 +759,7 @@
         </insert>
     </changeSet>
     
-    <changeSet author="pauloborges (manual)" id="20210131-2400">
+    <changeSet author="pauloborges (manual)" id="1603928315936-2400">
         
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
@@ -773,8 +773,7 @@
         </insert>
     </changeSet>
     
-    <!-- BUG MysqlDataTruncation: Data truncation: Data too long for column 'image'
-    <changeSet author="pauloborges (manual)" id="20210131-2500">
+    <changeSet author="pauloborges (manual)" id="1603928315936-2500">
         
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
@@ -788,9 +787,8 @@
             <column name="image" valueBlobFile="../com/openbravo/images/paperboard960_600.png" />
         </insert>
     </changeSet>
-    -->
     
-    <changeSet author="pauloborges (manual)" id="20210131-2600">
+    <changeSet author="pauloborges (manual)" id="1603928315936-2600">
         <insert tableName="pickup_number">
             <column name="id" value="1"/>
         </insert>
