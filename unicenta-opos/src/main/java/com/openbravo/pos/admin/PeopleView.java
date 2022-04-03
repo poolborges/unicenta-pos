@@ -166,7 +166,6 @@ public class PeopleView extends JPanel implements EditorRecord {
         } else {
             jLblCardID.setText(AppLocal.getIntString("label.card"));            
         }
-        LOGGER.log(Level.FINE, "People Card (Text.length): "+m_jcard.getText().length());
         
         m_jName.setEnabled(true);
         m_jRole.setEnabled(true);

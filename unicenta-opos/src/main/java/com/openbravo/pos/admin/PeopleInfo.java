@@ -31,7 +31,7 @@ public class PeopleInfo implements SerializableRead, IKeyed {
     
     private static final long serialVersionUID = 9110127845966L;
     private String m_sID;
-    protected String m_sName;
+    private String m_sName;
     
     public PeopleInfo() {
         m_sID = null;
