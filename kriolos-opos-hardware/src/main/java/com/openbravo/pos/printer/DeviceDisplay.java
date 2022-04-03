@@ -65,4 +65,7 @@ public interface DeviceDisplay {
      *
      */
     public void clearVisor();
+    
+    
+    public void repaintLines();
 }

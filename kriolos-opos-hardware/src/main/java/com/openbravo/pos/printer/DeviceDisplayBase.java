@@ -50,14 +50,14 @@ public class DeviceDisplayBase {
      */
     public static final int ANIMATION_CURTAIN = 4;
     
-    private DeviceDisplayImpl impl;    
+    private DeviceDisplay impl;    
     private DisplayAnimator anim;     
     private javax.swing.Timer m_tTimeTimer;    
     private int counter = 0;
     
     /** Creates a new instance of DeviceDisplayBase
      * @param impl */
-    public DeviceDisplayBase(DeviceDisplayImpl impl) {
+    public DeviceDisplayBase(DeviceDisplay impl) {
         this.impl = impl; 
         anim = new NullAnimator("", "");
         m_tTimeTimer = new javax.swing.Timer(50, new PrintTimeAction());

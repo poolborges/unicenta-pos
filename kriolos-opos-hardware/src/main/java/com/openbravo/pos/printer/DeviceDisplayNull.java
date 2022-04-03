@@ -91,4 +91,8 @@ public class DeviceDisplayNull implements DeviceDisplay {
     @Override
     public void writeVisor(int animation, String sLine1, String sLine2) {
     } 
+    
+    @Override
+    public void repaintLines() {
+    }
 }

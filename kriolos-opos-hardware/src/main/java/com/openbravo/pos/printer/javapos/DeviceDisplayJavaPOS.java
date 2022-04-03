@@ -18,7 +18,6 @@ package com.openbravo.pos.printer.javapos;
 
 import com.openbravo.pos.printer.DeviceDisplay;
 import com.openbravo.pos.printer.DeviceDisplayBase;
-import com.openbravo.pos.printer.DeviceDisplayImpl;
 import com.openbravo.pos.printer.TicketPrinterException;
 import jpos.JposException;
 import jpos.LineDisplay;
@@ -28,7 +27,7 @@ import jpos.LineDisplayConst;
  *
  * @author JG uniCenta
  */
-public class DeviceDisplayJavaPOS implements DeviceDisplay, DeviceDisplayImpl {
+public class DeviceDisplayJavaPOS implements DeviceDisplay {
     
     private String m_sName;
     private LineDisplay m_ld;

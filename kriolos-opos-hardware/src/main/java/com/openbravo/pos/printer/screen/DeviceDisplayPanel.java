@@ -19,7 +19,6 @@ package com.openbravo.pos.printer.screen;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.printer.DeviceDisplay;
 import com.openbravo.pos.printer.DeviceDisplayBase;
-import com.openbravo.pos.printer.DeviceDisplayImpl;
 import java.awt.*;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -28,7 +27,7 @@ import javax.swing.JPanel;
  *
  * @author  adrianromero
  */
-public class DeviceDisplayPanel extends JPanel implements DeviceDisplay, DeviceDisplayImpl {
+public class DeviceDisplayPanel extends JPanel implements DeviceDisplay {
     
     private String m_sName;
     

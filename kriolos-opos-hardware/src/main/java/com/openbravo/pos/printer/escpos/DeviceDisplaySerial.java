@@ -19,12 +19,11 @@ package com.openbravo.pos.printer.escpos;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.printer.DeviceDisplay;
 import com.openbravo.pos.printer.DeviceDisplayBase;
-import com.openbravo.pos.printer.DeviceDisplayImpl;
 /**
  *
  * @author adrianromero
  */
-public abstract class DeviceDisplaySerial implements DeviceDisplay, DeviceDisplayImpl {
+public abstract class DeviceDisplaySerial implements DeviceDisplay {
     
     private String m_sName;    
 

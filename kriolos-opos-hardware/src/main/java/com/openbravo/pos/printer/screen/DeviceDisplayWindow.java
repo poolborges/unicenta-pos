@@ -121,5 +121,9 @@ public class DeviceDisplayWindow extends javax.swing.JFrame implements DeviceDis
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel m_jContainer;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void repaintLines() {
+    }
     
 }
