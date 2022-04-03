@@ -21,7 +21,6 @@ import com.openbravo.data.user.SaveProvider;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.BeanFactoryDataSingle;
-import java.util.UUID;
 
 /**
  *
@@ -32,7 +31,6 @@ public class DataLogicAdmin extends BeanFactoryDataSingle {
     private Session s;
     private TableDefinition<PeopleInfo> m_tpeople;
     private TableDefinition<RoleInfo> m_troles;
-    private TableDefinition<ResourceInfo> m_tresources;
 
     public DataLogicAdmin() {}
 
@@ -57,22 +55,6 @@ public class DataLogicAdmin extends BeanFactoryDataSingle {
                  new Formats[]{Formats.STRING, Formats.STRING, Formats.NULL},
                  new int[]{0}
         );
-
-        m_tresources = new TableDefinition(s,
-                "resources",
-                 new String[]{
-                    "ID", "NAME", "RESTYPE", "CONTENT"},
-                 new String[]{
-                    "ID",
-                    AppLocal.getIntString("label.name"),
-                    AppLocal.getIntString("label.type"),
-                    "CONTENT"},
-                 new Datas[]{
-                    Datas.STRING, Datas.STRING, Datas.INT, Datas.BYTES},
-                 new Formats[]{
-                    Formats.STRING, Formats.STRING, Formats.INT, Formats.NULL},
-                 new int[]{0}
-        );
     }
 
     public final TableDefinition<PeopleInfo> getTablePeople() {
@@ -83,9 +65,6 @@ public class DataLogicAdmin extends BeanFactoryDataSingle {
         return m_troles;
     }
 
-    public final TableDefinition<ResourceInfo> getTableResources() {
-        return m_tresources;
-    }
     
 
     private SentenceExec peopleSentenceExecUpdate(){
@@ -118,8 +97,8 @@ public class DataLogicAdmin extends BeanFactoryDataSingle {
     public SaveProvider<Object> getPeopleSaveProvider(){
         return new DefaultSaveProvider(
                 peopleSentenceExecUpdate(), 
-                peopleSentenceExecDelete(), 
-                peopleSentenceExecInsert());
+                peopleSentenceExecInsert(), 
+                peopleSentenceExecDelete());
     }
             
 

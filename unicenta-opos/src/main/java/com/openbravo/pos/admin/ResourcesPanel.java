@@ -45,19 +45,14 @@ public class ResourcesPanel extends JPanelTable {
     @Override
     protected void init() {
         DataLogicAdmin dlAdmin = (DataLogicAdmin) app.getBean("com.openbravo.pos.admin.DataLogicAdmin"); 
-        tresources = dlAdmin.getTableResources();         
+        DataLogicSystem dlSystem = (DataLogicSystem) app.getBean("com.openbravo.pos.forms.DataLogicSystem");
+        tresources = dlSystem.getTableResources();         
         jeditor = new ResourcesView(dirty);           
     }
 
     @Override
     public boolean deactivate() {
-        if (super.deactivate()) {
-            DataLogicSystem dlSystem = (DataLogicSystem) app.getBean("com.openbravo.pos.forms.DataLogicSystem");            
-            dlSystem.resetResourcesCache();
-            return true;
-        } else {
-            return false;
-        }    
+        return super.deactivate();    
     }
 
     @Override

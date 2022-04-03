@@ -17,6 +17,8 @@ package com.openbravo.pos.customers;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.*;
+import com.openbravo.data.user.DefaultSaveProvider;
+import com.openbravo.data.user.SaveProvider;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.BeanFactoryDataSingle;
@@ -30,25 +32,25 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
 
     protected Session s;
     private static final Datas[] RESERVATION_DATA = new Datas[]{
-        Datas.STRING,       //R.ID 
-        Datas.TIMESTAMP,    //R.CREATED
-        Datas.TIMESTAMP,    //R.DATENEW
-        Datas.STRING,       //C.CUSTOMER
-        Datas.STRING,       //customers.TAXID
-        Datas.STRING,       //customers.SEARCHKEY
-        Datas.STRING,       //COALESCE(customers.NAME, R.TITLE)
-        Datas.INT,          //R.CHAIRS
-        Datas.BOOLEAN,      //R.ISDONE
-        Datas.STRING        //R.DESCRIPTION
+        Datas.STRING,     //R.ID 
+        Datas.TIMESTAMP,  //R.CREATED
+        Datas.TIMESTAMP,  //R.DATENEW
+        Datas.STRING,     //C.CUSTOMER
+        Datas.STRING,     //customers.TAXID
+        Datas.STRING,     //customers.SEARCHKEY
+        Datas.STRING,     //COALESCE(customers.NAME, R.TITLE)
+        Datas.INT,        //R.CHAIRS
+        Datas.BOOLEAN,    //R.ISDONE
+        Datas.STRING      //R.DESCRIPTION
     };
 
     private static final Datas[] CUSTOMER_DATA = new Datas[]{
-        Datas.OBJECT, Datas.STRING,     //TAXID
-        Datas.OBJECT, Datas.STRING,     //SEARCHKEY
-        Datas.OBJECT, Datas.STRING,     //NAME
-        Datas.OBJECT, Datas.STRING,     //POSTAL
-        Datas.OBJECT, Datas.STRING,     //PHONE
-        Datas.OBJECT, Datas.STRING      //EMAIL
+        Datas.OBJECT, Datas.STRING, //TAXID
+        Datas.OBJECT, Datas.STRING, //SEARCHKEY
+        Datas.OBJECT, Datas.STRING, //NAME
+        Datas.OBJECT, Datas.STRING, //POSTAL
+        Datas.OBJECT, Datas.STRING, //PHONE
+        Datas.OBJECT, Datas.STRING //EMAIL
     };
 
     @Override
@@ -71,8 +73,8 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
     public final CustomerInfo getCustomerInfo(String id) throws BasicException {
         return (CustomerInfo) new PreparedSentence(s,
                 "SELECT "
-                        + "ID, TAXID, SEARCHKEY, NAME, "
-                        + "POSTAL, EMAIL, PHONE, IMAGE "
+                + "ID, TAXID, SEARCHKEY, NAME, "
+                + "POSTAL, EMAIL, PHONE, IMAGE "
                 + "FROM customers WHERE VISIBLE = " + s.DB.TRUE() + " "
                 + "AND ID = ?",
                 SerializerWriteString.INSTANCE,
@@ -96,13 +98,13 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
     // <editor-fold defaultstate="collapsed" desc="Reservation">
     public final SentenceList getReservationsList() {
         return new PreparedSentence(s,
-                "SELECT " +
-                        "R.ID, R.CREATED, R.DATENEW, C.CUSTOMER, customers.TAXID, customers.SEARCHKEY, " +
-                        "COALESCE(customers.NAME, R.TITLE),  R.CHAIRS, R.ISDONE, R.DESCRIPTION " +
-                        "FROM reservations R " +
-                        "LEFT OUTER JOIN reservation_customers C ON R.ID = C.ID " +
-                        "LEFT OUTER JOIN customers ON C.CUSTOMER = customers.ID " +
-                        "WHERE R.DATENEW >= ? AND R.DATENEW < ?",
+                "SELECT "
+                + "R.ID, R.CREATED, R.DATENEW, C.CUSTOMER, customers.TAXID, customers.SEARCHKEY, "
+                + "COALESCE(customers.NAME, R.TITLE),  R.CHAIRS, R.ISDONE, R.DESCRIPTION "
+                + "FROM reservations R "
+                + "LEFT OUTER JOIN reservation_customers C ON R.ID = C.ID "
+                + "LEFT OUTER JOIN customers ON C.CUSTOMER = customers.ID "
+                + "WHERE R.DATENEW >= ? AND R.DATENEW < ?",
                 new SerializerWriteBasic(new Datas[]{Datas.TIMESTAMP, Datas.TIMESTAMP}),
                 new SerializerReadBasic(RESERVATION_DATA));
     }
@@ -167,120 +169,120 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
         TableDefinition tcustomers = new TableDefinition(s,
                 "customers",
                 new String[]{
-                        "ID",
-                        "SEARCHKEY",
-                        "TAXID",
-                        "NAME",
-                        "TAXCATEGORY",
-                        "CARD",
-                        "MAXDEBT",
-                        "ADDRESS",
-                        "ADDRESS2",
-                        "POSTAL",
-                        "CITY",
-                        "REGION",
-                        "COUNTRY",
-                        "FIRSTNAME",
-                        "LASTNAME",
-                        "EMAIL",
-                        "PHONE",
-                        "PHONE2",
-                        "FAX",
-                        "NOTES",
-                        "VISIBLE",
-                        "CURDATE",
-                        "CURDEBT",
-                        "IMAGE",
-                        "ISVIP",
-                        "DISCOUNT",
-                        "MEMODATE"
+                    "ID",
+                    "SEARCHKEY",
+                    "TAXID",
+                    "NAME",
+                    "TAXCATEGORY",
+                    "CARD",
+                    "MAXDEBT",
+                    "ADDRESS",
+                    "ADDRESS2",
+                    "POSTAL",
+                    "CITY",
+                    "REGION",
+                    "COUNTRY",
+                    "FIRSTNAME",
+                    "LASTNAME",
+                    "EMAIL",
+                    "PHONE",
+                    "PHONE2",
+                    "FAX",
+                    "NOTES",
+                    "VISIBLE",
+                    "CURDATE",
+                    "CURDEBT",
+                    "IMAGE",
+                    "ISVIP",
+                    "DISCOUNT",
+                    "MEMODATE"
                 },
                 new String[]{
-                        "ID",
-                        AppLocal.getIntString("label.searchkey"),
-                        AppLocal.getIntString("label.taxid"),
-                        AppLocal.getIntString("label.name"),
-                        "TAXCATEGORY",
-                        "CARD",
-                        AppLocal.getIntString("label.maxdebt"),
-                        AppLocal.getIntString("label.address"),
-                        AppLocal.getIntString("label.address2"),
-                        AppLocal.getIntString("label.postal"),
-                        AppLocal.getIntString("label.city"),
-                        AppLocal.getIntString("label.region"),
-                        AppLocal.getIntString("label.country"),
-                        AppLocal.getIntString("label.firstname"),
-                        AppLocal.getIntString("label.lastname"),
-                        AppLocal.getIntString("label.email"),
-                        AppLocal.getIntString("label.phone"),
-                        AppLocal.getIntString("label.phone2"),
-                        AppLocal.getIntString("label.fax"),
-                        AppLocal.getIntString("label.notes"),
-                        "VISIBLE",
-                        AppLocal.getIntString("label.curdate"),
-                        AppLocal.getIntString("label.curdebt"),
-                        "IMAGE",
-                        "ISVIP",
-                        "DISCOUNT",
-                        "MEMODATE"
+                    "ID",
+                    AppLocal.getIntString("label.searchkey"),
+                    AppLocal.getIntString("label.taxid"),
+                    AppLocal.getIntString("label.name"),
+                    "TAXCATEGORY",
+                    "CARD",
+                    AppLocal.getIntString("label.maxdebt"),
+                    AppLocal.getIntString("label.address"),
+                    AppLocal.getIntString("label.address2"),
+                    AppLocal.getIntString("label.postal"),
+                    AppLocal.getIntString("label.city"),
+                    AppLocal.getIntString("label.region"),
+                    AppLocal.getIntString("label.country"),
+                    AppLocal.getIntString("label.firstname"),
+                    AppLocal.getIntString("label.lastname"),
+                    AppLocal.getIntString("label.email"),
+                    AppLocal.getIntString("label.phone"),
+                    AppLocal.getIntString("label.phone2"),
+                    AppLocal.getIntString("label.fax"),
+                    AppLocal.getIntString("label.notes"),
+                    "VISIBLE",
+                    AppLocal.getIntString("label.curdate"),
+                    AppLocal.getIntString("label.curdebt"),
+                    "IMAGE",
+                    "ISVIP",
+                    "DISCOUNT",
+                    "MEMODATE"
                 },
                 new Datas[]{
-                        Datas.STRING, //id
-                        Datas.STRING, //searchkey
-                        Datas.STRING, //taxid
-                        Datas.STRING, //name
-                        Datas.STRING, //taxcat
-                        Datas.STRING, //card
-                        Datas.DOUBLE, //maxdebt
-                        Datas.STRING, //add
-                        Datas.STRING, //add2
-                        Datas.STRING, //postal
-                        Datas.STRING, //city
-                        Datas.STRING, //region
-                        Datas.STRING, //cntry
-                        Datas.STRING, //fname
-                        Datas.STRING, //lname
-                        Datas.STRING, //email
-                        Datas.STRING, //phone
-                        Datas.STRING, //phone2
-                        Datas.STRING, //fax
-                        Datas.STRING, //notes
-                        Datas.BOOLEAN, //visible
-                        Datas.TIMESTAMP, //curdate
-                        Datas.DOUBLE, //curdebt
-                        Datas.IMAGE, //image
-                        Datas.BOOLEAN, //isvip
-                        Datas.DOUBLE, //discount
-                        Datas.TIMESTAMP //memodate
+                    Datas.STRING, //id
+                    Datas.STRING, //searchkey
+                    Datas.STRING, //taxid
+                    Datas.STRING, //name
+                    Datas.STRING, //taxcat
+                    Datas.STRING, //card
+                    Datas.DOUBLE, //maxdebt
+                    Datas.STRING, //add
+                    Datas.STRING, //add2
+                    Datas.STRING, //postal
+                    Datas.STRING, //city
+                    Datas.STRING, //region
+                    Datas.STRING, //cntry
+                    Datas.STRING, //fname
+                    Datas.STRING, //lname
+                    Datas.STRING, //email
+                    Datas.STRING, //phone
+                    Datas.STRING, //phone2
+                    Datas.STRING, //fax
+                    Datas.STRING, //notes
+                    Datas.BOOLEAN, //visible
+                    Datas.TIMESTAMP, //curdate
+                    Datas.DOUBLE, //curdebt
+                    Datas.IMAGE, //image
+                    Datas.BOOLEAN, //isvip
+                    Datas.DOUBLE, //discount
+                    Datas.TIMESTAMP //memodate
                 },
                 new Formats[]{
-                        Formats.STRING, //id
-                        Formats.STRING, //searchkey
-                        Formats.STRING, //taxid
-                        Formats.STRING, //name
-                        Formats.STRING, //taxcat
-                        Formats.STRING, //card
-                        Formats.CURRENCY, //maxdebt
-                        Formats.STRING, //add
-                        Formats.STRING, //add2
-                        Formats.STRING, //postal
-                        Formats.STRING, //city
-                        Formats.STRING, //region
-                        Formats.STRING, //cntry
-                        Formats.STRING, //fname
-                        Formats.STRING, //lname
-                        Formats.STRING, //email
-                        Formats.STRING, //phone
-                        Formats.STRING, //phone2
-                        Formats.STRING, //fax
-                        Formats.STRING, //notes
-                        Formats.BOOLEAN, //visible
-                        Formats.TIMESTAMP, //curdate
-                        Formats.CURRENCY, //curdebt
-                        Formats.NULL, //image
-                        Formats.BOOLEAN, //isvip
-                        Formats.DOUBLE, //discount
-                        Formats.TIMESTAMP //memodate
+                    Formats.STRING, //id
+                    Formats.STRING, //searchkey
+                    Formats.STRING, //taxid
+                    Formats.STRING, //name
+                    Formats.STRING, //taxcat
+                    Formats.STRING, //card
+                    Formats.CURRENCY, //maxdebt
+                    Formats.STRING, //add
+                    Formats.STRING, //add2
+                    Formats.STRING, //postal
+                    Formats.STRING, //city
+                    Formats.STRING, //region
+                    Formats.STRING, //cntry
+                    Formats.STRING, //fname
+                    Formats.STRING, //lname
+                    Formats.STRING, //email
+                    Formats.STRING, //phone
+                    Formats.STRING, //phone2
+                    Formats.STRING, //fax
+                    Formats.STRING, //notes
+                    Formats.BOOLEAN, //visible
+                    Formats.TIMESTAMP, //curdate
+                    Formats.CURRENCY, //curdebt
+                    Formats.NULL, //image
+                    Formats.BOOLEAN, //isvip
+                    Formats.DOUBLE, //discount
+                    Formats.TIMESTAMP //memodate
                 },
                 new int[]{0}
         );
@@ -320,6 +322,7 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
     // </editor-fold>
 
     protected static class CustomerInfoRead implements SerializerRead<CustomerInfo> {
+
         @Override
         public CustomerInfo readValues(DataRead dr) throws BasicException {
             CustomerInfo c = new CustomerInfo(dr.getString(1));
@@ -332,6 +335,70 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
             c.setImage(ImageUtils.readImage(dr.getBytes(8)));
             return c;
         }
+    }
+
+    Datas[] customerData = new Datas[]{
+        Datas.STRING, //id
+        Datas.STRING, //searchkey
+        Datas.STRING, //taxid
+        Datas.STRING, //name
+        Datas.STRING, //taxcat
+        Datas.STRING, //card
+        Datas.DOUBLE, //maxdebt
+        Datas.STRING, //add
+        Datas.STRING, //add2
+        Datas.STRING, //postal
+        Datas.STRING, //city
+        Datas.STRING, //region
+        Datas.STRING, //cntry
+        Datas.STRING, //fname
+        Datas.STRING, //lname
+        Datas.STRING, //email
+        Datas.STRING, //phone
+        Datas.STRING, //phone2
+        Datas.STRING, //fax
+        Datas.STRING, //notes
+        Datas.BOOLEAN, //visible
+        Datas.TIMESTAMP, //curdate
+        Datas.DOUBLE, //curdebt
+        Datas.IMAGE, //image
+        Datas.BOOLEAN, //isvip
+        Datas.DOUBLE, //discount
+        Datas.TIMESTAMP //memodate
+    };
+
+    private SentenceExec customerSentenceExecUpdate() {
+        Datas[] resourcedata = customerData;
+        SentenceExec sentupdate = new PreparedSentenceJDBC(this.s,
+                "update customers set ID = ?, SEARCHKEY = ?, TAXID = ?, NAME = ?, TAXCATEGORY = ?, CARD = ?, MAXDEBT = ?, ADDRESS = ?, ADDRESS2 = ?, POSTAL = ?, CITY = ?, REGION = ?, COUNTRY = ?, FIRSTNAME = ?, LASTNAME = ?, EMAIL = ?, PHONE = ?, PHONE2 = ?, FAX = ?, NOTES = ?, VISIBLE = ?, CURDATE = ?, CURDEBT = ?, IMAGE = ?, ISVIP = ?, DISCOUNT = ?, MEMODATE = ? where ID = ?",
+                resourcedata, new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 0});
+
+        return sentupdate;
+    }
+
+    private SentenceExec customerSentenceExecDelete() {
+        Datas[] resourcedata = new Datas[]{Datas.STRING};
+        SentenceExec sentdelete = new PreparedSentenceJDBC(this.s,
+                "DELETE FROM customers WHERE ID = ?",
+                resourcedata, new int[]{0});
+
+        return sentdelete;
+    }
+
+    private SentenceExec customerSentenceExecInsert() {
+        Datas[] resourcedata = customerData;
+        SentenceExec sentinsert = new PreparedSentenceJDBC(this.s,
+                "insert into customers (ID, SEARCHKEY, TAXID, NAME, TAXCATEGORY, CARD, MAXDEBT, ADDRESS, ADDRESS2, POSTAL, CITY, REGION, COUNTRY, FIRSTNAME, LASTNAME, EMAIL, PHONE, PHONE2, FAX, NOTES, VISIBLE, CURDATE, CURDEBT, IMAGE, ISVIP, DISCOUNT, MEMODATE) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                resourcedata, new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26});
+
+        return sentinsert;
+    }
+
+    public SaveProvider<Object> getCustomerSaveProvider() {
+        return new DefaultSaveProvider(
+                customerSentenceExecUpdate(),
+                customerSentenceExecInsert(),
+                customerSentenceExecDelete());
     }
 
 }

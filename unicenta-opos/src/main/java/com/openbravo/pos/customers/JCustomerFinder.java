@@ -53,7 +53,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
         m_jtxtName.reset();
         m_jtxtPostal.reset();
         m_jtxtPhone.reset();
-        m_jtxtName2.reset();
+        m_jtxtEmail.reset();
         m_jtxtTaxID.activate();
 
         cleanSearch();
@@ -105,14 +105,14 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
         m_jtxtName.addEditorKeys(m_jKeys);
         m_jtxtPostal.addEditorKeys(m_jKeys);
         m_jtxtPhone.addEditorKeys(m_jKeys);
-        m_jtxtName2.addEditorKeys(m_jKeys);
+        m_jtxtEmail.addEditorKeys(m_jKeys);
 
         m_jtxtTaxID.reset();
         m_jtxtSearchKey.reset();
         m_jtxtName.reset();
         m_jtxtPostal.reset();
         m_jtxtPhone.reset();
-        m_jtxtName2.reset();
+        m_jtxtEmail.reset();
 
         m_jtxtTaxID.activate();
 
@@ -135,7 +135,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
             m_jtxtName.reset();
             m_jtxtPostal.reset();
             m_jtxtPhone.reset();
-            m_jtxtName2.reset();
+            m_jtxtEmail.reset();
 
             m_jtxtTaxID.activate();
 
@@ -147,7 +147,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
             m_jtxtName.setText(customer.getName());
             m_jtxtPostal.setText(customer.getPostal());
             m_jtxtPhone.setText(customer.getPhone());
-            m_jtxtName2.setText(customer.getEmail());
+            m_jtxtEmail.setText(customer.getEmail());
 
             m_jtxtTaxID.activate();
 
@@ -161,7 +161,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
         m_jtxtName.setText("");
         m_jtxtPostal.setText("");
         m_jtxtPhone.setText("");
-        m_jtxtName2.setText("");
+        m_jtxtEmail.setText("");
         jListCustomers.setModel(new MyListData(new ArrayList()));
     }
 
@@ -249,12 +249,12 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
         }
 
         //
-        if (m_jtxtName2.getText() == null || m_jtxtName2.getText().equals("")) {
+        if (m_jtxtEmail.getText() == null || m_jtxtEmail.getText().equals("")) {
             afilter[10] = QBFCompareEnum.COMP_NONE;
             afilter[11] = null;
         } else {
             afilter[10] = QBFCompareEnum.COMP_RE;
-            afilter[11] = "%" + m_jtxtName2.getText() + "%";
+            afilter[11] = "%" + m_jtxtEmail.getText() + "%";
         }
 
         return afilter;
@@ -318,7 +318,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
         jLblPhone = new javax.swing.JLabel();
         jLblEmail = new javax.swing.JLabel();
         m_jtxtPhone = new com.openbravo.editor.JEditorString();
-        m_jtxtName2 = new com.openbravo.editor.JEditorString();
+        m_jtxtEmail = new com.openbravo.editor.JEditorString();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jListCustomers = new javax.swing.JList();
@@ -429,9 +429,9 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
         m_jtxtPhone.setMinimumSize(new java.awt.Dimension(150, 30));
         m_jtxtPhone.setPreferredSize(new java.awt.Dimension(250, 30));
 
-        m_jtxtName2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jtxtName2.setMinimumSize(new java.awt.Dimension(150, 30));
-        m_jtxtName2.setPreferredSize(new java.awt.Dimension(250, 30));
+        m_jtxtEmail.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        m_jtxtEmail.setMinimumSize(new java.awt.Dimension(150, 30));
+        m_jtxtEmail.setPreferredSize(new java.awt.Dimension(250, 30));
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -461,7 +461,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(m_jtxtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(m_jtxtName2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(m_jtxtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -491,7 +491,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLblEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(m_jtxtName2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(m_jtxtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -611,7 +611,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
         m_jtxtName.reset();
         m_jtxtPostal.reset();
         m_jtxtPhone.reset();
-        m_jtxtName2.reset();
+        m_jtxtEmail.reset();
 
         m_jtxtTaxID.activate(); 
         
@@ -641,8 +641,8 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
     private javax.swing.JButton jcmdCancel;
     private javax.swing.JButton jcmdOK;
     private com.openbravo.editor.JEditorKeys m_jKeys;
+    private com.openbravo.editor.JEditorString m_jtxtEmail;
     private com.openbravo.editor.JEditorString m_jtxtName;
-    private com.openbravo.editor.JEditorString m_jtxtName2;
     private com.openbravo.editor.JEditorString m_jtxtPhone;
     private com.openbravo.editor.JEditorString m_jtxtPostal;
     private com.openbravo.editor.JEditorString m_jtxtSearchKey;

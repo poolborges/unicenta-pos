@@ -467,12 +467,12 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
     private List<SupplierTransaction> getTransactionOfName(String sId) {
         List<SupplierTransaction> supplierList = new ArrayList<>();
         try {
-            List<SupplierTransaction> supplierTransactionList = dlSuppliers.getSuppliersTransactionList(sId);
+            supplierList = dlSuppliers.getSuppliersTransactionList(sId);
 
-            for (SupplierTransaction supplierTransaction : supplierTransactionList) {
+            for (SupplierTransaction supplierTransaction : supplierList) {
                 String supplierId = supplierTransaction.getSupplierId();
-                if (supplierId.equals(sId)) {
-                    supplierList.add(supplierTransaction);
+                if (!supplierId.equals(sId)) {
+                    supplierList.remove(supplierTransaction);
                 }
             }
 

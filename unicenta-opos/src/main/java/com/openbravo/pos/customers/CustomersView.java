@@ -38,8 +38,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import com.openbravo.beans.JCalendarDialog;
@@ -47,9 +45,6 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import javax.swing.InputVerifier;
-import javax.swing.JComponent;
-import javax.swing.JTextField;
 import javax.swing.table.JTableHeader;
 import org.netbeans.validation.api.builtin.stringvalidation.StringValidators;
 
@@ -59,12 +54,11 @@ import org.netbeans.validation.api.builtin.stringvalidation.StringValidators;
  */
 public final class CustomersView extends com.openbravo.pos.panels.ValidationPanel implements EditorRecord {
 
+    private final static System.Logger LOGGER = System.getLogger(CustomersView.class.getName());
     private static final long serialVersionUID = 1L;
     private Object m_oId;
 
     private SentenceList m_sentcat;
-    private List<CustomerTransaction> customerTransactionList;
-    private TransactionTableModel transactionModel;
     private ComboBoxValModel m_CategoryModel;
 
     private DirtyManager m_Dirty;
@@ -123,10 +117,10 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
             init();
             initValidator();
         } catch (BeanFactoryException ex) {
-            Logger.getLogger(CustomersView.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(System.Logger.Level.WARNING, "", ex);
         }
     }
-    
+
     private void initValidator() {
         org.netbeans.validation.api.ui.ValidationGroup valGroup = getValidationGroup();
         valGroup.add(m_jSearchkey, StringValidators.REQUIRE_NON_EMPTY_STRING);
@@ -384,9 +378,6 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
         jBtnCreateCard.setEnabled(false);
         jBtnClearCard.setEnabled(false);
 
-// JG 3 Oct 2013 - for Transaction List table
-        transactionModel = new TransactionTableModel(getTransactionOfName((String) m_oId));
-        jTableCustomerTransactions.setModel(transactionModel);
         jTableCustomerTransactions.setEnabled(false);
 
         m_jdate.setEnabled(false);
@@ -548,20 +539,17 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
 // JG 10 April 2016 - Revision    
     private List<CustomerTransaction> getTransactionOfName(String cId) {
 
+        List<CustomerTransaction> customerTransactionList = new ArrayList<>();
         try {
             customerTransactionList = dlSales.getCustomersTransactionList(cId);
-
-        } catch (BasicException ex) {
-            Logger.getLogger(CustomersView.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        List<CustomerTransaction> customerList = new ArrayList<>();
-
-        for (CustomerTransaction customerTransaction : customerTransactionList) {
-            String customerId = customerTransaction.getCustomerId();
-            if (customerId.equals(cId)) {
-                customerList.add(customerTransaction);
+            for (CustomerTransaction customerTransaction : customerTransactionList) {
+                String customerId = customerTransaction.getCustomerId();
+                if (!customerId.equals(cId)) {
+                    customerTransactionList.remove(customerTransaction);
+                }
             }
+        } catch (BasicException ex) {
+            LOGGER.log(System.Logger.Level.WARNING, "", ex);
         }
 
         txtCurdate.repaint();
@@ -570,7 +558,7 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
         repaint();
         refresh();
 
-        return customerList;
+        return customerTransactionList;
     }
 
     class TransactionTableModel extends AbstractTableModel {
@@ -1508,12 +1496,12 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
                     mailto = new URI("mailto:"
                             + txtEmail.getText());
                 } catch (URISyntaxException ex) {
-                    Logger.getLogger(CustomersView.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(System.Logger.Level.WARNING, "", ex);
                 }
                 try {
                     desktop.mail(mailto);
                 } catch (IOException ex) {
-                    Logger.getLogger(CustomersView.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.log(System.Logger.Level.WARNING, "", ex);
                 }
             } else {
                 JOptionPane.showMessageDialog(this,
@@ -1525,9 +1513,10 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
     }//GEN-LAST:event_webBtnMailActionPerformed
 
     private void jBtnShowTransActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnShowTransActionPerformed
-        String cId = m_oId.toString();
-        if (cId != null) {
-            transactionModel = new TransactionTableModel(getTransactionOfName(cId));
+
+        if (m_oId != null) {
+            String cId = m_oId.toString();
+            TransactionTableModel transactionModel = new TransactionTableModel(getTransactionOfName(cId));
             jTableCustomerTransactions.setModel(transactionModel);
             if (transactionModel.getRowCount() > 0) {
                 jTableCustomerTransactions.setVisible(true);
@@ -1535,9 +1524,15 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
                 jLblTranCount.setText(TranCount + " for " + m_jName.getText());
             } else {
                 jTableCustomerTransactions.setVisible(false);
-                JOptionPane.showMessageDialog(null, "No Transactions for this Customer", "Transactions", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null,
+                        AppLocal.getIntString("message.nocustomertranx"),
+                        AppLocal.getIntString("label.Transactions"),
+                        JOptionPane.INFORMATION_MESSAGE);
             }
             resetTranxTable();
+        } else {
+            LOGGER.log(System.Logger.Level.DEBUG, "Customer ID is null");
+            Toolkit.getDefaultToolkit().beep();
         }
     }//GEN-LAST:event_jBtnShowTransActionPerformed
 

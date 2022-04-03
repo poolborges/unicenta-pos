@@ -18,6 +18,7 @@ package com.openbravo.pos.forms;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.*;
 import com.openbravo.format.Formats;
+import com.openbravo.pos.admin.ResourceInfo;
 import com.openbravo.pos.util.ThumbNailBuilder;
 import com.openbravo.pos.voucher.VoucherInfo;
 import java.awt.image.BufferedImage;
@@ -41,42 +42,48 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
 
     private Session session;
     private String m_dbVersion;
-    private final Map<String, byte[]> resourcescache;
-
-
+    private TableDefinition<ResourceInfo> m_tresources;
+    
     public DataLogicSystem() {
-        resourcescache = new HashMap<>();
     }
 
     @Override
     public void init(Session session) {
         this.session = session;
         this.m_dbVersion = this.session.DB.getName();
-        resetResourcesCache();
+        
+        m_tresources = new TableDefinition(session,
+            "resources",
+            new String[]{
+                "ID", "NAME", "RESTYPE", "CONTENT"},
+            new String[]{
+                "ID",
+                AppLocal.getIntString("label.name"),
+                AppLocal.getIntString("label.type"),
+                "CONTENT"},
+            new Datas[]{
+                Datas.STRING, Datas.STRING, Datas.INT, Datas.BYTES},
+            new Formats[]{
+                Formats.STRING, Formats.STRING, Formats.INT, Formats.NULL},
+            new int[]{0}
+    );
 
 //// <editor-fold defaultstate="collapsed" desc="START OF PRODUCT">
 // </editor-fold>
 //// <editor-fold defaultstate="collapsed" desc="START OF CUSTOMER">
 //// </editor-fold>   
-//// <editor-fold defaultstate="collapsed" desc="START OF PEOPLE">
 
-//// </editor-fold>   
 //// <editor-fold defaultstate="collapsed" desc="START OF CASH">
 //// </editor-fold>   
 //// <editor-fold defaultstate="collapsed" desc="START OF LOCATION AND PLACES">
-        
-
 //// </editor-fold>   
 
-//// <editor-fold defaultstate="collapsed" desc="START OF CVIMPORT">     
-             
 
-//// </editor-fold>  
+    }
 
-//// <editor-fold defaultstate="collapsed" desc="START OF ORDER">   
-  
-    
-//// </editor-fold> 
+
+    public final TableDefinition<ResourceInfo> getTableResources() {
+        return m_tresources;
     }
 
     public String getDBVersion() {
@@ -84,7 +91,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
     }
 
     public final String findVersion() throws BasicException {
-        final SentenceFind<String> m_version = new PreparedSentence<String,String>(this.session,
+        final SentenceFind<String> m_version = new PreparedSentence<String, String>(this.session,
                 "SELECT VERSION FROM applications WHERE ID = ?",
                 SerializerWriteString.INSTANCE, SerializerReadString.INSTANCE);
 
@@ -101,6 +108,8 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         m_dummy.exec();
     }
 
+//// <editor-fold defaultstate="collapsed" desc="START OF PEOPLE">
+  
     /**
      *
      * @return @throws BasicException
@@ -126,7 +135,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                 "SELECT PERMISSIONS FROM permissions WHERE ID = ?",
                 SerializerWriteString.INSTANCE,
                 new SerializerReadBasic(new Datas[]{Datas.STRING}));
-        
+
         return m_permissionlist.list(role);
     }
 
@@ -137,7 +146,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      * @throws BasicException
      */
     public final AppUser findPeopleByCard(String card) throws BasicException {
-        
+
         final SentenceFind<AppUser> m_peoplebycard = new PreparedSentence<String, AppUser>(this.session,
                 "SELECT ID, NAME, APPPASSWORD, CARD, ROLE, IMAGE "
                 + "FROM people "
@@ -153,12 +162,12 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      * @return
      */
     public final String findRolePermissions(String sRole) {
-        
+
         final SentenceFind m_rolepermissions = new PreparedSentence(this.session,
                 "SELECT PERMISSIONS FROM roles WHERE ID = ?",
                 SerializerWriteString.INSTANCE,
                 SerializerReadBytes.INSTANCE);
-        
+
         String content = new String();
         try {
             content = Formats.BYTEA.formatValue(m_rolepermissions.find(sRole));
@@ -181,14 +190,25 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
 
         m_changepassword.exec(userdata);
     }
-
-//// <editor-fold defaultstate="collapsed" desc="START OF RESOURCE">
-    public final void resetResourcesCache() {
-        if (resourcescache != null) {
-            resourcescache.clear();
-        }
+    
+    /**
+     *
+     * @param permissions
+     * @throws BasicException
+     */
+    public final void execUpdatePermissions(Object[] permissions) throws BasicException {
+        final SentenceExec m_updatepermissions = new StaticSentence(this.session,
+                "INSERT INTO permissions (ID, PERMISSIONS) "
+                + "VALUES (?, ?)",
+                new SerializerWriteBasic(new Datas[]{
+            Datas.STRING,
+            Datas.STRING}));
+        m_updatepermissions.exec(permissions);
     }
 
+//// </editor-fold> 
+    
+//// <editor-fold defaultstate="collapsed" desc="START OF RESOURCE">
     private byte[] getResource(String name) {
 
         SentenceFind m_resourcebytes = new PreparedSentence(this.session,
@@ -196,20 +216,17 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                 SerializerWriteString.INSTANCE,
                 SerializerReadBytes.INSTANCE);
 
-        byte[] resource = resourcescache.get(name);
+        byte[] resource;
 
-        if (resource == null) {
-            try {
-                resource = (byte[]) m_resourcebytes.find(name);
-                if (resource != null) {
-                    resourcescache.put(name, resource);
-                } else {
-                    LOGGER.log(Level.WARNING, "Resource NOT found name: {0}", name);
-                }
-            } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "Exception while get resource name: " + name, e);
-                resource = null;
+        try {
+            resource = (byte[]) m_resourcebytes.find(name);
+            if (resource != null) {
+            } else {
+                LOGGER.log(Level.WARNING, "Resource NOT found name: {0}", name);
             }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Exception while get resource name: " + name, e);
+            resource = null;
         }
 
         return resource;
@@ -224,25 +241,23 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
     public final void setResource(String name, int type, byte[] data) {
 
         Datas[] resourcedata = new Datas[]{Datas.STRING, Datas.STRING, Datas.INT, Datas.BYTES};
-         Object[] value = new Object[]{UUID.randomUUID().toString(), name, type, data};
-         
+        Object[] value = new Object[]{UUID.randomUUID().toString(), name, type, data};
+
         SentenceExec m_resourcebytesinsert = new PreparedSentenceJDBC(this.session,
                 "INSERT INTO resources(ID, NAME, RESTYPE, CONTENT) VALUES (?, ?, ?, ?)",
-                resourcedata,new int[]{0, 1, 2, 3});
+                resourcedata, new int[]{0, 1, 2, 3});
 
         SentenceExec m_resourcebytesupdate = new PreparedSentenceJDBC(this.session,
                 "UPDATE resources SET NAME = ?, RESTYPE = ?, CONTENT = ? WHERE NAME = ?",
                 resourcedata, new int[]{1, 2, 3, 1});
 
-       
         try {
             if (m_resourcebytesupdate.exec(value) != 0) {
-               LOGGER.log(Level.INFO, "Resource update: " + name);
-            }else {
-               m_resourcebytesinsert.exec(value);
-               LOGGER.log(Level.INFO, "Resource insert: " + name);
+                LOGGER.log(Level.INFO, "Resource update: " + name);
+            } else {
+                m_resourcebytesinsert.exec(value);
+                LOGGER.log(Level.INFO, "Resource insert: " + name);
             }
-            resourcescache.put(name, data);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Exception while save resource name: " + name, ex);
         }
@@ -435,21 +450,9 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
     }
 //// </editor-fold> 
 
-    /**
-     *
-     * @param permissions
-     * @throws BasicException
-     */
-    public final void execUpdatePermissions(Object[] permissions) throws BasicException {
-        final SentenceExec m_updatepermissions = new StaticSentence(this.session,
-                "INSERT INTO permissions (ID, PERMISSIONS) "
-                + "VALUES (?, ?)",
-                new SerializerWriteBasic(new Datas[]{
-            Datas.STRING,
-            Datas.STRING}));
-        m_updatepermissions.exec(permissions);
-    }
-
+    
+//// <editor-fold defaultstate="collapsed" desc="START OF LINEREMOVED">
+     
     /**
      *
      * @param line
@@ -490,7 +493,8 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
             LOGGER.log(Level.SEVERE, "Exception on execute ticket removed: ", e);
         }
     }
-
+//// </editor-fold>  
+    
     /**
      *
      * @param iLocation
@@ -504,6 +508,8 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                 SerializerReadString.INSTANCE);
         return (String) m_locationfind.find(iLocation);
     }
+
+//// <editor-fold defaultstate="collapsed" desc="START OF CVIMPORT">     
 
     /**
      *
@@ -580,7 +586,8 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         m_insertCustomerCSVEntry.exec(csv);
 
     }
-
+//// </editor-fold>  
+    
 // This is used by CSVimport to detect what type of product insert we are looking at, or what error occured
     /**
      *
@@ -679,7 +686,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      * @throws BasicException
      */
     public final String getCustomerRecordType(Object[] myCustomer) throws BasicException {
-        
+
         final SerializerRead customerIdRead = (DataRead dr) -> (dr.getString(1));
 
         final SentenceFind m_getCustomerAllFields;
@@ -732,31 +739,46 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
     }
 
     public final void updatePlaces(int x, int y, String id) throws BasicException {
-        final SentenceExec m_updatePlaces = new StaticSentence(this.session, 
-                "UPDATE PLACES SET X = ?, Y = ? WHERE ID = ?", 
-                new SerializerWriteBasic(new Datas[]{Datas.INT,Datas.INT,Datas.STRING}));
+        final SentenceExec m_updatePlaces = new StaticSentence(this.session,
+                "UPDATE PLACES SET X = ?, Y = ? WHERE ID = ?",
+                new SerializerWriteBasic(new Datas[]{Datas.INT, Datas.INT, Datas.STRING}));
         m_updatePlaces.exec(x, y, id);
     }
 
-
-    public final List<VoucherInfo> getVouchersActiveList() throws BasicException  {
-        final SentenceList m_voucherlist = new StaticSentence(this.session,
+    public final List<VoucherInfo> getVouchersActiveList() throws BasicException {
+        final SentenceList<VoucherInfo>  m_voucherlist = new StaticSentence(this.session,
                 "SELECT id, voucher_number, customer, amount, status FROM vouchers WHERE status LIKE 'A'",
                 SerializerWriteString.INSTANCE,
                 VoucherInfo.getSerializerRead());
-        
+
         return m_voucherlist.list();
     }
 
+//// <editor-fold defaultstate="collapsed" desc="START OF ORDER">   
+    
+    /**
+     * 
+     * @param orderId
+     * @param qty
+     * @param details
+     * @param attributes
+     * @param notes
+     * @param ticketId
+     * @param ordertime
+     * @param displayId
+     * @param auxiliary
+     * @param completetime
+     * @throws BasicException 
+     */
     public final void addOrder(String orderId, Integer qty,
             String details, String attributes, String notes, String ticketId,
             String ordertime, Integer displayId, String auxiliary, String completetime
     ) throws BasicException {
 
-        if(ordertime == null){
-           ordertime = Long.toString(new Date().getTime()) ;
+        if (ordertime == null) {
+            ordertime = Long.toString(new Date().getTime());
         }
-        
+
         final SentenceExec m_addOrder = new StaticSentence(this.session,
                 "INSERT INTO orders (ORDERID, QTY, DETAILS, ATTRIBUTES, "
                 + "NOTES, TICKETID, ORDERTIME, DISPLAYID, AUXILIARY, "
@@ -779,6 +801,20 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                 ordertime, displayId, auxiliary, completetime);
     }
 
+    /**
+     * 
+     * @param orderId
+     * @param qty
+     * @param details
+     * @param attributes
+     * @param notes
+     * @param ticketId
+     * @param ordertime
+     * @param displayId
+     * @param auxiliary
+     * @param completetime
+     * @throws BasicException 
+     */
     public final void updateOrder(String orderId, Integer qty,
             String details, String attributes, String notes, String ticketId,
             String ordertime, Integer displayId, String auxiliary, String completetime
@@ -813,13 +849,19 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                 ordertime, displayId, auxiliary, completetime);
     }
 
+    /**
+     * Delete Order
+     * @param orderId
+     * @throws BasicException 
+     */
     public void deleteOrder(String orderId) throws BasicException {
         final SentenceExec m_deleteOrder = new StaticSentence(this.session,
                 "DELETE FROM orders WHERE ORDERID = ?",
                 SerializerWriteString.INSTANCE);
         m_deleteOrder.exec(orderId);
     }
-
+//// </editor-fold> 
+    
     private final static class AppuserReader implements SerializerRead<AppUser> {
 
         final ThumbNailBuilder defaultUserTN = new ThumbNailBuilder(32, 32, "com/openbravo/images/user.png");
