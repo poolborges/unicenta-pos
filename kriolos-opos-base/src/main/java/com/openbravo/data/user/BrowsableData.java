@@ -28,7 +28,7 @@ import javax.swing.event.ListDataListener;
  *
  * @author JG uniCenta
  */
-public class BrowsableData implements ListModel {
+public class BrowsableData<E> implements ListModel<E> {
     
     /**
      *
@@ -36,24 +36,24 @@ public class BrowsableData implements ListModel {
     protected EventListenerList listeners = new EventListenerList();
     private boolean m_bIsAdjusting;
     
-    private ListProvider m_dataprov;      
-    private SaveProvider m_saveprov;  
+    private ListProvider<E> m_dataprov;      
+    private SaveProvider<E> m_saveprov;  
     
-    private List m_aData; // List<Object>
+    private List<E> m_aData; // List<Object>
     
-    private Comparator m_comparer;
+    private Comparator<E> m_comparer;
     
     /** Creates a new instance of BrowsableData
      * @param dataprov
      * @param saveprov
      * @param c */
-    public BrowsableData(ListProvider dataprov, SaveProvider saveprov, Comparator c) {
+    public BrowsableData(ListProvider<E> dataprov, SaveProvider<E> saveprov, Comparator<E> c) {
         m_dataprov = dataprov;
         m_saveprov = saveprov;
         m_comparer = c;
         m_bIsAdjusting = false;
         
-        m_aData = new ArrayList();
+        m_aData = new ArrayList<>();
     }
 
     /**
@@ -61,7 +61,7 @@ public class BrowsableData implements ListModel {
      * @param dataprov
      * @param saveprov
      */
-    public BrowsableData(ListProvider dataprov, SaveProvider saveprov) {
+    public BrowsableData(ListProvider<E> dataprov, SaveProvider<E> saveprov) {
         this(dataprov, saveprov, null);
     }
 
@@ -69,22 +69,26 @@ public class BrowsableData implements ListModel {
      *
      * @param dataprov
      */
-    public BrowsableData(ListProvider dataprov) {
+    public BrowsableData(ListProvider<E> dataprov) {
         this(dataprov, null, null);
     }    
 
+    @Override
     public final void addListDataListener(ListDataListener l) {
         listeners.add(ListDataListener.class, l);
     }
+    @Override
     public final void removeListDataListener(ListDataListener l) {
         listeners.remove(ListDataListener.class, l);
     }
 
     // Metodos de acceso
-    public final Object getElementAt(int index) {
+    @Override
+    public final E getElementAt(int index) {
         return m_aData.get(index);
     }        
 
+    @Override
     public final int getSize() {
         return m_aData.size();
     }   
@@ -106,11 +110,11 @@ public class BrowsableData implements ListModel {
         m_bIsAdjusting = true;
         EventListener[] l = listeners.getListeners(ListDataListener.class);
         ListDataEvent e = null;
-        for (int i = 0; i < l.length; i++) {
+        for (EventListener l1 : l) {
             if (e == null) {
                 e = new ListDataEvent(this, ListDataEvent.INTERVAL_ADDED, index0, index1);
             }
-            ((ListDataListener) l[i]).intervalAdded(e);	       
+            ((ListDataListener) l1).intervalAdded(e);	       
         }
         m_bIsAdjusting = false;
     }
@@ -124,11 +128,11 @@ public class BrowsableData implements ListModel {
         m_bIsAdjusting = true;
         EventListener[] l = listeners.getListeners(ListDataListener.class);
         ListDataEvent e = null;
-        for (int i = 0; i < l.length; i++) {
+        for (EventListener l1 : l) {
             if (e == null) {
                 e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, index0, index1);
             }
-            ((ListDataListener) l[i]).contentsChanged(e);	       
+            ((ListDataListener) l1).contentsChanged(e);	       
         }
         m_bIsAdjusting = false;
     }
@@ -142,11 +146,11 @@ public class BrowsableData implements ListModel {
         m_bIsAdjusting = true;
         EventListener[] l = listeners.getListeners(ListDataListener.class);
         ListDataEvent e = null;
-        for (int i = 0; i < l.length; i++) {
+        for (EventListener l1 : l) {
             if (e == null) {
                 e = new ListDataEvent(this, ListDataEvent.INTERVAL_REMOVED, index0, index1);
             }
-            ((ListDataListener) l[i]).intervalRemoved(e);	       
+            ((ListDataListener) l1).intervalRemoved(e);	       
         }
         m_bIsAdjusting = false;
     }
@@ -181,7 +185,7 @@ public class BrowsableData implements ListModel {
      *
      * @param l
      */
-    public void loadList(List l) {
+    public void loadList(List<E> l) {
         putNewData(l);
     }
     
@@ -190,7 +194,7 @@ public class BrowsableData implements ListModel {
      * @param c
      * @throws BasicException
      */
-    public void sort(Comparator c) throws BasicException {
+    public void sort(Comparator<E> c) throws BasicException {
         
         Collections.sort(m_aData, c);
         putNewData(m_aData);
@@ -295,7 +299,7 @@ public class BrowsableData implements ListModel {
      * @return
      * @throws BasicException
      */
-    public final int updateRecord(int index, Object value) throws BasicException {
+    public final int updateRecord(int index, E value) throws BasicException {
                 
         if (canUpdateData() && index >= 0 && index < m_aData.size()) {
             if (m_saveprov.updateData(value) > 0) { 
@@ -342,7 +346,7 @@ public class BrowsableData implements ListModel {
      * @return
      * @throws BasicException
      */
-    public final int insertRecord(Object value) throws BasicException {   
+    public final int insertRecord(E value) throws BasicException {   
         
         if (canInsertData() && m_saveprov.insertData(value) > 0) { 
             int newindex;
@@ -363,10 +367,10 @@ public class BrowsableData implements ListModel {
         }       
     }
     
-    private final void putNewData(List aData) {
+    private void putNewData(List<E> aData) {
         
         int oldSize = m_aData.size();        
-        m_aData = (aData == null) ? new ArrayList() : aData;
+        m_aData = (aData == null) ? new ArrayList<>() : aData;
         int newSize = m_aData.size();
         
         // Ordeno si es un Browsabledata ordenado
@@ -382,14 +386,14 @@ public class BrowsableData implements ListModel {
         }    
     }        
     
-    private final int insertionPoint(Object value) {
+    private int insertionPoint(E value) {
         
 	int low = 0;
 	int high = m_aData.size() - 1;
 
 	while (low <= high) {
 	    int mid = (low + high) >> 1;
-	    Object midVal = m_aData.get(mid);
+	    E midVal = m_aData.get(mid);
 	    int cmp = m_comparer.compare(midVal, value);
 
 	    if (cmp <= 0) {

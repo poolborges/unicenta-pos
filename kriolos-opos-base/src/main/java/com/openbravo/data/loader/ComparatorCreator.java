@@ -22,7 +22,7 @@ import java.util.Comparator;
  *
  * @author JG uniCenta
  */
-public interface ComparatorCreator {
+public interface ComparatorCreator<E> {
 
     /**
      *
@@ -35,5 +35,5 @@ public interface ComparatorCreator {
      * @param index
      * @return
      */
-    public Comparator createComparator(int[] index);
+    public Comparator<E> createComparator(int[] index);
 }

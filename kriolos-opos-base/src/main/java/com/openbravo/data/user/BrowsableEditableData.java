@@ -30,8 +30,9 @@ import java.util.logging.Logger;
 /**
  *
  * @author JG uniCenta
+ * @param <E>
  */
-public class BrowsableEditableData {
+public class BrowsableEditableData<E> {
 
     private static final Logger LOGGER = Logger.getLogger(BrowsableEditableData.class.getName());
 
@@ -42,14 +43,13 @@ public class BrowsableEditableData {
 
     private final static int INX_EOF = -1;
 
-    private BrowsableData m_bd;
+    private BrowsableData<E> m_bd;
 
     protected EventListenerList listeners = new EventListenerList();
 
-    private EditorRecord m_editorrecord;
+    private EditorRecord<E> m_editorrecord;
     private DirtyManager m_Dirty;
-    private int m_iState; // vinculado siempre al m_editorrecord
-//    private DocumentLoader m_keyvalue;
+    private int m_iState;
     private int m_iIndex;
     private boolean m_bIsAdjusting;
 
@@ -62,17 +62,15 @@ public class BrowsableEditableData {
      * @param ed
      * @param dirty
      */
-    public BrowsableEditableData(BrowsableData bd, EditorRecord ed, DirtyManager dirty) {
+    public BrowsableEditableData(BrowsableData<E> bd, EditorRecord<E> ed, DirtyManager dirty) {
         m_bd = bd;
 
         m_editorrecord = ed;
         m_Dirty = dirty;
         m_iState = ST_NORECORD;
-        m_iIndex = INX_EOF; // En EOF
+        m_iIndex = INX_EOF;
         m_bIsAdjusting = false;
-//        m_keyvalue = DocumentLoaderBasic.INSTANCE;
 
-        // Inicializo ?
         m_editorrecord.writeValueEOF();
         m_Dirty.setDirty(false);
     }
@@ -86,8 +84,10 @@ public class BrowsableEditableData {
      * @param ed
      * @param dirty
      */
-    public BrowsableEditableData(ListProvider dataprov, SaveProvider saveprov, Comparator c, EditorRecord ed, DirtyManager dirty) {
-        this(new BrowsableData(dataprov, saveprov, c), ed, dirty);
+    public BrowsableEditableData(ListProvider<E> dataprov, 
+            SaveProvider<E> saveprov, Comparator<E> c, 
+            EditorRecord<E> ed, DirtyManager dirty) {
+        this(new BrowsableData<>(dataprov, saveprov, c), ed, dirty);
     }
 
     /**
@@ -98,8 +98,9 @@ public class BrowsableEditableData {
      * @param ed
      * @param dirty
      */
-    public BrowsableEditableData(ListProvider dataprov, SaveProvider saveprov, EditorRecord ed, DirtyManager dirty) {
-        this(new BrowsableData(dataprov, saveprov, null), ed, dirty);
+    public BrowsableEditableData(ListProvider<E> dataprov, 
+            SaveProvider<E> saveprov, EditorRecord<E> ed, DirtyManager dirty) {
+        this(new BrowsableData<>(dataprov, saveprov, null), ed, dirty);
     }
 
     /**
@@ -107,7 +108,7 @@ public class BrowsableEditableData {
      *
      * @return
      */
-    public final ListModel getListModel() {
+    public final ListModel<E> getListModel() {
         return m_bd;
     }
 
@@ -120,7 +121,7 @@ public class BrowsableEditableData {
         return m_bIsAdjusting || m_bd.isAdjusting();
     }
 
-    private Object getCurrentElement() {
+    private E getCurrentElement() {
         return (m_iIndex >= 0 && m_iIndex < m_bd.getSize()) ? m_bd.getElementAt(m_iIndex) : null;
     }
 
@@ -238,7 +239,7 @@ public class BrowsableEditableData {
 
         m_bIsAdjusting = true;
         // Lanzamos los eventos...
-        Object obj = getCurrentElement();
+        E obj = getCurrentElement();
         int iIndex = getIndex();
         int iCount = m_bd.getSize();
 
@@ -367,7 +368,7 @@ public class BrowsableEditableData {
      * @param c
      * @throws BasicException
      */
-    public void sort(Comparator c) throws BasicException {
+    public void sort(Comparator<E> c) throws BasicException {
         if (confirmChanged()) {
             m_bd.sort(c);
             baseMoveTo(0);
@@ -496,9 +497,7 @@ public class BrowsableEditableData {
      * @param c
      */
     public void actionReloadCurrent(Component c) {
-        if (confirmChanged(c)) {
-            refreshCurrent();
-        }
+        refreshCurrent();
     }
 
     /**
@@ -544,7 +543,7 @@ public class BrowsableEditableData {
      */
     public final void actionDelete() throws BasicException {
         // Y nos ponemos en estado de delete
-        Object obj = getCurrentElement();
+        E obj = getCurrentElement();
         int iIndex = getIndex();
         int iCount = m_bd.getSize();
         if (iIndex >= 0 && iIndex < iCount) {
@@ -560,8 +559,6 @@ public class BrowsableEditableData {
     }
 
     private void baseMoveTo(int i) {
-        // Este senor y el constructor a INX_EOF
-        // son los unicos que tienen potestad de modificar m_iIndex.
         if (i >= 0 && i < m_bd.getSize()) {
             m_iIndex = i;
         } else {
@@ -576,8 +573,8 @@ public class BrowsableEditableData {
 
     private boolean confirmChanged(Component c) {
 
-        return !m_Dirty.isDirty()
-                || JOptionPane.showConfirmDialog(c,
+        return m_Dirty.isDirty()
+                && JOptionPane.showConfirmDialog(c,
                         LocalRes.getIntString("message.changeslost"),
                         LocalRes.getIntString("title.editor"),
                         JOptionPane.YES_NO_OPTION,
