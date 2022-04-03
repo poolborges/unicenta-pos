@@ -23,11 +23,11 @@ import com.openbravo.data.loader.DataRead;
  * @author adrianromero Created on 27 de febrero de 2007, 23:46
  *
  */
-public class RoleExtInfo extends RoleInfo {
+public class RoleInfoExt extends RoleInfo {
 
     protected byte[] m_aPermissions;
 
-    public RoleExtInfo() {
+    public RoleInfoExt() {
         super();
         m_aPermissions = null;
     }
