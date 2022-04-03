@@ -20,6 +20,7 @@ import com.openbravo.basic.BasicException;
 import java.awt.image.BufferedImage;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 
 /**
@@ -177,7 +178,7 @@ public abstract class Datas<T> {
             return byte[].class;
         }
         protected String toStringAbstract(byte[] value) {
-            return "0x" + ImageUtils.bytes2hex(value);
+            return Base64.getEncoder().encodeToString(value);
         }
         protected int compareAbstract(byte[] o1, byte[] o2) {
             throw new UnsupportedOperationException();
@@ -187,6 +188,7 @@ public abstract class Datas<T> {
     private static final class DatasIMAGE extends Datas<BufferedImage> {
         @Override
         public BufferedImage getValue(DataRead dr, int i) throws BasicException {
+            
             return ImageUtils.readImage(dr.getBytes(i));
         }
         @Override
@@ -199,7 +201,7 @@ public abstract class Datas<T> {
         }
         @Override
         protected String toStringAbstract(BufferedImage value) {
-            return "0x" + ImageUtils.bytes2hex(ImageUtils.writeImage(value));
+            return Base64.getEncoder().encodeToString(ImageUtils.writeImage(value));
         }
         @Override
         protected int compareAbstract(BufferedImage o1, BufferedImage o2) {
@@ -226,7 +228,7 @@ public abstract class Datas<T> {
             return java.lang.Object.class;
         }
         protected String toStringAbstract(Object value) {
-            return "0x" + ImageUtils.bytes2hex(ImageUtils.writeSerializable(value));
+            return Base64.getEncoder().encodeToString(ImageUtils.writeSerializable(value));
         }
         protected int compareAbstract(Object o1, Object o2) {
             throw new UnsupportedOperationException();
