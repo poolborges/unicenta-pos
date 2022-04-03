@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Paulo Borges
+ * Copyright (C) 2022 KriolOS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,56 @@
  */
 package com.openbravo.pos.admin;
 
+import java.awt.image.BufferedImage;
 /**
  *
  * @author bellah
  */
 public class PeopleInfoExt extends PeopleInfo{
-    
+    private String password;
+    private String roleId;
+    private Boolean visible;
+    private String card;
+    private BufferedImage image;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+
+    public String getCard() {
+        return card;
+    }
+
+    public void setCard(String card) {
+        this.card = card;
+    }
+
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public void setImage(BufferedImage image) {
+        this.image = image;
+    }
+
 }

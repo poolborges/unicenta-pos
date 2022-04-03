@@ -30,42 +30,42 @@ import com.openbravo.data.loader.SerializableRead;
 public class PeopleInfo implements SerializableRead, IKeyed {
     
     private static final long serialVersionUID = 9110127845966L;
-    private String m_sID;
-    private String m_sName;
+    private String id;
+    private String name;
     
     public PeopleInfo() {
-        m_sID = null;
-        m_sName = null;
+        id = null;
+        name = null;
     }
 
     @Override
     public Object getKey() {
-        return m_sID;
+        return id;
     }
 
     @Override
     public void readValues(DataRead dr) throws BasicException {
-        m_sID = dr.getString(1);
-        m_sName = dr.getString(2);
+        id = dr.getString(1);
+        name = dr.getString(2);
     }
 
     public String getID() {
-        return m_sID;
+        return id;
     }
     public void setID(String sID) {
-        m_sID = sID;
+        id = sID;
     }
 
     public String getName() {
-        return m_sName;
+        return name;
     }
 
     public void setName(String sValue) {
-        m_sName = sValue;
+        name = sValue;
     }    
     
     @Override
     public String toString() {
-        return m_sName;
+        return name;
     }
 }

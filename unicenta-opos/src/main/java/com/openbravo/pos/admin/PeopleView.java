@@ -30,25 +30,25 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
  *
  * @author adrianromero
  */
-public class PeopleView extends JPanel implements EditorRecord {
-    private static final Logger LOGGER = Logger.getLogger(PeopleView.class.getName());
+public class PeopleView extends JPanel implements EditorRecord<Object> {
+
+    private static final long serialVersionUID = 1L;
+    
     private Object m_oId;
     private String m_sPassword;
     
     private final DirtyManager m_Dirty;
     
-    private final SentenceList m_sentrole;
-    private ComboBoxValModel m_RoleModel;  
+    private final SentenceList<RoleInfo> m_sentrole;
+    private ComboBoxValModel<RoleInfo> m_RoleModel;  
     
-    private final ComboBoxValModel m_ReasonModel;        
+    private final ComboBoxValModel<String> m_ReasonModel;        
     
     /** Creates new form PeopleEditor
      * @param dlAdmin
@@ -59,7 +59,7 @@ public class PeopleView extends JPanel implements EditorRecord {
                 
         // El modelo de roles
         m_sentrole = dlAdmin.getRolesList();
-        m_RoleModel = new ComboBoxValModel();
+        m_RoleModel = new ComboBoxValModel<>();
         
         m_Dirty = dirty;
         m_jName.getDocument().addDocumentListener(dirty);
@@ -68,7 +68,7 @@ public class PeopleView extends JPanel implements EditorRecord {
         m_jImage.addPropertyChangeListener("image", dirty);
         m_jcard.getDocument().addDocumentListener(dirty);
 
-        m_ReasonModel = new ComboBoxValModel();
+        m_ReasonModel = new ComboBoxValModel<>();
         m_ReasonModel.add(AppLocal.getIntString("cboption.generate"));
         m_ReasonModel.add(AppLocal.getIntString("cboption.clear"));              
         /*IBUTTON DISABLE 
@@ -77,21 +77,20 @@ public class PeopleView extends JPanel implements EditorRecord {
         
         webCBSecurity.setModel(m_ReasonModel);
         
-        writeValueEOF();
+        cleanFields();
+        disableFields();
     }
 
-    /**
-     *
-     */
-    @Override
-    public void writeValueEOF() {
+    private void cleanFields(){
         m_oId = null;
-        m_jName.setText(null);
         m_sPassword = null;
+        m_jName.setText(null);
         m_RoleModel.setSelectedKey(null);
         m_jVisible.setSelected(false);
         m_jcard.setText(null);
         m_jImage.setImage(null);
+    }
+    private void disableFields(){
         m_jName.setEnabled(false);
         m_jRole.setEnabled(false);
         m_jVisible.setEnabled(false);
@@ -101,25 +100,30 @@ public class PeopleView extends JPanel implements EditorRecord {
         webCBSecurity.setEnabled(false);
     }
     
-    /**
-     *
-     */
-    @Override
-    public void writeValueInsert() {
-        m_oId = null;
-        m_jName.setText(null);
-        m_sPassword = null;
-        m_RoleModel.setSelectedKey(null);
-        m_jVisible.setSelected(true);
-        m_jcard.setText(null);
-        m_jImage.setImage(null);
+    private void enableFields(){
         m_jName.setEnabled(true);
         m_jRole.setEnabled(true);
         m_jVisible.setEnabled(true);
         m_jcard.setEnabled(true);
         m_jImage.setEnabled(true);
         jButton1.setEnabled(true);
-        webCBSecurity.setEnabled(true);        
+        webCBSecurity.setEnabled(true);
+    }
+    
+    
+    @Override
+    public void writeValueEOF() {
+        cleanFields();
+        disableFields();
+    }
+    
+    /**
+     *
+     */
+    @Override
+    public void writeValueInsert() {
+        cleanFields();
+        enableFields();        
     }
     
     /**
@@ -133,17 +137,11 @@ public class PeopleView extends JPanel implements EditorRecord {
         m_jName.setText(Formats.STRING.formatValue(people[1]));
         m_sPassword = Formats.STRING.formatValue(people[2]);
         m_RoleModel.setSelectedKey(people[3]);
-        m_jVisible.setSelected(((Boolean) people[4]).booleanValue());
+        m_jVisible.setSelected(((Boolean) people[4]));
         m_jcard.setText(Formats.STRING.formatValue(people[5]));
         m_jImage.setImage((BufferedImage) people[6]);
         
-        m_jName.setEnabled(false);
-        m_jRole.setEnabled(false);
-        m_jVisible.setEnabled(false);
-        m_jcard.setEnabled(false);
-        m_jImage.setEnabled(false);        
-        jButton1.setEnabled(false);
-        webCBSecurity.setEnabled(false);        
+        disableFields();
     }
 
     /**
@@ -157,7 +155,7 @@ public class PeopleView extends JPanel implements EditorRecord {
         m_jName.setText(Formats.STRING.formatValue(people[1]));
         m_sPassword = Formats.STRING.formatValue(people[2]);
         m_RoleModel.setSelectedKey(people[3]);
-        m_jVisible.setSelected(((Boolean) people[4]).booleanValue());
+        m_jVisible.setSelected(((Boolean) people[4]));
         m_jcard.setText(Formats.STRING.formatValue(people[5]));
         m_jImage.setImage((BufferedImage) people[6]);
         
@@ -166,14 +164,8 @@ public class PeopleView extends JPanel implements EditorRecord {
         } else {
             jLblCardID.setText(AppLocal.getIntString("label.card"));            
         }
-        
-        m_jName.setEnabled(true);
-        m_jRole.setEnabled(true);
-        m_jVisible.setEnabled(true);
-        m_jcard.setEnabled(true);
-        m_jImage.setEnabled(true);
-        jButton1.setEnabled(true);
-        webCBSecurity.setEnabled(true);        
+
+        enableFields();          
     }
     
     /**
@@ -209,7 +201,7 @@ public class PeopleView extends JPanel implements EditorRecord {
      */
     public void activate() throws BasicException {
         
-        m_RoleModel = new ComboBoxValModel(m_sentrole.list());
+        m_RoleModel = new ComboBoxValModel<>(m_sentrole.list());
         m_jRole.setModel(m_RoleModel);
     }
     
