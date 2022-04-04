@@ -44,20 +44,21 @@ public class ReportUtils {
             return PrintServiceLookup.lookupDefaultPrintService();       
         } else {
             
-            if ("(Show dialog)".equals(printername)) {
-                return null; // null means "you have to show the print dialog"
-            } else if ("(Default)".equals(printername)) {
-                return PrintServiceLookup.lookupDefaultPrintService(); 
-            } else {
-                PrintService[] pservices = 
-                        PrintServiceLookup.lookupPrintServices(DocFlavor.SERVICE_FORMATTED.PRINTABLE , null);
-                for (PrintService s : pservices) {    
-                    if (printername.equals(s.getName())) {
-                        return s;
-                    }
-                }
-                return PrintServiceLookup.lookupDefaultPrintService();       
-            }                
+            switch (printername) {
+                case "(Show dialog)":
+                    return null; // null means "you have to show the print dialog"
+                case "(Default)":
+                    return PrintServiceLookup.lookupDefaultPrintService();
+                default:
+                    PrintService[] pservices =
+                            PrintServiceLookup.lookupPrintServices(DocFlavor.SERVICE_FORMATTED.PRINTABLE , null);
+                    for (PrintService s : pservices) {
+                            if (printername.equals(s.getName())) {
+                                    return s;
+                                    }
+                            }
+                    return PrintServiceLookup.lookupDefaultPrintService();                
+            }
         }                 
     }
     
