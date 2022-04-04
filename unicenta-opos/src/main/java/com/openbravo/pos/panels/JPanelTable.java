@@ -34,6 +34,8 @@ import javax.swing.ListCellRenderer;
  */
 public abstract class JPanelTable extends JPanel implements JPanelView, BeanFactoryApp {
 
+    private static final long serialVersionUID = 1L;
+
     protected BrowsableEditableData bd;
     protected DirtyManager dirty;
     protected AppView app;
@@ -82,9 +84,7 @@ public abstract class JPanelTable extends JPanel implements JPanelView, BeanFact
             if (cr != null) {
                 JListNavigator nl = new JListNavigator(bd);
                 nl.applyComponentOrientation(getComponentOrientation());
-                if (cr != null) {
-                    nl.setCellRenderer(cr);
-                }
+                nl.setCellRenderer(cr);
                 container.add(nl, java.awt.BorderLayout.LINE_START);
             }
 

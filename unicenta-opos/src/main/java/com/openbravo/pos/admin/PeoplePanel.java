@@ -24,7 +24,6 @@ import com.openbravo.data.loader.Vectorer;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.data.user.ListProvider;
 import com.openbravo.data.user.ListProviderCreator;
-import com.openbravo.data.user.DefaultSaveProvider;
 import com.openbravo.data.user.SaveProvider;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.panels.JPanelTable;
@@ -115,9 +114,8 @@ public class PeoplePanel extends JPanelTable {
      */
     @Override
     public void activate() throws BasicException {
-        
-        jeditor.activate(); // primero el editor    
-        super.activate(); // y luego cargamos los datos
+        jeditor.activate();   
+        super.activate();
     }      
 
     /**
