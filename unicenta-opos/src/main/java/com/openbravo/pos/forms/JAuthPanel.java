@@ -32,7 +32,7 @@ import javax.swing.SwingConstants;
 
 /**
  *
- * @author bellah
+ * @author poolborges
  */
 public class JAuthPanel extends javax.swing.JPanel {
 

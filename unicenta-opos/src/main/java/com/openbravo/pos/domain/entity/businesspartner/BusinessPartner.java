@@ -23,7 +23,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author pauloborges
+ * @author poolborges
  */
 //@RequiredArgsConstructor
 //@ToString( doNotUseGetters = true )

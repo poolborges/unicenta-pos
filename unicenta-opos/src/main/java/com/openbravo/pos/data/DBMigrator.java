@@ -35,7 +35,7 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 
 /**
  *
- * @author pauloborges
+ * @author poolborges
  */
 public class DBMigrator {
 

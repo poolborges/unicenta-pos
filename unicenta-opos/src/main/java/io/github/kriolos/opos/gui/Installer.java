@@ -24,7 +24,7 @@ import org.openide.windows.OnShowing;
 
 /**
  *
- * @author bellah
+ * @author poolborges
  */
 @OnShowing
 public class Installer extends ModuleInstall implements Runnable {

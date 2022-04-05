@@ -18,7 +18,7 @@ package com.openbravo.pos.forms;
 
 /**
  *
- * @author bellah
+ * @author poolborges
  */
 public class JSplashScreen extends javax.swing.JPanel {
 

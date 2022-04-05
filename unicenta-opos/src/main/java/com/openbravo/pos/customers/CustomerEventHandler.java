@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author bellah
+ * @author poolborges
  */
 public class CustomerEventHandler {
     private static final Logger LOGGER = Logger.getLogger(CustomerEventHandler.class.getName());

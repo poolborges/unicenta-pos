@@ -22,7 +22,7 @@ import javax.swing.*;
 import java.net.URL;
 
 /**
- * @author pauloborges
+ * @author poolborges
  */
 public enum ImageResources {
 

@@ -23,7 +23,7 @@ import com.openbravo.data.loader.SerializableRead;
 
 /**
  *
- * @author pauloborges
+ * @author poolborges
  */
 public class ResourceInfo implements SerializableRead, IKeyed {
     

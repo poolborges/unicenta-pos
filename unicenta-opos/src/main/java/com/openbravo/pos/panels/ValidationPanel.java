@@ -25,7 +25,7 @@ import org.netbeans.validation.api.ui.swing.SwingValidationGroup;
 
 /**
  *
- * @author bellah
+ * @author poolborges
  */
 public abstract class ValidationPanel extends JPanel implements ValidationGroupProvider{
 

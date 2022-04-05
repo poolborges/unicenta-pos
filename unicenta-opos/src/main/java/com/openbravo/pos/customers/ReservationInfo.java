@@ -23,7 +23,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author pauloborges
+ * @author poolborges
  */
 public class ReservationInfo implements Serializable {
 

@@ -19,7 +19,7 @@ package com.openbravo.pos.admin;
 import java.awt.image.BufferedImage;
 /**
  *
- * @author bellah
+ * @author poolborges
  */
 public class PeopleInfoExt extends PeopleInfo{
     private String password;
