@@ -19,7 +19,6 @@ package com.openbravo.data.loader;
 import java.sql.*;
 import java.util.*; 
 import com.openbravo.basic.BasicException;
-import com.openbravo.data.loader.JDBCBaseSentence.JDBCDataResultSet;
 
 /**
  *
