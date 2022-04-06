@@ -5,14 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
     
     <parent>
-        <groupId>io.gitub.kriolsolutions.krospos</groupId>
-        <artifactId>kropos-parent</artifactId>
-        <version>1.0.0</version>
+        <groupId>io.github.kriolos.opos</groupId>
+        <artifactId>kriolos-opos-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>unicentaopos-samples</artifactId>
     <packaging>jar</packaging>
-    <name>krPOS :: Unicenta.Samples</name>
+    <name>Kriolos.POS.Samples</name>
     <description>Open Source POS Samples</description>  
 
     <properties>
@@ -48,7 +48,7 @@
         </dependency>
 
         <dependency>
-            <groupId>io.gitub.kriolsolutions.krospos</groupId>
+            <groupId>io.github.kriolos.opos</groupId>
             <artifactId>kriolos-pos</artifactId>
         </dependency>
   

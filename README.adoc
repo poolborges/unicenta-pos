@@ -265,6 +265,22 @@ mvn clean install jacoco:prepare-agent jacoco:report
 mvn clean jacoco:prepare-agent install jacoco:report
 ----
 
+== Developers Mention
+
+* @author Mikel Irurita
+* @author jaroslawwozniak
+* @author adrianromero (adrian)
+* @author JG uniCenta (jack gerrard, jack)
+* @author HS uniCenta
+* @author Ryan Airey
+* @author Ali Safdar and Aneeqa Baber
+* @author jaroslawwozniak
+* @author Luis Ig. Bacas Riveiro	lbacas@opensistemas.com
+* @author Pablo J. Urbano Santos	purbano@opensistemas.com
+* @author Xibergy Systems
+* @author JA
+* @author poolborges
+* @author Teodor Danciu (teodord@users.sourceforge.net)
 
 == Reference
 

@@ -1,0 +1,49 @@
+= KriolOS POS :: Hardware
+
+Provide access/API for common POS (Poin of Sales) Hardware
+
+
+.Common Hardware
+|====
+|Names
+
+|Priner (hermal Priner, Receip Priner
+|Scanner
+|Drawer
+|Scale
+|Displa
+|Pamn
+|====
+
+.Libs
+|====
+|Name  |License  |Descrip |Ref
+
+|jPOS 
+|AGPL
+|Is a implemenaion of ISO-8583 Sandard
+|hp://jpos.org gihub.com/jpos
+
+|JavaPOS
+|
+|
+|
+
+|====
+
+
+
+* ISO-8583 (ransion Card Origined Messages Sandard)
+
+=== ESC (Epson Sandard Code)
+
+* Carcher Encoding
+
+ESC/POS
+
+* ESC/POS prining command is a simplified version of ESC prining Conrol Command.
+* 
+
+ESC/P-K 
+
+* Adds special suppor for chinese Compuers

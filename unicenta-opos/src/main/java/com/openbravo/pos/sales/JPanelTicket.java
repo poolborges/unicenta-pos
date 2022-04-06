@@ -496,15 +496,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private void countArticles() {
         
         if (m_oTicket != null) {
-            //oCount = count;                             // existing line before change
-            //count = (int) m_oTicket.getArticlesCount(); //existing line after change
-
-            for (int i = 0; i < m_oTicket.getLinesCount(); i++) {
-                //
-            }
-            
             if (m_App.hasPermission("sales.Total") && m_oTicket.getArticlesCount() > 1) {
-               btnSplit.setEnabled(true);
+                btnSplit.setEnabled(true);
             } else {
                 btnSplit.setEnabled(false);
             }
@@ -521,10 +514,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 Integer secret = Integer.parseInt(m_App.getProperties().getProperty("override.pin"));
                 Integer iValue = JIntegerDialog.showComponent(this, AppLocal.getIntString("title.override.enterpin"));
 
-                if (iValue == null ? secret == null : iValue.equals(secret)) {
+                if (iValue != null && iValue.equals(secret)) {
                     pinOK = true;
-                    //JOptionPane.showMessageDialog(this, "Units changed from "+ count + " to " + oCount);
-
                 } else {
                     pinOK = false;
                     JOptionPane.showMessageDialog(this, AppLocal.getIntString("message.override.badpin"));
@@ -584,7 +575,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                         (java.util.Properties) (oProduct.getProperties().clone())));
 
             } else {
-                JOptionPane.showMessageDialog(this, "Service Charge Not Enabled");
+                JOptionPane.showMessageDialog(this, AppLocal.getIntString("message.sconoff.disable"));
             }
 
         } else {
