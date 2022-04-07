@@ -275,7 +275,7 @@ public final class Transfer extends JPanel implements JPanelView {
         try {
             txtOut.append("Adding Foreign Keys" + "\n");
             webPBar.setString("Adding Keys...");
-            webPBar.setBgBottom(Color.MAGENTA);
+            webPBar.setBackground(Color.MAGENTA);
             BatchSentence bsentence = new BatchSentenceResource(session_target, targetFKadd);
             
             java.util.List l = bsentence.list();
@@ -1807,7 +1807,7 @@ public final class Transfer extends JPanel implements JPanelView {
                     txtOut.append("Data Transfer Complete" + "\n");
                     
                     webPBar.setString("Finished!");
-                    webPBar.setBgBottom(Color.GREEN);                    
+                    webPBar.setBackground(Color.GREEN);                    
                     jbtnTransfer.setEnabled(true);
 
                     JOptionPane.showMessageDialog(this
@@ -1846,14 +1846,14 @@ public final class Transfer extends JPanel implements JPanelView {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        cbSource = new com.alee.laf.combobox.WebComboBox();
-        jtxtDbDriverLib = new com.alee.laf.text.WebTextField();
+        cbSource = new javax.swing.JComboBox();
+        jtxtDbDriverLib = new javax.swing.JTextField();
         jbtnDbDriverLib = new javax.swing.JButton();
-        jtxtDbDriver = new com.alee.laf.text.WebTextField();
-        jtxtDbType = new com.alee.laf.text.WebTextField();
+        jtxtDbDriver = new javax.swing.JTextField();
+        jtxtDbType = new javax.swing.JTextField();
         jlblVersion = new javax.swing.JLabel();
-        txtDbUser = new com.alee.laf.text.WebTextField();
-        txtDbPass = new com.alee.laf.text.WebPasswordField();
+        txtDbUser = new javax.swing.JTextField();
+        txtDbPass = new javax.swing.JPasswordField();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtOut = new javax.swing.JTextArea();
         jLabel8 = new javax.swing.JLabel();
@@ -1862,15 +1862,15 @@ public final class Transfer extends JPanel implements JPanelView {
         jLabel9 = new javax.swing.JLabel();
         jbtnTest = new javax.swing.JButton();
         jbtnTransfer = new javax.swing.JButton();
-        webPBar = new com.alee.laf.progressbar.WebProgressBar();
+        webPBar = new javax.swing.JProgressBar();
         jLabel11 = new javax.swing.JLabel();
         jlblDBSize = new javax.swing.JLabel();
-        jtxtDbServerPort = new com.alee.laf.text.WebTextField();
-        jtxtDbName = new com.alee.laf.text.WebTextField();
+        jtxtDbServerPort = new javax.swing.JTextField();
+        jtxtDbName = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        jtxtDbParams = new com.alee.laf.text.WebTextField();
+        jtxtDbParams = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -1931,9 +1931,9 @@ public final class Transfer extends JPanel implements JPanelView {
         jLabel6.setText("TRANSFER TO :");
         jLabel6.setPreferredSize(new java.awt.Dimension(150, 30));
 
+        cbSource.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         cbSource.setForeground(new java.awt.Color(51, 51, 51));
         cbSource.setToolTipText(bundle.getString("tooltip.transferfromdb")); // NOI18N
-        cbSource.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         cbSource.setPreferredSize(new java.awt.Dimension(150, 30));
         cbSource.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1941,9 +1941,9 @@ public final class Transfer extends JPanel implements JPanelView {
             }
         });
 
+        jtxtDbDriverLib.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jtxtDbDriverLib.setForeground(new java.awt.Color(51, 51, 51));
         jtxtDbDriverLib.setToolTipText(bundle.getString("tootltip.transferlib")); // NOI18N
-        jtxtDbDriverLib.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jtxtDbDriverLib.setPreferredSize(new java.awt.Dimension(360, 30));
 
         jbtnDbDriverLib.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/fileopen.png"))); // NOI18N
@@ -1952,14 +1952,14 @@ public final class Transfer extends JPanel implements JPanelView {
         jbtnDbDriverLib.setMinimumSize(new java.awt.Dimension(64, 32));
         jbtnDbDriverLib.setPreferredSize(new java.awt.Dimension(60, 30));
 
+        jtxtDbDriver.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jtxtDbDriver.setForeground(new java.awt.Color(51, 51, 51));
         jtxtDbDriver.setToolTipText(bundle.getString("tootltip.transferclass")); // NOI18N
-        jtxtDbDriver.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jtxtDbDriver.setPreferredSize(new java.awt.Dimension(360, 30));
 
+        jtxtDbType.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jtxtDbType.setForeground(new java.awt.Color(51, 51, 51));
         jtxtDbType.setToolTipText(bundle.getString("tootltip.transferdbtype")); // NOI18N
-        jtxtDbType.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jtxtDbType.setPreferredSize(new java.awt.Dimension(150, 30));
 
         jlblVersion.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
@@ -1971,14 +1971,14 @@ public final class Transfer extends JPanel implements JPanelView {
         jlblVersion.setMinimumSize(new java.awt.Dimension(150, 30));
         jlblVersion.setPreferredSize(new java.awt.Dimension(125, 30));
 
+        txtDbUser.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         txtDbUser.setForeground(new java.awt.Color(51, 51, 51));
         txtDbUser.setToolTipText(bundle.getString("tooltip.dbuser")); // NOI18N
-        txtDbUser.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         txtDbUser.setPreferredSize(new java.awt.Dimension(125, 30));
 
+        txtDbPass.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         txtDbPass.setForeground(new java.awt.Color(51, 51, 51));
         txtDbPass.setToolTipText(bundle.getString("tooltip.dbpassword")); // NOI18N
-        txtDbPass.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         txtDbPass.setPreferredSize(new java.awt.Dimension(125, 30));
 
         jScrollPane1.setBorder(null);
@@ -2050,9 +2050,7 @@ public final class Transfer extends JPanel implements JPanelView {
         });
 
         webPBar.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
-        webPBar.setHighlightDarkWhite(new java.awt.Color(204, 0, 0));
         webPBar.setPreferredSize(new java.awt.Dimension(240, 30));
-        webPBar.setProgressBottomColor(new java.awt.Color(0, 153, 255));
 
         jLabel11.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(102, 102, 102));
@@ -2070,14 +2068,14 @@ public final class Transfer extends JPanel implements JPanelView {
         jlblDBSize.setMinimumSize(new java.awt.Dimension(150, 30));
         jlblDBSize.setPreferredSize(new java.awt.Dimension(125, 30));
 
+        jtxtDbServerPort.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jtxtDbServerPort.setForeground(new java.awt.Color(51, 51, 51));
         jtxtDbServerPort.setToolTipText(bundle.getString("tootltip.servernameport")); // NOI18N
-        jtxtDbServerPort.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jtxtDbServerPort.setPreferredSize(new java.awt.Dimension(360, 30));
 
+        jtxtDbName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jtxtDbName.setForeground(new java.awt.Color(51, 51, 51));
         jtxtDbName.setToolTipText(bundle.getString("tootltip.transferdbname")); // NOI18N
-        jtxtDbName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jtxtDbName.setPreferredSize(new java.awt.Dimension(360, 30));
 
         jLabel12.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -2101,9 +2099,9 @@ public final class Transfer extends JPanel implements JPanelView {
         jLabel14.setMinimumSize(new java.awt.Dimension(150, 30));
         jLabel14.setPreferredSize(new java.awt.Dimension(160, 30));
 
+        jtxtDbParams.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jtxtDbParams.setForeground(new java.awt.Color(51, 51, 51));
         jtxtDbParams.setToolTipText(bundle.getString("tootltip.transferdbparams")); // NOI18N
-        jtxtDbParams.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jtxtDbParams.setPreferredSize(new java.awt.Dimension(360, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -2404,7 +2402,7 @@ public final class Transfer extends JPanel implements JPanelView {
     }//GEN-LAST:event_cbSourceActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.alee.laf.combobox.WebComboBox cbSource;
+    private javax.swing.JComboBox cbSource;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -2427,16 +2425,16 @@ public final class Transfer extends JPanel implements JPanelView {
     private javax.swing.JLabel jlblDBSize;
     private javax.swing.JLabel jlblSource;
     private javax.swing.JLabel jlblVersion;
-    private com.alee.laf.text.WebTextField jtxtDbDriver;
-    private com.alee.laf.text.WebTextField jtxtDbDriverLib;
-    private com.alee.laf.text.WebTextField jtxtDbName;
-    private com.alee.laf.text.WebTextField jtxtDbParams;
-    private com.alee.laf.text.WebTextField jtxtDbServerPort;
-    private com.alee.laf.text.WebTextField jtxtDbType;
-    private com.alee.laf.text.WebPasswordField txtDbPass;
-    private com.alee.laf.text.WebTextField txtDbUser;
+    private javax.swing.JTextField jtxtDbDriver;
+    private javax.swing.JTextField jtxtDbDriverLib;
+    private javax.swing.JTextField jtxtDbName;
+    private javax.swing.JTextField jtxtDbParams;
+    private javax.swing.JTextField jtxtDbServerPort;
+    private javax.swing.JTextField jtxtDbType;
+    private javax.swing.JPasswordField txtDbPass;
+    private javax.swing.JTextField txtDbUser;
     private javax.swing.JTextArea txtOut;
-    private com.alee.laf.progressbar.WebProgressBar webPBar;
+    private javax.swing.JProgressBar webPBar;
     // End of variables declaration//GEN-END:variables
 
 }

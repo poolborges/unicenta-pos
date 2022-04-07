@@ -16,7 +16,7 @@
     <description>Open Source POS Samples</description>  
 
     <properties>
-        <javafx.version>11</javafx.version>
+        <javafx.version>19-ea+4</javafx.version>
         <auto-service.version>1.0-rc7</auto-service.version>
     </properties>
     
@@ -109,6 +109,12 @@
             <groupId>org.patrodyne</groupId>
             <artifactId>patrodyne-scripting-java</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.dalsemi.onewire</groupId> 
+            <artifactId>onewire-api</artifactId> 
+            <version>0.1</version>
         </dependency>
         
     </dependencies>
@@ -208,7 +214,7 @@
                     <plugin>
                         <groupId>org.openjfx</groupId>
                         <artifactId>javafx-maven-plugin</artifactId>
-                        <version>0.0.4</version>
+                        <version>0.0.8</version>
                         <configuration>
                             <mainClass>com.unicenta.orderpop.OrderPop</mainClass>
                         </configuration>
