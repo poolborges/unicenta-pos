@@ -21,6 +21,7 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.forms.*;
+import java.awt.HeadlessException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EventListener;
@@ -47,10 +48,7 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
      */
     public JPanelConfiguration(AppView oApp) {
         this(oApp.getProperties());
-        if (oApp != null) {
-            jbtnExit.setVisible(false);
-        }
-
+        jbtnExit.setVisible(false);
     }
 
     /**
@@ -101,47 +99,45 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
     }
 
     private void restoreProperties() {
-
-        config.setFactoryConfig();
-        // paneles auxiliares
-        m_panelconfig.forEach(c -> {
-            c.loadProperties(config);
-        });
-        
-        /*
-        if (config.delete()) {
-            loadProperties();
-        } else {
+        try {
+            config.setFactoryConfig();
+            m_panelconfig.forEach(c -> {
+                c.loadProperties(config);
+            });
+        } catch (Exception e) {
             JMessageDialog.showMessage(this,
                     new MessageInf(MessageInf.SGN_WARNING,
-                            AppLocal.getIntString("message.cannotdeleteconfig")));
+                            AppLocal.getIntString("message.cannotrestoreconfig"), e));
         }
-        */
     }
 
     public void loadProperties() {
 
-        config.load();
-        // paneles auxiliares
-        m_panelconfig.forEach(c -> {
-            c.loadProperties(config);
-        });
+        try {
+            config.load();
+            m_panelconfig.forEach(c -> {
+                c.loadProperties(config);
+            });
+        } catch (Exception e) {
+            JMessageDialog.showMessage(this,
+                    new MessageInf(MessageInf.SGN_WARNING,
+                            AppLocal.getIntString("message.cannotloadconfig"), e));
+        }
     }
 
     private void saveProperties() {
 
-        // paneles auxiliares
-        m_panelconfig.forEach(c -> {
-            c.saveProperties(config);
-        });
-
         try {
+            m_panelconfig.forEach(c -> {
+                c.saveProperties(config);
+            });
+
             config.save();
             JOptionPane.showMessageDialog(this,
                     AppLocal.getIntString("message.restartchanges"),
                     AppLocal.getIntString("message.title"),
                     JOptionPane.INFORMATION_MESSAGE);
-        } catch (IOException e) {
+        } catch (HeadlessException | IOException e) {
             JMessageDialog.showMessage(this,
                     new MessageInf(MessageInf.SGN_WARNING,
                             AppLocal.getIntString("message.cannotsaveconfig"), e));
@@ -378,10 +374,10 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
     }//GEN-LAST:event_jbtnSaveActionPerformed
 
     private void jbtnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnExitActionPerformed
-        if(deactivate() && closeEventListener != null){
+        if (deactivate() && closeEventListener != null) {
             closeEventListener.windowClosed(new CloseEvent(this));
         }
-        
+
     }//GEN-LAST:event_jbtnExitActionPerformed
 
 
@@ -402,18 +398,18 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
     // End of variables declaration//GEN-END:variables
 
     public interface CloseEventListener extends EventListener {
+
         public void windowClosed(CloseEvent e);
     }
-    
-    
-    public class CloseEvent extends java.util.EventObject{
+
+    public class CloseEvent extends java.util.EventObject {
 
         public CloseEvent(Object source) {
             super(source);
         }
-        
+
         @Override
-        public String toString(){
+        public String toString() {
             return CloseEvent.class.getName();
         }
     }

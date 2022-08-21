@@ -137,7 +137,6 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
      *
      * @throws BasicException
      */
-    @SuppressWarnings("unchecked")
     public void activate() throws BasicException {
 
         List a = m_sentcat.list();

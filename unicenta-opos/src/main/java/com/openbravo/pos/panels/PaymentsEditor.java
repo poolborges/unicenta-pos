@@ -222,13 +222,13 @@ public final class PaymentsEditor extends javax.swing.JPanel implements EditorRe
             return d;
         }
         @Override
-        public Double addSignum(Double d) {
-            if (d == null) {
+        public Double addSignum(Double value) {
+            if (value == null) {
                 return null;
-            } else if (d.doubleValue() < 0.0) {
-                return -d.doubleValue();
+            } else if (value < 0.0) {
+                return -value;
             } else {
-                return d;
+                return value;
             }
         }
     }

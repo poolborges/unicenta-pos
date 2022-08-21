@@ -16,6 +16,7 @@
 
 package com.openbravo.pos.panels;
 
+import com.openbravo.basic.BasicException;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.data.user.ListProvider;
 import com.openbravo.data.user.DefaultSaveProvider;
@@ -81,4 +82,14 @@ public class JPanelPayments extends JPanelTable {
     public String getTitle() {
         return AppLocal.getIntString("Menu.Payments");
     }    
+    
+    @Override
+    public void activate() throws BasicException {         
+        super.activate();
+    }
+    
+    @Override
+    public boolean deactivate() {
+        return super.deactivate();
+    }
 }
