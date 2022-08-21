@@ -21,13 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <groupId>io.github.kriolos.opos</groupId>
         <artifactId>kriolos-opos-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../</relativePath> 
     </parent>  
     <artifactId>kriolos-pos</artifactId> 
     <packaging>nbm</packaging>
     <name>Kriolos.POS.App</name> 
     
     <properties>
-        <netbeans.version>RELEASE130</netbeans.version>
         <mysql.version>8.0.29</mysql.version>
         <derby.version>10.15.2.0</derby.version>
         <jasperreports.version>6.20.0</jasperreports.version>
