@@ -357,6 +357,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <plugin>
                 <groupId>org.apache.netbeans.utilities</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
+                <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
                         <publicPackage>com.openbravo.basic</publicPackage>

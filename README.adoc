@@ -22,13 +22,15 @@ endif::[]
 
 [[doc]]
 = krPOS - Kriol Point Of Sales
-:author: Copyright (c) 2020-2020 Paulo Borges.
+:author: Copyright (c) 2020-2022 KriolOS.
 :revnumber: krpos-0.0.1-snapshot
 :revdate: {last-update-label} {docdatetime}
 :version-label!:
 
 
 ifdef::badges[]
+== Build status
+
 image:https://github.com/poolborges/unicenta-pos/actions/workflows/build.yml/badge.svg["Build Status", link="https://github.com/poolborges/unicenta-pos/actions/workflows/build.yml"]
 image:https://codecov.io/github/poolborges/unicenta-pos/coverage.svg["Code Coverage", link="https://codecov.io/gh/poolborges/unicenta-pos"]
 image:https://img.shields.io/badge/License-GPLv3-blue.svg["License: GPL v3", link="https://www.gnu.org/licenses/gpl-3.0.en.html"]
