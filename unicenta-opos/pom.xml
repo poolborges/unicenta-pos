@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <netbeans.version>RELEASE130</netbeans.version>
         <mysql.version>8.0.29</mysql.version>
         <derby.version>10.15.2.0</derby.version>
-        <jasperreports.version>6.19.0</jasperreports.version>
+        <jasperreports.version>6.20.0</jasperreports.version>
         <flatlaf.version>2.0.2</flatlaf.version>
     </properties>
 
