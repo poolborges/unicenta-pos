@@ -343,6 +343,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.formdev</groupId>
+                        <artifactId>flatlaf</artifactId>
+                        <version>${flatlaf.version}</version>
+                        <scope>compile</scope> <!-- RUN: PROVIDED -->
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

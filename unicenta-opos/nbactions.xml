@@ -17,13 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <actions>
     <action>
-        <actionName>CUSTOM-JasperDesignViewer</actionName>
-        <displayName>JasperDesignViewer</displayName>
+        <actionName>CUSTOM-StartPOS</actionName>
+        <displayName>StartPOS</displayName>
         <goals>
-            <goal>compile</goal> 
+            <goal>compile</goal>
             <goal>exec:java</goal>
-            <goal>-Dexec.mainClass="net.sf.jasperreports.view.JasperDesignViewer"</goal>
-            <goal>-Dexec.args="-XML -Fsrc/main/resources/com/openbravo/reports/products.jrxml"</goal>
+            <goal>-Dexec.mainClass="com.openbravo.pos.forms.StartPOS"</goal>
         </goals>
     </action>
     <action>
@@ -37,12 +36,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </activatedProfiles>
     </action>
     <action>
-        <actionName>CUSTOM-StartPOS</actionName>
-        <displayName>StartPOS</displayName>
+        <actionName>CUSTOM-JasperDesignViewer</actionName>
+        <displayName>JasperDesignViewer</displayName>
         <goals>
-            <goal>compile</goal>
+            <goal>compile</goal> 
             <goal>exec:java</goal>
-            <goal>-Dexec.mainClass="com.openbravo.pos.forms.StartPOS"</goal>
+            <goal>-Dexec.mainClass="net.sf.jasperreports.view.JasperDesignViewer"</goal>
+            <goal>-Dexec.args="-XML -Fsrc/main/resources/com/openbravo/reports/products.jrxml"</goal>
         </goals>
     </action>
 </actions>

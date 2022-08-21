@@ -16,6 +16,7 @@
  */
 package com.openbravo.pos.core.spi.gui;
 
+import com.openbravo.pos.admin.ResourcesView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -27,16 +28,18 @@ import java.util.logging.Logger;
  */
 public class FlatlafProvider {
 
+    private static final Logger LOGGER = Logger.getLogger(ResourcesView.class.getName());
     public List<LafInfo> getLafInfoList() {
         List<LafInfo> lafs = new ArrayList<>();
 
         // FlatLaf - Flat Look and Feel 
-        lafs.add(new LafInfo("Flat Dark", com.formdev.flatlaf.FlatDarkLaf.class.getCanonicalName()));
-        lafs.add(new LafInfo("Flat Darcula", com.formdev.flatlaf.FlatDarculaLaf.class.getCanonicalName()));
-        lafs.add(new LafInfo("Flat Light", com.formdev.flatlaf.FlatLightLaf.class.getCanonicalName()));
-        lafs.add(new LafInfo("Flat IntelliJ", com.formdev.flatlaf.FlatIntelliJLaf.class.getCanonicalName()));
+        try {
+            lafs.add(new LafInfo("Flat Dark", com.formdev.flatlaf.FlatDarkLaf.class.getCanonicalName()));
+            lafs.add(new LafInfo("Flat Darcula", com.formdev.flatlaf.FlatDarculaLaf.class.getCanonicalName()));
+            lafs.add(new LafInfo("Flat Light", com.formdev.flatlaf.FlatLightLaf.class.getCanonicalName()));
+            lafs.add(new LafInfo("Flat IntelliJ", com.formdev.flatlaf.FlatIntelliJLaf.class.getCanonicalName()));
 
-        /*
+            /*
         lafs.addItem(new LafInfo("Arc",com.formdev.flatlaf.intellijthemes.FlatArcIJTheme.class.getCanonicalName()));
         lafs.addItem(new LafInfo("Arc (Orange)",com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme.class.getCanonicalName()));
         lafs.addItem(new LafInfo("Arc Dark",com.formdev.flatlaf.intellijthemes.FlatArcDarkIJTheme.class.getCanonicalName()));
@@ -100,7 +103,10 @@ public class FlatlafProvider {
         lafs.addItem(new LafInfo("Solarized Dark Contrast (Material)",com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatSolarizedDarkContrastIJTheme.class.getCanonicalName()));
         lafs.addItem(new LafInfo("Solarized Light (Material)",com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatSolarizedLightIJTheme.class.getCanonicalName()));
         lafs.addItem(new LafInfo("Solarized Light Contrast (Material)",com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatSolarizedLightContrastIJTheme.class.getCanonicalName()));
-        */
+             */
+        } catch (Throwable ex) {
+            LOGGER.log(Level.WARNING, "Exception loading LAF from com.formdev.flatlaf package ", ex);
+        }
         return lafs;
     }
 }
