@@ -1,7 +1,7 @@
 // Global settings
 :ascii-ids:
 :encoding: UTF-8
-:lang: pt_PT
+:lang: en
 :icons: font
 :toc:
 :toc-placement!:
@@ -10,20 +10,20 @@
 :stem:
 
 ifdef::env-github[]
-:imagesdir: https://raw.githubusercontent.com/poolborges/unicenta-pos/master/docs/images/
+:imagesdir: https://raw.githubusercontent.com/poolborges/unicenta-pos/main/docs/images/
 :tip-caption: :bulb:
 :note-caption: :information_source:
 :important-caption: :heavy_exclamation_mark:
 :caution-caption: :fire:
 :warning-caption: :warning:
 :badges:
-:doc-dir: https://github.com/poolborges/unicenta-pos/master/docs
+:doc-dir: https://github.com/poolborges/unicenta-pos/main/docs
 endif::[]
 
 [[doc]]
-= krPOS - Kriol Point Of Sales
+= Kriol Open Source Point Of Sales
 :author: Copyright (c) 2020-2022 KriolOS.
-:revnumber: krpos-0.0.1-snapshot
+:revnumber: 2022-08-23
 :revdate: {last-update-label} {docdatetime}
 :version-label!:
 
@@ -39,235 +39,20 @@ endif::[]
 
 == About
 
-krPOS is Point Of Sales for "Kriol" Markert
+kriolosPOS (Kriol Open Source Point Of Sales)
 
 NOTE: WILL NOT follow future version of Unicenta oPOS
 
-=== History of krPOS
+=== History of kriolosPOS
 
-* krPOS is a fork of UnicentaOPOS 4.5 (2019-06-30) 
-* UnicentaOPOS is a fork of OpenBravo POS
-* Openbravo has acquired Librepos (previously named Tina POS) 
-** Adrian Romero was founder and main developer for Tina POS
+* kriolosPOS is a fork of UnicentaOPOS 4.5 (2019-06-30) 
+* UnicentaOPOS was a fork of OpenBravoPOS
+* OpenbravoPOS was a fork of Librepos (previously named Tina POS) 
+** Adrian Romero was the founder and main developer for Tina POS
 
 * License: GPL version 3
 
-
-== Project's Vision
-
-* COMPAIBLE: Unicenta DB SCHEMA 4.5
-* Changes SHOULD be smoth as possible
-* FOCUS/PRIMAR: Point Of Sales (Small/Med Retail Business, On Shop,). 
-** other SHOULD be provide as integration with ERP such as: Idempiere; Apache OFBiz, 
-
-=== UI & Business Logic
-
-* Evaluate Pattern: Mode View ViewModel(MVVM), Model View Control(MVC)
-* Compose for Desktop (Kolin DSL): 
-** https://github.com/JetBrains/compose-jb
-** https://github.com/JetBrains/compose-jb/blob/master/tutorials/Swing_Integration
-* OpenJX (XML)
-** Supported on: Netbeans Platform 
-
-
-=== Context
-
-AppContext 
-
-* Provide info abou current App Instance: provide b underline infra: OSGI; Netbeans Platform
-** DI Container, etc...
-** User (Provide info about authenticated User and permission's
-** Host (Provide info about host running the POS)
-
-
-=== Configuration 
-
-File (Encr Password, KeyStorage, )
-
-* Abstract Config Acess (SHOULD be based on MicroProfile Config SPEC)
-* Only database properties SHOULD be available on file (Properies File)
-* database.1.url, database.1.username, database.1.password
-
-Contextual Config on Database (KVP)
-
-* AppConfig:
-* HosConfig:
-
-
-=== Resource 
-
-APP Resource (Customization)
-
-* Should not be stored on database anymore, but provided on specific jar and available on classpath
-** on OSGI those resource can be easily updated as fragment of bundle kiolos-pos-resource
-
-
-=== Database Access & Migration 
-
-
-.Database Access (On Evaluation/Experimental)
-|====
-|Name |Evaluate? |Reference
-
-|JPA (JQL/HQL)
-|-
-|
-
-|JPA wih JPAStreamer: 
-|-
-|https://github.com/speedment/speedment
-
-|Reladomo ORM
-|-
-|https://goldmansachs.github.io/reladomo/
-|====
-
-.Migration tools/Libs
-|====
-|Name |Evaluate? |Reference
-
-|Liquidbase
-|X (CHOSED)
-|-
-
-|Obevo 
-|-
-|https://github.com/goldmansachs/obevo
-
-|====
-
-
-=== EventSystem & ScriptEngine
-
-EventSystem Concepts: Event, EventPublisher, EventHandler
-
-* EventPublisher
-* EventHandler
-** EX: ScriptRunnerEventHandler
-
-ScriptEngine
-
-* ScriptEngine: 
-** Kotlin(kts)
-** groovy (but may not included, just for testing/evaluation)
-
-=== Modularity
-
-Frameworks
-
-* OSGI 7 (core, compendium, ...): NON-UI Componen/Modules
-* Netbeans Platform v12+(): UI Modules, Update, Distribuition
-
-Modularity of code base: API, Reference Implementation(impl)
-
-* krospos-core-api
-* krospos-core-impl 
-* krospos-gui-api
-* krospos-gui-core
-* krospos-data-api
-* krospos-data-impl
-
-==== Service Provider Interface (SPI)
-
-About Java SPI available since Java 1.5 (eg: Used in JDBC driver loading)
-
-* META-INF/services
-* https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html
-* https://en.wikipedia.org/wiki/Service_provider_interface
-
-.Example of possible SPI 
-|====
-|ResourceLoader, ResourceProvider resource:file:// resource:db:// resource:classpath://
-|PaymentGatewayProvider
-|====
-
-==== OSGI 
-
-* Fragment for static resource customization
-* capabilities and requirement
-* Declarative Service (Dependency Injection)
-* ConfigAdmin
-* Custom Annotation
-* Apache Karaf (Apache Felix)
-* TornadoFX (OSGI and JavaFX)
-* ...
-
-== Docker 
-
-.Run MySQL database for Developer Env 
-----
-docker run --name unicenta -p 3306:3306 -d -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=unicenta -e MYSQL_USER=unicenta -e MYSQL_PASSWORD=unicenta mysql:5.6
-----
-
-== GUI Libraries
-
-Currently GUI is Swing based on __Netbeans GUI Designer__ which use XML to create UI and generate Swing Java code.
-
-GUI Framework/Toolkit
-
-* Java Swing (Migra
-* Jetbrains Compose for Desktop
-* Netbeans Platform 
-** (Property Change Event and Listener)
-** Windows System API (Behaviors: Docking; floating, moving/positioning; Persist state between restart)
-** Node Explore View 
-** JFXPanel (allow to use JavaFX content)
-* JavaFX (Web View, 
-* TornadoFX (Build on top of JavaFX, But comple
-* Eclipse SWT 
-
-Swing Libraries
-
-* SwingX
-* ... (TO BE REMOVED)
-
-== Tools for improvemen of Code Quali
-
-
-GUI Test 
-
-** FEST (Deprecate) use AssertJ (Swing Module)
-
-Test Coverage with
-
-* JaCoCo coverage tool, used to measure how many lines of our code are tested.
-* OpenClover (code coverage tool for Java, Groovy and AspectJ)
-
-Static Source Code Analysis with 
-
-* PMD
-* SpotBugs (Alternative to FindBug) and Find Security Bugs
-
-Project has strict code style guidelines with
-
-* Checkstyle maven-checkstyle-plugin 
-
-Scan your Dependencies for Vulnerabilities with
-
-* OWASP Dependency Check 
-*** Dependency-Check is a Software Composition Analysis (SCA) tool suite 
-** https://owasp.org/www-project-dependency-check/
-
-Performance and 
- 
-* SoapUI (API Testing Tooling)
-* Gatlin 
-* JMeter
-* Locust (Python Based)
-
-.Example use dependecies check
-----
-mvn org.owasp:dependency-check-maven:check -Dformat=CSV
-mvn org.owasp:dependency-check-maven:aggregate -Dformat=CSV
-----
-
-.Example use JaCoCo
-----
-mvn clean install jacoco:prepare-agent jacoco:report
-mvn clean jacoco:prepare-agent install jacoco:report
-----
-
-== Developers Mention
+=== Pass Developers and Contributors
 
 * @author Mikel Irurita
 * @author jaroslawwozniak
@@ -284,9 +69,16 @@ mvn clean jacoco:prepare-agent install jacoco:report
 * @author poolborges
 * @author Teodor Danciu (teodord@users.sourceforge.net)
 
+== Run DB on Docker 
+
+.Run MySQL database for Developer Env 
+----
+docker run --name unicenta -p 3306:3306 -d -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=unicenta -e MYSQL_USER=unicenta -e MYSQL_PASSWORD=unicenta mysql:5.6
+----
+
 == Reference
 
-* link:{doc-dir}/[App Docs]
+* link:{doc-dir}/[Documentation]
 
 
 == Screenshots 

@@ -9,7 +9,7 @@
 :stem:
 
 [[gd]]
-= Kriolos :: POS Documentation
+= Development Guides
 :author: Kriolos Team
 :keywords: Kriolos, Opensource, Retail, POS 
 :description: Kriolos POS Development Guide
@@ -19,6 +19,7 @@
 
 Guides 
 
+include::chapters/product-vision.adoc[] 
 include::chapters/contributors.adoc[] 
 include::chapters/database-overview.adoc[] 
 include::chapters/develop-overview.adoc[] 

@@ -3,22 +3,35 @@
 :encoding: UTF-8
 :lang: en
 :icons: font
-:toc: left
+:toc:
+:toc-placement!:
 :toclevels: 3
 :numbered:
 :stem:
 
+ifdef::env-github[]
+:imagesdir: https://raw.githubusercontent.com/poolborges/unicenta-pos/main/docs/images/
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+:badges:
+:doc-dir: https://github.com/poolborges/unicenta-pos/main/docs
+endif::[]
 
-[[gd]]
-= MOBICS Documentation
-:author: MOBICS Team
-:keywords: MOBICS, ITS, C-ITS, V2X  
-:description: MOBICS Documentation common place for all MOBICS documentation
-:revnumber: {app-product-name} {app-version}
+[[doc]]
+= Project Documentation
+:author: Copyright (c) 2020-2022 KriolOS.
+:revnumber: 2022-08-23
 :revdate: {last-update-label} {docdatetime}
 :version-label!:
 
-Documentations are written in AsciiDoc(AsciiDoc is a text document format for writing documentation, ...)
+== Docs
+
+* link:{doc-dir}/guide-devel/[Developer Guide]
+
+
 
 == References
 
