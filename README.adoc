@@ -28,6 +28,8 @@ endif::[]
 :version-label!:
 
 
+WARNING: IN DEVELOPMENT (NOT RELEASE YET)
+
 ifdef::badges[]
 == Build status
 
@@ -39,9 +41,9 @@ endif::[]
 
 == About
 
-kriolosPOS (Kriol Open Source Point Of Sales)
+Kriol Open Source Point Of Sales (kriolosPOS)
 
-NOTE: WILL NOT follow future version of Unicenta oPOS
+image::krpos-screenshot.gif[]
 
 === History of kriolosPOS
 
@@ -50,7 +52,6 @@ NOTE: WILL NOT follow future version of Unicenta oPOS
 * OpenbravoPOS was a fork of Librepos (previously named Tina POS) 
 ** Adrian Romero was the founder and main developer for Tina POS
 
-* License: GPL version 3
 
 === Pass Developers and Contributors
 
@@ -79,10 +80,5 @@ docker run --name unicenta -p 3306:3306 -d -e MYSQL_ROOT_PASSWORD=root -e MYSQL_
 == Reference
 
 * link:{doc-dir}/[Documentation]
-
-
-== Screenshots 
-
-image::krpos-screenshot.gif[]
 
 
