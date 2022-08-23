@@ -88,12 +88,8 @@ public class JRootMenu {
         }
     }
     
-    public boolean checkLastView(JPanelView m_jMyView){
-        if (m_jLastView == null || (m_jMyView != m_jLastView && m_jLastView.deactivate())) {
-            return true;
-        }else {
-            return false;
-        }
+    public boolean checkIfLastView(JPanelView m_jMyView){
+        return m_jMyView == m_jLastView;
     }
     
     public void setLastView(JPanelView m_jMyView){

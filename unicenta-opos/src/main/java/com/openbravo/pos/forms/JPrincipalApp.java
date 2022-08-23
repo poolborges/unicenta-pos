@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 
-
 /**
  *
  * @author adrianromero
@@ -41,7 +40,7 @@ public class JPrincipalApp extends JPanel implements AppUserView {
 
     private Icon menu_open;
     private Icon menu_close;
-    
+
     private final JRootMenu rMenu;
 
     /**
@@ -80,7 +79,6 @@ public class JPrincipalApp extends JPanel implements AppUserView {
         addView(new JPanel(), "<NULL>");
         showView("<NULL>");
 
-        
     }
 
     private void setMenuIcon() {
@@ -100,7 +98,6 @@ public class JPrincipalApp extends JPanel implements AppUserView {
     private void assignMenuButtonIcon() {
         colapseButton.setIcon(m_jPanelMenu.isVisible() ? menu_close : menu_open);
     }
-
 
     private void setMenuVisible(boolean value) {
 
@@ -137,7 +134,7 @@ public class JPrincipalApp extends JPanel implements AppUserView {
     private void addView(JComponent component, String sView) {
         m_jPanelContainer.add(component, sView);
     }
-    
+
     private void showView(String sView) {
         CardLayout cl = (CardLayout) (m_jPanelContainer.getLayout());
         cl.show(m_jPanelContainer, sView);
@@ -151,17 +148,13 @@ public class JPrincipalApp extends JPanel implements AppUserView {
     @Override
     public void showTask(String sTaskClass) {
 
-        m_appview.waitCursorBegin();
-        
-        LOGGER.info("Show View for class: "+sTaskClass);
+        LOGGER.info("Show View for class: " + sTaskClass);
+        try {
+            m_appview.waitCursorBegin();
 
-        if (m_appuser.hasPermission(sTaskClass)) {
+            if (m_appuser.hasPermission(sTaskClass)) {
 
-            JPanelView m_jMyView = rMenu.getCreatedViews().get(sTaskClass);
-            
-
-            if (rMenu.checkLastView(m_jMyView)) {
-
+                JPanelView m_jMyView = rMenu.getCreatedViews().get(sTaskClass);
                 if (m_jMyView == null) {
 
                     m_jMyView = rMenu.getPreparedViews().get(sTaskClass);
@@ -170,50 +163,58 @@ public class JPrincipalApp extends JPanel implements AppUserView {
 
                         try {
                             m_jMyView = (JPanelView) m_appview.getBean(sTaskClass);
-                        } catch (Exception e) {
-                            LOGGER.log(Level.SEVERE, "Exception on get a JPanelView Bean for class: "+sTaskClass, e);
+                        } catch (BeanFactoryException e) {
+                            LOGGER.log(Level.SEVERE, "Exception on get a JPanelView Bean for class: " + sTaskClass, e);
                             m_jMyView = new JPanelNull(m_appview, e);
                         }
                     }
 
-                    m_jMyView.getComponent().applyComponentOrientation(getComponentOrientation());
-                    addView(m_jMyView.getComponent(), sTaskClass);
                     rMenu.getCreatedViews().put(sTaskClass, m_jMyView);
                 }
 
-                try {
-                    LOGGER.info("Call 'activate' on class: "+sTaskClass);
+                if (!rMenu.checkIfLastView(m_jMyView)) {
+
+                    if (rMenu.getLastView() != null) {
+                        LOGGER.info("Call 'deactivate' on class: " + rMenu.getLastView().getClass().getName());
+                        rMenu.getLastView().deactivate();
+                    }
+
+                    m_jMyView.getComponent().applyComponentOrientation(getComponentOrientation());
+                    addView(m_jMyView.getComponent(), sTaskClass);
+
+                    LOGGER.info("Call 'activate' on class: " + sTaskClass);
                     m_jMyView.activate();
-                    
-                } catch (BasicException e) {
-                    LOGGER.log(Level.SEVERE, "Exception on call 'activate' on class: : "+sTaskClass, e);
-                    JMessageDialog.showMessage(this,
-                            new MessageInf(MessageInf.SGN_WARNING,
-                                    AppLocal.getIntString("message.notactive"), e));
+
+                    rMenu.setLastView(m_jMyView);
+
+                    setMenuVisible(getBounds().width > 800);
+
+                    showView(sTaskClass);
+                    String sTitle = m_jMyView.getTitle();
+                    if (sTitle != null && !sTitle.isBlank()) {
+                        m_jPanelTitle.setVisible(true);
+                        m_jTitle.setText(sTitle);
+                    } else {
+                        m_jPanelTitle.setVisible(false);
+                        m_jTitle.setText("");
+                    }
+                } else {
+                    LOGGER.log(Level.INFO, "Already open: " + sTaskClass + ", Instance: " + m_jMyView);
                 }
+            } else {
 
-                rMenu.setLastView(m_jMyView);
-
-                setMenuVisible(getBounds().width > 800);
-
-                showView(sTaskClass);
-                String sTitle = m_jMyView.getTitle();
-                if(sTitle != null && !sTitle.isBlank()){
-                    m_jPanelTitle.setVisible(true);
-                    m_jTitle.setText(sTitle);
-                }else {
-                    m_jPanelTitle.setVisible(false);
-                    m_jTitle.setText("");
-                }
+                LOGGER.log(Level.INFO, "NO PERMISSION on call class: : " + sTaskClass);
+                JMessageDialog.showMessage(this,
+                        new MessageInf(MessageInf.SGN_WARNING,
+                                AppLocal.getIntString("message.notpermissions")));
             }
-        } else {
-
-            LOGGER.log(Level.INFO, "NO PERMISSION on call class: : "+sTaskClass);
+            m_appview.waitCursorEnd();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Exception on show class: " + sTaskClass, e);
             JMessageDialog.showMessage(this,
                     new MessageInf(MessageInf.SGN_WARNING,
-                            AppLocal.getIntString("message.notpermissions")));
+                            AppLocal.getIntString("message.notactive"), e));
         }
-        m_appview.waitCursorEnd();
     }
 
     @Override
