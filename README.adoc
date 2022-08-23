@@ -17,7 +17,7 @@ ifdef::env-github[]
 :caution-caption: :fire:
 :warning-caption: :warning:
 :badges:
-:doc-dir: https://github.com/poolborges/unicenta-pos/main/docs
+:doc-dir: https://github.com/poolborges/unicenta-pos/tree/main/docs
 endif::[]
 
 [[doc]]
