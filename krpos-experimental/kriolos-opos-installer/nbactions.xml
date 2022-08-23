@@ -4,7 +4,7 @@
             <actionName>CUSTOM-exec:exec Bitrock</actionName>
             <displayName>exec:exec Bitrock</displayName>
             <goals>
-                <goal>deploy</goal>
+                <goal>install</goal>
             </goals>
             <activatedProfiles>
                 <activatedProfile>bitrock</activatedProfile>

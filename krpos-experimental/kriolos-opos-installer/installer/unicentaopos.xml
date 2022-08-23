@@ -1,13 +1,13 @@
 <project>
-    <shortName>krPOS</shortName>
-    <fullName>Kriol Open Source Point Of Sale</fullName>
-    <version>4.5</version>
-    <readmeFile>README</readmeFile>
+    <shortName>kriolosPOS</shortName>
+    <fullName>Kriolos POS</fullName>
+    <version>1.0.0-SNAPHOT</version>
+    <readmeFile>readme/README.txt</readmeFile>
     <licenseFile>licensing/uniCenta oPOS Notice.txt</licenseFile>
-    <leftImage>v_logo_dark.png</leftImage>
-    <logoImage>unicentaopos.png</logoImage>
-    <splashImage>uniCenta_splash_dark.png</splashImage>
-    <wmImage>unicentaopos.png</wmImage>
+    <leftImage>images/v_logo_dark.png</leftImage>
+    <logoImage>images/unicentaopos.png</logoImage>
+    <splashImage>images/uniCenta_splash_dark.png</splashImage>
+    <wmImage>images/unicentaopos.png</wmImage>
     <defaultLanguage>pt</defaultLanguage>
     <allowLanguageSelection>1</allowLanguageSelection>
     <componentList>
@@ -22,7 +22,7 @@
                     <comment>${product_fullname}</comment>
                     <exec>sh ${installdir}/start.sh</exec>
                     <icon>${installdir}/unicentaopos.png</icon>
-                    <name>KrPOS</name>
+                    <name>kriolosPOS</name>
                     <noPinToStart>0</noPinToStart>
                     <path>${installdir}</path>
                     <platforms>windows</platforms>
@@ -30,7 +30,7 @@
                     <runInTerminal>0</runInTerminal>
                     <windowsExec>${installdir}/start.bat</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon>${installdir}/unicentaopos.ico</windowsIcon>
+                    <windowsIcon>${installdir}/images/unicentaopos.ico</windowsIcon>
                     <windowsPath>${installdir}</windowsPath>
                 </shortcut>
             </desktopShortcutList>
@@ -45,7 +45,7 @@
                             <origin>native</origin>
                         </distributionDirectory>
                         <distributionDirectory>
-                            <origin>../target/unicentaopos/lib</origin>
+                            <origin>../target/app-setup-dir/lib</origin>
                         </distributionDirectory>
                         <distributionDirectory>
                             <origin>assets</origin>
@@ -84,41 +84,37 @@
                             <origin>scripts/start.bat</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>../../unicenta-opos/target/unicentaopos.jar</origin>
+                            <origin>../target/app-setup-dir/kriolos-pos.jar</origin>
                         </distributionFile>
-                        <distributionFile>
-                            <origin>uniCenta_splash_dark.png</origin>
-                        </distributionFile>
-                        <distributionFile>
-                            <origin>unicentaopos.png</origin>
-                        </distributionFile>
-                        <distributionFile>
-                            <origin>unicentaopos.ico</origin>
-                        </distributionFile>
-                        <distributionFile>
-                            <origin>window.logo.png</origin>
-                        </distributionFile>
-                        <distributionFile>
-                            <origin>README_Locales.txt</origin>
-                        </distributionFile>
-                        <distributionFile>
-                            <origin>README</origin>
-                        </distributionFile>
+                        <distributionDirectory>
+                            <origin>images</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <allowWildcards>1</allowWildcards>
+                            <includeFiles>.txt</includeFiles>
+                            <origin>readme</origin>
+                            <onPackingFilterList>
+                                <fileNameFilter>
+                                    <logic>matches</logic>
+                                    <pattern>*.txt</pattern>
+                                </fileNameFilter>
+                            </onPackingFilterList>
+                        </distributionDirectory>
                     </distributionFileList>
                 </folder>
                 <folder>
-                    <description>DEB1</description>
+                    <description>Icons</description>
                     <destination>/usr/share/icons</destination>
                     <name>unicentaoposiscon</name>
                     <platforms>linux</platforms>
                     <distributionFileList>
                         <distributionFile>
-                            <origin>unicentaopos.png</origin>
+                            <origin>images/unicentaopos.png</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>
                 <folder>
-                    <description>DEB2</description>
+                    <description>Desktop</description>
                     <destination>/usr/share/applications</destination>
                     <name>unicentaoposdesktop</name>
                     <platforms>linux</platforms>
@@ -129,7 +125,7 @@
                     </distributionFileList>
                 </folder>
                 <folder>
-                    <description>DEB3</description>
+                    <description>Exec</description>
                     <destination>/usr/bin/</destination>
                     <name>unicentaoposexec</name>
                     <platforms>linux</platforms>
@@ -142,37 +138,37 @@
             </folderList>
             <startMenuShortcutList>
                 <startMenuShortcut>
-                    <comment>Run krPOS</comment>
-                    <name>krPOS</name>
+                    <comment>kriolosPOS Start</comment>
+                    <name>kriolosPOS</name>
                     <runAsAdmin>0</runAsAdmin>
                     <runInTerminal>0</runInTerminal>
-                    <windowsExec>${installdir}/start.bat</windowsExec>
+                    <windowsExec>${installdir}/scripts/start.bat</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon>${installdir}/unicentaopos.ico</windowsIcon>
+                    <windowsIcon>${installdir}/images/unicentaopos.ico</windowsIcon>
                     <windowsPath>${installdir}</windowsPath>
                 </startMenuShortcut>
                 <startMenuShortcut>
-                    <comment>Run krPOS remote Order popup</comment>
+                    <comment>kriolosPOS Remote Order</comment>
                     <name>Order Pop</name>
                     <runAsAdmin>0</runAsAdmin>
                     <runInTerminal>0</runInTerminal>
-                    <windowsExec>${installdir}/orderpop.bat</windowsExec>
+                    <windowsExec>${installdir}/scripts/orderpop.bat</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon>${installdir}/unicentaopos.ico</windowsIcon>
+                    <windowsIcon>${installdir}/images/unicentaopos.ico</windowsIcon>
                     <windowsPath>${installdir}</windowsPath>
                 </startMenuShortcut>
                 <startMenuShortcut>
-                    <comment>Configure krOS</comment>
+                    <comment>kriolosPOS Configure</comment>
                     <name>Configure</name>
                     <runAsAdmin>0</runAsAdmin>
                     <runInTerminal>0</runInTerminal>
-                    <windowsExec>${installdir}/configure.bat</windowsExec>
+                    <windowsExec>${installdir}/scripts/configure.bat</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon>${installdir}/unicentaopos.ico</windowsIcon>
+                    <windowsIcon>${installdir}/images/unicentaopos.ico</windowsIcon>
                     <windowsPath>${installdir}</windowsPath>
                 </startMenuShortcut>
                 <startMenuFileShortcut>
-                    <comment>Assets for krPOS</comment>
+                    <comment>kriolosPOS Assets</comment>
                     <filePath>${installdir}/Bonus</filePath>
                     <name>Bonus</name>
                     <runAsAdmin>0</runAsAdmin>
@@ -180,7 +176,7 @@
                     <windowsIcon></windowsIcon>
                 </startMenuFileShortcut>
                 <startMenuFileShortcut>
-                    <comment>Languages for krPOS</comment>
+                    <comment>kriolosPOS Languages</comment>
                     <filePath>${installdir}/locales</filePath>
                     <name>Locales</name>
                     <runAsAdmin>0</runAsAdmin>
@@ -210,26 +206,20 @@
             <selectionOrder>newest</selectionOrder>
             <onErrorActionList>
                 <showInfo>
-                    <explanation>When done...
-Please use the JRE 1.8 version located in your Windows\ folder</explanation>
+                    <explanation>Please try ti use the JRE version located in your computer</explanation>
                     <text>Couldn't find Java JRE runtime on your machine!
-Opening the Java website for you
-
-Install the correct Java JRE runtime for your machine
-
-Then continue with uniCenta oPOS installation.</text>
+                        Opening the Java website for you
+                        Install the correct Java JRE runtime for your machine
+                        Then continue with Application installation.</text>
                 </showInfo>
                 <launchBrowser>
-                    <url>http://www.java.com</url>
+                    <url>https://adoptium.net/temurin/releases/?version=17</url>
                 </launchBrowser>
             </onErrorActionList>
             <validVersionList>
                 <validVersion>
-                    <bitness></bitness>
-                    <maxVersion>1.8</maxVersion>
-                    <minVersion>1.8</minVersion>
-                    <requireJDK>0</requireJDK>
-                    <vendor>sun</vendor>
+                    <maxVersion>19</maxVersion>
+                    <minVersion>11</minVersion>
                 </validVersion>
             </validVersionList>
         </autodetectJava>
@@ -240,30 +230,30 @@ Then continue with uniCenta oPOS installation.</text>
         </launchBrowser>
     </postInstallationActionList>
     <createOsxBundleZip>1</createOsxBundleZip>
-    <description>KrOS POS - Open Source Point Of Sale</description>
+    <description>Open Source Point Of Sale</description>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
     <licenseFileEncoding>utf-8</licenseFileEncoding>
-    <nativePackageName>uniCenta oPOS</nativePackageName>
-    <outputDirectory>../../target/installers</outputDirectory>
-    <productComments>uniCenta oPOS Touch Friendly Point of Sale</productComments>
-    <productContact>info@unicenta.com</productContact>
-    <productUrlHelpLink>https://unicenta.com/support</productUrlHelpLink>
-    <productUrlInfoAbout>https://unicenta.com/about-unicenta-opos/</productUrlInfoAbout>
+    <nativePackageName>POS</nativePackageName>
+    <outputDirectory>../target/installers</outputDirectory>
+    <productComments>Open Source Point of Sale</productComments>
+    <productContact>https://github.com/kriolos/kriolos-obiz</productContact>
+    <productUrlHelpLink>https://github.com/kriolos/kriolos-obiz</productUrlHelpLink>
+    <productUrlInfoAbout>https://github.com/kriolos/kriolos-obiz</productUrlInfoAbout>
     <readmeFileEncoding>utf-8</readmeFileEncoding>
-    <release>4.3.1</release>
+    <release>2022-08</release>
     <requireInstallationByRootUser>1</requireInstallationByRootUser>
     <saveRelativePaths>1</saveRelativePaths>
     <splashScreenDelay>4</splashScreenDelay>
     <summary>POS</summary>
-    <vendor>KriolSolutions</vendor>
-    <windowsExecutableIcon>unicentaopos.ico</windowsExecutableIcon>
-    <windowsResourceComments>uniCenta oPOS is free software licensed under GNU GPL 3</windowsResourceComments>
-    <windowsResourceFileDescription>uniCenta oPOS executable</windowsResourceFileDescription>
-    <windowsResourceFileVersion>4.20</windowsResourceFileVersion>
-    <windowsResourceInternalName>uniCenta oPOS</windowsResourceInternalName>
-    <windowsResourceLegalTrademarks>uniCenta and uniCenta oPOS are trademarks of uniCenta</windowsResourceLegalTrademarks>
-    <windowsUninstallerExecutableIcon>unicentaopos.ico</windowsUninstallerExecutableIcon>
+    <vendor>KriolOS</vendor>
+    <windowsExecutableIcon>images/unicentaopos.ico</windowsExecutableIcon>
+    <windowsResourceComments>Free software licensed under GNU GPL 3</windowsResourceComments>
+    <windowsResourceFileDescription>Application executable</windowsResourceFileDescription>
+    <windowsResourceFileVersion>1.0.0.0</windowsResourceFileVersion>
+    <windowsResourceInternalName>POS</windowsResourceInternalName>
+    <windowsResourceLegalTrademarks>Are trademarks of ...</windowsResourceLegalTrademarks>
+    <windowsUninstallerExecutableIcon>images/unicentaopos.ico</windowsUninstallerExecutableIcon>
     <parameterList>
         <directoryParameter>
             <name>installdir</name>
@@ -280,8 +270,8 @@ Then continue with uniCenta oPOS installation.</text>
         <linkParameter>
             <name>open_browser</name>
             <title>Installation Help</title>
-            <description>Open uniCenta Website</description>
-            <explanation>Get online help with your uniCenta oPOS installation</explanation>
+            <description>Open Vendor Website</description>
+            <explanation>Get online help with your aplication installation</explanation>
             <insertAfter>${installation_finished}${installation_finished}</insertAfter>
             <clickedActionList>
                 <launchBrowser>
@@ -292,11 +282,11 @@ Then continue with uniCenta oPOS installation.</text>
     </parameterList>
     <platformOptionsList>
         <platformOptions>
-            <description>KrOS POS - Open Source Point Of Sale</description>
+            <description>KriolosPOS - Open Source Point Of Sale</description>
             <platform>deb</platform>
             <release>1</release>
             <summary>POS</summary>
-            <vendor>uniCenta</vendor>
+            <vendor>KriolOS</vendor>
         </platformOptions>
         <platformOptions>
             <platform>windows</platform>
@@ -312,12 +302,12 @@ Then continue with uniCenta oPOS installation.</text>
         <readmeFile>
             <code>en</code>
             <encoding>utf-8</encoding>
-            <file>README</file>
+            <file>readme/README.txt</file>
         </readmeFile>
     </readmeFileList>
     <slideShowImageList>
         <slideShowImage>
-            <path>uniCenta_logo_500_222.png</path>
+            <path>images/uniCenta_logo_500_222.png</path>
         </slideShowImage>
     </slideShowImageList>
 </project>

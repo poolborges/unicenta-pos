@@ -8,30 +8,31 @@
         <relativePath/>
     </parent>
     <artifactId>kriolos-krpos-bitrock</artifactId>
-    <version>4.5</version>
     <packaging>pom</packaging>
     <name>Kriolos.POS.Bitrock</name>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
-        <!-- Specify this via command line i.e -Dbitrock.exec=~/bitrock/installbuilder-19.9.0/bin/builder-->  
-        <bitrock.directory>${project.build.directory}/installbuilder</bitrock.directory>
-        <app.dist.directory>${project.build.directory}/unicentaopos</app.dist.directory>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <!-- Specify this via command line i.e 
+            -Dbitrock.executable=~/bitrock/installbuilder-19.9.0/bin/builder
+            -Dbitrock.executable="C:\Program Files\VMware InstallBuilder for Windows 22.8.0"
+            ${project.build.directory}/installbuilder
+        -->  
+        <bitrock.directory>C:\Program Files\VMware InstallBuilder for Windows 22.8.0</bitrock.directory>
+        <app.dist.directory>${project.build.directory}/app-setup-dir</app.dist.directory>
     </properties>
     
     <dependencies>
         <dependency>
             <groupId>io.github.kriolos.opos</groupId>
-            <artifactId>unicenta-opos</artifactId>
+            <artifactId>kriolos-pos</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
     
     <build>
-        <finalName>unicentaopos</finalName> 
+        <finalName>kriolos-pos</finalName> 
     </build>
     
     <profiles>
@@ -56,7 +57,7 @@
                                     <overWriteReleases>false</overWriteReleases>  
                                     <overWriteSnapshots>false</overWriteSnapshots>  
                                     <overWriteIfNewer>true</overWriteIfNewer> 
-                                    <excludeArtifactIds>unicentaopos</excludeArtifactIds>
+                                    <excludeArtifactIds>kriolos-pos</excludeArtifactIds>
                                 </configuration> 
                             </execution>
                             <execution>
@@ -68,9 +69,8 @@
                                 <configuration>
                                     <artifactItems>
                                         <artifactItem>
-                                            <groupId>com.unicenta</groupId>  
-                                            <artifactId>unicentaopos</artifactId>  
-                                            <version>4.5</version> 
+                                            <groupId>io.github.kriolos.opos</groupId>
+                                            <artifactId>kriolos-pos</artifactId>
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
                                             <outputDirectory>${app.dist.directory}</outputDirectory>
@@ -157,11 +157,10 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                        <version>1.1</version>
                         <executions>
                             <execution>
                                 <id>execute</id>  
-                                <phase>deploy</phase>
+                                <phase>install</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
@@ -171,7 +170,7 @@
                             <executable>${bitrock.executable}</executable>
                             <arguments>
                                 <argument>build</argument>
-                                <argument>${basedir}/src/installer/unicentaopos.xml</argument>
+                                <argument>${basedir}/installer/unicentaopos.xml</argument>
                                 <argument>${bitrock.platform}</argument>
                             </arguments>
                         </configuration>

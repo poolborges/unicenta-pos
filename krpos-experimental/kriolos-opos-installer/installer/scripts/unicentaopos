@@ -1,0 +1,3 @@
+#!/bin/sh
+
+sh /opt/kriolos-pos/start.sh
