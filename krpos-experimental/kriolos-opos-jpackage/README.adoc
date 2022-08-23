@@ -1,0 +1,7 @@
+= JPackage
+
+
+== Pre-requisite
+
+* https://wixtoolset.org
+** NEED: Microsoft .NET Framework 3.5 Service pack 1

@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.kriolos.opos</groupId>
+        <artifactId>kriolos-opos-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath/>
+    </parent>
+    <artifactId>kriolos-pos-izpack</artifactId>
+    <packaging>pom</packaging>
+    <name>Kriolos.POS.Izpack</name>
+    <description>Kriolos Point Of Sales</description>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- SETUP PROFILE: izPack, Launch4j -->
+        <info.appName>Kriol Open Source POS</info.appName>
+        <info.appsubpath>kriolosPOS/standard</info.appsubpath>
+        <izpack.dir.app>${basedir}/src/main/izpack</izpack.dir.app>
+        <izpack.version>5.1.3</izpack.version>
+        <izpack.dir.staging>${project.build.directory}/staging</izpack.dir.staging>
+        <izpack.app.finalname>kriolos-pos-setup.jar</izpack.app.finalname>
+        
+        <!-- APP PROFILE: Assembly, Launch4j -->
+        <app.main.class>com.openbravo.pos.forms.StartPOS</app.main.class>
+        <app.name.final>kriolos-pos</app.name.final>
+        <app.name.jar>kriolos-pos</app.name.jar>
+        <app.name.exe>kriolos-pos.exe</app.name.exe>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>  
+            <artifactId>kriolos-pos</artifactId>  
+        </dependency>
+    </dependencies>
+    
+
+    <profiles>
+        <profile>
+            <id>launch4j-setup</id>
+            <build>
+                <plugins>
+                    <plugin> 
+                        <groupId>org.apache.maven.plugins</groupId>  
+                        <artifactId>maven-dependency-plugin</artifactId>  
+                        <version>3.3.0</version>  
+                        <executions> 
+                            <execution> 
+                                <id>copy-dependencies</id>  
+                                <phase>prepare-package</phase>  
+                                <goals> 
+                                    <goal>copy-dependencies</goal> 
+                                </goals>  
+                                <configuration> 
+                                    <outputDirectory>${izpack.dir.staging}/lib</outputDirectory>
+                                    <overWriteReleases>false</overWriteReleases>  
+                                    <overWriteSnapshots>false</overWriteSnapshots>  
+                                    <overWriteIfNewer>true</overWriteIfNewer> 
+                                </configuration> 
+                            </execution>
+                        </executions> 
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId> 
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>3.3.0</version>
+                        <executions>
+                            <execution>
+                                <id>copy-resources</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${izpack.dir.staging}</outputDirectory>
+                                    <!-- Recursive copy of all resource under src/main/izpack. 
+                                    (install.xml,panel data, stuff to install) 
+                                    -->
+                                    <resources>
+                                        <resource>
+                                            <directory>src/main/izpack</directory>
+                                            <includes>
+                                                <include>**/*</include>
+                                            </includes>
+                                            <filtering>false</filtering>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin> 
+                    <plugin>
+                        <groupId>org.codehaus.izpack</groupId>
+                        <artifactId>izpack-maven-plugin</artifactId>
+                        <version>${izpack.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <descriptorEncoding>UTF-8</descriptorEncoding>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>izpack</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- base for relative paths in izpack descriptor -->
+                                    <baseDir>${izpack.dir.staging}</baseDir>
+                                    <installFile>${izpack.dir.app}/install.xml</installFile>
+                                    <output>${project.build.directory}/${izpack.app.finalname}</output>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                    <finalName>${project.build.finalName}</finalName>
+                                    <enableOverrideArtifact>true</enableOverrideArtifact>
+                                    <mkdirs>true</mkdirs>
+                                    <autoIncludeUrl>false</autoIncludeUrl>
+                                    <autoIncludeDevelopers>false</autoIncludeDevelopers>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.codehaus.izpack</groupId>
+                                <artifactId>izpack-panel</artifactId>
+                                <version>${izpack.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                        <artifactId>launch4j-maven-plugin</artifactId>
+                        <version>2.1.2</version>
+                        <executions>
+                            <execution>
+                                <id>l4j-gui</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>launch4j</goal>
+                                </goals>
+                                <configuration>
+                                    <headerType>gui</headerType>
+                                    <jar>${project.build.directory}/${izpack.app.finalname}</jar>
+                                    <outfile>${project.build.directory}/kriolos-pos-setup.exe</outfile>
+                                    <classPath>
+                                        <mainClass>com.izforge.izpack.installer.bootstrap.Installer</mainClass>
+                                    </classPath>
+                                    <jre>
+                                        <path>C:\Program Files\Eclipse Adoptium\jdk-17.0.3.7-hotspot</path>
+                                        <bundledJre64Bit>true</bundledJre64Bit>
+                                        <bundledJreAsFallback>true</bundledJreAsFallback>
+                                        <minVersion>11.0.0</minVersion>
+                                        <maxVersion>17.0.0</maxVersion>
+                                        <jdkPreference>preferJre</jdkPreference>
+                                        <runtimeBits>64</runtimeBits>
+                                    </jre>
+                                    <versionInfo>
+                                        <fileVersion>1.0.0.0</fileVersion>
+                                        <fileDescription>Kriolos POS Setup Installer based on izPack</fileDescription>
+                                        <txtProductVersion>1.0.0.0</txtProductVersion>
+                                        <txtFileVersion>${project.version}</txtFileVersion>
+                                        <copyright>KriolOS</copyright>
+                                        <productVersion>1.0.0.0</productVersion>
+                                        <productName>Kriolos POS Setup</productName>
+                                        <internalName>kriolos-pos-setup</internalName>
+                                        <originalFilename>kriolos-pos-setup.exe</originalFilename>
+                                    </versionInfo>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
+        <profile>
+            <id>launch4j-app</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>3.4.2</version>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <archive>
+                                <manifest>
+                                    <mainClass>${app.main.class}</mainClass>
+                                </manifest>
+                            </archive>
+                            <finalName>${app.name.final}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                                <phase>package</phase> <!-- bind to the packaging phase -->
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+  
+                    <plugin>
+                        <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                        <artifactId>launch4j-maven-plugin</artifactId>
+                        <version>2.1.2</version>
+                        <executions>
+                            <execution>
+                                <id>l4j-gui</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>launch4j</goal>
+                                </goals>
+                                <configuration>
+                                    <headerType>gui</headerType>
+                                    <jar>${project.build.directory}/${app.name.jar}.jar</jar>
+                                    <outfile>${project.build.directory}/${app.name.exe}</outfile>
+                                    <classPath>
+                                        <mainClass>${app.main.class}</mainClass>
+                                    </classPath>
+                                    <jre>
+                                        <path>C:\Program Files\Eclipse Adoptium\jdk-17.0.3.7-hotspot</path>
+                                        <bundledJre64Bit>true</bundledJre64Bit>
+                                        <bundledJreAsFallback>true</bundledJreAsFallback>
+                                        <minVersion>11.0.0</minVersion>
+                                        <maxVersion>17.0.0</maxVersion>
+                                        <jdkPreference>preferJre</jdkPreference>
+                                        <runtimeBits>64</runtimeBits>
+                                    </jre>
+                                    <versionInfo>
+                                        <fileVersion>1.0.0.0</fileVersion>
+                                        <fileDescription>KriolOS Point Of Sales</fileDescription>
+                                        <txtFileVersion>1.0.0.0</txtFileVersion>
+                                        <txtProductVersion>1.0.0.0</txtProductVersion>
+                                        <copyright>KriolOS</copyright>
+                                        <productVersion>1.0.0.0</productVersion>
+                                        <productName>KriolOS POS</productName>
+                                        <internalName>kriolos-pos</internalName>
+                                        <originalFilename>${app.name.exe}</originalFilename>
+                                    </versionInfo>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

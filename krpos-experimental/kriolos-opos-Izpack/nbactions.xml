@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+
+    <action>
+        <actionName>CUSTOM-package-setup</actionName>
+        <displayName>package setup</displayName>
+        <goals>
+            <goal>package</goal>
+        </goals>
+        <activatedProfiles>
+            <activatedProfile>launch4j-setup</activatedProfile>
+        </activatedProfiles>
+    </action>
+    
+    <action>
+        <actionName>CUSTOM-package-app</actionName>
+        <displayName>package app</displayName>
+        <goals>
+            <goal>package</goal>
+        </goals>
+        <activatedProfiles>
+            <activatedProfile>launch4j-app</activatedProfile>
+        </activatedProfiles>
+    </action>
+</actions>

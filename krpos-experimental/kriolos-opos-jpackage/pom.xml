@@ -5,17 +5,16 @@
         <groupId>io.github.kriolos.opos</groupId>
         <artifactId>kriolos-opos-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath/>
     </parent>
     <artifactId>kriolos-krpos-jpackage</artifactId>
     <packaging>pom</packaging>
-    <name>krPOS :: krPOS.JPackage</name>
+    <name>Kriolos.POS.JPackage</name>
     
     <properties>
         <appModule>io.github.kriolos.opos</appModule>
         <appMainClass>com.openbravo.pos.forms.StartPOS</appMainClass>
         <appIcon></appIcon>
-        
-        <libusb4java.classifier>win32-x86</libusb4java.classifier>
     </properties>
  
     <dependencies>
@@ -24,14 +23,6 @@
             <artifactId>kriolos-pos</artifactId>  
             <scope>compile</scope>
             <exclusions>
-                <exclusion>
-                    <groupId>org.usb4java</groupId>
-                    <artifactId>usb4java</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.beanshell</groupId>
-                    <artifactId>bsh</artifactId>
-                </exclusion>
                 <exclusion>
                     <groupId>org.osgi</groupId>
                     <artifactId>org.osgi.core</artifactId>
@@ -59,26 +50,6 @@
             </exclusions>
         </dependency>
         
-        <dependency>
-            <groupId>org.usb4java</groupId>
-            <artifactId>usb4java</artifactId> 
-            <version>1.3.0</version> 
-            <scope>runtime</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.usb4java</groupId>  
-                    <artifactId>libusb4java</artifactId> 
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.usb4java</groupId>  
-            <artifactId>libusb4java</artifactId> 
-            <version>1.3.0</version> 
-            <scope>runtime</scope>
-            <classifier>${libusb4java.classifier}</classifier>
-        </dependency>
-        
     </dependencies>
     
     <build>
@@ -104,12 +75,16 @@
             <plugin>
                 <groupId>org.panteleyev</groupId>
                 <artifactId>jpackage-maven-plugin</artifactId>
+                <version>1.5.2</version>
                 <configuration>
                     <name>kriolPOS</name>
                     <appVersion>1.0.0</appVersion>
                     <copyright>Paulo Borges</copyright>
-                    <description>KriolOS.POS (Kriol Open Source Point Of Sales)</description>    
+                    <description>Kriol Open Source Point Of Sales</description>    
                     <vendor>KriolOSS</vendor>
+                    <appImage>${project.basedir}/icons/app_icon.ico</appImage>
+                    <aboutUrl>https://github.com/kriolos/kriolos-obiz</aboutUrl>
+                    <licenseFile>${project.basedir}/LICENSE</licenseFile>
                     
                     <input>${project.build.directory}/mods</input>
                     <mainClass>${appMainClass}</mainClass>
@@ -126,9 +101,9 @@
                     <destination>${project.build.directory}/dist</destination>
                     <runtimeImage>${java.home}</runtimeImage>
                     
-                    <!-- Change on profile for specific OS
+                    <!-- Change on profile for specific OS -->
                     <icon>${project.basedir}/icons/app_icon.ico</icon>
-                    -->
+                    
                     <javaOptions>
                         <option>-Dfile.encoding=UTF-8</option>
                         <option>--add-opens=java.base/java.util=ALL-UNNAMED</option>
