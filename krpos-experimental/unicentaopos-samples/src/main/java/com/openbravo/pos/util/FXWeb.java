@@ -38,7 +38,7 @@ import javax.swing.SwingUtilities;
 
 import com.sun.javafx.application.PlatformImpl;
 
-import static com.openbravo.pos.util.PosProviderConstants.PROVIDER_SPLASHER_HTML_URL;
+import static com.unicenta.pos.util.PosProviderConstants.PROVIDER_SPLASHER_HTML_URL;
 
 /**
  * SwingFXWebView

@@ -24,7 +24,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 
-import static com.openbravo.pos.util.PosProviderConstants.VIDEO_MEDIA_URL_SAMPLE;
+import static com.unicenta.pos.util.PosProviderConstants.VIDEO_MEDIA_URL_SAMPLE;
 
 /**
  * Provides JavaFX media player services

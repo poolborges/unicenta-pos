@@ -30,7 +30,7 @@ import java.awt.event.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static com.openbravo.pos.util.PosProviderConstants.PROVIDER_SPLASHER_HTML_URL;
+import static com.unicenta.pos.util.PosProviderConstants.PROVIDER_SPLASHER_HTML_URL;
 import static javafx.concurrent.Worker.State.FAILED;
   
 public class UniBrowser extends JFrame {
