@@ -38,8 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <project.github-url>http://kriolos.github.io/kriolos-opos</project.github-url>
 
         <!-- MISC config-->
-        <jacoco.plugin.version>0.8.5</jacoco.plugin.version>
-        <jacoco.plugin.reportPath>${project.build.directory}/jacoco.exec</jacoco.plugin.reportPath>
         <clover-maven-plugin.version>4.4.1</clover-maven-plugin.version>
         <spotbug.version>4.2.0</spotbug.version>
         <maven-pmd-plugin.version>3.14.0</maven-pmd-plugin.version>
@@ -85,6 +83,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <scm>
         <connection>scm:git:https://github.com/poolborges/unicenta-pos.git</connection>
         <developerConnection>scm:git:https://github.com/poolborges/unicenta-pos.git</developerConnection>
+        <url>https://github.com/poolborges/unicenta-pos</url>
+        <tag>HEAD</tag>
     </scm>
     
     <issueManagement>
@@ -96,13 +96,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <site>
             <id>https://poolborges.github.io/unicenta-pos</id>
         </site>
+        <repository>
+            <id>github</id>
+            <name>GitHub Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/poolborges/${project.artifactId}</url>
+        </repository>
     </distributionManagement>
     
     <ciManagement>
-        <system>Travis</system>
-        <url>https://travis-ci.org/poolborges/unicenta-pos</url>
+        <system>GitHub Action</system>
+        <url>https://github.com/poolborges/unicenta-pos/actions</url>
     </ciManagement>
-
+    
     <licenses>
         <license>
             <name>GNU General Public License, version 3</name>
@@ -145,6 +150,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>unicenta-opos-i18n</module>
         <module>unicenta-thirdparty</module>
         <module>unicenta-opos</module>
+        <module>docs</module>
     </modules>
     
     <dependencyManagement>
@@ -268,7 +274,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${jacoco.plugin.version}</version>
+                    <version>${jacoco.version}</version>
                 </plugin>
                 <!-- Common Vulnerabilyt and Expose (CVE) -->
                 <plugin>
@@ -427,10 +433,43 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
+            
+            <properties>
+                <jacoco.version>0.8.8</jacoco.version>
+                <jacoco.unittest.file>${project.build.directory}/jacoco.exec</jacoco.unittest.file>
+                <jacoco.itest.file>${project.build.directory}/jacoco-it.exec</jacoco.itest.file>
+                <jacoco.agent.jar>${project.build.directory}/jacoco-agent.jar</jacoco.agent.jar>
+                <surefire.argLine>-javaagent:${jacoco.agent.jar}=destfile=${jacoco.unittest.file}</surefire.argLine>
+                <failsafe.jacoco.args>-javaagent:${jacoco.agent.jar}=destfile=${jacoco.unittest.file}</failsafe.jacoco.args>
+            </properties>
             <build>
                 <plugins>
                     
-                    
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>download-jacoco-agent</id>
+                                <phase>process-test-resources</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.jacoco</groupId>
+                                            <artifactId>org.jacoco.agent</artifactId>
+                                            <version>${jacoco.version}</version>
+                                            <classifier>runtime</classifier>
+                                            <outputDirectory>${project.build.directory}</outputDirectory>
+                                            <destFileName>jacoco-agent.jar</destFileName>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <!-- Static Analyzer -->
                     <plugin>
                         <groupId>com.github.spotbugs</groupId>
@@ -473,19 +512,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             </execution>
                         </executions>
                     </plugin>
-                    <!-- mvn test -->
+                    <!-- mvn test: surefire to execute unit tests -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <version>3.0.0-M5</version>
+                        <version>3.0.0-M7</version>
                         <configuration>
                             <reuseForks>true</reuseForks>
                             <!-- Sets the VM argument line used when unit tests are run. -->
                             <argLine>${surefire.jacoco.args}</argLine>
-                            <argLine>${argLine} -Xmx2048m</argLine>
                         </configuration>
                     </plugin>
-                    <!-- mvn verify -->
+                    <!-- mvn verify : failsafe for integration Test-->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
@@ -493,7 +531,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <configuration>
                             <reuseForks>true</reuseForks>
                             <argLine>${failsafe.jacoco.args}</argLine>
-                            <argLine>${argLine} -Xmx2048m -XX:MaxPermSize=512M</argLine>
                         </configuration>
                         <executions>
                             <execution>
@@ -508,22 +545,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <executions>
-                            <!-- Prepares the property pointing to the JaCoCo runtime agent which
-                            is passed as VM argument when Maven the Surefire plugin is executed. -->
                             <execution>
                                 <id>pre-unit-test</id>
                                 <goals>
                                     <goal>prepare-agent</goal>
                                 </goals>
                                 <configuration>
-                                    <destFile>${project.build.directory}/jacoco-output/jacoco-unit-tests.exec</destFile>
-                                    <!-- Sets the name of the property containing 
-                                    the settings for JaCoCo runtime agent. -->
+                                    <destFile>${jacoco.unittest.file}</destFile>
                                     <propertyName>surefire.jacoco.args</propertyName>
                                 </configuration>
                             </execution>
-                            <!-- Ensures that the code coverage report for unit tests 
-                            is created after unit tests have been run. -->
                             <execution>
                                 <id>post-unit-test</id>
                                 <phase>test</phase>
@@ -532,8 +563,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 </goals>
                         
                                 <configuration>
-                                    <dataFile>${project.build.directory}/jacoco-output/jacoco-unit-tests.exec</dataFile>
-                                    <!-- Sets the output directory for the code coverage report. -->
+                                    <dataFile>${jacoco.unittest.file}</dataFile>
                                     <outputDirectory>${project.reporting.outputDirectory}/jacoco-unit-test-coverage-report</outputDirectory>
                                 </configuration>
                             </execution>
@@ -545,7 +575,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                     <goal>prepare-agent</goal>
                                 </goals>
                                 <configuration>
-                                    <destFile>${project.build.directory}/jacoco-output/jacoco-integration-tests.exec</destFile>
+                                    <destFile>${jacoco.itest.file}</destFile>
                                     <propertyName>failsafe.jacoco.args</propertyName>
                                 </configuration>
                             </execution>
@@ -557,7 +587,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                     <goal>report</goal>
                                 </goals>
                                 <configuration>
-                                    <dataFile>${project.build.directory}/jacoco-output/jacoco-integration-tests.exec</dataFile>
+                                    <dataFile>${jacoco.itest.file}</dataFile>
                                     <outputDirectory>${project.reporting.outputDirectory}/jacoco-integration-test-coverage-report</outputDirectory>
                                 </configuration>
                             </execution>
@@ -590,7 +620,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 </goals>
                                 <configuration>
                                     <dataFile>${project.build.directory}/jacoco-output/merged.exec</dataFile>
-                                    <outputDirectory>${project.reporting.outputDirectory}/jacoco-merged-test-coverage-report</outputDirectory>
+                                    <outputDirectory>${project.reporting.outputDirectory}/jacoco-coverage-report</outputDirectory>
+                                </configuration>
+                            </execution>
+                            
+                            <execution>
+                                <id>jacoco-check</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <!--If the Code coverage is less than 90%, then build fail -->
+                                        <rule>
+                                            <element>CLASS</element>
+                                            <excludes>
+                                                <exclude>*Test</exclude>
+                                                <exclude>*IT</exclude>
+                                            </excludes>
+                                            <limits>
+                                                <limit>
+                                                    <counter>LINE</counter>
+                                                    <value>COVEREDRATIO</value>
+                                                    <minimum>0.90</minimum>
+                                                </limit>
+                                            </limits>
+                                        </rule>
+                                    </rules>
+                                    <dataFile>${project.build.directory}/jacoco-output/merged.exec</dataFile>
                                 </configuration>
                             </execution>
                         </executions>
@@ -741,7 +799,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-report-plugin</artifactId>
-                        <version>3.0.0-M5</version>
+                        <version>3.0.0-M7</version>
                         <configuration>
                             <aggregate>true</aggregate>
                         </configuration>
@@ -831,6 +889,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     </plugin>
                 </plugins>
             </reporting>
+        </profile>
+         <!-- GPG Signature on release -->
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <phase>verify</phase>
+                                <configuration>
+                                    <!-- Prevent `gpg` from using pinentry app -->
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
