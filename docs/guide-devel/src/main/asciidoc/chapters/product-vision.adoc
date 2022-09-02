@@ -1,11 +1,11 @@
+[[gd-vision]]
 == Project's Vision
 
-* COMPAIBLE: Unicenta DB SCHEMA 4.5
-* Changes SHOULD be smoth as possible
-* FOCUS/PRIMAR: Point Of Sales (Small/Med Retail Business, On Shop,). 
-** other SHOULD be provide as integration with ERP such as: Idempiere; Apache OFBiz, 
+* Run on Java Version 17
+* Point Of Sales for (Small/Medium Retail Business). 
+** Provide as integration with ERP such as: Idempiere; Apache OFBiz, 
 
-== UI & Business Logic
+=== UI & Business Logic
 
 * Evaluate Pattern: Mode View ViewModel(MVVM), Model View Control(MVC)
 * Compose for Desktop (Kolin DSL): 
@@ -15,7 +15,7 @@
 ** Supported on: Netbeans Platform 
 
 
-== Context
+=== Context
 
 AppContext 
 
@@ -25,11 +25,11 @@ AppContext
 ** Host (Provide info about host running the POS)
 
 
-== Configuration 
+=== Configuration 
 
 File (Encr Password, KeyStorage, )
 
-* Abstract Config Acess (SHOULD be based on MicroProfile Config SPEC)
+* Abstract Config Access (SHOULD be based on MicroProfile Config SPEC)
 * Only database properties SHOULD be available on file (Properies File)
 * database.1.url, database.1.username, database.1.password
 
@@ -39,7 +39,7 @@ Contextual Config on Database (KVP)
 * HosConfig:
 
 
-== Resource 
+=== Resource 
 
 APP Resource (Customization)
 
@@ -47,7 +47,7 @@ APP Resource (Customization)
 ** on OSGI those resource can be easily updated as fragment of bundle kiolos-pos-resource
 
 
-== Database Access & Migration 
+=== Database Access & Migration 
 
 
 .Database Access (On Evaluation/Experimental)
@@ -82,7 +82,7 @@ APP Resource (Customization)
 |====
 
 
-== EventSystem & ScriptEngine
+=== EventSystem & ScriptEngine
 
 EventSystem Concepts: Event, EventPublisher, EventHandler
 
@@ -96,7 +96,7 @@ ScriptEngine
 ** Kotlin(kts)
 ** groovy (but may not included, just for testing/evaluation)
 
-== Modularity
+=== Modularity
 
 Frameworks
 
@@ -138,8 +138,7 @@ About Java SPI available since Java 1.5 (eg: Used in JDBC driver loading)
 * ...
 
 
-
-== GUI Libraries
+=== GUI Libraries
 
 Currently GUI is Swing based on __Netbeans GUI Designer__ which use XML to create UI and generate Swing Java code.
 
@@ -161,7 +160,7 @@ Swing Libraries
 * SwingX
 * ... (TO BE REMOVED)
 
-== Tools for improvemen of Code Quali
+=== Tools for improvemen of Code Quali
 
 
 GUI Test 
@@ -207,6 +206,7 @@ mvn clean install jacoco:prepare-agent jacoco:report
 mvn clean jacoco:prepare-agent install jacoco:report
 ----
 
-== Reference
+=== Reference
 
 * todo
+

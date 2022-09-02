@@ -59,22 +59,32 @@ machine.scanner=scanpal2
 
 === Printer
 
-* ESCPOS
+ESC/POS:: Printer Command Specification (Epson protocol for thermal receipt printers.
 
-.Encoding for Devices
+.Supported Devices
 |====
-|Name 
+|Name |Description
 
 |Epson
+|Receipt Printer
+
 |Ithaca
+|Receipt Printer
+
 |Star
+|Star Micronics
+
 |SurePOS
+|IBM SurePOS (POS Computer with integrated Receipt Printer)
+
 |TMU220
+|Epson TM-U220 Receipt Printer 
+
 |====
 
 .POS Printer configuration example
 ----
-machine.printername
+machine.printername=epson
 ----
 
 === Display 
@@ -89,3 +99,4 @@ Display Implemented
 ----
 machine.display=javapos:
 ----
+

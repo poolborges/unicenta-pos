@@ -2,7 +2,7 @@
 <actions>
         <action>
             <actionName>CUSTOM-package</actionName>
-            <displayName>package</displayName>
+            <displayName>GenDoc</displayName>
             <goals>
                 <goal>package</goal>
                 <!--

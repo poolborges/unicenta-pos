@@ -5,10 +5,11 @@
         <groupId>io.github.kriolos.opos</groupId>
         <artifactId>kriolos-opos-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../</relativePath> 
     </parent>  
     <artifactId>kriolos-pos-doc</artifactId>
     <packaging>pom</packaging>
-    <name>Kriolos :: POS.Doc</name>
+    <name>Kriolos.POS.Doc</name>
     <description>Kriolos :: POS official documentation</description>
     
     <properties>
@@ -29,6 +30,34 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>com.github.jeluard</groupId>
+                        <artifactId>plantuml-maven-plugin</artifactId>
+                        <version>1.2</version>
+                        <configuration>
+                            <sourceFiles>
+                                <directory>${basedir}/src/main/plantuml</directory>
+                                <includes>
+                                    <include>**/*.puml</include>
+                                </includes>
+                            </sourceFiles>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>net.sourceforge.plantuml</groupId>
+                                <artifactId>plantuml</artifactId>
+                                <version>8059</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.asciidoctor</groupId>
                         <artifactId>asciidoctor-maven-plugin</artifactId>
                         <version>2.2.2</version>
@@ -39,6 +68,9 @@
                             <outputDirectory>${asciidoc.output.directory}</outputDirectory>
                             <imagesDir>${asciidoc.images.directory}</imagesDir>
                             <imagesDir>${project.build.directory}/plantuml</imagesDir>
+                            <requires>
+                                <require>asciidoctor-diagram</require>
+                            </requires>
                             <attributes>
                                 <icons>font</icons>
                                 <pagenums />
@@ -65,6 +97,12 @@
                                     <!-- <sourceDocumentName>index.adoc</sourceDocumentName> -->
                                     <outputDirectory>${asciidoc.output.directory}/pdf</outputDirectory>
                                     <backend>pdf</backend>
+                                    <doctype>book</doctype>
+                                    <source-highlighter>coderay</source-highlighter><!-- highlightjs does not work in PDF -->
+                                    <attributes>
+                                        <pdf-stylesdir>${project.basedir}/src/themes</pdf-stylesdir>
+                                        <pdf-style>custom</pdf-style>
+                                    </attributes>
                                 </configuration>
                             </execution>
                             <execution>
@@ -75,6 +113,7 @@
                                 </goals>
                                 <configuration>
                                     <outputDirectory>${asciidoc.output.directory}/html</outputDirectory>
+                                    <imagesdir>./images</imagesdir>
                                     <preserveDirectories>true</preserveDirectories>
                                     <backend>html5</backend>
                                     <sourceHighlighter>prettify</sourceHighlighter>
@@ -92,22 +131,32 @@
                             <dependency>
                                 <groupId>org.asciidoctor</groupId>
                                 <artifactId>asciidoctorj-pdf</artifactId>
-                                <version>1.6.2</version>
+                                <version>2.3.0</version>
                             </dependency>
                             <dependency>
                                 <groupId>org.asciidoctor</groupId>
                                 <artifactId>asciidoctorj-diagram</artifactId>
-                                <version>2.2.1</version>
+                                <version>2.2.3</version>
                             </dependency>
                             <dependency>
                                 <groupId>org.asciidoctor</groupId>
                                 <artifactId>asciidoctorj-diagram-plantuml</artifactId>
-                                <version>1.2021.8</version>
+                                <version>1.2022.5</version>
                             </dependency>
                             <dependency>
                                 <groupId>org.asciidoctor</groupId>
                                 <artifactId>asciidoctorj-diagram-ditaamini</artifactId>
-                                <version>1.0.1</version>
+                                <version>1.0.3</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoctorj-chart</artifactId>
+                                <version>1.0.0.alpha.1</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoctorj-epub3</artifactId>
+                                <version>1.5.1</version>
                             </dependency>
         
                             <!--

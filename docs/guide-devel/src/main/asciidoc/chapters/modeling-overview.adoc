@@ -1,12 +1,12 @@
 [[gd-modeling]]
 == Modeling
 
-Chapter
+TODO write overview here
 
 === Data Loader UML
 
 .Data Loader Class Diagram
-[diagram, plantuml]
+[plantuml]
 ----
 @startuml
 
@@ -54,6 +54,8 @@ SerializerRead <-- SerializerReadBasic
 @enduml
 ----
 
+
 === Reference
 
-* ...
+* todo
+

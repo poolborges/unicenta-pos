@@ -5,10 +5,11 @@
         <groupId>io.github.kriolos.opos</groupId>
         <artifactId>kriolos-pos-doc</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../</relativePath> 
     </parent>
     
     <artifactId>kriolos-pos-doc-devel</artifactId>
     <packaging>pom</packaging>
-    <name>Kriolos :: POS.Doc Development</name>
-    <description>Kriolos :: POS.Doc Development Guide</description>
+    <name>Kriolos.POS.Doc.Development</name>
+    <description>Kriolos POS Doc Development Guide</description>
 </project>

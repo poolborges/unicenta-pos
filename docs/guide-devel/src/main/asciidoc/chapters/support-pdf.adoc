@@ -1,0 +1,35 @@
+== PDF
+
+Support of PDF files (Export) via 
+
+Export PDF via 
+
+* JasperReport
+
+=== Knowledge
+
+PDF (PDFJT)
+
+PDF (PDF417)
+
+PDF (Pdfbox vs itext)
+
+Apache™ FOP (Formatting Objects Processor)::
+
+Formatting Objects Processor is a Java application that converts XSL Formatting Objects files to PDF or other printable formats. is a print formatter driven by XSL formatting objects (XSL-FO) and an output independent formatter.
+
+Apache FOP supported 
+
+* barcode formats:
+** UPC-A, UPC-E, EAN-8, Code 93, Code 128, 
+** QR Code, Data Matrix, Aztec, PDF 417, etc. 
+** InputStream in; new BufferedReader (new InputStreamReader (in))
+* More 
+** XSL-FO
+** Office Files (Apache POI, ODF Toolkit, OOXML, …) 
+** PDFs (Apache PDF Box, iText, …)  
+
+.Apache FOP 
+----
+<barcode:barcode xmlns:barcode="http://barcode4j.
+----

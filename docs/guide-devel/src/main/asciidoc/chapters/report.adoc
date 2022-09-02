@@ -1,0 +1,25 @@
+[[gd-report]]
+== Report
+
+The report module use JasperReport Library
+
+=== Report Viewer
+
+TODO...
+
+=== Jasper Report Library
+
+* JRXML
+* Creating a CanvasProvider 
+* http://jasperreports.sourceforge.net/sample.reference/barcode4j/index.html
+
+.Jasper suppor barcode
+----
+<componentElement> 
+<reportElement style="Barcode" x="130" y="100" width="200" height="30"/> 
+<c:Code128 xmlns:c="http://jasperreports.org/ns" message="123456789"> 
+
+<barcode:{type}> {barcode-specific configuration} </barcode:{type}> 
+
+<barcode:barcode> </barcode:barcode>
+----

@@ -161,7 +161,6 @@ Maritme
 * Moorers (mooers, vessel
 
 
-
 === Database Dataypes
 
 
@@ -179,3 +178,4 @@ Maritme
 * https://www.cmi.ac.in/~madhavan/courses/databases10/mysql-5.0-reference-manual/data-types.html
 * https://federico-razzoli.com/text-and-blob-good-practices
 * http://www.h2database.com/html/datatypes.html
+

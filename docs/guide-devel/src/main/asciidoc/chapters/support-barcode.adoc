@@ -1,0 +1,56 @@
+== BarCode 
+
+
+=== Bar code (Code 39)
+
+* Code 39 (Code 3 of 9) TrueType (ttf) barcode font
+* 3 of 9 (sometimes called "code 39") a widely used barcode standard that includes capital letters, numbers, and several symbols.
+* This is not the barcode for UPC's (universal price codes) found on products at the store. 
+* However, most kinds of barcode scanners will recognize 3 of 9 just fine. 
+
+.Bar code fonts
+[%header]
+|====
+|Name               |Description                    |License
+
+|FREE3OF9.TTF       
+|Free 3 of 9
+|freeware
+
+|FRE3OF9X.TTF       
+|Free 3 of 9 Extended(includes full ASCII character set)           
+|freeware
+|====
+
+
+.Barcode Standard
+|====
+|Code 39
+|Code 128       
+|EAN 128 Barcode
+|====
+
+
+
+* Libre Barcode 128 (Google Fonts)
+* (UPS) and in retail as Code 128 EAN/UCC (This variation is now known as 128 GS1. 
+* Barcode4J is a flexible 
+* EAN code (10)
+* GS1 DataMatrix 
+* It can encode all 128 characters of ASCII use of an extension symbol (FNC4), the Latin-1 characters defined in ISO/IEC 8859-1. 0.
+* UPC-A number
+* high-density linear barcode symbology defined in ISO/IEC 15417:2007
+* FNC1
+
+=== QrCode 
+
+----
+QR Code is a kind of 2-D (two-dimensional) symbology developed by Denso Wave 
+(a division of Denso Corporation at the time) and released in 1994 with 
+the primary aim of being a symbol that is easily interpreted by scanner equipment. 
+com is the number one paste tool since 2002
+
+ZXing (pronounced "zebra crossing") is an open-source, 
+multi-format 1D/2D barcode image processing library originally implemented 
+by Google in Java (zip 13 k)
+----
