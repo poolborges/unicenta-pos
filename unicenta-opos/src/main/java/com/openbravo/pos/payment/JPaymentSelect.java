@@ -22,7 +22,7 @@ import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.forms.DataLogicSystem;
-import com.openbravo.resources.ImageResources;
+import com.openbravo.pos.resources.ImageResources;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -33,7 +33,6 @@ import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.plaf.metal.MetalTabbedPaneUI;

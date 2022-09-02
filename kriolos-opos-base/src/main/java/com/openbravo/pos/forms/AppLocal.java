@@ -27,7 +27,7 @@ public class AppLocal {
 
     public static final String APP_NAME = "KrOS POS";
     public static final String APP_ID = "kriolos-opos";
-    public static final String APP_VERSION = "4.5";
+    public static final String APP_VERSION = "1.0.0-SNAPSHOT";
 
     private static final LocaleResources m_resources;
     

@@ -17,6 +17,7 @@
 
 package com.openbravo.pos.util;
 
+import com.openbravo.pos.util.StringUtils;
 import java.io.UnsupportedEncodingException;
 import java.security.*;
 import javax.crypto.*;

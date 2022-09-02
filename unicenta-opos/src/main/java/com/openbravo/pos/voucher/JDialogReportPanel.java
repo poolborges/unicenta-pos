@@ -27,7 +27,7 @@ import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.reports.ReportFields;
 import com.openbravo.pos.reports.ReportFieldsArray;
 // import com.openbravo.pos.util.FontUtil;
-import com.openbravo.pos.util.JRViewer400;
+import com.openbravo.pos.reports.JRViewer400;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;

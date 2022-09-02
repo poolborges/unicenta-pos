@@ -15,12 +15,12 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.forms;
 
+import com.openbravo.beans.JPasswordDialog;
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.scripting.ScriptEngine;
 import com.openbravo.pos.scripting.ScriptException;
 import com.openbravo.pos.scripting.ScriptFactory;
-import com.openbravo.pos.util.Hashcypher;
 import com.openbravo.pos.util.StringUtils;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -307,7 +307,7 @@ public class JRootMenu {
 
             try {
                 AppUser m_appuser = appview.getUser();
-                String sNewPassword = Hashcypher.changePassword(parent, m_appuser.getPassword());
+                String sNewPassword = JPasswordDialog.changePassword(parent, m_appuser.getPassword());
 /*
                 if (sNewPassword != null) {
                     DataLogicSystem m_dlSystem = (DataLogicSystem) appview.getBean("com.openbravo.pos.forms.DataLogicSystem");

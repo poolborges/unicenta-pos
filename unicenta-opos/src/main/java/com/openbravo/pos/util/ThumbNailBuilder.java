@@ -17,7 +17,6 @@
 package com.openbravo.pos.util;
 
 import com.openbravo.data.loader.ImageUtils;
-import com.openbravo.pos.config.JPanelConfigGeneral;
 import java.awt.image.*;
 import java.awt.*;
 import java.awt.font.TextAttribute;
@@ -35,7 +34,7 @@ import net.coobird.thumbnailator.Thumbnailator;
  */
 public class ThumbNailBuilder {
 
-    private static final Logger LOGGER = Logger.getLogger(JPanelConfigGeneral.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ThumbNailBuilder.class.getName());
 
     private Image defaultImage;
     private int thumbWidth;

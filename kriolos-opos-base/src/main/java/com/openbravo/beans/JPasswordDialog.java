@@ -18,6 +18,8 @@ package com.openbravo.beans;
 
 import com.openbravo.editor.JEditorKeys;
 import com.openbravo.editor.JEditorPassword;
+import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.util.Hashcypher;
 import java.awt.*;
 import javax.swing.*;
 
@@ -127,6 +129,57 @@ public class JPasswordDialog extends javax.swing.JDialog {
         myMsg.setTitle(title, message, icon);
         myMsg.setVisible(true);
         return myMsg.m_sPassword;
+    }
+    
+    /**
+     *
+     * @param parent
+     * @return
+     */
+    public static String changePassword(Component parent) {
+        // Show the changePassword dialogs but do not check the old password
+        
+        String sPassword = JPasswordDialog.showEditPassword(parent,                 
+                AppLocal.getIntString("label.Password"), 
+                AppLocal.getIntString("label.passwordnew"),
+                new ImageIcon(Hashcypher.class.getResource("/com/openbravo/images/password.png")));
+        if (sPassword != null) {
+            String sPassword2 = JPasswordDialog.showEditPassword(parent,                 
+                    AppLocal.getIntString("label.Password"), 
+                    AppLocal.getIntString("label.passwordrepeat"),
+                    new ImageIcon(Hashcypher.class.getResource("/com/openbravo/images/password.png")));
+            if (sPassword2 != null) {
+                if (sPassword.equals(sPassword2)) {
+                    return  Hashcypher.hashString(sPassword);
+                } else {
+                    JOptionPane.showMessageDialog(parent, AppLocal.getIntString("message.changepassworddistinct"), AppLocal.getIntString("message.title"), JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        }   
+        
+        return null;
+    }
+
+    /**
+     *
+     * @param parent
+     * @param sOldPassword
+     * @return
+     */
+    public static String changePassword(Component parent, String sOldPassword) {
+        
+        String sPassword = JPasswordDialog.showEditPassword(parent,                 
+                AppLocal.getIntString("label.Password"), 
+                AppLocal.getIntString("label.passwordold"),
+                new ImageIcon(Hashcypher.class.getResource("/com/openbravo/images/password.png")));
+        if (sPassword != null) {
+            if (Hashcypher.authenticate(sPassword, sOldPassword)) {
+                return changePassword(parent);               
+            } else {
+                JOptionPane.showMessageDialog(parent, AppLocal.getIntString("message.BadPassword"), AppLocal.getIntString("message.title"), JOptionPane.WARNING_MESSAGE);
+           }
+        }
+        return null;
     }
 
     /** This method is called from within the constructor to

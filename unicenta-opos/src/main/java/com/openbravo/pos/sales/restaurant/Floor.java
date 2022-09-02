@@ -20,7 +20,7 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.DataRead;
 import com.openbravo.data.loader.ImageUtils;
 import com.openbravo.data.loader.SerializableRead;
-import com.openbravo.resources.ImageResources;
+import com.openbravo.pos.resources.ImageResources;
 import com.openbravo.pos.util.ThumbNailBuilder;
 import java.awt.Container;
 import java.awt.Dimension;

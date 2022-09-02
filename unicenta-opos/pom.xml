@@ -232,14 +232,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <scope>runtime</scope>
         </dependency>
         
-        <!-- ValidationAPI and NBM WRAPPER
-        <dependency>
-            <groupId>org.netbeans.external</groupId> 
-            <artifactId>ValidationAPI</artifactId> 
-            <version>${netbeans.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        -->
+        <!-- Netbeans Module - Swing Validation: On NBM Need extra lib -->
         <dependency>
             <groupId>org.netbeans.modules</groupId>
             <artifactId>org-netbeans-modules-swing-validation</artifactId>
@@ -350,6 +343,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <version>${flatlaf.version}</version>
                         <scope>compile</scope> <!-- RUN: PROVIDED -->
                     </dependency>
+                    <!-- ValidationAPI and NBM WRAPPER  -->
+                    <dependency>
+                        <groupId>org.netbeans.external</groupId> 
+                        <artifactId>ValidationAPI</artifactId> 
+                        <version>${netbeans.version}</version>
+                        <scope>compile</scope>
+                    </dependency>
+       
                 </dependencies>
             </plugin>
             <plugin>

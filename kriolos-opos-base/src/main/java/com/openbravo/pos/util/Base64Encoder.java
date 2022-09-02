@@ -17,44 +17,51 @@
 
 package com.openbravo.pos.util;
 
+import java.util.Base64;
+
 /**
  *
- * @author Mikel Irurita
+ * @author JG uniCenta
  */
-public class LuhnAlgorithm {
+public class Base64Encoder {
     
-    /** Creates a new instance of LuhnAlgorithm */
-    private LuhnAlgorithm() {
+    /**
+     *
+     * @param base64
+     * @return
+     */
+    public static byte[] decode(String base64) {
+
+        try {
+            return Base64.getDecoder().decode(base64.getBytes());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
      *
-     * @param cardNumber
+     * @param raw
      * @return
      */
-    public static boolean checkCC(String cardNumber){
-        int sum = 0;
-
-        int flip = 0;
-        
-        if ( !StringUtils.isNumber(cardNumber) ){
-            return false;
+    public static String encode(byte[] raw) {
+        try {
+            return Base64.getEncoder().encodeToString(raw);
+        } catch (Exception e) {
+            return null;
         }
-        
-        for (int i = cardNumber.length() -1; i >= 0; i--) {
-             int k = Character.digit(cardNumber.charAt(i), 10);
-             flip ++;
-
-             if ( flip % 2 == 0 ) {
-                k *= 2;
-                if (k > 9) {
-                    k -= 9;
-                }
-            }
-            sum += k;
-        }
-        return (sum % 10 == 0);
     }
-
+    
+    /**
+     *
+     * @param raw
+     * @return
+     */
+    public static String encodeChunked(byte[] raw) {
+        try {
+            return Base64.getEncoder().encodeToString(raw);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
-

@@ -47,7 +47,7 @@ import com.openbravo.pos.ticket.TaxInfo;
 import com.openbravo.pos.ticket.TicketInfo;
 import com.openbravo.pos.ticket.TicketLineInfo;
 import com.openbravo.pos.util.InactivityListener;
-import com.openbravo.pos.util.JRPrinterAWT300;
+import com.openbravo.pos.reports.JRPrinterAWT300;
 import com.openbravo.pos.util.ReportUtils;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;

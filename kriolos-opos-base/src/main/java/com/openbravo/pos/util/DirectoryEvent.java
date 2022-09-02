@@ -42,6 +42,7 @@ public class DirectoryEvent implements ActionListener {
         
         m_fc.resetChoosableFileFilters();
         m_fc.addChoosableFileFilter(new FileFilter() {
+            @Override
             public boolean accept(File f) {
                 if (f.isDirectory()) {
                     return true;

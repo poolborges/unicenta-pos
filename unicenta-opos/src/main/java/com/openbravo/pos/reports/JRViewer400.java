@@ -28,7 +28,7 @@
  * Carlton Moore - cmoore79@users.sourceforge.net
  *  Petr Michalek - pmichalek@users.sourceforge.net
  */
-package com.openbravo.pos.util;
+package com.openbravo.pos.reports;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -655,7 +655,6 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
         setPreferredSize(new java.awt.Dimension(1000, 600));
         setLayout(new java.awt.BorderLayout());
 
-        jToolBar.setFloatable(false);
         jToolBar.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
 
         btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/filesave.png"))); // NOI18N

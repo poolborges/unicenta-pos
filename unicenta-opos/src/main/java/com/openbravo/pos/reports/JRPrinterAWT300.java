@@ -35,7 +35,7 @@
 // Added to the constructor the service, instead of isDialog
 // And the redesign of the design properties of the toolbar
 // Nothing else.
-package com.openbravo.pos.util;
+package com.openbravo.pos.reports;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;

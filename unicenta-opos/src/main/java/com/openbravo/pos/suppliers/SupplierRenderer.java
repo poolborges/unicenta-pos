@@ -19,7 +19,7 @@
 
 package com.openbravo.pos.suppliers;
 
-import com.openbravo.resources.ImageResources;
+import com.openbravo.pos.resources.ImageResources;
 
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;

@@ -25,7 +25,6 @@ import com.openbravo.data.loader.Session;
 import com.openbravo.data.user.EditorCreator;
 import com.openbravo.pos.forms.*;
 import com.openbravo.pos.sales.TaxesLogic;
-import com.openbravo.pos.util.JRViewer400;
 import java.awt.BorderLayout;
 import java.io.IOException;
 import java.io.InputStream;
