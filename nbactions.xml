@@ -23,4 +23,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <goal>license:check</goal>
         </goals>
     </action>
+    <action>
+            <actionName>CUSTOM-QA</actionName>
+            <displayName>QA</displayName>
+            <goals>
+                <goal>test</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>qa</activatedProfile>
+                <activatedProfile>reporting</activatedProfile>
+            </activatedProfiles>
+        </action>
 </actions>
