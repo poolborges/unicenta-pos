@@ -1,0 +1,23 @@
+name: Java CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'adopt'
+        cache: maven
+    - name: Install dependencies
+      run: mvn -Pqa install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    - name: Run tests and collect coverage
+      run: mvn -Pqa -B test
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
