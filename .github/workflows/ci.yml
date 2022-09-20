@@ -16,7 +16,7 @@ jobs:
         distribution: 'adopt'
         cache: maven
     - name: Install dependencies
-      run: mvn -Pqa install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+      run: mvn -Pqa -DskipTests=true "-Dmaven.javadoc.skip=true" -B -V install
     - name: Run tests and collect coverage
       run: mvn -Pqa -B test
     - name: Upload coverage to Codecov
