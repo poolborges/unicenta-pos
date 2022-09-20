@@ -5,6 +5,7 @@
         <groupId>io.github.kriolos.opos</groupId>
         <artifactId>kriolos-opos-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../</relativePath>
     </parent>
     <groupId/>
     <artifactId>kriolos-opos-buildtools</artifactId>
