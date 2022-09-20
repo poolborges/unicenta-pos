@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../</relativePath> 
     </parent>  
+    <groupId>io.github.kriolos.opos</groupId>  
     <artifactId>kriolos-pos</artifactId> 
     <packaging>nbm</packaging>
     <name>Kriolos.POS.App</name> 
