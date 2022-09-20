@@ -42,7 +42,7 @@ image:https://badges.crowdin.net/krpos/localized.svg["Crowdin/Translation Status
 == Stats
 
 image:https://img.shields.io/github/issues-pr-raw/poolborges/unicenta-pos["GitHub Pull Requests", link="https://github.com/poolborges/unicenta-pos/pulls"]
-image:https://img.shields.io/badge/team-committers-green["GitHub Committers]", link="https://github.com/orgs/kriolos/teams/obiz-core-team/members"]
+image:https://img.shields.io/badge/team-committers-green["GitHub Committers", link="https://github.com/orgs/kriolos/teams/obiz-core-team/members"]
 image:https://img.shields.io/github/contributors/poolborges/unicenta-pos["GitHub Contributors", link="https://github.com/poolborges/unicenta-pos/contributors"]
 image:https://img.shields.io/github/commit-activity/m/poolborges/unicenta-pos["GitHub Commit Activity", link="https://github.com/poolborges/unicenta-pos/commits"]
 
