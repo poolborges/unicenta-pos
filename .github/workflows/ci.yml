@@ -29,7 +29,6 @@ jobs:
               chmod +x ./mvnw
            else
               echo "$RUNNER_OS not need change permission"
-              exit 1
            fi
       shell: bash
     - name: Run tests and collect coverage
