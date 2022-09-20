@@ -39,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         <!-- MISC config-->
         <clover-maven-plugin.version>4.4.1</clover-maven-plugin.version>
-        <spotbug.version>4.2.0</spotbug.version>
+        <spotbug.version>4.7.2.0</spotbug.version>
         <maven-pmd-plugin.version>3.14.0</maven-pmd-plugin.version>
         
         <!-- Javadoc config -->
@@ -144,7 +144,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </contributors>
 
     <modules>
-        <module>kriolos.pos.buildtools</module>
+        <module>kriolos-opos-buildtools</module>
         <module>kriolos-opos-rxtxjna</module>
         <module>kriolos-opos-base</module>
         <module>kriolos-opos-hardware</module>
