@@ -3,21 +3,25 @@ name: Java CI
 on: [push, pull_request]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+        java: [11, 17, 18, 19-ea]
+      fail-fast: false
+      max-parallel: 4
+    name: Test JDK ${{ matrix.java }}, ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
+    - name: Set up JDK
+      uses: actions/setup-java@v3
       with:
-        java-version: '17'
+        java-version: ${{ matrix.java }}
         distribution: 'adopt'
         cache: maven
-    - name: Install dependencies
-      run: mvn -Pqa -DskipTests=true "-Dmaven.javadoc.skip=true" -B -V install
     - name: Run tests and collect coverage
-      run: mvn -Pqa -B test
+      run: ./mvnw test -Pqa -B --no-transfer-progress
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3

@@ -11,4 +11,7 @@
     <artifactId>kriolos-pos-i18n</artifactId>
     <packaging>jar</packaging>
     <name>Kriolos.POS.i18N</name>  
+    <properties>
+        <skipTests>true</skipTests>
+    </properties>
 </project>
