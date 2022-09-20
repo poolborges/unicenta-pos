@@ -21,6 +21,17 @@ jobs:
         java-version: ${{ matrix.java }}
         distribution: 'adopt'
         cache: maven
+    - name: Make mvnw executable
+      run: |
+           if [ "$RUNNER_OS" == "Linux" ]; then
+              chmod +x ./mvnw
+           elif [ "$RUNNER_OS" == "macOS" ]; then
+              chmod +x ./mvnw
+           else
+              echo "$RUNNER_OS not need change permission"
+              exit 1
+           fi
+      shell: bash
     - name: Run tests and collect coverage
       run: ./mvnw test -Pqa -B --no-transfer-progress
     - name: Upload coverage to Codecov
