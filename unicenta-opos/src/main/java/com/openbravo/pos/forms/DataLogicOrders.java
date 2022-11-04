@@ -68,8 +68,8 @@ public class DataLogicOrders extends BeanFactoryDataSingle {
             String ordertime, Integer displayId, String auxiliary, String completetime
         ) throws BasicException {
 
-        m_addOrder.exec(orderId, qty, details, attributes, notes, ticketId, 
-                ordertime, displayId, auxiliary, completetime);    
+        m_addOrder.exec(new Object[]{orderId, qty, details, attributes, notes, ticketId, 
+                ordertime, displayId, auxiliary, completetime});    
     } 
     
     public final void resetPickup() throws BasicException {

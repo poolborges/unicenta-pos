@@ -30,7 +30,7 @@ import java.util.UUID;
  */
 public final class RolesView extends javax.swing.JPanel implements EditorRecord {
     
-    private Object m_oId;
+    private String m_oId;
 
     public RolesView(DirtyManager dirty) {
         initComponents();
@@ -52,7 +52,7 @@ public final class RolesView extends javax.swing.JPanel implements EditorRecord 
     
     @Override
     public void writeValueInsert() {
-        m_oId = null;
+        m_oId = UUID.randomUUID().toString();
         m_jName.setText(null);
         m_jText.setText(null);
         m_jName.setEnabled(true);
@@ -63,7 +63,7 @@ public final class RolesView extends javax.swing.JPanel implements EditorRecord 
     public void writeValueDelete(Object value) {
 
         Object[] role = (Object[]) value;
-        m_oId = role[0];
+        m_oId = (String)role[0];
         m_jName.setText(Formats.STRING.formatValue(role[1]));
         m_jText.setText(Formats.BYTEA.formatValue(role[2]));
         m_jText.setCaretPosition(0);
@@ -75,7 +75,7 @@ public final class RolesView extends javax.swing.JPanel implements EditorRecord 
     public void writeValueEdit(Object value) {
 
         Object[] role = (Object[]) value;
-        m_oId = role[0];
+        m_oId = (String)role[0];
         m_jName.setText(Formats.STRING.formatValue(role[1]));
         m_jText.setText(Formats.BYTEA.formatValue(role[2]));
         m_jText.setCaretPosition(0);

@@ -49,7 +49,7 @@ public final class ResourcesView extends JPanel implements EditorRecord {
     private static final Logger LOGGER = Logger.getLogger(ResourcesView.class.getName());
     
     private static final long serialVersionUID = 1L;
-    private Object m_oId;
+    private String m_oId;
     private final ComboBoxValModel m_ResourceModel;
     
     private final RSyntaxTextArea m_RSyntaxTextArea;
@@ -108,7 +108,7 @@ public final class ResourcesView extends JPanel implements EditorRecord {
      */
     @Override
     public void writeValueInsert() {
-        m_oId = null;
+        m_oId = UUID.randomUUID().toString();
         m_jName.setText(null);
         m_ResourceModel.setSelectedItem(ResourceType.TEXT);
         m_RSyntaxTextArea.setText(null);
@@ -130,7 +130,7 @@ public final class ResourcesView extends JPanel implements EditorRecord {
     @Override
     public void writeValueDelete(Object value) {
         Object[] resource = (Object[]) value;
-        m_oId = resource[0];
+        m_oId = (String)resource[0];
         m_jName.setText((String) resource[1]);
         m_ResourceModel.setSelectedKey(resource[2]);
         
@@ -169,7 +169,7 @@ public final class ResourcesView extends JPanel implements EditorRecord {
     @Override
     public void writeValueEdit(Object value) {
         Object[] resource = (Object[]) value;
-        m_oId = resource[0];
+        m_oId = (String)resource[0];
         m_jName.setText((String) resource[1]);
         m_ResourceModel.setSelectedKey(resource[2]);
         

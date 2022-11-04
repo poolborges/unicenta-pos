@@ -56,7 +56,7 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
 
     private final static System.Logger LOGGER = System.getLogger(CustomersView.class.getName());
     private static final long serialVersionUID = 1L;
-    private Object m_oId;
+    private String m_oId;
 
     private SentenceList m_sentcat;
     private ComboBoxValModel m_CategoryModel;
@@ -316,7 +316,7 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
     public void writeValueDelete(Object value) {
 
         Object[] customer = (Object[]) value;
-        m_oId = customer[0];
+        m_oId = (String)customer[0];
         m_jSearchkey.setText((String) customer[1]);
         m_jTaxID.setText((String) customer[2]);
         m_jName.setText((String) customer[3]);
@@ -394,7 +394,7 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
     @Override
     public void writeValueEdit(Object value) {
         Object[] customer = (Object[]) value;
-        m_oId = customer[0];
+        m_oId = (String)customer[0];
         m_jSearchkey.setText((String) customer[1]);
         m_jTaxID.setText((String) customer[2]);
         m_jName.setText((String) customer[3]);

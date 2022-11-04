@@ -55,7 +55,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
 
     private static final Logger LOGGER = Logger.getLogger(SuppliersView.class.getName());
     private static final long serialVersionUID = 1L;
-    private Object m_oId;
+    private String m_oId;
 
     private DataLogicSuppliers dlSuppliers;
 
@@ -254,7 +254,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
     public void writeValueDelete(Object value) {
 
         Object[] supplier = (Object[]) value;
-        m_oId = supplier[0];
+        m_oId = (String)supplier[0];
         m_jSearchkey.setText((String) supplier[1]);
         m_jTaxID.setText((String) supplier[2]);
         m_jName.setText((String) supplier[3]);
@@ -324,7 +324,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
     @Override
     public void writeValueEdit(Object value) {
         Object[] supplier = (Object[]) value;
-        m_oId = supplier[0];
+        m_oId = (String)supplier[0];
         m_jSearchkey.setText((String) supplier[1]);
         m_jTaxID.setText((String) supplier[2]);
         m_jName.setText((String) supplier[3]);

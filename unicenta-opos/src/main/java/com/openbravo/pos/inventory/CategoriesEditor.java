@@ -50,10 +50,8 @@ import javax.swing.table.JTableHeader;
  * @author adrianromero
  */
 public final class CategoriesEditor extends JPanel implements EditorRecord {
-
-    private Object m_oId;       
-    private Object m_id;
-    public String cId;
+    
+    private String m_id;
     
     private final SentenceList m_sentcat;
     private ComboBoxValModel m_CategoryModel;
@@ -170,12 +168,12 @@ public final class CategoriesEditor extends JPanel implements EditorRecord {
     @Override
     public void writeValueDelete(Object value) {
         Object[] cat = (Object[]) value;
-        m_id = cat[0];
+        m_id = (String) cat[0];
         m_jName.setText(Formats.STRING.formatValue(cat[1]));
         m_CategoryModel.setSelectedKey(cat[2]);
         m_jImage.setImage((BufferedImage) cat[3]);
         m_jTextTip.setText(Formats.STRING.formatValue(cat[4]));
-        m_jCatNameShow.setSelected(((Boolean)cat[5]).booleanValue());
+        m_jCatNameShow.setSelected(((Boolean)cat[5]));
         m_jCatOrder.setText(Formats.STRING.formatValue(cat[6]));
         
         m_jName.setEnabled(false);
@@ -186,7 +184,7 @@ public final class CategoriesEditor extends JPanel implements EditorRecord {
         m_jCatNameShow.setEnabled(false);
         m_jCatOrder.setEnabled(false);   
         
-        stockModel = new CategoriesEditor.StockTableModel(getProductOfName((String) m_oId));      
+        stockModel = new CategoriesEditor.StockTableModel(getProductOfName(m_id));      
         
     }
 
@@ -197,7 +195,7 @@ public final class CategoriesEditor extends JPanel implements EditorRecord {
     @Override
     public void writeValueEdit(Object value) {
         Object[] cat = (Object[]) value;
-        m_id = cat[0];
+        m_id = (String) cat[0];
         m_jName.setText(Formats.STRING.formatValue(cat[1]));
         m_CategoryModel.setSelectedKey(cat[2]);
         m_jImage.setImage((BufferedImage) cat[3]);

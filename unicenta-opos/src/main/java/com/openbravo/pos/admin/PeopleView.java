@@ -42,7 +42,7 @@ public class PeopleView extends JPanel implements EditorRecord<Object> {
 
     private static final long serialVersionUID = 1L;
     
-    private Object m_oId;
+    private String m_oId;
     private String m_sPassword;
     
     private final DirtyManager m_Dirty;
@@ -125,6 +125,7 @@ public class PeopleView extends JPanel implements EditorRecord<Object> {
     @Override
     public void writeValueInsert() {
         cleanFields();
+        m_oId = UUID.randomUUID().toString();
         enableFields();        
     }
     
@@ -135,7 +136,7 @@ public class PeopleView extends JPanel implements EditorRecord<Object> {
     @Override
     public void writeValueDelete(Object value) {
         Object[] people = (Object[]) value;
-        m_oId = people[0];
+        m_oId = (String)people[0];
         m_jName.setText(Formats.STRING.formatValue(people[1]));
         m_sPassword = Formats.STRING.formatValue(people[2]);
         m_RoleModel.setSelectedKey(people[3]);
@@ -153,7 +154,7 @@ public class PeopleView extends JPanel implements EditorRecord<Object> {
     @Override
     public void writeValueEdit(Object value) {
         Object[] people = (Object[]) value;
-        m_oId = people[0];
+        m_oId = (String)people[0];
         m_jName.setText(Formats.STRING.formatValue(people[1]));
         m_sPassword = Formats.STRING.formatValue(people[2]);
         m_RoleModel.setSelectedKey(people[3]);

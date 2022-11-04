@@ -36,7 +36,7 @@ import java.util.Calendar;
  */
 public final class LeavesView extends javax.swing.JPanel implements EditorRecord {
 
-    private Object m_oId;
+    private String m_oId;
     private Object m_employeeid;
     private SentenceList m_sentcat;
 
@@ -107,7 +107,7 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
     @Override
     public void writeValueEdit(Object value) {
         Object[] leaves = (Object[]) value;
-        m_oId = leaves[0];
+        m_oId = (String)leaves[0];
         m_employeeid = leaves[1];
         m_jEmployeeName.setText((String) leaves[2]);
         m_jStartDate.setText(Formats.TIMESTAMP.formatValue((Date) leaves[3]));
@@ -126,7 +126,7 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
     @Override
     public void writeValueDelete(Object value) {
         Object[] leaves = (Object[]) value;
-        m_oId = leaves[0];
+        m_oId = (String)leaves[0];
         m_employeeid = leaves[1];
         m_jEmployeeName.setText((String) leaves[2]);
         m_jStartDate.setText(Formats.TIMESTAMP.formatValue((Date) leaves[3]));

@@ -116,7 +116,7 @@ public class JProductAttEdit extends javax.swing.JDialog {
             this.ok = false;
 
             // get attsetinst values
-            AttributeSetInfo asi = (AttributeSetInfo) dlProdAttribute.attsetSent.find(attsetid);
+            AttributeSetInfo asi = (AttributeSetInfo) dlProdAttribute.attsetSent.find(new Object[]{attsetid});
 
             if (asi == null) {
 //                throw new BasicException(AppLocal.getIntString("message.attsetnotexists"));
@@ -126,8 +126,8 @@ public class JProductAttEdit extends javax.swing.JDialog {
             setTitle(asi.getName());
 
             List<AttributeInstInfo> attinstinfo = attsetinstid == null
-                    ? dlProdAttribute.attinstSent.list(attsetid)
-                    : dlProdAttribute.attinstSent2.list(attsetid, attsetinstid);
+                    ? dlProdAttribute.attinstSent.list(new Object[]{attsetid})
+                    : dlProdAttribute.attinstSent2.list(new Object[]{attsetid, attsetinstid});
 
             itemslist = new ArrayList<>();
 
@@ -135,7 +135,7 @@ public class JProductAttEdit extends javax.swing.JDialog {
 
                 JProductAttEditI item;
 
-                List<String> values = dlProdAttribute.attvaluesSent.list(aii.getAttid());
+                List<String> values = dlProdAttribute.attvaluesSent.list(new Object[]{aii.getAttid()});
                 if (values.isEmpty()) {
                     // Does not exist a list of values then a textfield
                     item = new JProductAttEditItem(aii.getAttid(),  aii.getAttname(), aii.getValue(), m_jKeys);
@@ -278,7 +278,7 @@ public class JProductAttEdit extends javax.swing.JDialog {
             // Some values then an instance should exists.
             try {
                 // Exist an attribute set instance with these values for the attributeset selected
-                id = (String) dlProdAttribute.attsetinstExistsSent.find(attsetid, description.toString());
+                id = (String) dlProdAttribute.attsetinstExistsSent.find(new Object[]{attsetid, description.toString()});
             } catch (Exception ex) {
                 // Logger.getLogger(JProductAttEdit.class.getName()).log(Level.SEVERE, null, ex);
                 return;
@@ -291,9 +291,9 @@ public class JProductAttEdit extends javax.swing.JDialog {
                 // Maybe these two modes must be supported one for selection and other for creation....
                 id = UUID.randomUUID().toString();
                 try {
-                    dlProdAttribute.attsetSave.exec(id, attsetid, description.toString());
+                    dlProdAttribute.attsetSave.exec(new Object[]{id, attsetid, description.toString()});
                     for (JProductAttEditI item : itemslist) {
-                        dlProdAttribute.attinstSave.exec(UUID.randomUUID().toString(), id, item.getAttribute(), item.getValue());
+                        dlProdAttribute.attinstSave.exec(new Object[]{UUID.randomUUID().toString(), id, item.getAttribute(), item.getValue()});
                     }
 
                 } catch (Exception ex) {

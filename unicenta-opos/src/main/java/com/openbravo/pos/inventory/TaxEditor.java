@@ -42,7 +42,7 @@ import javax.swing.JPanel;
  */
 public class TaxEditor extends JPanel implements EditorRecord {
     
-    private Object m_oId;
+    private String m_oId;
     
     private SentenceList taxcatsent;
     private ComboBoxValModel taxcatmodel;    
@@ -175,7 +175,7 @@ public class TaxEditor extends JPanel implements EditorRecord {
     public void writeValueDelete(Object value) {
 
         Object[] tax = (Object[]) value;
-        m_oId = tax[0];
+        m_oId = (String)tax[0];
         m_jName.setText(Formats.STRING.formatValue(tax[1]));
         taxcatmodel.setSelectedKey(tax[2]);
         taxcustcatmodel.setSelectedKey(tax[3]);
@@ -201,7 +201,7 @@ public class TaxEditor extends JPanel implements EditorRecord {
     public void writeValueEdit(Object value) {
 
         Object[] tax = (Object[]) value;
-        m_oId = tax[0];
+        m_oId = (String)tax[0];
         m_jName.setText(Formats.STRING.formatValue(tax[1]));
         taxcatmodel.setSelectedKey(tax[2]);
         taxcustcatmodel.setSelectedKey(tax[3]);

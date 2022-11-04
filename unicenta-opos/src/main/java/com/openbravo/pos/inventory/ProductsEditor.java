@@ -73,7 +73,7 @@ public final class ProductsEditor extends javax.swing.JPanel implements EditorRe
     private AppProperties m_props;
 
     private static final long serialVersionUID = 1L;
-    private Object m_oId;
+    private String m_oId;
 
     private final SentenceList m_sentcat;
     private ComboBoxValModel m_CategoryModel;
@@ -506,7 +506,7 @@ public final class ProductsEditor extends javax.swing.JPanel implements EditorRe
 
         m_jTitle.setText(Formats.STRING.formatValue(myprod[1])
                 + " - " + Formats.STRING.formatValue(myprod[4]));
-        m_oId = myprod[0];
+        m_oId = (String)myprod[0];
         m_jRef.setText(Formats.STRING.formatValue(myprod[1]));
         m_jCode.setText(Formats.STRING.formatValue(myprod[2]));
         m_jCodetype.setSelectedItem(myprod[3]);
@@ -610,7 +610,7 @@ public final class ProductsEditor extends javax.swing.JPanel implements EditorRe
                 + " - " + Formats.STRING.formatValue(myprod[4])
                 + " " + AppLocal.getIntString("label.recorddeleted"));
 
-        m_oId = myprod[0];
+        m_oId = (String)myprod[0];
         m_jRef.setText(Formats.STRING.formatValue(myprod[1]));
         m_jCode.setText(Formats.STRING.formatValue(myprod[2]));
         m_jCodetype.setSelectedItem(myprod[3]);

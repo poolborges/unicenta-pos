@@ -742,7 +742,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         final SentenceExec m_updatePlaces = new StaticSentence(this.session,
                 "UPDATE PLACES SET X = ?, Y = ? WHERE ID = ?",
                 new SerializerWriteBasic(new Datas[]{Datas.INT, Datas.INT, Datas.STRING}));
-        m_updatePlaces.exec(x, y, id);
+        m_updatePlaces.exec(new Object[]{x, y, id});
     }
 
     public final List<VoucherInfo> getVouchersActiveList() throws BasicException {
@@ -797,8 +797,8 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
             Datas.INT,    // Auxiliary
             Datas.STRING  // CompleteTime
         }));
-        m_addOrder.exec(orderId, qty, details, attributes, notes, ticketId,
-                ordertime, displayId, auxiliary, completetime);
+        m_addOrder.exec(new Object[]{orderId, qty, details, attributes, notes, ticketId,
+                ordertime, displayId, auxiliary, completetime});
     }
 
     /**
@@ -845,8 +845,8 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
             Datas.INT, // Auxiliary
             Datas.STRING // CompleteTime
         }));
-        m_updateOrder.exec(orderId, qty, details, attributes, notes, ticketId,
-                ordertime, displayId, auxiliary, completetime);
+        m_updateOrder.exec(new Object[]{orderId, qty, details, attributes, notes, ticketId,
+                ordertime, displayId, auxiliary, completetime});
     }
 
     /**

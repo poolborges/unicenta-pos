@@ -34,6 +34,8 @@ import javax.swing.ListCellRenderer;
  * @author adrianromero
  */
 public class CategoriesPanel extends JPanelTable {
+
+    private static final long serialVersionUID = 1L;
     
     private TableDefinition tcategories;
     private CategoriesEditor jeditor;

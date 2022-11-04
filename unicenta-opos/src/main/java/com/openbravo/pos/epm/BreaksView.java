@@ -32,7 +32,7 @@ import java.util.UUID;
  */
 public final class BreaksView extends javax.swing.JPanel implements EditorRecord {
 
-    private Object m_oId;
+    private String m_oId;
     private SentenceList m_sentcat;
     private DirtyManager m_Dirty;
 
@@ -91,7 +91,7 @@ public final class BreaksView extends javax.swing.JPanel implements EditorRecord
     @Override
     public void writeValueEdit(Object value) {
         Object[] breaks = (Object[]) value;
-        m_oId = breaks[0];
+        m_oId = (String)breaks[0];
         m_jBreakName.setText((String) breaks[1]);
         m_jBreakDescription.setText((String) breaks[2]);
         m_jVisible.setSelected(((Boolean) breaks[3]).booleanValue());
@@ -107,7 +107,7 @@ public final class BreaksView extends javax.swing.JPanel implements EditorRecord
     @Override
     public void writeValueDelete(Object value) {
         Object[] breaks = (Object[]) value;
-        m_oId = breaks[0];
+        m_oId = (String)breaks[0];
         m_jBreakName.setText((String) breaks[1]);
         m_jBreakDescription.setText((String) breaks[2]);
         m_jVisible.setSelected(((Boolean) breaks[3]).booleanValue());

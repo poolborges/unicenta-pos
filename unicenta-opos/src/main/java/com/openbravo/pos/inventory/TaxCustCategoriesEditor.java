@@ -36,7 +36,7 @@ import javax.swing.JPanel;
  */
 public final class TaxCustCategoriesEditor extends JPanel implements EditorRecord {
     
-    private Object m_oId;
+    private String m_oId;
     
     /** Creates new form taxEditor
      * @param dirty */
@@ -76,7 +76,7 @@ public final class TaxCustCategoriesEditor extends JPanel implements EditorRecor
     public void writeValueDelete(Object value) {
 
         Object[] taxcustcat = (Object[]) value;
-        m_oId = taxcustcat[0];
+        m_oId = (String)taxcustcat[0];
         m_jName.setText(Formats.STRING.formatValue(taxcustcat[1]));
         m_jName.setEnabled(false);
     }    
@@ -89,7 +89,7 @@ public final class TaxCustCategoriesEditor extends JPanel implements EditorRecor
     public void writeValueEdit(Object value) {
 
         Object[] taxcustcat = (Object[]) value;
-        m_oId = taxcustcat[0];
+        m_oId = (String)taxcustcat[0];
         m_jName.setText(Formats.STRING.formatValue(taxcustcat[1]));
         m_jName.setEnabled(true);
     }

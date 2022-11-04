@@ -115,7 +115,7 @@ public class JProductAttEdit2 extends javax.swing.JDialog {
             this.ok = false;
 
             // get attsetinst values
-            AttributeSetInfo asi = (AttributeSetInfo) dlProdAttribute.attsetSent.find(attsetid);
+            AttributeSetInfo asi = (AttributeSetInfo) dlProdAttribute.attsetSent.find(new Object[]{attsetid});
 
             if (asi == null) {
 //                throw new BasicException(AppLocal.getIntString("message.attsetnotexists"));
@@ -125,8 +125,8 @@ public class JProductAttEdit2 extends javax.swing.JDialog {
             setTitle(asi.getName());
 
             List<AttributeInstInfo> attinstinfo = attsetinstid == null
-                    ? dlProdAttribute.attinstSent.list(attsetid)
-                    : dlProdAttribute.attinstSent2.list(attsetid, attsetinstid);
+                    ? dlProdAttribute.attinstSent.list(new Object[]{attsetid})
+                    : dlProdAttribute.attinstSent2.list(new Object[]{attsetid, attsetinstid});
 
             itemslist = new ArrayList<>();
 
@@ -134,7 +134,7 @@ public class JProductAttEdit2 extends javax.swing.JDialog {
 
                 JProductAttEditI item;
 
-                List<String> values = dlProdAttribute.attvaluesSent.list(aii.getAttid());
+                List<String> values = dlProdAttribute.attvaluesSent.list(new Object[]{aii.getAttid()});
                 if (values.isEmpty()) {
                     // Does not exist a list of values then a textfield
                     item = new JProductAttEditItem(aii.getAttid(),  aii.getAttname(), aii.getValue(), m_jKeys);
@@ -275,7 +275,7 @@ public class JProductAttEdit2 extends javax.swing.JDialog {
 
             try {
                 
-                id = (String) dlProdAttribute.attsetinstExistsSent.find(attsetid, description.toString());
+                id = (String) dlProdAttribute.attsetinstExistsSent.find(new Object[]{attsetid, description.toString()});
            
             } catch (Exception ex) {
                 return;
@@ -289,10 +289,10 @@ public class JProductAttEdit2 extends javax.swing.JDialog {
                 id = UUID.randomUUID().toString();
 
                 try {
-                    dlProdAttribute.attsetSave.exec(id, attsetid, description.toString());
+                    dlProdAttribute.attsetSave.exec(new Object[] { id, attsetid, description.toString()});
 
                     for (JProductAttEditI item : itemslist) {
-                        dlProdAttribute.attinstSave.exec(UUID.randomUUID().toString(), id, item.getAttribute(), item.getValue());
+                        dlProdAttribute.attinstSave.exec(new Object[] { UUID.randomUUID().toString(), id, item.getAttribute(), item.getValue()});
                     }
 
                 } catch (BasicException ex) {

@@ -50,7 +50,7 @@ public class JRDataSourceBasic implements JRDataSource {
     public JRDataSourceBasic(BaseSentence sent, ReportFields fields, Object params) throws BasicException {
 
         this.sent = sent;
-        SRS = sent.openExec(params);
+        SRS = sent.openExec((Object[])params);
         m_fields = fields;
     }
 
