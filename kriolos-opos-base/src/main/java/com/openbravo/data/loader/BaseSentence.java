@@ -17,6 +17,7 @@ package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +30,7 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
 
     protected final static Logger LOGGER = Logger.getLogger(BaseSentence.class.getName());
 
-    public abstract DataResultSet<T> openExec(Object params) throws BasicException;
+    public abstract DataResultSet<T> openExec(Object[] params) throws BasicException;
 
     public abstract DataResultSet<T> moreResults() throws BasicException;
 
@@ -41,12 +42,11 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
     }
 
     @Override
-    public final int exec(Object... params) throws BasicException {
-        return exec((Object) params);
-    }
-
-    @Override
     public final int exec(Object params) throws BasicException {
+        return exec(new Object[]{params});
+    }
+    @Override
+    public final int exec(Object[] params) throws BasicException {
         DataResultSet<T> SRS = openExec(params);
         if (SRS == null) {
             LOGGER.log(Level.WARNING, "openExec return ResultSet is NULL");
@@ -60,17 +60,16 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
 
     @Override
     public final List<T> list() throws BasicException {
-        return list((Object) null);
+        return list(null);
     }
 
     @Override
-    public final List<T> list(Object... params) throws BasicException {
-        return list((Object) params);
+    public List<T> list(Object params) throws BasicException {
+        return list(new Object[]{params});
     }
-
+    
     @Override
-    public final List<T> list(Object params) throws BasicException {
-        // En caso de error o lanza un pepinazo en forma de DataException 
+    public final List<T> list(Object[] params) throws BasicException {
         DataResultSet<T> SRS = openExec(params);
         List<T> aSO = fetchAll(SRS);
         SRS.close();
@@ -84,27 +83,28 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
     }
 
     @Override
-    public final List<T> listPage(Object params, int offset, int length) throws BasicException {
-        // En caso de error o lanza un pepinazo en forma de DataException         
-        DataResultSet<T> resultSet = openExec(params);
-        List<T> aSO = fetchPage(resultSet, offset, length);
-        resultSet.close();
-        closeExec();
+    public final List<T> listPage(Object[] params, int offset, int length) throws BasicException {
+        List<T> aSO = Collections.<T>emptyList();
+        try {
+            DataResultSet<T> resultSet = openExec(params);
+            fetchPage(resultSet, offset, length);
+            resultSet.close();
+        } catch (Exception ex) {
+            throw new BasicException(ex);
+        } finally {
+            closeExec();
+        }
+
         return aSO;
     }
 
     @Override
     public final T find() throws BasicException {
-        return find((Object) null);
+        return find((Object)null);
     }
 
     @Override
     public final T find(Object... params) throws BasicException {
-        return find((Object) params);
-    }
-
-    @Override
-    public final T find(Object params) throws BasicException {
         T obj = null;
         try {
             DataResultSet<T> resultSet = openExec(params);

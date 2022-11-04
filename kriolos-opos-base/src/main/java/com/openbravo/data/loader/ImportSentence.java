@@ -53,7 +53,7 @@ public class ImportSentence extends BaseSentence {
      * @throws BasicException
      */
     @Override
-    public DataResultSet openExec(Object params) throws BasicException {
+    public DataResultSet openExec(Object[] params) throws BasicException {
         return null;
     }
 }

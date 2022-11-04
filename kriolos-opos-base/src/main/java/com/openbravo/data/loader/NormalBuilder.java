@@ -34,7 +34,7 @@ public class NormalBuilder implements ISQLBuilderStatic {
     }
 
     @Override
-    public String getSQL(SerializerWrite sw, Object params) throws BasicException {
+    public String getSQL(SerializerWrite sw, Object[] params) throws BasicException {
         String sql = null;
         try {
 

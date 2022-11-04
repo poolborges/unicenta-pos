@@ -33,7 +33,7 @@ public class SequenceForMySQL extends BaseSentence {
     }
 
     @Override
-    public DataResultSet openExec(Object params) throws BasicException {
+    public DataResultSet openExec(Object[] params) throws BasicException {
         sent1.exec();
         return sent2.openExec(null);
     }

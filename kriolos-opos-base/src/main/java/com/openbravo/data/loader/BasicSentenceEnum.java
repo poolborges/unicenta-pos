@@ -49,7 +49,7 @@ public class BasicSentenceEnum implements SentenceEnum {
      * @throws BasicException
      */
     @Override
-    public void load(Object params) throws BasicException {
+    public void load(Object[] params) throws BasicException {
         SRS = sent.openExec(params);
     }
 

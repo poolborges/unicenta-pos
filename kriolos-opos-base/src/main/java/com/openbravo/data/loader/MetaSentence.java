@@ -91,7 +91,7 @@ public class MetaSentence extends JDBCBaseSentence {
      * @return
      * @throws BasicException
      */
-    public DataResultSet openExec(Object params) throws BasicException {
+    public DataResultSet openExec(Object[] params) throws BasicException {
         
         closeExec();
         

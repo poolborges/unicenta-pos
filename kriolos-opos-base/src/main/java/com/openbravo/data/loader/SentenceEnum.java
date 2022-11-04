@@ -35,7 +35,7 @@ public interface SentenceEnum {
      * @param params
      * @throws BasicException
      */
-    public void load(Object params) throws BasicException;
+    public void load(Object[] params) throws BasicException;
 
     /**
      *

@@ -131,7 +131,7 @@ public abstract class BatchSentence extends BaseSentence {
     }
 
     @Override
-    public DataResultSet openExec(Object params) throws BasicException {
+    public DataResultSet openExec(Object[] params) throws BasicException {
 
         BufferedReader br = new BufferedReader(getReader());
 

@@ -23,37 +23,16 @@ import java.awt.Component;
  * @author JG uniCenta
  */
 public interface EditorRecord<T> extends EditorCreator<T> {
-       
-    /**
-     *
-     */
+
     public void writeValueEOF();
 
-    /**
-     *
-     */
     public void writeValueInsert(); 
 
-    /**
-     *
-     * @param value
-     */
     public void writeValueEdit(T value); // not null por definicion.
 
-    /**
-     *
-     * @param value
-     */
     public void writeValueDelete(T value); // not null por definicion.
-    
-    /**
-     *
-     */
+
     public void refresh();
-    
-    /**
-     *
-     * @return
-     */
+
     public Component getComponent(); 
 }

@@ -23,27 +23,8 @@ import com.openbravo.basic.BasicException;
  * @author JG uniCenta
  */
 public interface SentenceFind<T> {
-    
-    /**
-     *
-     * @return
-     * @throws BasicException
-     */
+
     public T find() throws BasicException;
 
-    /**
-     *
-     * @param params
-     * @return
-     * @throws BasicException
-     */
-    public T find(Object params) throws BasicException;
-
-    /**
-     *
-     * @param params
-     * @return
-     * @throws BasicException
-     */
     public T find(Object... params) throws BasicException;
 }
