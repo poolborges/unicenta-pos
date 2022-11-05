@@ -39,7 +39,7 @@ public class JProductFinder extends javax.swing.JDialog {
     public final static int PRODUCT_NORMAL = 1;
     public final static int PRODUCT_AUXILIAR = 2;
     public final static int PRODUCT_BUNDLE = 3;    
-    private Object dlSales;
+    private DataLogicSales dlSales;
     
     private JProductFinder(java.awt.Frame parent, boolean modal) {
         super(parent, modal);

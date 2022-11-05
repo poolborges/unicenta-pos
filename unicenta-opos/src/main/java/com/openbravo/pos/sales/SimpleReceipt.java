@@ -51,7 +51,7 @@ public class SimpleReceipt extends javax.swing.JPanel {
         
     private JTicketLines ticketlines;
     private TicketInfo ticket;
-    private Object ticketext;
+    private String ticketext;
     
     /** Creates new form SimpleReceipt
      * @param ticketline
@@ -84,7 +84,7 @@ public class SimpleReceipt extends javax.swing.JPanel {
      * @param ticket
      * @param ticketext
      */
-    public void setTicket(TicketInfo ticket, Object ticketext) {
+    public void setTicket(TicketInfo ticket, String ticketext) {
         
         this.ticket = ticket;
         this.ticketext = ticketext;

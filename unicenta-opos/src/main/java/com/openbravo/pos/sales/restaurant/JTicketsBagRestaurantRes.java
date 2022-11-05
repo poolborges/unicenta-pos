@@ -45,7 +45,7 @@ public class JTicketsBagRestaurantRes extends javax.swing.JPanel implements Edit
     private DataLogicCustomers dlCustomers = null;
     
     private final DirtyManager m_Dirty;
-    private Object m_sID;
+    private String m_sID;
     private CustomerInfo customer;
     private Date m_dCreated;
     private final JTimePanel m_timereservation;
@@ -210,7 +210,7 @@ public class JTicketsBagRestaurantRes extends javax.swing.JPanel implements Edit
     @Override
     public void writeValueDelete(Object value) {
         Object[] res = (Object[]) value;
-        m_sID = res[0];
+        m_sID = (String)res[0];
         m_dCreated = (Date) res[1];
         m_timereservation.setCheckDates(m_dcurrentday, new Date(m_dcurrentday.getTime() + 3600000L));
         m_timereservation.setDate((Date) res[2]);       
@@ -238,7 +238,7 @@ public class JTicketsBagRestaurantRes extends javax.swing.JPanel implements Edit
     @Override
     public void writeValueEdit(Object value) {
         Object[] res = (Object[]) value;
-        m_sID = res[0];
+        m_sID = (String)res[0];
         m_dCreated = (Date) res[1];
         m_timereservation.setCheckDates(m_dcurrentday, new Date(m_dcurrentday.getTime() + 3600000L));
         m_timereservation.setDate((Date) res[2]);

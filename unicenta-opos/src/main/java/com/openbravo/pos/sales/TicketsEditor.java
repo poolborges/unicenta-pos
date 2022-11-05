@@ -29,7 +29,7 @@ public interface TicketsEditor {
      * @param oTicket Ticket
      * @param oTicketExt extra information of ticket
      */
-    public void setActiveTicket(TicketInfo oTicket, Object oTicketExt);
+    public void setActiveTicket(TicketInfo oTicket, String oTicketExt);
 
     /**
      *

@@ -67,8 +67,7 @@ public class JDialogNewCustomer extends javax.swing.JDialog {
     }
 
     public Object createValue() throws BasicException {
-        Object customer = customersView.createValue();
-        return customer;
+        return customersView.createValue();
     }
 
     public static JDialogNewCustomer getDialog(Component parent, AppView app) {

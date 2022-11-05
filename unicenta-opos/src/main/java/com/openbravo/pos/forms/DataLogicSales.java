@@ -1979,8 +1979,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     public final SentenceExec getProductCatInsert() {
         return new SentenceExecTransaction(s) {
             @Override
-            public int execInTransaction(Object params) throws BasicException {
-                Object[] values = (Object[]) params;
+            public int execInTransaction(Object[] params) throws BasicException {
                 int i = new PreparedSentence(s,
                          "INSERT INTO products ("
                         + "ID, "
@@ -2028,7 +2027,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                                     25, 26, 27, 28, 29}))
                         .exec(params);
 
-                if (i > 0 && ((Boolean) values[30])) {
+                if (i > 0 && ((Boolean) params[30])) {
                     return new PreparedSentence(s,
                              "INSERT INTO products_cat (PRODUCT, CATORDER) VALUES (?, ?)",
                              new SerializerWriteBasicExt(productsRow.getDatas(), new int[]{0, 31}))
@@ -2047,8 +2046,8 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     public final SentenceExec getProductCatUpdate() {
         return new SentenceExecTransaction(s) {
             @Override
-            public int execInTransaction(Object params) throws BasicException {
-                Object[] values = (Object[]) params;
+            public int execInTransaction(Object[] params) throws BasicException {
+    
                 int i = new PreparedSentence(s,
                          "UPDATE products SET "
                         + "ID = ?, "
@@ -2092,7 +2091,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                                     26, 27, 28, 29, 0}))
                         .exec(params);
                 if (i > 0) {
-                    if (((Boolean) values[30])) {
+                    if (((Boolean) params[30])) {
                         if (new PreparedSentence(s,
                                  "UPDATE products_cat SET CATORDER = ? WHERE PRODUCT = ?",
                                  new SerializerWriteBasicExt(productsRow.getDatas(),
@@ -2119,7 +2118,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     public final SentenceExec getProductCatDelete() {
         return new SentenceExecTransaction(s) {
             @Override
-            public int execInTransaction(Object params) throws BasicException {
+            public int execInTransaction(Object[] params) throws BasicException {
                 new PreparedSentence(s,
                          "DELETE FROM products_cat WHERE PRODUCT = ?",
                          new SerializerWriteBasicExt(productsRow.getDatas(), new int[]{0})).exec(params);
@@ -2160,7 +2159,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
              * @param params[7] Double Price
              * @param params[8] String Application User
              */
-            public int execInTransaction(Object params) throws BasicException {
+            public int execInTransaction(Object[] params) throws BasicException {
 
                 Object[] adjustParams = new Object[4];
                 Object[] paramsArray = (Object[]) params;
@@ -2189,8 +2188,8 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     public final SentenceExec getStockDiaryInsert1() {
         return new SentenceExecTransaction(s) {
             @Override
-            public int execInTransaction(Object params) throws BasicException {
-                int updateresult = ((Object[]) params)[5] == null
+            public int execInTransaction(Object[] params) throws BasicException {
+                int updateresult =  params[5] == null
                         ? new PreparedSentence(s,
                                  "UPDATE stockcurrent SET UNITS = (UNITS + ?) "
                                 + "WHERE LOCATION = ? AND PRODUCT = ? "
@@ -2228,7 +2227,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     public final SentenceExec getStockDiaryDelete() {
         return new SentenceExecTransaction(s) {
             @Override
-            public int execInTransaction(Object params) throws BasicException {
+            public int execInTransaction(Object[] params) throws BasicException {
                 int updateresult = ((Object[]) params)[5] == null // if ATTRIBUTESETINSTANCE_ID is null
                         ? new PreparedSentence(s,
                                  "UPDATE stockcurrent SET UNITS = (UNITS - ?) "
@@ -2307,7 +2306,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     public final SentenceExec getPaymentMovementInsert() {
         return new SentenceExecTransaction(s) {
             @Override
-            public int execInTransaction(Object params) throws BasicException {
+            public int execInTransaction(Object[] params) throws BasicException {
                 new PreparedSentence(s,
                          "INSERT INTO receipts (ID, MONEY, DATENEW) "
                         + "VALUES (?, ?, ?)",
@@ -2329,7 +2328,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     public final SentenceExec getPaymentMovementDelete() {
         return new SentenceExecTransaction(s) {
             @Override
-            public int execInTransaction(Object params) throws BasicException {
+            public int execInTransaction(Object[] params) throws BasicException {
                 new PreparedSentence(s,
                          "DELETE FROM payments WHERE ID = ?",
                          new SerializerWriteBasicExt(paymenttabledatas, new int[]{3})).exec(params);
@@ -2637,8 +2636,8 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     public final SentenceExec getCustomerInsert() {
         return new SentenceExecTransaction(s) {
             @Override
-            public int execInTransaction(Object params) throws BasicException {
-                Object[] values = (Object[]) params;
+            public int execInTransaction(Object[] params) throws BasicException {
+                Object[] values =  params;
                 int i = new PreparedSentence(s,
                          "INSERT INTO customers ("
                         + "ID, "
@@ -2694,8 +2693,8 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     public final SentenceExec getCustomerUpdate() {
         return new SentenceExecTransaction(s) {
             @Override
-            public int execInTransaction(Object params) throws BasicException {
-                Object[] values = (Object[]) params;
+            public int execInTransaction(Object[] params) throws BasicException {
+                Object[] values = params;
                 int i = new PreparedSentence(s,
                          "UPDATE customers SET "
                         + "ID = ?, "
@@ -2768,7 +2767,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     public final SentenceExec getCustomerDelete() {
         return new SentenceExecTransaction(s) {
             @Override
-            public int execInTransaction(Object params) throws BasicException {
+            public int execInTransaction(Object[] params) throws BasicException {
                 return new PreparedSentence(s,
                          "DELETE FROM customers WHERE ID = ?",
                          new SerializerWriteBasicExt(customersRow.getDatas(),

@@ -30,7 +30,7 @@ import java.util.UUID;
  */
 public final class AttributesEditor extends javax.swing.JPanel implements EditorRecord {
 
-    private Object id;
+    private String id;
         
     /** Creates new form AttributesEditor
      * @param dirty */
@@ -70,7 +70,7 @@ public final class AttributesEditor extends javax.swing.JPanel implements Editor
     public void writeValueDelete(Object value) {
 
         Object[] attr = (Object[]) value;
-        id = attr[0];
+        id = (String)attr[0];
         m_jName.setText(Formats.STRING.formatValue(attr[1]));
         m_jName.setEnabled(false);
     }    
@@ -83,7 +83,7 @@ public final class AttributesEditor extends javax.swing.JPanel implements Editor
     public void writeValueEdit(Object value) {
 
         Object[] attr = (Object[]) value;
-        id = attr[0];
+        id = (String)attr[0];
         m_jName.setText(Formats.STRING.formatValue(attr[1]));
         m_jName.setEnabled(true);
     }

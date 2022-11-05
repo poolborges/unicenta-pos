@@ -43,7 +43,7 @@ import javax.swing.JOptionPane;
 public final class VoucherEditor extends javax.swing.JPanel implements EditorRecord {
 
     private static final DateFormat m_simpledate = new SimpleDateFormat("MM-yy");
-    private Object id;
+    private String id;
     private final DataLogicCustomers dlCustomers;
     private final  DataLogicSystem dlSystem;
     private CustomerInfo customerInfo;
@@ -112,7 +112,7 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
     if ("A".equals(m_jStatus.getText())) {
         try {
             Object[] attr = (Object[]) value;
-            id = attr[0];
+            id = (String)attr[0];
             m_jNumber.setText(Formats.STRING.formatValue(attr[1]));
             m_jNumber.setEnabled(false);
             customerInfo = dlCustomers.getCustomerInfo(attr[2].toString());
@@ -140,7 +140,7 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
 
         try {
             Object[] attr = (Object[]) value;
-            id = attr[0];
+            id = (String)attr[0];
             m_jNumber.setText(Formats.STRING.formatValue(attr[1]));
             m_jNumber.setEnabled(true);
             customerInfo = dlCustomers.getCustomerInfo(attr[2].toString());

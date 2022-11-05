@@ -582,7 +582,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
         m_jName = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         m_jVisible = new javax.swing.JCheckBox();
-        jLabel1 = new javax.swing.JLabel();
+        lblMaxdebt = new javax.swing.JLabel();
         txtMaxdebt = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         txtCurdebt = new javax.swing.JTextField();
@@ -658,6 +658,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
         m_jSearchkey_Label.setText(AppLocal.getIntString("label.searchkeym")); // NOI18N
 
         m_jSearchkey.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        m_jSearchkey.setName(m_jSearchkey_Label.getText());
         m_jSearchkey.setPreferredSize(new java.awt.Dimension(0, 30));
 
         m_jName_Label.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -667,6 +668,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
         m_jName_Label.setPreferredSize(new java.awt.Dimension(150, 30));
 
         m_jName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        m_jName.setName(m_jName_Label.getText());
         m_jName.setPreferredSize(new java.awt.Dimension(0, 30));
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -678,14 +680,15 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
 
         m_jVisible.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel1.setText(AppLocal.getIntString("label.maxdebt")); // NOI18N
-        jLabel1.setMaximumSize(new java.awt.Dimension(140, 25));
-        jLabel1.setMinimumSize(new java.awt.Dimension(140, 25));
-        jLabel1.setPreferredSize(new java.awt.Dimension(150, 30));
+        lblMaxdebt.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblMaxdebt.setText(AppLocal.getIntString("label.maxdebt")); // NOI18N
+        lblMaxdebt.setMaximumSize(new java.awt.Dimension(140, 25));
+        lblMaxdebt.setMinimumSize(new java.awt.Dimension(140, 25));
+        lblMaxdebt.setPreferredSize(new java.awt.Dimension(150, 30));
 
         txtMaxdebt.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         txtMaxdebt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtMaxdebt.setName(lblMaxdebt.getText());
         txtMaxdebt.setPreferredSize(new java.awt.Dimension(150, 30));
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -724,7 +727,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(m_jSearchkey_Label, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(lblMaxdebt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(txtMaxdebt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -779,7 +782,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
                     .addComponent(m_jSearchkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblMaxdebt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtMaxdebt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(9, 9, 9)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1266,7 +1269,6 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane formTabbedPane;
     private javax.swing.JButton jBtnShowTrans;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
@@ -1293,6 +1295,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTableSupplierTransactions;
+    private javax.swing.JLabel lblMaxdebt;
     private javax.swing.JTextField m_jName;
     private javax.swing.JLabel m_jName_Label;
     private javax.swing.JTextArea m_jNotes;

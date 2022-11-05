@@ -82,8 +82,8 @@ public class ProductsWarehousePanel extends JPanelTable2 {
         
         SentenceExec updatesent =  new SentenceExecTransaction(app.getSession()) {
             @Override
-            public int execInTransaction(Object params) throws BasicException {
-                Object[] values = (Object[]) params;
+            public int execInTransaction(Object[] params) throws BasicException {
+                Object[] values = params;
                 if (values[0] == null)  {
                     // INSERT
                     values[0] = UUID.randomUUID().toString();

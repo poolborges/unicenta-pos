@@ -38,13 +38,13 @@ public class BundleEditor extends javax.swing.JPanel implements EditorRecord {
 
     private DataLogicSales m_dlSales;
     
-    private Object id;
-    private Object product;
-    private Object productBundle;
-    private Object name;
-    private Object quantity;
+    private String id;
+    private String product;
+    private String productBundle;
+    private String name;
+    private Double quantity;
     
-    private Object insertproduct;
+    private String insertproduct;
 
     /** Creates new form BundleEditor */
     public BundleEditor(AppView app, DirtyManager dirty) {
@@ -118,11 +118,11 @@ public class BundleEditor extends javax.swing.JPanel implements EditorRecord {
     public void writeValueEdit(Object value) {
         Object[] obj = (Object[]) value;
         
-        id = obj[0];
-        product = obj[1];
-        productBundle = obj[2];
-        quantity = obj[3];
-        name = obj[6];
+        id = (String)obj[0];
+        product = (String)obj[1];
+        productBundle = (String)obj[2];
+        quantity = (double)obj[3];
+        name = (String)obj[6];
         m_jReference.setText(Formats.STRING.formatValue(obj[4]));
         m_jBarcode.setText(Formats.STRING.formatValue(obj[5]));
         m_jProduct.setText(Formats.STRING.formatValue(obj[4]) + " - " + Formats.STRING.formatValue(obj[6]));        
@@ -141,11 +141,11 @@ public class BundleEditor extends javax.swing.JPanel implements EditorRecord {
     public void writeValueDelete(Object value) {
         Object[] obj = (Object[]) value;
         
-        id = obj[0];
-        product = obj[1];
-        productBundle = obj[2];
-        quantity = obj[3];
-        name = obj[6];
+        id = (String)obj[0];
+        product = (String)obj[1];
+        productBundle = (String)obj[2];
+        quantity = (double)obj[3];
+        name = (String)obj[6];
         m_jReference.setText(Formats.STRING.formatValue(obj[4]));
         m_jBarcode.setText(Formats.STRING.formatValue(obj[5]));
         m_jProduct.setText(Formats.STRING.formatValue(obj[4]) + " - " + Formats.STRING.formatValue(obj[6]));        

@@ -94,7 +94,7 @@ public class DataLogicAdmin extends BeanFactoryDataSingle {
         return sentinsert;
     }
     
-    public SaveProvider<Object> getPeopleSaveProvider(){
+    public SaveProvider<Object[]> getPeopleSaveProvider(){
         return new DefaultSaveProvider(
                 peopleSentenceExecUpdate(), 
                 peopleSentenceExecInsert(), 

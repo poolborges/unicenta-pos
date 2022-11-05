@@ -231,7 +231,7 @@ public final class TicketInfo implements SerializableRead, Externalizable {
         return m_iPickupId;
     }
     
-    public String getName(Object info) {
+    public String getName(String info) {
 // JG Aug 2014 - Add User info
         List<String> name = new ArrayList<>();        
 
@@ -252,7 +252,7 @@ public final class TicketInfo implements SerializableRead, Externalizable {
                 name.add(Integer.toString(m_iTicketId));                
             }
         } else {
-            name.add(info.toString());            
+            name.add(info);            
         }
 
         if (m_Customer != null) {        

@@ -111,7 +111,7 @@ public class ReceiptSplit extends javax.swing.JDialog {
      * @param ticketext
      * @return
      */
-    public boolean showDialog(TicketInfo ticket, TicketInfo ticket2, Object ticketext) {
+    public boolean showDialog(TicketInfo ticket, TicketInfo ticket2, String ticketext) {
 
         receiptone.setTicket(ticket, ticketext);
         receipttwo.setTicket(ticket2, ticketext);

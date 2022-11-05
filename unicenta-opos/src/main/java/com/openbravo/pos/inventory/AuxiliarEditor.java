@@ -38,12 +38,12 @@ public class AuxiliarEditor extends javax.swing.JPanel implements EditorRecord {
 
     private DataLogicSales m_dlSales;
     
-    private Object id;
-    private Object product;
-    private Object product2;
-    private Object name;
+    private String id;
+    private String product;
+    private String product2;
+    private String name;
     
-    private Object insertproduct;
+    private String productID;
 
     /** Creates new form AuxiliarEditor
      * @param app
@@ -64,9 +64,9 @@ public class AuxiliarEditor extends javax.swing.JPanel implements EditorRecord {
     public void setInsertProduct(ProductInfoExt prod) {
         
         if (prod == null) {
-            insertproduct = null;
+            productID = null;
         } else {
-            insertproduct = prod.getID();
+            productID = prod.getID();
         }
     }
 
@@ -106,7 +106,7 @@ public class AuxiliarEditor extends javax.swing.JPanel implements EditorRecord {
     public void writeValueInsert() {
         
         id = UUID.randomUUID().toString();
-        product = insertproduct;
+        product = productID;
         product2 = null;
         name = null;
         m_jReference.setText(null);
@@ -129,10 +129,10 @@ public class AuxiliarEditor extends javax.swing.JPanel implements EditorRecord {
     public void writeValueEdit(Object value) {
         Object[] obj = (Object[]) value;
         
-        id = obj[0];
-        product = obj[1];
-        product2 = obj[2];
-        name = obj[5];
+        id = (String)obj[0];
+        product = (String)obj[1];
+        product2 = (String)obj[2];
+        name = (String)obj[5];
         m_jReference.setText(Formats.STRING.formatValue(obj[3]));
         m_jBarcode.setText(Formats.STRING.formatValue(obj[4]));
         m_jProduct.setText(Formats.STRING.formatValue(obj[3]) + " - " + Formats.STRING.formatValue(obj[5]));        
@@ -153,10 +153,10 @@ public class AuxiliarEditor extends javax.swing.JPanel implements EditorRecord {
     public void writeValueDelete(Object value) {
         Object[] obj = (Object[]) value;
         
-        id = obj[0];
-        product = obj[1];
-        product2 = obj[2];
-        name = obj[5];
+        id = (String)obj[0];
+        product = (String)obj[1];
+        product2 = (String)obj[2];
+        name = (String)obj[5];
         m_jReference.setText(Formats.STRING.formatValue(obj[3]));
         m_jBarcode.setText(Formats.STRING.formatValue(obj[4]));
         m_jProduct.setText(Formats.STRING.formatValue(obj[3]) + " - " + Formats.STRING.formatValue(obj[5]));        

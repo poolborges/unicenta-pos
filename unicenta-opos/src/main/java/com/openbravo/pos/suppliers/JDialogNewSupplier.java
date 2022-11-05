@@ -73,8 +73,7 @@ public class JDialogNewSupplier extends javax.swing.JDialog {
     }
     
      public Object createValue() throws BasicException {
-        Object supplier = suppliersView.createValue();
-        return supplier;
+        return suppliersView.createValue();
     }
 
     

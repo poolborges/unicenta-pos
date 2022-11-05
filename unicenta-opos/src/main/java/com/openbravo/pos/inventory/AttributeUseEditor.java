@@ -39,10 +39,9 @@ public class AttributeUseEditor extends javax.swing.JPanel implements EditorReco
     private SentenceList attributesent;
     private ComboBoxValModel attributemodel;
 
-    private Object id;
-    private Object attuseid;
-
-    private Object insertid;
+    private String id;
+    private String attuseid;
+    private String insertid;
 
     /** Creates new form AttributeSetEditor
      * @param app
@@ -113,7 +112,7 @@ public class AttributeUseEditor extends javax.swing.JPanel implements EditorReco
     public void writeValueInsert() {
 
         id = UUID.randomUUID().toString();
-        attuseid = insertid;
+        attuseid = (String)insertid;
         attributemodel.setSelectedKey(null);
         jLineno.setText(null);
 
@@ -130,8 +129,8 @@ public class AttributeUseEditor extends javax.swing.JPanel implements EditorReco
 
         Object[] obj = (Object[]) value;
 
-        id = obj[0];
-        attuseid = obj[1];
+        id = (String)obj[0];
+        attuseid = (String)obj[1];
         attributemodel.setSelectedKey(obj[2]);
         jLineno.setText(Formats.INT.formatValue(obj[3]));
 
@@ -148,8 +147,8 @@ public class AttributeUseEditor extends javax.swing.JPanel implements EditorReco
 
         Object[] obj = (Object[]) value;
 
-        id = obj[0];
-        attuseid = obj[1];
+        id = (String)obj[0];
+        attuseid = (String)obj[1];
         attributemodel.setSelectedKey(obj[2]);
         jLineno.setText(Formats.INT.formatValue(obj[3]));
 

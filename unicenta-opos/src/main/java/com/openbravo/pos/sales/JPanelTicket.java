@@ -104,7 +104,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     protected DataLogicCustomers dlCustomers;
     protected TicketsEditor m_panelticket;
     protected TicketInfo m_oTicket;
-    protected Object m_oTicketExt;
+    protected String m_oTicketExt;
 
     private int m_iNumberStatus;
     private int m_iNumberStatusInput;
@@ -364,7 +364,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
      * @param oTicketExt
      */
     @Override
-    public void setActiveTicket(TicketInfo oTicket, Object oTicketExt) {
+    public void setActiveTicket(TicketInfo oTicket, String oTicketExt) {
 
         LOGGER.log(System.Logger.Level.DEBUG,"JPanelTicket setActiveTicket: "+oTicketExt);
         switch (getTicketsbag()) {
@@ -1579,7 +1579,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         }
     }
 
-    private boolean closeTicket(TicketInfo ticket, Object ticketext) {
+    private boolean closeTicket(TicketInfo ticket, String ticketext) {
         if (listener != null) {
             listener.stop();
         }
@@ -1706,7 +1706,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         return (tmpPickupId);
     }
 
-    private void printTicket(String sresourcename, TicketInfo ticket, Object ticketext) {
+    private void printTicket(String sresourcename, TicketInfo ticket, String ticketext) {
 
         String sresource = dlSystem.getResourceAsXML(sresourcename);
         if (sresource == null) {
@@ -1782,7 +1782,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     }
 
-    private void printReport(String resourcefile, TicketInfo ticket, Object ticketext) {
+    private void printReport(String resourcefile, TicketInfo ticket, String ticketext) {
 
         try {
 
@@ -1876,7 +1876,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         }
     }
 
-    private Object executeEvent(TicketInfo ticket, Object ticketext, String eventkey, ScriptArg... args) {
+    private Object executeEvent(TicketInfo ticket, String ticketext, String eventkey, ScriptArg... args) {
 
         String resource = m_jbtnconfig.getEvent(eventkey);
         if (resource == null) {
@@ -2031,11 +2031,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     public class ScriptObject {
 
         private final TicketInfo ticket;
-        private final Object ticketext;
+        private final String ticketext;
 
         private int selectedindex;
 
-        private ScriptObject(TicketInfo ticket, Object ticketext) {
+        private ScriptObject(TicketInfo ticket, String ticketext) {
             this.ticket = ticket;
             this.ticketext = ticketext;
         }

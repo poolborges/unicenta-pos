@@ -14,7 +14,7 @@ import java.util.UUID;
 import javax.swing.JOptionPane;
 
 public final class UomEditor extends javax.swing.JPanel implements EditorRecord {
-    private Object m_id;
+    private String m_id;
     
     /** Creates new form JPanelUnits Of Measure
      * @param app
@@ -117,7 +117,7 @@ public final class UomEditor extends javax.swing.JPanel implements EditorRecord 
     public void writeValueEdit(Object value) {
         Object[] obj = (Object[]) value;
         
-        m_id = obj[0];
+        m_id = (String)obj[0];
         m_jName.setText(Formats.STRING.formatValue(obj[1]));
         m_jName.setEnabled(true);
         
@@ -127,7 +127,7 @@ public final class UomEditor extends javax.swing.JPanel implements EditorRecord 
     public void writeValueDelete(Object value) {
         Object[] obj = (Object[]) value;
         
-        m_id = obj[0];
+        m_id = (String)obj[0];
         m_jName.setText(Formats.STRING.formatValue(obj[1]));
         m_jName.setEnabled(false);
         

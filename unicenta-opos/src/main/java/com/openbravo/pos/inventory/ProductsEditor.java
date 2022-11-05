@@ -90,7 +90,7 @@ public final class ProductsEditor extends javax.swing.JPanel implements EditorRe
     private final SentenceList taxsent;
     private TaxesLogic taxeslogic;
 
-    private Object pricesell;
+    private Double pricesell;
     private boolean priceselllock = false;
 
     private boolean reportlock = false;
@@ -991,7 +991,7 @@ public final class ProductsEditor extends javax.swing.JPanel implements EditorRe
 
         if (!priceselllock) {
             priceselllock = true;
-            pricesell = value;
+            pricesell = (Double)value;
             m_jPriceSell.setText(Formats.CURRENCY.formatValue(pricesell));
             priceselllock = false;
         }
