@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  *
  * @author JG uniCenta
  */
-public class SerializerWriteComposed implements SerializerWrite {
+public class SerializerWriteComposed implements SerializerWrite<Object[]> {
 
     private final static Logger LOGGER = Logger.getLogger(SerializerWriteComposed.class.getName());
     private List<SerializerWrite> serwrites = new ArrayList<SerializerWrite>();
@@ -37,15 +37,14 @@ public class SerializerWriteComposed implements SerializerWrite {
         serwrites.add(sw);
     }
 
-    public void writeValues(DataWrite dp, Object obj) throws BasicException {
+    public void writeValues(DataWrite dp, Object[] parameters) throws BasicException {
 
         int posi = 0;
         try {
-            Object[] arrObjects = (Object[]) obj;
             DataWriteComposed dpc = new DataWriteComposed(dp);
             for (SerializerWrite sw : serwrites) {
                 dpc.next();
-                sw.writeValues(dpc, arrObjects[posi++]);
+                sw.writeValues(dpc, parameters[posi++]);
             }
 
         } catch (Exception ex) {

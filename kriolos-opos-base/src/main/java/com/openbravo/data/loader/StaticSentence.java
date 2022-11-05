@@ -77,12 +77,13 @@ public class StaticSentence<W extends Object, T> extends JDBCBaseSentence<T> {
         DataResultSet<T> result;
         String sentence = "";
         try {
-            sentence = m_sentence.getSQL(m_SerWrite, params);
-
             LOGGER.log(Level.FINE, "Executing SQL params: {0}", params);
-            LOGGER.log(Level.FINE, "Executing SQL sentence : {0}", sentence);
             log(params);
-
+            
+            sentence = m_sentence.getSQL(m_SerWrite, params);
+            
+            LOGGER.log(Level.FINE, "Executing SQL sentence : {0}", sentence);
+            
             m_Stmt = session.getConnection().createStatement();
 
             if (m_Stmt.execute(sentence)) {

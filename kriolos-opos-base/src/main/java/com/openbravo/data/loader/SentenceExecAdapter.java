@@ -39,9 +39,7 @@ public abstract class SentenceExecAdapter implements SentenceExec {
      * @return
      * @throws BasicException
      */
-    public int exec(Object... params) throws BasicException {
-        return exec((Object) params);
-    }
+    public abstract int exec(Object[] params) throws BasicException;
 
     /**
      *

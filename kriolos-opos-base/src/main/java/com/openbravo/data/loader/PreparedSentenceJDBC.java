@@ -24,8 +24,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -116,20 +114,21 @@ public final class PreparedSentenceJDBC implements SentenceExec {
      * @throws BasicException
      */
     @Override
-    public int exec(Object... params) throws BasicException {
+    public int exec(Object[] params) throws BasicException {
 
         int rowsAffected = 0;
+        LOGGER.log(System.Logger.Level.INFO,
+                         "{params.length: " + (params == null? "NULL" : params.length)
+                        + ", indexValue.length: " + indexValue.length
+                        + ", paramsDatas.length: " + paramsDatas.length
+                        + "} "+sql);
+        LOGGER.log(System.Logger.Level.INFO, "SQL: " +sql);
         try ( PreparedStatement preparedStatement = session.getConnection().prepareStatement(sql)) {
 
             int parameterCount = preparedStatement.getParameterMetaData().getParameterCount();
             
 
-                LOGGER.log(System.Logger.Level.DEBUG, "VARIBLES length "
-                        + "{params: " + (params == null? "NULL" : params.length)
-                        + ", indexValue: " + indexValue.length
-                        + ", paramsDatas: " + paramsDatas.length 
-                        + ", parameterCount:" +parameterCount
-                        + "} "+sql);
+                
    
             for (int posi = 0; posi < paramsDatas.length; posi++) {
 
@@ -149,6 +148,8 @@ public final class PreparedSentenceJDBC implements SentenceExec {
                 int paramPosi = posi + 1;
                 preparedStatement(preparedStatement, da, obj, paramPosi);
             }
+            
+            LOGGER.log(System.Logger.Level.INFO, "PreparedStatement: " + preparedStatement.toString());
             rowsAffected = preparedStatement.executeUpdate();
         } catch (SQLException sqlex) {
             LOGGER.log(System.Logger.Level.WARNING, "Exception while execute SQL: " + sql, sqlex);

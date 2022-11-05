@@ -42,7 +42,7 @@ public abstract class SentenceExecTransaction implements SentenceExec {
      * @throws BasicException
      */
     public final int exec() throws BasicException {
-        return exec((Object) null);
+        return exec((Object[]) null);
     }
 
     /**
@@ -51,8 +51,14 @@ public abstract class SentenceExecTransaction implements SentenceExec {
      * @return
      * @throws BasicException
      */
-    public final int exec(Object... params) throws BasicException {
-        return exec((Object) params);
+    public final int exec(Object[] params) throws BasicException {
+        Transaction<Integer> t = new Transaction<Integer>(m_s) {
+            public Integer transact() throws BasicException{
+                return execInTransaction(params);
+            }
+        };
+        
+        return t.execute();
     }
 
     /**
@@ -62,14 +68,7 @@ public abstract class SentenceExecTransaction implements SentenceExec {
      * @throws BasicException
      */
     public final int exec(final Object params) throws BasicException {
-        
-        Transaction<Integer> t = new Transaction<Integer>(m_s) {
-            public Integer transact() throws BasicException{
-                return execInTransaction(params);
-            }
-        };
-        
-        return t.execute();
+        return exec((Object[])params);
     }
     
     /**
@@ -78,6 +77,6 @@ public abstract class SentenceExecTransaction implements SentenceExec {
      * @return
      * @throws BasicException
      */
-    protected abstract int execInTransaction(Object params) throws BasicException; 
+    protected abstract int execInTransaction(Object[] params) throws BasicException; 
 }
 

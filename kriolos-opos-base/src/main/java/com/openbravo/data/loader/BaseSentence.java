@@ -43,7 +43,7 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
 
     @Override
     public final int exec(Object params) throws BasicException {
-        return exec(new Object[]{params});
+        return exec((Object[])params);
     }
     @Override
     public final int exec(Object[] params) throws BasicException {

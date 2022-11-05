@@ -23,7 +23,7 @@ import com.openbravo.data.loader.SentenceExec;
  *
  * @author JG uniCenta
  */
-public class DefaultSaveProvider implements SaveProvider<Object>{
+public class DefaultSaveProvider implements SaveProvider<Object[]>{
     
     /**
      *
@@ -87,7 +87,7 @@ public class DefaultSaveProvider implements SaveProvider<Object>{
      * @throws BasicException
      */
     @Override
-    public int deleteData(Object value) throws BasicException {
+    public int deleteData(Object[] value) throws BasicException {
         return m_sentdelete.exec(value);
     }
     
@@ -107,7 +107,7 @@ public class DefaultSaveProvider implements SaveProvider<Object>{
      * @throws BasicException
      */
     @Override
-    public int insertData(Object value) throws BasicException {
+    public int insertData(Object[] value) throws BasicException {
         return m_sentinsert.exec(value);
     }
     
@@ -127,7 +127,7 @@ public class DefaultSaveProvider implements SaveProvider<Object>{
      * @throws BasicException
      */
     @Override
-    public int updateData(Object value) throws BasicException {
+    public int updateData(Object[] value) throws BasicException {
         return m_sentupdate.exec(value);
     }
 }

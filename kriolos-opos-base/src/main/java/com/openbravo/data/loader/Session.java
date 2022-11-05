@@ -119,7 +119,7 @@ public final class Session {
     public void begin() throws SQLException {
         
         if (m_bInTransaction) {
-            throw new SQLException("Already in transaction");
+            throw new SQLException("Transaction already started");
         } else {
             ensureConnection();
             m_c.setAutoCommit(false);

@@ -15,7 +15,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.data.loader;
 
-import java.util.*;
 import com.openbravo.basic.BasicException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

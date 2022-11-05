@@ -62,6 +62,11 @@ public abstract class Datas<T> {
             return toStringAbstract(value);
         }
     }
+    
+    @Override
+    public String toString() {
+        return getClassValue().getName();
+    }
 
     public int compare(T o1, T o2) {
         if (o1 == null) {

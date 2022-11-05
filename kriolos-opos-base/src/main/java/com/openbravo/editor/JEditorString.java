@@ -22,6 +22,8 @@ package com.openbravo.editor;
  */
 public class JEditorString extends JEditorText {
 
+    private static final long serialVersionUID = 1L;
+
     
     public JEditorString() {
         super();
