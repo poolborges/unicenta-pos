@@ -35,78 +35,31 @@ import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
-// import org.jdesktop.swingx.painter.MattePainter;
 
 /**
  *
  * @author poolborges
  */
 public class JRootMenu {
-    
+
     private static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.forms.JRootMenu");
-    
-    private Map<String, JPanelView> m_aPreparedViews; // Prepared views   
-    private Map<String, JPanelView> m_aCreatedViews;
-    
-    private JPanelView m_jLastView;
-    private Action m_actionfirst;
-    
+
     private final Component parent;
     private final AppUserView appview;
+    private final ViewManager viewManager = new ViewManager();
 
-    public JRootMenu(Component _parent, AppUserView _appview){
-        m_aPreparedViews = new HashMap<>();
-        m_aCreatedViews = new HashMap<>();
-        m_actionfirst = null;
-        m_jLastView = null;
-        
+    public JRootMenu(Component _parent, AppUserView _appview) {
         parent = _parent;
         appview = _appview;
     }
     
-    public JPanelView getLastView(){
-        return m_jLastView;
-    }
-    public Action getActionfirst(){
-        return m_actionfirst;
-    }
-    public void resetActionfirst(){
-        if(m_actionfirst != null){
-            m_actionfirst.actionPerformed(null);
-            m_actionfirst = null;
-        }
-    }
-    
-    public boolean deactivateLastView(){
-        if (m_jLastView == null) {
-            return true;
-        } else if (m_jLastView.deactivate()) {
-            m_jLastView = null;
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    public boolean checkIfLastView(JPanelView m_jMyView){
-        return m_jMyView == m_jLastView;
-    }
-    
-    public void setLastView(JPanelView m_jMyView){
-        m_jLastView = m_jMyView;
+    public ViewManager getViewManager(){
+        return viewManager;
     }
 
-    public Map<String, JPanelView> getPreparedViews(){
-        return m_aPreparedViews;
-    }
-    
-    public Map<String, JPanelView> getCreatedViews(){
-        return m_aCreatedViews;
-    }
-    
     public void setRootMenu(JScrollPane m_jPanelLeft, DataLogicSystem m_dlSystem) {
         try {
-            
+
             String menuScrip = m_dlSystem.getResourceAsText("Menu.Root");
             Component menuComponent = getScriptMenu(menuScrip);
 
@@ -114,13 +67,13 @@ public class JRootMenu {
                 m_jPanelLeft.setViewportView(menuComponent);
             } else {
                 String pah = "/com/openbravo/pos/templates/Menu.Root.txt";
-                LOGGER.log(Level.FINE, "Root.Men lookup classpath: "+pah);
+                LOGGER.log(Level.FINE, "Root.Men lookup classpath: " + pah);
                 menuScrip = StringUtils.readResource(pah);
                 menuComponent = getScriptMenu(menuScrip);
-                if(menuComponent != null){
+                if (menuComponent != null) {
                     m_jPanelLeft.setViewportView(menuComponent);
-                }else{
-                    LOGGER.log(Level.SEVERE, "Failed on build Root.Menu from class path: "+pah);
+                } else {
+                    LOGGER.log(Level.SEVERE, "Failed on build Root.Menu from class path: " + pah);
                 }
             }
 
@@ -132,12 +85,12 @@ public class JRootMenu {
     private Component getScriptMenu(String menutext) {
 
         Component menuComponent = null;
-        
-        if(menutext == null || menutext.isBlank()){
+
+        if (menutext == null || menutext.isBlank()) {
             LOGGER.log(Level.SEVERE, "Script content is blank/emp");
             return menuComponent;
         }
-        
+
         try {
             ScriptMenu menu = new ScriptMenu(parent, appview);
 
@@ -205,7 +158,7 @@ public class JRootMenu {
 
         public ScriptSubmenu addSubmenu(String icon, String key, String classname) {
             ScriptSubmenu submenu = new ScriptSubmenu(parent, m_appview, key);
-            m_aPreparedViews.put(classname, new JPanelMenu(submenu.getMenuDefinition()));
+            viewManager.getPreparedViews().put(classname, new JPanelMenu(submenu.getMenuDefinition()));
             addAction(new MenuPanelAction(m_appview, icon, key, classname));
             return submenu;
         }
@@ -230,8 +183,8 @@ public class JRootMenu {
 
                 taskGroup.setVisible(true);
                 /* */
-                if (m_actionfirst == null) {
-                    m_actionfirst = act;
+                if (viewManager.getActionfirst() == null) {
+                    viewManager.setActionfirst(act);
                 }
             }
         }
@@ -267,8 +220,8 @@ public class JRootMenu {
         }
 
         public ScriptSubmenu addSubmenu(String icon, String key, String classname) {
-            ScriptSubmenu submenu = new ScriptSubmenu(parent, m_appview,key);
-            m_aPreparedViews.put(classname, new JPanelMenu(submenu.getMenuDefinition()));
+            ScriptSubmenu submenu = new ScriptSubmenu(parent, m_appview, key);
+            viewManager.getPreparedViews().put(classname, new JPanelMenu(submenu.getMenuDefinition()));
             menudef.addMenuItem(new MenuPanelAction(m_appview, icon, key, classname));
             return submenu;
         }
@@ -308,13 +261,13 @@ public class JRootMenu {
             try {
                 AppUser m_appuser = appview.getUser();
                 String sNewPassword = JPasswordDialog.changePassword(parent, m_appuser.getPassword());
-/*
+                /*
                 if (sNewPassword != null) {
                     DataLogicSystem m_dlSystem = (DataLogicSystem) appview.getBean("com.openbravo.pos.forms.DataLogicSystem");
                     m_dlSystem.execChangePassword(new Object[]{sNewPassword, m_appuser.getId()});
                     m_appuser.setPassword(sNewPassword);
                 }
-*/
+                 */
             } catch (Exception e) {
                 JMessageDialog.showMessage(parent,
                         new MessageInf(MessageInf.SGN_WARNING,
@@ -340,4 +293,66 @@ public class JRootMenu {
         }
     }
 
+    public class ViewManager {
+
+        private JPanelView m_jLastView;
+        private Action m_actionfirst;
+
+        private final Map<String, JPanelView> m_aPreparedViews; // Prepared views   
+        private final Map<String, JPanelView> m_aCreatedViews;
+
+        public ViewManager() {
+
+            m_aPreparedViews = new HashMap<>();
+            m_aCreatedViews = new HashMap<>();
+            m_actionfirst = null;
+            m_jLastView = null;
+        }
+
+        public JPanelView getLastView() {
+            return m_jLastView;
+        }
+
+        public Action getActionfirst() {
+            return m_actionfirst;
+        }
+        
+        public void setActionfirst(Action actionfirst) {
+            m_actionfirst = actionfirst;
+        }
+
+        public void resetActionfirst() {
+            if (m_actionfirst != null) {
+                m_actionfirst.actionPerformed(null);
+                m_actionfirst = null;
+            }
+        }
+
+        public boolean deactivateLastView() {
+            if (m_jLastView == null) {
+                return true;
+            } else if (m_jLastView.deactivate()) {
+                m_jLastView = null;
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public boolean checkIfLastView(JPanelView m_jMyView) {
+            return m_jMyView == m_jLastView;
+        }
+
+        public void setLastView(JPanelView m_jMyView) {
+            m_jLastView = m_jMyView;
+        }
+
+        public Map<String, JPanelView> getPreparedViews() {
+            return m_aPreparedViews;
+        }
+
+        public Map<String, JPanelView> getCreatedViews() {
+            return m_aCreatedViews;
+        }
+    }
 }

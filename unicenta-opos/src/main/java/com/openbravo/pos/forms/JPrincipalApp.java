@@ -113,11 +113,11 @@ public class JPrincipalApp extends JPanel implements AppUserView {
     public void activate() {
 
         setMenuVisible(getBounds().width > 800);
-        rMenu.resetActionfirst();
+        rMenu.getViewManager().resetActionfirst();
     }
 
     public boolean deactivate() {
-        if (rMenu.deactivateLastView()) {
+        if (rMenu.getViewManager().deactivateLastView()) {
             showView("<NULL>");
             return true;
         } else {
@@ -154,43 +154,43 @@ public class JPrincipalApp extends JPanel implements AppUserView {
 
             if (m_appuser.hasPermission(sTaskClass)) {
 
-                JPanelView m_jMyView = rMenu.getCreatedViews().get(sTaskClass);
-                if (m_jMyView == null) {
+                JPanelView viewPanel = rMenu.getViewManager().getCreatedViews().get(sTaskClass);
+                if (viewPanel == null) {
 
-                    m_jMyView = rMenu.getPreparedViews().get(sTaskClass);
+                    viewPanel = rMenu.getViewManager().getPreparedViews().get(sTaskClass);
 
-                    if (m_jMyView == null) {
+                    if (viewPanel == null) {
 
                         try {
-                            m_jMyView = (JPanelView) m_appview.getBean(sTaskClass);
+                            viewPanel = (JPanelView) m_appview.getBean(sTaskClass);
                         } catch (BeanFactoryException e) {
                             LOGGER.log(Level.SEVERE, "Exception on get a JPanelView Bean for class: " + sTaskClass, e);
-                            m_jMyView = new JPanelNull(m_appview, e);
+                            viewPanel = new JPanelNull(m_appview, e);
                         }
                     }
 
-                    rMenu.getCreatedViews().put(sTaskClass, m_jMyView);
+                    rMenu.getViewManager().getCreatedViews().put(sTaskClass, viewPanel);
                 }
 
-                if (!rMenu.checkIfLastView(m_jMyView)) {
+                if (!rMenu.getViewManager().checkIfLastView(viewPanel)) {
 
-                    if (rMenu.getLastView() != null) {
-                        LOGGER.info("Call 'deactivate' on class: " + rMenu.getLastView().getClass().getName());
-                        rMenu.getLastView().deactivate();
+                    if (rMenu.getViewManager().getLastView() != null) {
+                        LOGGER.info("Call 'deactivate' on class: " + rMenu.getViewManager().getLastView().getClass().getName());
+                        rMenu.getViewManager().getLastView().deactivate();
                     }
 
-                    m_jMyView.getComponent().applyComponentOrientation(getComponentOrientation());
-                    addView(m_jMyView.getComponent(), sTaskClass);
+                    viewPanel.getComponent().applyComponentOrientation(getComponentOrientation());
+                    addView(viewPanel.getComponent(), sTaskClass);
 
                     LOGGER.info("Call 'activate' on class: " + sTaskClass);
-                    m_jMyView.activate();
+                    viewPanel.activate();
 
-                    rMenu.setLastView(m_jMyView);
+                    rMenu.getViewManager().setLastView(viewPanel);
 
                     setMenuVisible(getBounds().width > 800);
 
                     showView(sTaskClass);
-                    String sTitle = m_jMyView.getTitle();
+                    String sTitle = viewPanel.getTitle();
                     if (sTitle != null && !sTitle.isBlank()) {
                         m_jPanelTitle.setVisible(true);
                         m_jTitle.setText(sTitle);
@@ -199,7 +199,7 @@ public class JPrincipalApp extends JPanel implements AppUserView {
                         m_jTitle.setText("");
                     }
                 } else {
-                    LOGGER.log(Level.INFO, "Already open: " + sTaskClass + ", Instance: " + m_jMyView);
+                    LOGGER.log(Level.INFO, "Already open: " + sTaskClass + ", Instance: " + viewPanel);
                 }
             } else {
 
