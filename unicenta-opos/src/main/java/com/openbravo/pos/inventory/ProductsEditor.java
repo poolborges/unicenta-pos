@@ -34,7 +34,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import com.openbravo.beans.JCalendarDialog;
 import com.openbravo.data.loader.Session;
-import com.openbravo.pos.catalog.JCatalog;
 import com.openbravo.pos.forms.AppProperties;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -55,19 +54,19 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import javax.imageio.ImageIO;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.netbeans.validation.api.builtin.stringvalidation.StringValidators;
 
 /**
  *
  * @author Jack Gerrard
  */
-public final class ProductsEditor extends javax.swing.JPanel implements EditorRecord {
+public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPanel  implements EditorRecord {
 
     private static final Logger LOGGER = Logger.getLogger(ProductsEditor.class.getName());
     private AppProperties m_props;
@@ -207,6 +206,15 @@ public final class ProductsEditor extends javax.swing.JPanel implements EditorRe
         m_jdate.getDocument().addDocumentListener(dirty);
 
         init();
+        initValidator();
+    }
+    
+    private void initValidator() {
+        org.netbeans.validation.api.ui.ValidationGroup valGroup = getValidationGroup();
+        valGroup.add(m_jRef, StringValidators.REQUIRE_NON_EMPTY_STRING);
+        valGroup.add(m_jName, StringValidators.REQUIRE_NON_EMPTY_STRING);
+        valGroup.add(m_jCode, StringValidators.REQUIRE_NON_EMPTY_STRING);
+        valGroup.add(m_jPriceSellTax, StringValidators.REQUIRE_NON_EMPTY_STRING);
     }
 
     private void init() {
@@ -502,45 +510,7 @@ public final class ProductsEditor extends javax.swing.JPanel implements EditorRe
 
         reportlock = true;
 
-        Object[] myprod = (Object[]) value;
-
-        m_jTitle.setText(Formats.STRING.formatValue(myprod[1])
-                + " - " + Formats.STRING.formatValue(myprod[4]));
-        m_oId = (String)myprod[0];
-        m_jRef.setText(Formats.STRING.formatValue(myprod[1]));
-        m_jCode.setText(Formats.STRING.formatValue(myprod[2]));
-        m_jCodetype.setSelectedItem(myprod[3]);
-        m_jName.setText(Formats.STRING.formatValue(myprod[4]));
-        m_jPriceBuy.setText(Formats.CURRENCY.formatValue(myprod[5]));
-        setPriceSell(myprod[6]);
-        m_CategoryModel.setSelectedKey(myprod[7]);
-        taxcatmodel.setSelectedKey(myprod[8]);
-        attmodel.setSelectedKey(myprod[9]);
-        m_jstockcost.setText(Formats.CURRENCY.formatValue(myprod[10]));
-        m_jstockvolume.setText(Formats.DOUBLE.formatValue(myprod[11]));
-//  JG 3 feb 16 speedup   m_jImage.setImage((BufferedImage) myprod[12]); 
-        m_jImage.setImage(findImage(m_oId));
-        m_jComment.setSelected(((Boolean) myprod[13]));
-        m_jScale.setSelected(((Boolean) myprod[14]));
-        m_jConstant.setSelected(((Boolean) myprod[15]));
-        m_jPrintKB.setSelected(((Boolean) myprod[16]));
-        m_jSendStatus.setSelected(((Boolean) myprod[17]));
-        m_jService.setSelected(((Boolean) myprod[18]));
-        txtAttributes.setText(Formats.BYTEA.formatValue(myprod[19]));
-        m_jDisplay.setText(Formats.STRING.formatValue(myprod[20]));
-        m_jVprice.setSelected(((Boolean) myprod[21]));
-        m_jVerpatrib.setSelected(((Boolean) myprod[22]));
-        m_jTextTip.setText(Formats.STRING.formatValue(myprod[23]));
-        m_jCheckWarrantyReceipt.setSelected(((Boolean) myprod[24]));
-        m_jStockUnits.setText(Formats.DOUBLE.formatValue(myprod[25]));
-        m_jPrintTo.setSelectedItem(myprod[26]);
-        m_SuppliersModel.setSelectedKey(myprod[27]);
-        m_UomModel.setSelectedKey(myprod[28]);
-
-        m_jdate.setText(Formats.DATE.formatValue(myprod[29]));
-
-        m_jInCatalog.setSelected(((Boolean) myprod[30]));
-        m_jCatalogOrder.setText(Formats.INT.formatValue(myprod[31]));
+        setValues(value);
 
         txtAttributes.setCaretPosition(0);
         reportlock = false;
@@ -596,6 +566,46 @@ public final class ProductsEditor extends javax.swing.JPanel implements EditorRe
         calculatePriceSellTax();
         calculateGP();
     }
+    
+    private void setValues(Object value){
+        Object[] myprod = (Object[]) value;
+
+        m_jTitle.setText(Formats.STRING.formatValue((String)myprod[1])
+                + " - " + Formats.STRING.formatValue((String)myprod[4]));
+        m_oId = (String)myprod[0];
+        m_jRef.setText(Formats.STRING.formatValue((String)myprod[1]));
+        m_jCode.setText(Formats.STRING.formatValue((String)myprod[2]));
+        m_jCodetype.setSelectedItem(myprod[3]);
+        m_jName.setText(Formats.STRING.formatValue((String)myprod[4]));
+        m_jPriceBuy.setText(Formats.CURRENCY.formatValue((Double)myprod[5]));
+        setPriceSell(myprod[6]);
+        m_CategoryModel.setSelectedKey(myprod[7]);
+        taxcatmodel.setSelectedKey(myprod[8]);
+        attmodel.setSelectedKey(myprod[9]);
+        m_jstockcost.setText(Formats.CURRENCY.formatValue((Double)myprod[10]));
+        m_jstockvolume.setText(Formats.DOUBLE.formatValue((Double)myprod[11]));
+//  JG 3 feb 16 speedup   m_jImage.setImage((BufferedImage) myprod[12]); 
+        m_jImage.setImage(findImage(m_oId));
+        m_jComment.setSelected(((Boolean) myprod[13]));
+        m_jScale.setSelected(((Boolean) myprod[14]));
+        m_jConstant.setSelected(((Boolean) myprod[15]));
+        m_jPrintKB.setSelected(((Boolean) myprod[16]));
+        m_jSendStatus.setSelected(((Boolean) myprod[17]));
+        m_jService.setSelected(((Boolean) myprod[18]));
+        txtAttributes.setText(Formats.BYTEA.formatValue((byte[])myprod[19]));
+        m_jDisplay.setText(Formats.STRING.formatValue((String)myprod[20]));
+        m_jVprice.setSelected(((Boolean) myprod[21]));
+        m_jVerpatrib.setSelected(((Boolean) myprod[22]));
+        m_jTextTip.setText(Formats.STRING.formatValue((String)myprod[23]));
+        m_jCheckWarrantyReceipt.setSelected(((Boolean) myprod[24]));
+        m_jStockUnits.setText(Formats.DOUBLE.formatValue((Double)myprod[25]));
+        m_jPrintTo.setSelectedItem(myprod[26]);
+        m_SuppliersModel.setSelectedKey(myprod[27]);
+        m_UomModel.setSelectedKey(myprod[28]);
+        m_jdate.setText(Formats.DATE.formatValue((Date)myprod[29]));
+        m_jInCatalog.setSelected(((Boolean) myprod[30]));
+        m_jCatalogOrder.setText(Formats.INT.formatValue((Integer)myprod[31]));
+    }
 
     /**
      *
@@ -605,45 +615,7 @@ public final class ProductsEditor extends javax.swing.JPanel implements EditorRe
     public void writeValueDelete(Object value) {
 
         reportlock = true;
-        Object[] myprod = (Object[]) value;
-        m_jTitle.setText(Formats.STRING.formatValue(myprod[1])
-                + " - " + Formats.STRING.formatValue(myprod[4])
-                + " " + AppLocal.getIntString("label.recorddeleted"));
-
-        m_oId = (String)myprod[0];
-        m_jRef.setText(Formats.STRING.formatValue(myprod[1]));
-        m_jCode.setText(Formats.STRING.formatValue(myprod[2]));
-        m_jCodetype.setSelectedItem(myprod[3]);
-        m_jName.setText(Formats.STRING.formatValue(myprod[4]));
-        m_jPriceBuy.setText(Formats.CURRENCY.formatValue(myprod[5]));
-        setPriceSell(myprod[6]);
-        m_CategoryModel.setSelectedKey(myprod[7]);
-        taxcatmodel.setSelectedKey(myprod[8]);
-        attmodel.setSelectedKey(myprod[9]);
-        m_jstockcost.setText(Formats.CURRENCY.formatValue(myprod[10]));
-        m_jstockvolume.setText(Formats.DOUBLE.formatValue(myprod[11]));
-// JG 3 feb 16 speed test        m_jImage.setImage((BufferedImage) myprod[12]);
-        m_jImage.setImage(findImage(m_oId));
-        m_jComment.setSelected(((Boolean) myprod[13]));
-        m_jScale.setSelected(((Boolean) myprod[14]));
-        m_jConstant.setSelected(((Boolean) myprod[15]));
-        m_jPrintKB.setSelected(((Boolean) myprod[16]));
-        m_jService.setSelected(((Boolean) myprod[17]));
-        m_jSendStatus.setSelected(((Boolean) myprod[18]));
-        txtAttributes.setText(Formats.BYTEA.formatValue(myprod[19]));
-        m_jDisplay.setText(Formats.STRING.formatValue(myprod[20]));
-        m_jVprice.setSelected(((Boolean) myprod[21]));
-        m_jVerpatrib.setSelected(((Boolean) myprod[22]));
-        m_jTextTip.setText(Formats.STRING.formatValue(myprod[23]));
-        m_jCheckWarrantyReceipt.setSelected(((Boolean) myprod[24]));
-        m_jStockUnits.setText(Formats.DOUBLE.formatValue(myprod[25]));
-        m_jPrintTo.setSelectedItem(myprod[26]);
-        m_SuppliersModel.setSelectedKey(myprod[27]);
-        m_UomModel.setSelectedKey(myprod[28]);
-        m_jdate.setText(Formats.DATE.formatValue(myprod[29]));
-
-        m_jInCatalog.setSelected(((Boolean) myprod[30]));
-        m_jCatalogOrder.setText(Formats.INT.formatValue(myprod[31]));
+        setValues(value);
 
         txtAttributes.setCaretPosition(0);
 
@@ -903,12 +875,12 @@ public final class ProductsEditor extends javax.swing.JPanel implements EditorRe
             reportlock = true;
 
             Double dPriceBuy = readCurrency(m_jPriceBuy.getText());
-            Double dPriceSell = (Double) pricesell;
+            Double dPriceSell = pricesell;
 
             if (dPriceBuy == null || dPriceSell == null) {
                 m_jmargin.setText(null);
             } else {
-                m_jmargin.setText(Formats.PERCENT.formatValue(dPriceSell.doubleValue() / dPriceBuy.doubleValue() - 1.0));
+                m_jmargin.setText(Formats.PERCENT.formatValue(dPriceSell / dPriceBuy - 1.0));
             }
             reportlock = false;
         }
@@ -2133,7 +2105,7 @@ public final class ProductsEditor extends javax.swing.JPanel implements EditorRe
 
         add(jTabbedPane1);
         jTabbedPane1.setBounds(0, 10, 640, 490);
-        jTabbedPane1.getAccessibleContext().setAccessibleName("Price");
+        jTabbedPane1.getAccessibleContext().setAccessibleName("Product Editor Tab");
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonHTMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonHTMLActionPerformed

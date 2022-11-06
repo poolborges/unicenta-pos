@@ -76,7 +76,7 @@ public final class TaxCategoriesEditor extends JPanel implements EditorRecord {
 
         Object[] taxcustcat = (Object[]) value;
         m_oId = (String)taxcustcat[0];
-        m_jName.setText(Formats.STRING.formatValue(taxcustcat[1]));
+        m_jName.setText(Formats.STRING.formatValue((String)taxcustcat[1]));
         m_jName.setEnabled(false);
     }    
 
@@ -89,7 +89,7 @@ public final class TaxCategoriesEditor extends JPanel implements EditorRecord {
 
         Object[] taxcustcat = (Object[]) value;
         m_oId = (String)taxcustcat[0];
-        m_jName.setText(Formats.STRING.formatValue(taxcustcat[1]));
+        m_jName.setText(Formats.STRING.formatValue((String)taxcustcat[1]));
         m_jName.setEnabled(true);
     }
 

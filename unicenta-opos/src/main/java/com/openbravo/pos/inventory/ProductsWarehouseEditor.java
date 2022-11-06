@@ -100,10 +100,10 @@ public class ProductsWarehouseEditor extends javax.swing.JPanel implements Edito
         prodref = myprod[2];
         prodname = myprod[3];
         location = myprod[4];
-        m_jTitle.setText(Formats.STRING.formatValue(myprod[2]) + " - " + Formats.STRING.formatValue(myprod[3]));
-        m_jQuantity.setText(Formats.DOUBLE.formatValue(myprod[7]));
-        m_jMinimum.setText(Formats.DOUBLE.formatValue(myprod[5]));
-        m_jMaximum.setText(Formats.DOUBLE.formatValue(myprod[6]));
+        m_jTitle.setText(Formats.STRING.formatValue((String)myprod[2]) + " - " + Formats.STRING.formatValue((String)myprod[3]));
+        m_jQuantity.setText(Formats.DOUBLE.formatValue((Double)myprod[7]));
+        m_jMinimum.setText(Formats.DOUBLE.formatValue((Double)myprod[5]));
+        m_jMaximum.setText(Formats.DOUBLE.formatValue((Double)myprod[6]));
         m_jMinimum.setEnabled(true);
         m_jMaximum.setEnabled(true);
      }
@@ -120,10 +120,10 @@ public class ProductsWarehouseEditor extends javax.swing.JPanel implements Edito
         prodref = myprod[2];
         prodname = myprod[3];
         location = myprod[4];
-        m_jTitle.setText(Formats.STRING.formatValue(myprod[2]) + " - " + Formats.STRING.formatValue(myprod[3]));
-        m_jQuantity.setText(Formats.DOUBLE.formatValue(myprod[7]));
-        m_jMinimum.setText(Formats.DOUBLE.formatValue(myprod[5]));
-        m_jMaximum.setText(Formats.DOUBLE.formatValue(myprod[6]));
+        m_jTitle.setText(Formats.STRING.formatValue((String)myprod[2]) + " - " + Formats.STRING.formatValue((String)myprod[3]));
+        m_jQuantity.setText(Formats.DOUBLE.formatValue((Double)myprod[7]));
+        m_jMinimum.setText(Formats.DOUBLE.formatValue((Double)myprod[5]));
+        m_jMaximum.setText(Formats.DOUBLE.formatValue((Double)myprod[6]));
         m_jMinimum.setEnabled(false);
         m_jMaximum.setEnabled(false);
     }

@@ -315,34 +315,7 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
     @Override
     public void writeValueDelete(Object value) {
 
-        Object[] customer = (Object[]) value;
-        m_oId = (String)customer[0];
-        m_jSearchkey.setText((String) customer[1]);
-        m_jTaxID.setText((String) customer[2]);
-        m_jName.setText((String) customer[3]);
-        m_CategoryModel.setSelectedKey(customer[4]);
-        jcard.setText((String) customer[5]);
-        txtMaxdebt.setText(Formats.CURRENCY.formatValue(customer[6]));
-        txtAddress.setText(Formats.STRING.formatValue(customer[7]));
-        txtAddress2.setText(Formats.STRING.formatValue(customer[8]));
-        txtPostal.setText(Formats.STRING.formatValue(customer[9]));
-        txtCity.setText(Formats.STRING.formatValue(customer[10]));
-        txtRegion.setText(Formats.STRING.formatValue(customer[11]));
-        txtCountry.setText(Formats.STRING.formatValue(customer[12]));
-        txtFirstName.setText(Formats.STRING.formatValue(customer[13]));
-        txtLastName.setText(Formats.STRING.formatValue(customer[14]));
-        txtEmail.setText(Formats.STRING.formatValue(customer[15]));
-        txtPhone.setText(Formats.STRING.formatValue(customer[16]));
-        txtPhone2.setText(Formats.STRING.formatValue(customer[17]));
-        txtFax.setText(Formats.STRING.formatValue(customer[18]));
-        m_jNotes.setText((String) customer[19]);
-        m_jVisible.setSelected(((Boolean) customer[20]));
-        txtCurdate.setText(Formats.DATE.formatValue(customer[21]));
-        txtCurdebt.setText(Formats.CURRENCY.formatValue(customer[22]));
-        m_jImage.setImage((BufferedImage) customer[23]);
-        m_jVip.setSelected(((Boolean) customer[24]));
-        txtDiscount.setText(Formats.DOUBLE.formatValue(customer[25]));
-        m_jdate.setText(Formats.DATE.formatValue(customer[26]));
+        setValues(value);
 
         m_jTaxID.setEnabled(false);
         m_jSearchkey.setEnabled(false);
@@ -385,6 +358,37 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
         repaint();
         refresh();
     }
+    
+    private void setValues(Object value){
+        Object[] customer = (Object[]) value;
+        m_oId = (String)customer[0];
+        m_jSearchkey.setText((String) customer[1]);
+        m_jTaxID.setText((String) customer[2]);
+        m_jName.setText((String) customer[3]);
+        m_CategoryModel.setSelectedKey(customer[4]);
+        jcard.setText((String) customer[5]);
+        txtMaxdebt.setText(Formats.CURRENCY.formatValue((Double)customer[6]));
+        txtAddress.setText(Formats.STRING.formatValue((String)customer[7]));
+        txtAddress2.setText(Formats.STRING.formatValue((String)customer[8]));
+        txtPostal.setText(Formats.STRING.formatValue((String)customer[9]));
+        txtCity.setText(Formats.STRING.formatValue((String)customer[10]));
+        txtRegion.setText(Formats.STRING.formatValue((String)customer[11]));
+        txtCountry.setText(Formats.STRING.formatValue((String)customer[12]));
+        txtFirstName.setText(Formats.STRING.formatValue((String)customer[13]));
+        txtLastName.setText(Formats.STRING.formatValue((String)customer[14]));
+        txtEmail.setText(Formats.STRING.formatValue((String)customer[15]));
+        txtPhone.setText(Formats.STRING.formatValue((String)customer[16]));
+        txtPhone2.setText(Formats.STRING.formatValue((String)customer[17]));
+        txtFax.setText(Formats.STRING.formatValue((String)customer[18]));
+        m_jNotes.setText((String) customer[19]);
+        m_jVisible.setSelected(((Boolean) customer[20]));
+        txtCurdate.setText(Formats.DATE.formatValue((Date)customer[21]));
+        txtCurdebt.setText(Formats.CURRENCY.formatValue((Double)customer[22]));
+        m_jImage.setImage((BufferedImage) customer[23]);
+        m_jVip.setSelected(((Boolean) customer[24]));
+        txtDiscount.setText(Formats.DOUBLE.formatValue((Double)customer[25]));
+        m_jdate.setText(Formats.DATE.formatValue((Date)customer[26]));
+    }
 
     /**
      * Edit object
@@ -393,35 +397,7 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
      */
     @Override
     public void writeValueEdit(Object value) {
-        Object[] customer = (Object[]) value;
-        m_oId = (String)customer[0];
-        m_jSearchkey.setText((String) customer[1]);
-        m_jTaxID.setText((String) customer[2]);
-        m_jName.setText((String) customer[3]);
-        m_CategoryModel.setSelectedKey(customer[4]);
-        jcard.setText((String) customer[5]);
-        txtMaxdebt.setText(Formats.CURRENCY.formatValue(customer[6]));
-        txtAddress.setText(Formats.STRING.formatValue(customer[7]));
-        txtAddress2.setText(Formats.STRING.formatValue(customer[8]));
-        txtPostal.setText(Formats.STRING.formatValue(customer[9]));
-        txtCity.setText(Formats.STRING.formatValue(customer[10]));
-        txtRegion.setText(Formats.STRING.formatValue(customer[11]));
-        txtCountry.setText(Formats.STRING.formatValue(customer[12]));
-        txtFirstName.setText(Formats.STRING.formatValue(customer[13]));
-        txtLastName.setText(Formats.STRING.formatValue(customer[14]));
-        txtEmail.setText(Formats.STRING.formatValue(customer[15]));
-        txtPhone.setText(Formats.STRING.formatValue(customer[16]));
-        txtPhone2.setText(Formats.STRING.formatValue(customer[17]));
-        txtFax.setText(Formats.STRING.formatValue(customer[18]));
-        m_jNotes.setText((String) customer[19]);
-        m_jVisible.setSelected(((Boolean) customer[20]));
-        txtCurdate.setText(Formats.DATE.formatValue(customer[21]));
-        txtCurdebt.setText(Formats.CURRENCY.formatValue(customer[22]));
-        m_jImage.setImage((BufferedImage) customer[23]);
-        m_jVip.setSelected(((Boolean) customer[24]));
-        txtDiscount.setText(Formats.DOUBLE.formatValue(customer[25]));
-
-        m_jdate.setText(Formats.DATE.formatValue(customer[26]));
+        setValues(value);
 
         m_jTaxID.setEnabled(true);
         m_jSearchkey.setEnabled(true);

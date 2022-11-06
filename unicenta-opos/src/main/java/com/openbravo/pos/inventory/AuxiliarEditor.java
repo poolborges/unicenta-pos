@@ -133,9 +133,9 @@ public class AuxiliarEditor extends javax.swing.JPanel implements EditorRecord {
         product = (String)obj[1];
         product2 = (String)obj[2];
         name = (String)obj[5];
-        m_jReference.setText(Formats.STRING.formatValue(obj[3]));
-        m_jBarcode.setText(Formats.STRING.formatValue(obj[4]));
-        m_jProduct.setText(Formats.STRING.formatValue(obj[3]) + " - " + Formats.STRING.formatValue(obj[5]));        
+        m_jReference.setText(Formats.STRING.formatValue((String)obj[3]));
+        m_jBarcode.setText(Formats.STRING.formatValue((String)obj[4]));
+        m_jProduct.setText(Formats.STRING.formatValue((String)obj[3]) + " - " + Formats.STRING.formatValue((String)obj[5]));        
 
         m_jReference.setEnabled(true);
         m_jBarcode.setEnabled(true);
@@ -157,9 +157,9 @@ public class AuxiliarEditor extends javax.swing.JPanel implements EditorRecord {
         product = (String)obj[1];
         product2 = (String)obj[2];
         name = (String)obj[5];
-        m_jReference.setText(Formats.STRING.formatValue(obj[3]));
-        m_jBarcode.setText(Formats.STRING.formatValue(obj[4]));
-        m_jProduct.setText(Formats.STRING.formatValue(obj[3]) + " - " + Formats.STRING.formatValue(obj[5]));        
+        m_jReference.setText(Formats.STRING.formatValue((String)obj[3]));
+        m_jBarcode.setText(Formats.STRING.formatValue((String)obj[4]));
+        m_jProduct.setText(Formats.STRING.formatValue((String)obj[3]) + " - " + Formats.STRING.formatValue((String)obj[5]));        
 
         
         m_jReference.setEnabled(false);

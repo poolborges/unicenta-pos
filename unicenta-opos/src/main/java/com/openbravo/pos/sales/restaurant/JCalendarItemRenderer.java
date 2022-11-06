@@ -27,6 +27,7 @@ import java.awt.Insets;
 
 import java.io.Serializable;
 import com.openbravo.format.Formats;
+import java.util.Date;
 
 /**
  *
@@ -85,11 +86,11 @@ public class JCalendarItemRenderer extends javax.swing.JPanel implements ListCel
             m_jDescription.setText("");
         } else {
             Object[] avalue = (Object []) value;
-            m_jTime.setText(Formats.TIME.formatValue(avalue[2]));
-            m_jTitle.setText(Formats.STRING.formatValue(avalue[6]));
-            m_jChairs.setText(Formats.INT.formatValue(avalue[7]));
+            m_jTime.setText(Formats.TIME.formatValue((Date)avalue[2]));
+            m_jTitle.setText(Formats.STRING.formatValue((String)avalue[6]));
+            m_jChairs.setText(Formats.INT.formatValue((Integer)avalue[7]));
             m_bDone = ((Boolean) avalue[8]).booleanValue();
-            m_jDescription.setText(Formats.STRING.formatValue(avalue[9]));
+            m_jDescription.setText(Formats.STRING.formatValue((String)avalue[9]));
         }
 
         setEnabled(list.isEnabled());

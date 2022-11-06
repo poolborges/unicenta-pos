@@ -97,7 +97,7 @@ public class AttributeValuesEditor extends javax.swing.JPanel implements EditorR
 
         id = (String)obj[0];
         attid = (String)obj[1];
-        jValue.setText(Formats.STRING.formatValue(obj[2]));
+        jValue.setText(Formats.STRING.formatValue((String)obj[2]));
 
         jValue.setEnabled(true);
     }
@@ -113,7 +113,7 @@ public class AttributeValuesEditor extends javax.swing.JPanel implements EditorR
 
         id = (String)obj[0];
         attid = (String)obj[1];
-        jValue.setText(Formats.STRING.formatValue(obj[2]));
+        jValue.setText(Formats.STRING.formatValue((String)obj[2]));
 
         jValue.setEnabled(false);
     }

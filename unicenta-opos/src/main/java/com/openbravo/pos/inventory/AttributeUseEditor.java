@@ -132,7 +132,7 @@ public class AttributeUseEditor extends javax.swing.JPanel implements EditorReco
         id = (String)obj[0];
         attuseid = (String)obj[1];
         attributemodel.setSelectedKey(obj[2]);
-        jLineno.setText(Formats.INT.formatValue(obj[3]));
+        jLineno.setText(Formats.INT.formatValue((Integer)obj[3]));
 
         jAttribute.setEnabled(true);
         jLineno.setEnabled(true);
@@ -150,7 +150,7 @@ public class AttributeUseEditor extends javax.swing.JPanel implements EditorReco
         id = (String)obj[0];
         attuseid = (String)obj[1];
         attributemodel.setSelectedKey(obj[2]);
-        jLineno.setText(Formats.INT.formatValue(obj[3]));
+        jLineno.setText(Formats.INT.formatValue((Integer)obj[3]));
 
         jAttribute.setEnabled(false);
         jLineno.setEnabled(false);

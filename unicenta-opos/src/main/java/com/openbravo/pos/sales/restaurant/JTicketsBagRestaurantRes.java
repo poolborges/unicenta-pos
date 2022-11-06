@@ -221,7 +221,7 @@ public class JTicketsBagRestaurantRes extends javax.swing.JPanel implements Edit
         assignCustomer(c);        
         m_jtxtChairs.setValueInteger(((Integer)res[7]).intValue());
         m_bReceived = ((Boolean)res[8]).booleanValue();
-        m_jtxtDescription.setText(Formats.STRING.formatValue(res[9]));
+        m_jtxtDescription.setText(Formats.STRING.formatValue((String)res[9]));
         m_timereservation.setEnabled(false);
         txtCustomer.setEnabled(false);
         m_jtxtChairs.setEnabled(false);
@@ -249,7 +249,7 @@ public class JTicketsBagRestaurantRes extends javax.swing.JPanel implements Edit
         assignCustomer(c);  
         m_jtxtChairs.setValueInteger(((Integer)res[7]).intValue());
         m_bReceived = ((Boolean)res[8]).booleanValue();
-        m_jtxtDescription.setText(Formats.STRING.formatValue(res[9]));
+        m_jtxtDescription.setText(Formats.STRING.formatValue((String)res[9]));
         m_timereservation.setEnabled(true);
         txtCustomer.setEnabled(true);
         m_jtxtChairs.setEnabled(true);

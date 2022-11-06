@@ -170,7 +170,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
 
         String content = new String();
         try {
-            content = Formats.BYTEA.formatValue(m_rolepermissions.find(sRole));
+            content = Formats.BYTEA.formatValue((byte[])m_rolepermissions.find(sRole));
         } catch (BasicException e) {
             LOGGER.log(Level.SEVERE, "Exception on format permissions for role: " + sRole, e);
         }

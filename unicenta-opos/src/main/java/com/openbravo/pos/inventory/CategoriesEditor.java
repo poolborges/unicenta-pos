@@ -169,12 +169,12 @@ public final class CategoriesEditor extends JPanel implements EditorRecord {
     public void writeValueDelete(Object value) {
         Object[] cat = (Object[]) value;
         m_id = (String) cat[0];
-        m_jName.setText(Formats.STRING.formatValue(cat[1]));
+        m_jName.setText(Formats.STRING.formatValue((String)cat[1]));
         m_CategoryModel.setSelectedKey(cat[2]);
         m_jImage.setImage((BufferedImage) cat[3]);
-        m_jTextTip.setText(Formats.STRING.formatValue(cat[4]));
+        m_jTextTip.setText(Formats.STRING.formatValue((String)cat[4]));
         m_jCatNameShow.setSelected(((Boolean)cat[5]));
-        m_jCatOrder.setText(Formats.STRING.formatValue(cat[6]));
+        m_jCatOrder.setText(Formats.STRING.formatValue((String)cat[6]));
         
         m_jName.setEnabled(false);
         m_jCategory.setEnabled(false);
@@ -196,16 +196,16 @@ public final class CategoriesEditor extends JPanel implements EditorRecord {
     public void writeValueEdit(Object value) {
         Object[] cat = (Object[]) value;
         m_id = (String) cat[0];
-        m_jName.setText(Formats.STRING.formatValue(cat[1]));
+        m_jName.setText(Formats.STRING.formatValue((String)cat[1]));
         m_CategoryModel.setSelectedKey(cat[2]);
         m_jImage.setImage((BufferedImage) cat[3]);
-        m_jTextTip.setText(Formats.STRING.formatValue(cat[4])); 
+        m_jTextTip.setText(Formats.STRING.formatValue((String)cat[4])); 
         m_jCatNameShow.setSelected(((Boolean)cat[5]));
+        m_jCatOrder.setText(Formats.STRING.formatValue((String)cat [6]));
 
         if(m_jCatOrder.getText().length() == 0) {    
             m_jCatOrder.setText(null);        
         }
-        m_jCatOrder.setText(Formats.STRING.formatValue(cat [6]));
 
         m_jName.setEnabled(true);
         m_jCategory.setEnabled(true);

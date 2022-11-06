@@ -64,8 +64,8 @@ public final class RolesView extends javax.swing.JPanel implements EditorRecord 
 
         Object[] role = (Object[]) value;
         m_oId = (String)role[0];
-        m_jName.setText(Formats.STRING.formatValue(role[1]));
-        m_jText.setText(Formats.BYTEA.formatValue(role[2]));
+        m_jName.setText(Formats.STRING.formatValue((String)role[1]));
+        m_jText.setText(Formats.BYTEA.formatValue((byte[])role[2]));
         m_jText.setCaretPosition(0);
         m_jName.setEnabled(false);
         m_jText.setEnabled(false);
@@ -76,8 +76,8 @@ public final class RolesView extends javax.swing.JPanel implements EditorRecord 
 
         Object[] role = (Object[]) value;
         m_oId = (String)role[0];
-        m_jName.setText(Formats.STRING.formatValue(role[1]));
-        m_jText.setText(Formats.BYTEA.formatValue(role[2]));
+        m_jName.setText(Formats.STRING.formatValue((String)role[1]));
+        m_jText.setText(Formats.BYTEA.formatValue((byte[])role[2]));
         m_jText.setCaretPosition(0);
         m_jName.setEnabled(true);
         m_jText.setEnabled(true);

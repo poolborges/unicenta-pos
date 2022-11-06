@@ -84,9 +84,9 @@ public final class LocationsView extends javax.swing.JPanel implements EditorRec
     public void writeValueDelete(Object value) {
         
         Object[] location = (Object[]) value;
-        m_sID = Formats.STRING.formatValue(location[0]);
-        m_jName.setText(Formats.STRING.formatValue(location[1]));
-        m_jAddress.setText(Formats.STRING.formatValue(location[2]));
+        m_sID = Formats.STRING.formatValue((String)location[0]);
+        m_jName.setText(Formats.STRING.formatValue((String)location[1]));
+        m_jAddress.setText(Formats.STRING.formatValue((String)location[2]));
 
         m_jName.setEnabled(false);
         m_jAddress.setEnabled(false);
@@ -100,9 +100,9 @@ public final class LocationsView extends javax.swing.JPanel implements EditorRec
     public void writeValueEdit(Object value) {
         
         Object[] location = (Object[]) value;
-        m_sID = Formats.STRING.formatValue(location[0]);
-        m_jName.setText(Formats.STRING.formatValue(location[1]));
-        m_jAddress.setText(Formats.STRING.formatValue(location[2]));
+        m_sID = Formats.STRING.formatValue((String)location[0]);
+        m_jName.setText(Formats.STRING.formatValue((String)location[1]));
+        m_jAddress.setText(Formats.STRING.formatValue((String)location[2]));
 
         m_jName.setEnabled(true);
         m_jAddress.setEnabled(true);

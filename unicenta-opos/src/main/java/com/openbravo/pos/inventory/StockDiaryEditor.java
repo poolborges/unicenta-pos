@@ -251,13 +251,13 @@ public final class StockDiaryEditor extends javax.swing.JPanel implements Editor
     public void writeValueDelete(Object value) {
         Object[] diary = (Object[]) value;
         m_sID = (String) diary[0];
-        m_jdate.setText(Formats.TIMESTAMP.formatValue(diary[1]));
+        m_jdate.setText(Formats.TIMESTAMP.formatValue((Date)diary[1]));
         m_ReasonModel.setSelectedKey(diary[2]);
         m_LocationsModel.setSelectedKey(diary[3]);
         productid = (String) diary[4];
         attsetinstid = (String) diary[5];
         m_junits.setText(Formats.DOUBLE.formatValue(signum((Double) diary[6], (Integer) diary[2])));
-        m_jprice.setText(Formats.CURRENCY.formatValue(diary[7]));
+        m_jprice.setText(Formats.CURRENCY.formatValue((Double)diary[7]));
         productref = (String) diary[8];
         productcode = (String) diary[9];
         productname =(String) diary[10];
@@ -297,13 +297,13 @@ public final class StockDiaryEditor extends javax.swing.JPanel implements Editor
     public void writeValueEdit(Object value) {
         Object[] diary = (Object[]) value;
         m_sID = (String) diary[0];
-        m_jdate.setText(Formats.TIMESTAMP.formatValue(diary[1]));
+        m_jdate.setText(Formats.TIMESTAMP.formatValue((Date)diary[1]));
         m_ReasonModel.setSelectedKey(diary[2]);
         m_LocationsModel.setSelectedKey(diary[3]);
         productid = (String) diary[4];
         attsetinstid = (String) diary[5];
         m_junits.setText(Formats.DOUBLE.formatValue(signum((Double) diary[6], (Integer) diary[2])));
-        m_jprice.setText(Formats.CURRENCY.formatValue(diary[7]));
+        m_jprice.setText(Formats.CURRENCY.formatValue((Double)diary[7]));
         sAppUser = (String) diary[8];
         productref = (String) diary[9];
         productcode = (String) diary[10];

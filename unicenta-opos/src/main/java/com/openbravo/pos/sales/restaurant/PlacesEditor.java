@@ -122,11 +122,11 @@ public final class PlacesEditor extends JPanel implements EditorRecord {
     public void writeValueDelete(Object value) {
         
         Object[] place = (Object[]) value;
-        m_sID = Formats.STRING.formatValue(place[0]);
-        m_jName.setText(Formats.STRING.formatValue(place[1]));
-        m_jSeats.setText(Formats.STRING.formatValue(place[2]));        
-        m_jX.setText(Formats.INT.formatValue(place[3]));
-        m_jY.setText(Formats.INT.formatValue(place[4]));
+        m_sID = Formats.STRING.formatValue((String)place[0]);
+        m_jName.setText(Formats.STRING.formatValue((String)place[1]));
+        m_jSeats.setText(Formats.STRING.formatValue((String)place[2]));        
+        m_jX.setText(Formats.INT.formatValue((Integer)place[3]));
+        m_jY.setText(Formats.INT.formatValue((Integer)place[4]));
         m_FloorModel.setSelectedKey(place[5]);
         
 
@@ -145,11 +145,11 @@ public final class PlacesEditor extends JPanel implements EditorRecord {
     public void writeValueEdit(Object value) {
         
         Object[] place = (Object[]) value;
-        m_sID = Formats.STRING.formatValue(place[0]);
-        m_jName.setText(Formats.STRING.formatValue(place[1]));
-        m_jSeats.setText(Formats.STRING.formatValue(place[2]));        
-        m_jX.setText(Formats.INT.formatValue(place[3]));
-        m_jY.setText(Formats.INT.formatValue(place[4]));
+        m_sID = Formats.STRING.formatValue((String)place[0]);
+        m_jName.setText(Formats.STRING.formatValue((String)place[1]));
+        m_jSeats.setText(Formats.STRING.formatValue((String)place[2]));        
+        m_jX.setText(Formats.INT.formatValue((Integer)place[3]));
+        m_jY.setText(Formats.INT.formatValue((Integer)place[4]));
         m_FloorModel.setSelectedKey(place[5]);
 
         m_jName.setEnabled(true);

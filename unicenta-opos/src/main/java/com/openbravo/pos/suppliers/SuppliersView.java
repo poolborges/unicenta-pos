@@ -253,34 +253,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
     @Override
     public void writeValueDelete(Object value) {
 
-        Object[] supplier = (Object[]) value;
-        m_oId = (String)supplier[0];
-        m_jSearchkey.setText((String) supplier[1]);
-        m_jTaxID.setText((String) supplier[2]);
-        m_jName.setText((String) supplier[3]);
-        txtMaxdebt.setText(Formats.CURRENCY.formatValue(supplier[4]));
-
-        txtAddress.setText(Formats.STRING.formatValue(supplier[5]));
-        txtAddress2.setText(Formats.STRING.formatValue(supplier[6]));
-        txtPostal.setText(Formats.STRING.formatValue(supplier[7]));
-        txtCity.setText(Formats.STRING.formatValue(supplier[8]));
-        txtRegion.setText(Formats.STRING.formatValue(supplier[9]));
-        txtCountry.setText(Formats.STRING.formatValue(supplier[10]));
-
-        txtFirstName.setText(Formats.STRING.formatValue(supplier[11]));
-        txtLastName.setText(Formats.STRING.formatValue(supplier[12]));
-        txtEmail.setText(Formats.STRING.formatValue(supplier[13]));
-        txtPhone.setText(Formats.STRING.formatValue(supplier[14]));
-        txtPhone2.setText(Formats.STRING.formatValue(supplier[15]));
-        txtFax.setText(Formats.STRING.formatValue(supplier[16]));
-
-        m_jNotes.setText((String) supplier[17]);
-        m_jVisible.setSelected(((Boolean) supplier[18]));
-
-        txtCurdate.setText(Formats.DATE.formatValue(supplier[19]));
-        txtCurdebt.setText(Formats.CURRENCY.formatValue(supplier[20]));
-
-        m_jVATID.setText((String) supplier[21]);
+        setValues(value);
 
         m_jTaxID.setEnabled(false);
         m_jVATID.setEnabled(false);
@@ -315,6 +288,37 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
         refresh();
 
     }
+    
+    private void setValues(Object value){
+    Object[] supplier = (Object[]) value;
+        m_oId = (String)supplier[0];
+        m_jSearchkey.setText((String) supplier[1]);
+        m_jTaxID.setText((String) supplier[2]);
+        m_jName.setText((String) supplier[3]);
+        txtMaxdebt.setText(Formats.CURRENCY.formatValue((Double)supplier[4]));
+
+        txtAddress.setText(Formats.STRING.formatValue((String)supplier[5]));
+        txtAddress2.setText(Formats.STRING.formatValue((String)supplier[6]));
+        txtPostal.setText(Formats.STRING.formatValue((String)supplier[7]));
+        txtCity.setText(Formats.STRING.formatValue((String)supplier[8]));
+        txtRegion.setText(Formats.STRING.formatValue((String)supplier[9]));
+        txtCountry.setText(Formats.STRING.formatValue((String)supplier[10]));
+
+        txtFirstName.setText(Formats.STRING.formatValue((String)supplier[11]));
+        txtLastName.setText(Formats.STRING.formatValue((String)supplier[12]));
+        txtEmail.setText(Formats.STRING.formatValue((String)supplier[13]));
+        txtPhone.setText(Formats.STRING.formatValue((String)supplier[14]));
+        txtPhone2.setText(Formats.STRING.formatValue((String)supplier[15]));
+        txtFax.setText(Formats.STRING.formatValue((String)supplier[16]));
+
+        m_jNotes.setText((String) supplier[17]);
+        m_jVisible.setSelected(((Boolean) supplier[18]));
+
+        txtCurdate.setText(Formats.DATE.formatValue((Date)supplier[19]));
+        txtCurdebt.setText(Formats.CURRENCY.formatValue((Double)supplier[20]));
+
+        m_jVATID.setText((String) supplier[21]);
+    }
 
     /**
      * Edit object
@@ -323,32 +327,8 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
      */
     @Override
     public void writeValueEdit(Object value) {
-        Object[] supplier = (Object[]) value;
-        m_oId = (String)supplier[0];
-        m_jSearchkey.setText((String) supplier[1]);
-        m_jTaxID.setText((String) supplier[2]);
-        m_jName.setText((String) supplier[3]);
-        txtMaxdebt.setText(Formats.CURRENCY.formatValue(supplier[4]));
-
-        txtAddress.setText(Formats.STRING.formatValue(supplier[5]));
-        txtAddress2.setText(Formats.STRING.formatValue(supplier[6]));
-        txtPostal.setText(Formats.STRING.formatValue(supplier[7]));
-        txtCity.setText(Formats.STRING.formatValue(supplier[8]));
-        txtRegion.setText(Formats.STRING.formatValue(supplier[9]));
-        txtCountry.setText(Formats.STRING.formatValue(supplier[10]));
-        txtFirstName.setText(Formats.STRING.formatValue(supplier[11]));
-        txtLastName.setText(Formats.STRING.formatValue(supplier[12]));
-        txtEmail.setText(Formats.STRING.formatValue(supplier[13]));
-        txtPhone.setText(Formats.STRING.formatValue(supplier[14]));
-        txtPhone2.setText(Formats.STRING.formatValue(supplier[15]));
-        txtFax.setText(Formats.STRING.formatValue(supplier[16]));
-
-        m_jNotes.setText((String) supplier[17]);
-        m_jVisible.setSelected(((Boolean) supplier[18]));
-        txtCurdate.setText(Formats.DATE.formatValue(supplier[19]));
-        txtCurdebt.setText(Formats.CURRENCY.formatValue(supplier[20]));
-
-        m_jVATID.setText((String) supplier[21]);
+        
+        setValues(value);
 
         m_jSearchkey.setEnabled(true);
         m_jTaxID.setEnabled(true);

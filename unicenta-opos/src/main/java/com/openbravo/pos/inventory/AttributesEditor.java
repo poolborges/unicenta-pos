@@ -71,7 +71,7 @@ public final class AttributesEditor extends javax.swing.JPanel implements Editor
 
         Object[] attr = (Object[]) value;
         id = (String)attr[0];
-        m_jName.setText(Formats.STRING.formatValue(attr[1]));
+        m_jName.setText(Formats.STRING.formatValue((String)attr[1]));
         m_jName.setEnabled(false);
     }    
 
@@ -84,7 +84,7 @@ public final class AttributesEditor extends javax.swing.JPanel implements Editor
 
         Object[] attr = (Object[]) value;
         id = (String)attr[0];
-        m_jName.setText(Formats.STRING.formatValue(attr[1]));
+        m_jName.setText(Formats.STRING.formatValue((String)attr[1]));
         m_jName.setEnabled(true);
     }
 

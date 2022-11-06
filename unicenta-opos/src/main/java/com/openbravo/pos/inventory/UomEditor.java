@@ -118,7 +118,7 @@ public final class UomEditor extends javax.swing.JPanel implements EditorRecord 
         Object[] obj = (Object[]) value;
         
         m_id = (String)obj[0];
-        m_jName.setText(Formats.STRING.formatValue(obj[1]));
+        m_jName.setText(Formats.STRING.formatValue((String)obj[1]));
         m_jName.setEnabled(true);
         
     }
@@ -128,7 +128,7 @@ public final class UomEditor extends javax.swing.JPanel implements EditorRecord 
         Object[] obj = (Object[]) value;
         
         m_id = (String)obj[0];
-        m_jName.setText(Formats.STRING.formatValue(obj[1]));
+        m_jName.setText(Formats.STRING.formatValue((String)obj[1]));
         m_jName.setEnabled(false);
         
     }

@@ -136,7 +136,7 @@ public final class ResourcesView extends JPanel implements EditorRecord {
         
         ResourceType restype = (ResourceType) m_ResourceModel.getSelectedItem();
         if (restype == ResourceType.TEXT) {
-            m_RSyntaxTextArea.setText(Formats.BYTEA.formatValue(resource[3]));
+            m_RSyntaxTextArea.setText(Formats.BYTEA.formatValue((byte[])resource[3]));
             m_RSyntaxTextArea.setSyntaxEditingStyle(getResourceSyntaxStyle(m_RSyntaxTextArea.getText()));
             m_RSyntaxTextArea.setCaretPosition(0);
             
@@ -176,7 +176,7 @@ public final class ResourcesView extends JPanel implements EditorRecord {
         ResourceType restype = (ResourceType) m_ResourceModel.getSelectedItem();
         if (restype == ResourceType.TEXT) {
             
-            m_RSyntaxTextArea.setText(Formats.BYTEA.formatValue(resource[3]));
+            m_RSyntaxTextArea.setText(Formats.BYTEA.formatValue((byte[])resource[3]));
             m_RSyntaxTextArea.setSyntaxEditingStyle(getResourceSyntaxStyle(m_RSyntaxTextArea.getText()));
             m_RSyntaxTextArea.setCaretPosition(0);
             

@@ -83,8 +83,8 @@ public final class FloorsEditor extends JPanel implements EditorRecord {
     public void writeValueDelete(Object value) {
         
         Object[] floor = (Object[]) value;
-        m_sID = Formats.STRING.formatValue(floor[0]);
-        m_jName.setText(Formats.STRING.formatValue(floor[1]));
+        m_sID = Formats.STRING.formatValue((String)floor[0]);
+        m_jName.setText(Formats.STRING.formatValue((String)floor[1]));
         m_jImage.setImage((BufferedImage) floor[2]);
 
         m_jName.setEnabled(false);
@@ -99,8 +99,8 @@ public final class FloorsEditor extends JPanel implements EditorRecord {
     public void writeValueEdit(Object value) {
         
         Object[] floor = (Object[]) value;
-        m_sID = Formats.STRING.formatValue(floor[0]);
-        m_jName.setText(Formats.STRING.formatValue(floor[1]));
+        m_sID = Formats.STRING.formatValue((String)floor[0]);
+        m_jName.setText(Formats.STRING.formatValue((String)floor[1]));
         m_jImage.setImage((BufferedImage) floor[2]);
 
         m_jName.setEnabled(true);

@@ -113,14 +113,14 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
         try {
             Object[] attr = (Object[]) value;
             id = (String)attr[0];
-            m_jNumber.setText(Formats.STRING.formatValue(attr[1]));
+            m_jNumber.setText(Formats.STRING.formatValue((String)attr[1]));
             m_jNumber.setEnabled(false);
             customerInfo = dlCustomers.getCustomerInfo(attr[2].toString());
             m_jCustomer.setText(customerInfo.getName());
             m_jCustomer.setEnabled(false);
-            m_jAmount.setText(Formats.DOUBLE.formatValue(attr[3]));
+            m_jAmount.setText(Formats.DOUBLE.formatValue((Double)attr[3]));
             m_jAmount.setEnabled(false);
-            m_jStatus.setText(Formats.STRING.formatValue(attr[4]));
+            m_jStatus.setText(Formats.STRING.formatValue((String)attr[4]));
             m_jStatus.setEnabled(false);
             
             jButtonPrint.setEnabled(false);
@@ -141,14 +141,14 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
         try {
             Object[] attr = (Object[]) value;
             id = (String)attr[0];
-            m_jNumber.setText(Formats.STRING.formatValue(attr[1]));
+            m_jNumber.setText(Formats.STRING.formatValue((String)attr[1]));
             m_jNumber.setEnabled(true);
             customerInfo = dlCustomers.getCustomerInfo(attr[2].toString());
             m_jCustomer.setText(customerInfo.getName());
             m_jCustomer.setEnabled(true);
-            m_jAmount.setText(Formats.DOUBLE.formatValue(attr[3]));
+            m_jAmount.setText(Formats.DOUBLE.formatValue((Double)attr[3]));
             m_jAmount.setEnabled(true);
-            m_jStatus.setText(Formats.STRING.formatValue(attr[4]));
+            m_jStatus.setText(Formats.STRING.formatValue((String)attr[4]));
             
             jButtonPrint.setEnabled(true);
             

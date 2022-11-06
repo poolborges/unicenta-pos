@@ -137,11 +137,11 @@ public class PeopleView extends JPanel implements EditorRecord<Object> {
     public void writeValueDelete(Object value) {
         Object[] people = (Object[]) value;
         m_oId = (String)people[0];
-        m_jName.setText(Formats.STRING.formatValue(people[1]));
-        m_sPassword = Formats.STRING.formatValue(people[2]);
+        m_jName.setText(Formats.STRING.formatValue((String)people[1]));
+        m_sPassword = Formats.STRING.formatValue((String)people[2]);
         m_RoleModel.setSelectedKey(people[3]);
         m_jVisible.setSelected(((Boolean) people[4]));
-        m_jcard.setText(Formats.STRING.formatValue(people[5]));
+        m_jcard.setText(Formats.STRING.formatValue((String)people[5]));
         m_jImage.setImage((BufferedImage) people[6]);
         
         disableFields();
@@ -155,11 +155,11 @@ public class PeopleView extends JPanel implements EditorRecord<Object> {
     public void writeValueEdit(Object value) {
         Object[] people = (Object[]) value;
         m_oId = (String)people[0];
-        m_jName.setText(Formats.STRING.formatValue(people[1]));
-        m_sPassword = Formats.STRING.formatValue(people[2]);
+        m_jName.setText(Formats.STRING.formatValue((String)people[1]));
+        m_sPassword = Formats.STRING.formatValue((String)people[2]);
         m_RoleModel.setSelectedKey(people[3]);
         m_jVisible.setSelected(((Boolean) people[4]));
-        m_jcard.setText(Formats.STRING.formatValue(people[5]));
+        m_jcard.setText(Formats.STRING.formatValue((String)people[5]));
         m_jImage.setImage((BufferedImage) people[6]);
         
         if (m_jcard.getText().length() == 16) {

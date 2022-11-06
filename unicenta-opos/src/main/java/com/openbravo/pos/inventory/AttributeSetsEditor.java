@@ -71,7 +71,7 @@ public final class AttributeSetsEditor extends javax.swing.JPanel implements Edi
 
         Object[] attrset = (Object[]) value;
         id = (String)attrset[0];
-        m_jName.setText(Formats.STRING.formatValue(attrset[1]));
+        m_jName.setText(Formats.STRING.formatValue((String)attrset[1]));
         m_jName.setEnabled(false);
     }
 
@@ -84,7 +84,7 @@ public final class AttributeSetsEditor extends javax.swing.JPanel implements Edi
 
         Object[] attrset = (Object[]) value;
         id = (String)attrset[0];
-        m_jName.setText(Formats.STRING.formatValue(attrset[1]));
+        m_jName.setText(Formats.STRING.formatValue((String)attrset[1]));
         m_jName.setEnabled(true);
     }
 

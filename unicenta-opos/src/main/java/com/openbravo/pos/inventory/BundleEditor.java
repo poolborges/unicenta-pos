@@ -123,10 +123,10 @@ public class BundleEditor extends javax.swing.JPanel implements EditorRecord {
         productBundle = (String)obj[2];
         quantity = (double)obj[3];
         name = (String)obj[6];
-        m_jReference.setText(Formats.STRING.formatValue(obj[4]));
-        m_jBarcode.setText(Formats.STRING.formatValue(obj[5]));
-        m_jProduct.setText(Formats.STRING.formatValue(obj[4]) + " - " + Formats.STRING.formatValue(obj[6]));        
-        m_jQuantity.setText(Formats.DOUBLE.formatValue(obj[3]));
+        m_jReference.setText(Formats.STRING.formatValue((String)obj[4]));
+        m_jBarcode.setText(Formats.STRING.formatValue((String)obj[5]));
+        m_jProduct.setText(Formats.STRING.formatValue((String)obj[4]) + " - " + Formats.STRING.formatValue((String)obj[6]));        
+        m_jQuantity.setText(Formats.DOUBLE.formatValue((Double)obj[3]));
         
         m_jReference.setEnabled(true);
         m_jBarcode.setEnabled(true);
@@ -146,10 +146,10 @@ public class BundleEditor extends javax.swing.JPanel implements EditorRecord {
         productBundle = (String)obj[2];
         quantity = (double)obj[3];
         name = (String)obj[6];
-        m_jReference.setText(Formats.STRING.formatValue(obj[4]));
-        m_jBarcode.setText(Formats.STRING.formatValue(obj[5]));
-        m_jProduct.setText(Formats.STRING.formatValue(obj[4]) + " - " + Formats.STRING.formatValue(obj[6]));        
-        m_jQuantity.setText(Formats.DOUBLE.formatValue(obj[3]));
+        m_jReference.setText(Formats.STRING.formatValue((String)obj[4]));
+        m_jBarcode.setText(Formats.STRING.formatValue((String)obj[5]));
+        m_jProduct.setText(Formats.STRING.formatValue((String)obj[4]) + " - " + Formats.STRING.formatValue((String)obj[6]));        
+        m_jQuantity.setText(Formats.DOUBLE.formatValue((Double)obj[3]));
         
         m_jReference.setEnabled(false);
         m_jBarcode.setEnabled(false);

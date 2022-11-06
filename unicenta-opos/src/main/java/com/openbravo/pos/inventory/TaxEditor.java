@@ -176,13 +176,13 @@ public class TaxEditor extends JPanel implements EditorRecord {
 
         Object[] tax = (Object[]) value;
         m_oId = (String)tax[0];
-        m_jName.setText(Formats.STRING.formatValue(tax[1]));
+        m_jName.setText(Formats.STRING.formatValue((String)tax[1]));
         taxcatmodel.setSelectedKey(tax[2]);
         taxcustcatmodel.setSelectedKey(tax[3]);
         taxparentmodel.setSelectedKey(tax[4]);        
-        m_jRate.setText(Formats.PERCENT.formatValue(tax[5]));
+        m_jRate.setText(Formats.PERCENT.formatValue((Double)tax[5]));
         jCascade.setSelected((Boolean) tax[6]);
-        jOrder.setText(Formats.INT.formatValue(tax[7]));
+        jOrder.setText(Formats.INT.formatValue((Integer)tax[7]));
         
         m_jName.setEnabled(false);
         m_jTaxCategory.setEnabled(false);
@@ -202,13 +202,13 @@ public class TaxEditor extends JPanel implements EditorRecord {
 
         Object[] tax = (Object[]) value;
         m_oId = (String)tax[0];
-        m_jName.setText(Formats.STRING.formatValue(tax[1]));
+        m_jName.setText(Formats.STRING.formatValue((String)tax[1]));
         taxcatmodel.setSelectedKey(tax[2]);
         taxcustcatmodel.setSelectedKey(tax[3]);
         taxparentmodel.setSelectedKey(tax[4]);        
-        m_jRate.setText(Formats.PERCENT.formatValue(tax[5]));
+        m_jRate.setText(Formats.PERCENT.formatValue((Double)tax[5]));
         jCascade.setSelected((Boolean) tax[6]);
-        jOrder.setText(Formats.INT.formatValue(tax[7]));
+        jOrder.setText(Formats.INT.formatValue((Integer)tax[7]));
       
         m_jName.setEnabled(true);
         m_jTaxCategory.setEnabled(true);
