@@ -17,6 +17,7 @@
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
+import java.util.logging.Logger;
 
 /**
  *
@@ -24,6 +25,7 @@ import com.openbravo.basic.BasicException;
  */
 public class QBFBuilder implements ISQLBuilderStatic {
    
+    private static final Logger LOGGER = Logger.getLogger("com.openbravo.data.loader.QBFBuilder");
     private final String m_sSentNullFilter;     // la sentencia que se devuelve cuando el filtro es vacio
     private final String m_sSentBeginPart;      // La sentencia que se devuelve es m_sSentBeginPart + ( filtro ) + m_sSentEndPart
     private final String m_sSentEndPart;
@@ -108,43 +110,43 @@ public class QBFBuilder implements ISQLBuilderStatic {
         }
         
         @Override
-        public void setDouble(int paramIndex, Double dValue) throws BasicException {
+        public void setDouble(int paramIndex, Double value) throws BasicException {
             if ((paramIndex - 1) % 2 == 0) {
-                throw new BasicException(LocalRes.getIntString("exception.nocompare"));
+                throw new BasicException(exceptionMessage(paramIndex, value));
             } else {
-                m_aParams[(paramIndex - 1) / 2] = DataWriteUtils.getSQLValue(dValue);
+                m_aParams[(paramIndex - 1) / 2] = DataWriteUtils.getSQLValue(value);
             }
         }        
         @Override
-        public void setBoolean(int paramIndex, Boolean bValue) throws BasicException {
+        public void setBoolean(int paramIndex, Boolean value) throws BasicException {
             if ((paramIndex - 1) % 2 == 0) {
-                throw new BasicException(LocalRes.getIntString("exception.nocompare"));
+                throw new BasicException(exceptionMessage(paramIndex, value));
             } else {
-                m_aParams[(paramIndex - 1) / 2] = DataWriteUtils.getSQLValue(bValue);
+                m_aParams[(paramIndex - 1) / 2] = DataWriteUtils.getSQLValue(value);
             }
         }        
         @Override
-        public void setInt(int paramIndex, Integer iValue) throws BasicException {
+        public void setInt(int paramIndex, Integer value) throws BasicException {
             if ((paramIndex - 1) % 2 == 0) {
-                throw new BasicException(LocalRes.getIntString("exception.nocompare"));
+                throw new BasicException(exceptionMessage(paramIndex, value));
             } else {
-                m_aParams[(paramIndex - 1) / 2] = DataWriteUtils.getSQLValue(iValue);
+                m_aParams[(paramIndex - 1) / 2] = DataWriteUtils.getSQLValue(value);
             }
         }       
         @Override
-        public void setString(int paramIndex, String sValue) throws BasicException {
+        public void setString(int paramIndex, String value) throws BasicException {
             if ((paramIndex - 1) % 2 == 0) {
-                throw new BasicException(LocalRes.getIntString("exception.nocompare"));
+                throw new BasicException(exceptionMessage(paramIndex, value));
             } else {
-                m_aParams[(paramIndex - 1) / 2] = DataWriteUtils.getSQLValue(sValue);
+                m_aParams[(paramIndex - 1) / 2] = DataWriteUtils.getSQLValue(value);
             }
         }        
         @Override
-        public void setTimestamp(int paramIndex, java.util.Date dValue) throws BasicException {
+        public void setTimestamp(int paramIndex, java.util.Date value) throws BasicException {
             if ((paramIndex - 1) % 2 == 0) {
-                throw new BasicException(LocalRes.getIntString("exception.nocompare"));
+                throw new BasicException(exceptionMessage(paramIndex, value));
             } else {
-                m_aParams[(paramIndex - 1) / 2] = DataWriteUtils.getSQLValue(dValue);
+                m_aParams[(paramIndex - 1) / 2] = DataWriteUtils.getSQLValue(value);
             }
         }
 //        public void setBinaryStream(int paramIndex, java.io.InputStream in, int length) throws DataException{
@@ -157,7 +159,7 @@ public class QBFBuilder implements ISQLBuilderStatic {
         @Override
         public void setBytes(int paramIndex, byte[] value) throws BasicException {
             if ((paramIndex - 1) % 2 == 0) {
-                throw new BasicException(LocalRes.getIntString("exception.nocompare"));
+                throw new BasicException(exceptionMessage(paramIndex, value));
             } else {
                 throw new BasicException("Param type not allowed");
             }
@@ -168,7 +170,7 @@ public class QBFBuilder implements ISQLBuilderStatic {
                 if (value instanceof QBFCompareEnum) {
                     m_aiCondFields[(paramIndex - 1) / 2] = (QBFCompareEnum) value;
                 } else {
-                    throw new BasicException(LocalRes.getIntString("exception.nocompare"));
+                    throw new BasicException(exceptionMessage(paramIndex, value));
                 }
             } else {
                 m_aParams[(paramIndex - 1) / 2] = DataWriteUtils.getSQLValue(value);
@@ -192,6 +194,20 @@ public class QBFBuilder implements ISQLBuilderStatic {
             }
 
             return sFilter.toString();
-        }                
+        }
+        
+        private void logMissinQBF(int paramIndex, Object value) {
+            String valueS = value != null ? value.toString() : "null";
+            LOGGER.warning(String.format("Expected comparator for QBF on paramIndex: %d value: %s", 
+                    paramIndex, valueS));
+        }
+        
+        private String exceptionMessage(int paramIndex, Object value) {
+            String valueS = value != null ? value.toString() : "null";
+            return String.format("%s <<<DETAILED>>> paramIndex: %d value: %s",
+                    LocalRes.getIntString("exception.nocompare"), 
+                    paramIndex, 
+                    valueS);
+        }
     }   
 }

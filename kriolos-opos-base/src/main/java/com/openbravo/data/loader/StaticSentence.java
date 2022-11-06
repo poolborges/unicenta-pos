@@ -61,7 +61,7 @@ public class StaticSentence<W extends Object, T> extends JDBCBaseSentence<T> {
     public StaticSentence(Session s, String sentence, SerializerWrite<W> serwrite) {
         this(s, new NormalBuilder(sentence), serwrite, null);
     }
-    
+
     public StaticSentence(Session s, String sentence, SerializerRead<T> serread) {
         this(s, new NormalBuilder(sentence), null, serread);
     }
@@ -76,14 +76,15 @@ public class StaticSentence<W extends Object, T> extends JDBCBaseSentence<T> {
 
         DataResultSet<T> result;
         String sentence = "";
+
+        LOGGER.log(Level.FINE, "Executing SQL params: {0}", params);
+        log(params);
         try {
-            LOGGER.log(Level.FINE, "Executing SQL params: {0}", params);
-            log(params);
-            
+
             sentence = m_sentence.getSQL(m_SerWrite, params);
-            
+
             LOGGER.log(Level.FINE, "Executing SQL sentence : {0}", sentence);
-            
+
             m_Stmt = session.getConnection().createStatement();
 
             if (m_Stmt.execute(sentence)) {
@@ -118,6 +119,7 @@ public class StaticSentence<W extends Object, T> extends JDBCBaseSentence<T> {
                 }
             }
         } catch (SQLException eSQL) {
+            LOGGER.log(Level.SEVERE, "Exception while execute: ", eSQL);
             throw new BasicException(eSQL);
         }
     }

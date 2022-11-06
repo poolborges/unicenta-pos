@@ -29,21 +29,21 @@ import com.openbravo.basic.BasicException;
  *
  * @author JG uniCenta
  */
-public abstract class Formats {
+public abstract class Formats<T> {
 
-    public final static Formats NULL = new FormatsNULL();
-    public final static Formats INT = new FormatsINT();
-    public final static Formats STRING = new FormatsSTRING();
-    public final static Formats DOUBLE = new FormatsDOUBLE();
-    public final static Formats CURRENCY = new FormatsCURRENCY();
-    public final static Formats PERCENT = new FormatsPERCENT();
-    public final static Formats BOOLEAN = new FormatsBOOLEAN();
-    public final static Formats TIMESTAMP = new FormatsTIMESTAMP();
-    public final static Formats DATE = new FormatsDATE();
-    public final static Formats TIME = new FormatsTIME();
-    public final static Formats BYTEA = new FormatsBYTEA();
-    public final static Formats HOURMIN = new FormatsHOURMIN();
-    public final static Formats SIMPLEDATE = new FormatsSIMPLEDATE();
+    public final static Formats<Object> NULL = new FormatsNULL();
+    public final static Formats<Integer> INT = new FormatsINT();
+    public final static Formats<String> STRING = new FormatsSTRING();
+    public final static Formats<Double> DOUBLE = new FormatsDOUBLE();
+    public final static Formats<Double> CURRENCY = new FormatsCURRENCY();
+    public final static Formats<Double> PERCENT = new FormatsPERCENT();
+    public final static Formats<Boolean> BOOLEAN = new FormatsBOOLEAN();
+    public final static Formats<Date> TIMESTAMP = new FormatsTIMESTAMP();
+    public final static Formats<Date> DATE = new FormatsDATE();
+    public final static Formats<Date> TIME = new FormatsTIME();
+    public final static Formats<byte[]> BYTEA = new FormatsBYTEA();
+    public final static Formats<Date> HOURMIN = new FormatsHOURMIN();
+    public final static Formats<Date> SIMPLEDATE = new FormatsSIMPLEDATE();
 
     private static NumberFormat m_integerformat = NumberFormat.getIntegerInstance();
     private static NumberFormat m_doubleformat = NumberFormat.getNumberInstance();
@@ -63,7 +63,7 @@ public abstract class Formats {
         return m_currencyformat.getMaximumFractionDigits();
     }
 
-    public String formatValue(Object value) {
+    public String formatValue(T value) {
         if (value == null) {
             return "";
         } else {
@@ -71,7 +71,7 @@ public abstract class Formats {
         }
     }
 
-    public Object parseValue(String value, Object defvalue) throws BasicException {
+    public T parseValue(String value, T defvalue) throws BasicException {
         if (value == null || "".equals(value)) {
             return defvalue;
         } else {
@@ -83,7 +83,7 @@ public abstract class Formats {
         }
     }
 
-    public Object parseValue(String value) throws BasicException {
+    public T parseValue(String value) throws BasicException {
         return parseValue(value, null);
     }
 
@@ -143,9 +143,9 @@ public abstract class Formats {
         }
     }
 
-    protected abstract String formatValueInt(Object value);
+    protected abstract String formatValueInt(T value);
 
-    protected abstract Object parseValueInt(String value) throws ParseException;
+    protected abstract T parseValueInt(String value) throws ParseException;
 
     public abstract int getAlignment();
 
@@ -167,15 +167,15 @@ public abstract class Formats {
         }
     }
 
-    private static final class FormatsINT extends Formats {
+    private static final class FormatsINT extends Formats<Integer> {
 
         @Override
-        protected String formatValueInt(Object value) {
+        protected String formatValueInt(Integer value) {
             return m_integerformat.format(((Number) value).longValue());
         }
 
         @Override
-        protected Object parseValueInt(String value) throws ParseException {
+        protected Integer parseValueInt(String value) throws ParseException {
             return m_integerformat.parse(value).intValue();
         }
 
@@ -185,15 +185,15 @@ public abstract class Formats {
         }
     }
 
-    private static final class FormatsSTRING extends Formats {
+    private static final class FormatsSTRING extends Formats<String> {
 
         @Override
-        protected String formatValueInt(Object value) {
-            return (String) value;
+        protected String formatValueInt(String value) {
+            return value;
         }
 
         @Override
-        protected Object parseValueInt(String value) throws ParseException {
+        protected String parseValueInt(String value) throws ParseException {
             return value;
         }
 
@@ -203,15 +203,15 @@ public abstract class Formats {
         }
     }
 
-    private static final class FormatsDOUBLE extends Formats {
+    private static final class FormatsDOUBLE extends Formats<Double> {
 
         @Override
-        protected String formatValueInt(Object value) {
+        protected String formatValueInt(Double value) {
             return m_doubleformat.format(DoubleUtils.fixDecimals((Number) value)); // quickfix for 3838
         }
 
         @Override
-        protected Object parseValueInt(String value) throws ParseException {
+        protected Double parseValueInt(String value) throws ParseException {
             return m_doubleformat.parse(value).doubleValue();
         }
 
@@ -221,15 +221,15 @@ public abstract class Formats {
         }
     }
 
-    private static final class FormatsPERCENT extends Formats {
+    private static final class FormatsPERCENT extends Formats<Double> {
 
         @Override
-        protected String formatValueInt(Object value) {
+        protected String formatValueInt(Double value) {
             return m_percentformat.format(DoubleUtils.fixDecimals((Number) value)); // quickfix for 3838
         }
 
         @Override
-        protected Object parseValueInt(String value) throws ParseException {
+        protected Double parseValueInt(String value) throws ParseException {
             try {
                 return m_percentformat.parse(value).doubleValue();
             } catch (ParseException e) {
@@ -244,15 +244,15 @@ public abstract class Formats {
         }
     }
 
-    private static final class FormatsCURRENCY extends Formats {
+    private static final class FormatsCURRENCY extends Formats<Double> {
 
         @Override
-        protected String formatValueInt(Object value) {
+        protected String formatValueInt(Double value) {
             return m_currencyformat.format(DoubleUtils.fixDecimals((Number) value)); // quickfix for 3838
         }
 
         @Override
-        protected Object parseValueInt(String value) throws ParseException {
+        protected Double parseValueInt(String value) throws ParseException {
             try {
                 return m_currencyformat.parse(value).doubleValue();
             } catch (ParseException e) {
@@ -267,15 +267,15 @@ public abstract class Formats {
         }
     }
 
-    private static final class FormatsBOOLEAN extends Formats {
+    private static final class FormatsBOOLEAN extends Formats<Boolean> {
 
         @Override
-        protected String formatValueInt(Object value) {
+        protected String formatValueInt(Boolean value) {
             return ((Boolean) value).toString();
         }
 
         @Override
-        protected Object parseValueInt(String value) throws ParseException {
+        protected Boolean parseValueInt(String value) throws ParseException {
             return Boolean.valueOf(value);
         }
 
@@ -285,15 +285,15 @@ public abstract class Formats {
         }
     }
 
-    private static final class FormatsTIMESTAMP extends Formats {
+    private static final class FormatsTIMESTAMP extends Formats<Date> {
 
         @Override
-        protected String formatValueInt(Object value) {
+        protected String formatValueInt(Date value) {
             return m_datetimeformat.format((Date) value);
         }
 
         @Override
-        protected Object parseValueInt(String value) throws ParseException {
+        protected Date parseValueInt(String value) throws ParseException {
             try {
                 return m_datetimeformat.parse(value);
             } catch (ParseException e) {
@@ -308,15 +308,15 @@ public abstract class Formats {
         }
     }
 
-    private static final class FormatsDATE extends Formats {
+    private static final class FormatsDATE extends Formats<Date> {
 
         @Override
-        protected String formatValueInt(Object value) {
+        protected String formatValueInt(Date value) {
             return m_dateformat.format((Date) value);
         }
 
         @Override
-        protected Object parseValueInt(String value) throws ParseException {
+        protected Date parseValueInt(String value) throws ParseException {
             return m_dateformat.parse(value);
         }
 
@@ -326,15 +326,15 @@ public abstract class Formats {
         }
     }
 
-    private static final class FormatsTIME extends Formats {
+    private static final class FormatsTIME extends Formats<Date> {
 
         @Override
-        protected String formatValueInt(Object value) {
+        protected String formatValueInt(Date value) {
             return m_timeformat.format((Date) value);
         }
 
         @Override
-        protected Object parseValueInt(String value) throws ParseException {
+        protected Date parseValueInt(String value) throws ParseException {
             return m_timeformat.parse(value);
         }
 
@@ -344,19 +344,19 @@ public abstract class Formats {
         }
     }
 
-    private static final class FormatsBYTEA extends Formats {
+    private static final class FormatsBYTEA extends Formats<byte[]> {
 
         @Override
-        protected String formatValueInt(Object value) {
+        protected String formatValueInt(byte[] value) {
             try {
-                return new String((byte[]) value, "UTF-8");
+                return new String(value, "UTF-8");
             } catch (java.io.UnsupportedEncodingException eu) {
                 return "";
             }
         }
 
         @Override
-        protected Object parseValueInt(String value) throws ParseException {
+        protected byte[] parseValueInt(String value) throws ParseException {
             try {
                 return value.getBytes("UTF-8");
             } catch (java.io.UnsupportedEncodingException eu) {
