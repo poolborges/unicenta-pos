@@ -18,6 +18,7 @@ package com.openbravo.pos.forms;
 import com.openbravo.beans.JPasswordDialog;
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
+import com.openbravo.pos.forms.menu.Menu;
 import com.openbravo.pos.scripting.ScriptEngine;
 import com.openbravo.pos.scripting.ScriptException;
 import com.openbravo.pos.scripting.ScriptFactory;
@@ -106,7 +107,7 @@ public class JRootMenu {
         return menuComponent;
     }
 
-    public class ScriptMenu {
+    public class ScriptMenu implements Menu{
 
         private final JXTaskPaneContainer taskPane;
         private final Component parent;
@@ -119,18 +120,38 @@ public class JRootMenu {
             taskPane.applyComponentOrientation(parent.getComponentOrientation());
         }
 
+        @Override
         public ScriptGroup addGroup(String key) {
             ScriptGroup group = new ScriptGroup(key, parent, appview);
             taskPane.add(group.getTaskGroup());
             return group;
         }
+        
+        public void setSystemAction() {
+            /*
+            addAction(new ChangePasswordAction(parent, appview,
+                    "/com/openbravo/images/password.png", "Menu.ChangePassword"));
+            
+            addAction(new ExitAction(parent, appview,
+                    "/com/openbravo/images/logout.png", "Menu.Exit"));
+            
+            
+            menudef.addMenuItem(new ChangePasswordAction(parent, m_appview,
+                    "/com/openbravo/images/password.png", "Menu.ChangePassword"));
+            
+            
+            menudef.addMenuItem(new ExitAction(parent, m_appview,
+                    "/com/openbravo/images/logout.png", "Menu.Exit"));
+            */
+        }
+        
 
         public JXTaskPaneContainer getTaskPane() {
             return taskPane;
         }
     }
 
-    public class ScriptGroup {
+    public class ScriptGroup implements Menu.MenuGroup{
 
         private final JXTaskPane taskGroup;
         private final AppUserView m_appview;
@@ -148,29 +169,22 @@ public class JRootMenu {
             taskGroup.setFont(new java.awt.Font("Arial", 0, 16));
         }
 
+        @Override
         public void addPanel(String icon, String key, String classname) {
             addAction(new MenuPanelAction(m_appview, icon, key, classname));
         }
 
+        @Override
         public void addExecution(String icon, String key, String classname) {
             addAction(new MenuExecAction(m_appview, icon, key, classname));
         }
 
+        @Override
         public ScriptSubmenu addSubmenu(String icon, String key, String classname) {
-            ScriptSubmenu submenu = new ScriptSubmenu(parent, m_appview, key);
+            ScriptSubmenu submenu = new ScriptSubmenu(m_appview, key);
             viewManager.getPreparedViews().put(classname, new JPanelMenu(submenu.getMenuDefinition()));
             addAction(new MenuPanelAction(m_appview, icon, key, classname));
             return submenu;
-        }
-
-        public void addChangePasswordAction() {
-            addAction(new ChangePasswordAction(parent, m_appview,
-                    "/com/openbravo/images/password.png", "Menu.ChangePassword"));
-        }
-
-        public void addExitAction() {
-            addAction(new ExitAction(parent, m_appview,
-                    "/com/openbravo/images/logout.png", "Menu.Exit"));
         }
 
         private void addAction(Action act) {
@@ -182,7 +196,6 @@ public class JRootMenu {
                 c.setFocusable(false);
 
                 taskGroup.setVisible(true);
-                /* */
                 if (viewManager.getActionfirst() == null) {
                     viewManager.setActionfirst(act);
                 }
@@ -194,46 +207,37 @@ public class JRootMenu {
         }
     }
 
-    public class ScriptSubmenu {
+    public class ScriptSubmenu implements Menu.Submenu{
 
         private final MenuDefinition menudef;
-
         private final AppUserView m_appview;
-        private final Component parent;
 
-        private ScriptSubmenu(Component _parent, AppUserView _appview, String key) {
-            parent = _parent;
+        private ScriptSubmenu(AppUserView _appview, String key) {
             m_appview = _appview;
             menudef = new MenuDefinition(key);
         }
 
+        @Override
         public void addTitle(String key) {
             menudef.addMenuTitle(key);
         }
 
+        @Override
         public void addPanel(String icon, String key, String classname) {
             menudef.addMenuItem(new MenuPanelAction(m_appview, icon, key, classname));
         }
 
+        @Override
         public void addExecution(String icon, String key, String classname) {
             menudef.addMenuItem(new MenuExecAction(m_appview, icon, key, classname));
         }
 
+        @Override
         public ScriptSubmenu addSubmenu(String icon, String key, String classname) {
-            ScriptSubmenu submenu = new ScriptSubmenu(parent, m_appview, key);
+            ScriptSubmenu submenu = new ScriptSubmenu(m_appview, key);
             viewManager.getPreparedViews().put(classname, new JPanelMenu(submenu.getMenuDefinition()));
             menudef.addMenuItem(new MenuPanelAction(m_appview, icon, key, classname));
             return submenu;
-        }
-
-        public void addChangePasswordAction() {
-            menudef.addMenuItem(new ChangePasswordAction(parent, m_appview,
-                    "/com/openbravo/images/password.png", "Menu.ChangePassword"));
-        }
-
-        public void addExitAction() {
-            menudef.addMenuItem(new ExitAction(parent, m_appview,
-                    "/com/openbravo/images/logout.png", "Menu.Exit"));
         }
 
         public MenuDefinition getMenuDefinition() {
