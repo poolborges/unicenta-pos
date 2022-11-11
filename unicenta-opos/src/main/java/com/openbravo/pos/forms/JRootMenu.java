@@ -201,9 +201,19 @@ public class JRootMenu {
                 }
             }
         }
-
+        
         public JXTaskPane getTaskGroup() {
             return taskGroup;
+        }
+
+        @Override
+        public void addChangePasswordAction() {
+            
+        }
+
+        @Override
+        public void addExitAction() {
+            
         }
     }
 

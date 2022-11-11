@@ -623,6 +623,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 TicketLineInfo line = m_oTicket.getLine(i);
 
                 if (line.isProductVerpatrib()) {
+                    /*
                     JProductAttEdit2 attedit = JProductAttEdit2.getAttributesEditor(this, m_App.getSession());
                     attedit.editAttributes(line.getProductAttSetId(), line.getProductAttSetInstId());
                     attedit.setVisible(true);
@@ -630,11 +631,12 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     if (attedit.isOK()) {
                         line.setProductAttSetInstId(attedit.getAttributeSetInst());
                         line.setProductAttSetInstDesc(attedit.getAttributeSetInstDescription());
-                        paintTicketLine(i, line);
                     }
+                    */
+                    paintTicketLine(i, line);
                 }
 
-            } catch (BasicException ex) {
+            } catch (Exception ex) {
                 LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
                         AppLocal.getIntString("message.cannotfindattributes"), ex);

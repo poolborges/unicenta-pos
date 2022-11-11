@@ -28,6 +28,8 @@ public interface Menu {
         public void addPanel(String icon, String key, String classname);
         public void addExecution(String icon, String key, String classname);
         public Submenu addSubmenu(String icon, String key, String classname);
+        public void addChangePasswordAction();
+        public void addExitAction();
     }
 
     public interface Submenu {

@@ -66,7 +66,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     public static final String DEBT = "debt";
     public static final String DEBT_PAID = "debtpaid";
     protected static final String PREPAY = "prepay";
-    private static final Logger logger = Logger.getLogger("com.openbravo.pos.forms.DataLogicSales");
+    private static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.forms.DataLogicSales");
 
     private String getCardName;
     protected SentenceExec m_createCat;
@@ -1538,6 +1538,10 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      * @throws BasicException
      */
     public final TicketInfo loadTicket(final int tickettype, final int ticketid) throws BasicException {
+        
+        SerializerWrite<Object[]> sw = new SerializerWriteBasicExt(new Datas[]{Datas.INT, Datas.INT}, new int[]{0, 1});
+        Object[] params = new Object[]{tickettype, ticketid};
+        
         TicketInfo ticket = (TicketInfo) new PreparedSentence(s,
                  "SELECT "
                 + "T.ID, "
@@ -1555,15 +1559,9 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 + "LEFT OUTER JOIN people P ON T.PERSON = P.ID "
                 + "WHERE T.TICKETTYPE = ? AND T.TICKETID = ? "
                 + "ORDER BY R.DATENEW DESC",
-                 SerializerWriteParams.INSTANCE,
+                 sw,
                  new SerializerReadClass(TicketInfo.class))
-                .find(new DataParams() {
-                    @Override
-                    public void writeValues() throws BasicException {
-                        setInt(1, tickettype);
-                        setInt(2, ticketid);
-                    }
-                });
+                .find(params);
 
         if (ticket != null) {
 
@@ -1621,46 +1619,48 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                             throw new BasicException();
                     }
                 }
+                
+                byte[] properties = null;
+                try {
+                    ByteArrayOutputStream o = new ByteArrayOutputStream();
+                    ticket.getProperties().storeToXML(o, AppLocal.APP_NAME, "UTF-8");
+                    properties = o.toByteArray();
+                } catch (IOException e) {
+
+                }
+                
+                SerializerWrite<Object[]> sw = new SerializerWriteBasicExt(
+                        new Datas[]{Datas.STRING, Datas.STRING, Datas.TIMESTAMP, Datas.BYTES, Datas.STRING},
+                        new int[]{0, 1, 2, 3, 4});
+                Object[] params = new Object[]{ 
+                    ticket.getId(), 
+                    ticket.getActiveCash(), 
+                    ticket.getDate(),
+                    properties,
+                ticket.getProperty("person")};
 
                 new PreparedSentence(s,
                          "INSERT INTO receipts (ID, MONEY, DATENEW, ATTRIBUTES, PERSON) VALUES (?, ?, ?, ?, ?)",
-                         SerializerWriteParams.INSTANCE)
-                        .exec(new DataParams() {
-
-                            @Override
-                            public void writeValues() throws BasicException {
-                                setString(1, ticket.getId());
-                                setString(2, ticket.getActiveCash());
-                                setTimestamp(3, ticket.getDate());
-
-                                try {
-                                    ByteArrayOutputStream o = new ByteArrayOutputStream();
-                                    ticket.getProperties().storeToXML(o, AppLocal.APP_NAME, "UTF-8");
-                                    setBytes(4, o.toByteArray());
-                                } catch (IOException e) {
-                                    setBytes(4, null);
-                                }
-                                setString(5, ticket.getProperty("person"));
-                            }
-                        });
+                         sw)
+                        .exec(params);
 
                 // new ticket
+                sw = new SerializerWriteBasicExt(
+                        new Datas[]{Datas.STRING, Datas.INT, Datas.INT, Datas.STRING, Datas.STRING, Datas.INT},
+                        new int[]{0, 1, 2, 3, 4, 5});
+                params = new Object[]{ 
+                    ticket.getId(), 
+                    ticket.getTicketType(), 
+                    ticket.getTicketId(),
+                    ticket.getUser().getId(),
+                    ticket.getCustomerId(),
+                    ticket.getTicketStatus()
+                };
                 new PreparedSentence(s,
                          "INSERT INTO tickets (ID, TICKETTYPE, TICKETID, PERSON, CUSTOMER, STATUS) "
                         + "VALUES (?, ?, ?, ?, ?, ?)",
-                         SerializerWriteParams.INSTANCE)
-                        .exec(new DataParams() {
-
-                            @Override
-                            public void writeValues() throws BasicException {
-                                setString(1, ticket.getId());
-                                setInt(2, ticket.getTicketType());
-                                setInt(3, ticket.getTicketId());
-                                setString(4, ticket.getUser().getId());
-                                setString(5, ticket.getCustomerId());
-                                setInt(6, ticket.getTicketStatus());
-                            }
-                        });
+                         sw)
+                        .exec(params);
 
                 // update status of existing ticket
                 new PreparedSentence(s,
