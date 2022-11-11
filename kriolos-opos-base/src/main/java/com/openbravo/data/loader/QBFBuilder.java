@@ -77,7 +77,7 @@ public class QBFBuilder implements ISQLBuilderStatic {
      * @throws BasicException
      */
     @Override
-    public String getSQL(SerializerWrite sw, Object[] params) throws BasicException {
+    public String getSQL(SerializerWrite sw, Object params) throws BasicException {
         
         QBFParameter mydw = new QBFParameter(m_asFindFields);
         if (sw == null || params == null) {

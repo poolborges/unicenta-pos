@@ -24,9 +24,7 @@ import com.openbravo.basic.BasicException;
  */
 public class ImportSentence extends BaseSentence {
     
-    /** Creates a new instance of ImportSentence */
-    public ImportSentence() {
-    }
+    public ImportSentence() {}
     
     /**
      *
@@ -53,7 +51,7 @@ public class ImportSentence extends BaseSentence {
      * @throws BasicException
      */
     @Override
-    public DataResultSet openExec(Object[] params) throws BasicException {
+    public DataResultSet openExec(Object params) throws BasicException {
         return null;
     }
 }

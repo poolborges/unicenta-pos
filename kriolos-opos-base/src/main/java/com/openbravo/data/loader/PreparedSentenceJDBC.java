@@ -113,8 +113,7 @@ public final class PreparedSentenceJDBC implements SentenceExec {
      * @return
      * @throws BasicException
      */
-    @Override
-    public int exec(Object[] params) throws BasicException {
+    private int exec(Object[] params) throws BasicException {
 
         int rowsAffected = 0;
         LOGGER.log(System.Logger.Level.INFO,

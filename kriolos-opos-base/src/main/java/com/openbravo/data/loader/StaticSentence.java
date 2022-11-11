@@ -71,7 +71,7 @@ public class StaticSentence<W extends Object, T> extends JDBCBaseSentence<T> {
     }
 
     @Override
-    public DataResultSet<T> openExec(Object[] params) throws BasicException {
+    public DataResultSet<T> openExec(Object params) throws BasicException {
         closeExec();
 
         DataResultSet<T> result;

@@ -30,7 +30,7 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
 
     protected final static Logger LOGGER = Logger.getLogger(BaseSentence.class.getName());
 
-    public abstract DataResultSet<T> openExec(Object[] params) throws BasicException;
+    public abstract DataResultSet<T> openExec(Object params) throws BasicException;
 
     public abstract DataResultSet<T> moreResults() throws BasicException;
 
@@ -43,10 +43,6 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
 
     @Override
     public final int exec(Object params) throws BasicException {
-        return exec((Object[])params);
-    }
-    @Override
-    public final int exec(Object[] params) throws BasicException {
         DataResultSet<T> SRS = openExec(params);
         if (SRS == null) {
             LOGGER.log(Level.WARNING, "openExec return ResultSet is NULL");
@@ -63,13 +59,9 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
         return list(null);
     }
 
+
     @Override
-    public List<T> list(Object params) throws BasicException {
-        return list(new Object[]{params});
-    }
-    
-    @Override
-    public final List<T> list(Object[] params) throws BasicException {
+    public final List<T> list(Object params) throws BasicException {
         DataResultSet<T> SRS = openExec(params);
         List<T> aSO = fetchAll(SRS);
         SRS.close();
@@ -83,7 +75,7 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
     }
 
     @Override
-    public final List<T> listPage(Object[] params, int offset, int length) throws BasicException {
+    public final List<T> listPage(Object params, int offset, int length) throws BasicException {
         List<T> aSO = Collections.<T>emptyList();
         try {
             DataResultSet<T> resultSet = openExec(params);

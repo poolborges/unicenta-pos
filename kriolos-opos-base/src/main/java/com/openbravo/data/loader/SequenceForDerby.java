@@ -35,7 +35,7 @@ public class SequenceForDerby extends BaseSentence {
     }
 
     @Override
-    public DataResultSet openExec(Object[] params) throws BasicException {
+    public DataResultSet openExec(Object params) throws BasicException {
         sent1.exec();
         sent2.exec();
         return sent3.openExec(null);

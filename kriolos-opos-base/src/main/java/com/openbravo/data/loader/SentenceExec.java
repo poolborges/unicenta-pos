@@ -27,6 +27,4 @@ public interface SentenceExec {
     public int exec() throws BasicException;
 
     public int exec(Object params) throws BasicException;
-
-    public int exec(Object[] params) throws BasicException;
 }
