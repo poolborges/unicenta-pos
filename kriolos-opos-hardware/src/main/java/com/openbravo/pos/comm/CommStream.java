@@ -62,6 +62,7 @@ public class CommStream {
                     ((SerialPort)m_CommPortPrinter).setSerialPortParams(9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE); // Configuramos el puerto
                 } else if (m_PortIdPrinter.getPortType() == CommPortIdentifier.PORT_PARALLEL) {
                     //((ParallelPort)m_CommPortPrinter).setMode(1);
+                    throw new RuntimeException("ParallelPort NOT SUPPORTED (nrjavaserial don't implement gnu.io.ParallelPort)");
                 }
             }
         } catch (Exception e) {
