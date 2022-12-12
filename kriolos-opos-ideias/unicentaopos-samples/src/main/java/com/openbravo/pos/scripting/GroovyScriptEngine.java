@@ -19,12 +19,15 @@ package com.openbravo.pos.scripting;
 import com.google.auto.service.AutoService;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
+//import org.openide.util.lookup.ServiceProvider;
 
 /**
- *
+ * This is a implementation for OpenBravo POS ScriptEngine 
+ * Also a IDEIA to use Service Provider Interface (SPI)
  * @author pauloborges
  */
 @AutoService(ScriptEngine.class)
+//@ServiceProvider(service=ScriptEngine.class)
 public class GroovyScriptEngine implements ScriptEngine {
 
     // call groovy expressions from Java code

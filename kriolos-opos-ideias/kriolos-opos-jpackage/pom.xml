@@ -75,7 +75,7 @@
             <plugin>
                 <groupId>org.panteleyev</groupId>
                 <artifactId>jpackage-maven-plugin</artifactId>
-                <version>1.5.2</version>
+                <version>1.6.0</version>
                 <configuration>
                     <name>kriolPOS</name>
                     <appVersion>1.0.0</appVersion>
@@ -136,6 +136,7 @@
                         <configuration>
                             <icon>${project.basedir}/icons/app_icon.ico</icon>
                             <winMenu>true</winMenu>
+                            <type>msi</type>
                         </configuration>
                     </plugin>
                 </plugins> 
@@ -161,6 +162,7 @@
                         <configuration>
                             <icon>${project.basedir}/icons/app_icon.ico</icon>
                             <winMenu>true</winMenu>
+                            <type>msi</type>
                         </configuration>
                     </plugin>
                 </plugins> 

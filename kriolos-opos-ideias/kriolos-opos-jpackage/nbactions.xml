@@ -9,4 +9,13 @@
             <goal>jpackage:jpackage</goal>
         </goals>
     </action>
+    <action>
+            <actionName>CUSTOM-jpackage@win</actionName>
+            <displayName>jpackage@win</displayName>
+            <goals>
+                <goal>package</goal>
+                <goal>jpackage:jpackage@win</goal>
+                <goal>-Djpackage.dryRun=true</goal>
+            </goals>
+        </action>
 </actions>

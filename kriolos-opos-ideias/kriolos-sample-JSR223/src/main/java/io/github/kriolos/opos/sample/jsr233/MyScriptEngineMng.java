@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.openbravo.pos.scripting;
+package io.github.kriolos.opos.sample.jsr233;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +28,7 @@ import javax.script.ScriptException;
  *
  * @author pauloborges
  */
-public class PosScriptEngineMng {
+public class MyScriptEngineMng {
 
     public void numerateScriptEngines() {
 
@@ -61,58 +61,20 @@ public class PosScriptEngineMng {
         });
     }
 
-    public void executeKotlinScript() {
-        try {
 
-            javax.script.ScriptEngine engine = new ScriptEngineManager().getEngineByExtension("kts");
-            Objects.requireNonNull(engine, "Require ScriptEngine for Kotlin (.kts extension)");
-            Object res1 = engine.eval("val velocity = 3");
-
-            Objects.requireNonNull(res1, "res1 must not null");
-            Object res2 = engine.eval("velocity + 2");
-
-            assert (res2 instanceof Integer) : /*Assertation BAD */
-                    "Velocidade da particula não pode ser maior que a velocidade da luz";
-
-            assert ((Integer) res2 < 5) :
-                    "Velocidade da particula não pode ser maior que a velocidade da luz";
-
-            System.out.println("Valor em res2: "+ (Integer)res2);
-        } catch (ScriptException ex) {
-            Logger.getLogger(PosScriptEngineMng.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void executeGroovyScript() {
-        try {
-            javax.script.ScriptEngine engine = new ScriptEngineManager().getEngineByExtension("groovy");
-            Objects.requireNonNull(engine, "Require ScriptEngine for Groovy (.groovy extension)");
-            Object res1 = engine.eval("def velocity = 3");
-            Objects.requireNonNull(res1, "res1 must not null");
-            Object res2 = engine.eval("velocity + 2");
-            
-            assert ((Integer) res2 < 5) :
-                    "Velocidade da particula não pode ser maior que a velocidade da luz";
-            
-            System.out.println("Valor em res2: "+ (Integer)res2);
-            
-        } catch (ScriptException ex) {
-            Logger.getLogger(PosScriptEngineMng.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
     public static void main(String[] args) {
 
-        PosScriptEngineMng psmng = new PosScriptEngineMng();
+        MyScriptEngineMng psmng = new MyScriptEngineMng();
 
-        System.out.println("numerateScriptEngines ========================");
+        System.out.println("Enumerate ScriptEngines ========================");
         psmng.numerateScriptEngines();
         
-        System.out.println("cexecuteGroovyScript ========================");
-        psmng.executeGroovyScript();
+        System.out.println("Execute GroovyScript ========================");
+        new GroovyScriptTest().executeScript();
         
-        //System.out.println("executeKotlinScript ========================");
-        //psmng.executeKotlinScript();
+        System.out.println("Execute KotlinScript ========================");
+        new KotlinScriptTest().executeScript();
 
     }
 }

@@ -1,0 +1,18 @@
+
+
+
+
+== Checkstyles
+
+
+* https://checkstyle.sourceforge.io/google_style.html
+
+.Use configuration provide by checkstyles
+----
+<configLocation>google_checks.xml</configLocation>
+----
+
+.Use your local configuration
+----
+<configLocation>buildConfig/checkstyle-krpos.xml</configLocation>
+----
