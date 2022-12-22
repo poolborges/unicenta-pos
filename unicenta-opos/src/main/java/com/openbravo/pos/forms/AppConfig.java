@@ -411,6 +411,8 @@ public class AppConfig implements AppProperties {
 
 class SortedStoreProperties extends Properties {
 
+    private static final long serialVersionUID = 1L;
+
     @Override
     public void store(OutputStream out, String comments) throws IOException {
         Properties sortedProps;

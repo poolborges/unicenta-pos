@@ -21,6 +21,8 @@ import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class StartPOS {
@@ -28,15 +30,6 @@ public class StartPOS {
     private static final Logger LOGGER = Logger.getLogger(StartPOS.class.getName());
 
     public static void main(final String args[]) {
-
-        /* Single Instance - Use Junique
-        try {
-            InstanceManager.queryInstance().restoreWindow();
-        } catch (RemoteException | NotBoundException e) {
-            LOGGER.log(Level.WARNING, "Cannot start the application, another instance is running", e);
-            System.exit(1);
-        }
-        */
 
         File configFile = (args.length > 0 ? new File(args[0]) : null);
         AppConfig config = new AppConfig(configFile);
@@ -50,12 +43,34 @@ public class StartPOS {
 
                 final JRootFrame rootframe = new JRootFrame(config);
                 if ("true".equals(config.getProperty("machine.uniqueinstance"))) {
+                    
+                    try {
+                        InstanceManager.queryInstance().restoreWindow();
+                    } catch (RemoteException | NotBoundException e) {
+                        String msg = "Cannot start the application. Another instance is alreday running";
+                        LOGGER.log(Level.WARNING, msg, e);
+                        //Open A Window a Present a message to User
+                        //Wait maximun 30 second and close
+                        JOptionPane.showMessageDialog(null,
+                            msg,
+                            AppLocal.APP_NAME, JOptionPane.WARNING_MESSAGE);
+                        System.exit(-1000);
+                    }
+        
                     // Register the running application
                     try {
-                        final InstanceManager m_instmanager = new InstanceManager(rootframe);
+                        final InstanceManager instmanager = new InstanceManager(rootframe);
+                        instmanager.registerInstance();
 
                     } catch (RemoteException | AlreadyBoundException e) {
-                        LOGGER.log(Level.WARNING, "Cannot create a new instance of application", e);
+                        String msg = "Cannot start the application. Cannot register a new instance";
+                        LOGGER.log(Level.WARNING, msg, e);
+                        //Open A Window a Present a message to User
+                        //Wait maximun 30 second and close
+                        JOptionPane.showMessageDialog(null,
+                            msg,
+                            AppLocal.APP_NAME, JOptionPane.WARNING_MESSAGE);
+                        System.exit(-1001);
                     }
                 }
 
