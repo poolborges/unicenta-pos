@@ -47,8 +47,8 @@
         <res id="InfoPanel.info" src="installer/Readme.txt"/>
         <res id="HTMLHelloPanel.welcome" src="installer/welcome.html"/>
         <res id="HTMLInfoPanel.welcome" src="installer/welcome.html"/>
-        <res id="IZPackLogo" src="installer/izpack-logo-medium.png"/>
-        <res id="Installer.image" src="installer/installer.png"/>
+        <res id="IZPackLogo" src="installer/app_logo_100×100.png"/>
+        <res id="Installer.image" src="installer/app_logo.png"/>
     </resources>
  
     <panels>
