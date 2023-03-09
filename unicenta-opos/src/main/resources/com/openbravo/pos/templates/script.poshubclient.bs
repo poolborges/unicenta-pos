@@ -15,13 +15,13 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //
-// script.posapps.txt
+// script.poshubclient.bs
 // This script opens up the posapps settings / config screen
 //
 
 //import io.github.kriosolutions.krposhub.KrPosHubClient
 import java.awt.Window;
 
-System.out.println("SCRIPT_RUN: Run posapps!");
+System.out.println("SCRIPT_RUN: Run PosHubClient!");
 
-//KrPosHubClient.openScreen(ticket,dbURL,dbUser,dbPassword,rootWindow,"Settings");
+//PosHubClient.openScreen(ticket,dbURL,dbUser,dbPassword,rootWindow,"Settings");

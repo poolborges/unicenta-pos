@@ -67,7 +67,7 @@ public class JRootMenu {
             if (menuComponent != null) {
                 m_jPanelLeft.setViewportView(menuComponent);
             } else {
-                String pah = "/com/openbravo/pos/templates/Menu.Root.txt";
+                String pah = "/com/openbravo/pos/templates/Menu.Root.bs";
                 LOGGER.log(Level.FINE, "Root.Men lookup classpath: " + pah);
                 menuScrip = StringUtils.readResource(pah);
                 menuComponent = getScriptMenu(menuScrip);
