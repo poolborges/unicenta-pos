@@ -1,0 +1,52 @@
+= Installer
+
+
+== IzPack 
+
+IzPack:: is a installer builder (Ago 2022, Support Java 8 Only)
+
+* https://github.com/izpack/izpack
+* http://izpack.org
+* Maven plugin for IzPack mvn://org.codehaus.izpack/izpack-maven-plugin
+* https://izpack.atlassian.net/wiki/spaces/IZPACK/pages/491628/IzPack+Maven+Plugin+Reference
+
+.How to  
+----
+java -jar kriolos-pos-setup.jar -console
+----
+
+
+== BitRock (VMware InstallBuilder)
+
+* https://installbuilder.com/
+* https://clients.bitrock.com/installbuilder/docs/installbuilder-userguide.html
+
+== DCP Setup Maker 
+
+DCP:: is a Powerful cross-platform install builder, Provide GUI 
+
+* Support: 
+* http://devcompack.sourceforge.net/
+* http://www.devcompack.com/setupmaker/
+
+.How to use
+----
+java -jar DCP.jar
+----
+
+== Launch4J
+
+Launch4J:: Is a native Launcher
+
+* http://launch4j.sourceforge.net/
+* https://github.com/orphan-oss/launch4j-maven-plugin
+
+
+== Others for reference 
+
+* JSmooth:: Is a native Launcher
+* Inno Setup is a free installer for Windows programs. 
+* NSIS (Nullsoft Scriptable Install System) is a professional open source system to create Windows installers.
+* Advanced Installer is a powerful and easy to use setup authoring tool which offers full Windows Installer support and more.
+
+
