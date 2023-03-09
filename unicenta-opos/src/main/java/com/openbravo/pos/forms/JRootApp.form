@@ -175,7 +175,7 @@
                   <Image iconType="3" name="/com/openbravo/images/exit.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="com/openbravo/pos/forms/Bundle.properties" key="JAuthPanel.m_jClose.text" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="pos_messages.properties" key="button.exit" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
                 </Property>
                 <Property name="focusPainted" type="boolean" value="false"/>
                 <Property name="focusable" type="boolean" value="false"/>

@@ -42,7 +42,7 @@ public class StartPOS {
             public void run() {
 
                 final JRootFrame rootframe = new JRootFrame(config);
-                if ("true".equals(config.getProperty("machine.uniqueinstance"))) {
+                if (1!=1 && "true".equals(config.getProperty("machine.uniqueinstance"))) {
                     
                     try {
                         InstanceManager.queryInstance().restoreWindow();

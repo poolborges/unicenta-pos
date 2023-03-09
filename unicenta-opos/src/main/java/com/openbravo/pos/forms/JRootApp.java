@@ -29,8 +29,6 @@ import com.openbravo.pos.scanpal2.DeviceScannerFactory;
 import java.awt.CardLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Cursor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -398,8 +396,16 @@ public class JRootApp extends JPanel implements AppView {
 
         if (closeAppView()) {
             releaseResources();
-            session.close();
-            SwingUtilities.getWindowAncestor(this).dispose();
+            if(session != null){
+                session.close();
+            }
+            java.awt.Window parent = SwingUtilities.getWindowAncestor(this);
+            if(parent != null){
+                parent.dispose();
+            }else {
+                this.setVisible(false);
+                this.setEnabled(false);
+            }
         }
     }
 
@@ -524,7 +530,7 @@ public class JRootApp extends JPanel implements AppView {
 
         m_jClose.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         m_jClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/exit.png"))); // NOI18N
-        m_jClose.setText(AppLocal.getIntString("JAuthPanel.m_jClose.text")); // NOI18N
+        m_jClose.setText(AppLocal.getIntString("button.exit")); // NOI18N
         m_jClose.setFocusPainted(false);
         m_jClose.setFocusable(false);
         m_jClose.setPreferredSize(new java.awt.Dimension(100, 50));
