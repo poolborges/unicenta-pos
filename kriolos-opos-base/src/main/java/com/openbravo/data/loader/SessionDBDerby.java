@@ -85,7 +85,7 @@ public class SessionDBDerby implements SessionDB {
      * @return
      */
     @Override
-    public SentenceFind resetSequenceSentence(Session s, String sequence) {
+    public SentenceExec resetSequenceSentence(Session s, String sequence) {
         return new SequenceForDerby(s, sequence);    
 }
 }

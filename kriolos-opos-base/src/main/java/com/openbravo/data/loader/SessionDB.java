@@ -66,7 +66,7 @@ public interface SessionDB {
      * @param sequence
      * @return
      */
-    public SentenceFind resetSequenceSentence(Session s, String sequence);
+    public SentenceExec resetSequenceSentence(Session s, String sequence);
     
 }
 

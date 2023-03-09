@@ -196,6 +196,7 @@ public final class Session {
         switch (sdbmanager) {
             case "HSQL Database Engine":
                 return new SessionDBHSQLDB();
+            case "MariaDB":
             case "MySQL":
                 return new SessionDBMySQL();
             case "PostgreSQL":

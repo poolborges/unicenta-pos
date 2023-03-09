@@ -80,7 +80,7 @@ public class SessionDBMySQL implements SessionDB {
      * @return
      */
     @Override
-    public SentenceFind resetSequenceSentence(Session s, String sequence) {
-        return new SequenceForMySQL(s, "UPDATE pickup_number SET ID=1");
+    public SentenceExec resetSequenceSentence(Session s, String sequence) {
+        return new SequenceForMySQL(s, "UPDATE "+sequence+" SET ID=1");
     }    
 }

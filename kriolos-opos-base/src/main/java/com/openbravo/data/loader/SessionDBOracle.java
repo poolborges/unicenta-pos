@@ -78,7 +78,7 @@ public class SessionDBOracle implements SessionDB {
      * @param sequence
      * @return
      */
-    public SentenceFind resetSequenceSentence(Session s, String sequence) {
+    public SentenceExec resetSequenceSentence(Session s, String sequence) {
         return new StaticSentence(s, "SELECT " + sequence + ".NEXTVAL FROM DUAL", null, SerializerReadInteger.INSTANCE);
     }
 }

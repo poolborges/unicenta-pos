@@ -85,7 +85,7 @@ public class SessionDBHSQLDB implements SessionDB {
      * @return
      */
     @Override
-    public SentenceFind resetSequenceSentence(Session s, String sequence) {
+    public SentenceExec resetSequenceSentence(Session s, String sequence) {
         return new StaticSentence(s, "CALL NEXT VALUE FOR " + sequence, null, SerializerReadInteger.INSTANCE);
     }    
 }

@@ -88,7 +88,7 @@ public class SessionDBGeneric implements SessionDB {
      * @param sequence
      * @return
      */
-    public SentenceFind resetSequenceSentence(Session s, String sequence){
+    public SentenceExec resetSequenceSentence(Session s, String sequence){
         return new StaticSentence(s, "ALTER SEQUENCE " + sequence + " RESTART WITH 0", null, SerializerReadInteger.INSTANCE);   
 }    
 }

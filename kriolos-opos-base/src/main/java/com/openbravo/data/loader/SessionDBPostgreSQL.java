@@ -85,7 +85,7 @@ public class SessionDBPostgreSQL implements SessionDB {
      * @return
      */
     @Override
-    public SentenceFind resetSequenceSentence(Session s, String sequence){
+    public SentenceExec resetSequenceSentence(Session s, String sequence){
         return new StaticSentence(s, "ALTER SEQUENCE " + sequence + " RESTART WITH '0'", null, SerializerReadInteger.INSTANCE);   
     }
 }
