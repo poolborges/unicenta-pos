@@ -100,3 +100,17 @@ Display Implemented
 machine.display=javapos:
 ----
 
+
+led8 (Display LED 8)
+
+== Audio 
+
+
+----
+Clip clip = AudioSystem.getClip();
+
+
+
+----
+
+

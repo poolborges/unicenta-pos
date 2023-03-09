@@ -1,0 +1,234 @@
+= Printer 
+
+
+
+== XML Schema (XSD)
+
+
+* Schemas/{YEAR}/{SCHEMA-NAME}
+** Look how microsoft do this kind of repository of schemas
+
+.Schema Example
+[source, xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<Ticket xmlns="https://kriolos-obiz.github.io/OBiz/Schemas/2022/Ticket.1.1.xsd">
+    
+</Ticket>
+----
+
+
+== Start Elements
+
+* opendrawer
+* buzzer
+* play
+* ticket
+* display
+* fiscalreceipt
+* fiscalzreport
+* fiscalxreport
+
+
+=== Ticket
+
+
+== OutputType
+
+TicketPaser use (0) None means no output has been chosed yet by parser)
+
+
+
+* 1) Display
+* 2) Ticket 
+* 3) FicalReceipt
+
+
+== Element OpenDrawer 'opendrawer'
+
+.Opendrawer XSD
+[source,xml]
+----
+<opendrawer printer="1">
+
+
+</opendrawer>
+----
+
+
+Hooks
+
+* OpenDrawer (Call something that a opendrawer happen: e.g Register on database log)
+
+
+== Element Buzzer 'buzzer'
+
+
+[source, xml]
+----
+<buzzer printer="1">
+----
+
+
+== Element Play 'play'
+
+[source, xml]
+----
+<play printer="1">
+----
+
+
+== Element Ticket "ticket"
+
+
+* OutputType: 2 (ticket)
+* OutputPrinter: (default: 1) - Will set the printer where every thing will send
+** From attr: 'printer'
+** 
+
+[source,xml]
+----
+<ticket printer="1">
+----
+
+== Element Display "display"
+
+* OutputType: 1 (Display)
+* OutputPrinter: null
+* VisorAnimation
+** From attr: *animation*
+* VisorLine1: null
+* VisorLine2: null
+
+[source,xml]
+----
+<display animation=""
+----
+
+.Attrubute 'animation' values
+|====
+|value |description
+
+|scroll
+|
+
+|flyer
+|
+
+|blink
+|
+
+|curtin
+|
+
+|"default"
+|
+
+|====
+
+
+
+
+== Element FicalReceipt 'ficalreceipt'
+
+
+* OutputType: 3 (Fiscal Printer)
+* Functions
+** printer.getFiscalPrinter().beginReceipt()
+
+== Element FiscalZPrinter 'fiscalzprinter'
+
+* Functions
+** printer.getFiscalPrinter().printerZReport()
+
+
+==
+
+== Printer
+
+.Diagram 1
+[plantuml]
+----
+@startuml
+interface Printer 
+
+interface RendererPrinter
+
+interface PeripheralPrinter
+
+interface ReceiptPrinter
+
+interface DisplayPrinter
+
+
+interface HTMLReceiptPrinter
+interface JavaPOS
+
+interface TickerParser
+interface TickerProcessor
+
+interface FiscalReceiptPrintr
+
+
+@enduml
+----
+
+
+== Original 
+
+
+* DeviceTicket - Facade Class
+
+.Diagram 2
+[plantuml]
+----
+@startuml
+
+interface DevicePrinter
+interface DeviceFiscalPrinter
+interface DeviceDisplay
+class DeviceFiscalPrinterJavaPOS as dfp
+
+
+class DeviceTicket {
+
+  deviceFiscal:  DeviceFiscalPrinter
+  devicePrinter: DevicePrinter
+  deviceDisplay: DeviceDisplay
+}
+
+
+
+
+@enduml
+----
+
+
+== Directory Services
+
+
+== Java Media
+
+
+* Java Audio 
+* Java Imag
+* Java Video
+
+
+* java.appet.AudioClip 
+** (deprecate since jdk:9, forremoval since:)
+** Alternative: javax.sound.sampled.Clip 
+*** github.com/philfrei/AudioCue-maven
+
+
+----
+----
+
+
+
+
+
+
+
+
+
