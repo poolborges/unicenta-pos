@@ -19,17 +19,12 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.loader.Session;
-import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppProperties;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.AppViewConnection;
 import com.openbravo.pos.forms.JPanelView;
-import com.openbravo.pos.util.AltEncrypter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.awt.HeadlessException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
@@ -41,14 +36,10 @@ import javax.swing.JPanel;
  * @author JG uniCenta
  */
 public class JPanelResetPickupId extends JPanel implements JPanelView {
+
     private static final Logger LOGGER = Logger.getLogger(JPanelResetPickupId.class.getName());
-    private AppConfig config;
-    private Connection con;
-    private String sdbmanager;
-    private Session session;
+    private static final long serialVersionUID = 1L;
     private AppProperties m_props;
-    private String SQL;
-    private Statement stmt;
 
     /**
      * Creates new form JPaneldbUpdate
@@ -66,7 +57,6 @@ public class JPanelResetPickupId extends JPanel implements JPanelView {
     public JPanelResetPickupId(AppProperties props) {
 
         initComponents();
-        config = new AppConfig(props.getConfigFile());
         m_props = props;
 
     }
@@ -75,59 +65,15 @@ public class JPanelResetPickupId extends JPanel implements JPanelView {
      *
      */
     public void performReset() {
+        try {
+            Session session = AppViewConnection.createSession(m_props);
+            session.DB.resetSequenceSentence(session, "pickup_number").exec();
+            JOptionPane.showMessageDialog(this, "Reset complete.");
 
-        if ("HSQL Database Engine".equals(sdbmanager)) {
-            SQL = "ALTER SEQUENCE pickup_number RESTART WITH 1";
-            try {
-                stmt.executeUpdate(SQL);
-            } catch (SQLException e) {
-                LOGGER.log(Level.WARNING, null, e);
-            }
-        } else if ("MySQL".equals(sdbmanager)) {
-            SQL = "UPDATE pickup_number SET ID=0";
-            try {
-                stmt.executeUpdate(SQL);
-            } catch (SQLException e) {
-                LOGGER.log(Level.WARNING, null, e);
-            }
-        } else if ("PostgreSQL".equals(sdbmanager)) {
-            SQL = "ALTER SEQUENCE pickup_number RESTART WITH 1";
-            try {
-                stmt.executeUpdate(SQL);
-            } catch (SQLException e) {
-                LOGGER.log(Level.WARNING, null, e);
-            }
-        } else if ("Oracle".equals(sdbmanager)) {
-            SQL = "ALTER SEQUENCE pickup_number RESTART WITH 1";
-            try {
-                stmt.executeUpdate(SQL);
-            } catch (SQLException e) {
-                LOGGER.log(Level.WARNING, null, e);
-            }
-        } else if ("Apache Derby".equals(sdbmanager)) {
-            SQL = "ALTER TABLE pickup_number ALTER COLUMN ID RESTART WITH 1";
-            try {
-                stmt.executeUpdate(SQL);
-            } catch (SQLException e) {
-                LOGGER.log(Level.WARNING, null, e);
-            }
-        } else if ("Derby".equals(sdbmanager)) {
-            SQL = "UPDATE pickup_number SET ID=0";
-            try {
-                stmt.executeUpdate(SQL);
-            } catch (SQLException e) {
-                LOGGER.log(Level.WARNING, null, e);
-            }
-        } else {
-            SQL = "ALTER SEQUENCE pickup_number RESTART WITH 1";
-            try {
-                stmt.executeUpdate(SQL);
-            } catch (SQLException e) {
-                LOGGER.log(Level.WARNING, null, e);
-            }
+        } catch (BasicException | HeadlessException ex) {
+            LOGGER.log(Level.WARNING, null, ex);
+            JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_DANGER, "Unable to reset PickupID", ex));
         }
-        JOptionPane.showMessageDialog(this, "Reset complete.");
-
     }
 
     /**
@@ -154,28 +100,6 @@ public class JPanelResetPickupId extends JPanel implements JPanelView {
      */
     @Override
     public void activate() throws BasicException {
-
-        // connect to the database
-        String db_user = (m_props.getProperty("db.user"));
-        String db_url = (m_props.getProperty("db.URL"));
-        String db_password = (m_props.getProperty("db.password"));
-
-        if (db_user != null && db_password != null && db_password.startsWith("crypt:")) {
-            // the password is encrypted
-            AltEncrypter cypher = new AltEncrypter("cypherkey" + db_user);
-            db_password = cypher.decrypt(db_password.substring(6));
-        }
-
-        try {
-            session = AppViewConnection.createSession(m_props);
-            con = DriverManager.getConnection(db_url, db_user, db_password);
-            sdbmanager = con.getMetaData().getDatabaseProductName();
-            stmt = (Statement) con.createStatement();
-        } catch (BasicException | SQLException e) {
-            LOGGER.log(Level.WARNING, null, e);
-            JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_DANGER, AppLocal.getIntString("database.UnableToConnect"), e));
-        }
-
     }
 
     /**
