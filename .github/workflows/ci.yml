@@ -1,6 +1,10 @@
 name: Java CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   test:
@@ -15,6 +19,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: recursive
     - name: Set up JDK
       uses: actions/setup-java@v3
       with:
