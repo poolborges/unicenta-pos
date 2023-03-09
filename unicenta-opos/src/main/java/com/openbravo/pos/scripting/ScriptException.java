@@ -24,6 +24,8 @@ package com.openbravo.pos.scripting;
  * @author adrianromero
  */
 public class ScriptException extends java.lang.Exception {
+
+    private static final long serialVersionUID = 1L;
     
     /**
      * Creates a new instance of <code>ScriptException</code> without detail message.

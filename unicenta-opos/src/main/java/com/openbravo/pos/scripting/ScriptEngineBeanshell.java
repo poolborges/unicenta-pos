@@ -16,7 +16,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with KrOS POS.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.scripting;
 
 import bsh.EvalError;
@@ -27,49 +26,51 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author adrianromero
- * Created on 5 de marzo de 2007, 19:57
+ * @author adrianromero Created on 5 de marzo de 2007, 19:57
  *
  */
 class ScriptEngineBeanshell implements ScriptEngine {
+
     private static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.scripting.ScriptEngineBeanshell");
 
-    private Interpreter i;
-    
-    /** Creates a new instance of ScriptEngineBeanshell */
+    private final Interpreter interpreter;
+
+    /**
+     * Creates a new instance of ScriptEngineBeanshell
+     */
     public ScriptEngineBeanshell() {
-        i = new Interpreter();
+        interpreter = new Interpreter();
     }
-    
+
     @Override
     public void put(String key, Object value) {
-        
+
         try {
-            i.set(key, value);
+            interpreter.set(key, value);
         } catch (EvalError e) {
             LOGGER.log(Level.SEVERE, "Exception on put", e);
         }
     }
-    
+
     @Override
     public Object get(String key) {
-        
+
         try {
-            return i.get(key);
+            return interpreter.get(key);
         } catch (EvalError e) {
             LOGGER.log(Level.SEVERE, "Exception", e);
             return null;
         }
     }
-    
+
     @Override
     public Object eval(String src) throws ScriptException {
 
         try {
-            return i.eval(src);  
+            return interpreter.eval(src);
         } catch (EvalError e) {
             LOGGER.log(Level.SEVERE, "Exception on eval", e);
             throw new ScriptException(e);
-        }        
-    }   
+        }
+    }
 }
