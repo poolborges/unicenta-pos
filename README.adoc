@@ -34,7 +34,7 @@ WARNING: IN DEVELOPMENT (NOT RELEASE YET)
 ifdef::badges[]
 == Build status
 
-image:https://github.com/poolborges/unicenta-pos/actions/workflows/ci.yml/badge.svg["Build Status", link="https://github.com/poolborges/unicenta-pos/actions/workflows/build.yml"]
+image:https://github.com/poolborges/unicenta-pos/actions/workflows/ci.yml/badge.svg["Build Status", link="https://github.com/poolborges/unicenta-pos/actions/workflows/ci.yml"]
 image:https://codecov.io/github/poolborges/unicenta-pos/coverage.svg["Code Coverage", link="https://codecov.io/gh/poolborges/unicenta-pos"]
 image:https://img.shields.io/badge/License-GPLv3-blue.svg["License: GPL v3", link="https://www.gnu.org/licenses/gpl-3.0.en.html"]
 image:https://badges.crowdin.net/krpos/localized.svg["Crowdin/Translation Status", link="https://crowdin.com/project/krpos"]
