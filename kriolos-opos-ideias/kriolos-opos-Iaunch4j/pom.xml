@@ -24,18 +24,10 @@
     </properties>
     
     <dependencies>
-        <!--
         <dependency>
             <groupId>${project.groupId}</groupId>  
             <artifactId>kriolos-pos</artifactId>  
         </dependency>
-        -->
-        <dependency>
-            <groupId>io.gitub.kriolos.speedpos</groupId>
-            <artifactId>speedpos-app</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        
     </dependencies>
     
 
