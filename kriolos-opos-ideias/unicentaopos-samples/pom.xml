@@ -99,6 +99,12 @@
             </exclusions>
         </dependency>
         
+        <dependency>
+            <groupId>net.sf.sociaal</groupId>
+            <artifactId>freetts</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+        
     </dependencies>
 
     <build>
