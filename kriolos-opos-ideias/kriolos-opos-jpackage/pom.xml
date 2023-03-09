@@ -66,7 +66,7 @@
                         </goals>
                         <configuration>
                             <includeScope>runtime</includeScope>
-                            <outputDirectory>${project.build.directory}/mods</outputDirectory>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -77,32 +77,36 @@
                 <artifactId>jpackage-maven-plugin</artifactId>
                 <version>1.6.0</version>
                 <configuration>
-                    <name>kriolPOS</name>
+                    <name>kriolosPOS</name>
                     <appVersion>1.0.0</appVersion>
                     <copyright>Paulo Borges</copyright>
-                    <description>Kriol Open Source Point Of Sales</description>    
-                    <vendor>KriolOSS</vendor>
-                    <appImage>${project.basedir}/icons/app_icon.ico</appImage>
-                    <aboutUrl>https://github.com/kriolos/kriolos-obiz</aboutUrl>
-                    <licenseFile>${project.basedir}/LICENSE</licenseFile>
-                    
-                    <input>${project.build.directory}/mods</input>
+                    <description>KriolOS Point Of Sales</description>    
+                    <vendor>KriolOS</vendor>
+                    <type>APP_IMAGE</type>
+                    <input>${project.build.directory}/lib</input>
                     <mainClass>${appMainClass}</mainClass>
                     <mainJar>kriolos-pos-${project.version}.jar</mainJar>
-                    
-                    <!--
-                    <module>${appModule}/${appMainClass}</module>
-                    <modulePaths>
-                        <modulePath>${project.build.directory}/mods</modulePath>
-                    </modulePaths>
-                    -->
-                    
-                    
-                    <destination>${project.build.directory}/dist</destination>
-                    <runtimeImage>${java.home}</runtimeImage>
+                    <destination>${project.build.directory}/</destination>
                     
                     <!-- Change on profile for specific OS -->
                     <icon>${project.basedir}/icons/app_icon.ico</icon>
+                    
+                    
+                            
+                    <launchers>
+                        <launcher>
+                            <name>kriolosKDS-Config</name>
+                            <file>${project.basedir}/jpackage/launcher-pos-config.properties</file>
+                        </launcher>
+                        <launcher>
+                            <name>kriolosKDS-Transfer</name>
+                            <file>${project.basedir}/jpackage/launcher-pos-transfer.properties</file>
+                        </launcher>
+                        <launcher>
+                            <name>kriolosKDS-ResetPickup</name>
+                            <file>${project.basedir}/jpackage/launcher-pos-resetpickup.properties</file>
+                        </launcher>
+                    </launchers>
                     
                     <javaOptions>
                         <option>-Dfile.encoding=UTF-8</option>
