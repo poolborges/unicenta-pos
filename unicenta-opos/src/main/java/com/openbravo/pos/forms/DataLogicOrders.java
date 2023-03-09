@@ -57,9 +57,7 @@ public class DataLogicOrders extends BeanFactoryDataSingle {
                     Datas.STRING    // CompleteTime
                 }));
 
-        m_resetPickup =  new PreparedSentence(s
-                , "UPDATE pickup_number SET id=1"
-                , SerializerWriteParams.INSTANCE); 
+        m_resetPickup =  s.DB.resetSequenceSentence(s, "pickup_number");
     }
 
 

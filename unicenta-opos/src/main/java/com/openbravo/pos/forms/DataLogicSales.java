@@ -2513,7 +2513,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 "uom",
                 new String[]{"id", "name"},
                 new String[]{"id",
-                    AppLocal.getIntString("Label.Name")},
+                    AppLocal.getIntString("label.name")},
                 new Datas[]{
                     Datas.STRING, Datas.STRING},
                 new Formats[]{
