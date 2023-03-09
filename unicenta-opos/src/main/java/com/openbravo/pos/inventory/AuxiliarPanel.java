@@ -78,10 +78,8 @@ public class AuxiliarPanel extends JPanelTable2 {
      */
     @Override
     public void activate() throws BasicException {
+        super.activate();
         filter.activate();
-        
-        //super.activate();
-        startNavigation();
         reload(filter);
     }
 

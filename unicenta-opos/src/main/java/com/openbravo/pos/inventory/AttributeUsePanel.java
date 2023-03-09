@@ -78,9 +78,7 @@ public class AttributeUsePanel extends JPanelTable2 {
     public void activate() throws BasicException {
         filter.activate();
         editor.activate();
-
-        //super.activate();
-        startNavigation();
+        super.activate();
         reload();
     }
 

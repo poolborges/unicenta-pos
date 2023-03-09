@@ -39,20 +39,18 @@ public class CustomersPanel extends JPanelTable {
     private DataLogicCustomers dlCustomers;
     private CustomersView jeditor;
     
-    /** Creates a new instance of CustomersPanel */
     public CustomersPanel() {}
 
     @Override
     protected void init() {
-        //CustomerInfoGlobal.getInstance().setEditableData(bd);
         this.jeditor = new CustomersView(app, dirty);
         this.dlCustomers  = (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
     }
 
     @Override
-    public void activate() throws BasicException { 
-        jeditor.activate();         
+    public void activate() throws BasicException {     
         super.activate();
+        jeditor.activate();     
     }
 
     @Override

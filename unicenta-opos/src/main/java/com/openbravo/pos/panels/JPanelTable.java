@@ -24,6 +24,7 @@ import com.openbravo.data.user.*;
 import com.openbravo.pos.forms.*;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
@@ -35,6 +36,7 @@ import javax.swing.ListCellRenderer;
 public abstract class JPanelTable extends JPanel implements JPanelView, BeanFactoryApp {
 
     private static final long serialVersionUID = 1L;
+    private final static Logger LOGEER = Logger.getLogger(JPanelTable.class.getName());
 
     protected BrowsableEditableData bd;
     protected DirtyManager dirty;
@@ -47,6 +49,7 @@ public abstract class JPanelTable extends JPanel implements JPanelView, BeanFact
     @Override
     public void init(AppView app) throws BeanFactoryException {
 
+        LOGEER.info("Init JPanelTable");
         this.app = app;
         dirty = new DirtyManager();
         bd = null;
@@ -58,57 +61,56 @@ public abstract class JPanelTable extends JPanel implements JPanelView, BeanFact
         return this;
     }
 
-    protected void startNavigation() {
+    private void startNavigation() {
 
         if (bd == null) {
-
             // init browsable editable data
             bd = new BrowsableEditableData(getListProvider(), getSaveProvider(), getEditor(), dirty);
+        }
 
-            // Add the filter panel
-            Component c = getFilter();
-            if (c != null) {
-                c.applyComponentOrientation(getComponentOrientation());
-                add(c, BorderLayout.NORTH);
-            }
-
-            // Add the editor
-            c = getEditor().getComponent();
-            if (c != null) {
-                c.applyComponentOrientation(getComponentOrientation());
-                container.add(c, BorderLayout.CENTER);
-            }
-
-            // el panel este
-            ListCellRenderer cr = getListCellRenderer();
-            if (cr != null) {
-                JListNavigator nl = new JListNavigator(bd);
-                nl.applyComponentOrientation(getComponentOrientation());
-                nl.setCellRenderer(cr);
-                container.add(nl, java.awt.BorderLayout.LINE_START);
-            }
-
-            // add toolbar extras
-            c = getToolbarExtras();
-            if (c != null) {
-                c.applyComponentOrientation(getComponentOrientation());
-                toolbar.add(c);
-            }
-
-            // La Toolbar
-            c = new JLabelDirty(dirty);
+        // Add the filter panel
+        Component c = getFilter();
+        if (c != null) {
             c.applyComponentOrientation(getComponentOrientation());
-            toolbar.add(c);
-            c = new JCounter(bd);
+            add(c, BorderLayout.NORTH);
+        }
+
+        // Add the editor
+        c = getEditor().getComponent();
+        if (c != null) {
             c.applyComponentOrientation(getComponentOrientation());
-            toolbar.add(c);
-            c = new JNavigator(bd, getVectorer(), getComparatorCreator());
-            c.applyComponentOrientation(getComponentOrientation());
-            toolbar.add(c);
-            c = new JSaver(bd);
+            container.add(c, BorderLayout.CENTER);
+        }
+
+        // el panel este
+        ListCellRenderer cr = getListCellRenderer();
+        if (cr != null) {
+            JListNavigator nl = new JListNavigator(bd);
+            nl.applyComponentOrientation(getComponentOrientation());
+            nl.setCellRenderer(cr);
+            container.add(nl, java.awt.BorderLayout.LINE_START);
+        }
+
+        // add toolbar extras
+        c = getToolbarExtras();
+        if (c != null) {
             c.applyComponentOrientation(getComponentOrientation());
             toolbar.add(c);
         }
+
+        // La Toolbar
+        c = new JLabelDirty(dirty);
+        c.applyComponentOrientation(getComponentOrientation());
+        toolbar.add(c);
+        c = new JCounter(bd);
+        c.applyComponentOrientation(getComponentOrientation());
+        toolbar.add(c);
+        c = new JNavigator(bd, getVectorer(), getComparatorCreator());
+        c.applyComponentOrientation(getComponentOrientation());
+        toolbar.add(c);
+        c = new JSaver(bd);
+        c.applyComponentOrientation(getComponentOrientation());
+        toolbar.add(c);
     }
 
     public Component getToolbarExtras() {
@@ -146,9 +148,9 @@ public abstract class JPanelTable extends JPanel implements JPanelView, BeanFact
 
     @Override
     public void activate() throws BasicException {
+        LOGEER.info("Call active");
         startNavigation();
         bd.actionLoad();
-        bd.actionInsert(); //TODO (this method call is needed ???)
     }
 
     @Override

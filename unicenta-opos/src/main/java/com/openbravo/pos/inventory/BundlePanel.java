@@ -75,9 +75,8 @@ public class BundlePanel extends JPanelTable2 {
 
     @Override
     public void activate() throws BasicException {
+        super.activate();
         filter.activate();
-        
-        startNavigation();
         reload(filter);
     }
 
