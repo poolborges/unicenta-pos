@@ -520,9 +520,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
  *  Populate the floor plans and tables    
 */
     private void printState() {
-        String sDB;
-        sDB = m_App.getProperties().getProperty("db.engine");        
-        
+
         if (m_PlaceClipboard == null) {
             if (customer == null) {
                 m_jText.setText(null);
