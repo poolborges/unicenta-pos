@@ -1,19 +1,3 @@
-//    KrOS POS  - Open Source Point Of Sale
-//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
-//
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.beans;
 
 import java.io.File;
@@ -26,104 +10,87 @@ import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- *
- * @author adrian
- */
 public class LocaleResources {
-  
-    private final static Logger LOGGER = Logger.getLogger(LocaleResources.class.getName());
-    private List<ResourceBundle> m_resources;
+
+    private List<ResourceBundle> m_resources = new LinkedList<>();
+
     private ClassLoader m_localeloader;
-    
-    /** Creates a new instance of LocaleResources */
+
     public LocaleResources() {
-//        m_resources = new LinkedList<ResourceBundle>();
-        m_resources = new LinkedList<>();        
-        
-        File fuserdir = new File(System.getProperty("user.dir"));
-        File fresources = new File(fuserdir, "locales");
+        File fresources = new File(new File(System.getProperty("user.dir")), "locales");
         try {
-            m_localeloader = URLClassLoader.newInstance(
-                    new URL[] { fresources.toURI().toURL() },
-                    Thread.currentThread().getContextClassLoader());
+            this.m_localeloader = URLClassLoader.newInstance(new URL[]{fresources
+                .toURI().toURL()}, Thread.currentThread().getContextClassLoader());
         } catch (MalformedURLException e) {
-            m_localeloader = Thread.currentThread().getContextClassLoader();
-        }        
-    }
-    
-    public ResourceBundle getBundle(String bundlename) {
-        return ResourceBundle.getBundle(bundlename, Locale.getDefault(), m_localeloader);
-    }
-    
-    /**
-     *
-     * @param bundlename
-     */
-        
-    public void addBundleName(String bundlename) {
-//        m_resources.add(getBundle(bundlename));
-        m_resources.add(ResourceBundle.getBundle(bundlename));
+            this.m_localeloader = Thread.currentThread().getContextClassLoader();
+        }
     }
 
-    /**
-     *
-     * @param sKey
-     * @return
-     */
-    public String getString(String sKey) {
-        String res = null;
-        if (sKey == null) {
-            res = null;
-        } else  {            
-            for (ResourceBundle r : m_resources) {
-                try {
-                    res = r.getString(sKey);
-                } catch (MissingResourceException e) {
-                    //IGONE LOOK ON NEXT
-                }
-            }
-            
-            if (res == null){
-                LOGGER.log(Level.WARNING,"NOT FOUND i18n Key: "+sKey);
+    private ResourceBundle getBundle(String bundlename) {
+        ResourceBundle resource = null;
+        try {
+            resource = ResourceBundle.getBundle(bundlename, Locale.getDefault(), this.m_localeloader);
+        } catch (MissingResourceException ex) {
+            try {
+                resource = ResourceBundle.getBundle(bundlename);
+            } catch (Exception ex1) {
             }
         }
-        return res;
+        return resource;
     }
 
-    /**
-     *
-     * @param sKey
-     * @param sValues
-     * @return
-     */
-    public String getString(String sKey, Object ... sValues) {
-        
+    public void addBundleName(String bundlename) {
+        ResourceBundle resource = getBundle(bundlename);
+        if (resource != null) {
+            this.m_resources.add(resource);
+        }
+    }
+
+    public String getString(String sKey) {
         if (sKey == null) {
             return null;
-        } else  {
-            for (ResourceBundle r : m_resources) {
-                try {
-                    return MessageFormat.format(r.getString(sKey), sValues);
-                } catch (MissingResourceException e) {
-                    // Next
-                }
-            }
-            
-            // MissingResourceException in all ResourceBundle
-            StringBuilder sreturn = new StringBuilder();
-            sreturn.append("** ");
-            sreturn.append(sKey);            
-            for (Object value : sValues) {
-                sreturn.append(" < ");
-                sreturn.append(value.toString());
-            }
-            sreturn.append("** ");
-            
-            return sreturn.toString();
         }
+        for (ResourceBundle r : this.m_resources) {
+            try {
+                return r.getString(sKey);
+            } catch (MissingResourceException missingResourceException) {
+            }
+        }
+        return "** " + sKey + " **";
+    }
+
+    public String getString(String sKey, Object... sValues) {
+        if (sKey == null) {
+            return null;
+        }
+        for (ResourceBundle r : this.m_resources) {
+            try {
+                return MessageFormat.format(r.getString(sKey), sValues);
+            } catch (MissingResourceException missingResourceException) {
+            }
+        }
+        StringBuilder sreturn = new StringBuilder();
+        sreturn.append("** ");
+        sreturn.append(sKey);
+        for (Object value : sValues) {
+            sreturn.append(" < ");
+            sreturn.append(value.toString());
+        }
+        sreturn.append("** ");
+        return sreturn.toString();
+    }
+
+    public String getString2(String sKey, String defaultvalue) {
+        if (sKey == null) {
+            return null;
+        }
+        for (ResourceBundle r : this.m_resources) {
+            try {
+                return r.getString(sKey);
+            } catch (MissingResourceException missingResourceException) {
+            }
+        }
+        return defaultvalue;
     }
 }
