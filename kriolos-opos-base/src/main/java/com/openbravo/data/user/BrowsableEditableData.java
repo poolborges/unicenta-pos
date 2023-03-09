@@ -84,8 +84,8 @@ public class BrowsableEditableData<E> {
      * @param ed
      * @param dirty
      */
-    public BrowsableEditableData(ListProvider<E> dataprov, 
-            SaveProvider<E> saveprov, Comparator<E> c, 
+    public BrowsableEditableData(ListProvider<E> dataprov,
+            SaveProvider<E> saveprov, Comparator<E> c,
             EditorRecord<E> ed, DirtyManager dirty) {
         this(new BrowsableData<>(dataprov, saveprov, c), ed, dirty);
     }
@@ -98,7 +98,7 @@ public class BrowsableEditableData<E> {
      * @param ed
      * @param dirty
      */
-    public BrowsableEditableData(ListProvider<E> dataprov, 
+    public BrowsableEditableData(ListProvider<E> dataprov,
             SaveProvider<E> saveprov, EditorRecord<E> ed, DirtyManager dirty) {
         this(new BrowsableData<>(dataprov, saveprov, null), ed, dirty);
     }
@@ -214,7 +214,7 @@ public class BrowsableEditableData<E> {
                 break;
             }
             default:
-                sString += " UNKNOW";
+                sString += " ST_NORECORD";
                 break;
         }
         return sString;
@@ -233,7 +233,7 @@ public class BrowsableEditableData<E> {
      */
     private void fireDataBrowse() {
 
-        LOGGER.log(Level.INFO, "Executing state is: {0}, class: {1}",
+        LOGGER.log(Level.INFO, "Enter state is: {0}, class: {1}",
                 new Object[]{getStateAsString(),
                     m_editorrecord.getClass().getName()});
 
@@ -254,7 +254,7 @@ public class BrowsableEditableData<E> {
         m_Dirty.setDirty(false);
         fireStateUpdate();
 
-        LOGGER.log(Level.INFO, "Executing state is: {0}, class: {1}",
+        LOGGER.log(Level.INFO, "Exit state is: {0}, class: {1}",
                 new Object[]{getStateAsString(),
                     m_editorrecord.getClass().getName()});
 
@@ -318,7 +318,7 @@ public class BrowsableEditableData<E> {
      * Refresh current state
      */
     public void refreshCurrent() {
-        if (confirmChanged()) {
+        if (isConfirmed()) {
             baseMoveTo(m_iIndex);
         }
     }
@@ -329,7 +329,7 @@ public class BrowsableEditableData<E> {
      * @throws BasicException
      */
     public void refreshData() throws BasicException {
-        if (confirmChanged()) {
+        if (isConfirmed()) {
             m_bd.refreshData();
             m_editorrecord.refresh();
             baseMoveTo(0);
@@ -342,11 +342,10 @@ public class BrowsableEditableData<E> {
      * @throws BasicException
      */
     public void loadData() throws BasicException {
-        if (confirmChanged()) {
-            m_bd.loadData();
-            m_editorrecord.refresh();
-            baseMoveTo(0);
-        }
+
+        m_bd.loadData();
+        m_editorrecord.refresh();
+        baseMoveTo(0);
     }
 
     /**
@@ -355,7 +354,7 @@ public class BrowsableEditableData<E> {
      * @throws BasicException
      */
     public void unloadData() throws BasicException {
-        if (confirmChanged()) {
+        if (isConfirmed()) {
             m_bd.unloadData();
             m_editorrecord.refresh();
             baseMoveTo(0);
@@ -369,7 +368,7 @@ public class BrowsableEditableData<E> {
      * @throws BasicException
      */
     public void sort(Comparator<E> c) throws BasicException {
-        if (confirmChanged()) {
+        if (isConfirmed()) {
             m_bd.sort(c);
             baseMoveTo(0);
         }
@@ -382,7 +381,7 @@ public class BrowsableEditableData<E> {
      * @throws BasicException
      */
     public void moveTo(int i) throws BasicException {
-        if (confirmChanged()) {
+        if (isConfirmed()) {
             if (m_iIndex != i) {
                 baseMoveTo(i);
             }
@@ -395,7 +394,7 @@ public class BrowsableEditableData<E> {
      * @throws BasicException
      */
     public final void movePrev() throws BasicException {
-        if (confirmChanged()) {
+        if (isConfirmed()) {
             if (m_iIndex > 0) {
                 baseMoveTo(m_iIndex - 1);
             }
@@ -408,7 +407,7 @@ public class BrowsableEditableData<E> {
      * @throws BasicException
      */
     public final void moveNext() throws BasicException {
-        if (confirmChanged()) {
+        if (isConfirmed()) {
             if (m_iIndex < m_bd.getSize() - 1) {
                 baseMoveTo(m_iIndex + 1);
             }
@@ -421,7 +420,7 @@ public class BrowsableEditableData<E> {
      * @throws BasicException
      */
     public final void moveFirst() throws BasicException {
-        if (confirmChanged()) {
+        if (isConfirmed()) {
             if (m_bd.getSize() > 0) {
                 baseMoveTo(0);
             }
@@ -434,7 +433,7 @@ public class BrowsableEditableData<E> {
      * @throws BasicException
      */
     public final void moveLast() throws BasicException {
-        if (confirmChanged()) {
+        if (isConfirmed()) {
             if (m_bd.getSize() > 0) {
                 baseMoveTo(m_bd.getSize() - 1);
             }
@@ -508,7 +507,7 @@ public class BrowsableEditableData<E> {
      * @throws BasicException
      */
     public boolean actionClosingForm(Component c) throws BasicException {
-        return confirmChanged(c);
+        return isConfirmed(c);
     }
 
     /**
@@ -567,17 +566,21 @@ public class BrowsableEditableData<E> {
         fireDataBrowse();
     }
 
-    private boolean confirmChanged() {
-        return confirmChanged(null);
+    private boolean isConfirmed() {
+        return isConfirmed(null);
     }
 
-    private boolean confirmChanged(Component c) {
+    private boolean isConfirmed(Component c) {
 
-        return m_Dirty.isDirty()
-                && JOptionPane.showConfirmDialog(c,
-                        LocalRes.getIntString("message.changeslost"),
-                        LocalRes.getIntString("title.editor"),
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION;
+        boolean confimed = false;
+        if (m_Dirty.isDirty()) {
+
+            confimed = JOptionPane.showConfirmDialog(c,
+                    LocalRes.getIntString("message.changeslost"),
+                    LocalRes.getIntString("title.editor"),
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION;
+        }
+        return confimed;
     }
 }
