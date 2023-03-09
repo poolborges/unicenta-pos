@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -33,6 +35,8 @@ import javax.swing.*;
  * @author adrianromero
  */
 public class JPanelConfiguration extends JPanel implements JPanelView {
+
+    private final static Logger LOGGER = Logger.getLogger(JPanelConfiguration.class.getName());
 
     private static final long serialVersionUID = 1L;
 
@@ -119,6 +123,7 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
                 c.loadProperties(config);
             });
         } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "loading properties", e);
             JMessageDialog.showMessage(this,
                     new MessageInf(MessageInf.SGN_WARNING,
                             AppLocal.getIntString("message.cannotloadconfig"), e));
@@ -138,6 +143,7 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
                     AppLocal.getIntString("message.title"),
                     JOptionPane.INFORMATION_MESSAGE);
         } catch (HeadlessException | IOException e) {
+            LOGGER.log(Level.WARNING, "loading properties", e);
             JMessageDialog.showMessage(this,
                     new MessageInf(MessageInf.SGN_WARNING,
                             AppLocal.getIntString("message.cannotsaveconfig"), e));

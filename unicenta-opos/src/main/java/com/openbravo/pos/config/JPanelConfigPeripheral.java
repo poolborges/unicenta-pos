@@ -1118,7 +1118,7 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         m_jDisplayParams.add(jPanel1, "comm");
 
         jLabel20.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel20.setText(AppLocal.getIntString("Label.Name")); // NOI18N
+        jLabel20.setText(AppLocal.getIntString("label.name")); // NOI18N
         jLabel20.setPreferredSize(new java.awt.Dimension(50, 25));
 
         m_jtxtJPOSName.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1920,7 +1920,7 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
                 .addGroup(jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(webLabel2)
                     .addComponent(webLabel3))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
@@ -2069,7 +2069,7 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, 872, Short.MAX_VALUE)
+                .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, 794, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(

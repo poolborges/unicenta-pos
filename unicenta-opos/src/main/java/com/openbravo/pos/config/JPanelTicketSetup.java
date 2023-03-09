@@ -13,19 +13,17 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.config;
 
+import com.openbravo.basic.BasicException;
+import com.openbravo.data.loader.Session;
 import com.openbravo.data.user.DirtyManager;
 import java.awt.Component;
 import javax.swing.SpinnerNumberModel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.util.AltEncrypter;
@@ -36,27 +34,23 @@ import javax.swing.JOptionPane;
  * @author JG uniCenta
  */
 public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig {
+
     private static final Logger LOGGER = Logger.getLogger(JPanelTicketSetup.class.getName());
+    private static final long serialVersionUID = 1L;
     private final DirtyManager dirty = new DirtyManager();
-    private String receipt="1";
+    private String receipt = "1";
     private Integer x = 0;
     private String receiptSize;
     private String pickupSize;
-    private final Integer ps = 0;
-
-    private Connection conn;
-    private String sdbmanager;
-    private String SQL;
-    private Statement stmt;  
 
     /**
      *
      * @param oApp
      */
     public JPanelTicketSetup() {
-        
+
         initComponents();
-        
+
         jReceiptSize.addChangeListener(dirty);
         jPickupSize.addChangeListener(dirty);
         jTextReceiptPrefix.getDocument().addDocumentListener(dirty);
@@ -64,7 +58,6 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
 
         jbtnReset.setVisible(true);
     }
-
 
     /**
      *
@@ -74,7 +67,7 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
     public boolean hasChanged() {
         return dirty.isDirty();
     }
-    
+
     /**
      *
      * @return
@@ -83,7 +76,7 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
     public Component getConfigComponent() {
         return this;
     }
-   
+
     /**
      *
      * @param config
@@ -91,69 +84,67 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
     @Override
     public void loadProperties(AppConfig config) {
 
-        receiptSize =(config.getProperty("till.receiptsize"));
-        if (receiptSize == null || "".equals(receiptSize)){
-            jReceiptSize.setModel(new SpinnerNumberModel(1,1,20,1));
-        } else {            
-            jReceiptSize.setModel(new SpinnerNumberModel(Integer.parseInt(receiptSize),1,20,1));
-        }                
+        receiptSize = (config.getProperty("till.receiptsize"));
+        if (receiptSize == null || "".equals(receiptSize)) {
+            jReceiptSize.setModel(new SpinnerNumberModel(1, 1, 20, 1));
+        } else {
+            jReceiptSize.setModel(new SpinnerNumberModel(Integer.parseInt(receiptSize), 1, 20, 1));
+        }
 
-        pickupSize =(config.getProperty("till.pickupsize"));
-        if (pickupSize == null || "".equals(pickupSize)){
-            jPickupSize.setModel(new SpinnerNumberModel(1,1,20,1));
-        } else {            
-            jPickupSize.setModel(new SpinnerNumberModel(Integer.parseInt(pickupSize),1,20,1));
-        }        
-        
-        jTextReceiptPrefix.setText(config.getProperty("till.receiptprefix"));        
-// build the example receipt using the loaded details        
-        receipt="";
-        x=1;
-        while (x < (Integer)jReceiptSize.getValue()){
+        pickupSize = (config.getProperty("till.pickupsize"));
+        if (pickupSize == null || "".equals(pickupSize)) {
+            jPickupSize.setModel(new SpinnerNumberModel(1, 1, 20, 1));
+        } else {
+            jPickupSize.setModel(new SpinnerNumberModel(Integer.parseInt(pickupSize), 1, 20, 1));
+        }
+
+        jTextReceiptPrefix.setText(config.getProperty("till.receiptprefix"));
+        receipt = "";
+        x = 1;
+        while (x < (Integer) jReceiptSize.getValue()) {
             receipt += "0";
-        x++; 
-    }
-         
+            x++;
+        }
+
         receipt += "1";
-         jTicketExample.setText(jTextReceiptPrefix.getText()+receipt);  
-         m_jReceiptPrintOff.setSelected(Boolean.parseBoolean(config.getProperty("till.receiptprintoff"))); 
-        
+        jTicketExample.setText(jTextReceiptPrefix.getText() + receipt);
+        m_jReceiptPrintOff.setSelected(Boolean.parseBoolean(config.getProperty("till.receiptprintoff")));
+
         dirty.setDirty(false);
 
-        
     }
-    
+
     /*
      * JG Oct 2017 
      * This block to be used for internal SETS/RESETS and external ORDERS sync's  
-    */    
-    public void loadUp() throws ClassNotFoundException, SQLException {    
+     */
+    public void loadUp() throws ClassNotFoundException, SQLException {
 
-/* Add external received order reset block here - 
- * Get connex to secondary or external system's DB + [params]
- * Pref' use is JSON/REST rather than PreparedStatement
-*/        
+        /* Add external received order reset block here - 
+        Get connex to secondary or external system's DB + [params]
+        Pref' use is JSON/REST rather than PreparedStatement
+         */
     }
-    
+
     /**
      *
      * @param config
      */
     @Override
     public void saveProperties(AppConfig config) {
-        
+
         config.setProperty("till.receiptprefix", jTextReceiptPrefix.getText());
         config.setProperty("till.receiptsize", jReceiptSize.getValue().toString());
-        config.setProperty("till.pickupsize", jPickupSize.getValue().toString());        
-        config.setProperty("till.receiptprintoff",Boolean.toString(m_jReceiptPrintOff.isSelected()));
-        
+        config.setProperty("till.pickupsize", jPickupSize.getValue().toString());
+        config.setProperty("till.receiptprintoff", Boolean.toString(m_jReceiptPrintOff.isSelected()));
+
         dirty.setDirty(false);
     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -296,20 +287,20 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
 
     private void jTextReceiptPrefixKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextReceiptPrefixKeyReleased
 
-        jTicketExample.setText(jTextReceiptPrefix.getText()+ receipt);
+        jTicketExample.setText(jTextReceiptPrefix.getText() + receipt);
     }//GEN-LAST:event_jTextReceiptPrefixKeyReleased
 
     private void jReceiptSizeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jReceiptSizeStateChanged
 
-        receipt="";
-        x=1;
-        while (x < (Integer)jReceiptSize.getValue()){
+        receipt = "";
+        x = 1;
+        while (x < (Integer) jReceiptSize.getValue()) {
             receipt += "0";
-        x++; 
-    }
+            x++;
+        }
         receipt += "1";
-         jTicketExample.setText(jTextReceiptPrefix.getText()+receipt);
-         
+        jTicketExample.setText(jTextReceiptPrefix.getText() + receipt);
+
     }//GEN-LAST:event_jReceiptSizeStateChanged
 
     private void jPickupSizeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jPickupSizeStateChanged
@@ -321,52 +312,36 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
     }//GEN-LAST:event_m_jReceiptPrintOffActionPerformed
 
     private void jbtnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnResetActionPerformed
-        /* TODO: NEED IMPROVE PICKUP RESE
+
         int response = JOptionPane.showOptionDialog(null,
-            AppLocal.getIntString("message.resetpickup"),
-                    "Reset",
-                    JOptionPane.YES_NO_OPTION, 
-                    JOptionPane.QUESTION_MESSAGE,
-                    null, null, null);
+                AppLocal.getIntString("message.resetpickup"),
+                "Reset",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null, null, null);
         if (response == JOptionPane.YES_OPTION) {
-        try {
-            String db_user =(AppConfig.getInstance().getProperty("db.user"));
-            String db_url = (AppConfig.getInstance().getProperty("db.URL"));
-            String db_password = (AppConfig.getInstance().getProperty("db.password"));
-            
-            if (db_user != null && db_password != null && db_password.startsWith("crypt:")) {
-                AltEncrypter cypher = new AltEncrypter("cypherkey" + db_user);
-                db_password = cypher.decrypt(db_password.substring(6));
-            }
-            
-            conn = DriverManager.getConnection(db_url,db_user,db_password);
-            sdbmanager = conn.getMetaData().getDatabaseProductName();
-            stmt = (Statement) conn.createStatement();
-            
-            if ("MySQL".equals(sdbmanager)) {
-                SQL = "UPDATE pickup_number SET id = 0";
-                try {
-                    stmt.executeUpdate(SQL);
-                } catch (SQLException e){
-                    LOGGER.log(Level.WARNING, "Exception on reset pickup_number on MySQL", e);
+            try {
+                String db_user = (AppConfig.getInstance().getProperty("db.user"));
+                String db_url = (AppConfig.getInstance().getProperty("db.URL"));
+                String db_password = (AppConfig.getInstance().getProperty("db.password"));
+
+                if (db_user != null && db_password != null && db_password.startsWith("crypt:")) {
+                    AltEncrypter cypher = new AltEncrypter("cypherkey" + db_user);
+                    db_password = cypher.decrypt(db_password.substring(6));
                 }
-            } else if ("PostgreSQL".equals(sdbmanager)) {
-                SQL = "ALTER SEQUENCE pickup_number RESTART WITH 1";
-                try {
-                    stmt.executeUpdate(SQL);
-                } catch (SQLException e) {
-                    LOGGER.log(Level.WARNING, "Exception on reset pickup_number on PostgreSQL", e);
-                }
+
+                Session session = new Session(db_url, db_user, db_password);
+                session.DB.resetSequenceSentence(session, "pickup_number").exec();
+
+            } catch (SQLException | BasicException ex) {
+                LOGGER.log(Level.WARNING, null, ex);
             }
-        } catch (SQLException ex) {
-            LOGGER.log(Level.WARNING, null, ex);
+
         }
-        
-        }      
-*/
+
     }//GEN-LAST:event_jbtnResetActionPerformed
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -379,5 +354,5 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
     private javax.swing.JButton jbtnReset;
     private javax.swing.JCheckBox m_jReceiptPrintOff;
     // End of variables declaration//GEN-END:variables
-    
+
 }
