@@ -86,6 +86,11 @@ image::krpos-screenshot.gif[]
 docker run --name unicenta -p 3306:3306 -d -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=unicenta -e MYSQL_USER=unicenta -e MYSQL_PASSWORD=unicenta mysql:5.6
 ----
 
+.Run MySQL database for Developer Env
+----
+docker run --name unicentaMDB -p 3306:3306 -d -e MARIADB_ROOT_PASSWORD=root -eMARIADB_DATABASE=unicenta -eMARIADB_USER=unicenta -eMARIADB_PASSWORD=unicenta  mariadb/server:10.5
+----
+
 == Reference
 
 * link:{doc-dir}/[Documentation]
