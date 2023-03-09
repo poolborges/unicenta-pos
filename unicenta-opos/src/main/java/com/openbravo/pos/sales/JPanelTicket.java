@@ -138,7 +138,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
         initComponents();
 
-        LOGGER.log(System.Logger.Level.DEBUG,"JPanelTicket.init");
+        LOGGER.log(System.Logger.Level.DEBUG, "JPanelTicket.init");
         m_config = app.getProperties();
 
         m_App = app;
@@ -168,7 +168,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             m_jNumberKeys.dotIs00(true);
         }
 
-        LOGGER.log(System.Logger.Level.DEBUG,"JPanelTicket.init: criar: Ticket.Line");
+        LOGGER.log(System.Logger.Level.DEBUG, "JPanelTicket.init: criar: Ticket.Line");
         m_ticketlines = new JTicketLines(dlSystem.getResourceAsXML("Ticket.Line"));
         m_jPanelLines.add(m_ticketlines, java.awt.BorderLayout.CENTER);
         m_TTP = new TicketParser(m_App.getDeviceTicket(), dlSystem);
@@ -230,10 +230,10 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         return this;
     }
 
-    private String getTicketsbag(){
+    private String getTicketsbag() {
         return m_App.getProperties().getProperty("machine.ticketsbag");
     }
-            
+
     private class logout extends AbstractAction {
 
         public logout() {
@@ -272,13 +272,13 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     private void saveCurrentTicket() {
- 
+
         if (m_oTicket != null) {
             String currentTicket = m_oTicket.getId();
             try {
                 dlReceipts.updateSharedTicket(currentTicket, m_oTicket, m_oTicket.getPickupId());
             } catch (BasicException ex) {
-                LOGGER.log(System.Logger.Level.ERROR, "Exception on save current ticket: "+currentTicket, ex);
+                LOGGER.log(System.Logger.Level.ERROR, "Exception on save current ticket: " + currentTicket, ex);
             }
         }
     }
@@ -290,8 +290,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     @Override
     public void activate() throws BasicException {
 
-        LOGGER.log(System.Logger.Level.DEBUG,"JPanelTicket.activate");
-        
+        LOGGER.log(System.Logger.Level.DEBUG, "JPanelTicket.activate");
+
         Action logout = new logout();
         String autoLogoff = (m_App.getProperties().getProperty("till.autoLogoff"));
 
@@ -342,11 +342,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     @Override
     public boolean deactivate() {
-        LOGGER.log(System.Logger.Level.DEBUG,"JPanelTicket.deactivate");
+        LOGGER.log(System.Logger.Level.DEBUG, "JPanelTicket.deactivate");
         if (listener != null) {
             listener.stop();
         }
-        
+
         saveCurrentTicket();
 
         return m_ticketsbag.deactivate();
@@ -366,7 +366,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     @Override
     public void setActiveTicket(TicketInfo oTicket, String oTicketExt) {
 
-        LOGGER.log(System.Logger.Level.DEBUG,"JPanelTicket setActiveTicket: "+oTicketExt);
+        LOGGER.log(System.Logger.Level.DEBUG, "JPanelTicket setActiveTicket: " + oTicketExt);
         switch (getTicketsbag()) {
             case "restaurant":
                 if ("true".equals(m_App.getProperties().getProperty("till.autoLogoffrestaurant"))) {
@@ -413,7 +413,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             }
         }
 
-        if (m_oTicket != null){
+        if (m_oTicket != null) {
             executeEvent(m_oTicket, m_oTicketExt, "ticket.show");
         }
 
@@ -441,28 +441,13 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     private void refreshTicket() {
 
-        CardLayout cl = (CardLayout) (getLayout());
-
         if (m_oTicket == null) {
             m_jTicketId.setText(null);
             m_ticketlines.clearTicketLines();
-
             m_jSubtotalEuros.setText(null);
             m_jTaxesEuros.setText(null);
             m_jTotalEuros.setText(null);
             jCheckStock.setText(null);
-
-            checkStock();
-            countArticles();        
-            stateToZero();
-            repaint();
-
-            //Present ticket PANEL
-            cl.show(this, "ticket");
-
-            if ((m_oTicket != null) && (m_oTicket.getLinesCount() == 0)) {
-                resetSouthComponent();
-            }
         } else {
             if (m_oTicket.getTicketType() == TicketInfo.RECEIPT_REFUND) {
                 m_jEditLine.setVisible(false);
@@ -481,20 +466,23 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 m_ticketlines.addTicketLine(m_oTicket.getLine(i));
             }
 
-            countArticles();
-            printPartialTotals();
-            stateToZero();
-
-            cl.show(this, "ticket");
-
             if (m_oTicket.getLinesCount() == 0) {
                 resetSouthComponent();
             }
         }
+
+        CardLayout cl = (CardLayout) (getLayout());
+        cl.show(this, "ticket");
+
+        checkStock();
+        countArticles();
+        stateToZero();
+        printPartialTotals();
+        repaint();
     }
 
     private void countArticles() {
-        
+
         if (m_oTicket != null) {
             if (m_App.hasPermission("sales.Total") && m_oTicket.getArticlesCount() > 1) {
                 btnSplit.setEnabled(true);
@@ -527,7 +515,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     private void printPartialTotals() {
 
-        if (m_oTicket.getLinesCount() == 0) {
+        if (m_oTicket == null || m_oTicket.getLinesCount() == 0) {
             m_jSubtotalEuros.setText(null);
             m_jTaxesEuros.setText(null);
             m_jTotalEuros.setText(null);
@@ -540,16 +528,17 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     private void paintTicketLine(int index, TicketLineInfo oLine) {
-        m_oTicket.setLine(index, oLine);
-        m_ticketlines.setTicketLine(index, oLine);
-        m_ticketlines.setSelectedIndex(index);
-        //oCount = count;     // pass line old multiplier value
+        if (m_oTicket != null) {
+            m_oTicket.setLine(index, oLine);
+            m_ticketlines.setTicketLine(index, oLine);
+            m_ticketlines.setSelectedIndex(index);
+            //oCount = count;     // pass line old multiplier value
 
-        countArticles();
-        visorTicketLine(oLine);
-        printPartialTotals();
-        stateToZero();
-
+            countArticles();
+            visorTicketLine(oLine);
+            printPartialTotals();
+            stateToZero();
+        }
     }
 
     private void addTicketLine(ProductInfoExt oProduct, double dMul, double dPrice) {
@@ -632,7 +621,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                         line.setProductAttSetInstId(attedit.getAttributeSetInst());
                         line.setProductAttSetInstDesc(attedit.getAttributeSetInstDescription());
                     }
-                    */
+                     */
                     paintTicketLine(i, line);
                 }
 
@@ -804,7 +793,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             try {
                 Double value = m_App.getDeviceScale().readWeight();
                 if (value != null) {
-                    incProduct(prod,value);
+                    incProduct(prod, value);
                 }
             } catch (ScaleException ex) {
                 LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
@@ -815,7 +804,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             }
         } else {
             if (!prod.isVprice()) {
-                incProduct(prod,1.0);
+                incProduct(prod, 1.0);
             } else {
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(null,
@@ -842,7 +831,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         if (m_iNumberStatusInput == NUMBERZERO && m_iNumberStatusPor == NUMBERZERO) {
             incProduct(prod);
         } else if (m_iNumberStatusInput == NUMBERVALID && m_iNumberStatusPor == NUMBERZERO) {
-            incProduct(prod,getInputValue());
+            incProduct(prod, getInputValue());
         } else if (prod.isVprice()) {
             addTicketLine(prod, getPorValue(), getInputValue());
         } else {
@@ -1361,7 +1350,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     if (m_oTicket.getTicketType() == TicketInfo.RECEIPT_REFUND) {
                         if (m_App.getProperties().getProperty("override.check").equals("true")) {
                             //oCount = count - 1;  //increment existing line  
-                          
+
                             changeCount();
                             newline.setMultiply(newline.getMultiply() - 1.0);
                             newline.setProperty("ticket.updated", "true");
@@ -1466,7 +1455,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     } else {
                         if (m_App.getProperties().getProperty("override.check").equals("true")) {
                             //oCount = count + 1;  //increment existing line  
-            
+
                             if (changeCount()) {
                                 newline.setMultiply(dPor);
                                 newline.setProperty("ticket.updated", "true");
@@ -1496,7 +1485,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     if (m_oTicket.getTicketType() == TicketInfo.RECEIPT_REFUND) {
                         if (m_App.getProperties().getProperty("override.check").equals("true")) {
                             //oCount = count - 1;  //increment existing line  
-              
+
                             changeCount();
                             newline.setMultiply(-dPor);
                             newline.setProperty("ticket.updated", "true");
@@ -1511,7 +1500,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     } else {
                         if (m_App.getProperties().getProperty("override.check").equals("true")) {
                             //oCount = count - 1;  //increment existing line  
-                     
+
                             if (changeCount()) {
                                 newline.setMultiply(dPor);
                                 newline.setProperty("ticket.updated", "true");
@@ -1559,23 +1548,25 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             } else if (cTrans == ' ' || cTrans == '=') {
                 if (m_oTicket != null && m_oTicket.getLinesCount() > 0) {
                     if (closeTicket(m_oTicket, m_oTicketExt)) {
-                        m_ticketsbag.deleteTicket();
                         setActiveTicket(null, null);
-                        
+                        refreshTicket();
+                        //Delete will create a empty ticket
+                        m_ticketsbag.deleteTicket();
+
                         String autoLogoff = (m_App.getProperties().getProperty("till.autoLogoff"));
                         String autoLogoffRes = m_App.getProperties().getProperty("till.autoLogoffrestaurant");
                         if ("true".equals(autoLogoff)) {
                             if ("restaurant".equals(getTicketsbag()) && ("true".equals(autoLogoffRes))) {
                                 deactivate();
                             } else {
-                               ((JRootApp) m_App).closeAppView();
+                                ((JRootApp) m_App).closeAppView();
                             }
                         }
                     }
                     refreshTicket();
                 } else {
                     Toolkit.getDefaultToolkit().beep();
-                    LOGGER.log(System.Logger.Level.DEBUG, "Canno close Ticket, because m_oTicket is "+m_oTicket +", and LinesCount is "+ (m_oTicket != null ? m_oTicket.getLinesCount() : 0));
+                    LOGGER.log(System.Logger.Level.DEBUG, "Canno close Ticket, because m_oTicket is " + m_oTicket + ", and LinesCount is " + (m_oTicket != null ? m_oTicket.getLinesCount() : 0));
                 }
             }
         }
@@ -1633,16 +1624,16 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
                             try {
                                 executeEvent(ticket, ticketext, "ticket.close",
-                                    new ScriptArg("print", paymentdialog.isPrintSelected()),
-                                    new ScriptArg("ticket", ticket));
+                                        new ScriptArg("print", paymentdialog.isPrintSelected()),
+                                        new ScriptArg("ticket", ticket));
                             } catch (Exception ex) {
                                 LOGGER.log(System.Logger.Level.ERROR, "Exception on executeEvent: ", ex);
                             }
-                            
+
                             try {
                                 printTicket(paymentdialog.isPrintSelected() || warrantyPrint
-                                    ? "Printer.Ticket"
-                                    : "Printer.Ticket2", ticket, ticketext);
+                                        ? "Printer.Ticket"
+                                        : "Printer.Ticket2", ticket, ticketext);
                                 Notify(AppLocal.getIntString("notify.printing"));
                             } catch (Exception ex) {
                                 LOGGER.log(System.Logger.Level.ERROR, "Exception on printTicket: ", ex);
@@ -1751,7 +1742,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     public void printTicket(String resource) {
-        LOGGER.log(System.Logger.Level.DEBUG,"JPanelTicket printTicket: "+resource);
+        LOGGER.log(System.Logger.Level.DEBUG, "JPanelTicket printTicket: " + resource);
 //        printTicket(resource, m_oTicket, m_oTicketExt);
 // this method is intended to be called only from JPanelButtons.
 
@@ -1796,7 +1787,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 JasperDesign jd = JRXmlLoader.load(getClass().getResourceAsStream(resourcefile + ".jrxml"));
                 jr = JasperCompileManager.compileReport(jd);
             } else {
-                try ( ObjectInputStream oin = new ObjectInputStream(in)) {
+                try (ObjectInputStream oin = new ObjectInputStream(in)) {
                     jr = (JasperReport) oin.readObject();
                 }
             }
@@ -1964,7 +1955,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     public void checkStock() {
-        
+
         int i = m_ticketlines.getSelectedIndex();
 
         if (i >= 0) {
@@ -1991,9 +1982,9 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             } catch (BasicException ex) {
                 LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
             }
-        }else{   
+        } else {
             Toolkit.getDefaultToolkit().beep();
-            LOGGER.log(System.Logger.Level.WARNING,"ticketlines Selected Index: "+i);
+            LOGGER.log(System.Logger.Level.WARNING, "ticketlines Selected Index: " + i);
         }
     }
 
@@ -2090,8 +2081,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         public Object evalScript(String code, ScriptArg... args) throws ScriptException {
 
             ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
-            
-            for(ScriptArg arg: args){
+
+            for (ScriptArg arg : args) {
                 script.put(arg.getKey(), arg.getValue());
             }
 
@@ -2615,7 +2606,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         ProductInfoExt prod = JProductFinder.showMessage(JPanelTicket.this, dlSales);
         if (prod != null && m_oTicket != null) {
             buttonTransition(prod);
-        }else{
+        } else {
             Toolkit.getDefaultToolkit().beep();
         }
 
@@ -2630,9 +2621,9 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         if (i < 0) {
             Toolkit.getDefaultToolkit().beep();
             JOptionPane.showMessageDialog(this,
-                        AppLocal.getIntString("message.cannotfindattributes"),
-                        AppLocal.getIntString("message.productnotselected"),
-                        JOptionPane.INFORMATION_MESSAGE);
+                    AppLocal.getIntString("message.cannotfindattributes"),
+                    AppLocal.getIntString("message.productnotselected"),
+                    JOptionPane.INFORMATION_MESSAGE);
         } else {
             try {
                 TicketLineInfo line = m_oTicket.getLine(i);
@@ -2680,7 +2671,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }//GEN-LAST:event_j_btnRemotePrtActionPerformed
 
     private void btnReprint1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReprint1ActionPerformed
-        
+
         //TODO GET LAST FROM DB (USER ID)
         /*
         if (m_config.getProperty("lastticket.number") != null) {
@@ -2710,7 +2701,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 msg.show(this);
             }
         }
-        */
+         */
     }//GEN-LAST:event_btnReprint1ActionPerformed
 
     private void btnSplitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSplitActionPerformed
@@ -2917,7 +2908,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
                 CustomerInfo customerInfo = finder.getSelectedCustomer();
                 if (customerInfo != null) {
-                    
+
                     try {
                         CustomerInfoExt customerExt = dlSales.loadCustomerExt(customerInfo.getId());
                         m_oTicket.setCustomer(customerExt);
