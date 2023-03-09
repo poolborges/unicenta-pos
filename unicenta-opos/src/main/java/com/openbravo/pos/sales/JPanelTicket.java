@@ -1719,7 +1719,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 try {
                     ticket.setPickupId(dlSales.getNextPickupIndex());
                 } catch (BasicException ex) {
-                    LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
+                    LOGGER.log(System.Logger.Level.WARNING, "Exception on get pickup id: ", ex);
                     ticket.setPickupId(0);
                 }
             }
