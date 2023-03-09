@@ -36,6 +36,7 @@ public class InstanceManager {
     private static final String APPLICATION_ID = "com.openbravo.pos.instance.Kriolos-POS";
     private Registry registry;
     private final AppMessage message;
+    private final int RMI_PORT = 3005;
 
     /**
      * Creates a new instance of InstanceManager
@@ -61,28 +62,10 @@ public class InstanceManager {
      * @throws java.rmi.AlreadyBoundException
      */
     public boolean registerInstance() throws RemoteException, AlreadyBoundException {
-        LOGGER.info("Create a instance identify by ID: " + APPLICATION_ID);
+        LOGGER.info("Create a instance identify by ID: " + APPLICATION_ID + " on PORT: "+RMI_PORT);
         AppMessage stub = (AppMessage) UnicastRemoteObject.exportObject(this.message, 0);
-        this.registry = LocateRegistry.createRegistry(generateRandomPort());
+        this.registry = LocateRegistry.createRegistry(RMI_PORT);
         this.registry.bind(APPLICATION_ID, stub);
         return true;
-    }
-
-    private static int generateRandomPort() {
-        ServerSocket s = null;
-        try {
-            // ServerSocket(0) results in availability of a free random port
-            s = new ServerSocket(0);
-            return s.getLocalPort();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            assert s != null;
-            try {
-                s.close();
-            } catch (IOException ex) {
-                LOGGER.log(Level.WARNING,"QException getting random port ", ex);
-            }
-        }
     }
 }
