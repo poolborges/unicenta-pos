@@ -40,7 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         
         
         <mysql.version>8.0.29</mysql.version>
-        <derby.version>10.15.2.0</derby.version>
         <jasperreports.version>6.20.0</jasperreports.version>
         <flatlaf.version>2.0.2</flatlaf.version>
     </properties>
@@ -125,18 +124,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <version>${mysql.version}</version> 
             <scope>compile</scope>
         </dependency>  
-        <dependency> 
-            <groupId>org.apache.derby</groupId>  
-            <artifactId>derby</artifactId>  
-            <version>${derby.version}</version> 
-            <scope>runtime</scope>
-        </dependency>  
-        <dependency>
-            <groupId>org.apache.derby</groupId>  
-            <artifactId>derbyLocale_pt_BR</artifactId>  
-            <version>${derby.version}</version> 
-            <scope>runtime</scope>
-        </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
