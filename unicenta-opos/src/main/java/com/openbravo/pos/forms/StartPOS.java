@@ -16,6 +16,7 @@
 package com.openbravo.pos.forms;
 
 import com.openbravo.pos.instance.InstanceManager;
+import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
@@ -78,6 +79,7 @@ public class StartPOS {
                 if ("fullscreen".equals(screenmode)) {
                     rootframe.initFrame(true);
                 } else {
+                    rootframe.setExtendedState(MAXIMIZED_BOTH);
                     rootframe.initFrame(false);
                 }
             }

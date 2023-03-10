@@ -45,13 +45,11 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
     private final JSplashScreen splashScreen = new JSplashScreen();
     private final JRootApp m_rootapp;
     private final AppProperties m_props;
-    private final OSValidator m_OS;
 
     public JRootFrame(AppProperties props) {
         initComponents();
         m_props = props;
         m_rootapp = new JRootApp(m_props);
-        m_OS = new OSValidator();
     }
 
     public void initFrame(boolean kioskMode) {
@@ -63,25 +61,19 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, "Exception load icon: " + image, e);
         }
-        
+
         //SHOW SPLASH
         getContentPane().add(splashScreen, BorderLayout.CENTER);
-
-        if (kioskMode) {
-            modeKiosk();
-        } else {
-            modeWindow();
-        }
 
         //LOAD APP PANEL
         if (m_rootapp.initApp()) {
             getContentPane().remove(splashScreen);
-            
+
             getContentPane().add(m_rootapp, BorderLayout.CENTER);
             sendInitEnvent();
 
         } else {
-        //LOAD CONFIG PANEL
+            //LOAD CONFIG PANEL
             int opionRes = JOptionPane.showConfirmDialog(this,
                     AppLocal.getIntString("message.databasechange"),
                     "Connection", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
@@ -100,11 +92,16 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
 
                 getContentPane().remove(splashScreen);
                 getContentPane().add(config, BorderLayout.CENTER);
-
             } else {
                 dispose();
                 System.exit(0);
             }
+        }
+
+        if (kioskMode) {
+            modeKiosk();
+        } else {
+            modeWindow();
         }
     }
 
@@ -116,29 +113,35 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
 
     private void modeKiosk() {
 
-        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(0, 0, d.width, d.height);
-
-        GraphicsDevice device = GraphicsEnvironment
-                .getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        setUndecorated(true);
+        setResizable(false);
 
         // LINUX/UNIX
-        if (device.isFullScreenSupported() && !m_OS.isWindows()) {
-            setResizable(true);
+        if (new OSValidator().isUnix()) {
+            GraphicsDevice device = GraphicsEnvironment
+                    .getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
-            addFocusListener(new FocusListener() {
-                @Override
-                public void focusGained(FocusEvent arg0) {
-                    setAlwaysOnTop(true);
-                }
+            if (device.isFullScreenSupported()) {
+                setResizable(true);
 
-                @Override
-                public void focusLost(FocusEvent arg0) {
-                    setAlwaysOnTop(false);
-                }
-            });
-            device.setFullScreenWindow(this);
+                addFocusListener(new FocusListener() {
+                    @Override
+                    public void focusGained(FocusEvent arg0) {
+                        setAlwaysOnTop(true);
+                    }
+
+                    @Override
+                    public void focusLost(FocusEvent arg0) {
+                        setAlwaysOnTop(false);
+                    }
+                });
+                device.setFullScreenWindow(this);
+            } else {
+                setVisible(true);
+            }
         } else {
+            Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+            setBounds(0, 0, d.width, d.height);
             setVisible(true);
         }
     }
