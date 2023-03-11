@@ -52,7 +52,7 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
         m_rootapp = new JRootApp(m_props);
     }
 
-    public void initFrame(boolean kioskMode) {
+    public void initFrame() {
 
         setTitle(AppLocal.APP_NAME + " - " + AppLocal.APP_VERSION);
         String image = "/com/openbravo/images/app_logo_48x48.png";
@@ -98,16 +98,33 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
             }
         }
 
-        if (kioskMode) {
-            modeKiosk();
-        } else {
+        String screenmode = m_props.getProperty("machine.screenmode");
+        if (null == screenmode) {
             modeWindow();
+        } else {
+            switch (screenmode) {
+                case "fullscreen":
+                    modeKiosk();
+                    break;
+                case "windowmaximised":
+                    modeWindowMaximized();
+                    break;
+                default:
+                    modeWindow();
+                    break;
+            }
         }
+    }
+
+    private void modeWindowMaximized() {
+        setExtendedState(MAXIMIZED_BOTH);
+        setLocationRelativeTo(null); //center
+        setVisible(true);
     }
 
     private void modeWindow() {
         pack();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(null); //center
         setVisible(true);
     }
 

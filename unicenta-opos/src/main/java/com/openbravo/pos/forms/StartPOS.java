@@ -36,15 +36,15 @@ public class StartPOS {
         AppConfig config = new AppConfig(configFile);
         config.load();
         AppConfig.applySystemProperties(config);
-        
+
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
 
                 final JRootFrame rootframe = new JRootFrame(config);
-                if (1!=1 && "true".equals(config.getProperty("machine.uniqueinstance"))) {
-                    
+                if (1 != 1 && "true".equals(config.getProperty("machine.uniqueinstance"))) {
+
                     try {
                         InstanceManager.queryInstance().restoreWindow();
                     } catch (RemoteException | NotBoundException e) {
@@ -53,11 +53,11 @@ public class StartPOS {
                         //Open A Window a Present a message to User
                         //Wait maximun 30 second and close
                         JOptionPane.showMessageDialog(null,
-                            msg,
-                            AppLocal.APP_NAME, JOptionPane.WARNING_MESSAGE);
+                                msg,
+                                AppLocal.APP_NAME, JOptionPane.WARNING_MESSAGE);
                         System.exit(-1000);
                     }
-        
+
                     // Register the running application
                     try {
                         final InstanceManager instmanager = new InstanceManager(rootframe);
@@ -69,19 +69,13 @@ public class StartPOS {
                         //Open A Window a Present a message to User
                         //Wait maximun 30 second and close
                         JOptionPane.showMessageDialog(null,
-                            msg,
-                            AppLocal.APP_NAME, JOptionPane.WARNING_MESSAGE);
+                                msg,
+                                AppLocal.APP_NAME, JOptionPane.WARNING_MESSAGE);
                         System.exit(-1001);
                     }
                 }
-
-                String screenmode = config.getProperty("machine.screenmode");
-                if ("fullscreen".equals(screenmode)) {
-                    rootframe.initFrame(true);
-                } else {
-                    rootframe.setExtendedState(MAXIMIZED_BOTH);
-                    rootframe.initFrame(false);
-                }
+                
+                rootframe.initFrame();
             }
         });
     }
