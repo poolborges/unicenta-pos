@@ -152,6 +152,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>unicenta-thirdparty</module>
         <module>unicenta-opos</module>
         <module>docs</module>
+        <module>kriolos-pos-domain</module>
     </modules>
     
     <dependencyManagement>
