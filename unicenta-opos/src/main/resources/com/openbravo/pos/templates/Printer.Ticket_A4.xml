@@ -86,7 +86,7 @@
         
 		<line><text align="left" length="15">Served by:</text><text>${ticket.printUser()}</text></line>
 		<line></line>
-		<line><text align ="left" length="83">Item</text><text align ="right" length="10">Price</text><text align ="right" length="5">Qty</text><text align ="right" length="10">Value</text></line>
+		<line><text align ="left" length="83">Item</text><text align ="right" length="10">Price</text><text align ="right" length="5">Qty</text><text align ="right" length="10">Amount</text></line>
 		<line><text align="left" length="108">------------------------------------------------------------------------------------------------------------</text></line>
 
 #foreach ($ticketline in $ticket.getLines())

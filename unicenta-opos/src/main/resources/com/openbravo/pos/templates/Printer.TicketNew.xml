@@ -111,7 +111,7 @@
             <text align ="left" length="17">Item</text>
             <text align ="right" length="8">Price</text>
             <text align ="right" length="7">Qty</text>
-            <text align ="right" length="10">Value</text>
+            <text align ="right" length="10">Amount</text>
           </line>
           <line>
             <text>------------------------------------------</text>

@@ -37,6 +37,7 @@
 // Nothing else.
 package com.openbravo.pos.reports;
 
+import com.openbravo.pos.forms.AppLocal;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.HeadlessException;
@@ -144,7 +145,7 @@ public class JRPrinterAWT300 implements Printable {
         PageFormat pageFormat = printJob.defaultPage();
         Paper paper = pageFormat.getPaper();
 
-        printJob.setJobName("uniCentaReport - " + jasperPrint.getName());
+        printJob.setJobName(AppLocal.APP_NAME+" Printer - " + jasperPrint.getName());
 
         switch (jasperPrint.getOrientationValue()) {
             case LANDSCAPE: {

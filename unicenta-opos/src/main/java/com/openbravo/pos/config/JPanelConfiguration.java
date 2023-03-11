@@ -15,6 +15,8 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.config;
 
+import com.openbravo.pos.forms.AppConfig;
+import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppProperties;
 import com.openbravo.basic.BasicException;

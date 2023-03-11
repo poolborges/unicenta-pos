@@ -84,19 +84,25 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
     @Override
     public void loadProperties(AppConfig config) {
 
+        int recSize;
         receiptSize = (config.getProperty("till.receiptsize"));
-        if (receiptSize == null || "".equals(receiptSize)) {
-            jReceiptSize.setModel(new SpinnerNumberModel(1, 1, 20, 1));
-        } else {
-            jReceiptSize.setModel(new SpinnerNumberModel(Integer.parseInt(receiptSize), 1, 20, 1));
+        try {
+            recSize = Integer.parseInt(receiptSize);
+        } catch (NumberFormatException ex) {
+            recSize = 1;
         }
 
+        jReceiptSize.setModel(new SpinnerNumberModel(recSize, 1, 20, 1));
+
+        int picSize;
         pickupSize = (config.getProperty("till.pickupsize"));
-        if (pickupSize == null || "".equals(pickupSize)) {
-            jPickupSize.setModel(new SpinnerNumberModel(1, 1, 20, 1));
-        } else {
-            jPickupSize.setModel(new SpinnerNumberModel(Integer.parseInt(pickupSize), 1, 20, 1));
+        try {
+            picSize = Integer.parseInt(pickupSize);
+        } catch (NumberFormatException ex) {
+            picSize = 1;
         }
+
+        jPickupSize.setModel(new SpinnerNumberModel(picSize, 1, 20, 1));
 
         jTextReceiptPrefix.setText(config.getProperty("till.receiptprefix"));
         receipt = "";

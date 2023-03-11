@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </parent>  
     <groupId>io.github.kriolos.opos</groupId>  
     <artifactId>kriolos-pos</artifactId> 
-    <packaging>nbm</packaging>
+    <packaging>jar</packaging>
     <name>Kriolos.POS.App</name> 
     
     <properties>
@@ -64,18 +64,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
-        </dependency>    
-        <dependency> 
-            <groupId>org.apache.velocity</groupId>  
-            <artifactId>velocity-engine-core</artifactId>  
-            <version>2.3</version> 
-        </dependency>  
-        
-        <!-- BeanShell Script Engine -->
-        <dependency> 
-            <groupId>org.apache-extras.beanshell</groupId>  
-            <artifactId>bsh</artifactId>  
-            <version>2.0b6</version> 
         </dependency>  
         
 
@@ -162,12 +150,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <artifactId>rsyntaxtextarea</artifactId>
             <version>3.1.6</version>
         </dependency>
-          
-        <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>javax.persistence-api</artifactId>
-            <version>2.2</version>
-        </dependency>
+
         
         <dependency> 
             <groupId>org.jdatepicker</groupId>  
@@ -235,97 +218,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <artifactId>jaxb-impl</artifactId>
             <scope>runtime</scope>
         </dependency>
-        
+
+        <dependency> 
+            <groupId>org.netbeans.external</groupId>  
+            <artifactId>AbsoluteLayout</artifactId>  
+            <version>${netbeans.version}</version> 
+        </dependency> 
         <!-- Netbeans Module - Swing Validation: On NBM Need extra lib -->
         <dependency>
             <groupId>org.netbeans.modules</groupId>
             <artifactId>org-netbeans-modules-swing-validation</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
-        
-        <!-- netbeans MODULES -->
-        <dependency> 
-            <groupId>org.netbeans.external</groupId>  
-            <artifactId>AbsoluteLayout</artifactId>  
-            <version>${netbeans.version}</version> 
-        </dependency> 
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-windows</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-modules</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-awt</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-util</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-modules-settings</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-api-annotations-common</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        <!--
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-dialogs</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-explorer</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-nodes</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-util</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-util-lookup</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-util-ui</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        -->
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-util-ui</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-util-lookup</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-modules-options-api</artifactId>
-            <version>${netbeans.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>io.github.kriolos.opos</groupId>
             <artifactId>kriolos-pos-domain</artifactId>
@@ -372,36 +277,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.netbeans.utilities</groupId>
-                <artifactId>nbm-maven-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <publicPackages>
-                        <publicPackage>com.openbravo.basic</publicPackage>
-                        <publicPackage>com.openbravo.beans</publicPackage>
-                        <publicPackage>com.openbravo.beans.gui</publicPackage>
-                        <publicPackage>com.openbravo.data.gui</publicPackage>
-                        <publicPackage>com.openbravo.data.loader</publicPackage>
-                        <publicPackage>com.openbravo.data.model</publicPackage>
-                        <publicPackage>com.openbravo.data.user</publicPackage>
-                        <publicPackage>com.openbravo.editor</publicPackage>
-                        <publicPackage>com.openbravo.format</publicPackage>
-                        <publicPackage>com.openbravo.pos.*</publicPackage>
-                        <publicPackage>com.openbravo.resources</publicPackage>
-                        <publicPackage>io.github.kriolos.opos.*</publicPackage>
-                    </publicPackages>
-                    <codeNameBase>${project.artifactId}</codeNameBase>
-                    <verifyRuntime>warning<!-- fail,skip,warning --></verifyRuntime>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>javax.help</groupId>
-                        <artifactId>javahelp</artifactId>
-                        <version>2.0.02</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>   
     </build>  

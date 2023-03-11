@@ -104,6 +104,9 @@ public class JRootApp extends JPanel implements AppView {
         if (com.openbravo.pos.data.DBMigrator.execDBMigration(session)) {
             //return false;
             LOGGER.log(Level.INFO, "DB Migration execution Finished: OK");
+        }else {
+            JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_DANGER, "Database migration faile, Cannot continue"));
+            return false;
         }
 
         logStartup();

@@ -16,6 +16,11 @@
 
 package com.openbravo.pos.customers;
 
+import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.pos.forms.DataLogicSystem;
+import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.forms.BeanFactoryApp;
+import com.openbravo.pos.forms.BeanFactoryException;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;

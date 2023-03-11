@@ -24,7 +24,7 @@ class JTicket extends javax.swing.JPanel {
     
     private static final int H_GAP = 8;
     private static final int V_GAP = 8;
-    private static final int COLUMNS = 42;
+    private static final int COLUMNS = 46;
     private static final int LINEWIDTH = COLUMNS * 7;    
     
     private final BasicTicket basict;

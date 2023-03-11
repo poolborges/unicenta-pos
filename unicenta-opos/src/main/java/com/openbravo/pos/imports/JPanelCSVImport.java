@@ -17,6 +17,10 @@
 
 package com.openbravo.pos.imports;
 
+import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.pos.forms.AppConfig;
+import com.openbravo.pos.forms.DataLogicSystem;
+import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppProperties;
 import com.csvreader.CsvReader;

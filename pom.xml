@@ -153,6 +153,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>unicenta-opos</module>
         <module>docs</module>
         <module>kriolos-pos-domain</module>
+        <module>kriolos-pos-nbm</module>
     </modules>
     
     <dependencyManagement>

@@ -16,6 +16,8 @@
 
 package com.openbravo.pos.businesspartner;
 
+import com.openbravo.pos.customers.DataLogicCustomers;
+import com.openbravo.pos.customers.CustomerInfo;
 import com.openbravo.pos.customers.*;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.QBFCompareEnum;

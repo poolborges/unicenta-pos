@@ -16,6 +16,7 @@
 
 package com.openbravo.pos.inventory;
 
+import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.basic.BasicException;
 import com.openbravo.beans.DateUtils;

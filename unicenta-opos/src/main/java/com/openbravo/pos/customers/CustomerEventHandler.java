@@ -18,13 +18,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.customers;
 
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.BeanFactoryException;
-import com.openbravo.pos.forms.DataLogicSystem;
-import com.openbravo.pos.scripting.ScriptEngine;
-import com.openbravo.pos.scripting.ScriptException;
-import com.openbravo.pos.scripting.ScriptFactory;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**

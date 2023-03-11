@@ -18,11 +18,7 @@ package com.openbravo.pos.data;
 
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import liquibase.Liquibase;
@@ -64,10 +60,7 @@ public class DBMigrator {
         } catch (DatabaseException ex) {
             LOGGER.log(Level.SEVERE, "DB Migration Exception: ", ex);
             res = false;
-        } catch (LiquibaseException ex) {
-            LOGGER.log(Level.SEVERE, "DB Migration Exception: ", ex);
-            res = false;
-        } catch (SQLException ex) {
+        } catch (LiquibaseException | SQLException ex) {
             LOGGER.log(Level.SEVERE, "DB Migration Exception: ", ex);
             res = false;
         }

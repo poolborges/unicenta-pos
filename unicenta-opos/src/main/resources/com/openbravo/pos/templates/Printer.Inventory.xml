@@ -51,7 +51,7 @@
             <text align ="left" bold="true" length="17">Item</text>
             <text align ="right" bold="true" length="10">Price</text>
             <text align ="right" bold="true" length="5">Qty</text>
-            <text align ="right" bold="true" length="10">Value</text>
+            <text align ="right" bold="true" length="10">Amount</text>
         </line>      
         <line>
             <text>------------------------------------------</text>
