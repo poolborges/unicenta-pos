@@ -23,24 +23,28 @@ import com.openbravo.format.Formats;
 import com.openbravo.pos.ticket.TicketLineInfo;
 import com.openbravo.pos.ticket.TicketProductInfo; 
 
-discountrate = 1 - sales.getInputValue();
+if(sales != null){
+    discountrate = 1 - sales.getInputValue();
 
-index = sales.getSelectedIndex();
-if (index >= 0) {
-    if (ticket.getTotal() > 0.0 && discountrate > 0.0) {
-        sdiscount = Formats.PERCENT.formatValue((1-discountrate));
-        for (int number= 0; number < ticket.getLinesCount(); number++) {
-            line = ticket.getLine(number);
-            ticket.setLine(number,
-            new TicketLineInfo(
-                    line.getProductID(),
-                    line.getProductName() + " - Discount @  " + sdiscount + " was " + line.getPrice(),
-                    line.getProductTaxCategoryID(),
-                    line.getMultiply(),
-                    (double)Math.rint(line.getPrice() * discountrate *100) /100d,
-                    line.getTaxInfo())); 
-        }  
-    } else {  
+    index = sales.getSelectedIndex();
+    if (index >= 0) {
+        if (ticket.getTotal() > 0.0 && discountrate > 0.0) {
+            sdiscount = Formats.PERCENT.formatValue((1-discountrate));
+            for (int number= 0; number < ticket.getLinesCount(); number++) {
+                line = ticket.getLine(number);
+                ticket.setLine(number,
+                new TicketLineInfo(
+                        line.getProductID(),
+                        line.getProductName() + " - Discount @  " + sdiscount + " was " + line.getPrice(),
+                        line.getProductTaxCategoryID(),
+                        line.getMultiply(),
+                        (double)Math.rint(line.getPrice() * discountrate *100) /100d,
+                        line.getTaxInfo())); 
+            }  
+        } else {  
+            java.awt.Toolkit.getDefaultToolkit().beep();
+        }
+    } else {
         java.awt.Toolkit.getDefaultToolkit().beep();
     }
 } else {
