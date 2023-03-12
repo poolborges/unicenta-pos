@@ -41,8 +41,10 @@ public enum ImageResources {
     ICON_CANCEL("com/openbravo/images/cancel.png"),
     ICON_PACKAGE("com/openbravo/images/package.png");
 
-    private static final int WIDTH = 64;
-    private static final int HEIGHT = 48;
+    //THIS IS IMPORTANT DEFAULT SIZE, USE IN ICONS
+    // SHOULD BE 32 x 32, because some GUI expect (eg: PaymentSelector small icon)
+    private static final int WIDTH = 32;
+    private static final int HEIGHT = 32;
     
     private final String resourcePath;
 

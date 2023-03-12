@@ -27,6 +27,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -56,9 +57,25 @@ public class ThumbNailBuilder {
 
     public ThumbNailBuilder(int width, int height, String img) {
         try {
-            init(width, height, ImageIO.read(getClass().getClassLoader().getResourceAsStream(img)));
+            LOGGER.info("Loading image: " + img);
+            InputStream inputStrem = getClass().getClassLoader().getResourceAsStream(img);
+            BufferedImage bufImage = null;
+            if (inputStrem != null) {
+                bufImage = ImageIO.read(inputStrem);
+            } else {
+
+                inputStrem = ThumbNailBuilder.class.getResource(img).openStream();
+
+                if (inputStrem != null) {
+                    bufImage = ImageIO.read(inputStrem);
+                }else {
+                    //Creating of EMPTY IMAGE
+                    bufImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+                }
+            }
+            init(width, height, bufImage);
         } catch (IOException ex) {
-            LOGGER.log(Level.WARNING, "Exception creating t", ex);
+            LOGGER.log(Level.WARNING, "Exception loading resource image" + img, ex);
             init(width, height, null);
         }
     }
@@ -67,7 +84,7 @@ public class ThumbNailBuilder {
         this.m_width = width;
         this.m_height = height;
         if (imgdef == null) {
-            this.m_imgdefault = null;
+            this.m_imgdefault = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         } else {
             this.m_imgdefault = createThumbNail(imgdef);
         }
