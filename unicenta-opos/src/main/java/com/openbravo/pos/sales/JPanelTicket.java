@@ -673,7 +673,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     private ProductInfoExt getInputProduct() {
         ProductInfoExt oProduct = new ProductInfoExt();
-// Always add Default Prod ID + Add Name to Misc. if empty
+        // Always add Default Prod ID + Add Name to Misc. if empty
+        // THOSE ATTRIBUTE ARE IMPORTANT FOR Table foreign key rela
         oProduct.setID("xxx999_999xxx_x9x9x9");
         oProduct.setReference("xxx999");
         oProduct.setCode("xxx999");
