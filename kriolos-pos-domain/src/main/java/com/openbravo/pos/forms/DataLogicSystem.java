@@ -308,6 +308,8 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      * @return
      */
     public final BufferedImage getResourceAsImage(String sName) {
+        
+        LOGGER.log(Level.INFO, "Get image resource id: " + sName);
         BufferedImage img = null;
         try {
             InputStream strem = new ByteArrayInputStream(getResource(sName));

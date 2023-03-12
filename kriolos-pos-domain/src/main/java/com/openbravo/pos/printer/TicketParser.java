@@ -26,6 +26,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -39,6 +40,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author JG uniCenta
  */
 public class TicketParser extends DefaultHandler {
+    
+    private static final Logger LOGGER = Logger.getLogger(TicketParser.class.getName());
 
     private static SAXParser m_sp = null;
 
