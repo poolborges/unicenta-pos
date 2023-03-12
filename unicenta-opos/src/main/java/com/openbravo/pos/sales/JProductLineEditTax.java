@@ -27,7 +27,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.swing.JFrame;
 import com.openbravo.basic.BasicException;
-import com.openbravo.data.loader.Session;
 import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
@@ -70,11 +69,8 @@ public class JProductLineEditTax extends javax.swing.JDialog {
             throw new BasicException(AppLocal.getIntString("message.cannotcalculatetaxes"));
         }
 
-        if (!productID.equals("xxx999_999xxx_x9x9x9")) {
-            m_jBtnPriceUpdate.setVisible(AppConfig.getInstance().getBoolean("db.prodpriceupdate"));
-        }else{
-            m_jBtnPriceUpdate.setVisible(false);
-        }        
+        
+        m_jBtnPriceUpdate.setVisible(AppConfig.getInstance().getBoolean("db.prodpriceupdate"));      
 
         m_jBtnPriceUpdate.setEnabled(false);
         

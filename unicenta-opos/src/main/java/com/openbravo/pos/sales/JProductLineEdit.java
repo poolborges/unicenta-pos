@@ -30,14 +30,10 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.Session;
 import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppProperties;
 import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.AppViewConnection;
 import com.openbravo.pos.ticket.TicketLineInfo;
 import com.openbravo.pos.util.AltEncrypter;
 import java.sql.DriverManager;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -74,11 +70,7 @@ public class JProductLineEdit extends javax.swing.JDialog {
             throw new BasicException(AppLocal.getIntString("message.cannotcalculatetaxes"));
         }
 
-        if (!productID.equals("xxx999_999xxx_x9x9x9")) {
-            m_jBtnPriceUpdate.setVisible(AppConfig.getInstance().getBoolean("db.prodpriceupdate"));
-        }else{
-            m_jBtnPriceUpdate.setVisible(false);
-        }        
+        m_jBtnPriceUpdate.setVisible(AppConfig.getInstance().getBoolean("db.prodpriceupdate"));        
 
         m_jBtnPriceUpdate.setEnabled(false);
         

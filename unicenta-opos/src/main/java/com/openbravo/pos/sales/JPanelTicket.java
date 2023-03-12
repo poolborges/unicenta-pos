@@ -546,39 +546,12 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     private void addTicketLine(ProductInfoExt oProduct, double dMul, double dPrice) {
 
-        if (oProduct.isVprice() || oProduct.getID().equals("xxx999_999xxx_x9x9x9")) {
-            TaxInfo tax = taxeslogic.getTaxInfo(oProduct.getTaxCategoryID(), m_oTicket.getCustomer());
+        // get the line product tax
+        TaxInfo tax = taxeslogic.getTaxInfo(oProduct.getTaxCategoryID(), m_oTicket.getCustomer());
 
-            addTicketLine(new TicketLineInfo(oProduct, dMul, dPrice, tax,
-                    (java.util.Properties) (oProduct.getProperties().clone())));
-
-        } else if (oProduct.getID().equals("xxx998_998xxx_x8x8x8")) {
-
-            if (m_App.getProperties().getProperty("till.SCOnOff").equals("true")) {
-                TaxInfo tax = taxeslogic.getTaxInfo(oProduct.getTaxCategoryID(),
-                        m_oTicket.getCustomer());
-                String SCRate = (m_App.getProperties().getProperty("till.SCRate"));
-
-                double scharge;
-                scharge = Double.parseDouble(SCRate);
-                scharge = m_oTicket.getTotal() * (scharge / 100);
-
-                addTicketLine(new TicketLineInfo(oProduct, 1, scharge, tax,
-                        (java.util.Properties) (oProduct.getProperties().clone())));
-
-            } else {
-                JOptionPane.showMessageDialog(this, AppLocal.getIntString("message.sconoff.disable"));
-            }
-
-        } else {
-// get the line product tax
-            TaxInfo tax = taxeslogic.getTaxInfo(oProduct.getTaxCategoryID(), m_oTicket.getCustomer());
-
-            addTicketLine(new TicketLineInfo(oProduct, dMul, dPrice, tax,
-                    (java.util.Properties) (oProduct.getProperties().clone())));
-            refreshTicket();
-
-        }
+        addTicketLine(new TicketLineInfo(oProduct, dMul, dPrice, tax,
+                (java.util.Properties) (oProduct.getProperties().clone())));
+        refreshTicket();
 
         j_btnRemotePrt.setEnabled(true);
 
