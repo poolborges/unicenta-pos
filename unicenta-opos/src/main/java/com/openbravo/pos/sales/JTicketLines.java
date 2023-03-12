@@ -64,7 +64,7 @@ public class JTicketLines extends javax.swing.JPanel {
     /** Creates new form JLinesTicket
      * @param ticketline */
     public JTicketLines(String ticketline) {
-        
+        logger.log(Level.FINEST, "Creating ticketline from: "+ticketline);
         initComponents();
   
         ColumnTicket[] acolumns = new ColumnTicket[0];
@@ -80,11 +80,11 @@ public class JTicketLines extends javax.swing.JPanel {
                 acolumns = columnshandler.getColumns();
 
             } catch (ParserConfigurationException ePC) {
-                logger.log(Level.WARNING, LocalRes.getIntString("exception.parserconfig"), ePC);
+                logger.log(Level.WARNING, "exception.parserconfig"+ticketline, ePC);
             } catch (SAXException eSAX) {
-                logger.log(Level.WARNING, LocalRes.getIntString("exception.xmlfile"), eSAX);
+                logger.log(Level.WARNING, "exception.xmlfile"+ticketline, eSAX);
             } catch (IOException eIO) {
-                logger.log(Level.WARNING, LocalRes.getIntString("exception.iofile"), eIO);
+                logger.log(Level.WARNING, "exception.iofile"+ticketline, eIO);
             }
         }
                

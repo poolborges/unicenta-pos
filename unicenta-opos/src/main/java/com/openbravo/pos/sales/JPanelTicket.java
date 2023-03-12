@@ -129,7 +129,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private DataLogicReceipts dlReceipts = null;
     private Boolean priceWith00;
     private RestaurantDBUtils restDB;
-    private Boolean warrantyPrint = false;
     private AppProperties m_config;
     //private Integer count = 0;
     //private Integer oCount = 0;
@@ -205,11 +204,15 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         m_jbtnconfig = new JPanelButtons(m_App, new JPanelButtons.JPanelButtonListener() {
             @Override
             public void eval(String resource) {
+
+                LOGGER.log(System.Logger.Level.INFO, "Rrocessing code (resource id): " + resource);
                 evalScriptAndRefresh(resource);
             }
 
             @Override
             public void print(String resource) {
+
+                LOGGER.log(System.Logger.Level.INFO, "Rrocessing template (resource id): " + resource);
                 printTicket(resource);
             }
         }, sConfigRes);
@@ -1557,8 +1560,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
         if (m_App.hasPermission("sales.Total")) {
 
-            warrantyCheck(ticket);
-
             try {
 
                 taxeslogic.calculateTaxes(ticket);
@@ -1593,27 +1594,31 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                             try {
                                 dlSales.saveTicket(ticket, m_App.getInventoryLocation());
                             } catch (BasicException ex) {
-
-                                LOGGER.log(System.Logger.Level.ERROR, "Exception on: ", ex);
+                                LOGGER.log(System.Logger.Level.ERROR, "Exception on save ticket ", ex);
                                 MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE, AppLocal.getIntString("message.nosaveticket"), ex);
                                 msg.show(this);
                             }
 
+                            String eventName = "ticket.close";
                             try {
-                                executeEvent(ticket, ticketext, "ticket.close",
+                                executeEvent(ticket, ticketext, eventName,
                                         new ScriptArg("print", paymentdialog.isPrintSelected()),
                                         new ScriptArg("ticket", ticket));
                             } catch (Exception ex) {
-                                LOGGER.log(System.Logger.Level.ERROR, "Exception on executeEvent: ", ex);
+                                LOGGER.log(System.Logger.Level.ERROR, "Exception on executeEvent: " + eventName, ex);
                             }
 
+                            Boolean warrantyPrint = warrantyCheck(ticket);
+
+                            String scriptName = paymentdialog.isPrintSelected() || warrantyPrint
+                                    ? "Printer.Ticket"
+                                    : "Printer.Ticket2";
                             try {
-                                printTicket(paymentdialog.isPrintSelected() || warrantyPrint
-                                        ? "Printer.Ticket"
-                                        : "Printer.Ticket2", ticket, ticketext);
+
+                                printTicket(scriptName, ticket, ticketext);
                                 Notify(AppLocal.getIntString("notify.printing"));
                             } catch (Exception ex) {
-                                LOGGER.log(System.Logger.Level.ERROR, "Exception on printTicket: ", ex);
+                                LOGGER.log(System.Logger.Level.ERROR, "Exception on printTicket: " + scriptName, ex);
                             }
 
                             resultok = true;
@@ -1645,12 +1650,13 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     private boolean warrantyCheck(TicketInfo ticket) {
-        warrantyPrint = false;
+
+        Boolean warrantyPrint = false;
         int lines = 0;
         while (lines < ticket.getLinesCount()) {
             if (!warrantyPrint) {
                 warrantyPrint = ticket.getLine(lines).isProductWarranty();
-                return (true);
+                return true;
             }
             lines++;
         }
@@ -1678,6 +1684,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     private void printTicket(String sresourcename, TicketInfo ticket, String ticketext) {
 
+        LOGGER.log(System.Logger.Level.INFO, "Reading resource id: " + sresourcename);
         String sresource = dlSystem.getResourceAsXML(sresourcename);
         if (sresource == null) {
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotprintticket"));
@@ -1700,6 +1707,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     script.put("taxes", taxcollection);
                 }
 
+                Boolean warrantyPrint = warrantyCheck(ticket);
+
                 script.put("taxeslogic", taxeslogic);
                 script.put("ticket", ticket);
                 script.put("place", ticketext);
@@ -1711,7 +1720,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 m_TTP.printTicket(script.eval(sresource).toString(), ticket);
 
             } catch (ScriptException | TicketPrinterException ex) {
-                LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
+                LOGGER.log(System.Logger.Level.WARNING, "Exception on processing resource id: " + sresourcename, ex);
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotprintticket"), ex);
                 msg.show(JPanelTicket.this);
             }
@@ -1819,7 +1828,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             scr.setSelectedIndex(m_ticketlines.getSelectedIndex());
             return scr.evalScript(dlSystem.getResourceAsXML(resource), args);
         } catch (ScriptException ex) {
-            LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
+            LOGGER.log(System.Logger.Level.WARNING, "Exception on executing script with resource id: "+resource, ex);
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotexecute"), ex);
             msg.show(this);
             return msg;

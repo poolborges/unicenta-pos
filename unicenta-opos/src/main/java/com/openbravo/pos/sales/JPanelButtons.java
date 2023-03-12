@@ -63,17 +63,17 @@ public class JPanelButtons extends javax.swing.JPanel {
         this.bListener = bListener;
         dlSystem = (DataLogicSystem) app.getBean("com.openbravo.pos.forms.DataLogicSystem");
 
-        LOGGER.info("create JPanelButtons from XML");
+        LOGGER.info("create JPanelButtons from XML resource id: "+sConfigRes);
         try {
             SAXParserFactory spf = SAXParserFactory.newInstance();
             SAXParser m_sp = spf.newSAXParser();
             m_sp.parse(new InputSource(new StringReader(sConfigRes)), new ConfigurationHandler());
         } catch (ParserConfigurationException ePC) {
-            LOGGER.log(Level.WARNING, "exception.parserconfig", ePC);
+            LOGGER.log(Level.WARNING, "exception.parserconfig "+sConfigRes, ePC);
         } catch (SAXException eSAX) {
-            LOGGER.log(Level.WARNING, "exception.xmlfile", eSAX);
+            LOGGER.log(Level.WARNING, "exception.xmlfile: "+sConfigRes, eSAX);
         } catch (IOException eIO) {
-            LOGGER.log(Level.WARNING, "exception.iofile", eIO);
+            LOGGER.log(Level.WARNING, "exception.iofile: "+sConfigRes, eIO);
         }
     }
 
@@ -202,6 +202,7 @@ public class JPanelButtons extends javax.swing.JPanel {
 
             setName(sKey);
             setText(title);
+            setToolTipText(title);
             setIcon(new ImageIcon(tnbmacro.getThumbNail(dlSystem.getResourceAsImage(sImage))));
             setFocusPainted(false);
             setFocusable(false);
