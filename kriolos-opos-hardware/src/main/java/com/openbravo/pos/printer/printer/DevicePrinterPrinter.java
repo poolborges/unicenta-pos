@@ -225,7 +225,7 @@ public class DevicePrinterPrinter implements DevicePrinter {
             if (printservice == null) {
                 String[] printers = ReportUtils.getPrintNames();
                 if (printers.length == 0) {
-                    logger.warning(AppLocal.getIntString("message.noprinters"));
+                    logger.warning("No printers was found");
                     ps = null;
                 } else {
                     SelectPrinter selectprinter = SelectPrinter.getSelectPrinter(parent, printers);
@@ -254,7 +254,7 @@ public class DevicePrinterPrinter implements DevicePrinter {
             }
 
         } catch (PrintException ex) {
-            logger.log(Level.WARNING, AppLocal.getIntString("message.printererror"), ex);
+            logger.log(Level.WARNING, "Printer error", ex);
             JMessageDialog.showMessage(parent, new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.printererror"), ex));
         }
 
