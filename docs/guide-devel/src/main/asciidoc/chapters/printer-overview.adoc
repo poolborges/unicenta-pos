@@ -1,20 +1,21 @@
 = Printer 
 
 
+== Example 
 
-== XML Schema (XSD)
 
-
-* Schemas/{YEAR}/{SCHEMA-NAME}
-** Look how microsoft do this kind of repository of schemas
-
-.Schema Example
-[source, xml]
 ----
-<?xml version="1.0" encoding="UTF-8"?>
-<Ticket xmlns="https://kriolos-obiz.github.io/OBiz/Schemas/2022/Ticket.1.1.xsd">
-    
-</Ticket>
+<output>
+    <fiscalreceipt>
+        <line price="${ticketline.getValue()}" units="${ticketline.getMultiply()}" tax="${vatinfo}">${ticketline.printName()}</line>
+        <message>Items count: ${ticket.printArticlesCount()}</message>
+        <total paid="${paymentline.getTotal()}">Cheque refund</total>
+    </fiscalreceipt>
+
+    <fiscalzreport/>
+    <fiscalxreport/>
+   
+</output>
 ----
 
 
@@ -30,21 +31,16 @@
 * fiscalxreport
 
 
-=== Ticket
-
-
-== OutputType
+=== OutputType
 
 TicketPaser use (0) None means no output has been chosed yet by parser)
-
-
 
 * 1) Display
 * 2) Ticket 
 * 3) FicalReceipt
 
 
-== Element OpenDrawer 'opendrawer'
+=== Element OpenDrawer 'opendrawer'
 
 .Opendrawer XSD
 [source,xml]
@@ -61,7 +57,7 @@ Hooks
 * OpenDrawer (Call something that a opendrawer happen: e.g Register on database log)
 
 
-== Element Buzzer 'buzzer'
+=== Element Buzzer 'buzzer'
 
 
 [source, xml]
@@ -70,15 +66,15 @@ Hooks
 ----
 
 
-== Element Play 'play'
+=== Element Play 'play'
 
+.Example __play__ element
 [source, xml]
 ----
 <play printer="1">
 ----
 
-
-== Element Ticket "ticket"
+=== Element Ticket "ticket"
 
 
 * OutputType: 2 (ticket)
@@ -86,6 +82,7 @@ Hooks
 ** From attr: 'printer'
 ** 
 
+.Example __ticket__ element
 [source,xml]
 ----
 <ticket printer="1">
@@ -100,6 +97,7 @@ Hooks
 * VisorLine1: null
 * VisorLine2: null
 
+.Example __display__ element
 [source,xml]
 ----
 <display animation=""
@@ -127,10 +125,7 @@ Hooks
 |====
 
 
-
-
 == Element FicalReceipt 'ficalreceipt'
-
 
 * OutputType: 3 (Fiscal Printer)
 * Functions
@@ -142,9 +137,8 @@ Hooks
 ** printer.getFiscalPrinter().printerZReport()
 
 
-==
 
-== Printer
+== IDEIAS Printer
 
 .Diagram 1
 [plantuml]
@@ -159,7 +153,6 @@ interface PeripheralPrinter
 interface ReceiptPrinter
 
 interface DisplayPrinter
-
 
 interface HTMLReceiptPrinter
 interface JavaPOS
@@ -176,7 +169,6 @@ interface FiscalReceiptPrintr
 
 == Original 
 
-
 * DeviceTicket - Facade Class
 
 .Diagram 2
@@ -189,7 +181,6 @@ interface DeviceFiscalPrinter
 interface DeviceDisplay
 class DeviceFiscalPrinterJavaPOS as dfp
 
-
 class DeviceTicket {
 
   deviceFiscal:  DeviceFiscalPrinter
@@ -197,23 +188,19 @@ class DeviceTicket {
   deviceDisplay: DeviceDisplay
 }
 
-
-
-
 @enduml
 ----
 
 
 == Directory Services
 
+TODO....
 
 == Java Media
-
 
 * Java Audio 
 * Java Imag
 * Java Video
-
 
 * java.appet.AudioClip 
 ** (deprecate since jdk:9, forremoval since:)
@@ -221,10 +208,20 @@ class DeviceTicket {
 *** github.com/philfrei/AudioCue-maven
 
 
-----
-----
 
+== IDEIAS: XML Schema (XSD)
 
+* Schemas/{YEAR}/{SCHEMA-NAME}
+** Look how microsoft do this kind of repository of schemas
+
+.Schema Example
+[source, xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<Ticket xmlns="https://kriolos-obiz.github.io/OBiz/Schemas/2022/Ticket.1.1.xsd">
+    
+</Ticket>
+----
 
 
 

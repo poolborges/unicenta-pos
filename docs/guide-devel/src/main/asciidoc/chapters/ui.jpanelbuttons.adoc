@@ -1,0 +1,49 @@
+= JPanelButtons
+
+
+* Enabled extra __button__ and __event__ on some UI panel
+
+== Configuration (XML)
+
+* USE: DIRECT (Without pre-processor with Apache velocity)
+* Provide: 
+
+
+XML Elements
+
+* button
+* event
+* img-width
+* img-heigth
+* event
+* taxesincluded
+* taxcategoryid
+* pricevisible
+
+.Example (Ticket.Buttons.xml)
+[source,xml]
+----
+<configuration>
+    <button key="button.totaldiscount" image="discount" code="script.totaldiscount"/>
+    <button key="button.print" image="ticket_print" template="Printer.TicketPreview"/>
+    <button key="button.refundit" name="button.refundit" code="script.Refundit"/>
+    <!-- Maximum Category height for 1024x768 in Full Screen mode (Default=ENABLED) -->
+    <cat-height value="320" />
+    <!-- Medium Product button size in Sales screen (Default=ENABLED) -->
+    <img-width value="107"/>
+    <img-height value="60"/>
+
+
+    <!-- on event 'cash.close' call bsh script 'Cash.Close' -->
+    <event key="cash.close" code="Cash.Close"/>
+    <!-- SET Show Change in Cash Sale (Default=ENABLED -->
+    <event key="ticket.close" code="Ticket.Close"/>
+
+    <!-- Print Receipt (Default=ENABLED) -->
+    <printselected value="true"/>
+
+    <taxesincluded value="true"/>
+    <taxcategoryid value="001"/>
+    <pricevisible value="true" />
+</configuration>
+----

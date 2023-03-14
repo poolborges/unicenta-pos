@@ -1,0 +1,23 @@
+= Business Object (BO) Ticket
+
+
+The chapter provide 
+
+Ticket is a Business Document
+
+* Purchase Ticket
+* Sale Ticket
+
+
+== Ticket
+
+* Header
+* Lines
+* Summary
+
+== TicketLineInfo
+
+
+.Properties
+|====
+|====
