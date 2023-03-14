@@ -1,3 +1,7 @@
+//
+// Ticket.Discount
+// This script applies UsersInput% Discount for a Line of Receipt
+//
 import com.openbravo.format.Formats;
 import com.openbravo.pos.ticket.TicketLineInfo;
 import com.openbravo.pos.ticket.TicketProductInfo;

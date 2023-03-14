@@ -62,8 +62,6 @@ public class JPanelButtons extends javax.swing.JPanel {
         events = new HashMap<>();
         this.bListener = bListener;
         dlSystem = (DataLogicSystem) app.getBean("com.openbravo.pos.forms.DataLogicSystem");
-
-        LOGGER.info("create JPanelButtons from XML resource id: "+sConfigRes);
         try {
             SAXParserFactory spf = SAXParserFactory.newInstance();
             SAXParser m_sp = spf.newSAXParser();

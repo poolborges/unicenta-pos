@@ -201,12 +201,16 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             sConfigRes = "";
         }
 
+        ScriptArg sa1 = new ScriptArg("ticket", m_oTicket);
+        ScriptArg sa2 = new ScriptArg("user", m_App.getAppUserView().getUser());
+        ScriptArg sa3 = new ScriptArg("sales", this);
+
         m_jbtnconfig = new JPanelButtons(m_App, new JPanelButtons.JPanelButtonListener() {
             @Override
             public void eval(String resource) {
 
                 LOGGER.log(System.Logger.Level.INFO, "Rrocessing code (resource id): " + resource);
-                evalScriptAndRefresh(resource);
+                evalScriptAndRefresh(resource, sa1, sa2, sa3);
             }
 
             @Override
@@ -561,8 +565,10 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     /**
+     * Add a Ticket Line
      *
      * @param oLine
+     *          Ticket line
      */
     protected void addTicketLine(TicketLineInfo oLine) {
         if (oLine.isProductCom()) {
@@ -591,7 +597,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 TicketLineInfo line = m_oTicket.getLine(i);
 
                 if (line.isProductVerpatrib()) {
-                    /*
+
                     JProductAttEdit2 attedit = JProductAttEdit2.getAttributesEditor(this, m_App.getSession());
                     attedit.editAttributes(line.getProductAttSetId(), line.getProductAttSetInstId());
                     attedit.setVisible(true);
@@ -600,7 +606,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                         line.setProductAttSetInstId(attedit.getAttributeSetInst());
                         line.setProductAttSetInstDesc(attedit.getAttributeSetInstDescription());
                     }
-                     */
+
                     paintTicketLine(i, line);
                 }
 
@@ -698,6 +704,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         return dValue / (1.0 + dTaxRate);
     }
 
+    /**
+     * Get Price from a input field
+     *
+     * @return
+     */
     private double getInputValue() {
         try {
             return Double.parseDouble(m_jPrice.getText());
@@ -1729,15 +1740,10 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     public void printTicket(String resource) {
         LOGGER.log(System.Logger.Level.DEBUG, "JPanelTicket printTicket: " + resource);
-//        printTicket(resource, m_oTicket, m_oTicketExt);
-// this method is intended to be called only from JPanelButtons.
-
         if (resource == null) {
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotexecute"));
             msg.show(this);
         } else {
-// JG 5 Jul 17 calculate taxes disabled as causing incorrect tax recalc
-//            taxeslogic.calculateTaxes(m_oTicket);
             printTicket(resource, m_oTicket, m_oTicketExt);
         }
 
@@ -1828,7 +1834,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             scr.setSelectedIndex(m_ticketlines.getSelectedIndex());
             return scr.evalScript(dlSystem.getResourceAsXML(resource), args);
         } catch (ScriptException ex) {
-            LOGGER.log(System.Logger.Level.WARNING, "Exception on executing script with resource id: "+resource, ex);
+            LOGGER.log(System.Logger.Level.WARNING, "Exception on executing script with resource id: " + resource, ex);
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotexecute"), ex);
             msg.show(this);
             return msg;
@@ -1942,11 +1948,13 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     public void checkStock() {
 
-        int i = m_ticketlines.getSelectedIndex();
+        int tckLineIndex = m_ticketlines.getSelectedIndex();
+                
+        LOGGER.log(System.Logger.Level.INFO, "Check stock for ticketlines (Selected Index): " + tckLineIndex);
 
-        if (i >= 0) {
+        if (tckLineIndex >= 0) {
             try {
-                TicketLineInfo line = m_oTicket.getLine(i);
+                TicketLineInfo line = m_oTicket.getLine(tckLineIndex);
                 String pId = line.getProductID();
 
                 String location = m_App.getInventoryLocation();
@@ -1966,11 +1974,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     jCheckStock.setText("");
                 }
             } catch (BasicException ex) {
-                LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
+                LOGGER.log(System.Logger.Level.WARNING, "Exception on check stock for ticketline "+tckLineIndex, ex);
             }
-        } else {
-            Toolkit.getDefaultToolkit().beep();
-            LOGGER.log(System.Logger.Level.WARNING, "ticketlines Selected Index: " + i);
         }
     }
 
@@ -1994,13 +1999,13 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
             content = "<html>"
                     + "<b>" + AppLocal.getIntString("label.vip") + " : " + "</b>" + vip + "<br>"
-                    + "<b>" + AppLocal.getIntString("label.discount") + " : " + "</b>" + discount + "<br>";
+                    + "<b>" + AppLocal.getIntString("label.discount") + " : " + "</b>" + discount + "<br>" + "</html>";
 
             JFrame frame = new JFrame();
             JOptionPane.showMessageDialog(frame,
                     content,
-                    "Info",
-                    JOptionPane.WARNING_MESSAGE);
+                    "Customer Discount Info",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -2606,10 +2611,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         // no line selected (-1)
         if (i < 0) {
             Toolkit.getDefaultToolkit().beep();
-            JOptionPane.showMessageDialog(this,
-                    AppLocal.getIntString("message.cannotfindattributes"),
-                    AppLocal.getIntString("message.productnotselected"),
-                    JOptionPane.INFORMATION_MESSAGE);
         } else {
             try {
                 TicketLineInfo line = m_oTicket.getLine(i);
