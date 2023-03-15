@@ -1,1 +1,1 @@
-include::main/asciidoc/index.adoc[] 
+include::src/main/asciidoc/index.adoc[] 
