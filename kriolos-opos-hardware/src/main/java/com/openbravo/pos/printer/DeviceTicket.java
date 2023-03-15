@@ -48,10 +48,10 @@ public class DeviceTicket {
     private Map<String, DevicePrinter> m_deviceprinters;
     private List<DevicePrinter> m_deviceprinterslist;
 
-/** 
- * 
- * Creates a new instance of DeviceTicket 
- */
+    /**
+     *
+     * Creates a new instance of DeviceTicket
+     */
     public DeviceTicket() {
         // Una impresora solo de pantalla.
 
@@ -76,8 +76,24 @@ public class DeviceTicket {
     public DeviceTicket(Component parent, AppProperties props) {
 
         PrinterWritterPool pws = new PrinterWritterPool();
+        
+        m_nullprinter = new DevicePrinterNull();
+        m_deviceprinters = new HashMap<>();
+        m_deviceprinterslist = new ArrayList<>();
+        
+        initDeviceFiscalPrinter(props);
+        initDeviceDisplay(props, pws);
+        initDevicePrinter(parent, props, pws);
 
-        // La impresora fiscal
+    }
+
+    /**
+     * Init Fiscal Printer
+     * 
+     * @param props
+     * @param pws 
+     */
+    private void initDeviceFiscalPrinter(AppProperties props) {
         StringParser sf = new StringParser(props.getProperty("machine.fiscalprinter"));
         String sFiscalType = sf.nextToken(':');
         String sFiscalParam1 = sf.nextToken(',');
@@ -90,60 +106,16 @@ public class DeviceTicket {
         } catch (TicketPrinterException e) {
             m_deviceFiscal = new DeviceFiscalPrinterNull(e.getMessage());
         }
+    }
 
-        StringParser sd = new StringParser(props.getProperty("machine.display"));
-        String sDisplayType = sd.nextToken(':');
-        String sDisplayParam1 = sd.nextToken(',');
-        String sDisplayParam2 = sd.nextToken(',');
-
-        if ("serial".equals(sDisplayType) 
-                || "rxtx".equals(sDisplayType) 
-                || "file".equals(sDisplayType)) {
-            sDisplayParam2 = sDisplayParam1;
-            sDisplayParam1 = sDisplayType;
-            sDisplayType = "epson";
-        }
-
-        try {
-         
-            switch (sDisplayType) {
-                case "screen":
-                    m_devicedisplay = new DeviceDisplayPanel();
-                    break;
-                case "window":
-                    m_devicedisplay = new DeviceDisplayWindow();
-                    break;
-                case "epson":
-                    m_devicedisplay = new DeviceDisplayESCPOS(
-                            pws.getPrinterWritter(sDisplayParam1, sDisplayParam2)
-                            , new UnicodeTranslatorInt());
-                    break;
-                case "surepos":
-                    m_devicedisplay = new DeviceDisplaySurePOS(
-                            pws.getPrinterWritter(sDisplayParam1, sDisplayParam2));
-                    break;
-                case "ld200":
-                    m_devicedisplay = new DeviceDisplayESCPOS(
-                            pws.getPrinterWritter(sDisplayParam1, sDisplayParam2)
-                            , new UnicodeTranslatorEur());
-                    break;
-                case "javapos":
-                    m_devicedisplay = new DeviceDisplayJavaPOS(sDisplayParam1);
-                    break;
-                default:
-                    m_devicedisplay = new DeviceDisplayNull();
-                    break;
-            }
-        } catch (TicketPrinterException e) {
-            logger.log(Level.WARNING, e.getMessage(), e);
-            m_devicedisplay = new DeviceDisplayNull(e.getMessage());
-        }
-
-        m_nullprinter = new DevicePrinterNull();
-
-        m_deviceprinters = new HashMap<>();
-        m_deviceprinterslist = new ArrayList<>();
-
+    /**
+     * Init/Register all printer
+     * 
+     * @param parent
+     * @param props
+     * @param pws 
+     */
+    private void initDevicePrinter(Component parent, AppProperties props, PrinterWritterPool pws) {
         // Empezamos a iterar por las impresoras...
         int iPrinterIndex = 1;
         String sPrinterIndex = Integer.toString(iPrinterIndex);
@@ -156,9 +128,8 @@ public class DeviceTicket {
             String sPrinterParam1 = sp.nextToken(',');
             String sPrinterParam2 = sp.nextToken(',');
 
-
-            if ("serial".equals(sPrinterType) 
-                    || "rxtx".equals(sPrinterType) 
+            if ("serial".equals(sPrinterType)
+                    || "rxtx".equals(sPrinterType)
                     || "file".equals(sPrinterType)) {
                 sPrinterParam2 = sPrinterParam1;
                 sPrinterParam1 = sPrinterType;
@@ -166,14 +137,14 @@ public class DeviceTicket {
             }
 
             try {
-        
+
                 switch (sPrinterType) {
                     case "screen":
                         addPrinter(sPrinterIndex, new DevicePrinterPanel());
                         break;
                     case "printer":
                         // backward compatibility
-                        if (sPrinterParam2 == null || sPrinterParam2.equals("") 
+                        if (sPrinterParam2 == null || sPrinterParam2.equals("")
                                 || sPrinterParam2.equals("true")) {
                             sPrinterParam2 = "receipt";
                         } else if (sPrinterParam2.equals("false")) {
@@ -185,32 +156,32 @@ public class DeviceTicket {
                                 Integer.parseInt(props.getProperty("paper." + sPrinterParam2 + ".width")),
                                 Integer.parseInt(props.getProperty("paper." + sPrinterParam2 + ".height")),
                                 props.getProperty("paper." + sPrinterParam2 + ".mediasizename")
-                                ));
+                        ));
                         break;
                     case "epson":
                         addPrinter(sPrinterIndex, new DevicePrinterESCPOS(
-                                pws.getPrinterWritter(sPrinterParam1, sPrinterParam2)
-                                , new CodesEpson(), new UnicodeTranslatorInt()));
+                                pws.getPrinterWritter(sPrinterParam1, sPrinterParam2),
+                                new CodesEpson(), new UnicodeTranslatorInt()));
                         break;
                     case "tmu220":
                         addPrinter(sPrinterIndex, new DevicePrinterESCPOS(
-                                pws.getPrinterWritter(sPrinterParam1, sPrinterParam2)
-                                , new CodesTMU220(), new UnicodeTranslatorInt()));
+                                pws.getPrinterWritter(sPrinterParam1, sPrinterParam2),
+                                new CodesTMU220(), new UnicodeTranslatorInt()));
                         break;
                     case "star":
                         addPrinter(sPrinterIndex, new DevicePrinterESCPOS(
-                                pws.getPrinterWritter(sPrinterParam1, sPrinterParam2)
-                                , new CodesStar(), new UnicodeTranslatorStar()));
+                                pws.getPrinterWritter(sPrinterParam1, sPrinterParam2),
+                                new CodesStar(), new UnicodeTranslatorStar()));
                         break;
                     case "ithaca":
                         addPrinter(sPrinterIndex, new DevicePrinterESCPOS(
-                                pws.getPrinterWritter(sPrinterParam1, sPrinterParam2)
-                                , new CodesIthaca(), new UnicodeTranslatorInt()));
+                                pws.getPrinterWritter(sPrinterParam1, sPrinterParam2),
+                                new CodesIthaca(), new UnicodeTranslatorInt()));
                         break;
                     case "surepos":
                         addPrinter(sPrinterIndex, new DevicePrinterESCPOS(
-                                pws.getPrinterWritter(sPrinterParam1, sPrinterParam2)
-                                , new CodesSurePOS(), new UnicodeTranslatorSurePOS()));
+                                pws.getPrinterWritter(sPrinterParam1, sPrinterParam2),
+                                new CodesSurePOS(), new UnicodeTranslatorSurePOS()));
                         break;
                     case "plain":
                         addPrinter(sPrinterIndex, new DevicePrinterPlain(
@@ -231,11 +202,68 @@ public class DeviceTicket {
         }
     }
 
+    private void initDeviceDisplay(AppProperties props, PrinterWritterPool pws) {
+        StringParser sd = new StringParser(props.getProperty("machine.display"));
+        String sDisplayType = sd.nextToken(':');
+        String sDisplayParam1 = sd.nextToken(',');
+        String sDisplayParam2 = sd.nextToken(',');
+
+        if ("serial".equals(sDisplayType)
+                || "rxtx".equals(sDisplayType)
+                || "file".equals(sDisplayType)) {
+            sDisplayParam2 = sDisplayParam1;
+            sDisplayParam1 = sDisplayType;
+            sDisplayType = "epson";
+        }
+
+        try {
+
+            switch (sDisplayType) {
+                case "screen":
+                    m_devicedisplay = new DeviceDisplayPanel();
+                    break;
+                case "window":
+                    m_devicedisplay = new DeviceDisplayWindow();
+                    break;
+                case "epson":
+                    m_devicedisplay = new DeviceDisplayESCPOS(
+                            pws.getPrinterWritter(sDisplayParam1, sDisplayParam2),
+                            new UnicodeTranslatorInt());
+                    break;
+                case "surepos":
+                    m_devicedisplay = new DeviceDisplaySurePOS(
+                            pws.getPrinterWritter(sDisplayParam1, sDisplayParam2));
+                    break;
+                case "ld200":
+                    m_devicedisplay = new DeviceDisplayESCPOS(
+                            pws.getPrinterWritter(sDisplayParam1, sDisplayParam2),
+                            new UnicodeTranslatorEur());
+                    break;
+                case "javapos":
+                    m_devicedisplay = new DeviceDisplayJavaPOS(sDisplayParam1);
+                    break;
+                default:
+                    m_devicedisplay = new DeviceDisplayNull();
+                    break;
+            }
+        } catch (TicketPrinterException e) {
+            logger.log(Level.WARNING, e.getMessage(), e);
+            m_devicedisplay = new DeviceDisplayNull(e.getMessage());
+        }
+    }
+
     private void addPrinter(String sPrinterIndex, DevicePrinter p) {
         m_deviceprinters.put(sPrinterIndex, p);
         m_deviceprinterslist.add(p);
     }
 
+    /**
+     * PrinterWritterPool 
+     * 
+     * Class to avoid two device (serial/file/rxtx) to open the same COM port
+     * Avoid colision on Computer COM port
+     * 
+     */
     private static class PrinterWritterPool {
 
         private final Map<String, PrinterWritter> m_apool = new HashMap<>();
@@ -245,7 +273,7 @@ public class DeviceTicket {
             String skey = con + "-->" + port;
             PrinterWritter pw = (PrinterWritter) m_apool.get(skey);
             if (pw == null) {
-            
+
                 switch (con) {
                     case "serial":
                     case "rxtx":
@@ -257,36 +285,35 @@ public class DeviceTicket {
                         m_apool.put(skey, pw);
                         break;
                     default:
-                        throw new TicketPrinterException();
+                        throw new TicketPrinterException("PrinterWriterPool accept (serial|rxtx|file), But unknow port type: "+skey);
                 }
             }
             return pw;
         }
     }
-    
 
     /**
      *
      * @return Fiscal printer
      */
-        public DeviceFiscalPrinter getFiscalPrinter() {
+    public DeviceFiscalPrinter getFiscalPrinter() {
         return m_deviceFiscal;
     }
-    
+
     /**
      *
      * @return Device display
      */
-        public DeviceDisplay getDeviceDisplay() {
+    public DeviceDisplay getDeviceDisplay() {
         return m_devicedisplay;
     }
-    
+
     /**
      *
      * @param key
      * @return Device printer
      */
-        public DevicePrinter getDevicePrinter(String key) {
+    public DevicePrinter getDevicePrinter(String key) {
         DevicePrinter printer = m_deviceprinters.get(key);
         return printer == null ? m_nullprinter : printer;
     }
@@ -298,14 +325,14 @@ public class DeviceTicket {
     public List<DevicePrinter> getDevicePrinterAll() {
         return m_deviceprinterslist;
     }
-    
+
     /**
      *
      * @param iSize
      * @param cWhiteChar
      * @return Spacing string length
      */
-        public static String getWhiteString(int iSize, char cWhiteChar) {
+    public static String getWhiteString(int iSize, char cWhiteChar) {
 
         char[] cFill = new char[iSize];
         for (int i = 0; i < iSize; i++) {
@@ -387,26 +414,25 @@ public class DeviceTicket {
     /**
      *
      * @param sLine
-     * @return Equalise Left/Right spacing 
+     * @return Equalise Left/Right spacing
      */
     public static String alignCenter(String sLine) {
         return alignCenter(sLine, 42);
     }
 
 // JG 16 May 12     public static final byte[] transNumber(String sCad) {
-
     /**
      *
      * @param sCad
      * @return Convert number to string
      */
-        public static byte[] transNumber(String sCad) {
+    public static byte[] transNumber(String sCad) {
 
         if (sCad == null) {
             return null;
         } else {
             byte bAux[] = new byte[sCad.length()];
-            for( int i = 0; i < sCad.length(); i++) {
+            for (int i = 0; i < sCad.length(); i++) {
                 bAux[i] = transNumberChar(sCad.charAt(i));
             }
             return bAux;
@@ -420,17 +446,28 @@ public class DeviceTicket {
      */
     public static byte transNumberChar(char sChar) {
         switch (sChar) {
-        case '0' : return 0x30;
-        case '1' : return 0x31;
-        case '2' : return 0x32;
-        case '3' : return 0x33;
-        case '4' : return 0x34;
-        case '5' : return 0x35;
-        case '6' : return 0x36;
-        case '7' : return 0x37;
-        case '8' : return 0x38;
-        case '9' : return 0x39;
-        default: return 0x30;
+            case '0':
+                return 0x30;
+            case '1':
+                return 0x31;
+            case '2':
+                return 0x32;
+            case '3':
+                return 0x33;
+            case '4':
+                return 0x34;
+            case '5':
+                return 0x35;
+            case '6':
+                return 0x36;
+            case '7':
+                return 0x37;
+            case '8':
+                return 0x38;
+            case '9':
+                return 0x39;
+            default:
+                return 0x30;
         }
     }
 }
