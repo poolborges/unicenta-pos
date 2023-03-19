@@ -23,9 +23,15 @@
 ifndef::imagesdir[:imagesdir: images]
 
 include::chapters/product-vision.adoc[] 
+
 include::chapters/contributors.adoc[] 
+
 include::chapters/database-overview.adoc[] 
+
 include::chapters/develop-overview.adoc[] 
+
 include::chapters/modeling-overview.adoc[] 
+
 include::chapters/peripheral-overview.adoc[] 
+
 include::chapters/resources-overview.adoc[] 
