@@ -118,6 +118,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <groupId>javax.usb</groupId>  
             <artifactId>usb-api</artifactId>  
             <version>1.0.2</version> 
-        </dependency>   
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.5.1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.5.1</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 </project>

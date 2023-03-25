@@ -16,7 +16,11 @@
  */
 package com.openbravo.pos.util;
 
-
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -41,13 +45,12 @@ import org.krysalis.barcode4j.output.java2d.Java2DCanvasProvider;
  * @author adrian
  */
 public class BarcodeImage {
-    
+
     /**
      *
      * @param value
      * @return
      */
-        
     public static Image getBarcodeCodabar(String value) {
         AbstractBarcodeBean barcode = new CodabarBean();
         barcode.setMsgPosition(HumanReadablePlacement.HRP_BOTTOM);
@@ -75,7 +78,7 @@ public class BarcodeImage {
         barcode.setMsgPosition(HumanReadablePlacement.HRP_BOTTOM);
         return getBarcode(value, barcode);
     }
-    
+
     /**
      *
      * @param value
@@ -86,7 +89,7 @@ public class BarcodeImage {
         barcode.setMsgPosition(HumanReadablePlacement.HRP_BOTTOM);
         return getBarcode(value, barcode);
     }
-    
+
     /**
      *
      * @param value
@@ -97,7 +100,7 @@ public class BarcodeImage {
         barcode.setMsgPosition(HumanReadablePlacement.HRP_BOTTOM);
         return getBarcode(value, barcode);
     }
-    
+
     /**
      *
      * @param value
@@ -108,7 +111,7 @@ public class BarcodeImage {
         barcode.setMsgPosition(HumanReadablePlacement.HRP_BOTTOM);
         return getBarcode(value, barcode);
     }
-    
+
     /**
      *
      * @param value
@@ -119,7 +122,7 @@ public class BarcodeImage {
         barcode.setMsgPosition(HumanReadablePlacement.HRP_BOTTOM);
         return getBarcode(value, barcode);
     }
-    
+
     /**
      *
      * @param value
@@ -130,7 +133,7 @@ public class BarcodeImage {
         barcode.setMsgPosition(HumanReadablePlacement.HRP_BOTTOM);
         return getBarcode(value, barcode);
     }
-    
+
     /**
      *
      * @param value
@@ -139,37 +142,47 @@ public class BarcodeImage {
     public static Image getBarcode128(String value) {
         AbstractBarcodeBean barcode = new Code128Bean();
         barcode.setMsgPosition(HumanReadablePlacement.HRP_NONE);
-        return getBarcode(value, barcode); 
+        return getBarcode(value, barcode);
     }
-    
+
+    public static Image getQRCode(String value) {
+        QRCodeWriter qRCodeWriter = new QRCodeWriter();
+        try {
+            BitMatrix matrix = qRCodeWriter.encode(value, BarcodeFormat.QR_CODE, 100, 100);
+            return MatrixToImageWriter.toBufferedImage(matrix);
+        } catch (WriterException ex) {
+            return null;
+        }
+    }
+
     private static Image getBarcode(String value, AbstractBarcodeBean barcode) {
-        
-        barcode.setModuleWidth(1.0); 
+
+        barcode.setModuleWidth(1.0);
         barcode.setBarHeight(40.0);
         barcode.setFontSize(10.0);
         barcode.setQuietZone(10.0);
-        barcode.doQuietZone(true);                
+        barcode.doQuietZone(true);
         BarcodeDimension dim = barcode.calcDimensions(value);
         int width = (int) dim.getWidth(0) + 20;
-        int height = (int) dim.getHeight(0);        
-        
+        int height = (int) dim.getHeight(0);
+
         BufferedImage imgtext = new BufferedImage(width, height,  BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = imgtext.createGraphics();
-        
+
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, width, height);
-        
+
         g2d.setColor(Color.BLACK);
-        
+
         try {
             barcode.generateBarcode(new Java2DCanvasProvider(g2d, 0), value);
         } catch (IllegalArgumentException e) {
             g2d.drawRect(0, 0, width - 1, height - 1);
             g2d.drawString(value, 2, height - 3);
         }
-        
+
         g2d.dispose();
-        
-        return imgtext;  
+
+        return imgtext;
     }
 }
