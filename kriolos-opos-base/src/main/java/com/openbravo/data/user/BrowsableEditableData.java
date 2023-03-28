@@ -433,11 +433,10 @@ public class BrowsableEditableData<E> {
      * @throws BasicException
      */
     public final void moveLast() throws BasicException {
-        if (isConfirmed()) {
-            if (m_bd.getSize() > 0) {
+        
+        if (m_bd.getSize() > 0) {
                 baseMoveTo(m_bd.getSize() - 1);
             }
-        }
     }
 
     /**
@@ -507,7 +506,7 @@ public class BrowsableEditableData<E> {
      * @throws BasicException
      */
     public boolean actionClosingForm(Component c) throws BasicException {
-        return isConfirmed(c);
+        return checkDirty(c);
     }
 
     /**
@@ -567,12 +566,12 @@ public class BrowsableEditableData<E> {
     }
 
     private boolean isConfirmed() {
-        return isConfirmed(null);
+        return checkDirty(null);
     }
 
-    private boolean isConfirmed(Component c) {
+    private boolean checkDirty(Component c) {
 
-        boolean confimed = false;
+        boolean confimed;
         if (m_Dirty.isDirty()) {
 
             confimed = JOptionPane.showConfirmDialog(c,
@@ -580,6 +579,8 @@ public class BrowsableEditableData<E> {
                     LocalRes.getIntString("title.editor"),
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION;
+        }else{
+            confimed = true;
         }
         return confimed;
     }
