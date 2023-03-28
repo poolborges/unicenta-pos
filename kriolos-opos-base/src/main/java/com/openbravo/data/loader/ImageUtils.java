@@ -24,6 +24,7 @@ import java.awt.image.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -113,7 +114,7 @@ public class ImageUtils {
 
     public static BufferedImage getImageFromUrl(URL url) {
         //TODO improve null checking Objects.requireNonNull(url, "url should not be null");
-        BufferedImage image = generateDefaultImage();
+        BufferedImage image = null; //generateDefaultImage();
         if (url != null) {
             try {
                 URLConnection urlConnection = url.openConnection();
@@ -131,7 +132,7 @@ public class ImageUtils {
 
     public static BufferedImage readImage(byte[] imageByteArray) {
         //TODO improve null checking Objects.requireNonNull(imageByteArray, "imageByteArray should not be null");
-        BufferedImage image = generateDefaultImage();
+        BufferedImage image = null;//generateDefaultImage();
         if (imageByteArray != null) {
             try ( ByteArrayInputStream input = new ByteArrayInputStream(imageByteArray)) {
                 image = ImageIO.read(input);

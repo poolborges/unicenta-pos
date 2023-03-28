@@ -38,15 +38,16 @@ public class TableDefinition<T> {
     /** 
      * Creates a new instance of TableDefinition
      * 
-     * @param s
-     * @param fieldformat
-     * @param tablename
-     * @param fieldname
+     * @param s session
+     * @param tablename Table Name
+     * @param fieldname Fields name
      * @param fieldtran
-     * @param fielddata 
-     * @param idinx
+     * @param fielddata Fields datatype
+     * @param fieldformat Field format
+     * @param idinx     IDs position of 
      */
-    public TableDefinition(Session s, String tablename, String[] fieldname, String[] fieldtran, Datas[] fielddata, Formats[] fieldformat,int[] idinx) {
+    public TableDefinition(Session s, String tablename, String[] fieldname, 
+            String[] fieldtran, Datas[] fielddata, Formats[] fieldformat, int[] idinx) {
         
         m_s = s;
         this.tablename = tablename;       
@@ -61,15 +62,15 @@ public class TableDefinition<T> {
 
     /**
      *
-     * @param s
-     * @param tablename
-     * @param fieldname
-     * @param fielddata
-     * @param fieldformat
-     * @param idinx
+     * @param session Session
+     * @param tablename Table name
+     * @param fieldname Fields name
+     * @param fielddata Fields datatype
+     * @param fieldformat Fields format
+     * @param idinx IDs or PKs
      */
-    public TableDefinition(Session s,String tablename, String[] fieldname, Datas[] fielddata, Formats[] fieldformat,int[] idinx) {
-        this(s, tablename, fieldname, fieldname, fielddata, fieldformat, idinx);
+    public TableDefinition(Session session,String tablename, String[] fieldname, Datas[] fielddata, Formats[] fieldformat,int[] idinx) {
+        this(session, tablename, fieldname, fieldname, fielddata, fieldformat, idinx);
     }
 
     /**
@@ -131,7 +132,11 @@ public class TableDefinition<T> {
     }
 
     private SerializerWrite getSerializerUpdateBasic(int[] fieldindx) {
-        
+       int[] aindex= updateStatementParams(fieldindx);
+       return new SerializerWriteBasicExt(fielddata, aindex);
+    }
+    
+    private int [] updateStatementParams(int[] fieldindx){
         int[] aindex = new int[fieldindx.length + idinx.length];
 
         for (int i = 0; i < fieldindx.length; i++) {
@@ -139,9 +144,9 @@ public class TableDefinition<T> {
         } 
         for (int i = 0; i < idinx.length; i++) {
             aindex[i + fieldindx.length] = idinx[i];
-        }       
- 
-        return new SerializerWriteBasicExt(fielddata, aindex);
+        }  
+        
+        return aindex;
     }
 
     public SentenceList<T> getListSentence() {
@@ -171,10 +176,10 @@ public class TableDefinition<T> {
     }
 
     public SentenceExec getDeleteSentence() {
-        return getDeleteSentence(getSerializerDeleteBasic());
+        return new PreparedSentenceJDBC(m_s,getDeleteSQL(), fielddata, idinx);
     }
 
-    public SentenceExec getDeleteSentence(SerializerWrite<T> sw) {
+    private SentenceExec getDeleteSentence(SerializerWrite<T> sw) {
         return new PreparedSentence(m_s, getDeleteSQL(), sw, null);
     }
     
@@ -199,7 +204,7 @@ public class TableDefinition<T> {
     }
     
     public SentenceExec getInsertSentence(int[] fieldindx) {
-        return new PreparedSentence(m_s, getInsertSQL(fieldindx), getSerializerInsertBasic(fieldindx), null);
+        return new PreparedSentenceJDBC(m_s,getInsertSQL(fieldindx), fielddata, fieldindx);
     }
     
     private String getInsertSQL(int[] fieldindx) {
@@ -241,7 +246,7 @@ public class TableDefinition<T> {
     }
 
     public SentenceExec getUpdateSentence(int[] fieldindx) {
-        return new PreparedSentence(m_s, getUpdateSQL(fieldindx), getSerializerUpdateBasic(fieldindx), null);
+        return new PreparedSentenceJDBC(m_s,getUpdateSQL(fieldindx), fielddata, updateStatementParams(fieldindx));
     }
     
     private String getUpdateSQL(int[] fieldindx) {

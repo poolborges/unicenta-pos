@@ -23,6 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -35,14 +36,14 @@ public final class PreparedSentenceJDBC implements SentenceExec {
 
     private final Session session;
     private final String sql;
-    private final Datas[] paramsDatas;
-    private final int[] indexValue;
+    private final Datas[] paramsDataType;
+    private final int[] paramValueIndex;
 
-    public PreparedSentenceJDBC(Session s, String sentence, Datas[] param, int[] index) {
-        session = s;
-        sql = sentence;
-        paramsDatas = param;
-        indexValue = index;
+    public PreparedSentenceJDBC(Session session, String sqlSentence, Datas[] param, int[] index) {
+        this.session = session;
+        this.sql = sqlSentence;
+        this.paramsDataType = param;
+        this.paramValueIndex = index;
     }
 
     /**
@@ -80,19 +81,19 @@ public final class PreparedSentenceJDBC implements SentenceExec {
         } else {
             try ( PreparedStatement preparedStatement = session.getConnection().prepareStatement(sql)) {
                 int posi = 0;
-                int pindex = indexValue[posi];
-                Datas da = paramsDatas[pindex];
+                int pindex = paramValueIndex[posi];
+                Datas da = paramsDataType[pindex];
                 Object obj = params;
                 int paramPosi = posi + 1;
                 
                 int parameterCount = preparedStatement.getParameterMetaData().getParameterCount();
                 LOGGER.log(System.Logger.Level.DEBUG, "VARIBLES length "
                         + "{params: " + (params == null? "NULL" : params.getClass())
-                        + ", indexValue: " + indexValue.length
-                        + ", paramsDatas: " + paramsDatas.length 
+                        + ", paramValueIndex: " + paramValueIndex.length
+                        + ", paramsDataType: " + paramsDataType.length 
                         + ", parameterCount:" +parameterCount
-                        + "} "+sql);
-
+                        + "} ");
+                LOGGER.log(System.Logger.Level.INFO, "SQL: " +sql);
                 preparedStatement(preparedStatement, da, obj, paramPosi);
                 rowsAffected = preparedStatement.executeUpdate();
             } catch (SQLException sqlex) {
@@ -115,47 +116,45 @@ public final class PreparedSentenceJDBC implements SentenceExec {
      */
     private int exec(Object[] params) throws BasicException {
 
+        String logSql = sql;
         int rowsAffected = 0;
+        int paramsSize = (params == null)? 0 : params.length;
         LOGGER.log(System.Logger.Level.INFO,
-                         "{params.length: " + (params == null? "NULL" : params.length)
-                        + ", indexValue.length: " + indexValue.length
-                        + ", paramsDatas.length: " + paramsDatas.length
-                        + "} "+sql);
-        LOGGER.log(System.Logger.Level.INFO, "SQL: " +sql);
+                         "{params.length: " + paramsSize
+                        + ", paramValueIndex.length: " + paramValueIndex.length
+                        + ", paramsDataType.length: " + paramsDataType.length
+                        + "} ");
+        LOGGER.log(System.Logger.Level.INFO,
+                    "{DATA params: " + Arrays.toString(params)
+                         +"\n paramValueIndex: " + Arrays.toString(paramValueIndex)
+                        + "\n paramsDataType " + Arrays.toString(paramsDataType)
+                        + "");
+        LOGGER.log(System.Logger.Level.INFO, "SQL: " + logSql);
         try ( PreparedStatement preparedStatement = session.getConnection().prepareStatement(sql)) {
 
             int parameterCount = preparedStatement.getParameterMetaData().getParameterCount();
-            
+            LOGGER.log(System.Logger.Level.WARNING, "Prepare statement has params total: " +parameterCount);
+            if(paramsSize != parameterCount){  
+             //TODO MUST COMPARE PARAMETER AND THROW EXCEPTION
+             //throw new BasicException("SQL statement missing paramters: ");
+            }
+            for (int posi = 0; posi < parameterCount; posi++) {
 
+                int pindex = paramValueIndex[posi];
                 
-   
-            for (int posi = 0; posi < paramsDatas.length; posi++) {
-
-                int pindex;
-                /*
-                if(indexValue.length == 1){
-                    pindex = posi;
-                }else {
-                   pindex = indexValue[posi];
-                }
-                */
-                pindex = indexValue[posi];
-                
-                Datas da = paramsDatas[pindex];
+                Datas da = paramsDataType[pindex];
                 Object obj = params[pindex];
 
                 int paramPosi = posi + 1;
                 preparedStatement(preparedStatement, da, obj, paramPosi);
             }
             
-            LOGGER.log(System.Logger.Level.INFO, "PreparedStatement: " + preparedStatement.toString());
+            logSql = preparedStatement.toString();
+            LOGGER.log(System.Logger.Level.INFO, "PreparedStatement parameterCount"+parameterCount +"; SQL:" + logSql);
             rowsAffected = preparedStatement.executeUpdate();
         } catch (SQLException sqlex) {
-            LOGGER.log(System.Logger.Level.WARNING, "Exception while execute SQL: " + sql, sqlex);
+            LOGGER.log(System.Logger.Level.WARNING, "Exception while execute SQL: " + logSql, sqlex);
             throw new BasicException(sqlex);
-        } catch (Exception ex) {
-            LOGGER.log(System.Logger.Level.WARNING, "Exception while execute SQL: " + sql, ex);
-            throw new BasicException(ex);
         }
 
         return rowsAffected;
