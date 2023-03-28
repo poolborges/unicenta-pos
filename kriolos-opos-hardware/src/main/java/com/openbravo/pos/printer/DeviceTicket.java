@@ -26,6 +26,7 @@ import com.openbravo.pos.printer.screen.DeviceDisplayPanel;
 import com.openbravo.pos.printer.screen.DeviceDisplayWindow;
 import com.openbravo.pos.printer.screen.DevicePrinterPanel;
 import com.openbravo.pos.util.StringParser;
+import com.openbravo.pos.util.StringUtils;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,11 +77,11 @@ public class DeviceTicket {
     public DeviceTicket(Component parent, AppProperties props) {
 
         PrinterWritterPool pws = new PrinterWritterPool();
-        
+
         m_nullprinter = new DevicePrinterNull();
         m_deviceprinters = new HashMap<>();
         m_deviceprinterslist = new ArrayList<>();
-        
+
         initDeviceFiscalPrinter(props);
         initDeviceDisplay(props, pws);
         initDevicePrinter(parent, props, pws);
@@ -89,9 +90,9 @@ public class DeviceTicket {
 
     /**
      * Init Fiscal Printer
-     * 
+     *
      * @param props
-     * @param pws 
+     * @param pws
      */
     private void initDeviceFiscalPrinter(AppProperties props) {
         StringParser sf = new StringParser(props.getProperty("machine.fiscalprinter"));
@@ -110,10 +111,10 @@ public class DeviceTicket {
 
     /**
      * Init/Register all printer
-     * 
+     *
      * @param parent
      * @param props
-     * @param pws 
+     * @param pws
      */
     private void initDevicePrinter(Component parent, AppProperties props, PrinterWritterPool pws) {
         // Empezamos a iterar por las impresoras...
@@ -258,11 +259,11 @@ public class DeviceTicket {
     }
 
     /**
-     * PrinterWritterPool 
-     * 
+     * PrinterWritterPool
+     *
      * Class to avoid two device (serial/file/rxtx) to open the same COM port
      * Avoid colision on Computer COM port
-     * 
+     *
      */
     private static class PrinterWritterPool {
 
@@ -284,8 +285,19 @@ public class DeviceTicket {
                         pw = new PrinterWritterFile(port);
                         m_apool.put(skey, pw);
                         break;
+                    case "network":
+                        String[] str = port.split("\\:");
+                        String hostAddr = str[0];
+                        int portAddr = (str.length == 2) ? Integer.parseInt(str[1]) : 9100;
+                        if (hostAddr != null && !hostAddr.isBlank()) {
+                            pw = new PrinterWritterNetwork(hostAddr, portAddr);
+                            this.m_apool.put(skey, pw);
+                            return pw;
+                        } else {
+                            throw new TicketPrinterException("Invalid host addr: " + hostAddr + "; connection string: " + skey);
+                        }
                     default:
-                        throw new TicketPrinterException("PrinterWriterPool accept (serial|rxtx|file), But unknow port type: "+skey);
+                        throw new TicketPrinterException("Not supported protocol with connection string: " + skey);
                 }
             }
             return pw;
