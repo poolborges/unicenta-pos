@@ -68,7 +68,7 @@ public class ThumbNailBuilder {
 
                 if (inputStrem != null) {
                     bufImage = ImageIO.read(inputStrem);
-                }else {
+                } else {
                     //Creating of EMPTY IMAGE
                     bufImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
                 }
@@ -211,5 +211,14 @@ public class ThumbNailBuilder {
             previmg = midimg;
         }
         return previmg;
+    }
+
+    public static BufferedImage resize(BufferedImage image, int width, int height) {
+        BufferedImage bi = new BufferedImage(width, height, 3);
+        Graphics2D g2d = bi.createGraphics();
+        g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
+        g2d.drawImage(image, 0, 0, width, height, null);
+        g2d.dispose();
+        return bi;
     }
 }
