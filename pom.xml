@@ -183,6 +183,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <artifactId>kriolos-opos-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-pos-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             
             <dependency> 
                 <groupId>org.jetbrains.kotlin</groupId>  
@@ -214,6 +219,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>5.9.2</version>
+                <scope>test</scope>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>5.9.2</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-params</artifactId>
+                <version>5.9.2</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -345,11 +370,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </excludes>
                     </configuration>
                 </plugin>
-            
+                
             </plugins>
         </pluginManagement>
         
         <plugins>
+            <!-- Generate ${project.build.directory} ${project.build.outputDirectory}/META-INF/uild.properties --> 
+            <plugin>
+                <groupId>de.smartics.maven.plugin</groupId>
+                <artifactId>buildmetadata-maven-plugin</artifactId>
+                <version>1.7.0</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>provide-buildmetadata</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Generated Code from src/main/java-template/.../Version.java -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -940,7 +979,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </plugins>
             </reporting>
         </profile>
-         <!-- GPG Signature on release -->
+        <!-- GPG Signature on release -->
         <profile>
             <id>release</id>
             <build>
