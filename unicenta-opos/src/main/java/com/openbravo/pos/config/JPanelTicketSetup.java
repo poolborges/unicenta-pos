@@ -92,7 +92,7 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
             recSize = 1;
         }
 
-        jReceiptSize.setModel(new SpinnerNumberModel(recSize, 1, 20, 1));
+        jReceiptSize.setModel(new SpinnerNumberModel(recSize, 0, 20, 1));
 
         int picSize;
         pickupSize = (config.getProperty("till.pickupsize"));
@@ -102,9 +102,19 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
             picSize = 1;
         }
 
-        jPickupSize.setModel(new SpinnerNumberModel(picSize, 1, 20, 1));
+        jPickupSize.setModel(new SpinnerNumberModel(picSize, 0, 20, 1));
 
         jTextReceiptPrefix.setText(config.getProperty("till.receiptprefix"));
+
+        m_jReceiptPrintOff.setSelected(Boolean.parseBoolean(config.getProperty("till.receiptprintoff")));
+        
+        receiptPrefixExample();
+
+        dirty.setDirty(false);
+
+    }
+
+    private void receiptPrefixExample() {
         receipt = "";
         x = 1;
         while (x < (Integer) jReceiptSize.getValue()) {
@@ -114,10 +124,6 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
 
         receipt += "1";
         jTicketExample.setText(jTextReceiptPrefix.getText() + receipt);
-        m_jReceiptPrintOff.setSelected(Boolean.parseBoolean(config.getProperty("till.receiptprintoff")));
-
-        dirty.setDirty(false);
-
     }
 
     /*
@@ -188,10 +194,11 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
         });
 
         jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel3.setText(bundle.getString("label.ticketsetupprefix")); // NOI18N
 
         jTextReceiptPrefix.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        jTextReceiptPrefix.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextReceiptPrefix.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextReceiptPrefix.setPreferredSize(new java.awt.Dimension(100, 30));
         jTextReceiptPrefix.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -199,14 +206,18 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
             }
         });
 
+        jTicketExample.setEditable(false);
         jTicketExample.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jTicketExample.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTicketExample.setText("1");
         jTicketExample.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jTicketExample.setEnabled(false);
         jTicketExample.setPreferredSize(new java.awt.Dimension(100, 30));
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel2.setText(bundle.getString("label.pickupcodesize")); // NOI18N
+        jLabel2.setToolTipText(bundle.getString("label.pickupcodesize")); // NOI18N
         jLabel2.setPreferredSize(new java.awt.Dimension(190, 30));
 
         jPickupSize.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
@@ -248,7 +259,7 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(m_jReceiptPrintOff, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -266,7 +277,7 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jbtnReset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTicketExample, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(243, Short.MAX_VALUE))
+                .addContainerGap(247, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -277,17 +288,17 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
                     .addComponent(jReceiptSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
                     .addComponent(jTextReceiptPrefix, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTicketExample, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(m_jReceiptPrintOff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jPickupSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jbtnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(m_jReceiptPrintOff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(316, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -298,14 +309,7 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
 
     private void jReceiptSizeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jReceiptSizeStateChanged
 
-        receipt = "";
-        x = 1;
-        while (x < (Integer) jReceiptSize.getValue()) {
-            receipt += "0";
-            x++;
-        }
-        receipt += "1";
-        jTicketExample.setText(jTextReceiptPrefix.getText() + receipt);
+        receiptPrefixExample();
 
     }//GEN-LAST:event_jReceiptSizeStateChanged
 
