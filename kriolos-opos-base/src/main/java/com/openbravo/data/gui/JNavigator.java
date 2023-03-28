@@ -30,30 +30,12 @@ import com.openbravo.data.user.StateListener;
  * @author JG uniCenta
  */
 public class JNavigator extends javax.swing.JPanel implements BrowseListener, StateListener {
-    
-    /**
-     *
-     */
+
     public final static int BUTTONS_ALL = 0;
-
-    /**
-     *
-     */
     public final static int BUTTONS_NONAVIGATE = 1;
-    
-    /**
-     *
-     */
-    protected BrowsableEditableData m_bd;
 
-    /**
-     *
-     */
+    protected BrowsableEditableData m_bd;
     protected ComparatorCreator m_cc;
-    
-    /**
-     *
-     */
     protected FindInfo m_LastFindInfo;  
 
     private javax.swing.JButton jbtnFind = null;
@@ -214,28 +196,15 @@ public class JNavigator extends javax.swing.JPanel implements BrowseListener, St
         bd.addStateListener(this);
     }
 
-    /**
-     *
-     * @param bd
-     */
     public JNavigator(BrowsableEditableData bd) {
         this(bd, null, null, BUTTONS_ALL);
     }
 
-    /**
-     *
-     * @param bd
-     * @param vec
-     * @param cc
-     */
     public JNavigator(BrowsableEditableData bd, Vectorer vec, ComparatorCreator cc) {
         this(bd, vec, cc, BUTTONS_ALL);
     }
 
-    /**
-     *
-     * @param iState
-     */
+    @Override
     public void updateState(int iState) {
         if (iState == BrowsableEditableData.ST_INSERT || iState == BrowsableEditableData.ST_DELETE) {
              // Insert o Delete
@@ -247,15 +216,10 @@ public class JNavigator extends javax.swing.JPanel implements BrowseListener, St
         }
     }
 
-    /**
-     *
-     * @param iIndex
-     * @param iCounter
-     */
+    @Override
     public void updateIndex(int iIndex, int iCounter) {
         
         if (iIndex >= 0 && iIndex < iCounter) {
-            // Reposicionamiento
             if (jbtnFirst != null) jbtnFirst.setEnabled(iIndex > 0);
             if (jbtnPrev != null) jbtnPrev.setEnabled(iIndex > 0);
             if (jbtnNext != null) jbtnNext.setEnabled(iIndex < iCounter - 1);
