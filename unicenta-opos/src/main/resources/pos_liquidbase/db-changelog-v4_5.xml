@@ -122,7 +122,7 @@
             </column>
             <column name="catorder" type="VARCHAR(255)"/>
         </createTable>
-        <modifySql dbms="mysql">
+        <modifySql dbms="mysql,mariadb">
             <replace replace="BLOB" with="MEDIUMBLOB"/>
         </modifySql>
     </changeSet>
@@ -207,7 +207,7 @@
             <column defaultValueNumeric="0.0" name="discount" type="DOUBLE"/>
             <column defaultValueDate="2022-01-01T00:00:01" name="memodate" type="datetime"/>
         </createTable>
-        <modifySql dbms="mysql">
+        <modifySql dbms="mysql,mariadb">
             <replace replace="BLOB" with="MEDIUMBLOB"/>
         </modifySql>
     </changeSet>
@@ -230,7 +230,7 @@
             </column>
             <column name="image" type="BLOB"/>
         </createTable>
-        <modifySql dbms="mysql">
+        <modifySql dbms="mysql,mariadb">
             <replace replace="BLOB" with="MEDIUMBLOB"/>
         </modifySql>
     </changeSet>
@@ -331,7 +331,7 @@
             <column name="cardname" type="VARCHAR(255)"/>
             <column name="voucher" type="VARCHAR(255)"/>
         </createTable>
-        <modifySql dbms="mysql">
+        <modifySql dbms="mysql,mariadb">
             <replace replace="BLOB" with="MEDIUMBLOB"/>
         </modifySql>
     </changeSet>
@@ -353,7 +353,7 @@
             </column>
             <column name="image" type="BLOB"/>
         </createTable>
-        <modifySql dbms="mysql">
+        <modifySql dbms="mysql,mariadb">
             <replace replace="BLOB" with="MEDIUMBLOB"/>
         </modifySql>
     </changeSet>
@@ -465,7 +465,7 @@
             <column defaultValue="0" name="uom" type="VARCHAR(255)"/>
             <column defaultValueDate="2022-01-01T00:00:01" name="memodate" type="datetime"/>
         </createTable>
-        <modifySql dbms="mysql">
+        <modifySql dbms="mysql,mariadb">
             <replace replace="BLOB" with="MEDIUMBLOB"/>
         </modifySql>
     </changeSet>
@@ -520,7 +520,7 @@
             <column name="attributes" type="BLOB"/>
             <column name="person" type="VARCHAR(255)"/>
         </createTable>
-        <modifySql dbms="mysql">
+        <modifySql dbms="mysql,mariadb">
             <replace replace="BLOB" with="MEDIUMBLOB"/>
         </modifySql>
     </changeSet>
@@ -570,7 +570,7 @@
             </column>
             <column name="content" type="BLOB"/>
         </createTable>
-        <modifySql dbms="mysql">
+        <modifySql dbms="mysql,mariadb">
             <replace replace="BLOB" with="MEDIUMBLOB"/>
         </modifySql>
     </changeSet>
@@ -584,7 +584,7 @@
             </column>
             <column name="permissions" type="BLOB"/>
         </createTable>
-        <modifySql dbms="mysql">
+        <modifySql dbms="mysql,mariadb">
             <replace replace="BLOB" with="MEDIUMBLOB"/>
         </modifySql>
     </changeSet>
@@ -603,7 +603,7 @@
             </column>
             <column name="locked" type="VARCHAR(20)"/>
         </createTable>
-        <modifySql dbms="mysql">
+        <modifySql dbms="mysql,mariadb">
             <replace replace="BLOB" with="MEDIUMBLOB"/>
         </modifySql>
     </changeSet>
@@ -849,7 +849,7 @@
             </column>
             <column name="attributes" type="BLOB"/>
         </createTable>
-        <modifySql dbms="mysql">
+        <modifySql dbms="mysql,mariadb">
             <replace replace="BLOB" with="MEDIUMBLOB"/>
         </modifySql>
     </changeSet>
