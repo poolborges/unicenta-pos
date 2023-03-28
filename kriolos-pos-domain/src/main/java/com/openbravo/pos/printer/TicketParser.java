@@ -17,6 +17,7 @@ package com.openbravo.pos.printer;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.pos.forms.DataLogicSystem;
+import com.openbravo.pos.printer.escpos.DeviceDisplayLED8;
 import com.openbravo.pos.ticket.TicketInfo;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -40,7 +41,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author JG uniCenta
  */
 public class TicketParser extends DefaultHandler {
-    
+
     private static final Logger LOGGER = Logger.getLogger(TicketParser.class.getName());
 
     private static SAXParser m_sp = null;
@@ -377,6 +378,9 @@ public class TicketParser extends DefaultHandler {
                         }
                     } else {
                         m_sVisorLine.append(text);
+                    }
+                    if (this.m_iTextStyle > -1 && this.m_printer.getDeviceDisplay() instanceof DeviceDisplayLED8) {
+                        ((DeviceDisplayLED8) this.m_printer.getDeviceDisplay()).displayLight(this.m_iTextStyle);
                     }
                     text = null;
                 } else if ("display".equals(qName)) {

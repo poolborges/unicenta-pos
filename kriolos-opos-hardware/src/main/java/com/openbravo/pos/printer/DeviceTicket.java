@@ -243,6 +243,10 @@ public class DeviceTicket {
                 case "javapos":
                     m_devicedisplay = new DeviceDisplayJavaPOS(sDisplayParam1);
                     break;
+                case "led8":
+                    this.m_devicedisplay = new DeviceDisplayLED8(
+                            pws.getPrinterWritter(sDisplayParam1, sDisplayParam2));
+                    break;
                 default:
                     m_devicedisplay = new DeviceDisplayNull();
                     break;
