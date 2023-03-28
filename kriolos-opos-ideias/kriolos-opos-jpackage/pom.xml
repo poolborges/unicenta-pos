@@ -15,6 +15,7 @@
         <appModule>io.github.kriolos.opos</appModule>
         <appMainClass>com.openbravo.pos.forms.StartPOS</appMainClass>
         <appIcon></appIcon>
+        <appJar>kriolos-pos-${project.version}.jar</appJar>
     </properties>
  
     <dependencies>
@@ -49,7 +50,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
     </dependencies>
     
     <build>
@@ -75,7 +75,6 @@
             <plugin>
                 <groupId>org.panteleyev</groupId>
                 <artifactId>jpackage-maven-plugin</artifactId>
-                <version>1.6.0</version>
                 <configuration>
                     <name>kriolosPOS</name>
                     <appVersion>1.0.0</appVersion>
@@ -85,14 +84,12 @@
                     <type>APP_IMAGE</type>
                     <input>${project.build.directory}/lib</input>
                     <mainClass>${appMainClass}</mainClass>
-                    <mainJar>kriolos-pos-${project.version}.jar</mainJar>
+                    <mainJar>${appJar}</mainJar>
                     <destination>${project.build.directory}/</destination>
                     
                     <!-- Change on profile for specific OS -->
                     <icon>${project.basedir}/icons/app_icon.ico</icon>
-                    
-                    
-                            
+ 
                     <launchers>
                         <launcher>
                             <name>kriolosKDS-Config</name>
