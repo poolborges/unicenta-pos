@@ -22,11 +22,11 @@ import com.openbravo.pos.printer.javapos.DeviceDisplayJavaPOS;
 import com.openbravo.pos.printer.javapos.DeviceFiscalPrinterJavaPOS;
 import com.openbravo.pos.printer.javapos.DevicePrinterJavaPOS;
 import com.openbravo.pos.printer.printer.DevicePrinterPrinter;
+import com.openbravo.pos.printer.screen.DeviceDisplayWindowDualScreen;
 import com.openbravo.pos.printer.screen.DeviceDisplayPanel;
 import com.openbravo.pos.printer.screen.DeviceDisplayWindow;
 import com.openbravo.pos.printer.screen.DevicePrinterPanel;
 import com.openbravo.pos.util.StringParser;
-import com.openbravo.pos.util.StringUtils;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -225,6 +225,9 @@ public class DeviceTicket {
                     break;
                 case "window":
                     m_devicedisplay = new DeviceDisplayWindow();
+                    break;
+                case "dual":
+                    m_devicedisplay = new DeviceDisplayWindowDualScreen();
                     break;
                 case "epson":
                     m_devicedisplay = new DeviceDisplayESCPOS(

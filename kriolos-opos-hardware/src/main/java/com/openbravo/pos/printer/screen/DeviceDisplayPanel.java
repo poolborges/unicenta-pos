@@ -32,8 +32,7 @@ public class DeviceDisplayPanel extends JPanel implements DeviceDisplay {
     private String m_sName;
     
     private DeviceDisplayBase m_displaylines;
-    
-    /** Creates new form JVisor */
+
     public DeviceDisplayPanel() {
         this(1.0);
     }
@@ -49,11 +48,6 @@ public class DeviceDisplayPanel extends JPanel implements DeviceDisplay {
         
         jline1.setFont(new Font("Monospaced", Font.BOLD, (int)(16 * dZoom)));
         jline2.setFont(new Font("Monospaced", Font.BOLD, (int)(16 * dZoom)));
-// JG Feb' 16 - Revert
-// Consolas intro'd in v4.1 but causes issue in RightToLeft languages i.e.: Arabic 
-//        jline1.setFont(new Font("Consolas", Font.BOLD, (int)(16 * dZoom)));
-//        jline2.setFont(new Font("Consolas", Font.BOLD, (int)(16 * dZoom)));        
-
         m_displaylines = new DeviceDisplayBase(this);
     }
     

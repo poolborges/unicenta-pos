@@ -24,35 +24,16 @@ import javax.swing.JComponent;
  */
 public interface DeviceDisplay {
 
-    // INTERFAZ DESCRIPCION
-
-    /**
-     *
-     * @return
-     */
-        public String getDisplayName();
-
-    /**
-     *
-     * @return
-     */
+    public String getDisplayName();
     public String getDisplayDescription();
-
-    /**
-     *
-     * @return
-     */
     public JComponent getDisplayComponent();
-    
-    // INTERFAZ VISOR
-
     /**
      *
      * @param animation
      * @param sLine1
      * @param sLine2
      */
-        public void writeVisor(int animation, String sLine1, String sLine2);
+    public void writeVisor(int animation, String sLine1, String sLine2);
 
     /**
      *
@@ -60,12 +41,6 @@ public interface DeviceDisplay {
      * @param sLine2
      */
     public void writeVisor(String sLine1, String sLine2);
-
-    /**
-     *
-     */
     public void clearVisor();
-    
-    
     public void repaintLines();
 }

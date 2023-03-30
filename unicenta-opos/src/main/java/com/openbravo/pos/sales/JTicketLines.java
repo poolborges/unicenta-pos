@@ -13,10 +13,8 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.sales;
 
-import com.openbravo.data.loader.LocalRes;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.scripting.ScriptEngine;
 import com.openbravo.pos.scripting.ScriptException;
@@ -57,18 +55,21 @@ public class JTicketLines extends javax.swing.JPanel {
     private static final Logger logger = Logger.getLogger("com.openbravo.pos.sales.JTicketLines");
 
     private static SAXParser m_sp = null;
-    
+
     private final TicketTableModel m_jTableModel;
     private Boolean sendStatus;
-    
-    /** Creates new form JLinesTicket
-     * @param ticketline */
+
+    /**
+     * Creates new form JLinesTicket
+     *
+     * @param ticketline
+     */
     public JTicketLines(String ticketline) {
-        logger.log(Level.FINEST, "Creating ticketline from: "+ticketline);
+        logger.log(Level.FINEST, "Creating ticketline from: " + ticketline);
         initComponents();
-  
+
         ColumnTicket[] acolumns = new ColumnTicket[0];
-        
+
         if (ticketline != null) {
             try {
                 if (m_sp == null) {
@@ -80,46 +81,46 @@ public class JTicketLines extends javax.swing.JPanel {
                 acolumns = columnshandler.getColumns();
 
             } catch (ParserConfigurationException ePC) {
-                logger.log(Level.WARNING, "exception.parserconfig"+ticketline, ePC);
+                logger.log(Level.WARNING, "exception.parserconfig" + ticketline, ePC);
             } catch (SAXException eSAX) {
-                logger.log(Level.WARNING, "exception.xmlfile"+ticketline, eSAX);
+                logger.log(Level.WARNING, "exception.xmlfile" + ticketline, eSAX);
             } catch (IOException eIO) {
-                logger.log(Level.WARNING, "exception.iofile"+ticketline, eIO);
+                logger.log(Level.WARNING, "exception.iofile" + ticketline, eIO);
             }
         }
-               
-        m_jTableModel = new TicketTableModel(acolumns);    
-        m_jTicketTable.setModel(m_jTableModel);        
-        
+
+        m_jTableModel = new TicketTableModel(acolumns);
+        m_jTicketTable.setModel(m_jTableModel);
+
         //m_jTicketTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         TableColumnModel jColumns = m_jTicketTable.getColumnModel();
         for (int i = 0; i < acolumns.length; i++) {
             jColumns.getColumn(i).setPreferredWidth(acolumns[i].width);
             jColumns.getColumn(i).setResizable(false);
-        }       
-        
+        }
+
         m_jScrollTableTicket.getVerticalScrollBar().setPreferredSize(new Dimension(35, 35));
-       
-      // set font for headers
+
+        // set font for headers
         Font f = new Font("Arial", Font.BOLD, 14);
         JTableHeader header = m_jTicketTable.getTableHeader();
         header.setFont(f);
-      
-        m_jTicketTable.getTableHeader().setReorderingAllowed(true); 
+
+        m_jTicketTable.getTableHeader().setReorderingAllowed(true);
         m_jTicketTable.setAutoCreateRowSorter(true);
         m_jTicketTable.setDefaultRenderer(Object.class, new TicketCellRenderer(acolumns));
-        
+
         m_jTicketTable.setRowHeight(40);
-        m_jTicketTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
-        
+        m_jTicketTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
         m_jTableModel.clear();
     }
-    
+
     /**
      *
      * @param l
      */
-    public void addListSelectionListener(ListSelectionListener l) {        
+    public void addListSelectionListener(ListSelectionListener l) {
         m_jTicketTable.getSelectionModel().addListSelectionListener(l);
     }
 
@@ -130,23 +131,23 @@ public class JTicketLines extends javax.swing.JPanel {
     public void removeListSelectionListener(ListSelectionListener l) {
         m_jTicketTable.getSelectionModel().removeListSelectionListener(l);
     }
-    
+
     /**
      *
      */
-    public void clearTicketLines() {                   
+    public void clearTicketLines() {
         m_jTableModel.clear();
     }
-    
+
     /**
      *
      * @param index
      * @param oLine
      */
-    public void setTicketLine(int index, TicketLineInfo oLine){
-        m_jTableModel.setRow(index, oLine);  
+    public void setTicketLine(int index, TicketLineInfo oLine) {
+        m_jTableModel.setRow(index, oLine);
     }
-    
+
     /**
      *
      * @param oLine
@@ -154,8 +155,8 @@ public class JTicketLines extends javax.swing.JPanel {
     public void addTicketLine(TicketLineInfo oLine) {
 
         m_jTableModel.addRow(oLine);
-        
-        setSelectedIndex(m_jTableModel.getRowCount() - 1);   
+
+        setSelectedIndex(m_jTableModel.getRowCount() - 1);
     }
 
     /**
@@ -166,15 +167,15 @@ public class JTicketLines extends javax.swing.JPanel {
     public void insertTicketLine(int index, TicketLineInfo oLine) {
 
         m_jTableModel.insertRow(index, oLine);
-        
-        setSelectedIndex(index);   
-    }     
+
+        setSelectedIndex(index);
+    }
 
     /**
      *
      * @param i
      */
-    public void removeTicketLine(int i){
+    public void removeTicketLine(int i) {
 
         m_jTableModel.removeRow(i);
 
@@ -186,19 +187,19 @@ public class JTicketLines extends javax.swing.JPanel {
             setSelectedIndex(i);
         }
     }
-    
+
     /**
      *
      * @param i
      */
-    public void setSelectedIndex(int i){
-        
+    public void setSelectedIndex(int i) {
+
         m_jTicketTable.getSelectionModel().setSelectionInterval(i, i);
 
         Rectangle oRect = m_jTicketTable.getCellRect(i, 0, true);
         m_jTicketTable.scrollRectToVisible(oRect);
     }
-    
+
     /**
      *
      * @return
@@ -206,17 +207,17 @@ public class JTicketLines extends javax.swing.JPanel {
     public int getSelectedIndex() {
         return m_jTicketTable.getSelectionModel().getMinSelectionIndex(); // solo sera uno, luego no importa...
     }
-    
+
     /**
      *
      */
     public void selectionDown() {
-        
+
         int i = m_jTicketTable.getSelectionModel().getMaxSelectionIndex();
-        if (i < 0){
-            i =  0;
+        if (i < 0) {
+            i = 0;
         } else {
-            i ++;
+            i++;
             if (i >= m_jTableModel.getRowCount()) {
                 i = m_jTableModel.getRowCount() - 1;
             }
@@ -226,17 +227,17 @@ public class JTicketLines extends javax.swing.JPanel {
             setSelectedIndex(i);
         }
     }
-    
+
     /**
      *
      */
     public void selectionUp() {
-        
+
         int i = m_jTicketTable.getSelectionModel().getMinSelectionIndex();
-        if (i < 0){
+        if (i < 0) {
             i = m_jTableModel.getRowCount() - 1; // No hay ninguna seleccionada
         } else {
-            i --;
+            i--;
             if (i < 0) {
                 i = 0;
             }
@@ -246,100 +247,109 @@ public class JTicketLines extends javax.swing.JPanel {
             setSelectedIndex(i);
         }
     }
-    
+
+    public void setTicketTableFont(Font f) {
+        this.m_jTicketTable.getTableHeader().setFont(f);
+        this.m_jTicketTable.setFont(f);
+    }
+
     private static class TicketCellRenderer extends DefaultTableCellRenderer {
 
         private static final long serialVersionUID = 1L;
-        
-        private final ColumnTicket[] m_acolumns;        
-        
+
+        private final ColumnTicket[] m_acolumns;
+
         public TicketCellRenderer(ColumnTicket[] acolumns) {
             m_acolumns = acolumns;
         }
-        
+
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, 
-                boolean isSelected, boolean hasFocus, int row, int column){
-            
-           JLabel aux = (JLabel) super.getTableCellRendererComponent(table, value, 
-                   isSelected, hasFocus, row, column);
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+
+            JLabel aux = (JLabel) super.getTableCellRendererComponent(table, value,
+                    isSelected, hasFocus, row, column);
             aux.setVerticalAlignment(javax.swing.SwingConstants.TOP);
             aux.setHorizontalAlignment(m_acolumns[column].align);
-            Font fName =aux.getFont();
-            aux.setFont(new Font(fName.getName(),Font.PLAIN,14));
- 
+            Font fName = aux.getFont();
+            aux.setFont(new Font(fName.getName(), Font.PLAIN, 14));
+
             return aux;
         }
     }
-    
+
     private static class TicketCellRendererSent extends DefaultTableCellRenderer {
 
         private static final long serialVersionUID = 1L;
-        
-        private final ColumnTicket[] m_acolumns;        
-        
+
+        private final ColumnTicket[] m_acolumns;
+
         public TicketCellRendererSent(ColumnTicket[] acolumns) {
             m_acolumns = acolumns;
         }
-        
+
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, 
-                boolean isSelected, boolean hasFocus, int row, int column){
-            
-           JLabel aux = (JLabel) super.getTableCellRendererComponent(table, 
-                   value, isSelected, hasFocus, row, column);
-           
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+
+            JLabel aux = (JLabel) super.getTableCellRendererComponent(table,
+                    value, isSelected, hasFocus, row, column);
+
             aux.setVerticalAlignment(javax.swing.SwingConstants.TOP);
             aux.setHorizontalAlignment(m_acolumns[column].align);
-            Font fName =aux.getFont();
-            aux.setFont(new Font(fName.getName(),Font.PLAIN,12));
+            Font fName = aux.getFont();
+            aux.setFont(new Font(fName.getName(), Font.PLAIN, 12));
             aux.setBackground(Color.yellow);
             return aux;
         }
-    }    
-    
+    }
+
     private static class TicketTableModel extends AbstractTableModel {
-        
+
         private final ColumnTicket[] m_acolumns;
         private final ArrayList m_rows = new ArrayList();
-        
+
         public TicketTableModel(ColumnTicket[] acolumns) {
             m_acolumns = acolumns;
         }
+
         @Override
         public int getRowCount() {
             return m_rows.size();
         }
+
         @Override
         public int getColumnCount() {
             return m_acolumns.length;
         }
+
         @Override
         public String getColumnName(int column) {
             return AppLocal.getIntString(m_acolumns[column].name);
             // return m_acolumns[column].name;
         }
+
         @Override
         public Object getValueAt(int row, int column) {
             return ((String[]) m_rows.get(row))[column];
         }
-  
+
         @Override
         public boolean isCellEditable(int row, int column) {
             return false;
         }
-        
+
         public void clear() {
             int old = getRowCount();
-            if (old > 0) { 
+            if (old > 0) {
                 m_rows.clear();
                 fireTableRowsDeleted(0, old - 1);
             }
         }
-        
-        public void setRow(int index, TicketLineInfo oLine){
-            
-            String[] row = (String []) m_rows.get(index);
+
+        public void setRow(int index, TicketLineInfo oLine) {
+
+            String[] row = (String[]) m_rows.get(index);
             for (int i = 0; i < m_acolumns.length; i++) {
                 try {
                     ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
@@ -347,18 +357,18 @@ public class JTicketLines extends javax.swing.JPanel {
                     row[i] = script.eval(m_acolumns[i].value).toString();
                 } catch (ScriptException e) {
                     row[i] = null;
-                } 
+                }
                 fireTableCellUpdated(index, i);
-            }             
-        }        
-        
+            }
+        }
+
         public void addRow(TicketLineInfo oLine) {
-            
+
             insertRow(m_rows.size(), oLine);
         }
-        
+
         public void insertRow(int index, TicketLineInfo oLine) {
-            
+
             String[] row = new String[m_acolumns.length];
             for (int i = 0; i < m_acolumns.length; i++) {
                 try {
@@ -367,36 +377,40 @@ public class JTicketLines extends javax.swing.JPanel {
                     row[i] = script.eval(m_acolumns[i].value).toString();
                 } catch (ScriptException e) {
                     row[i] = null;
-                }  
-            } 
-            
+                }
+            }
+
             m_rows.add(index, row);
             fireTableRowsInserted(index, index);
         }
-        
+
         public void removeRow(int row) {
             m_rows.remove(row);
             fireTableRowsDeleted(row, row);
-        }        
+        }
     }
-    
+
     private static class ColumnsHandler extends DefaultHandler {
-        
+
         private ArrayList m_columns = null;
-        
+
         public ColumnTicket[] getColumns() {
             return (ColumnTicket[]) m_columns.toArray(new ColumnTicket[m_columns.size()]);
         }
+
         @Override
-        public void startDocument() throws SAXException { 
+        public void startDocument() throws SAXException {
             m_columns = new ArrayList();
         }
+
         @Override
-        public void endDocument() throws SAXException {}    
+        public void endDocument() throws SAXException {
+        }
+
         @Override
-        public void startElement(String uri, String localName, String qName, 
-                Attributes attributes) throws SAXException{
-            if ("column".equals(qName)){
+        public void startElement(String uri, String localName, String qName,
+                Attributes attributes) throws SAXException {
+            if ("column".equals(qName)) {
                 ColumnTicket c = new ColumnTicket();
                 c.name = attributes.getValue("name");
                 c.width = Integer.parseInt(attributes.getValue("width"));
@@ -415,32 +429,37 @@ public class JTicketLines extends javax.swing.JPanel {
                 c.value = attributes.getValue("value");
                 m_columns.add(c);
             }
-        }      
+        }
+
         @Override
-        public void endElement(String uri, String localName, String qName) throws SAXException {}
+        public void endElement(String uri, String localName, String qName) throws SAXException {
+        }
+
         @Override
-        public void characters(char[] ch, int start, int length) throws SAXException {}
+        public void characters(char[] ch, int start, int length) throws SAXException {
+        }
     }
 
     /**
      *
      * @param state
      */
-    public void setSendStatus(Boolean state){
+    public void setSendStatus(Boolean state) {
         sendStatus = state;
     }
-    
+
     private static class ColumnTicket {
+
         public String name;
         public int width;
         public int align;
         public String value;
     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -463,11 +482,11 @@ public class JTicketLines extends javax.swing.JPanel {
 
         add(m_jScrollTableTicket, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane m_jScrollTableTicket;
     private javax.swing.JTable m_jTicketTable;
     // End of variables declaration//GEN-END:variables
-    
+
 }

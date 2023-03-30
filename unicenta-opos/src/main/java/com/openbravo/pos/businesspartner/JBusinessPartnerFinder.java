@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.*;
 
-import java.awt.event.KeyEvent; //Jack
+import java.awt.event.KeyEvent;
 
 /**
  *
@@ -42,18 +42,18 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
 
     private static final long serialVersionUID = 1L;
 
-    private BusinessPartner m_ReturnBusinessPartner;
+    private BusinessPartner m_BPartner;
     private ListProvider lpr;
     private AppView appView;
 
     public void searchKey() {
-        jbtnExecute.setMnemonic(KeyEvent.VK_E); // Jack 
+        jbtnExecute.setMnemonic(KeyEvent.VK_E);
         executeSearch();
     }
 
     public void resetKey() {
 
-        jbtnReset.setMnemonic(KeyEvent.VK_R); // Jack
+        jbtnReset.setMnemonic(KeyEvent.VK_R);
         m_jtxtTaxID.reset();
         m_jtxtSearchKey.reset();
         m_jtxtName.reset();
@@ -69,14 +69,10 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
         this.appView = appView;
     }
 
-    /** Creates new form JCustomerFinder */
     private JBusinessPartnerFinder(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
     }
 
-    /**
-     * Creates new form JCustomerFinder
-     */
     private JBusinessPartnerFinder(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
     }
@@ -97,7 +93,7 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
     }
 
     public BusinessPartner getSelectedCustomer() {
-        return m_ReturnBusinessPartner;
+        return m_BPartner;
     }
 
     private void init(DataLogicCustomers dlCustomers) {
@@ -124,17 +120,17 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
 
         lpr = new ListProviderCreator(dlCustomers.getCustomerList(), this);
 
-        jListCustomers.setCellRenderer(new CustomerRenderer());
+        jListBPartner.setCellRenderer(new CustomerRenderer());
 
         getRootPane().setDefaultButton(jcmdOK);
 
-        m_ReturnBusinessPartner = null;
+        m_BPartner = null;
 
     }
 
-    public void search(BusinessPartner customer) {
+    public void search(BusinessPartner bpartner) {
 
-        if (customer == null || customer.getName() == null || customer.getName().equals("")) {
+        if (bpartner == null || bpartner.getName() == null || bpartner.getName().equals("")) {
 
             m_jtxtTaxID.reset();
             m_jtxtSearchKey.reset();
@@ -148,12 +144,12 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
             cleanSearch();
         } else {
 
-            m_jtxtTaxID.setText(customer.getTaxid());
-            m_jtxtSearchKey.setText(customer.getSearchkey());
-            m_jtxtName.setText(customer.getName());
-            m_jtxtPostal.setText(customer.getPostal());
-            m_jtxtPhone.setText(customer.getPhone());
-            m_jtxtEmail.setText(customer.getEmail());
+            m_jtxtTaxID.setText(bpartner.getTaxid());
+            m_jtxtSearchKey.setText(bpartner.getSearchkey());
+            m_jtxtName.setText(bpartner.getName());
+            m_jtxtPostal.setText(bpartner.getPostal());
+            m_jtxtPhone.setText(bpartner.getPhone());
+            m_jtxtEmail.setText(bpartner.getEmail());
 
             m_jtxtTaxID.activate();
 
@@ -168,24 +164,21 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
         m_jtxtPostal.setText("");
         m_jtxtPhone.setText("");
         m_jtxtEmail.setText("");
-        jListCustomers.setModel(new MyListData(new ArrayList()));
+        jListBPartner.setModel(new BPListModel(new ArrayList()));
     }
 
-    /**
-     * This method actions the customer data search
-     */
     public void executeSearch() {
         
         try {
-            jListCustomers.setModel(new MyListData(lpr.loadData()));
-            if (jListCustomers.getModel().getSize() > 0) {
-                jListCustomers.setSelectedIndex(0);
+            jListBPartner.setModel(new BPListModel(lpr.loadData()));
+            if (jListBPartner.getModel().getSize() > 0) {
+                jListBPartner.setSelectedIndex(0);
             } else {
                 if(!m_jtxtName.getText().equals("")) {
                     
                     int n = JOptionPane.showConfirmDialog(
                         null,
-                        AppLocal.getIntString("message.customernotfound"),
+                        AppLocal.getIntString("message.bpartnernotfound"),
                         AppLocal.getIntString("title.editor"),
                         JOptionPane.YES_NO_OPTION);
 
@@ -253,7 +246,7 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
             afilter[9] = "%" + m_jtxtPhone.getText() + "%";
         }
 
-        //
+        // EMail
         if (m_jtxtEmail.getText() == null || m_jtxtEmail.getText().equals("")) {
             afilter[10] = QBFCompareEnum.COMP_NONE;
             afilter[11] = null;
@@ -275,11 +268,11 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
         }
     }
 
-    private static class MyListData extends javax.swing.AbstractListModel {
+    private static class BPListModel extends javax.swing.AbstractListModel {
 
         private final java.util.List m_data;
 
-        public MyListData(java.util.List data) {
+        public BPListModel(java.util.List data) {
             m_data = data;
         }
 
@@ -308,7 +301,7 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
         jPanel1 = new javax.swing.JPanel();
         jcmdCancel = new javax.swing.JButton();
         jcmdOK = new javax.swing.JButton();
-        jImageViewerCustomer = new com.openbravo.data.gui.JImageViewer();
+        jImageViewerBP = new com.openbravo.data.gui.JImageViewer();
         jPanel3 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
@@ -326,7 +319,7 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
         m_jtxtEmail = new com.openbravo.editor.JEditorString();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jListCustomers = new javax.swing.JList();
+        jListBPartner = new javax.swing.JList();
         jPanel6 = new javax.swing.JPanel();
         jbtnReset = new javax.swing.JButton();
         jbtnExecute = new javax.swing.JButton();
@@ -376,7 +369,7 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
         jPanel8.add(jPanel1, java.awt.BorderLayout.LINE_END);
 
         jPanel2.add(jPanel8, java.awt.BorderLayout.PAGE_END);
-        jPanel2.add(jImageViewerCustomer, java.awt.BorderLayout.CENTER);
+        jPanel2.add(jImageViewerBP, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.LINE_END);
 
@@ -512,20 +505,20 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(400, 147));
 
-        jListCustomers.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jListCustomers.setFocusable(false);
-        jListCustomers.setRequestFocusEnabled(false);
-        jListCustomers.addMouseListener(new java.awt.event.MouseAdapter() {
+        jListBPartner.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jListBPartner.setFocusable(false);
+        jListBPartner.setRequestFocusEnabled(false);
+        jListBPartner.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jListCustomersMouseClicked(evt);
+                jListBPartnerMouseClicked(evt);
             }
         });
-        jListCustomers.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        jListBPartner.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jListCustomersValueChanged(evt);
+                jListBPartnerValueChanged(evt);
             }
         });
-        jScrollPane1.setViewportView(jListCustomers);
+        jScrollPane1.setViewportView(jListBPartner);
 
         jPanel4.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
@@ -569,7 +562,7 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
     }// </editor-fold>//GEN-END:initComponents
     private void jcmdOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcmdOKActionPerformed
 
-        m_ReturnBusinessPartner = (CustomerInfo) jListCustomers.getSelectedValue();
+        m_BPartner = (BusinessPartner) jListBPartner.getSelectedValue();
         dispose();
 
     }//GEN-LAST:event_jcmdOKActionPerformed
@@ -582,32 +575,32 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
 
     private void jbtnExecuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnExecuteActionPerformed
 
-        m_ReturnBusinessPartner=null;
+        m_BPartner=null;
         executeSearch();
         
     }//GEN-LAST:event_jbtnExecuteActionPerformed
 
-    private void jListCustomersValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListCustomersValueChanged
+    private void jListBPartnerValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListBPartnerValueChanged
 
-        m_ReturnBusinessPartner = (CustomerInfo) jListCustomers.getSelectedValue();
+        m_BPartner = (CustomerInfo) jListBPartner.getSelectedValue();
         
-        if (m_ReturnBusinessPartner != null) {
-                jImageViewerCustomer.setImage(m_ReturnBusinessPartner.getImage());
+        if (m_BPartner != null) {
+                jImageViewerBP.setImage(m_BPartner.getImage());
         }
         
-        jcmdOK.setEnabled(jListCustomers.getSelectedValue() != null);
+        jcmdOK.setEnabled(jListBPartner.getSelectedValue() != null);
 
-    }//GEN-LAST:event_jListCustomersValueChanged
+    }//GEN-LAST:event_jListBPartnerValueChanged
 
-    private void jListCustomersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListCustomersMouseClicked
+    private void jListBPartnerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListBPartnerMouseClicked
 
-        m_ReturnBusinessPartner = (BusinessPartner) jListCustomers.getSelectedValue();
+        m_BPartner = (BusinessPartner) jListBPartner.getSelectedValue();
         
-        if (m_ReturnBusinessPartner != null) {
-                jImageViewerCustomer.setImage(m_ReturnBusinessPartner.getImage());
+        if (m_BPartner != null) {
+                jImageViewerBP.setImage(m_BPartner.getImage());
         } 
 
-    }//GEN-LAST:event_jListCustomersMouseClicked
+    }//GEN-LAST:event_jListBPartnerMouseClicked
 
     private void jbtnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnResetActionPerformed
  
@@ -624,14 +617,14 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
 }//GEN-LAST:event_jbtnResetActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.openbravo.data.gui.JImageViewer jImageViewerCustomer;
+    private com.openbravo.data.gui.JImageViewer jImageViewerBP;
     private javax.swing.JLabel jLblEmail;
     private javax.swing.JLabel jLblName;
     private javax.swing.JLabel jLblPhone;
     private javax.swing.JLabel jLblPostal;
     private javax.swing.JLabel jLblSearchKey;
     private javax.swing.JLabel jLblTaxID;
-    private javax.swing.JList jListCustomers;
+    private javax.swing.JList jListBPartner;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

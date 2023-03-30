@@ -130,7 +130,7 @@
             </Container>
           </SubComponents>
         </Container>
-        <Component class="com.openbravo.data.gui.JImageViewer" name="jImageViewerCustomer">
+        <Component class="com.openbravo.data.gui.JImageViewer" name="jImageViewerBP">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
               <BorderConstraints direction="Center"/>
@@ -462,7 +462,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JList" name="jListCustomers">
+                <Component class="javax.swing.JList" name="jListBPartner">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="14" style="0"/>
@@ -474,8 +474,8 @@
                     <Property name="requestFocusEnabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jListCustomersMouseClicked"/>
-                    <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="jListCustomersValueChanged"/>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jListBPartnerMouseClicked"/>
+                    <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="jListBPartnerValueChanged"/>
                   </Events>
                 </Component>
               </SubComponents>

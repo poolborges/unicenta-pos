@@ -41,7 +41,6 @@
               <Dimension value="[0, 1]"/>
             </Property>
             <Property name="requestFocusEnabled" type="boolean" value="false"/>
-            <Property name="showVerticalLines" type="boolean" value="false"/>
           </Properties>
         </Component>
       </SubComponents>

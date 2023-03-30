@@ -40,6 +40,7 @@ import com.openbravo.pos.payment.JPaymentSelectReceipt;
 import com.openbravo.pos.payment.JPaymentSelectRefund;
 import com.openbravo.pos.printer.TicketParser;
 import com.openbravo.pos.printer.TicketPrinterException;
+import com.openbravo.pos.printer.screen.DeviceDisplayAdvance;
 import com.openbravo.pos.sales.restaurant.RestaurantDBUtils;
 import com.openbravo.pos.scale.ScaleException;
 import com.openbravo.pos.scripting.ScriptEngine;
@@ -56,6 +57,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.Window;
 import static java.awt.Window.getWindows;
@@ -65,6 +67,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.print.PrintService;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -73,6 +77,8 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRMapArrayDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -188,6 +194,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         initExtButtons();
 
         initComponentFromChild();
+
+        initDeviceDisplay();
     }
 
     private void initExtButtons() {
@@ -567,8 +575,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     /**
      * Add a Ticket Line
      *
-     * @param oLine
-     *          Ticket line
+     * @param oLine Ticket line
      */
     protected void addTicketLine(TicketLineInfo oLine) {
         if (oLine.isProductCom()) {
@@ -1810,6 +1817,53 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         }
     }
 
+    private void initDeviceDisplay() {
+        var deviceDisplay = m_App.getDeviceTicket().getDeviceDisplay();
+        if (deviceDisplay != null && deviceDisplay instanceof DeviceDisplayAdvance) {
+            DeviceDisplayAdvance advDisplay = (DeviceDisplayAdvance) deviceDisplay;
+
+            this.m_ticketlines.addListSelectionListener((ListSelectionEvent e) -> {
+                DeviceDisplayAdvance advDisplay1 = (DeviceDisplayAdvance) JPanelTicket.this.m_App.getDeviceTicket().getDeviceDisplay();
+                int ticketLineIndex = JPanelTicket.this.m_ticketlines.getSelectedIndex();
+                // FEATURE 1
+                if (advDisplay1.hasFeature(1) && !e.getValueIsAdjusting()) {
+                    if (ticketLineIndex >= 0) {
+                        try {
+                            String sProductId = JPanelTicket.this.m_oTicket.getLine(ticketLineIndex).getProductID();
+                            if (sProductId != null) {
+                                ProductInfoExt prod = JPanelTicket.this.dlSales.getProductInfo(sProductId);
+                                if (prod == null) {
+                                    prod = dlSales.getProductInfoByCode(sProductId);
+                                }
+                                if (prod != null) {
+                                    advDisplay1.setProductImage(prod.getImage());
+                                }
+                            }
+                        } catch (BasicException ex) {
+                            LOGGER.log(System.Logger.Level.WARNING, "", ex);
+                        }
+                    }
+                }
+
+                //FEATURE 2
+                if (advDisplay.hasFeature(2)) {
+
+                    //TODO EVALUATE PERFORMANCE TO CREATE THIS EVERY TIME
+                    JTicketLines m_ticketlines2 = new JTicketLines(this.dlSystem.getResourceAsXML("Ticket.Line"));
+                    m_ticketlines2.setTicketTableFont(new Font("Arial", 0, 18));
+                    m_ticketlines2.clearTicketLines();
+                    for (int j = 0; JPanelTicket.this.m_oTicket != null && j < JPanelTicket.this.m_oTicket.getLinesCount(); j++) {
+                        m_ticketlines2.insertTicketLine(j, JPanelTicket.this.m_oTicket.getLine(j));
+                    }
+                    m_ticketlines2.setSelectedIndex(ticketLineIndex);
+
+                    advDisplay.setTicketLines(m_ticketlines2);
+                }
+            });
+        }
+
+    }
+
     private void visorTicketLine(TicketLineInfo oLine) {
         if (oLine == null) {
             m_App.getDeviceTicket().getDeviceDisplay().clearVisor();
@@ -1949,7 +2003,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     public void checkStock() {
 
         int tckLineIndex = m_ticketlines.getSelectedIndex();
-                
+
         LOGGER.log(System.Logger.Level.INFO, "Check stock for ticketlines (Selected Index): " + tckLineIndex);
 
         if (tckLineIndex >= 0) {
@@ -1974,7 +2028,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     jCheckStock.setText("");
                 }
             } catch (BasicException ex) {
-                LOGGER.log(System.Logger.Level.WARNING, "Exception on check stock for ticketline "+tckLineIndex, ex);
+                LOGGER.log(System.Logger.Level.WARNING, "Exception on check stock for ticketline " + tckLineIndex, ex);
             }
         }
     }
