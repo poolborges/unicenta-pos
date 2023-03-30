@@ -150,7 +150,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>kriolos-opos-hardware</module>
         <module>kriolos-pos-domain</module>
         <module>unicenta-opos-i18n</module>
-        <module>unicenta-thirdparty</module>
+        <module>kriolos-opos-thirdparty</module>
         <module>unicenta-opos</module>
         <module>docs</module>
     </modules>

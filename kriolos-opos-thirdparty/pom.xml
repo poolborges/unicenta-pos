@@ -11,7 +11,7 @@
         <relativePath>../</relativePath> 
     </parent>  
     <groupId>io.github.kriolos.opos</groupId>
-    <artifactId>unicenta-thirdparty</artifactId>
+    <artifactId>kriolos-opos-thirdparty</artifactId>
     <packaging>pom</packaging>
     <name>Kriolos.POS.Thirdparty</name>
 
