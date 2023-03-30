@@ -79,6 +79,23 @@ image::krpos-screenshot.gif[]
 * @author poolborges
 * @author Teodor Danciu (teodord@users.sourceforge.net)
 
+
+== Run App From source
+
+.Example Compile and Execute (windows powershell/Terminal)
+[source,cmd]
+----
+.\mvnw.cmd compile install
+.\mvnw.cmd exec:java -pl unicenta-opos "-Dexec.mainClass=com.openbravo.pos.forms.StartPOS"
+----
+
+.Example Compile and Execute (Linux/Unix Bash)
+[source,bash]
+----
+./mvnw compile install
+./mvnw exec:java -pl unicenta-opos "-Dexec.mainClass=com.openbravo.pos.forms.StartPOS"
+----
+
 == Run DB on Docker 
 
 .Run MySQL database for Developer Env 
