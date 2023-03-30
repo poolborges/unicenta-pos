@@ -108,7 +108,7 @@
         </dependency>
         <dependency>
             <groupId>io.github.kriolos.opos</groupId>
-            <artifactId>kriolos-pos-domain</artifactId>
+            <artifactId>kriolos-opos-domain</artifactId>
             <type>jar</type>
         </dependency>
     </dependencies>
