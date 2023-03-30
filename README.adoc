@@ -10,7 +10,7 @@
 :stem:
 
 ifdef::env-github[]
-:imagesdir: https://raw.githubusercontent.com/poolborges/unicenta-pos/main/docs/images/
+:imagesdir: https://raw.githubusercontent.com/poolborges/unicenta-pos/main/docs/src/main/images/
 :tip-caption: :bulb:
 :note-caption: :information_source:
 :important-caption: :heavy_exclamation_mark:
