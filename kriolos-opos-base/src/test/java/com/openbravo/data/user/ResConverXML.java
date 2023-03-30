@@ -1,3 +1,5 @@
+package com.openbravo.data.user;
+
 /*
  * Copyright (C) 2022 Paulo Borges
  *
