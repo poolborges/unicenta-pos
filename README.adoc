@@ -112,4 +112,6 @@ docker run --name unicentaMDB -p 3306:3306 -d -e MARIADB_ROOT_PASSWORD=root -eMA
 
 * link:{doc-dir}/[Documentation]
 
+== Screenshots 
 
+image::kriolos-opos-screenshot.gif[]
