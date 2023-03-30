@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <relativePath>../</relativePath> 
     </parent>  
     <groupId>io.github.kriolos.opos</groupId>  
-    <artifactId>kriolos-pos</artifactId> 
+    <artifactId>kriolos-opos-app</artifactId> 
     <packaging>jar</packaging>
     <name>Kriolos.POS.App</name> 
     
@@ -55,8 +55,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <artifactId>kriolos-opos-hardware</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.github.kriolos.opos</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>kriolos-opos-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>kriolos-opos-i18n</artifactId>
         </dependency>
 
         <dependency> 
@@ -207,12 +211,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <artifactId>jaxb-api</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        
-        <!-- Translations i18n --> 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>kriolos-pos-i18n</artifactId>
         </dependency>
         
         <!-- JAX XML-->

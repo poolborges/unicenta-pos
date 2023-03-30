@@ -144,14 +144,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </contributors>
 
     <modules>
-        <module>kriolos-opos-buildtools</module>
-        <module>kriolos-opos-rxtxjna</module>
+        <module>kriolos-opos-thirdparty</module>
         <module>kriolos-opos-base</module>
         <module>kriolos-opos-hardware</module>
         <module>kriolos-opos-domain</module>
-        <module>unicenta-opos-i18n</module>
-        <module>kriolos-opos-thirdparty</module>
-        <module>unicenta-opos</module>
+        <module>kriolos-opos-i18n</module>
+        <module>kriolos-opos-app</module>
         <module>docs</module>
     </modules>
     
@@ -159,12 +157,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <dependencies>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>kriolos-pos</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>kriolos-pos-i18n</artifactId>
+                <artifactId>kriolos-opos-app</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -174,17 +167,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>kriolos-opos-hardware</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>kriolos-opos-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>kriolos-opos-domain</artifactId>
+                <artifactId>kriolos-opos-i18n</artifactId>
                 <version>${project.version}</version>
             </dependency>
             

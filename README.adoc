@@ -86,14 +86,14 @@ image::krpos-screenshot.gif[]
 [source,cmd]
 ----
 .\mvnw.cmd compile install
-.\mvnw.cmd exec:java -pl unicenta-opos "-Dexec.mainClass=com.openbravo.pos.forms.StartPOS"
+.\mvnw.cmd exec:java -pl kriolos-opos-app "-Dexec.mainClass=com.openbravo.pos.forms.StartPOS"
 ----
 
 .Example Compile and Execute (Linux/Unix Bash)
 [source,bash]
 ----
 ./mvnw compile install
-./mvnw exec:java -pl unicenta-opos "-Dexec.mainClass=com.openbravo.pos.forms.StartPOS"
+./mvnw exec:java -pl kriolos-opos-app "-Dexec.mainClass=com.openbravo.pos.forms.StartPOS"
 ----
 
 == Run DB on Docker 
