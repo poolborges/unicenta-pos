@@ -1,6 +1,7 @@
 package com.openbravo.pos.comm;
 
 import gnu.io.CommPortIdentifier;
+import java.util.Enumeration;
 
 /**
  *

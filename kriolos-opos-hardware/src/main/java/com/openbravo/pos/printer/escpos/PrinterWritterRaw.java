@@ -16,8 +16,7 @@
  */
 package com.openbravo.pos.printer.escpos;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import com.openbravo.pos.forms.AppLocal;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -38,20 +37,21 @@ import javax.print.attribute.standard.JobName;
 
 public final class PrinterWritterRaw extends PrinterWritter {
     private static final Logger LOGGER = Logger.getLogger(PrinterWritterRaw.class.getName());
+    
     private byte[] m_printData;
     private PrintService m_printService;
-    private final DocFlavor m_docFlavor;
+    private final DocFlavor DOC_Flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
     private PrinterBuffer m_buff = null;
-    private OutputStream m_out;
+    private final static String DOC_NAME = "Ticket";
+
 
     public PrinterWritterRaw(String sRawPrinter) {
         m_printData = null;
-        m_docFlavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
         m_buff = new PrinterBuffer();
 
         init();
 
-        PrintService[] services = PrintServiceLookup.lookupPrintServices(m_docFlavor, null);
+        PrintService[] services = PrintServiceLookup.lookupPrintServices(DOC_Flavor, null);
         for (PrintService ps : services) {
             if (ps.getName().contains(sRawPrinter)) {
                 // if we have found the prineter the start our print routine
@@ -83,15 +83,6 @@ public final class PrinterWritterRaw extends PrinterWritter {
 
     @Override
     protected void internalClose() {
-        try {
-            if (m_out != null) {
-                m_out.flush();
-                m_out.close();
-                m_out = null;
-            }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Exception on close: ", e);
-        }
     }
 
     @Override
@@ -123,11 +114,11 @@ public final class PrinterWritterRaw extends PrinterWritter {
                 DocPrintJob pj = m_printService.createPrintJob();
                 DocAttributeSet docattributes = new HashDocAttributeSet();
 
-                docattributes.add(new DocumentName("Ticket", Locale.getDefault()));
+                docattributes.add(new DocumentName(DOC_NAME, Locale.getDefault()));
                 PrintRequestAttributeSet jobattributes = new HashPrintRequestAttributeSet();
 
-                jobattributes.add(new JobName("unicenta", Locale.getDefault()));
-                Doc doc = new SimpleDoc(m_printData, m_docFlavor, docattributes);
+                jobattributes.add(new JobName(AppLocal.APP_NAME, Locale.getDefault()));
+                Doc doc = new SimpleDoc(m_printData, DOC_Flavor, docattributes);
                 pj.print(doc, jobattributes);
             } catch (PrintException ex) {
                 LOGGER.log(Level.WARNING, "Exception on print: ", ex);
@@ -139,13 +130,13 @@ public final class PrinterWritterRaw extends PrinterWritter {
 
     private class PrinterBuffer {
 
-        private final LinkedList m_list;
+        private final LinkedList<Object> m_list;
 
         /**
          * Creates a new instance of PrinterBuffer
          */
         public PrinterBuffer() {
-            m_list = new LinkedList();
+            m_list = new LinkedList<>();
         }
 
         public synchronized void putData(Object data) {
