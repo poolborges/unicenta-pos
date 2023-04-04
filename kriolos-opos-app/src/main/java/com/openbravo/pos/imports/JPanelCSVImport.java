@@ -13,44 +13,34 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
 package com.openbravo.pos.imports;
 
-import com.openbravo.pos.forms.DataLogicSales;
-import com.openbravo.pos.forms.AppConfig;
-import com.openbravo.pos.forms.DataLogicSystem;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppProperties;
 import com.csvreader.CsvReader;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.ComboBoxValModel;
-import com.openbravo.data.loader.SentenceList;
-import com.openbravo.data.loader.Session;
+import com.openbravo.data.loader.*;
 import com.openbravo.data.user.DefaultSaveProvider;
+import com.openbravo.data.user.SaveProvider;
 import com.openbravo.pos.forms.*;
 import com.openbravo.pos.sales.TaxesLogic;
 import com.openbravo.pos.ticket.ProductInfoExt;
-import java.io.*;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.lang3.StringUtils;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.apache.commons.lang3.StringUtils;
-import com.openbravo.data.loader.Datas;
-import com.openbravo.data.loader.PreparedSentence;
-import com.openbravo.data.loader.SerializerWriteBasicExt;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
-
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Graphical User Interface and code for importing data from a CSV file allowing
@@ -59,13 +49,15 @@ import java.nio.charset.Charset;
  */
 public class JPanelCSVImport extends JPanel implements JPanelView {
 
+    private static final Logger LOGGER = Logger.getLogger(JPanelCSVImport.class.getName());
+
     private ArrayList<String> Headers = new ArrayList<>();
     private Session s;
     private Connection con;
     private String csvFileName;
     private Double dOriginalRate = 0.0;
     private String dCategory;
-    private String dSupplier;    
+    private String dSupplier;
     private String csvMessage = "";
     private CsvReader products;
     private double oldSellPrice = 0;
@@ -74,17 +66,17 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     private int rowCount = 0;
     private String last_folder;
     private File config_file;
-    
+
     private static String category_default = "[ USE DEFAULT CATEGORY ]";
     private static String reject_bad_category = "[ REJECT ITEMS WITH BAD CATEGORIES ]";
     private static String supplier_default = "[ USE DEFAULT SUPPLIER ]";
-    private static String reject_bad_supplier = "[ REJECT ITEMS WITH BAD SUPPLIER ]";    
+    private static String reject_bad_supplier = "[ REJECT ITEMS WITH BAD SUPPLIER ]";
 
     private DataLogicSales m_dlSales;
-    private DataLogicSystem m_dlSystem;  
+    private DataLogicSystem m_dlSystem;
 
-    protected DefaultSaveProvider spr;
- 
+    protected SaveProvider spr;
+
     private String Category;
     private String categoryName;
     private String categoryParentid;
@@ -92,28 +84,28 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     private SentenceList m_sentcat;
     private ComboBoxValModel m_CategoryModel;
     private HashMap cat_list = new HashMap();
-    private ArrayList badCategories = new ArrayList();    
-     
+    private ArrayList badCategories = new ArrayList();
+
     private String productReference;
     private String productBarcode;
-    private String productBarcodetype;    
+    private String productBarcodetype;
     private String productName;
     private Double productBuyPrice;
     private Double productSellPrice;
-    private String productTax;    
-    
+    private String productTax;
+
     private String Supplier;
     private String supplierName;
     private SentenceList m_sentsupp;
-    private ComboBoxValModel m_SupplierModel; 
+    private ComboBoxValModel m_SupplierModel;
     private HashMap supp_list = new HashMap();
-    private ArrayList badSuppliers = new ArrayList();    
-        
+    private ArrayList badSuppliers = new ArrayList();
+
     private SentenceList taxcatsent;
     private ComboBoxValModel taxcatmodel;
     private SentenceList taxsent;
     private TaxesLogic taxeslogic;
-    
+
     private DocumentListener documentListener;
     private ProductInfoExt prodInfo;
     private String recordType = null;
@@ -124,10 +116,12 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     private int missingData = 0;
     private int noChanges = 0;
     private int badPrice = 0;
-    
+
     private double dTaxRate;
-    
-    private Integer progress = 0;    
+
+    private Integer progress = 0;
+
+    private String iso = "ISO-8859-1";
 
     /**
      * Constructs a new JPanelCSVImport object
@@ -207,10 +201,11 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
 
         File f = new File(CSVFileName);
         if (f.exists()) {
-            products = new CsvReader(CSVFileName, ',' ,Charset.forName("UTF-8"));
+//            products = new CsvReader(CSVFileName, ',' ,Charset.forName("UTF-8"));
+            products = new CsvReader(CSVFileName, ',', Charset.forName(jCBiso.getSelectedItem().toString()));
             products.setDelimiter(((String) jComboSeparator.getSelectedItem()).charAt(0));
             products.readHeaders();
-                          
+
             if (products.getHeaderCount() < 5) {
                 JOptionPane.showMessageDialog(null,
                         "Incorrect header in your source file",
@@ -228,10 +223,10 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
             jComboBarcode.addItem("");
             jComboBuy.addItem("");
             jComboSell.addItem("");
-            jComboTax.addItem("");            
+            jComboTax.addItem("");
             jComboCategory.addItem("");
             jComboSupplier.addItem("");
-            
+
             while (i < products.getHeaderCount()) {
                 jComboName.addItem(products.getHeader(i));
                 jComboReference.addItem(products.getHeader(i));
@@ -241,7 +236,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
                 jComboTax.addItem(products.getHeader(i));
                 jComboCategory.addItem(products.getHeader(i));
                 jComboSupplier.addItem(products.getHeader(i));
-                
+
                 Headers.add(products.getHeader(i));
                 ++i;
             }
@@ -249,11 +244,12 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
             enableCheckBoxes();
 
             while (products.readRecord()) {
+                System.out.println(products.getRawRecord());
                 ++rowCount;
             }
 
             jTextRecords.setText(Long.toString(rowCount));
-                      
+
             products.close();
 
         } else {
@@ -272,7 +268,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     private void enableCheckBoxes() {
         jHeaderRead.setEnabled(false);
         jImport.setEnabled(false);
-        jbtnReset.setEnabled(true);        
+        jbtnReset.setEnabled(true);
         jComboReference.setEnabled(true);
         jComboName.setEnabled(true);
         jComboBarcode.setEnabled(true);
@@ -282,7 +278,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         jComboCategory.setEnabled(true);
         jComboDefaultCategory.setEnabled(true);
         jComboSupplier.setEnabled(true);
-        jComboDefaultSupplier.setEnabled(true);        
+        jComboDefaultSupplier.setEnabled(true);
 
         jCheckInCatalogue.setEnabled(true);
         jCheckSellIncTax.setEnabled(true);
@@ -291,14 +287,14 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     /**
      * Pushes the Import process into a new thread so it doesn't interfere with
      * the UI responsiveness.
-    */
+     */
     private void setWorker() {
         progress = 0;
         webPBar.setStringPainted(true);
 
         final SwingWorker<Integer, Integer> pbWorker;
         pbWorker = new SwingWorker<Integer, Integer>() {
- 
+
             @Override
             protected final Integer doInBackground() throws Exception {
                 while ((progress >= 0) && (progress < 100)) {
@@ -318,7 +314,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
                     webPBar.setString("Imported 100%");
                 } else {
                     webPBar.setString("Imported " + progress + "%");
-                }    
+                }
             }
         };
         pbWorker.execute();
@@ -327,7 +323,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     /**
      * Runs the setWorker.
      *
-     */    
+     */
     private class workProcess implements Runnable {
 
         @Override
@@ -335,11 +331,11 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
             try {
                 ImportCsvFile(jFileName.getText());
             } catch (IOException ex) {
-                Logger.getLogger(JPanelCSVImport.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.WARNING, null, ex);
             }
         }
     }
-    
+
     /**
      * Imports the CSV File using specifications from the form.
      *
@@ -350,40 +346,42 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
 
         File f = new File(CSVFileName);
         if (f.exists()) {
-            webPBar.setString ( "Starting..." );
+            webPBar.setString("Starting...");
             webPBar.setVisible(true);
             jImport.setEnabled(false);
-            
+
 // Read file
-            products = new CsvReader(CSVFileName, ',' ,Charset.forName("UTF-8"));
+//            products = new CsvReader(CSVFileName, ',' ,Charset.forName("UTF-8"));
+            products = new CsvReader(CSVFileName, ',', Charset.forName(jCBiso.getSelectedItem().toString()));
+
             products.setDelimiter(((String) jComboSeparator.getSelectedItem()).charAt(0));
             products.readHeaders();
 
             currentRecord = 0;
-            
+
             while (products.readRecord()) {
                 productReference = products.get((String) jComboReference.getSelectedItem());
                 productName = products.get((String) jComboName.getSelectedItem());
                 productBarcode = products.get((String) jComboBarcode.getSelectedItem());
                 String BuyPrice = products.get((String) jComboBuy.getSelectedItem());
                 String SellPrice = products.get((String) jComboSell.getSelectedItem());
-                productTax = products.get((String) jComboTax.getSelectedItem());                
-                
-                Category = products.get((String) jComboCategory.getSelectedItem());
-                Supplier = products.get((String) jComboSupplier.getSelectedItem());                
-                
-                currentRecord++;
-                progress = currentRecord;                
-                
-// Strip Currencies Dollar GBP, euro 
-                BuyPrice = StringUtils.replaceChars(BuyPrice, "$", "");         
-                SellPrice = StringUtils.replaceChars(SellPrice, "$", "");
-                
-                BuyPrice = StringUtils.replaceChars(BuyPrice, "£", ""); 
-                SellPrice = StringUtils.replaceChars(SellPrice, "£", ""); 
+                productTax = products.get((String) jComboTax.getSelectedItem());
 
-                BuyPrice = StringUtils.replaceChars(BuyPrice, "€", "");                 
-                SellPrice = StringUtils.replaceChars(SellPrice, "€", "");                
+                Category = products.get((String) jComboCategory.getSelectedItem());
+                Supplier = products.get((String) jComboSupplier.getSelectedItem());
+
+                currentRecord++;
+                progress = currentRecord;
+
+// Strip Currencies Dollar GBP, euro 
+                BuyPrice = StringUtils.replaceChars(BuyPrice, "$", "");
+                SellPrice = StringUtils.replaceChars(SellPrice, "$", "");
+
+                BuyPrice = StringUtils.replaceChars(BuyPrice, "£", "");
+                SellPrice = StringUtils.replaceChars(SellPrice, "£", "");
+
+                BuyPrice = StringUtils.replaceChars(BuyPrice, "€", "");
+                SellPrice = StringUtils.replaceChars(SellPrice, "€", "");
 
                 dCategory = getCategory();
                 if ("Bad Category".equals(dCategory)) {
@@ -391,13 +389,13 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
                 } else {
                     csvMessage = "Missing data or Invalid number";
                 }
-                
-                dSupplier = getSupplier();  
+
+                dSupplier = getSupplier();
                 if ("Bad Supplier".equals(dSupplier)) {
                     csvMessage = "Bad Supplier details";
                 } else {
                     csvMessage = "Missing data or Invalid number";
-                }                
+                }
 
                 if (validateNumber(BuyPrice)) {
                     productBuyPrice = Double.parseDouble(BuyPrice);
@@ -412,17 +410,17 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
                 }
 
                 if ("".equals(productReference)
-//                        | "".equals(productName)
+                        //                        | "".equals(productName)
                         | "".equals(productBarcode)
                         | "".equals(BuyPrice)
                         | "".equals(SellPrice)
-                        | "".equals(productTax)                        
+                        | "".equals(productTax)
                         | productBuyPrice == null
                         | productSellPrice == null
                         | "Bad Category".equals(dCategory)) {
 
-                    if (productBuyPrice == null 
-                        | productSellPrice == null) {
+                    if (productBuyPrice == null
+                            | productSellPrice == null) {
                         badPrice++;
                     } else {
                         missingData++;
@@ -446,8 +444,8 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
                             createProduct("new");
                             newRecords++;
                             createCSVEntry("New product", null, null);
-                            break;                            
-                        case "Tax change":                            
+                            break;
+                        case "Tax change":
                         case "Exception":
                             invalidRecords++;
                             createCSVEntry(recordType, null, null);
@@ -458,41 +456,40 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
                     }
                 }
             }
-                products.close();
+            products.close();
         } else {
-            JOptionPane.showMessageDialog(null, 
-                "Unable to locate " 
-                + CSVFileName, 
-                "File not found", 
+            JOptionPane.showMessageDialog(null,
+                    "Unable to locate "
+                    + CSVFileName,
+                    "File not found",
                     JOptionPane.WARNING_MESSAGE);
         }
 
-            jTextNew.setText(Integer.toString(newRecords));
-            jTextUpdate.setText(Integer.toString(priceUpdates));
-            jTextInvalid.setText(Integer.toString(invalidRecords));
-            jTextMissing.setText(Integer.toString(missingData));
-            jTextNoChange.setText(Integer.toString(noChanges));
-            jTextBadPrice.setText(Integer.toString(badPrice));
-            if (badCategories.size() == 1 && badCategories.get(0) == "") {
-                jTextBadCats.setText("0");
-            } else {
-                jTextBadCats.setText(Integer.toString(badCategories.size()));
-            }
-            
-            JOptionPane.showMessageDialog(null,
+        jTextNew.setText(Integer.toString(newRecords));
+        jTextUpdate.setText(Integer.toString(priceUpdates));
+        jTextInvalid.setText(Integer.toString(invalidRecords));
+        jTextMissing.setText(Integer.toString(missingData));
+        jTextNoChange.setText(Integer.toString(noChanges));
+        jTextBadPrice.setText(Integer.toString(badPrice));
+        if (badCategories.size() == 1 && badCategories.get(0) == "") {
+            jTextBadCats.setText("0");
+        } else {
+            jTextBadCats.setText(Integer.toString(badCategories.size()));
+        }
+
+        JOptionPane.showMessageDialog(null,
                 "Import Complete",
                 "Imported",
-                    JOptionPane.WARNING_MESSAGE);            
-              
-            progress = 100;
-            webPBar.setValue(progress);
-            webPBar.setString("Imported : " + progress + " records"); 
+                JOptionPane.WARNING_MESSAGE);
+
+        progress = 100;
+        webPBar.setValue(progress);
+        webPBar.setString("Imported : " + progress + " records");
 //        }
     }
-    
+
     /**
-     * Tests
-     * <code>testString</code> for validity as a number
+     * Tests <code>testString</code> for validity as a number
      *
      * @param testString the string to be checked
      * @return True if a real number False if not
@@ -507,8 +504,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     }
 
     /**
-     * Lookup for an existing Product's Category
-     * CategoryID as string.
+     * Lookup for an existing Product's Category CategoryID as string.
      */
     private String getCategory() {
 
@@ -528,26 +524,26 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
 
             try {
                 m_dlSales.createCategory(newcat);
-        
+
                 cat_list = new HashMap<>();
                 for (Object category : m_sentcat.list()) {
                     m_CategoryModel.setSelectedItem(category);
                     cat_list.put(category.toString(), m_CategoryModel.getSelectedKey().toString());
                 }
-                    String cat = (String) cat_list.get(Category);
-                    return (cat);
-                } catch (BasicException ex) {
-                    Logger.getLogger(JPanelCSVImport.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                String cat = (String) cat_list.get(Category);
+                return (cat);
+            } catch (BasicException ex) {
+                LOGGER.log(Level.WARNING, null, ex);
             }
+        }
 
         if (!badCategories.contains(Category)) {
             badCategories.add(Category.trim());                                 // Save a list of the bad categories
         }
-        return ((jComboDefaultCategory.getSelectedItem() 
-                == reject_bad_category) 
-                ? "Bad Category" 
-                : (String) cat_list.get(m_CategoryModel.getSelectedText()));
+        return ((jComboDefaultCategory.getSelectedItem()
+                == reject_bad_category)
+                        ? "Bad Category"
+                        : (String) cat_list.get(m_CategoryModel.getSelectedText()));
     }
 
     /**
@@ -564,48 +560,49 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
             }
         }
 
-        if (!Supplier.equals("")) {          
+        if (!Supplier.equals("")) {
             Object[] newsupp = new Object[4];
             newsupp[0] = UUID.randomUUID().toString();
             newsupp[1] = Supplier;
             newsupp[2] = Supplier;
             newsupp[3] = true;
 
-                try {
-                    m_dlSales.createSupplier(newsupp);
-        
-                    supp_list = new HashMap<>();
-                    for (Object supplier : m_sentsupp.list()) {
-                        m_SupplierModel.setSelectedItem(supplier);
-                        supp_list.put(supplier.toString(), m_SupplierModel.getSelectedKey().toString());
-                    }
-                    String supp = (String) supp_list.get(Supplier);
-                    return (supp);
-                } catch (BasicException ex) {
-                    Logger.getLogger(JPanelCSVImport.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                m_dlSales.createSupplier(newsupp);
+
+                supp_list = new HashMap<>();
+                for (Object supplier : m_sentsupp.list()) {
+                    m_SupplierModel.setSelectedItem(supplier);
+                    supp_list.put(supplier.toString(), m_SupplierModel.getSelectedKey().toString());
                 }
+                String supp = (String) supp_list.get(Supplier);
+                return (supp);
+            } catch (BasicException ex) {
+                LOGGER.log(Level.WARNING, null, ex);
             }
+        }
 
         if (!badSuppliers.contains(Supplier)) {
-            badSuppliers.add(Supplier.trim());                              
+            badSuppliers.add(Supplier.trim());
         }
-        return ((jComboDefaultSupplier.getSelectedItem() 
-                == reject_bad_supplier) 
-                ? "Bad Supplier" 
-                : (String) supp_list.get(m_SupplierModel.getSelectedText()));
-    }    
-    
+        return ((jComboDefaultSupplier.getSelectedItem()
+                == reject_bad_supplier)
+                        ? "Bad Supplier"
+                        : (String) supp_list.get(m_SupplierModel.getSelectedText()));
+    }
+
     /**
      * Adjusts the sell price for included taxes
      *
      * @param pSellPrice sell price to be converted
-     * @return sell price after adjustment for included taxes and converted to double
+     * @return sell price after adjustment for included taxes and converted to
+     * double
      */
     private Double getSellPrice(String pSellPrice) {
 
         // Get the Tax Rate from the Import file
-            dTaxRate = taxeslogic.getTaxRate(productTax);
-        
+        dTaxRate = taxeslogic.getTaxRate(productTax);
+
         if (jCheckSellIncTax.isSelected()) {
             productSellPrice = ((Double.parseDouble(pSellPrice)) / (1 + dTaxRate));
             return productSellPrice;
@@ -627,30 +624,30 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         try {
             prodInfo = m_dlSales.getProductInfo(pID);
             dOriginalRate = taxeslogic.getTaxRate(prodInfo.getTaxCategoryID());
-            dCategory = ((String) cat_list.get(prodInfo.getCategoryID()) 
-                    == null) ? prodInfo.getCategoryID() 
-                    : (String) cat_list.get(prodInfo.getCategoryID());            
+            dCategory = ((String) cat_list.get(prodInfo.getCategoryID())
+                    == null) ? prodInfo.getCategoryID()
+                            : (String) cat_list.get(prodInfo.getCategoryID());
             oldBuyPrice = prodInfo.getPriceBuy();
             oldSellPrice = prodInfo.getPriceSell();
 //            productSellPrice *= (1 + dOriginalRate);
 
-            dSupplier = ((String) supp_list.get(prodInfo.getSupplierID()) 
-                    == null) ? prodInfo.getSupplierID() 
-                    : (String) supp_list.get(prodInfo.getSupplierID());             
+            dSupplier = ((String) supp_list.get(prodInfo.getSupplierID())
+                    == null) ? prodInfo.getSupplierID()
+                            : (String) supp_list.get(prodInfo.getSupplierID());
 
-            if ((oldBuyPrice != productBuyPrice) 
+            if ((oldBuyPrice != productBuyPrice)
                     || (oldSellPrice != productSellPrice)) {
-                createCSVEntry("Updated Price Details", oldBuyPrice, 
-                        (jCheckSellIncTax.isSelected()) 
-                                ? oldSellPrice * (1 + dOriginalRate) 
-                                : oldSellPrice);
+                createCSVEntry("Updated Price Details", oldBuyPrice,
+                        (jCheckSellIncTax.isSelected())
+                        ? oldSellPrice * (1 + dOriginalRate)
+                        : oldSellPrice);
                 createProduct("update");
                 priceUpdates++;
             } else {
                 noChanges++;
             }
         } catch (BasicException ex) {
-            Logger.getLogger(JPanelCSVImport.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.WARNING, null, ex);
         }
     }
 
@@ -666,7 +663,8 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
 
     /**
      * Returns this object
-     * @return 
+     *
+     * @return
      */
     @Override
     public JComponent getComponent() {
@@ -675,12 +673,13 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
 
     /**
      * Loads Tax and Category data into their combo boxes.
+     *
      * @throws com.openbravo.basic.BasicException
      */
     @Override
     public void activate() throws BasicException {
         // Get tax details and logic
-        taxsent = m_dlSales.getTaxList(); 
+        taxsent = m_dlSales.getTaxList();
         taxeslogic = new TaxesLogic(taxsent.list());
         taxcatsent = m_dlSales.getTaxCategoriesList();
         taxcatmodel = new ComboBoxValModel(taxcatsent.list());
@@ -709,8 +708,8 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         for (Object supplier : m_sentsupp.list()) {
             m_SupplierModel.setSelectedItem(supplier);
             supp_list.put(supplier.toString(), m_SupplierModel.getSelectedKey().toString());
-        }        
-                
+        }
+
         // reset the selected to the first in the list
         m_CategoryModel.setSelectedItem(null);
         m_SupplierModel.setSelectedItem(null);
@@ -744,19 +743,19 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         jComboSell.removeAllItems();
         jComboSell.setEnabled(false);
 
-        jComboTax.removeAllItems();        
+        jComboTax.removeAllItems();
         jComboTax.setEnabled(false);
 
         jComboCategory.removeAllItems();
         jComboCategory.setEnabled(false);
         jComboDefaultCategory.setEnabled(false);
-        
+
         jComboSupplier.removeAllItems();
         jComboSupplier.setEnabled(false);
-        jComboDefaultSupplier.setEnabled(false);        
+        jComboDefaultSupplier.setEnabled(false);
 
         jImport.setEnabled(false);
-        jbtnReset.setEnabled(true);        
+        jbtnReset.setEnabled(true);
         jHeaderRead.setEnabled(false);
         jCheckInCatalogue.setSelected(true);
         jCheckInCatalogue.setEnabled(true);
@@ -772,7 +771,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         jTextRecords.setText("");
         jTextBadPrice.setText("");
         jTextBadCats.setText("");
-        
+
         progress = 0;
 
         Headers.clear();
@@ -783,7 +782,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         noChanges = 0;
         badPrice = 0;
 //        badCategories = 0;
-        
+
     }
 
     /**
@@ -791,19 +790,19 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
      * completed to allow import to proceed
      */
     public void checkFieldMapping() {
-        if (jComboReference.getSelectedItem() != "" 
-                & jComboName.getSelectedItem() != "" 
+        if (jComboReference.getSelectedItem() != ""
+                & jComboName.getSelectedItem() != ""
                 & jComboBarcode.getSelectedItem() != ""
-                & jComboBuy.getSelectedItem() != "" 
-                & jComboSell.getSelectedItem() != "" 
-                & jComboTax.getSelectedItem() != ""                 
+                & jComboBuy.getSelectedItem() != ""
+                & jComboSell.getSelectedItem() != ""
+                & jComboTax.getSelectedItem() != ""
                 & jComboCategory.getSelectedItem() != ""
                 & m_CategoryModel.getSelectedText() != null) {
             jImport.setEnabled(true);
-            jbtnReset.setEnabled(true);            
+            jbtnReset.setEnabled(true);
         } else {
             jImport.setEnabled(false);
-            jbtnReset.setEnabled(false);             
+            jbtnReset.setEnabled(false);
         }
     }
 
@@ -820,6 +819,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
 
     /**
      * Creates a new Category if it doesn't exist
+     *
      * @param cType
      */
     public void createCategory(String cType) {
@@ -832,7 +832,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         mycat[4] = "<html><center><h4>" + categoryName;                         // Text tip string
         mycat[5] = true;                                                        // Show
         mycat[6] = categoryCatorder;                                            // Order 
-        
+
         try {
             if ("new".equals(cType)) {
                 spr.insertData(mycat);
@@ -840,8 +840,8 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
                 spr.updateData(mycat);
             }
         } catch (BasicException ex) {
-            Logger.getLogger(JPanelCSVImport.class.getName()).log(Level.SEVERE, null, ex);
-        }                
+            LOGGER.log(Level.WARNING, null, ex);
+        }
     }
 
     /**
@@ -855,7 +855,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         mysupp[1] = supplierName;                                               // SearchKey
         mysupp[2] = supplierName;                                               // Name string
         mysupp[3] = true;                                                       // Visible     
-        
+
         try {
             if ("new".equals(sType)) {
                 spr.insertData(mysupp);
@@ -863,10 +863,9 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
                 spr.updateData(mysupp);
             }
         } catch (BasicException ex) {
-            Logger.getLogger(JPanelCSVImport.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.WARNING, null, ex);
         }
-    }    
-
+    }
 
     /**
      *
@@ -875,10 +874,10 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     public void createProduct(String pType) {
 
         Object[] myprod = new Object[32];
-        if("new".equals(pType)) {
+        if ("new".equals(pType)) {
             myprod[0] = UUID.randomUUID().toString();
         } else {
-            myprod[0] = prodInfo.getID();                                       
+            myprod[0] = prodInfo.getID();
         }                                                                       // ID string
         myprod[1] = productReference;                                           // Reference string
         myprod[2] = productBarcode;                                             // Barcode String     
@@ -908,41 +907,41 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         myprod[26] = "1";                                                       // Printer         
         myprod[27] = dSupplier;                                                 // Supplier
         myprod[28] = "0";                                                       // UOM
-        myprod[29]= null;                                                        // memodate
+        myprod[29] = null;                                                        // memodate
         myprod[30] = jCheckInCatalogue.isSelected();                            // In catalog flag
         myprod[31] = null;                                                      // catalog order                
-        
+
         try {
             if ("new".equals(pType)) {
                 spr.insertData(myprod);
-                addStockCurrent("0", myprod[0].toString(), 0.0);  
-                webPBar.setString("Adding record " + progress);                 
+                addStockCurrent("0", myprod[0].toString(), 0.0);
+                webPBar.setString("Adding record " + progress);
             } else {
                 spr.updateData(myprod);
-                webPBar.setString("Updating record " + progress);                 
+                webPBar.setString("Updating record " + progress);
             }
-            
+
         } catch (BasicException ex) {
-            Logger.getLogger(JPanelCSVImport.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.WARNING, null, ex);
         }
     }
-    
+
     public void addStockCurrent(String LocationID, String ProductID, Double Units) throws BasicException {
 
         Object[] values = new Object[3];
         values[0] = "0";
-        values[1] = ProductID;                                      
+        values[1] = ProductID;
         values[2] = (double) Units;
 
-        PreparedSentence sentence = new PreparedSentence(s, 
+        PreparedSentence sentence = new PreparedSentence(s,
                 "INSERT INTO stockcurrent ( "
-                + "LOCATION, PRODUCT, UNITS) VALUES (?, ?, ?)"
-                , new SerializerWriteBasicExt((new Datas[]{
-                    Datas.STRING, Datas.STRING, Datas.DOUBLE}),
-                new int[]{0, 1, 2}));
+                + "LOCATION, PRODUCT, UNITS) VALUES (?, ?, ?)",
+                 new SerializerWriteBasicExt((new Datas[]{
+            Datas.STRING, Datas.STRING, Datas.DOUBLE}),
+                        new int[]{0, 1, 2}));
 
         sentence.exec(values);
-    }    
+    }
 
     /**
      *
@@ -969,7 +968,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         try {
             m_dlSystem.execAddCSVEntry(myprod);
         } catch (BasicException ex) {
-            Logger.getLogger(JPanelCSVImport.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.WARNING, null, ex);
         }
     }
 
@@ -986,11 +985,11 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         try {
             return (m_dlSystem.getProductRecordType(myprod));
         } catch (BasicException ex) {
-            Logger.getLogger(JPanelCSVImport.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.WARNING, null, ex);
         }
         return "Exception";
     }
- 
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -1053,6 +1052,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         jComboSeparator = new javax.swing.JComboBox();
         webPBar = new javax.swing.JProgressBar();
         jLblImportNotice = new javax.swing.JLabel();
+        jCBiso = new javax.swing.JComboBox<>();
 
         setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         setOpaque(false);
@@ -1460,11 +1460,11 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jImport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jbtnReset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         jLabel17.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
-        jLabel17.setText("Import version 4.3");
+        jLabel17.setText("Import version 4.5");
 
         jLabel18.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel18.setText(bundle.getString("label.csvdelimit")); // NOI18N
@@ -1649,7 +1649,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
                 .addContainerGap())
         );
 
-        jComboSeparator.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jComboSeparator.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jComboSeparator.setPreferredSize(new java.awt.Dimension(50, 30));
 
         webPBar.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
@@ -1661,9 +1661,13 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         jLblImportNotice.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLblImportNotice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/refundit.png"))); // NOI18N
         jLblImportNotice.setText(bundle.getString("label.importnotice")); // NOI18N
-        jLblImportNotice.setToolTipText(jLblImportNotice.getText());
         jLblImportNotice.setOpaque(true);
         jLblImportNotice.setPreferredSize(new java.awt.Dimension(150, 37));
+
+        jCBiso.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jCBiso.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ISO-8859-1", "ISO-8859-2", "ISO-8859-3", "ISO-8859-4", "ISO-8859-5", "ISO-8859-6", "ISO-8859-7", "ISO-8859-8", "ISO-8859-9", "ISO-8859-10", "UTF-8", "UTF-16", " " }));
+        jCBiso.setToolTipText(bundle.getString("tooltip.import.cbiso")); // NOI18N
+        jCBiso.setPreferredSize(new java.awt.Dimension(125, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -1683,7 +1687,9 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
                                 .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jComboSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(138, 138, 138)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jCBiso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
                                 .addComponent(jHeaderRead, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -1703,7 +1709,8 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jComboSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jHeaderRead, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jHeaderRead, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jCBiso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(webPBar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1712,17 +1719,17 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLblImportNotice, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jHeaderReadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jHeaderReadActionPerformed
         try {
             GetheadersFromFile(jFileName.getText());
-                webPBar.setString("Source file Header OK");            
+            webPBar.setString("Source file Header OK");
         } catch (IOException ex) {
-            Logger.getLogger(JPanelCSVImport.class.getName()).log(Level.SEVERE, null, ex);
-                webPBar.setString("Source file Header error!");            
+            LOGGER.log(Level.WARNING, null, ex);
+            webPBar.setString("Source file Header error!");
         }
     }//GEN-LAST:event_jHeaderReadActionPerformed
 
@@ -1732,7 +1739,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
 
         workProcess work = new workProcess();
         Thread thread2 = new Thread(work);
-        thread2.start();           
+        thread2.start();
 
     }//GEN-LAST:event_jImportActionPerformed
 
@@ -1743,14 +1750,14 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
 
     private void jbtnFileChooseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnFileChooseActionPerformed
         resetFields();
-        setWorker();        
+        setWorker();
 
         JFileChooser chooser = new JFileChooser(last_folder == null ? "C:\\" : last_folder);
         FileNameExtensionFilter filter = new FileNameExtensionFilter("csv files", "csv");
         chooser.setFileFilter(filter);
         chooser.showOpenDialog(null);
         File csvFile = chooser.getSelectedFile();
-      
+
         if (csvFile == null) {
             return;
         }
@@ -1765,7 +1772,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
             try {
                 CSVConfig.save();
             } catch (IOException ex) {
-                Logger.getLogger(JPanelCSVImport.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.WARNING, null, ex);
             }
         }
 
@@ -1781,9 +1788,9 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         int i = 1;
         jComboCategory.addItem("");
         while (i < Headers.size()) {
-            if ((Headers.get(i) != jComboBarcode.getSelectedItem()) 
+            if ((Headers.get(i) != jComboBarcode.getSelectedItem())
                     & (Headers.get(i) != jComboReference.getSelectedItem())
-                    & (Headers.get(i) != jComboName.getSelectedItem()) 
+                    & (Headers.get(i) != jComboName.getSelectedItem())
                     & (Headers.get(i) != jComboBuy.getSelectedItem())
                     & (Headers.get(i) != jComboSell.getSelectedItem())
                     & (Headers.get(i) != jComboTax.getSelectedItem())
@@ -1807,7 +1814,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
                 jComboDefaultCategory.setModel(m_CategoryModel);
             }
         } catch (BasicException ex) {
-            Logger.getLogger(JPanelCSVImport.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.WARNING, null, ex);
         }
         checkFieldMapping();
     }//GEN-LAST:event_jComboCategoryItemStateChanged
@@ -1825,11 +1832,11 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         int i = 1;
         jComboSell.addItem("");
         while (i < Headers.size()) {
-            if ((Headers.get(i) != jComboCategory.getSelectedItem()) 
-                    & (Headers.get(i) != jComboReference.getSelectedItem()) 
-                    & (Headers.get(i) != jComboName.getSelectedItem()) 
+            if ((Headers.get(i) != jComboCategory.getSelectedItem())
+                    & (Headers.get(i) != jComboReference.getSelectedItem())
+                    & (Headers.get(i) != jComboName.getSelectedItem())
                     & (Headers.get(i) != jComboBarcode.getSelectedItem())
-                    & (Headers.get(i) != jComboBuy.getSelectedItem())                     
+                    & (Headers.get(i) != jComboBuy.getSelectedItem())
                     & (Headers.get(i) != jComboTax.getSelectedItem())
                     & (Headers.get(i) != jComboSupplier.getSelectedItem())) {
 
@@ -1848,13 +1855,13 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         int i = 1;
         jComboBuy.addItem("");
         while (i < Headers.size()) {
-            if ((Headers.get(i) != jComboCategory.getSelectedItem()) 
-                    & (Headers.get(i) != jComboReference.getSelectedItem()) 
-                    & (Headers.get(i) != jComboName.getSelectedItem()) 
-                    & (Headers.get(i) != jComboBarcode.getSelectedItem()) 
+            if ((Headers.get(i) != jComboCategory.getSelectedItem())
+                    & (Headers.get(i) != jComboReference.getSelectedItem())
+                    & (Headers.get(i) != jComboName.getSelectedItem())
+                    & (Headers.get(i) != jComboBarcode.getSelectedItem())
                     & (Headers.get(i) != jComboSell.getSelectedItem())
                     & (Headers.get(i) != jComboTax.getSelectedItem())
-                    & (Headers.get(i) != jComboSupplier.getSelectedItem())) {                    
+                    & (Headers.get(i) != jComboSupplier.getSelectedItem())) {
                 jComboBuy.addItem(Headers.get(i));
             }
             ++i;
@@ -1870,13 +1877,13 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         int i = 1;
         jComboName.addItem("");
         while (i < Headers.size()) {
-            if ((Headers.get(i) != jComboCategory.getSelectedItem()) 
-                    & (Headers.get(i) != jComboReference.getSelectedItem()) 
-                    & (Headers.get(i) != jComboBarcode.getSelectedItem()) 
-                    & (Headers.get(i) != jComboBuy.getSelectedItem()) 
+            if ((Headers.get(i) != jComboCategory.getSelectedItem())
+                    & (Headers.get(i) != jComboReference.getSelectedItem())
+                    & (Headers.get(i) != jComboBarcode.getSelectedItem())
+                    & (Headers.get(i) != jComboBuy.getSelectedItem())
                     & (Headers.get(i) != jComboSell.getSelectedItem())
                     & (Headers.get(i) != jComboTax.getSelectedItem())
-                    & (Headers.get(i) != jComboSupplier.getSelectedItem())) {                
+                    & (Headers.get(i) != jComboSupplier.getSelectedItem())) {
                 jComboName.addItem(Headers.get(i));
             }
             ++i;
@@ -1892,13 +1899,13 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         int i = 1;
         jComboBarcode.addItem("");
         while (i < Headers.size()) {
-            if ((Headers.get(i) != jComboCategory.getSelectedItem()) 
-                    & (Headers.get(i) != jComboReference.getSelectedItem()) 
-                    & (Headers.get(i) != jComboName.getSelectedItem()) 
-                    & (Headers.get(i) != jComboBuy.getSelectedItem()) 
+            if ((Headers.get(i) != jComboCategory.getSelectedItem())
+                    & (Headers.get(i) != jComboReference.getSelectedItem())
+                    & (Headers.get(i) != jComboName.getSelectedItem())
+                    & (Headers.get(i) != jComboBuy.getSelectedItem())
                     & (Headers.get(i) != jComboSell.getSelectedItem())
                     & (Headers.get(i) != jComboTax.getSelectedItem())
-                    & (Headers.get(i) != jComboSupplier.getSelectedItem())) {                
+                    & (Headers.get(i) != jComboSupplier.getSelectedItem())) {
                 jComboBarcode.addItem(Headers.get(i));
             }
             ++i;
@@ -1914,13 +1921,13 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         int i = 1;
         jComboReference.addItem("");
         while (i < Headers.size()) {
-            if ((Headers.get(i) != jComboCategory.getSelectedItem()) 
-                    & (Headers.get(i) != jComboBarcode.getSelectedItem()) 
-                    & (Headers.get(i) != jComboName.getSelectedItem()) 
-                    & (Headers.get(i) != jComboBuy.getSelectedItem()) 
+            if ((Headers.get(i) != jComboCategory.getSelectedItem())
+                    & (Headers.get(i) != jComboBarcode.getSelectedItem())
+                    & (Headers.get(i) != jComboName.getSelectedItem())
+                    & (Headers.get(i) != jComboBuy.getSelectedItem())
                     & (Headers.get(i) != jComboSell.getSelectedItem())
                     & (Headers.get(i) != jComboTax.getSelectedItem())
-                    & (Headers.get(i) != jComboSupplier.getSelectedItem())) {                
+                    & (Headers.get(i) != jComboSupplier.getSelectedItem())) {
                 jComboReference.addItem(Headers.get(i));
             }
             ++i;
@@ -1942,11 +1949,11 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         int i = 1;
         jComboTax.addItem("");
         while (i < Headers.size()) {
-            if ((Headers.get(i) != jComboCategory.getSelectedItem()) 
-                    & (Headers.get(i) != jComboReference.getSelectedItem()) 
-                    & (Headers.get(i) != jComboBarcode.getSelectedItem()) 
-                    & (Headers.get(i) != jComboName.getSelectedItem())                     
-                    & (Headers.get(i) != jComboBuy.getSelectedItem()) 
+            if ((Headers.get(i) != jComboCategory.getSelectedItem())
+                    & (Headers.get(i) != jComboReference.getSelectedItem())
+                    & (Headers.get(i) != jComboBarcode.getSelectedItem())
+                    & (Headers.get(i) != jComboName.getSelectedItem())
+                    & (Headers.get(i) != jComboBuy.getSelectedItem())
                     & (Headers.get(i) != jComboSell.getSelectedItem())
                     & (Headers.get(i) != jComboSupplier.getSelectedItem())) {
                 jComboTax.addItem(Headers.get(i));
@@ -1971,7 +1978,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
                 jComboDefaultSupplier.setModel(m_SupplierModel);
             }
         } catch (BasicException ex) {
-            Logger.getLogger(JPanelCSVImport.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.WARNING, null, ex);
         }
         checkFieldMapping();
     }//GEN-LAST:event_jComboSupplierItemStateChanged
@@ -1981,12 +1988,12 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         int i = 1;
         jComboSupplier.addItem("");
         while (i < Headers.size()) {
-            if ((Headers.get(i) != jComboCategory.getSelectedItem()) 
-                    & (Headers.get(i) != jComboReference.getSelectedItem()) 
+            if ((Headers.get(i) != jComboCategory.getSelectedItem())
+                    & (Headers.get(i) != jComboReference.getSelectedItem())
                     & (Headers.get(i) != jComboBarcode.getSelectedItem())
-                    & (Headers.get(i) != jComboName.getSelectedItem())                     
+                    & (Headers.get(i) != jComboName.getSelectedItem())
                     & (Headers.get(i) != jComboBuy.getSelectedItem())
-                    & (Headers.get(i) != jComboSell.getSelectedItem())                    
+                    & (Headers.get(i) != jComboSell.getSelectedItem())
                     & (Headers.get(i) != jComboTax.getSelectedItem())) {
 
                 jComboSupplier.addItem(Headers.get(i));
@@ -2008,6 +2015,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     }//GEN-LAST:event_jComboSupplierActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> jCBiso;
     private javax.swing.JCheckBox jCheckInCatalogue;
     private javax.swing.JCheckBox jCheckSellIncTax;
     private javax.swing.JComboBox jComboBarcode;

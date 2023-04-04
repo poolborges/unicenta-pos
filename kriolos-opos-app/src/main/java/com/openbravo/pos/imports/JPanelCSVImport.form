@@ -40,7 +40,9 @@
                               <Component id="jLabel18" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jComboSeparator" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="138" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="jCBiso" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="jHeaderRead" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -52,7 +54,7 @@
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -68,6 +70,7 @@
                       <Component id="jComboSeparator" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel18" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jHeaderRead" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jCBiso" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="webPBar" min="-2" pref="32" max="-2" attributes="0"/>
               </Group>
@@ -80,7 +83,7 @@
                   </Group>
                   <Component id="jPanel1" min="-2" pref="469" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -761,7 +764,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Arial" size="10" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Import version 4.3"/>
+        <Property name="text" type="java.lang.String" value="Import version 4.5"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel18">
@@ -1184,7 +1187,7 @@
     <Component class="javax.swing.JComboBox" name="jComboSeparator">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Arial" size="12" style="0"/>
+          <Font name="Arial" size="14" style="0"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="0"/>
@@ -1222,14 +1225,44 @@
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="pos_messages.properties" key="label.importnotice" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
         </Property>
-        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection component="jLblImportNotice" name="text" type="property"/>
-        </Property>
         <Property name="opaque" type="boolean" value="true"/>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[150, 37]"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="jCBiso">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Arial" size="14" style="0"/>
+        </Property>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="13">
+            <StringItem index="0" value="ISO-8859-1"/>
+            <StringItem index="1" value="ISO-8859-2"/>
+            <StringItem index="2" value="ISO-8859-3"/>
+            <StringItem index="3" value="ISO-8859-4"/>
+            <StringItem index="4" value="ISO-8859-5"/>
+            <StringItem index="5" value="ISO-8859-6"/>
+            <StringItem index="6" value="ISO-8859-7"/>
+            <StringItem index="7" value="ISO-8859-8"/>
+            <StringItem index="8" value="ISO-8859-9"/>
+            <StringItem index="9" value="ISO-8859-10"/>
+            <StringItem index="10" value="UTF-8"/>
+            <StringItem index="11" value="UTF-16"/>
+            <StringItem index="12" value=" "/>
+          </StringArray>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="pos_messages.properties" key="tooltip.import.cbiso" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+        </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[125, 30]"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>
