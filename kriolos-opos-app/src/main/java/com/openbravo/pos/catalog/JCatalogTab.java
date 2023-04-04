@@ -29,6 +29,9 @@ import javax.swing.*;
 public class JCatalogTab extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 1L;
+    
+    private static final int CATALOG_BUTTON_WITH = 96;
+    private static final int CATALOG_BUTTON_HEIGHT = 82;
 
     private final JFlowPanel flowpanel;
 
@@ -75,9 +78,9 @@ public class JCatalogTab extends javax.swing.JPanel {
         btn.setVerticalTextPosition(SwingConstants.CENTER);
         btn.setFont(new java.awt.Font("Arial Bold", 0, 12));
         btn.setMargin(new Insets(2, 2, 2, 2));
-        btn.setMaximumSize(new java.awt.Dimension(96, 82));
-        btn.setMinimumSize(new java.awt.Dimension(96, 82));
-        btn.setPreferredSize(new java.awt.Dimension(96, 82));
+        btn.setMaximumSize(new java.awt.Dimension(CATALOG_BUTTON_WITH, CATALOG_BUTTON_HEIGHT));
+        btn.setMinimumSize(new java.awt.Dimension(CATALOG_BUTTON_WITH, CATALOG_BUTTON_HEIGHT));
+        btn.setPreferredSize(new java.awt.Dimension(CATALOG_BUTTON_WITH, CATALOG_BUTTON_HEIGHT));
         btn.applyComponentOrientation(getComponentOrientation());
         btn.addActionListener(actionListener);
 
