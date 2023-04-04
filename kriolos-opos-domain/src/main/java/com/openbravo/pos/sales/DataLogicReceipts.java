@@ -25,6 +25,7 @@ import com.openbravo.data.loader.SerializerWriteString;
 import com.openbravo.data.loader.Session;
 import com.openbravo.data.loader.StaticSentence;
 import com.openbravo.pos.forms.BeanFactoryDataSingle;
+import com.openbravo.pos.sales.SharedTicketInfo;
 import com.openbravo.pos.ticket.TicketInfo;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
