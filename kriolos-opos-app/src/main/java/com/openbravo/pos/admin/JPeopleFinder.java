@@ -198,7 +198,6 @@ public class JPeopleFinder extends javax.swing.JDialog implements EditorCreator 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(AppLocal.getIntString("form.usertitle")); // NOI18N
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setPreferredSize(new java.awt.Dimension(650, 300));
 
         jPanel3.setPreferredSize(new java.awt.Dimension(450, 231));
         jPanel3.setLayout(new java.awt.BorderLayout());

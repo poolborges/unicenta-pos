@@ -586,7 +586,6 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(AppLocal.getIntString("payment.title")); // NOI18N
-        setPreferredSize(new java.awt.Dimension(750, 127));
         setResizable(false);
 
         jPanel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N

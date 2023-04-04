@@ -253,7 +253,6 @@ public class JProductLineEdit extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(AppLocal.getIntString("label.editline")); // NOI18N
-        setPreferredSize(new java.awt.Dimension(650, 350));
 
         jPanel5.setLayout(new java.awt.BorderLayout());
 
