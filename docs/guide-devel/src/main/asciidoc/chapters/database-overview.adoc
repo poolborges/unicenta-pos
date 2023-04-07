@@ -38,7 +38,7 @@ This section provide information about POS's database schema
 |attributeset               |ProductAttribute set (To define a product attributes)
 |attributesetinstance       |ProductAttribute
 |attributeuse               |ProductAttribute
-|breaks                     |Shift (List of default Shift Breaks reazon)
+|breaks                     |EPM Shift Breaks(List of default Shift Breaks reazon)
 |categories                 |Product Categories
 |closedcash                 |CashRegister (Closes)
 |csvimport                  |
@@ -46,7 +46,7 @@ This section provide information about POS's database schema
 |draweropened               |CashRegister (Log of all cash register opening)
 |floors                     |Space (Physical/virtual areas of Establishment) 
 |lineremoved                |Ticket (List of deleted ticketlines from the sales screen)
-|leaves                     |Shift (List of entrances/exits of people)
+|leaves                     |EPM Leaves (List of entrances/exits of people)
 |locations                  |Inventory (Warehouses or Physical locations)
 |moorers                    |
 |orders                     |Printer (Dynamic list of incomplete orders sent to remote printer)
@@ -58,21 +58,21 @@ This section provide information about POS's database schema
 |products_bundle            |Product (Composite Product)
 |products_cat               |Product (Product's Categories)
 |products_com               |Product (Product's Companiam)
-|receipts                   |Ticket  (Detail of the settlement of the tickets)
+|receipts                   |Ticket  (Receipt - Detail of the settlement of the tickets)
 |reservation_customers      |Reservation
 |revervations               |Reservation
 |resources                  |APP (Resources: image, jasper,...)
 |roles                      |User Roles
 |sharedtickets              |Ticket
-|shift_breaks               |Shift (Breaks that occur in shifts)
-|shifts                     |Shift
+|shift_breaks               |EPM Shift (Breaks that occur in shifts)
+|shifts                     |EPM Shift
 |stockcurrent               |Inventory
 |stockdiary                 |Inventory
 |stocklevel                 |Inventory
 |suppliers                  |BusinessPartner (Supplier)
 |taxcategories              |Tax
 |taxcustcategories          |Tax
-|taxes                      |Tax
+|taxes                      |Ticket (Receipt - TaxLine) 
 |taxeslines                 |Tax
 |taxsuppcategories          |Tax
 |thirdparties               |
@@ -93,13 +93,22 @@ This section provide information about POS's database schema
 |====
 |Column |Type   |Description
 
-|id             |varchar(255)   |Indentify
+|id             |varchar(255)   |ID
 |name           |varchar(255)   |Name 
-|parentid       |varchar(255)   |Parent
+|parentid       |varchar(255)   |Parent ID
 |image          |MEDIUMBLOB()   |
 |texttip        |varchar(255)   |
-|catshowname    |SMALLINT       |
+|catshowname    |BOOLEAN        |
 |catorder       |varchar(255)   |
+|====
+
+.Table payments
+[%header]
+|====
+|Column |Type   |Description
+
+|id             |varchar(255)   |ID
+|receipt        |varchar(255)   |Receipt number
 |====
 
 === Group of Tables
@@ -164,11 +173,13 @@ Maritme
 === Database Dataypes
 
 
-.Datatype
+.Datatype MySQL and MariaDB
 |====
 |Name           |Max size
-|MEDIUMBLOB     |16,777,215 (224 – 1) bytes 
-|LONGVARBINARY = 16777215 bits
+
+|SMALLINT       |-32768 to 32767
+|MEDIUMBLOB     |16MB = 16777215 bits 
+|LONGVARBINARY  |16MB = 16777215 bits
 |====
 
 === References
