@@ -37,7 +37,7 @@ public final class Session {
     private boolean m_bInTransaction;
 
     private final DataSource datasource;
-    public final SessionDB sessionDB;
+    public final SessionDB DB;
 
     /**
      * Creates a new instance of Session
@@ -56,7 +56,7 @@ public final class Session {
 
         connect(); // no lazy connection
 
-        sessionDB = getDiff();
+        DB = getDiff();
     }
 
     public Session(DataSource ds) throws SQLException {
@@ -69,7 +69,7 @@ public final class Session {
 
         connect(); // no lazy connection
 
-        sessionDB = getDiff();
+        DB = getDiff();
     }
 
     /**
