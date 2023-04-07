@@ -404,16 +404,16 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
             if ("restaurant".equals(getTicketsbag())
                     && !oTicket.getOldTicket()) {
-                if (restDB.getCustomerNameInTable(oTicketExt.toString()) == null) {
+                if (restDB.getCustomerNameInTable(m_oTicketExt) == null) {
                     if (m_oTicket.getCustomer() != null) {
-                        restDB.setCustomerNameInTable(m_oTicket.getCustomer().toString(), oTicketExt.toString());
+                        restDB.setCustomerNameInTable(m_oTicket.getCustomer().toString(), m_oTicketExt);
                     }
                 }
-                if (restDB.getWaiterNameInTable(oTicketExt.toString()) == null
-                        || "".equals(restDB.getWaiterNameInTable(oTicketExt.toString()))) {
-                    restDB.setWaiterNameInTable(m_App.getAppUserView().getUser().getName(), oTicketExt.toString());
+                if (restDB.getWaiterNameInTable(m_oTicketExt) == null
+                        || "".equals(restDB.getWaiterNameInTable(m_oTicketExt))) {
+                    restDB.setWaiterNameInTable(m_App.getAppUserView().getUser().getName(), m_oTicketExt);
                 }
-                restDB.setTicketIdInTable(m_oTicket.getId(), oTicketExt.toString());
+                restDB.setTicketIdInTable(m_oTicket.getId(), m_oTicketExt);
             }
         }
 
@@ -427,7 +427,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 .getProperty("table.showcustomerdetails")))
                 || (Boolean.parseBoolean(m_App.getProperties().getProperty("table.showwaiterdetails")))))) {
             if (restDB.getTableMovedFlag(m_oTicket.getId())) {
-                restDB.moveCustomer(oTicketExt.toString(), m_oTicket.getId());
+                restDB.moveCustomer(m_oTicketExt, m_oTicket.getId());
             }
         }
 
@@ -560,9 +560,14 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     private void addTicketLine(ProductInfoExt oProduct, double dMul, double dPrice) {
+        
+        CustomerInfoExt customer = null;
+        if(m_oTicket != null){
+            customer = m_oTicket.getCustomer();
+        }
 
         // get the line product tax
-        TaxInfo tax = taxeslogic.getTaxInfo(oProduct.getTaxCategoryID(), m_oTicket.getCustomer());
+        TaxInfo tax = taxeslogic.getTaxInfo(oProduct.getTaxCategoryID(), customer);
 
         addTicketLine(new TicketLineInfo(oProduct, dMul, dPrice, tax,
                 (java.util.Properties) (oProduct.getProperties().clone())));
@@ -1560,6 +1565,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                                 ((JRootApp) m_App).closeAppView();
                             }
                         }
+                        
+                        createNewTicket();
                     }
                     refreshTicket();
                 } else {
@@ -1568,6 +1575,12 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 }
             }
         }
+    }
+
+    private void createNewTicket() {
+        //Create New Ticket
+        TicketInfo ticket = new TicketInfo();
+        setActiveTicket(ticket, null);
     }
 
     private boolean closeTicket(TicketInfo ticket, String ticketext) {
@@ -3084,7 +3097,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         if ((m_oTicket.getCustomer() != null)) {
             return m_oTicket.getCustomer().getName();
         } else if (m_oTicketExt != null) {
-            return m_oTicketExt.toString();
+            return m_oTicketExt;
         } else {
             if (m_oTicket.getPickupId() == 0) {
                 try {
