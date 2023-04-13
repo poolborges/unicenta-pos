@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.editor;
 
 import com.openbravo.format.Formats;
@@ -25,11 +24,11 @@ import com.openbravo.format.Formats;
 public class JEditorCurrency extends JEditorDouble {
 
     /**
-     *
+     * Return Formats.Currency 
      * @return
      */
-        @Override
+    @Override
     protected Formats getFormat() {
         return Formats.CURRENCY;
-    } 
+    }
 }
