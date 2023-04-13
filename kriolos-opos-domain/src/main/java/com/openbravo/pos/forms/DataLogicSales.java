@@ -49,6 +49,7 @@ import com.openbravo.pos.payment.PaymentInfoTicket;
 import com.openbravo.pos.sales.ReprintTicketInfo;
 import com.openbravo.pos.suppliers.SupplierInfo;
 import com.openbravo.pos.suppliers.SupplierInfoExt;
+import com.openbravo.pos.ticket.ProductInfoExtA;
 import com.openbravo.pos.voucher.VoucherInfo;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -83,23 +84,14 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
     public static final String DEBT = "debt";
     public static final String DEBT_PAID = "debtpaid";
-    protected static final String PREPAY = "prepay";
+    private static final String PREPAY = "prepay";
     private static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.forms.DataLogicSales");
 
     private String getCardName;
-    protected SentenceExec m_createCat;
-    protected SentenceExec m_createSupp;
-
-    protected AppView m_App;
-
-    private AppConfig m_config;
+    private SentenceExec m_createCat;
+    private SentenceExec m_createSupp;
 
     public DataLogicSales() {
-        AppView app = null;
-        m_config = AppConfig.getInstance();
-        m_config.load();
-        m_App = app;
-
         stockdiaryDatas = new Datas[]{
             Datas.STRING, Datas.TIMESTAMP, Datas.INT, Datas.STRING,
             Datas.STRING, Datas.STRING, Datas.DOUBLE, Datas.DOUBLE,
@@ -195,7 +187,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
     /**
      *
-     * @param s
+     * @param s session
      */
     @Override
     public void init(Session s) {
@@ -283,10 +275,13 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 ProductInfoExt.getSerializerRead()).find(id);
     }
 
-    public final ProductInfoExt getProductInfoByCode(String sCode) throws BasicException {
-//        if (sCode.length() == 13 && (sCode.startsWith("2") || sCode.startsWith("02"))) 
-//            return  getProductInfoByShortCode(sCode);
-//        else {        
+    /**
+     *
+     * @param sCode (Example BarCode)
+     * @return
+     * @throws BasicException
+     */
+    public final ProductInfoExt getProductInfoByCode(String sCode) throws BasicException {      
         return new PreparedSentence<String, ProductInfoExt>(s,
                 "SELECT "
                 + "ID, "
@@ -322,9 +317,14 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 + "FROM products WHERE CODE = ?",
                 SerializerWriteString.INSTANCE,
                 ProductInfoExt.getSerializerRead()).find(sCode);
-//        }
     }
 
+    /**
+     *
+     * @param sCode (short code, Example: Barcode)
+     * @return
+     * @throws BasicException
+     */
     public final ProductInfoExt getProductInfoByShortCode(String sCode) throws BasicException {
 
         return new PreparedSentence<String, ProductInfoExt>(s,
@@ -365,16 +365,20 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 ProductInfoExt.getSerializerRead()).find(sCode.substring(2, 8));
     }
 
-    /*
-*  Important Note: 
-*  Deliberately extracted from other code to force strict UPC-A (full 12 digits)
-*  Why? Because other manf' or in-store codes may exist and we just need a single
-*  record returned. Also, handling things this way will allow use (future) of a
-*  COUPON code (5 or 9 normally used) in-store
-*
+    /**
+     * Important Note: Deliberately extracted from other code to force strict
+     * UPC-A (full 12 digits) Why? Because other manf' or in-store codes may
+     * exist and we just need a single record returned. Also, handling things
+     * this way will allow use (future) of a COUPON code (5 or 9 normally used)
+     * in-store
+     *
      */
     public final ProductInfoExt getProductInfoByUShortCode(String sCode) throws BasicException {
 
+        /* selection of 7 digits ie: 2123456 
+        specific to allow for other 12 digit codes that may be in use at positions 234567
+        last digit (position 7) can be used to identify COUPON (5 or 9) - FUTURE  
+         */
         return new PreparedSentence<String, ProductInfoExt>(s,
                 "SELECT "
                 + "ID, "
@@ -408,11 +412,8 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 + "UOM, "
                 + "MEMODATE "
                 + "FROM products "
-                + "WHERE LEFT( CODE, 7 ) = ? AND CODETYPE = 'UPC-A' " //  selection of 7 digits ie: 2123456 specific to allow for other 12 digit
-                //  codes that may be in use at positions 234567
-                //  last digit (position 7) can be used to identify COUPON (5 or 9) - FUTURE              
-                ,
-                 SerializerWriteString.INSTANCE,
+                + "WHERE LEFT( CODE, 7 ) = ? AND CODETYPE = 'UPC-A' ",
+                SerializerWriteString.INSTANCE,
                 ProductInfoExt.getSerializerRead()).find(sCode.substring(0, 7));
     }
 
@@ -482,7 +483,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
     /**
      *
-     * @param category
+     * @param category ID
      * @return
      * @throws BasicException
      */
@@ -503,7 +504,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
     /**
      *
-     * @param category
+     * @param category ID
      * @return
      * @throws BasicException
      */
@@ -549,8 +550,8 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
     /**
      *
-     * @param id
-     * @return
+     * @param id Product ID
+     * @return List of ProductInfoExt
      * @throws BasicException
      */
     public List<ProductInfoExt> getProductComments(String id) throws BasicException {
@@ -595,7 +596,6 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 ProductInfoExt.getSerializerRead()).list(id);
     }
 
-    // JG uniCenta June 2014 includes StockUnits  
     /**
      *
      * @return @throws BasicException
@@ -739,7 +739,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      *
      * @return
      */
-    public SentenceList getProductListNormal() {
+    public SentenceList<ProductInfoExt> getProductListNormal() {
         return new StaticSentence(s,
                 new QBFBuilder(
                         "SELECT "
@@ -789,7 +789,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      *
      * @return
      */
-    public SentenceList getProductsList() {
+    public SentenceList<ProductInfo> getProductsList() {
         return new StaticSentence(s,
                 "SELECT "
                 + "ID, "
@@ -824,11 +824,10 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 + "MEMODATE "
                 + "FROM products "
                 + "ORDER BY NAME",
-                null,
                 ProductInfo.getSerializerRead());
     }
 
-    public SentenceList getProductList2() {
+    public SentenceList<ProductInfoExtA> getProductList2() {
         return new StaticSentence(s,
                 new QBFBuilder(
                         "SELECT "
@@ -839,6 +838,11 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                         + "products.pricesell, "
                         + "taxes.rate, "
                         + "products.pricesell + (products.pricesell * taxes.rate) AS SellIncTax "
+                        + "products.category"
+                        + "products.ISCOM"
+                        + "products.ISSCALE"
+                        + "products.ISCONSTANT"
+                        + "products.ISSERVICE"
                         + " FROM (((stockcurrent stockcurrent "
                         + "INNER JOIN locations locations "
                         + "ON (stockcurrent.location = locations.id)) "
@@ -856,14 +860,14 @@ public class DataLogicSales extends BeanFactoryDataSingle {
             Datas.OBJECT, Datas.DOUBLE,
             Datas.OBJECT, Datas.DOUBLE,
             Datas.OBJECT, Datas.STRING}),
-                ProductInfoExt.getSerializerRead());
+                ProductInfoExtA.getSerializerRead());
     }
 
     /**
      *
      * @return
      */
-    public SentenceList getProductListAuxiliar() {
+    public SentenceList<ProductInfoExt> getProductListAuxiliar() {
         return new StaticSentence(s,
                 new QBFBuilder(
                         "SELECT "
@@ -1064,7 +1068,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     }
 
     //Tickets and Receipt list
-    public SentenceList getTicketsList() {
+    public SentenceList<FindTicketsInfo> getTicketsList() {
         return new StaticSentence(s,
                 new QBFBuilder(
                         "SELECT "
@@ -1106,7 +1110,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      *
      * @return
      */
-    public final SentenceList getUserList() {
+    public final SentenceList<TaxCategoryInfo> getUserList() {
         return new StaticSentence(s,
                 "SELECT "
                 + "ID, "
@@ -1152,7 +1156,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      *
      * @return
      */
-    public final SentenceList getCategoriesList() {
+    public final SentenceList<CategoryInfo> getCategoriesList() {
         return new StaticSentence(s,
                 "SELECT "
                 + "ID, "
@@ -1172,7 +1176,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      *
      * @return
      */
-    public final SentenceList getCategoriesList_1() {
+    public final SentenceList<CategoryInfo> getCategoriesList_1() {
         return new StaticSentence(s,
                 "SELECT "
                 + "ID, "
@@ -1192,7 +1196,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      *
      * @return
      */
-    public final SentenceList getSuppList() {
+    public final SentenceList<SupplierInfo> getSuppList() {
         return new StaticSentence(s,
                 "SELECT "
                 + "ID, "
@@ -1316,7 +1320,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      *
      * @return
      */
-    public final SentenceList getAttributeSetList() {
+    public final SentenceList<AttributeSetInfo> getAttributeSetList() {
         return new StaticSentence(s,
                 "SELECT "
                 + "ID, "
@@ -1331,7 +1335,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      *
      * @return
      */
-    public final SentenceList getLocationsList() {
+    public final SentenceList<LocationInfo> getLocationsList() {
         return new StaticSentence(s,
                 "SELECT "
                 + "ID, "
@@ -1346,7 +1350,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      *
      * @return
      */
-    public final SentenceList getFloorsList() {
+    public final SentenceList<FloorsInfo> getFloorsList() {
         return new StaticSentence(s,
                 "SELECT ID, NAME FROM floors ORDER BY NAME",
                 null,
@@ -1357,7 +1361,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      *
      * @return
      */
-    public final SentenceList getFloorTablesList() {
+    public final SentenceList<FloorsInfo> getFloorTablesList() {
         return new StaticSentence(s,
                 "SELECT ID, NAME, SEATS FROM places ORDER BY NAME",
                 null,
@@ -2428,7 +2432,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
     public final TableDefinition getTableCategories() {
         return new TableDefinition(s,
-                "categories", 
+                "categories",
                 new String[]{"ID", "NAME", "PARENTID", "IMAGE", "TEXTTIP", "CATSHOWNAME", "CATORDER"},
                 new String[]{"ID", AppLocal.getIntString("label.name"), "", AppLocal.getIntString("label.image")},
                 new Datas[]{Datas.STRING, Datas.STRING, Datas.STRING, Datas.IMAGE, Datas.STRING, Datas.BOOLEAN, Datas.STRING},

@@ -16,7 +16,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with KrOS POS.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.ticket;
 
 import com.openbravo.basic.BasicException;
@@ -26,22 +25,30 @@ import com.openbravo.data.loader.SerializerRead;
 
 /**
  *
- * @author  Jack
- * @version 
+ * @author Jack
+ * @version
  */
 public class ProductInfo implements IKeyed {
 
     private static final long serialVersionUID = 8712449444103L;
     private String m_sID;
     private String m_sRef;
-    private String m_sCode;    
+    private String m_sCode;
+    private String m_sCodetype;
     private String m_sName;
+    private double m_dPriceBuy;
+    private double m_dPriceSell;
+    private String categoryid;
+    private String taxcategoryid; //Tax Category ID
 
-    /** Creates new ProductInfo
+    /**
+     * Creates new ProductInfo
+     *
      * @param id
      * @param ref
      * @param code
-     * @param name */
+     * @param name
+     */
     public ProductInfo(String id, String ref, String code, String name) {
         m_sID = id;
         m_sRef = ref;
@@ -65,6 +72,7 @@ public class ProductInfo implements IKeyed {
     public void setID(String sID) {
         m_sID = sID;
     }
+
     public String getID() {
         return m_sID;
     }
@@ -72,15 +80,15 @@ public class ProductInfo implements IKeyed {
     /**
      *
      * @return
-    */  
+     */
     public String getRef() {
         return m_sRef;
     }
+
     public void setRef(String sRef) {
         m_sRef = sRef;
     }
 
-    
     /**
      *
      * @return
@@ -88,10 +96,11 @@ public class ProductInfo implements IKeyed {
     public String getCode() {
         return m_sCode;
     }
+
     public void setCode(String sCode) {
         m_sCode = sCode;
     }
-    
+
     /**
      *
      * @return
@@ -99,11 +108,51 @@ public class ProductInfo implements IKeyed {
     public String getName() {
         return m_sName;
     }
+
     public void setName(String sName) {
         m_sName = sName;
     }
 
- 
+    public double getPriceBuy() {
+        return m_dPriceBuy;
+    }
+
+    public void setPriceBuy(double m_dPriceBuy) {
+        this.m_dPriceBuy = m_dPriceBuy;
+    }
+    
+    public String getCodetype() {
+        return m_sCodetype;
+    }
+
+    public void setCodetype(String m_sCodetype) {
+        this.m_sCodetype = m_sCodetype;
+    }
+
+    public double getPriceSell() {
+        return m_dPriceSell;
+    }
+
+    public void setPriceSell(double m_dPriceSell) {
+        this.m_dPriceSell = m_dPriceSell;
+    }
+
+    public String getCategoryID() {
+        return categoryid;
+    }
+
+    public void setCategoryID(String categoryid) {
+        this.categoryid = categoryid;
+    }
+
+    public String getTaxID() {
+        return taxcategoryid;
+    }
+
+    public void setTaxID(String taxcategoryid) {
+        this.taxcategoryid = taxcategoryid;
+    }
+
     @Override
     public String toString() {
         return m_sName;
@@ -113,12 +162,24 @@ public class ProductInfo implements IKeyed {
      *
      * @return
      */
-    public static SerializerRead getSerializerRead() {
-        return new SerializerRead() {
+    public static SerializerRead<ProductInfo> getSerializerRead() {
+        return new SerializerRead<ProductInfo>() {
             @Override
-            public Object readValues(DataRead dr) throws BasicException {
-            return new ProductInfo(dr.getString(1), dr.getString(2), 
-                dr.getString(3), dr.getString(4));
-        }};
+            public ProductInfo readValues(DataRead dr) throws BasicException {
+                ProductInfo prod = new ProductInfo(
+                        dr.getString(1),
+                        dr.getString(2),
+                        dr.getString(3),
+                        dr.getString(5));
+
+                prod.setCodetype(dr.getString(4));
+                prod.setPriceBuy(dr.getDouble(6));
+                prod.setPriceSell(dr.getDouble(7));
+                prod.setCategoryID(dr.getString(8));
+                prod.setTaxID(dr.getString(9));
+
+                return prod;
+            }
+        };
     }
 }
