@@ -18,6 +18,7 @@ package com.openbravo.pos.scale;
 
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppProperties;
+import com.openbravo.pos.scale.javapos.ScaleJavaPOS;
 import com.openbravo.pos.util.StringParser;
 import java.awt.Component;
 
@@ -66,6 +67,9 @@ public class DeviceScale {
             case "screen":
                 // on screen scale
                 m_scale = new ScaleDialog(parent);
+                break;
+            case "javapos":
+                m_scale = new ScaleJavaPOS(sScaleParam1);
                 break;
             default:
                 m_scale = null;

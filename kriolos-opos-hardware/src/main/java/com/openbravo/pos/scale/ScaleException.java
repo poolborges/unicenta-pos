@@ -35,4 +35,8 @@ public class ScaleException extends java.lang.Exception {
     public ScaleException(String msg) {
         super(msg);
     }
+    
+    public ScaleException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
 }

@@ -7,11 +7,11 @@ Provide access/API for common POS (Poin of Sales) Hardware
 |====
 |Names
 
-|Priner (hermal Priner, Receip Priner
+|Priner (Thermal Priner, Receipt Printer)
 |Scanner
 |Drawer
 |Scale
-|Displa
+|Display
 |Pamn
 |====
 
@@ -19,21 +19,13 @@ Provide access/API for common POS (Poin of Sales) Hardware
 |====
 |Name  |License  |Descrip |Ref
 
-|jPOS 
-|AGPL
-|Is a implemenaion of ISO-8583 Sandard
-|hp://jpos.org gihub.com/jpos
-
 |JavaPOS
-|
-|
-|
+|Eclipse Foundation CPL 
+|UnifiedPOS reference implementation for Java. 
+|https://github.com/JavaPOSWorkingGroup
 
 |====
 
-
-
-* ISO-8583 (ransion Card Origined Messages Sandard)
 
 === ESC (Epson Sandard Code)
 
@@ -42,8 +34,43 @@ Provide access/API for common POS (Poin of Sales) Hardware
 ESC/POS
 
 * ESC/POS prining command is a simplified version of ESC prining Conrol Command.
-* 
+* ...
 
 ESC/P-K 
 
 * Adds special suppor for chinese Compuers
+
+=== JavaPOS 
+
+----
+JavaPOS Device Controls, Device Services and Events v1.x
+----
+
+Concepts
+
+* JavaPOS Config Loader library (JCL).
+
+Configuration 
+
+* -Djpos.config.populatorFile="%USERPROFILE%/jpos.xml"
+
+
+Links
+
+* https://www.omg.org/retail/unified-pos.htm
+* https://www.omg.org/spec/UPOS/
+* https://github.com/JavaPOSWorkingGroup
+* Datalogic: 
+** https://datalogic.github.io/javapos/configref/jposxml/
+** https://github.com/orgs/datalogic
+
+== JPOS 
+
+(TO BE MOVED - NOT HARDWARE, BUT Payment releated)
+
+* jPOS Is a implemenaion of ISO-8583 Sandard
+* ISO-8583 (Transion Card Origined Messages Sandard)
+* License: AGPL
+* http://jpos.org 
+* http://gihub.com/jpos
+

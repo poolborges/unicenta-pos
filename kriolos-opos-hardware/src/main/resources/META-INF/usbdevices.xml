@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<usb>
+    <printer name="epson TM-T88" id= "04b8:0202" classname="com.openbravo.pos.printer.escpos.USBDevicePrinterEpson"/>
+    <printer name="star TSP-100" id= "0519:0003" classname="com.openbravo.pos.printer.escpos.USBDevicePrinterStar"/>
+    <display name="ld9000 Logic-Controls" id= "0fa8:a090" classname="com.openbravo.pos.printer.escpos.USBDeviceDisplayLD9000"/>
+    
+    <!--
+    <scale name="" id="" classname="" />
+    <scanner name="" id="" classname="" />
+    -->
+</usb>
