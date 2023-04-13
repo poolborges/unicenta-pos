@@ -814,10 +814,10 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="m_jPor" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="m_jPrice" pref="202" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="m_jPor" pref="24" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="m_jPrice" min="-2" pref="178" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                               <Component id="m_jEnter" min="-2" pref="71" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -830,7 +830,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="m_jEnter" min="-2" max="-2" attributes="0"/>
                                   <Component id="m_jPrice" alignment="0" min="-2" pref="44" max="-2" attributes="0"/>
-                                  <Component id="m_jPor" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="m_jPor" min="-2" pref="44" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>

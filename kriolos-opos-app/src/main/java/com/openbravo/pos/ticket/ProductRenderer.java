@@ -42,11 +42,11 @@ public class ProductRenderer extends DefaultListCellRenderer {
        
         if (prod != null) {
             
-            String prodLabe = "<html><center>" 
+            String prodLabe = "<html>" 
                     + prod.getReference()  
                     +  "<br>" + prod.getName() 
                     +  "<br>" + Formats.CURRENCY.formatValue(prod.getPriceSell())
-                    + "</center></html>";
+                    + "</html>";
             
             String toolTip = ""+ prod.getReference()  
                     +  "|" + prod.getName() 

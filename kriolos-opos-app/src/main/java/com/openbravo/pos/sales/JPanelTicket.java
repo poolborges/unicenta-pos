@@ -560,20 +560,24 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     private void addTicketLine(ProductInfoExt oProduct, double dMul, double dPrice) {
-        
-        CustomerInfoExt customer = null;
-        if(m_oTicket != null){
-            customer = m_oTicket.getCustomer();
+        if (m_oTicket != null) {
+            CustomerInfoExt customer = m_oTicket.getCustomer();
+
+            // get the line product tax
+            TaxInfo tax = taxeslogic.getTaxInfo(oProduct.getTaxCategoryID(), customer);
+
+            Properties props = new Properties();
+            if (oProduct.getProperties() != null && !oProduct.getProperties().isEmpty()) {
+                props = (java.util.Properties) oProduct.getProperties().clone();
+            }
+
+            addTicketLine(new TicketLineInfo(oProduct, dMul, dPrice, tax, props));
+            refreshTicket();
+
+            j_btnRemotePrt.setEnabled(true);
+        } else {
+            Toolkit.getDefaultToolkit().beep();
         }
-
-        // get the line product tax
-        TaxInfo tax = taxeslogic.getTaxInfo(oProduct.getTaxCategoryID(), customer);
-
-        addTicketLine(new TicketLineInfo(oProduct, dMul, dPrice, tax,
-                (java.util.Properties) (oProduct.getProperties().clone())));
-        refreshTicket();
-
-        j_btnRemotePrt.setEnabled(true);
 
     }
 
@@ -583,60 +587,64 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
      * @param oLine Ticket line
      */
     protected void addTicketLine(TicketLineInfo oLine) {
-        if (oLine.isProductCom()) {
-            int i = m_ticketlines.getSelectedIndex();
-
-            if (i >= 0 && !m_oTicket.getLine(i).isProductCom()) {
-                i++;
-            }
-
-            while (i >= 0 && i < m_oTicket.getLinesCount() && m_oTicket.getLine(i).isProductCom()) {
-                i++;
-            }
-
-            if (i >= 0) {
-                m_oTicket.insertLine(i, oLine);
-                m_ticketlines.insertTicketLine(i, oLine);
-            } else {
-                Toolkit.getDefaultToolkit().beep();
-            }
-        } else {
-            m_oTicket.addLine(oLine);
-            m_ticketlines.addTicketLine(oLine);
-
-            try {
+        if (m_oTicket != null) {
+            if (oLine.isProductCom()) {
                 int i = m_ticketlines.getSelectedIndex();
-                TicketLineInfo line = m_oTicket.getLine(i);
 
-                if (line.isProductVerpatrib()) {
-
-                    JProductAttEdit2 attedit = JProductAttEdit2.getAttributesEditor(this, m_App.getSession());
-                    attedit.editAttributes(line.getProductAttSetId(), line.getProductAttSetInstId());
-                    attedit.setVisible(true);
-
-                    if (attedit.isOK()) {
-                        line.setProductAttSetInstId(attedit.getAttributeSetInst());
-                        line.setProductAttSetInstDesc(attedit.getAttributeSetInstDescription());
-                    }
-
-                    paintTicketLine(i, line);
+                if (i >= 0 && !m_oTicket.getLine(i).isProductCom()) {
+                    i++;
                 }
 
-            } catch (Exception ex) {
-                LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
-                MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
-                        AppLocal.getIntString("message.cannotfindattributes"), ex);
-                msg.show(this);
+                while (i >= 0 && i < m_oTicket.getLinesCount() && m_oTicket.getLine(i).isProductCom()) {
+                    i++;
+                }
+
+                if (i >= 0) {
+                    m_oTicket.insertLine(i, oLine);
+                    m_ticketlines.insertTicketLine(i, oLine);
+                } else {
+                    Toolkit.getDefaultToolkit().beep();
+                }
+            } else {
+                m_oTicket.addLine(oLine);
+                m_ticketlines.addTicketLine(oLine);
+
+                try {
+                    int i = m_ticketlines.getSelectedIndex();
+                    TicketLineInfo line = m_oTicket.getLine(i);
+
+                    if (line.isProductVerpatrib()) {
+
+                        JProductAttEdit2 attedit = JProductAttEdit2.getAttributesEditor(this, m_App.getSession());
+                        attedit.editAttributes(line.getProductAttSetId(), line.getProductAttSetInstId());
+                        attedit.setVisible(true);
+
+                        if (attedit.isOK()) {
+                            line.setProductAttSetInstId(attedit.getAttributeSetInst());
+                            line.setProductAttSetInstDesc(attedit.getAttributeSetInstDescription());
+                        }
+
+                        paintTicketLine(i, line);
+                    }
+
+                } catch (Exception ex) {
+                    LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
+                    MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
+                            AppLocal.getIntString("message.cannotfindattributes"), ex);
+                    msg.show(this);
+                }
             }
+
+            visorTicketLine(oLine);
+            printPartialTotals();
+            stateToZero();
+            checkStock();
+            countArticles();
+
+            executeEvent(m_oTicket, m_oTicketExt, "ticket.change");
+        } else {
+            Toolkit.getDefaultToolkit().beep();
         }
-
-        visorTicketLine(oLine);
-        printPartialTotals();
-        stateToZero();
-        checkStock();
-        countArticles();
-
-        executeEvent(m_oTicket, m_oTicketExt, "ticket.change");
     }
 
     private void removeTicketLine(int i) {
@@ -694,11 +702,10 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     private ProductInfoExt getInputProduct() {
         ProductInfoExt oProduct = new ProductInfoExt();
-        // Always add Default Prod ID + Add Name to Misc. if empty
+        // Always add Default Prod ID + Add Name to Misc. 
         // THOSE ATTRIBUTE ARE IMPORTANT FOR Table foreign key rela
-        oProduct.setID("xxx999_999xxx_x9x9x9");
-        oProduct.setReference("xxx999");
-        oProduct.setCode("xxx999");
+        oProduct.setReference("0000");
+        oProduct.setCode("0000");
         oProduct.setName("***");
         oProduct.setTaxCategoryID(((TaxCategoryInfo) taxcategoriesmodel.getSelectedItem()).getID());
         oProduct.setPriceSell(includeTaxes(oProduct.getTaxCategoryID(), getInputValue()));
@@ -707,7 +714,12 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     private double includeTaxes(String tcid, double dValue) {
-        return dValue;
+        TaxInfo tax = null;
+        if (m_oTicket != null) {
+            tax = taxeslogic.getTaxInfo(tcid, m_oTicket.getCustomer());
+        }
+        double dTaxRate = tax == null ? 0.0 : tax.getRate();
+        return dValue / (1.0 + dTaxRate);
     }
 
     private double excludeTaxes(String tcid, double dValue) {
@@ -717,11 +729,12 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     /**
-     * Get Price from a input field
+     * Scanner Input Value Get Price from a input field MUST be Public is used
+     * by Script (
      *
      * @return
      */
-    private double getInputValue() {
+    public double getInputValue() {
         try {
             return Double.parseDouble(m_jPrice.getText());
         } catch (NumberFormatException ex) {
@@ -730,13 +743,27 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         }
     }
 
-    private double getPorValue() {
+    /**
+     * Scanner Por Value
+     *
+     * @return
+     */
+    public double getPorValue() {
         try {
             return Double.parseDouble(m_jPor.getText().substring(1));
         } catch (NumberFormatException | StringIndexOutOfBoundsException ex) {
             LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
             return 1.0;
         }
+    }
+
+    /**
+     * Get selected ticket line
+     *
+     * @return line index
+     */
+    public int getSelectedIndex() {
+        return m_ticketlines.getSelectedIndex();
     }
 
     private void stateToZero() {
@@ -1565,7 +1592,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                                 ((JRootApp) m_App).closeAppView();
                             }
                         }
-                        
+
                         createNewTicket();
                     }
                     refreshTicket();
@@ -2572,9 +2599,9 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         jPanelScannerLayout.setHorizontalGroup(
             jPanelScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelScannerLayout.createSequentialGroup()
-                .addComponent(m_jPor)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(m_jPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                .addComponent(m_jPor, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(m_jPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(m_jEnter, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -2585,7 +2612,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 .addGroup(jPanelScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(m_jEnter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(m_jPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(m_jPor))
+                    .addComponent(m_jPor, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -2682,19 +2709,22 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             try {
                 TicketLineInfo line = m_oTicket.getLine(i);
                 JProductAttEdit2 attedit = JProductAttEdit2.getAttributesEditor(this, m_App.getSession());
-                attedit.editAttributes(line.getProductAttSetId(), line.getProductAttSetInstId());
-                attedit.setVisible(true);
-                if (attedit.isOK()) {
-                    line.setProductAttSetInstId(attedit.getAttributeSetInst());
-                    line.setProductAttSetInstDesc(attedit.getAttributeSetInstDescription());
-                    paintTicketLine(i, line);
+                if (line.getProductAttSetId() != null) {
+                    attedit.editAttributes(line.getProductAttSetId(), line.getProductAttSetInstId());
+                    attedit.setVisible(true);
+                    if (attedit.isOK()) {
+                        line.setProductAttSetInstId(attedit.getAttributeSetInst());
+                        line.setProductAttSetInstDesc(attedit.getAttributeSetInstDescription());
+                        paintTicketLine(i, line);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            AppLocal.getIntString("message.cannotfindattributes"),
+                            AppLocal.getIntString("message.title"),
+                            JOptionPane.INFORMATION_MESSAGE);
                 }
             } catch (BasicException ex) {
                 LOGGER.log(System.Logger.Level.WARNING, "Exception while Open Product Atribute Editor: ", ex);
-                JOptionPane.showMessageDialog(this,
-                        AppLocal.getIntString("message.cannotfindattributes"),
-                        AppLocal.getIntString("message.title"),
-                        JOptionPane.INFORMATION_MESSAGE);
             }
         }
 
@@ -2846,8 +2876,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     TicketLineInfo line = m_oTicket.getLine(i);
                     String pId = line.getProductID();
                     String location = m_App.getInventoryLocation();
-                    ProductStock checkProduct;
-                    checkProduct = dlSales.getProductStockState(pId, location);
+                    ProductStock checkProduct = dlSales.getProductStockState(pId, location);
 
                     Double pMin;
                     Double pMax;
@@ -2857,11 +2886,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
                     if (!location.equals(checkProduct.getLocation())) {
                         content = AppLocal.getIntString("message.location.current");
-                        JFrame frame = new JFrame();
-                        JOptionPane.showMessageDialog(frame,
-                                content,
-                                "Info",
-                                JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         if (checkProduct.getMinimum() != null) {
                             pMin = checkProduct.getMinimum();
@@ -2886,20 +2910,21 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
                         content = "<html>"
                                 + "<b>" + AppLocal.getIntString("label.currentstock")
-                                + " : " + "</b>" + checkProduct.getUnits() + "<br>"
+                                + " : " + "</b>" + pUnits + "<br>"
                                 + "<b>" + AppLocal.getIntString("label.maximum")
                                 + " : " + "</b>" + pMax + "<br>"
                                 + "<b>" + AppLocal.getIntString("label.minimum")
                                 + " : " + "</b>" + pMin + "<br>"
                                 + "<b>" + AppLocal.getIntString("label.proddate")
                                 + " : " + "</b>" + pMemoDate + "<br>";
-
-                        JFrame frame = new JFrame();
-                        JOptionPane.showMessageDialog(frame,
-                                content,
-                                "Info",
-                                JOptionPane.INFORMATION_MESSAGE);
                     }
+
+                    JFrame frame = new JFrame();
+                    JOptionPane.showMessageDialog(frame,
+                            content,
+                            "Info",
+                            JOptionPane.INFORMATION_MESSAGE);
+
                 } catch (BasicException ex) {
                     LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
                 }

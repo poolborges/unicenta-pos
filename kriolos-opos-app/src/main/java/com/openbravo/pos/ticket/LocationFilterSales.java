@@ -40,9 +40,12 @@ public class LocationFilterSales extends javax.swing.JPanel implements EditorCre
     private SentenceList m_sentcat;
     private ComboBoxValModel m_CategoryModel;
     
-    /** Creates new form ProductFilterSales
+    /** 
+     * Creates new form LocationFilterSales
+     * 
      * @param dlSales
-     * @param jKeys */
+     * @param jKeys 
+     */
     public LocationFilterSales(DataLogicSales dlSales, JEditorKeys jKeys) {
         initComponents();
         
