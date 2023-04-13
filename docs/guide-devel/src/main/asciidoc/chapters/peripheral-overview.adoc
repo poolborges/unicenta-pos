@@ -178,7 +178,42 @@ ESC/POS:: Printer Command Specification (Epson protocol for thermal receipt prin
 .POS Printer configuration example
 ----
 machine.printername=epson
+machine.printer=TYPE:PARAM1,PARAM2
 ----
+
+
+TYPE (OLD URI)
+
+* serial 
+* rxtx
+* file
+
+
+
+.POS Printer configuration example
+----
+machine.printername=epson
+machine.printer=TYPE:PARAM1,PARAM2
+----
+
+
+TYPE (NEW URI)
+
+* screen
+* printer
+* epson
+* tmu220
+* star
+* ithaca
+* surepos
+* plain
+* javapos
+
+
+TYPE Printer (Paper Configuration)
+----
+----
+
 
 === Display 
 
