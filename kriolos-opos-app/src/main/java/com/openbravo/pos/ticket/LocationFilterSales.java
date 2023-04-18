@@ -156,28 +156,41 @@ public class LocationFilterSales extends javax.swing.JPanel implements EditorCre
         m_jtxtBarCode = new com.openbravo.editor.JEditorString();
         jLabel1 = new javax.swing.JLabel();
 
-        setPreferredSize(new java.awt.Dimension(370, 170));
+        setMinimumSize(new java.awt.Dimension(415, 185));
+        setPreferredSize(new java.awt.Dimension(415, 185));
 
         jLabel5.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel5.setText(AppLocal.getIntString("label.prodname")); // NOI18N
-        jLabel5.setPreferredSize(new java.awt.Dimension(0, 30));
+        jLabel5.setMaximumSize(new java.awt.Dimension(100, 30));
+        jLabel5.setMinimumSize(new java.awt.Dimension(100, 30));
+        jLabel5.setPreferredSize(new java.awt.Dimension(100, 30));
 
         m_jtxtName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jtxtName.setPreferredSize(new java.awt.Dimension(0, 30));
+        m_jtxtName.setMaximumSize(new java.awt.Dimension(200, 30));
+        m_jtxtName.setMinimumSize(new java.awt.Dimension(200, 30));
+        m_jtxtName.setPreferredSize(new java.awt.Dimension(200, 30));
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel2.setText(AppLocal.getIntString("label.prodcategory")); // NOI18N
-        jLabel2.setPreferredSize(new java.awt.Dimension(0, 30));
+        jLabel2.setMaximumSize(new java.awt.Dimension(100, 30));
+        jLabel2.setMinimumSize(new java.awt.Dimension(100, 30));
+        jLabel2.setPreferredSize(new java.awt.Dimension(100, 30));
 
         m_jCategory.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jCategory.setPreferredSize(new java.awt.Dimension(0, 30));
+        m_jCategory.setMaximumSize(new java.awt.Dimension(150, 30));
+        m_jCategory.setMinimumSize(new java.awt.Dimension(150, 30));
+        m_jCategory.setPreferredSize(new java.awt.Dimension(150, 30));
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel4.setText(AppLocal.getIntString("label.prodpricebuy")); // NOI18N
-        jLabel4.setPreferredSize(new java.awt.Dimension(0, 30));
+        jLabel4.setMaximumSize(new java.awt.Dimension(100, 30));
+        jLabel4.setMinimumSize(new java.awt.Dimension(100, 30));
+        jLabel4.setPreferredSize(new java.awt.Dimension(100, 30));
 
         m_jCboPriceBuy.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jCboPriceBuy.setPreferredSize(new java.awt.Dimension(0, 30));
+        m_jCboPriceBuy.setMaximumSize(new java.awt.Dimension(150, 30));
+        m_jCboPriceBuy.setMinimumSize(new java.awt.Dimension(150, 30));
+        m_jCboPriceBuy.setPreferredSize(new java.awt.Dimension(150, 30));
         m_jCboPriceBuy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 m_jCboPriceBuyActionPerformed(evt);
@@ -189,21 +202,28 @@ public class LocationFilterSales extends javax.swing.JPanel implements EditorCre
 
         jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel3.setText(AppLocal.getIntString("label.prodpricesell")); // NOI18N
-        jLabel3.setPreferredSize(new java.awt.Dimension(0, 30));
+        jLabel3.setMaximumSize(new java.awt.Dimension(100, 30));
+        jLabel3.setMinimumSize(new java.awt.Dimension(100, 30));
+        jLabel3.setPreferredSize(new java.awt.Dimension(100, 30));
 
         m_jCboPriceSell.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jCboPriceSell.setPreferredSize(new java.awt.Dimension(0, 30));
+        m_jCboPriceSell.setMaximumSize(new java.awt.Dimension(150, 30));
+        m_jCboPriceSell.setMinimumSize(new java.awt.Dimension(150, 30));
+        m_jCboPriceSell.setPreferredSize(new java.awt.Dimension(150, 30));
 
         m_jPriceSell.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         m_jPriceSell.setPreferredSize(new java.awt.Dimension(0, 30));
 
         m_jtxtBarCode.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jtxtBarCode.setMaximumSize(new java.awt.Dimension(100, 25));
-        m_jtxtBarCode.setPreferredSize(new java.awt.Dimension(0, 30));
+        m_jtxtBarCode.setMaximumSize(new java.awt.Dimension(200, 30));
+        m_jtxtBarCode.setMinimumSize(new java.awt.Dimension(200, 30));
+        m_jtxtBarCode.setPreferredSize(new java.awt.Dimension(200, 30));
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel1.setText(AppLocal.getIntString("label.prodbarcode")); // NOI18N
-        jLabel1.setPreferredSize(new java.awt.Dimension(0, 30));
+        jLabel1.setMaximumSize(new java.awt.Dimension(100, 30));
+        jLabel1.setMinimumSize(new java.awt.Dimension(100, 30));
+        jLabel1.setPreferredSize(new java.awt.Dimension(100, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -213,58 +233,61 @@ public class LocationFilterSales extends javax.swing.JPanel implements EditorCre
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(m_jCboPriceSell, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(m_jPriceSell, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(m_jtxtBarCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(m_jtxtBarCode, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(m_jtxtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(m_jtxtName, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(m_jCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(m_jCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(m_jCboPriceBuy, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(m_jPriceBuy, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(m_jCboPriceSell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(m_jPriceSell, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(m_jCboPriceBuy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(m_jPriceBuy, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(m_jtxtBarCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(m_jtxtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(m_jCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(m_jCboPriceBuy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(m_jPriceBuy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(m_jCboPriceSell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(m_jPriceSell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(m_jPriceSell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

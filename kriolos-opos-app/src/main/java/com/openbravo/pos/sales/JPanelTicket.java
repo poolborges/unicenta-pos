@@ -67,8 +67,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.print.PrintService;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -78,7 +76,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRMapArrayDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -332,6 +329,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         paymentdialogrefund = JPaymentSelectRefund.getDialog(this);
         paymentdialogrefund.init(m_App);
 
+        m_jaddtax.setSelected("true".equals(m_jbtnconfig.getProperty("taxesincluded")));
+
         List<TaxInfo> taxlist = senttax.list();
         taxcollection = new ListKeyed<>(taxlist);
         List<TaxCategoryInfo> taxcategorieslist = senttaxcategories.list();
@@ -340,6 +339,24 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         taxcategoriesmodel = new ComboBoxValModel(taxcategorieslist);
         taxcategoriesmodel.setSelectedKey(taxesid);
         taxeslogic = new TaxesLogic(taxlist);
+
+        m_jTax.setModel(taxcategoriesmodel);
+        if (taxesid == null) {
+            if (m_jTax.getItemCount() > 0) {
+                m_jTax.setSelectedIndex(0);
+            }
+        } else {
+            taxcategoriesmodel.setSelectedKey(taxesid);
+        }
+
+        m_jaddtax.setSelected((Boolean.parseBoolean(m_App.getProperties().getProperty("till.taxincluded"))));
+        if (m_App.getAppUserView().getUser().hasPermission("sales.ChangeTaxOptions")) {
+            m_jTax.setVisible(true);
+            m_jaddtax.setVisible(true);
+        } else {
+            m_jTax.setVisible(false);
+            m_jaddtax.setVisible(false);
+        }
 
         m_jDelete.setEnabled(m_App.hasPermission("sales.EditLines"));
         m_jNumberKeys.setMinusEnabled(m_App.hasPermission("sales.EditLines"));
@@ -2217,11 +2234,15 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         m_jTotalEuros = new javax.swing.JLabel();
         m_jContEntries = new javax.swing.JPanel();
         m_jPanEntries = new javax.swing.JPanel();
+        m_jNumberKeys = new com.openbravo.beans.JNumberKeys();
+        m_jPor = new javax.swing.JLabel();
         jPanelScanner = new javax.swing.JPanel();
         m_jPrice = new javax.swing.JLabel();
-        m_jPor = new javax.swing.JLabel();
         m_jEnter = new javax.swing.JButton();
-        m_jNumberKeys = new com.openbravo.beans.JNumberKeys();
+        jPanelTax = new javax.swing.JPanel();
+        m_jKeyFactory = new javax.swing.JTextField();
+        m_jTax = new javax.swing.JComboBox();
+        m_jaddtax = new javax.swing.JToggleButton();
         catcontainer = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(255, 204, 153));
@@ -2568,6 +2589,20 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         m_jPanEntries.setPreferredSize(new java.awt.Dimension(300, 350));
         m_jPanEntries.setLayout(new javax.swing.BoxLayout(m_jPanEntries, javax.swing.BoxLayout.Y_AXIS));
 
+        m_jNumberKeys.setMinimumSize(new java.awt.Dimension(300, 300));
+        m_jNumberKeys.setPreferredSize(new java.awt.Dimension(250, 250));
+        m_jNumberKeys.addJNumberEventListener(new com.openbravo.beans.JNumberEventListener() {
+            public void keyPerformed(com.openbravo.beans.JNumberEvent evt) {
+                m_jNumberKeysKeyPerformed(evt);
+            }
+        });
+        m_jPanEntries.add(m_jNumberKeys);
+
+        m_jPor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        m_jPor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        m_jPor.setRequestFocusEnabled(false);
+        m_jPanEntries.add(m_jPor);
+
         jPanelScanner.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         m_jPrice.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
@@ -2577,10 +2612,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         m_jPrice.setOpaque(true);
         m_jPrice.setPreferredSize(new java.awt.Dimension(100, 25));
         m_jPrice.setRequestFocusEnabled(false);
-
-        m_jPor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        m_jPor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_jPor.setRequestFocusEnabled(false);
 
         m_jEnter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/barcode.png"))); // NOI18N
         m_jEnter.setToolTipText(bundle.getString("tooltip.salebarcode")); // NOI18N
@@ -2599,8 +2630,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         jPanelScannerLayout.setHorizontalGroup(
             jPanelScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelScannerLayout.createSequentialGroup()
-                .addComponent(m_jPor, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap(30, Short.MAX_VALUE)
                 .addComponent(m_jPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(m_jEnter, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2611,23 +2641,68 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             .addGroup(jPanelScannerLayout.createSequentialGroup()
                 .addGroup(jPanelScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(m_jEnter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(m_jPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(m_jPor, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(m_jPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
         m_jPanEntries.add(jPanelScanner);
 
-        m_jNumberKeys.setMinimumSize(new java.awt.Dimension(300, 300));
-        m_jNumberKeys.setPreferredSize(new java.awt.Dimension(250, 250));
-        m_jNumberKeys.addJNumberEventListener(new com.openbravo.beans.JNumberEventListener() {
-            public void keyPerformed(com.openbravo.beans.JNumberEvent evt) {
-                m_jNumberKeysKeyPerformed(evt);
+        m_jContEntries.add(m_jPanEntries, java.awt.BorderLayout.NORTH);
+
+        jPanelTax.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jPanelTax.setPreferredSize(new java.awt.Dimension(276, 44));
+
+        m_jKeyFactory.setEditable(false);
+        m_jKeyFactory.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        m_jKeyFactory.setForeground(javax.swing.UIManager.getDefaults().getColor("Panel.background"));
+        m_jKeyFactory.setAutoscrolls(false);
+        m_jKeyFactory.setBorder(null);
+        m_jKeyFactory.setCaretColor(javax.swing.UIManager.getDefaults().getColor("Panel.background"));
+        m_jKeyFactory.setRequestFocusEnabled(false);
+        m_jKeyFactory.setVerifyInputWhenFocusTarget(false);
+        m_jKeyFactory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_jKeyFactoryActionPerformed(evt);
             }
         });
-        m_jPanEntries.add(m_jNumberKeys);
+        m_jKeyFactory.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                m_jKeyFactoryKeyTyped(evt);
+            }
+        });
 
-        m_jContEntries.add(m_jPanEntries, java.awt.BorderLayout.NORTH);
+        m_jTax.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        m_jTax.setToolTipText(bundle.getString("tooltip.salestaxswitch")); // NOI18N
+        m_jTax.setFocusable(false);
+
+        m_jaddtax.setToolTipText(bundle.getString("tooltip.switchtax")); // NOI18N
+
+        javax.swing.GroupLayout jPanelTaxLayout = new javax.swing.GroupLayout(jPanelTax);
+        jPanelTax.setLayout(jPanelTaxLayout);
+        jPanelTaxLayout.setHorizontalGroup(
+            jPanelTaxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTaxLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(m_jKeyFactory, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(m_jTax, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(m_jaddtax, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanelTaxLayout.setVerticalGroup(
+            jPanelTaxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelTaxLayout.createSequentialGroup()
+                .addGroup(jPanelTaxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(m_jTax, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
+                    .addGroup(jPanelTaxLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(m_jKeyFactory))
+                    .addComponent(m_jaddtax, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 4, Short.MAX_VALUE))
+        );
+
+        m_jContEntries.add(jPanelTax, java.awt.BorderLayout.CENTER);
 
         m_jPanContainer.add(m_jContEntries, java.awt.BorderLayout.LINE_END);
 
@@ -3058,6 +3133,17 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         stateTransition('\n');
     }//GEN-LAST:event_m_jEnterActionPerformed
 
+    private void m_jKeyFactoryKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_m_jKeyFactoryKeyTyped
+
+        m_jKeyFactory.setText(null);
+
+        stateTransition(evt.getKeyChar());
+    }//GEN-LAST:event_m_jKeyFactoryKeyTyped
+
+    private void m_jKeyFactoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jKeyFactoryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_m_jKeyFactoryActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnReprint1;
     private javax.swing.JButton btnSplit;
@@ -3071,6 +3157,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanelLinesToolbar;
     private javax.swing.JPanel jPanelScanner;
+    private javax.swing.JPanel jPanelTax;
     private javax.swing.JToggleButton jTBtnShow;
     private javax.swing.JButton j_btnRemotePrt;
     private javax.swing.JPanel m_jButtons;
@@ -3078,6 +3165,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private javax.swing.JButton m_jDelete;
     private javax.swing.JButton m_jEditLine;
     private javax.swing.JButton m_jEnter;
+    private javax.swing.JTextField m_jKeyFactory;
     private javax.swing.JLabel m_jLblTotalEuros1;
     private javax.swing.JLabel m_jLblTotalEuros2;
     private javax.swing.JLabel m_jLblTotalEuros3;
@@ -3095,9 +3183,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private javax.swing.JLabel m_jPor;
     private javax.swing.JLabel m_jPrice;
     private javax.swing.JLabel m_jSubtotalEuros;
+    private javax.swing.JComboBox m_jTax;
     private javax.swing.JLabel m_jTaxesEuros;
     private javax.swing.JLabel m_jTicketId;
     private javax.swing.JLabel m_jTotalEuros;
+    private javax.swing.JToggleButton m_jaddtax;
     private javax.swing.JButton m_jbtnScale;
     // End of variables declaration//GEN-END:variables
 

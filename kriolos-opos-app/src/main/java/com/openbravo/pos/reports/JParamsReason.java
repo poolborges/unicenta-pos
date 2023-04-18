@@ -116,15 +116,21 @@ public class JParamsReason extends javax.swing.JPanel implements ReportEditorCre
         jLabel2 = new javax.swing.JLabel();
         m_jreason = new javax.swing.JComboBox();
 
-        setPreferredSize(new java.awt.Dimension(400, 50));
+        setMaximumSize(new java.awt.Dimension(265, 42));
+        setMinimumSize(new java.awt.Dimension(265, 42));
+        setPreferredSize(new java.awt.Dimension(265, 42));
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel2.setText(AppLocal.getIntString("label.stockreason")); // NOI18N
-        jLabel2.setPreferredSize(new java.awt.Dimension(110, 30));
+        jLabel2.setMaximumSize(new java.awt.Dimension(100, 30));
+        jLabel2.setMinimumSize(new java.awt.Dimension(100, 30));
+        jLabel2.setPreferredSize(new java.awt.Dimension(100, 30));
 
         m_jreason.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         m_jreason.setMaximumRowCount(12);
-        m_jreason.setPreferredSize(new java.awt.Dimension(250, 30));
+        m_jreason.setMaximumSize(new java.awt.Dimension(150, 30));
+        m_jreason.setMinimumSize(new java.awt.Dimension(150, 30));
+        m_jreason.setPreferredSize(new java.awt.Dimension(150, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

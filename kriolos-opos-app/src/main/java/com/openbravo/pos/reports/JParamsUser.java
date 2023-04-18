@@ -130,18 +130,26 @@ public class JParamsUser extends javax.swing.JPanel implements ReportEditorCreat
         btnUser = new javax.swing.JButton();
 
         setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        setPreferredSize(new java.awt.Dimension(400, 60));
+        setMaximumSize(new java.awt.Dimension(330, 42));
+        setMinimumSize(new java.awt.Dimension(330, 42));
+        setPreferredSize(new java.awt.Dimension(330, 42));
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel1.setText(AppLocal.getIntString("label.user")); // NOI18N
+        jLabel1.setMaximumSize(new java.awt.Dimension(110, 30));
+        jLabel1.setMinimumSize(new java.awt.Dimension(110, 30));
         jLabel1.setPreferredSize(new java.awt.Dimension(110, 30));
 
         jTextField1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jTextField1.setPreferredSize(new java.awt.Dimension(200, 30));
+        jTextField1.setMaximumSize(new java.awt.Dimension(150, 30));
+        jTextField1.setMinimumSize(new java.awt.Dimension(150, 30));
+        jTextField1.setPreferredSize(new java.awt.Dimension(150, 30));
 
         btnUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/customer_sml.png"))); // NOI18N
         btnUser.setToolTipText("Get Customers");
-        btnUser.setPreferredSize(new java.awt.Dimension(80, 45));
+        btnUser.setMaximumSize(new java.awt.Dimension(48, 30));
+        btnUser.setMinimumSize(new java.awt.Dimension(48, 30));
+        btnUser.setPreferredSize(new java.awt.Dimension(48, 30));
         btnUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUserActionPerformed(evt);
@@ -170,7 +178,7 @@ public class JParamsUser extends javax.swing.JPanel implements ReportEditorCreat
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(12, 12, 12))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 

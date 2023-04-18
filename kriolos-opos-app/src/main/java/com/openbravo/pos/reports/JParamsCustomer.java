@@ -130,14 +130,20 @@ public class JParamsCustomer extends javax.swing.JPanel implements ReportEditorC
         jLabel2 = new javax.swing.JLabel();
 
         setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        setPreferredSize(new java.awt.Dimension(400, 60));
+        setMaximumSize(new java.awt.Dimension(325, 45));
+        setMinimumSize(new java.awt.Dimension(325, 45));
+        setPreferredSize(new java.awt.Dimension(325, 45));
 
         jTextField1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jTextField1.setPreferredSize(new java.awt.Dimension(250, 30));
+        jTextField1.setMaximumSize(new java.awt.Dimension(150, 30));
+        jTextField1.setMinimumSize(new java.awt.Dimension(150, 30));
+        jTextField1.setPreferredSize(new java.awt.Dimension(150, 30));
 
         btnCustomer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/customer_sml.png"))); // NOI18N
         btnCustomer.setToolTipText("Get Customers");
-        btnCustomer.setPreferredSize(new java.awt.Dimension(80, 45));
+        btnCustomer.setMaximumSize(new java.awt.Dimension(48, 30));
+        btnCustomer.setMinimumSize(new java.awt.Dimension(48, 30));
+        btnCustomer.setPreferredSize(new java.awt.Dimension(48, 30));
         btnCustomer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCustomerActionPerformed(evt);
@@ -146,7 +152,9 @@ public class JParamsCustomer extends javax.swing.JPanel implements ReportEditorC
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel2.setText(AppLocal.getIntString("label.customer")); // NOI18N
-        jLabel2.setPreferredSize(new java.awt.Dimension(110, 30));
+        jLabel2.setMaximumSize(new java.awt.Dimension(100, 30));
+        jLabel2.setMinimumSize(new java.awt.Dimension(100, 30));
+        jLabel2.setPreferredSize(new java.awt.Dimension(100, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -156,7 +164,7 @@ public class JParamsCustomer extends javax.swing.JPanel implements ReportEditorC
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -166,11 +174,11 @@ public class JParamsCustomer extends javax.swing.JPanel implements ReportEditorC
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(32, 32, 32))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages"); // NOI18N

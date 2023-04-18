@@ -130,14 +130,20 @@ public class JParamsSuppliers extends javax.swing.JPanel implements ReportEditor
         jLabel2 = new javax.swing.JLabel();
 
         setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        setPreferredSize(new java.awt.Dimension(400, 50));
+        setMaximumSize(new java.awt.Dimension(330, 42));
+        setMinimumSize(new java.awt.Dimension(330, 42));
+        setPreferredSize(new java.awt.Dimension(330, 42));
 
         jTextField1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jTextField1.setPreferredSize(new java.awt.Dimension(300, 30));
+        jTextField1.setMaximumSize(new java.awt.Dimension(150, 30));
+        jTextField1.setMinimumSize(new java.awt.Dimension(150, 30));
+        jTextField1.setPreferredSize(new java.awt.Dimension(150, 30));
 
         btnSupplier.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/customer_sml.png"))); // NOI18N
         btnSupplier.setToolTipText("Get Suppliers");
-        btnSupplier.setPreferredSize(new java.awt.Dimension(80, 45));
+        btnSupplier.setMaximumSize(new java.awt.Dimension(48, 30));
+        btnSupplier.setMinimumSize(new java.awt.Dimension(48, 30));
+        btnSupplier.setPreferredSize(new java.awt.Dimension(48, 30));
         btnSupplier.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSupplierActionPerformed(evt);
@@ -146,7 +152,9 @@ public class JParamsSuppliers extends javax.swing.JPanel implements ReportEditor
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel2.setText(AppLocal.getIntString("label.supplier")); // NOI18N
-        jLabel2.setPreferredSize(new java.awt.Dimension(110, 30));
+        jLabel2.setMaximumSize(new java.awt.Dimension(100, 30));
+        jLabel2.setMinimumSize(new java.awt.Dimension(100, 30));
+        jLabel2.setPreferredSize(new java.awt.Dimension(100, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -159,18 +167,17 @@ public class JParamsSuppliers extends javax.swing.JPanel implements ReportEditor
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(btnSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 

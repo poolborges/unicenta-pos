@@ -126,12 +126,20 @@ public class CategoryFilter extends javax.swing.JPanel implements ReportEditorCr
         m_jCategory = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
 
+        setMaximumSize(new java.awt.Dimension(300, 45));
+        setMinimumSize(new java.awt.Dimension(300, 45));
+        setPreferredSize(new java.awt.Dimension(300, 45));
+
         m_jCategory.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jCategory.setPreferredSize(new java.awt.Dimension(200, 30));
+        m_jCategory.setMaximumSize(new java.awt.Dimension(150, 30));
+        m_jCategory.setMinimumSize(new java.awt.Dimension(150, 30));
+        m_jCategory.setPreferredSize(new java.awt.Dimension(150, 30));
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel1.setText(AppLocal.getIntString("label.prodcategory")); // NOI18N
-        jLabel1.setPreferredSize(new java.awt.Dimension(150, 30));
+        jLabel1.setMaximumSize(new java.awt.Dimension(100, 30));
+        jLabel1.setMinimumSize(new java.awt.Dimension(100, 30));
+        jLabel1.setPreferredSize(new java.awt.Dimension(100, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

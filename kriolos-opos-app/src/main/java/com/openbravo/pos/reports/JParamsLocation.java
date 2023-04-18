@@ -136,14 +136,20 @@ public class JParamsLocation extends javax.swing.JPanel implements ReportEditorC
         jLabel8 = new javax.swing.JLabel();
 
         setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        setPreferredSize(new java.awt.Dimension(384, 40));
+        setMaximumSize(new java.awt.Dimension(265, 42));
+        setMinimumSize(new java.awt.Dimension(265, 42));
+        setPreferredSize(new java.awt.Dimension(265, 42));
 
         m_jLocation.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jLocation.setPreferredSize(new java.awt.Dimension(250, 30));
+        m_jLocation.setMaximumSize(new java.awt.Dimension(150, 30));
+        m_jLocation.setMinimumSize(new java.awt.Dimension(150, 30));
+        m_jLocation.setPreferredSize(new java.awt.Dimension(150, 30));
 
         jLabel8.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel8.setText(AppLocal.getIntString("label.warehouse")); // NOI18N
-        jLabel8.setPreferredSize(new java.awt.Dimension(110, 30));
+        jLabel8.setMaximumSize(new java.awt.Dimension(100, 30));
+        jLabel8.setMinimumSize(new java.awt.Dimension(100, 30));
+        jLabel8.setPreferredSize(new java.awt.Dimension(100, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -154,14 +160,15 @@ public class JParamsLocation extends javax.swing.JPanel implements ReportEditorC
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(m_jLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(m_jLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(m_jLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents

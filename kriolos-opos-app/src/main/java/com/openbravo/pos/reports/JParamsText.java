@@ -207,19 +207,39 @@ public final class JParamsText extends javax.swing.JPanel implements ReportEdito
         lblField = new javax.swing.JLabel();
         txtField = new javax.swing.JTextField();
 
-        setPreferredSize(new java.awt.Dimension(0, 30));
-        setLayout(null);
+        setMaximumSize(new java.awt.Dimension(265, 42));
+        setMinimumSize(new java.awt.Dimension(265, 42));
+        setPreferredSize(new java.awt.Dimension(265, 42));
 
         lblField.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lblField.setText("***");
         lblField.setPreferredSize(new java.awt.Dimension(0, 30));
-        add(lblField);
-        lblField.setBounds(20, 10, 120, 30);
 
         txtField.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtField.setPreferredSize(new java.awt.Dimension(0, 30));
-        add(txtField);
-        txtField.setBounds(140, 10, 200, 30);
+        txtField.setMaximumSize(new java.awt.Dimension(150, 30));
+        txtField.setMinimumSize(new java.awt.Dimension(150, 30));
+        txtField.setPreferredSize(new java.awt.Dimension(150, 30));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(4, 4, 4)
+                .addComponent(txtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
     }// </editor-fold>//GEN-END:initComponents
     
     
