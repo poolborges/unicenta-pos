@@ -158,7 +158,7 @@ public class TaxesLogic {
     private TaxesLogicElement getTaxesApplied(TaxInfo t) throws TaxesException {
         
         if (t == null) {
-            throw new TaxesException(new java.lang.NullPointerException());
+            throw new TaxesException(new java.lang.NullPointerException("TaxInfo is null"));
         }
         
         return taxtrees.get(t.getId());
