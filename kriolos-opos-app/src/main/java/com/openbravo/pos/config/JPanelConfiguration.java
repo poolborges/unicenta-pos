@@ -101,6 +101,8 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
         panel = new JPanelConfigCompany();
         m_panelconfig.add(panel);
         jPanelCompany.add(panel.getConfigComponent());
+        
+        loadProperties();
 
     }
 
@@ -117,7 +119,7 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
         }
     }
 
-    public void loadProperties() {
+    private void loadProperties() {
 
         try {
             config.load();

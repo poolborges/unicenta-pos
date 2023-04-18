@@ -53,9 +53,9 @@
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="jtxtDbOptions" alignment="0" pref="0" max="32767" attributes="0"/>
                                   <Component id="jtxtDbSchema" pref="0" max="32767" attributes="0"/>
-                                  <Component id="jButtonTest" min="-2" pref="96" max="-2" attributes="0"/>
                                   <Component id="jtxtDbUser" alignment="0" pref="261" max="32767" attributes="0"/>
                                   <Component id="jtxtDbPassword" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jButtonTest" alignment="0" min="-2" pref="160" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -70,22 +70,24 @@
                       </Group>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jtxtDbOptions1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jtxtDbSchema1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jtxtDbUser1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jtxtDbPassword1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jButtonTest1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="jtxtDbName1" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="jtxtDbURL1" pref="0" max="32767" attributes="0"/>
                               </Group>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="jtxtDbName1" min="-2" pref="269" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="jtxtDbURL1" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="jtxtDbOptions1" max="32767" attributes="0"/>
+                                      <Component id="jtxtDbSchema1" max="32767" attributes="0"/>
+                                      <Component id="jButtonTest1" alignment="0" min="-2" pref="160" max="-2" attributes="0"/>
+                                      <Component id="jtxtDbUser1" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="jtxtDbPassword1" alignment="0" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
                           </Group>
                       </Group>
                   </Group>
@@ -118,7 +120,7 @@
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="10" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

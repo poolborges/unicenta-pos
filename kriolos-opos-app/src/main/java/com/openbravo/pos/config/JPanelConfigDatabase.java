@@ -53,7 +53,8 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
         jtxtDbDriver.getDocument().addDocumentListener(dirty);
         jbtnDbDriverLib.addActionListener(new DirectoryEvent(jtxtDbDriverLib));
         jbtnDbDriverLib.setVisible(false);
-        jtxtDbDriverLib.setVisible(false);
+        jtxtDbDriverLib.setVisible(true);
+        jtxtDbDriverLib.setEditable(false);
         lblDbDriverLib.setVisible(false);
         jcboDBDriver.addActionListener(dirty);
         jcboDBDriver.addItem("MariaDB");
@@ -109,7 +110,6 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
         multiDB.setSelected(Boolean.parseBoolean(config.getProperty("db.multi")));                
 
         jcboDBDriver.setSelectedItem(config.getProperty("db.engine"));
-        jtxtDbDriverLib.setText(config.getProperty("db.driverlib"));
         jtxtDbDriver.setText(config.getProperty("db.driver"));
 
 // primary DB              
@@ -158,7 +158,6 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
         config.setProperty("db.multi",Boolean.toString(multiDB.isSelected()));
         
         config.setProperty("db.engine", comboValue(jcboDBDriver.getSelectedItem()));
-        config.setProperty("db.driverlib", jtxtDbDriverLib.getText());
         config.setProperty("db.driver", jtxtDbDriver.getText());
 
 // primary DB
@@ -463,9 +462,9 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jtxtDbOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
                                     .addComponent(jtxtDbSchema, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                                    .addComponent(jButtonTest, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jtxtDbUser, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
-                                    .addComponent(jtxtDbPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addComponent(jtxtDbPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButtonTest, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(40, 40, 40)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLblDbName1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -476,19 +475,20 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
                             .addComponent(jLblDbPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(11, 11, 11)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jtxtDbOptions1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jtxtDbSchema1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jtxtDbUser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jtxtDbPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButtonTest1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jtxtDbName1, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jtxtDbURL1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jtxtDbName1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jtxtDbURL1, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addGap(11, 11, 11)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jtxtDbOptions1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jtxtDbSchema1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jButtonTest1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jtxtDbUser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jtxtDbPassword1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -510,7 +510,7 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(multiDB, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jbtnDbDriverLib, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -603,38 +603,21 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
         
         switch(selected){
             case "MySQL":
-                jtxtDbDriverLib.setText("");
-                jtxtDbDriver.setText("com.mysql.jdbc.Driver");            
-                jtxtDbURL.setText("jdbc:mysql://localhost:3306/");                           
+                jtxtDbDriverLib.setText("Driver: com.mysql.jdbc.Driver | URL: jdbc:mysql://localhost:3306/");                    
                 jtxtDbOptions.setText("?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull");
-                jtxtDbSchema.setText("kriolpos");       
-                jtxtDbUser.setText("kriolpos");
-                jtxtDbPassword.setText("kriolpos");
                 break;
             case "MariaDB":           
-                jtxtDbDriverLib.setText("");
-                jtxtDbDriver.setText("org.mariadb.jdbc.Driver");
-                jtxtDbURL.setText("jdbc:mariadb://localhost:3306/");                          
-                jtxtDbOptions.setText("?characterEncoding=utf8");  
-                jtxtDbUser.setText("kriolpos");
-                jtxtDbPassword.setText("kriolpos");
+                jtxtDbDriverLib.setText("Driver: org.mariadb.jdbc.Driver | URL: jdbc:mariadb://localhost:3306/");     
+                jtxtDbOptions.setText("?characterEncoding=utf8");
                 break;
             case "PostgreSQL":
-                jtxtDbDriverLib.setText("");
-                jtxtDbDriver.setText("org.postgresql.Driver");
-                jtxtDbURL.setText("jdbc:postgresql://localhost:5432/"); 
-                jtxtDbOptions.setText("");            
-                jtxtDbSchema.setText("kriolpos");
-                jtxtDbUser.setText("kriolpos");
-                jtxtDbPassword.setText("kriolpos");
+                jtxtDbDriverLib.setText("Driver: org.postgresql.Driver | URL: jdbc:postgresql://localhost:5432/");
                 break;
         }    
     }//GEN-LAST:event_jcboDBDriverActionPerformed
 
     private void jButtonTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTestActionPerformed
         try {
-            String driverlib = jtxtDbDriverLib.getText();
-            String driver = jtxtDbDriver.getText();
             String url = jtxtDbURL.getText() + jtxtDbSchema.getText() + jtxtDbOptions.getText();
             String user = jtxtDbUser.getText();
             String password = new String(jtxtDbPassword.getPassword());
@@ -665,8 +648,6 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
 
     private void jButtonTest1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTest1ActionPerformed
         try {
-            String driverlib = jtxtDbDriverLib.getText();
-            String driver = jtxtDbDriver.getText();
             String url = jtxtDbURL1.getText() + jtxtDbSchema1.getText() + jtxtDbOptions1.getText();
             String user = jtxtDbUser1.getText();
             String password = new String(jtxtDbPassword1.getPassword());
