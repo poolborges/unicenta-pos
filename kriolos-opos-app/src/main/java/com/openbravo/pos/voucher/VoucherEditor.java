@@ -14,11 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.openbravo.pos.voucher;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.data.gui.ComboBoxValModel;
 import com.openbravo.data.user.DirtyManager;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
@@ -42,40 +40,35 @@ import javax.swing.JOptionPane;
 
 public final class VoucherEditor extends javax.swing.JPanel implements EditorRecord {
 
+    private static final Logger LOGGER = Logger.getLogger(VoucherEditor.class.getName());
+
     private static final DateFormat m_simpledate = new SimpleDateFormat("MM-yy");
+    private static final long serialVersionUID = 1L;
     private String id;
     private final DataLogicCustomers dlCustomers;
-    private final  DataLogicSystem dlSystem;
+    private final DataLogicSystem dlSystem;
     private CustomerInfo customerInfo;
     private final AppView m_app;
-    
-    private final ComboBoxValModel m_ReasonModel;    
 
-     public VoucherEditor(DirtyManager dirty,AppView app) {
+    public VoucherEditor(DirtyManager dirty, AppView app) {
         m_app = app;
 
         initComponents();
-  
-        dlCustomers = (DataLogicCustomers) 
-                app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
-        dlSystem= (DataLogicSystem) 
-                app.getBean("com.openbravo.pos.forms.DataLogicSystem");
+
+        dlCustomers = (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
+        dlSystem = (DataLogicSystem) app.getBean("com.openbravo.pos.forms.DataLogicSystem");
         m_jNumber.getDocument().addDocumentListener(dirty);
         m_jCustomer.getDocument().addDocumentListener(dirty);
         m_jAmount.getDocument().addDocumentListener(dirty);
         m_jStatus.getDocument().addDocumentListener(dirty);
+
+        jButtonPrint.setVisible(true);
         
-        jButtonPrint.setVisible(false);       
-        
-        m_ReasonModel = new ComboBoxValModel();
-        m_ReasonModel.add(AppLocal.getIntString("cboption.find"));
-        m_ReasonModel.add(AppLocal.getIntString("cboption.create"));              
-        jCBCustomer.setModel(m_ReasonModel);   
         jLblStatus.setIcon(null);
-                
+
         writeValueEOF();
     }
-     
+
     @Override
     public void writeValueEOF() {
         id = null;
@@ -86,11 +79,11 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
         m_jAmount.setText(null);
         m_jAmount.setEnabled(false);
         m_jStatus.setText(null);
-        m_jStatus.setEnabled(false);        
-        
+        m_jStatus.setEnabled(false);
+        btnCustomer.setEnabled(false);
         jButtonPrint.setEnabled(false);
     }
-    
+
     @Override
     public void writeValueInsert() {
         id = UUID.randomUUID().toString();
@@ -102,89 +95,90 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
         m_jAmount.setEnabled(true);
         m_jStatus.setText(null);
         m_jStatus.setText("A");
-        
-        jButtonPrint.setEnabled(false);
-        jButtonPrint.setEnabled(true);        
+        btnCustomer.setEnabled(true);
+        jButtonPrint.setEnabled(true);
     }
-    
+
     @Override
     public void writeValueDelete(Object value) {
-    if ("A".equals(m_jStatus.getText())) {
-        try {
-            Object[] attr = (Object[]) value;
-            id = (String)attr[0];
-            m_jNumber.setText(Formats.STRING.formatValue((String)attr[1]));
-            m_jNumber.setEnabled(false);
-            customerInfo = dlCustomers.getCustomerInfo(attr[2].toString());
-            m_jCustomer.setText(customerInfo.getName());
-            m_jCustomer.setEnabled(false);
-            m_jAmount.setText(Formats.DOUBLE.formatValue((Double)attr[3]));
-            m_jAmount.setEnabled(false);
-            m_jStatus.setText(Formats.STRING.formatValue((String)attr[4]));
-            m_jStatus.setEnabled(false);
-            
-            jButtonPrint.setEnabled(false);
-        } catch (BasicException ex) {
-            Logger.getLogger(VoucherEditor.class.getName()).log(Level.SEVERE, null, ex);
+        if ("A".equals(m_jStatus.getText())) {
+            try {
+                Object[] attr = (Object[]) value;
+                id = (String) attr[0];
+                m_jNumber.setText(Formats.STRING.formatValue((String) attr[1]));
+                m_jNumber.setEnabled(false);
+                customerInfo = dlCustomers.getCustomerInfo(attr[2].toString());
+                m_jCustomer.setText(customerInfo.getName());
+                m_jCustomer.setEnabled(false);
+                m_jAmount.setText(Formats.DOUBLE.formatValue((Double) attr[3]));
+                m_jAmount.setEnabled(false);
+                m_jStatus.setText(Formats.STRING.formatValue((String) attr[4]));
+                m_jStatus.setEnabled(false);
+
+                jButtonPrint.setEnabled(false);
+            } catch (BasicException ex) {
+                LOGGER.log(Level.SEVERE, "Exception delete voucher object", ex);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    AppLocal.getIntString("message.voucherdelete"),
+                    AppLocal.getIntString("Check"),
+                    JOptionPane.WARNING_MESSAGE);
         }
-    } else {
-        JOptionPane.showMessageDialog(this, 
-            AppLocal.getIntString("message.voucherdelete"),
-            AppLocal.getIntString("Check"),
-            JOptionPane.WARNING_MESSAGE);
     }
-    }    
-    
+
     @Override
     public void writeValueEdit(Object value) {
 
         try {
             Object[] attr = (Object[]) value;
-            id = (String)attr[0];
-            m_jNumber.setText(Formats.STRING.formatValue((String)attr[1]));
+            id = (String) attr[0];
+            m_jNumber.setText(Formats.STRING.formatValue((String) attr[1]));
             m_jNumber.setEnabled(true);
             customerInfo = dlCustomers.getCustomerInfo(attr[2].toString());
             m_jCustomer.setText(customerInfo.getName());
             m_jCustomer.setEnabled(true);
-            m_jAmount.setText(Formats.DOUBLE.formatValue((Double)attr[3]));
+            m_jAmount.setText(Formats.DOUBLE.formatValue((Double) attr[3]));
             m_jAmount.setEnabled(true);
-            m_jStatus.setText(Formats.STRING.formatValue((String)attr[4]));
-            
+            m_jStatus.setText(Formats.STRING.formatValue((String) attr[4]));
+
             jButtonPrint.setEnabled(true);
-            
+
             if (null == m_jStatus.getText()) {
                 jLblStatus.setIcon(null);
-            } else switch (m_jStatus.getText()) {
-                case "A":
-                    jLblStatus.setIcon(new javax.swing.ImageIcon(getClass()
-                            .getResource("/com/openbravo/images/OK.png")));
-                    m_jNumber.setEnabled(true);
-                    m_jAmount.setEnabled(true); 
-                    jCBCustomer.setEnabled(true);
-                    m_jStatus.setText("A");
-                    break;
-                case "D":
-                    jLblStatus.setIcon(new javax.swing.ImageIcon(getClass()
-                            .getResource("/com/openbravo/images/refundit.png")));
-                    m_jNumber.setEnabled(false);
-                    m_jAmount.setEnabled(false);
-                    jCBCustomer.setEnabled(false);                    
-                    m_jStatus.setText("D");                    
-                    
-                    break;
-                default:
-                    jLblStatus.setIcon(null);
-                    break;
-            }             
-            
+            } else {
+                switch (m_jStatus.getText()) {
+                    case "A":
+                        jLblStatus.setIcon(new javax.swing.ImageIcon(getClass()
+                                .getResource("/com/openbravo/images/OK.png")));
+                        m_jNumber.setEnabled(true);
+                        m_jAmount.setEnabled(true);
+                        btnCustomer.setEnabled(true);
+                        m_jStatus.setText("A");
+                        break;
+                    case "D":
+                        jLblStatus.setIcon(new javax.swing.ImageIcon(getClass()
+                                .getResource("/com/openbravo/images/refundit.png")));
+                        m_jNumber.setEnabled(false);
+                        m_jAmount.setEnabled(false);
+                        btnCustomer.setEnabled(false);
+                        m_jStatus.setText("D");
+
+                        break;
+                    default:
+                        jLblStatus.setIcon(null);
+                        break;
+                }
+            }
+
         } catch (BasicException ex) {
-            Logger.getLogger(VoucherEditor.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, "Exception edit voucher object", ex);
         }
     }
 
     @Override
     public Object createValue() throws BasicException {
-        
+
         Object[] attr = new Object[5];
 
         attr[0] = id;
@@ -192,23 +186,27 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
         attr[2] = customerInfo.getId();
         attr[3] = Formats.DOUBLE.parseValue(m_jAmount.getText());
         attr[4] = m_jStatus.getText();
-        
+
         return attr;
-    }    
-     
+    }
+
     @Override
     public Component getComponent() {
         return this;
     }
-    
+
     @Override
     public void refresh() {
     }
+    
+    private static Double readCurrency(String sValue) throws BasicException {
+        return Formats.CURRENCY.parseValue(sValue);
+    }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -223,7 +221,7 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
         jButtonPrint = new javax.swing.JButton();
         jLblStatus = new javax.swing.JLabel();
         m_jStatus = new javax.swing.JTextField();
-        jCBCustomer = new javax.swing.JComboBox<>();
+        btnCustomer = new javax.swing.JButton();
 
         setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
@@ -243,6 +241,7 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
         m_jCustomer.setPreferredSize(new java.awt.Dimension(240, 30));
 
         m_jAmount.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        m_jAmount.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         m_jAmount.setPreferredSize(new java.awt.Dimension(240, 30));
 
         jLabel5.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -272,14 +271,16 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
         m_jStatus.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         m_jStatus.setPreferredSize(new java.awt.Dimension(240, 30));
 
-        jCBCustomer.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jCBCustomer.setMaximumRowCount(2);
-        jCBCustomer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Find", "Create" }));
-        jCBCustomer.setToolTipText(AppLocal.getIntString("label.voucherCustomer")); // NOI18N
-        jCBCustomer.setPreferredSize(new java.awt.Dimension(110, 30));
-        jCBCustomer.addActionListener(new java.awt.event.ActionListener() {
+        btnCustomer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/customer_sml.png"))); // NOI18N
+        btnCustomer.setToolTipText("Open Customers");
+        btnCustomer.setFocusPainted(false);
+        btnCustomer.setFocusable(false);
+        btnCustomer.setMargin(new java.awt.Insets(8, 14, 8, 14));
+        btnCustomer.setPreferredSize(new java.awt.Dimension(100, 30));
+        btnCustomer.setRequestFocusEnabled(false);
+        btnCustomer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCBCustomerActionPerformed(evt);
+                btnCustomerActionPerformed(evt);
             }
         });
 
@@ -289,55 +290,54 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(m_jCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jCBCustomer, 0, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(m_jNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(m_jAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(m_jCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(26, 26, 26)
+                                .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(m_jNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(m_jAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(m_jStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
-                        .addComponent(jButtonPrint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(m_jStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(11, 11, 11)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(m_jNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(m_jCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jCBCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(m_jAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonPrint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(m_jStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(m_jCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(m_jAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(m_jStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7)
+                .addComponent(jButtonPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -345,46 +345,46 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
 private void jButtonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPrintActionPerformed
 
     try {
-        VoucherInfo  voucherInfo = dlCustomers.getVoucherInfoAll(id.toString());
+        VoucherInfo voucherInfo = dlCustomers.getVoucherInfoAll(id);
         BufferedImage image = dlSystem.getResourceAsImage("Window.Logo");
-        if (voucherInfo!=null){
+        if (voucherInfo != null) {
             JDialogReportPanel dialog = JDialogReportPanel
-                    .getDialog(this,m_app,voucherInfo,image);
+                    .getDialog(this, m_app, voucherInfo, image);
             dialog.setVisible(true);
         }
-                
-    } catch (BasicException ex) {
 
-    }    
+    } catch (BasicException ex) {
+        LOGGER.log(Level.WARNING, "Exception Create voucher printer dialog", ex);
+    }
 }//GEN-LAST:event_jButtonPrintActionPerformed
 
-    private void jCBCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBCustomerActionPerformed
-        if(jCBCustomer.getSelectedIndex() == 0){
+    private void btnCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCustomerActionPerformed
 
-            JCustomerFinder finder = JCustomerFinder.getCustomerFinder(this, dlCustomers);
-            finder.setVisible(true);
-            customerInfo = finder.getSelectedCustomer() ;
+        JCustomerFinder finder = JCustomerFinder.getCustomerFinder(this, dlCustomers);
+        finder.search(null);
+        finder.setVisible(true);
 
-            if (finder.getSelectedCustomer()!=null){
-                m_jCustomer.setText(customerInfo.getName()); 
-            }
-        } else {
+        if (finder.getSelectedCustomer() != null) {
+            customerInfo = finder.getSelectedCustomer();
+            m_jCustomer.setText(customerInfo.getName());
+        }
 
-         JDialogNewCustomer dialog = JDialogNewCustomer.getDialog(this,m_app);
-         dialog.setVisible(true);
-       
-           customerInfo=dialog.getSelectedCustomer();
-            if (dialog.getSelectedCustomer()!=null){
-                 m_jCustomer.setText(customerInfo.getName());  
+        if (false) {
+            JDialogNewCustomer dialog = JDialogNewCustomer.getDialog(this, m_app);
+            dialog.setVisible(true);
+
+            customerInfo = dialog.getSelectedCustomer();
+            if (dialog.getSelectedCustomer() != null) {
+                m_jCustomer.setText(customerInfo.getName());
             }
         }
 
-    }//GEN-LAST:event_jCBCustomerActionPerformed
+    }//GEN-LAST:event_btnCustomerActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCustomer;
     private javax.swing.JButton jButtonPrint;
-    private javax.swing.JComboBox<String> jCBCustomer;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
@@ -397,47 +397,46 @@ private void jButtonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
     public boolean isDataValid() {
         ValidateBuilder validate = new ValidateBuilder(this);
-        validate.setValidate(m_jNumber.getText(),ValidateBuilder.IS_NOT_EMPTY,
+        validate.setValidate(m_jNumber.getText(), ValidateBuilder.IS_NOT_EMPTY,
                 AppLocal.getIntString("message.message.emptynumber"));
-        validate.setValidate(m_jCustomer.getText(),ValidateBuilder.IS_NOT_EMPTY,
+        validate.setValidate(m_jCustomer.getText(), ValidateBuilder.IS_NOT_EMPTY,
                 AppLocal.getIntString("message.emptycustomer"));
-        validate.setValidate(m_jAmount.getText(),ValidateBuilder.IS_DOUBLE,
+        validate.setValidate(m_jAmount.getText(), ValidateBuilder.IS_DOUBLE,
                 AppLocal.getIntString("message.numericamount"));
-        validate.setValidate(m_jStatus.getText(),ValidateBuilder.IS_NOT_EMPTY,
-                AppLocal.getIntString("message.emptystatus"));        
+        validate.setValidate(m_jStatus.getText(), ValidateBuilder.IS_NOT_EMPTY,
+                AppLocal.getIntString("message.emptystatus"));
         return validate.getValid();
     }
-    
-    
-    public String generateVoucherNumber(){
-        String result="";
+
+    public String generateVoucherNumber() {
+        String result = "";
 
         try {
             result = "VO-";
             String date = m_simpledate.format(new Date());
             result = result + date;
-            String lastNumber= (String)dlCustomers.getVoucherNumber().find(result);
-            int newNumber = 1 ;
+            String lastNumber = (String) dlCustomers.getVoucherNumber().find(result);
+            int newNumber = 1;
 
-            if (lastNumber!=null){
-               newNumber = Integer.parseInt(lastNumber) +1;
-           }
+            if (lastNumber != null) {
+                newNumber = Integer.parseInt(lastNumber) + 1;
+            }
             result = result + "-" + getNewNumber(newNumber);
-            
+
             return result;
-            
+
         } catch (BasicException ex) {
+            LOGGER.log(Level.WARNING, "Exception generate voucher number", ex);
         }
         return result;
     }
-    
-    
-    private String getNewNumber(int newNumber){
+
+    private String getNewNumber(int newNumber) {
         String newNo = newNumber + "";
         String zero = "";
-        for (int i=0;i< 3 - newNo.length();i++){
+        for (int i = 0; i < 3 - newNo.length(); i++) {
             zero = zero + "0";
         }
-        return zero+newNo;
+        return zero + newNo;
     }
 }

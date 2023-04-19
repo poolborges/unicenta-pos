@@ -41,34 +41,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 import javax.swing.*;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
 public abstract class JDialogReportPanel extends javax.swing.JDialog {
+    
+    private static final Logger LOGGER = Logger.getLogger("com.openbravo.data.loader.QBFBuilder");
 
     private JRViewer400 reportviewer = null;
     private JasperReport jr = null;
     private AppView m_App;
-    private List<String> paramnames = new ArrayList<>();
+    
+    private String sentence;
     private List<Datas> fielddatas = new ArrayList<>();
     private List<String> fieldnames = new ArrayList<>();
-    private String sentence;
+    private List<String> paramnames = new ArrayList<>();
 
-    /**
-     * Creates new form JCustomerFinder
-     */
     private JDialogReportPanel(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
     }
 
-    /**
-     * Creates new form JCustomerFinder
-     */
     private JDialogReportPanel(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
     }
@@ -112,9 +111,7 @@ public abstract class JDialogReportPanel extends javax.swing.JDialog {
 
         if (jr != null) {
             try {
-
-                // Archivo de recursos
-                String res = "com/openbravo/reports/voucher_messages";//getResourceBundle();  
+                String res = "com/openbravo/reports/voucher_messages"; 
 
                 Map reportparams = new HashMap();
                 reportparams.put("CUSTOMER_NAME", voucherInfo.getCustomerName());
@@ -127,8 +124,10 @@ public abstract class JDialogReportPanel extends javax.swing.JDialog {
                 }
 
                 JasperPrint jp = JasperFillManager.fillReport(jr, reportparams, new JREmptyDataSource());
-//              JasperExportManager.exportReportToPdfFile(jp,"report7.pdf"); 
+
                 reportviewer.loadJasperPrint(jp);
+                
+                JasperExportManager.exportReportToPdfFile(jp,"voucher_"+voucherInfo.getVoucherNumber()+".pdf"); 
 
             } catch (MissingResourceException e) {
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadresourcedata"), e);
@@ -149,8 +148,9 @@ public abstract class JDialogReportPanel extends javax.swing.JDialog {
         jPanel4.add(reportviewer, BorderLayout.CENTER);
 
         try {
+            //voucher.jrxml
             jr = JasperCompileManager.compileReport("com/openbravo/reports/voucher" + ".jrxml");
-//                jr = JasperCompileManager.compileReport(getClass().getResourceAsStream("reports" +  "/com/openbravo/reports/voucher" + ".jrxml"));   
+            //jr = JasperCompileManager.compileReport(getClass().getResourceAsStream("reports" +  "/com/openbravo/reports/voucher" + ".jrxml"));   
         } catch (JRException e) {
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadreport"), e);
             msg.show(this);
