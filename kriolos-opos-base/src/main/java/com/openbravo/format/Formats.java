@@ -28,9 +28,14 @@ import com.openbravo.basic.BasicException;
 /**
  *
  * @author JG uniCenta
+ * @param <T>
  */
 public abstract class Formats<T> {
 
+    private final static String DEFAULT_PERCENT_FORMAT = "#,##0.##%";
+    private final static String DEFAULT_HOURMIN_FORMAT = "H:mm:ss";
+    private final static String DEFAULT_SIMPLEDATE_FORMAT = "dd-MM-yyyy";
+    
     public final static Formats<Object> NULL = new FormatsNULL();
     public final static Formats<Integer> INT = new FormatsINT();
     public final static Formats<String> STRING = new FormatsSTRING();
@@ -45,16 +50,16 @@ public abstract class Formats<T> {
     public final static Formats<Date> HOURMIN = new FormatsHOURMIN();
     public final static Formats<Date> SIMPLEDATE = new FormatsSIMPLEDATE();
 
+    //Support those format up
     private static NumberFormat m_integerformat = NumberFormat.getIntegerInstance();
     private static NumberFormat m_doubleformat = NumberFormat.getNumberInstance();
     private static NumberFormat m_currencyformat = NumberFormat.getCurrencyInstance();
-    private static NumberFormat m_percentformat = new DecimalFormat("#,##0.##%");
+    private static NumberFormat m_percentformat = NumberFormat.getCurrencyInstance(); //new DecimalFormat(DEFAULT_PERCENT_FORMAT);
     private static DateFormat m_dateformat = DateFormat.getDateInstance();
     private static DateFormat m_timeformat = DateFormat.getTimeInstance();
     private static DateFormat m_datetimeformat = DateFormat.getDateTimeInstance();
-
-    private static final DateFormat m_hourminformat = new SimpleDateFormat("H:mm:ss");
-    private static final DateFormat m_simpledate = new SimpleDateFormat("dd-MM-yyyy");
+    private static final DateFormat m_hourminformat = new SimpleDateFormat(DEFAULT_HOURMIN_FORMAT);
+    private static final DateFormat m_simpledate = new SimpleDateFormat(DEFAULT_SIMPLEDATE_FORMAT);
 
     protected Formats() {
     }
@@ -113,7 +118,7 @@ public abstract class Formats<T> {
 
     public static void setPercentPattern(String pattern) {
         if (pattern == null || pattern.equals("")) {
-            m_percentformat = new DecimalFormat("#,##0.##%");
+            m_percentformat = NumberFormat.getPercentInstance();
         } else {
             m_percentformat = new DecimalFormat(pattern);
         }
@@ -256,7 +261,6 @@ public abstract class Formats<T> {
             try {
                 return m_currencyformat.parse(value).doubleValue();
             } catch (ParseException e) {
-                // Segunda oportunidad como numero normalito
                 return m_doubleformat.parse(value).doubleValue();
             }
         }
@@ -271,7 +275,7 @@ public abstract class Formats<T> {
 
         @Override
         protected String formatValueInt(Boolean value) {
-            return ((Boolean) value).toString();
+            return value.toString();
         }
 
         @Override
@@ -289,7 +293,7 @@ public abstract class Formats<T> {
 
         @Override
         protected String formatValueInt(Date value) {
-            return m_datetimeformat.format((Date) value);
+            return m_datetimeformat.format( value);
         }
 
         @Override
@@ -297,7 +301,6 @@ public abstract class Formats<T> {
             try {
                 return m_datetimeformat.parse(value);
             } catch (ParseException e) {
-                // segunda oportunidad como fecha normalita
                 return m_dateformat.parse(value);
             }
         }
@@ -312,7 +315,7 @@ public abstract class Formats<T> {
 
         @Override
         protected String formatValueInt(Date value) {
-            return m_dateformat.format((Date) value);
+            return m_dateformat.format(value);
         }
 
         @Override
@@ -330,7 +333,7 @@ public abstract class Formats<T> {
 
         @Override
         protected String formatValueInt(Date value) {
-            return m_timeformat.format((Date) value);
+            return m_timeformat.format(value);
         }
 
         @Override
@@ -370,10 +373,10 @@ public abstract class Formats<T> {
         }
     }
 
-    private static final class FormatsHOURMIN extends Formats {
+    private static final class FormatsHOURMIN extends Formats<Date> {
 
         @Override
-        protected String formatValueInt(Object value) {
+        protected String formatValueInt(Date value) {
             return m_hourminformat.format(value);
         }
 
@@ -391,10 +394,10 @@ public abstract class Formats<T> {
 
     }
 
-    private static final class FormatsSIMPLEDATE extends Formats {
+    private static final class FormatsSIMPLEDATE extends Formats<Date> {
 
         @Override
-        protected String formatValueInt(Object value) {
+        protected String formatValueInt(Date value) {
 
             return m_simpledate.format(value);
         }
