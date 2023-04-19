@@ -13,34 +13,40 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.config;
 
 import com.openbravo.data.user.DirtyManager;
+import com.openbravo.format.Formats;
 import java.awt.Component;
 import java.util.Locale;
 import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
  *
- * @author  adrianromero
+ * @author adrianromero
  */
-public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfig {
-    
+public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfig, ActionListener {
+
     private final DirtyManager dirty = new DirtyManager();
-    
+
     private final static String DEFAULT_VALUE = "(Default)";
 
-    /** Creates new form JPanelConfigLocale */
+    /**
+     * Creates new form JPanelConfigLocale
+     */
     public JPanelConfigLocale() {
-        
+
         initComponents();
-        
+
         jcboLocale.addActionListener(dirty);
         jcboInteger.addActionListener(dirty);
         jcboDouble.addActionListener(dirty);
@@ -49,40 +55,59 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
         jcboDate.addActionListener(dirty);
         jcboTime.addActionListener(dirty);
         jcboDatetime.addActionListener(dirty);
-        
+
         List<Locale> availablelocales = new ArrayList<>();
         availablelocales.addAll(Arrays.asList(Locale.getAvailableLocales())); // Available java locales
 //        addLocale(availablelocales, new Locale("en", "GB", "")); // English GB
 //        addLocale(availablelocales, new Locale("en", "US", "")); // English USA
-        
+
         Collections.sort(availablelocales, new LocaleComparator());
-        
-        jcboLocale.addItem(new LocaleInfo (null));
+
+        //jcboLocale.addItem(new LocaleInfo(null));
         for (Locale l : availablelocales) {
             jcboLocale.addItem(new LocaleInfo(l));
         }
-        
+
         jcboInteger.addItem(DEFAULT_VALUE);
         jcboInteger.addItem("#0");
         jcboInteger.addItem("#,##0");
-        
+
         jcboDouble.addItem(DEFAULT_VALUE);
         jcboDouble.addItem("#0.0");
         jcboDouble.addItem("#,##0.#");
-        
+
         jcboCurrency.addItem(DEFAULT_VALUE);
         jcboCurrency.addItem("\u00A4 #0.00");
         jcboCurrency.addItem("'$' #,##0.00");
-        
+
         jcboPercent.addItem(DEFAULT_VALUE);
         jcboPercent.addItem("#,##0.##%");
-        
+
         jcboDate.addItem(DEFAULT_VALUE);
-        
+
         jcboTime.addItem(DEFAULT_VALUE);
-        
+
         jcboDatetime.addItem(DEFAULT_VALUE);
-               
+
+        setupListerner();
+        
+        System.out.println("Verificar (120 CVE) pt-CV Currency: 120.30 "
+                + NumberFormat.getCurrencyInstance(new Locale("pt", "CV")).format(120.30)
+                + "\n\rVerificar (120 Kuanza) pt-AO Currency: 120.30 "
+                + NumberFormat.getCurrencyInstance(new Locale("pt", "AO")).format(120.30));
+
+    }
+
+    private void setupListerner() {
+        //THIS ALLOW TO UPDATE TOOLTIP
+        jcboLocale.addActionListener(this);
+        jcboInteger.addActionListener(this);
+        jcboDouble.addActionListener(this);
+        jcboCurrency.addActionListener(this);
+        jcboPercent.addActionListener(this);
+        jcboDate.addActionListener(this);
+        jcboTime.addActionListener(this);
+        jcboDatetime.addActionListener(this);
     }
 
     private void addLocale(List<Locale> ll, Locale l) {
@@ -90,7 +115,7 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
             ll.add(l);
         }
     }
-    
+
     /**
      *
      * @return
@@ -99,7 +124,7 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
     public boolean hasChanged() {
         return dirty.isDirty();
     }
-    
+
     /**
      *
      * @return
@@ -108,31 +133,31 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
     public Component getConfigComponent() {
         return this;
     }
-   
+
     /**
      *
      * @param config
      */
     @Override
     public void loadProperties(AppConfig config) {
-        
+
         String slang = config.getProperty("user.language");
         String scountry = config.getProperty("user.country");
         String svariant = config.getProperty("user.variant");
-        
-        if (slang != null && !slang.equals("") && scountry != null && svariant != null) {                    
+
+        if (slang != null && !slang.equals("") && scountry != null && svariant != null) {
             Locale currentlocale = new Locale(slang, scountry, svariant);
-            for (int i = 0 ; i < jcboLocale.getItemCount(); i++)  {
+            for (int i = 0; i < jcboLocale.getItemCount(); i++) {
                 LocaleInfo l = (LocaleInfo) jcboLocale.getItemAt(i);
                 if (currentlocale.equals(l.getLocale())) {
                     jcboLocale.setSelectedIndex(i);
                     break;
                 }
-            }        
+            }
         } else {
             jcboLocale.setSelectedIndex(0);
         }
-        
+
         jcboInteger.setSelectedItem(writeWithDefault(config.getProperty("format.integer")));
         jcboDouble.setSelectedItem(writeWithDefault(config.getProperty("format.double")));
         jcboCurrency.setSelectedItem(writeWithDefault(config.getProperty("format.currency")));
@@ -140,17 +165,44 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
         jcboDate.setSelectedItem(writeWithDefault(config.getProperty("format.date")));
         jcboTime.setSelectedItem(writeWithDefault(config.getProperty("format.time")));
         jcboDatetime.setSelectedItem(writeWithDefault(config.getProperty("format.datetime")));
-               
+
         dirty.setDirty(false);
     }
-    
+
+    private void showHelp() {
+
+        //Set Current Locale to What is selected;
+        Locale.setDefault(((LocaleInfo) jcboLocale.getSelectedItem()).getLocale());
+
+        //Set Format/Pattern for: Number, Date, Currency 
+        Formats.setIntegerPattern(readWithDefault(jcboInteger.getSelectedItem()));
+        Formats.setDoublePattern(readWithDefault(jcboDouble.getSelectedItem()));
+        Formats.setCurrencyPattern(readWithDefault(jcboCurrency.getSelectedItem()));
+        Formats.setPercentPattern(readWithDefault(jcboPercent.getSelectedItem()));
+        Formats.setDatePattern(readWithDefault(jcboDate.getSelectedItem()));
+        Formats.setTimePattern(readWithDefault(jcboTime.getSelectedItem()));
+        Formats.setDateTimePattern(readWithDefault(jcboDatetime.getSelectedItem()));
+
+        jcboLocale.setToolTipText("<html>IETF BCP 47 Tag: " + Locale.getDefault().toLanguageTag());
+        jcboInteger.setToolTipText("<html>123 formated: " + Formats.INT.formatValue(123));
+        jcboDouble.setToolTipText("<html>123.45 formated: " + Formats.DOUBLE.formatValue(123.45));
+        jcboCurrency.setToolTipText("<html>123.45 formated: " + Formats.CURRENCY.formatValue(123.45));
+        jcboPercent.setToolTipText("<html>0.23 formated: " + Formats.PERCENT.formatValue(0.23));
+        jcboDate.setToolTipText("<html>Date formated: " + Formats.DATE.formatValue(new Date()));
+        jcboTime.setToolTipText("<html>Time formated: " + Formats.TIME.formatValue(new Date()));
+        jcboDatetime.setToolTipText("<html>DateTime formated: " + Formats.TIMESTAMP.formatValue(new Date()));
+
+        
+
+    }
+
     /**
      *
      * @param config
      */
     @Override
     public void saveProperties(AppConfig config) {
-        
+
         Locale l = ((LocaleInfo) jcboLocale.getSelectedItem()).getLocale();
         if (l == null) {
             config.setProperty("user.language", "");
@@ -161,7 +213,7 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
             config.setProperty("user.country", l.getCountry());
             config.setProperty("user.variant", l.getVariant());
         }
-         
+
         config.setProperty("format.integer", readWithDefault(jcboInteger.getSelectedItem()));
         config.setProperty("format.double", readWithDefault(jcboDouble.getSelectedItem()));
         config.setProperty("format.currency", readWithDefault(jcboCurrency.getSelectedItem()));
@@ -169,10 +221,10 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
         config.setProperty("format.date", readWithDefault(jcboDate.getSelectedItem()));
         config.setProperty("format.time", readWithDefault(jcboTime.getSelectedItem()));
         config.setProperty("format.datetime", readWithDefault(jcboDatetime.getSelectedItem()));
-        
+
         dirty.setDirty(false);
     }
-    
+
     private String readWithDefault(Object value) {
         if (DEFAULT_VALUE.equals(value)) {
             return "";
@@ -180,7 +232,7 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
             return value.toString();
         }
     }
-    
+
     private Object writeWithDefault(String value) {
         if (value == null || value.equals("") || value.equals(DEFAULT_VALUE)) {
             return DEFAULT_VALUE;
@@ -188,119 +240,160 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
             return value;
         }
     }
-    
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        showHelp();
+    }
+
     private static class LocaleInfo {
+
         private final Locale locale;
-        
+
         public LocaleInfo(Locale locale) {
             this.locale = locale;
         }
+
         public Locale getLocale() {
-            return locale;
+            return (locale == null) ? Locale.ROOT : locale;
         }
+
         @Override
         public String toString() {
-            return locale == null 
-                    ? "(System default)" 
+            return (locale == null || locale == Locale.ROOT)
+                    ? "(System default)"
                     : locale.getDisplayName();
         }
     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
+        lblLocale = new javax.swing.JLabel();
         jcboLocale = new javax.swing.JComboBox();
-        jLabel1 = new javax.swing.JLabel();
+        lblInteger = new javax.swing.JLabel();
         jcboInteger = new javax.swing.JComboBox();
-        jLabel2 = new javax.swing.JLabel();
+        lblDouble = new javax.swing.JLabel();
         jcboDouble = new javax.swing.JComboBox();
-        jLabel3 = new javax.swing.JLabel();
+        lblCurrency = new javax.swing.JLabel();
         jcboCurrency = new javax.swing.JComboBox();
-        jLabel4 = new javax.swing.JLabel();
+        lblPercent = new javax.swing.JLabel();
         jcboPercent = new javax.swing.JComboBox();
-        jLabel6 = new javax.swing.JLabel();
+        lblDate = new javax.swing.JLabel();
         jcboDate = new javax.swing.JComboBox();
-        jLabel7 = new javax.swing.JLabel();
+        lblTime = new javax.swing.JLabel();
         jcboTime = new javax.swing.JComboBox();
-        jLabel8 = new javax.swing.JLabel();
+        lblDateTime = new javax.swing.JLabel();
         jcboDatetime = new javax.swing.JComboBox();
 
         setMinimumSize(new java.awt.Dimension(0, 0));
         setOpaque(false);
         setPreferredSize(new java.awt.Dimension(650, 450));
 
+        jPanel1.setMaximumSize(new java.awt.Dimension(600, 400));
         jPanel1.setOpaque(false);
-        jPanel1.setPreferredSize(new java.awt.Dimension(600, 400));
+        jPanel1.setPreferredSize(new java.awt.Dimension(400, 300));
 
-        jLabel5.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel5.setText(AppLocal.getIntString("label.locale")); // NOI18N
-        jLabel5.setPreferredSize(new java.awt.Dimension(150, 30));
+        lblLocale.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblLocale.setText(AppLocal.getIntString("label.locale")); // NOI18N
+        lblLocale.setMaximumSize(new java.awt.Dimension(150, 30));
+        lblLocale.setMinimumSize(new java.awt.Dimension(150, 30));
+        lblLocale.setPreferredSize(new java.awt.Dimension(150, 30));
 
         jcboLocale.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jcboLocale.setPreferredSize(new java.awt.Dimension(0, 30));
+        jcboLocale.setMaximumSize(new java.awt.Dimension(200, 30));
+        jcboLocale.setMinimumSize(new java.awt.Dimension(200, 30));
+        jcboLocale.setPreferredSize(new java.awt.Dimension(200, 30));
 
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel1.setText(AppLocal.getIntString("label.integer")); // NOI18N
-        jLabel1.setPreferredSize(new java.awt.Dimension(150, 30));
+        lblInteger.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblInteger.setText(AppLocal.getIntString("label.integer")); // NOI18N
+        lblInteger.setMaximumSize(new java.awt.Dimension(150, 30));
+        lblInteger.setMinimumSize(new java.awt.Dimension(150, 30));
+        lblInteger.setPreferredSize(new java.awt.Dimension(150, 30));
 
         jcboInteger.setEditable(true);
         jcboInteger.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jcboInteger.setPreferredSize(new java.awt.Dimension(0, 30));
+        jcboInteger.setMaximumSize(new java.awt.Dimension(200, 30));
+        jcboInteger.setMinimumSize(new java.awt.Dimension(200, 30));
+        jcboInteger.setPreferredSize(new java.awt.Dimension(200, 30));
 
-        jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel2.setText(AppLocal.getIntString("label.double")); // NOI18N
-        jLabel2.setPreferredSize(new java.awt.Dimension(150, 30));
+        lblDouble.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblDouble.setText(AppLocal.getIntString("label.double")); // NOI18N
+        lblDouble.setMaximumSize(new java.awt.Dimension(150, 30));
+        lblDouble.setMinimumSize(new java.awt.Dimension(150, 30));
+        lblDouble.setPreferredSize(new java.awt.Dimension(150, 30));
 
         jcboDouble.setEditable(true);
         jcboDouble.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jcboDouble.setPreferredSize(new java.awt.Dimension(0, 30));
+        jcboDouble.setMaximumSize(new java.awt.Dimension(200, 30));
+        jcboDouble.setMinimumSize(new java.awt.Dimension(200, 30));
+        jcboDouble.setPreferredSize(new java.awt.Dimension(200, 30));
 
-        jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel3.setText(AppLocal.getIntString("label.currency")); // NOI18N
-        jLabel3.setPreferredSize(new java.awt.Dimension(150, 30));
+        lblCurrency.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblCurrency.setText(AppLocal.getIntString("label.currency")); // NOI18N
+        lblCurrency.setMaximumSize(new java.awt.Dimension(150, 30));
+        lblCurrency.setMinimumSize(new java.awt.Dimension(150, 30));
+        lblCurrency.setPreferredSize(new java.awt.Dimension(150, 30));
 
         jcboCurrency.setEditable(true);
         jcboCurrency.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jcboCurrency.setPreferredSize(new java.awt.Dimension(0, 30));
+        jcboCurrency.setMaximumSize(new java.awt.Dimension(200, 30));
+        jcboCurrency.setMinimumSize(new java.awt.Dimension(200, 30));
+        jcboCurrency.setPreferredSize(new java.awt.Dimension(200, 30));
 
-        jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel4.setText(AppLocal.getIntString("label.percent")); // NOI18N
-        jLabel4.setPreferredSize(new java.awt.Dimension(150, 30));
+        lblPercent.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblPercent.setText(AppLocal.getIntString("label.percent")); // NOI18N
+        lblPercent.setMaximumSize(new java.awt.Dimension(150, 30));
+        lblPercent.setMinimumSize(new java.awt.Dimension(150, 30));
+        lblPercent.setPreferredSize(new java.awt.Dimension(150, 30));
 
         jcboPercent.setEditable(true);
         jcboPercent.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jcboPercent.setPreferredSize(new java.awt.Dimension(0, 30));
+        jcboPercent.setMaximumSize(new java.awt.Dimension(200, 30));
+        jcboPercent.setMinimumSize(new java.awt.Dimension(200, 30));
+        jcboPercent.setPreferredSize(new java.awt.Dimension(200, 30));
 
-        jLabel6.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel6.setText(AppLocal.getIntString("label.date")); // NOI18N
-        jLabel6.setPreferredSize(new java.awt.Dimension(150, 30));
+        lblDate.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblDate.setText(AppLocal.getIntString("label.date")); // NOI18N
+        lblDate.setMaximumSize(new java.awt.Dimension(150, 30));
+        lblDate.setMinimumSize(new java.awt.Dimension(150, 30));
+        lblDate.setPreferredSize(new java.awt.Dimension(150, 30));
 
         jcboDate.setEditable(true);
         jcboDate.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jcboDate.setPreferredSize(new java.awt.Dimension(0, 30));
+        jcboDate.setMaximumSize(new java.awt.Dimension(200, 30));
+        jcboDate.setMinimumSize(new java.awt.Dimension(200, 30));
+        jcboDate.setPreferredSize(new java.awt.Dimension(200, 30));
 
-        jLabel7.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel7.setText(AppLocal.getIntString("label.time")); // NOI18N
-        jLabel7.setPreferredSize(new java.awt.Dimension(150, 30));
+        lblTime.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblTime.setText(AppLocal.getIntString("label.time")); // NOI18N
+        lblTime.setMaximumSize(new java.awt.Dimension(150, 30));
+        lblTime.setMinimumSize(new java.awt.Dimension(150, 30));
+        lblTime.setPreferredSize(new java.awt.Dimension(150, 30));
 
         jcboTime.setEditable(true);
         jcboTime.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jcboTime.setPreferredSize(new java.awt.Dimension(0, 30));
+        jcboTime.setMaximumSize(new java.awt.Dimension(200, 30));
+        jcboTime.setMinimumSize(new java.awt.Dimension(200, 30));
+        jcboTime.setPreferredSize(new java.awt.Dimension(200, 30));
 
-        jLabel8.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel8.setText(AppLocal.getIntString("label.datetime")); // NOI18N
-        jLabel8.setPreferredSize(new java.awt.Dimension(150, 30));
+        lblDateTime.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblDateTime.setText(AppLocal.getIntString("label.datetime")); // NOI18N
+        lblDateTime.setMaximumSize(new java.awt.Dimension(150, 30));
+        lblDateTime.setMinimumSize(new java.awt.Dimension(150, 30));
+        lblDateTime.setPreferredSize(new java.awt.Dimension(150, 30));
 
         jcboDatetime.setEditable(true);
         jcboDatetime.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jcboDatetime.setPreferredSize(new java.awt.Dimension(0, 30));
+        jcboDatetime.setMaximumSize(new java.awt.Dimension(200, 30));
+        jcboDatetime.setMinimumSize(new java.awt.Dimension(200, 30));
+        jcboDatetime.setPreferredSize(new java.awt.Dimension(200, 30));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -310,38 +403,38 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblDateTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jcboDatetime, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jcboDatetime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jcboTime, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jcboTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jcboDate, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jcboDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblPercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jcboPercent, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jcboPercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblCurrency, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jcboCurrency, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jcboCurrency, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblDouble, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jcboDouble, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jcboDouble, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblInteger, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jcboInteger, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jcboInteger, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblLocale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jcboLocale, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(51, 51, 51))
+                        .addComponent(jcboLocale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -349,36 +442,36 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jcboLocale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblLocale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblInteger, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jcboInteger, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDouble, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jcboDouble, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCurrency, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jcboCurrency, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jcboPercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jcboDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jcboTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDateTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jcboDatetime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(100, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -387,27 +480,19 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(2, 2, 2)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JComboBox jcboCurrency;
     private javax.swing.JComboBox jcboDate;
@@ -417,6 +502,14 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
     private javax.swing.JComboBox jcboLocale;
     private javax.swing.JComboBox jcboPercent;
     private javax.swing.JComboBox jcboTime;
+    private javax.swing.JLabel lblCurrency;
+    private javax.swing.JLabel lblDate;
+    private javax.swing.JLabel lblDateTime;
+    private javax.swing.JLabel lblDouble;
+    private javax.swing.JLabel lblInteger;
+    private javax.swing.JLabel lblLocale;
+    private javax.swing.JLabel lblPercent;
+    private javax.swing.JLabel lblTime;
     // End of variables declaration//GEN-END:variables
-    
+
 }

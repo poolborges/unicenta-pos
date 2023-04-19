@@ -245,7 +245,7 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
 
         jTabbedPane1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jTabbedPane1.setOpaque(true);
-        jTabbedPane1.setPreferredSize(new java.awt.Dimension(930, 550));
+        jTabbedPane1.setPreferredSize(new java.awt.Dimension(930, 530));
 
         jPanelGeneral.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jPanelGeneral.setPreferredSize(new java.awt.Dimension(0, 400));
