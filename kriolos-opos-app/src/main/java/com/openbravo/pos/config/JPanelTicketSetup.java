@@ -42,6 +42,7 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
     private Integer x = 0;
     private String receiptSize;
     private String pickupSize;
+    private AppConfig config;
 
     /**
      *
@@ -84,6 +85,7 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
     @Override
     public void loadProperties(AppConfig config) {
 
+        this.config = config;
         int recSize;
         receiptSize = (config.getProperty("till.receiptsize"));
         try {
@@ -323,7 +325,7 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
 
     private void jbtnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnResetActionPerformed
 
-        int response = JOptionPane.showOptionDialog(null,
+        int response = JOptionPane.showOptionDialog(this,
                 AppLocal.getIntString("message.resetpickup"),
                 "Reset",
                 JOptionPane.YES_NO_OPTION,
@@ -331,9 +333,10 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
                 null, null, null);
         if (response == JOptionPane.YES_OPTION) {
             try {
-                String db_user = (AppConfig.getInstance().getProperty("db.user"));
-                String db_url = (AppConfig.getInstance().getProperty("db.URL"));
-                String db_password = (AppConfig.getInstance().getProperty("db.password"));
+
+                String db_user = (config.getProperty("db.user"));
+                String db_url = (config.getProperty("db.URL") + config.getProperty("db.schema") + config.getProperty("db.options"));
+                String db_password = (config.getProperty("db.password"));
 
                 if (db_user != null && db_password != null && db_password.startsWith("crypt:")) {
                     AltEncrypter cypher = new AltEncrypter("cypherkey" + db_user);
@@ -341,9 +344,12 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
                 }
 
                 Session session = new Session(db_url, db_user, db_password);
-                session.DB.resetSequenceSentence(session, "pickup_number").exec();
+                session.begin();
+                session.DB.getSequenceSentence(session, "pickup_number").find();
+                session.DB.resetSequenceSentence(session, "pickup_number");
+                session.commit();
 
-            } catch (SQLException | BasicException ex) {
+            } catch (BasicException | SQLException ex) {
                 LOGGER.log(Level.WARNING, null, ex);
             }
 

@@ -147,15 +147,6 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
         jtxtStartupText.setText(config.getProperty("start.text")); 
         jtxtStartupLogo.setText(config.getProperty("start.logo"));
         jtxtStartupHTML.setText(config.getProperty("start.html"));
-
-        String txtPIN =(config.getProperty("override.pin"));
-        if (txtPIN == null){
-            config.setProperty("override.check","true");                        
-            config.setProperty("override.pin","1234");
-        }       
-        
-//         jtxtStartupMedia.setText(config.getProperty("start.media"));           // Coming later!! 
-  
         dirty.setDirty(false);
     }
 
