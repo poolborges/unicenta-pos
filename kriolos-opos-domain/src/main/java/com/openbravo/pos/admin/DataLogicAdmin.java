@@ -69,7 +69,7 @@ public class DataLogicAdmin extends BeanFactoryDataSingle {
 
     private SentenceExec peopleSentenceExecUpdate(){
         Datas[] resourcedata = new Datas[]{Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING, Datas.BOOLEAN, Datas.STRING, Datas.IMAGE};
-         SentenceExec sentupdate = new PreparedSentenceJDBC(this.s,
+         SentenceExec sentupdate = new PreparedSentenceExec(this.s,
                  "UPDATE people SET NAME = ?, APPPASSWORD = ?, ROLE = ?, VISIBLE = ?, CARD = ?, IMAGE = ? WHERE ID = ?",
                resourcedata,new int[]{1, 2, 3, 4, 5, 6, 0});
          
@@ -78,7 +78,7 @@ public class DataLogicAdmin extends BeanFactoryDataSingle {
     
     private SentenceExec peopleSentenceExecDelete(){
         Datas[] resourcedata = new Datas[]{Datas.STRING};
-         SentenceExec sentdelete = new PreparedSentenceJDBC(this.s,
+         SentenceExec sentdelete = new PreparedSentenceExec(this.s,
                 "DELETE FROM people WHERE ID = ?",
                 resourcedata,new int[]{0});
          
@@ -87,7 +87,7 @@ public class DataLogicAdmin extends BeanFactoryDataSingle {
     
     private SentenceExec peopleSentenceExecInsert(){
         Datas[] resourcedata = new Datas[]{Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING, Datas.BOOLEAN, Datas.STRING, Datas.IMAGE};
-         SentenceExec sentinsert = new PreparedSentenceJDBC(this.s,
+         SentenceExec sentinsert = new PreparedSentenceExec(this.s,
                 "INSERT INTO people(ID, NAME, APPPASSWORD, ROLE, VISIBLE, CARD, IMAGE) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 resourcedata,new int[]{0, 1, 2, 3, 4, 5, 6});
          

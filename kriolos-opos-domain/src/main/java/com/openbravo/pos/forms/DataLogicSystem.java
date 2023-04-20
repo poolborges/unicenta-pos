@@ -246,11 +246,11 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         Datas[] resourcedata = new Datas[]{Datas.STRING, Datas.STRING, Datas.INT, Datas.BYTES};
         Object[] value = new Object[]{UUID.randomUUID().toString(), name, type, data};
 
-        SentenceExec m_resourcebytesinsert = new PreparedSentenceJDBC(this.session,
+        SentenceExec m_resourcebytesinsert = new PreparedSentenceExec(this.session,
                 "INSERT INTO resources(ID, NAME, RESTYPE, CONTENT) VALUES (?, ?, ?, ?)",
                 resourcedata, new int[]{0, 1, 2, 3});
 
-        SentenceExec m_resourcebytesupdate = new PreparedSentenceJDBC(this.session,
+        SentenceExec m_resourcebytesupdate = new PreparedSentenceExec(this.session,
                 "UPDATE resources SET NAME = ?, RESTYPE = ?, CONTENT = ? WHERE NAME = ?",
                 resourcedata, new int[]{1, 2, 3, 1});
 
@@ -367,7 +367,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      * @throws BasicException
      */
     public final int getSequenceCash(String host) throws BasicException {
-        final SentenceFind m_sequencecash = new StaticSentence(this.session,
+        final SentenceFind m_sequencecash = new PreparedSentence(this.session,
                 "SELECT MAX(HOSTSEQUENCE) FROM closedcash WHERE HOST = ?",
                 SerializerWriteString.INSTANCE,
                 SerializerReadInteger.INSTANCE);
@@ -384,7 +384,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      */
     public final Object[] findActiveCash(String sActiveCashIndex) throws BasicException {
 
-        final SentenceFind m_activecash = new StaticSentence(this.session,
+        final SentenceFind m_activecash = new PreparedSentence(this.session,
                 "SELECT HOST, HOSTSEQUENCE, DATESTART, DATEEND, NOSALES "
                 + "FROM closedcash WHERE MONEY = ?",
                 SerializerWriteString.INSTANCE,

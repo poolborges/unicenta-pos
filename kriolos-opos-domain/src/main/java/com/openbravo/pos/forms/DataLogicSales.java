@@ -1698,7 +1698,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                             }
                         });
 
-                SentenceExec ticketlineinsert = new PreparedSentence(s,
+                SentenceExec ticketlineinsert = new PreparedSentenceExec(s,
                         "INSERT INTO ticketlines (TICKET, LINE, "
                         + "PRODUCT, ATTRIBUTESETINSTANCE_ID, "
                         + "UNITS, PRICE, TAXID, ATTRIBUTES) "
@@ -2002,7 +2002,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
         return new SentenceExecTransaction(s) {
             @Override
             public int execInTransaction(Object[] params) throws BasicException {
-                int i = new PreparedSentenceJDBC(s,
+                int i = new PreparedSentenceExec(s,
                         "INSERT INTO products ("
                         + "ID, "
                         + "REFERENCE, "
@@ -2101,7 +2101,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
             @Override
             public int execInTransaction(Object[] params) throws BasicException {
 
-                int i = new PreparedSentenceJDBC(s,
+                int i = new PreparedSentenceExec(s,
                         "UPDATE products SET "
                         + "ID = ?, "
                         + "REFERENCE = ?, "

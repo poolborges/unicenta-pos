@@ -370,7 +370,7 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
     };
 
     private SentenceExec customerSentenceExecUpdate() {
-        SentenceExec sentupdate = new PreparedSentenceJDBC(this.s,
+        SentenceExec sentupdate = new PreparedSentenceExec(this.s,
                 "update customers set ID = ?, SEARCHKEY = ?, TAXID = ?, NAME = ?, TAXCATEGORY = ?, CARD = ?, MAXDEBT = ?, ADDRESS = ?, ADDRESS2 = ?, POSTAL = ?, CITY = ?, REGION = ?, COUNTRY = ?, FIRSTNAME = ?, LASTNAME = ?, EMAIL = ?, PHONE = ?, PHONE2 = ?, FAX = ?, NOTES = ?, VISIBLE = ?, CURDATE = ?, CURDEBT = ?, IMAGE = ?, ISVIP = ?, DISCOUNT = ?, MEMODATE = ? where ID = ?",
                 customerData, new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 0});
 
@@ -379,7 +379,7 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
 
     private SentenceExec customerSentenceExecDelete() {
         Datas[] resourcedata = new Datas[]{Datas.STRING};
-        SentenceExec sentdelete = new PreparedSentenceJDBC(this.s,
+        SentenceExec sentdelete = new PreparedSentenceExec(this.s,
                 "DELETE FROM customers WHERE ID = ?",
                 resourcedata, new int[]{0});
 
@@ -387,7 +387,7 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
     }
 
     private SentenceExec customerSentenceExecInsert() {
-        SentenceExec sentinsert = new PreparedSentenceJDBC(this.s,
+        SentenceExec sentinsert = new PreparedSentenceExec(this.s,
                 "insert into customers (ID, SEARCHKEY, TAXID, NAME, TAXCATEGORY, CARD, MAXDEBT, ADDRESS, ADDRESS2, POSTAL, CITY, REGION, COUNTRY, FIRSTNAME, LASTNAME, EMAIL, PHONE, PHONE2, FAX, NOTES, VISIBLE, CURDATE, CURDEBT, IMAGE, ISVIP, DISCOUNT, MEMODATE) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 customerData, new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26});
 

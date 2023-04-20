@@ -29,7 +29,7 @@ public class SharedTicketInfo implements SerializableRead, SerializableWrite {
 
     private String id;
     private String name;
-    private String UserName;
+    private String username;
     private String status;
     private Integer pickupId;
     private TicketInfo ticketInfo;
@@ -39,8 +39,10 @@ public class SharedTicketInfo implements SerializableRead, SerializableWrite {
     public void readValues(DataRead dr) throws BasicException {
         id = dr.getString(1);
         name = dr.getString(2);
-        UserName = dr.getString(3);
+        username = dr.getString(3);
         status = dr.getString(4);  
+        pickupId = dr.getInt(5);
+        //MISSING READ MEDIUM_BLOB (Object
 
     }   
 
@@ -48,7 +50,7 @@ public class SharedTicketInfo implements SerializableRead, SerializableWrite {
     public void writeValues(DataWrite dp) throws BasicException {
         dp.setString(1, id);
         dp.setString(2, name);
-        dp.setString(3, UserName);
+        dp.setString(3, username);
         dp.setString(4, status);  
         dp.setInt(5, pickupId);  
         dp.setObject(6, ticketInfo);
@@ -63,7 +65,7 @@ public class SharedTicketInfo implements SerializableRead, SerializableWrite {
     }
 
     public String getAppUser() {
-        return UserName;
+        return username;
     }
     
     public String getStatus() {
@@ -71,7 +73,7 @@ public class SharedTicketInfo implements SerializableRead, SerializableWrite {
     }
 
     public String getUserName() {
-        return UserName;
+        return username;
     }
 
     public Integer getPickupId() {
@@ -91,7 +93,7 @@ public class SharedTicketInfo implements SerializableRead, SerializableWrite {
     }
 
     public void setUserName(String UserName) {
-        this.UserName = UserName;
+        this.username = UserName;
     }
 
     public void setStatus(String status) {
