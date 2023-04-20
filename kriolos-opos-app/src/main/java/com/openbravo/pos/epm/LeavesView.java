@@ -17,8 +17,6 @@ package com.openbravo.pos.epm;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.beans.JCalendarDialog;
-import com.openbravo.data.gui.MessageInf;
-import com.openbravo.data.loader.SentenceList;
 import com.openbravo.data.user.DirtyManager;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
@@ -26,19 +24,20 @@ import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import java.awt.Component;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 import java.util.Calendar;
+import org.netbeans.validation.api.builtin.stringvalidation.StringValidators;
 
 /**
  *
  * @author Ali Safdar and Aneeqa Baber
  */
-public final class LeavesView extends javax.swing.JPanel implements EditorRecord {
+public final class LeavesView extends com.openbravo.pos.panels.ValidationPanel implements EditorRecord {
 
-    private String m_oId;
+    private String leaveId;
     private String m_employeeid;
-    private SentenceList m_sentcat;
+    private Date beginDate;
+    private Date endDate;
 
     private DirtyManager m_Dirty;
     private DataLogicPresenceManagement dlPresenceManagement;
@@ -54,18 +53,22 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
         dlPresenceManagement = (DataLogicPresenceManagement) app.getBean("com.openbravo.pos.epm.DataLogicPresenceManagement");
         initComponents();
 
-        m_sentcat = dlPresenceManagement.getLeavesList();
         m_Dirty = dirty;
         m_jEmployeeName.getDocument().addDocumentListener(dirty);
         m_jStartDate.getDocument().addDocumentListener(dirty);
         m_jEndDate.getDocument().addDocumentListener(dirty);
         m_jLeaveNote.getDocument().addDocumentListener(dirty);
         writeValueEOF();
+        initValidator();
     }
 
+    private void initValidator() {
+        org.netbeans.validation.api.ui.ValidationGroup valGroup = getValidationGroup();
+        valGroup.add(m_jEmployeeName, StringValidators.REQUIRE_NON_EMPTY_STRING);
+        valGroup.add(m_jStartDate, StringValidators.REQUIRE_NON_EMPTY_STRING);
+        valGroup.add(m_jEndDate, StringValidators.REQUIRE_NON_EMPTY_STRING);
+    }
     void activate() throws BasicException {
-        List a = m_sentcat.list();
-        a.add(0, null);
     }
 
     /**
@@ -73,7 +76,7 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
      */
     @Override
     public void writeValueEOF() {
-        m_oId = null;
+        leaveId = null;
         m_jEmployeeName.setText(null);
         m_jStartDate.setText(null);
         m_jEndDate.setText(null);
@@ -89,7 +92,7 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
      */
     @Override
     public void writeValueInsert() {
-        m_oId = null;
+        leaveId = null;
         m_jEmployeeName.setText(null);
         m_jStartDate.setText(null);
         m_jEndDate.setText(null);
@@ -107,8 +110,8 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
     @Override
     public void writeValueEdit(Object value) {
         Object[] leaves = (Object[]) value;
-        m_oId = (String)leaves[0];
-        m_employeeid = (String)leaves[1];
+        leaveId = (String) leaves[0];
+        m_employeeid = (String) leaves[1];
         m_jEmployeeName.setText((String) leaves[2]);
         m_jStartDate.setText(Formats.TIMESTAMP.formatValue((Date) leaves[3]));
         m_jEndDate.setText(Formats.TIMESTAMP.formatValue((Date) leaves[4]));
@@ -126,8 +129,8 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
     @Override
     public void writeValueDelete(Object value) {
         Object[] leaves = (Object[]) value;
-        m_oId = (String)leaves[0];
-        m_employeeid = (String)leaves[1];
+        leaveId = (String) leaves[0];
+        m_employeeid = (String) leaves[1];
         m_jEmployeeName.setText((String) leaves[2]);
         m_jStartDate.setText(Formats.TIMESTAMP.formatValue((Date) leaves[3]));
         m_jEndDate.setText(Formats.TIMESTAMP.formatValue((Date) leaves[4]));
@@ -161,18 +164,18 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
     @Override
     public Object createValue() throws BasicException {
         Object[] leaves = new Object[6];
-        leaves[0] = m_oId == null ? UUID.randomUUID().toString() : m_oId;
+        leaves[0] = leaveId == null ? UUID.randomUUID().toString() : leaveId;
         leaves[1] = m_employeeid;
         leaves[2] = m_jEmployeeName.getText();
-        leaves[3] = (Date) Formats.TIMESTAMP.parseValue(m_jStartDate.getText());
-        leaves[4] = (Date) Formats.TIMESTAMP.parseValue(m_jEndDate.getText());
+        leaves[3] = Formats.TIMESTAMP.parseValue(m_jStartDate.getText());
+        leaves[4] = Formats.TIMESTAMP.parseValue(m_jEndDate.getText());
         leaves[5] = m_jLeaveNote.getText();
-        boolean isCheckedIn = dlPresenceManagement.IsCheckedIn((String) m_employeeid);
-        Date startDate = (Date) Formats.TIMESTAMP.parseValue(m_jStartDate.getText());
-        Date endDate = (Date) Formats.TIMESTAMP.parseValue(m_jEndDate.getText());
+        boolean isCheckedIn = dlPresenceManagement.IsCheckedIn(m_employeeid);
+        Date startDate = Formats.TIMESTAMP.parseValue(m_jStartDate.getText());
+        Date endDate = Formats.TIMESTAMP.parseValue(m_jEndDate.getText());
         Date systemDate = new Date();
         if (isCheckedIn && startDate.before(systemDate) && endDate.after(systemDate)) {
-            dlPresenceManagement.BlockEmployee((String) m_employeeid);
+            dlPresenceManagement.BlockEmployee(m_employeeid);
         }
         return leaves;
     }
@@ -183,7 +186,7 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
         if (!m_jStartDate.getText().equals("")) {
             Date startdate;
             try {
-                startdate = (Date) Formats.TIMESTAMP.parseValue(m_jStartDate.getText());
+                startdate = Formats.TIMESTAMP.parseValue(m_jStartDate.getText());
                 return (startdate.before(date)
                         || isSameDay(systemDate, date));
 
@@ -200,7 +203,7 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
         boolean validEndDate = true;
         if (!m_jEndDate.getText().equals("")) {
             try {
-                Date enddate = (Date) Formats.TIMESTAMP.parseValue(m_jEndDate.getText());
+                Date enddate = Formats.TIMESTAMP.parseValue(m_jEndDate.getText());
                 validEndDate = (enddate.after(date)
                         || isSameDay(systemDate, date));
             } catch (BasicException ex) {
@@ -212,6 +215,7 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
 
     /**
      * Compare two date by Day/Month/Year
+     *
      * @param date1
      * @param date2
      * @return true is two date is same day in time
@@ -281,9 +285,9 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
         btnEmployee.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/user_sml.png"))); // NOI18N
         btnEmployee.setFocusPainted(false);
         btnEmployee.setFocusable(false);
-        btnEmployee.setMaximumSize(new java.awt.Dimension(57, 33));
-        btnEmployee.setMinimumSize(new java.awt.Dimension(57, 33));
-        btnEmployee.setPreferredSize(new java.awt.Dimension(80, 45));
+        btnEmployee.setMaximumSize(new java.awt.Dimension(48, 32));
+        btnEmployee.setMinimumSize(new java.awt.Dimension(32, 32));
+        btnEmployee.setPreferredSize(new java.awt.Dimension(48, 32));
         btnEmployee.setRequestFocusEnabled(false);
         btnEmployee.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -292,7 +296,9 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
         });
 
         btnEndDate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/date.png"))); // NOI18N
-        btnEndDate.setPreferredSize(new java.awt.Dimension(80, 45));
+        btnEndDate.setMaximumSize(new java.awt.Dimension(48, 32));
+        btnEndDate.setMinimumSize(new java.awt.Dimension(32, 32));
+        btnEndDate.setPreferredSize(new java.awt.Dimension(48, 32));
         btnEndDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEndDateActionPerformed(evt);
@@ -300,7 +306,7 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
         });
 
         btnStartDate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/date.png"))); // NOI18N
-        btnStartDate.setPreferredSize(new java.awt.Dimension(80, 45));
+        btnStartDate.setPreferredSize(new java.awt.Dimension(48, 32));
         btnStartDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnStartDateActionPerformed(evt);
@@ -321,7 +327,7 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
                     .addComponent(m_EndDate, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
                     .addComponent(m_StartDate, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
                     .addComponent(m_Name, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -351,13 +357,13 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
                         .addComponent(m_StartDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(m_jStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(m_EndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(m_jEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(m_Notes, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -371,52 +377,39 @@ public final class LeavesView extends javax.swing.JPanel implements EditorRecord
         finder.search(null);
         finder.setVisible(true);
 
-        try {
-            m_jEmployeeName.setText(finder.getSelectedEmployee() == null
-                    ? null
-                    : dlPresenceManagement.loadEmployeeExt(finder.getSelectedEmployee().getId()).toString());
-            m_employeeid = finder.getSelectedEmployee() == null
-                    ? null
-                    : finder.getSelectedEmployee().getId();
-        } catch (BasicException e) {
-            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotfindemployee"), e);
-            msg.show(this);
+        if (finder.getSelectedEmployee() != null) {
+
+            m_jEmployeeName.setText(finder.getSelectedEmployee().getName());
+            m_employeeid = finder.getSelectedEmployee().getId();
+        }else {
+            m_jEmployeeName.setText(null);
+            m_employeeid = null;
         }
 }//GEN-LAST:event_btnEmployeeActionPerformed
 
     private void btnEndDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEndDateActionPerformed
         Date date;
         try {
-            date = (Date) Formats.TIMESTAMP.parseValue(m_jEndDate.getText());
+            date = Formats.TIMESTAMP.parseValue(m_jEndDate.getText());
         } catch (BasicException e) {
             date = null;
         }
         date = JCalendarDialog.showCalendarTimeHours(this, date);
         if (date != null) {
-            if (IsValidEndDate(date)) {
-                m_jEndDate.setText(Formats.TIMESTAMP.formatValue(date));
-            } else {
-                MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.invalidenddate"));
-                msg.show(this);
-            }
+            m_jEndDate.setText(Formats.TIMESTAMP.formatValue(date));
         }
 }//GEN-LAST:event_btnEndDateActionPerformed
 
     private void btnStartDateActionPerformed(java.awt.event.ActionEvent evt) {
         Date date;
         try {
-            date = (Date) Formats.TIMESTAMP.parseValue(m_jStartDate.getText());
+            date = Formats.TIMESTAMP.parseValue(m_jStartDate.getText());
         } catch (BasicException e) {
             date = null;
         }
         date = JCalendarDialog.showCalendarTimeHours(this, date);
         if (date != null) {
-            if (IsValidStartDate(date)) {
-                m_jStartDate.setText(Formats.TIMESTAMP.formatValue(date));
-            } else {
-                MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.invalidstartdate"));
-                msg.show(this);
-            }
+            m_jStartDate.setText(Formats.TIMESTAMP.formatValue(date));
         }
     }
 
