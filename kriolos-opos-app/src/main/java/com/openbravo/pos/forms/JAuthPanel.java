@@ -157,7 +157,7 @@ public class JAuthPanel extends javax.swing.JPanel {
                     LOGGER.log(Level.INFO, "IS Logged");
                     authListener.onSucess(m_actionuser);
                 } else {
-                    String sPassword = JPasswordDialog.showEditPassword(JAuthPanel.this,
+                    String sPassword = JPasswordDialog.showEditor(JAuthPanel.this,
                             AppLocal.getIntString("label.Password"),
                             m_actionuser.getName(),
                             m_actionuser.getIcon());
