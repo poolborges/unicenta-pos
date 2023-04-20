@@ -22,6 +22,7 @@ package com.openbravo.pos.sales.restaurant;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.beans.JIntegerDialog;
+import com.openbravo.beans.JPasswordDialog;
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.ListKeyed;
 import com.openbravo.data.gui.MessageInf;
@@ -278,10 +279,10 @@ public class JTicketsBagRestaurant extends javax.swing.JPanel {
 //        if (ticket != null) {
 
             if (m_App.getProperties().getProperty("override.check").equals("true")) {
-                Integer secret = Integer.parseInt(m_App.getProperties().getProperty("override.pin"));
-                Integer iValue = JIntegerDialog.showComponent(this, AppLocal.getIntString("title.override.enterpin")); 
+                String pin = m_App.getProperties().getProperty("override.pin");
+                String iValue = JPasswordDialog.showEditor(this, AppLocal.getIntString("title.override.enterpin"));
 
-                if (iValue == null ? secret == null : iValue.equals(secret)) {
+                if (iValue != null && iValue.equals(pin)) {
                     pinOK = true;
                     int res = JOptionPane.showConfirmDialog(this
                         , AppLocal.getIntString("message.wannadelete")

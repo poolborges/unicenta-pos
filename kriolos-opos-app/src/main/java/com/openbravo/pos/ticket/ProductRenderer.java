@@ -33,6 +33,10 @@ public class ProductRenderer extends DefaultListCellRenderer {
                 
     private static final int PROD_DEFAULT_WIDTH = 64;
     private static final int PROD_DEFAULT_HEIGHT = 54;
+    
+    private final static String DEFAULT_IMAGE = "com/openbravo/images/null.png";
+    private final static ThumbNailBuilder THUMB_NAIL = new ThumbNailBuilder(PROD_DEFAULT_WIDTH,PROD_DEFAULT_HEIGHT, DEFAULT_IMAGE);
+    private static final long serialVersionUID = 1L;
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -54,13 +58,13 @@ public class ProductRenderer extends DefaultListCellRenderer {
             
             setText(prodLabe);
             setToolTipText(toolTip);
-            ThumbNailBuilder tnbprod = null;
+            Image img;
+            
             if(prod.getImage() != null) {
-                tnbprod = new ThumbNailBuilder(PROD_DEFAULT_WIDTH,PROD_DEFAULT_HEIGHT,prod.getImage());
+                img = THUMB_NAIL.getThumbNail(prod.getImage());
             }else{
-                tnbprod = new ThumbNailBuilder(PROD_DEFAULT_WIDTH,PROD_DEFAULT_HEIGHT, "com/openbravo/images/null.png");
+                img = THUMB_NAIL.getThumbNail();
             }
-            Image img = tnbprod.getThumbNail();
             setIcon(img == null ? null :new ImageIcon(img));
         }
         return this;

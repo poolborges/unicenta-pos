@@ -17,6 +17,7 @@ package com.openbravo.pos.sales.shared;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.beans.JIntegerDialog;
+import com.openbravo.beans.JPasswordDialog;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
@@ -401,10 +402,10 @@ public class JTicketsBagShared extends JTicketsBag {
         if (m_panelticket.getActiveTicket()!= null) {
 
             if (m_App.getProperties().getProperty("override.check").equals("true")) {
-                Integer secret = Integer.parseInt(m_App.getProperties().getProperty("override.pin"));
-                Integer iValue = JIntegerDialog.showComponent(this, AppLocal.getIntString("title.override.enterpin"));
+                String pin = m_App.getProperties().getProperty("override.pin");
+                String iValue = JPasswordDialog.showEditor(this, AppLocal.getIntString("title.override.enterpin"));
 
-                if (iValue == null ? secret == null : iValue.equals(secret)) {
+                if (iValue != null && iValue.equals(pin)) {
                     pinOK = true;
                     int res = JOptionPane.showConfirmDialog(this,
                             AppLocal.getIntString("message.wannadelete"),

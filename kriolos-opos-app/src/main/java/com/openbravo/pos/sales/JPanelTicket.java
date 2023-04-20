@@ -20,7 +20,9 @@ import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.basic.BasicException;
+import com.openbravo.beans.JEditorTextDialog;
 import com.openbravo.beans.JIntegerDialog;
+import com.openbravo.beans.JPasswordDialog;
 import com.openbravo.data.gui.ComboBoxValModel;
 import com.openbravo.data.gui.ListKeyed;
 import com.openbravo.data.gui.MessageInf;
@@ -534,10 +536,10 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         if (m_oTicket != null) {
 
             if (m_App.getProperties().getProperty("override.check").equals("true")) {
-                Integer secret = Integer.parseInt(m_App.getProperties().getProperty("override.pin"));
-                Integer iValue = JIntegerDialog.showComponent(this, AppLocal.getIntString("title.override.enterpin"));
+                String pin = m_App.getProperties().getProperty("override.pin");
+                String iValue = JPasswordDialog.showEditor(this, AppLocal.getIntString("title.override.enterpin"));
 
-                if (iValue != null && iValue.equals(secret)) {
+                if (iValue != null && iValue.equals(pin)) {
                     pinOK = true;
                 } else {
                     pinOK = false;
@@ -1398,10 +1400,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                         if (m_App.getProperties().getProperty("override.check").equals("true")) {
                             //oCount = count - 1;  //increment existing line  
 
-                            changeCount();
-                            newline.setMultiply(newline.getMultiply() - 1.0);
-                            newline.setProperty("ticket.updated", "true");
-                            paintTicketLine(i, newline);
+                            if (changeCount()) {
+                                newline.setMultiply(newline.getMultiply() - 1.0);
+                                newline.setProperty("ticket.updated", "true");
+                                paintTicketLine(i, newline);
+                            }
                         } else {
                             newline.setMultiply(newline.getMultiply() - 1.0);
                             newline.setProperty("ticket.updated", "true");
@@ -1436,10 +1439,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     if (m_oTicket.getTicketType() == TicketInfo.RECEIPT_REFUND) {
                         if (m_App.getProperties().getProperty("override.check").equals("true")) {
                             //oCount = count - 1;  //increment existing line  
-                            changeCount();
-                            newline.setMultiply(newline.getMultiply() - 1.0);
-                            newline.setProperty("ticket.updated", "true");
-                            paintTicketLine(i, newline);
+                            if (changeCount()) {
+                                newline.setMultiply(newline.getMultiply() - 1.0);
+                                newline.setProperty("ticket.updated", "true");
+                                paintTicketLine(i, newline);
+                            }
                         } else {
                             newline.setMultiply(newline.getMultiply() - 1.0);
                             newline.setProperty("ticket.updated", "true");
@@ -1488,11 +1492,12 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     if (m_oTicket.getTicketType() == TicketInfo.RECEIPT_REFUND) {
                         if (m_App.getProperties().getProperty("override.check").equals("true")) {
                             //oCount = count - 1;  //increment existing line  
-                            changeCount();
-                            newline.setMultiply(-dPor);
-                            newline.setProperty("ticket.updated", "true");
-                            newline.setPrice(Math.abs(newline.getPrice()));
-                            paintTicketLine(i, newline);
+                            if (changeCount()) {
+                                newline.setMultiply(-dPor);
+                                newline.setProperty("ticket.updated", "true");
+                                newline.setPrice(Math.abs(newline.getPrice()));
+                                paintTicketLine(i, newline);
+                            }
                         } else {
                             newline.setMultiply(-dPor);
                             newline.setProperty("ticket.updated", "true");
@@ -1533,11 +1538,12 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                         if (m_App.getProperties().getProperty("override.check").equals("true")) {
                             //oCount = count - 1;  //increment existing line  
 
-                            changeCount();
-                            newline.setMultiply(-dPor);
-                            newline.setProperty("ticket.updated", "true");
-                            newline.setPrice(Math.abs(newline.getPrice()));
-                            paintTicketLine(i, newline);
+                            if (changeCount()) {
+                                newline.setMultiply(-dPor);
+                                newline.setProperty("ticket.updated", "true");
+                                newline.setPrice(Math.abs(newline.getPrice()));
+                                paintTicketLine(i, newline);
+                            }
                         } else {
                             newline.setMultiply(-dPor);
                             newline.setProperty("ticket.updated", "true");
@@ -3028,7 +3034,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         }
         Object[] options = {"Create", "Find", "Cancel"};
 
-        int n = JOptionPane.showOptionDialog(null,
+        int n = JOptionPane.showOptionDialog(this,
                 AppLocal.getIntString("message.customeradd"),
                 AppLocal.getIntString("label.customer"),
                 JOptionPane.YES_NO_CANCEL_OPTION,
