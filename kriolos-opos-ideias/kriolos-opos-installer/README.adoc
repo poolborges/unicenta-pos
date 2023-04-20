@@ -1,8 +1,0 @@
-= Installer
-
-
-== reference
-
-* https://clients.bitrock.com/installbuilder/docs/installbuilder-userguide.html
-* https://installbuilder.com/docs/installbuilder-userguide/index.html
-* https://installbuilder.com/docs/installbuilder-userguide

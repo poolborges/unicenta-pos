@@ -1,2 +1,0 @@
-# Provide this because kotlin jar not provied
-org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngineFactory
