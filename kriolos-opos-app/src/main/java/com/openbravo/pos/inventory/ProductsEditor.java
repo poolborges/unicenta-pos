@@ -66,13 +66,13 @@ import org.netbeans.validation.api.builtin.stringvalidation.StringValidators;
  *
  * @author Jack Gerrard
  */
-public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPanel  implements EditorRecord {
+public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPanel implements EditorRecord {
 
     private static final Logger LOGGER = Logger.getLogger(ProductsEditor.class.getName());
     private AppProperties m_props;
 
     private static final long serialVersionUID = 1L;
-    private String m_oId;
+    private String productId;
 
     private final SentenceList m_sentcat;
     private ComboBoxValModel m_CategoryModel;
@@ -94,8 +94,7 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
 
     private boolean reportlock = false;
     private int btn;
-
-    
+    private Color bckgColor = null;
 
     private SentenceList m_sentuom;
     private ComboBoxValModel m_UomModel;
@@ -208,7 +207,7 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
         init();
         initValidator();
     }
-    
+
     private void initValidator() {
         org.netbeans.validation.api.ui.ValidationGroup valGroup = getValidationGroup();
         valGroup.add(m_jRef, StringValidators.REQUIRE_NON_EMPTY_STRING);
@@ -268,7 +267,7 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
         m_jTitle.setText(AppLocal.getIntString("label.recordeof"));
 
 // Tab General        
-        m_oId = null;
+        productId = null;
         m_jRef.setText(null);
         m_jCode.setText(null);
         m_jCodetype.setSelectedIndex(0);
@@ -367,7 +366,7 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
         m_jTitle.setText(AppLocal.getIntString("label.recordnew"));
 
 // Tab General        
-        m_oId = UUID.randomUUID().toString();
+        productId = UUID.randomUUID().toString();
         m_jRef.setText(null);
         m_jCode.setText(null);
         m_jCodetype.setSelectedIndex(0);
@@ -464,7 +463,7 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
 
         Object[] myprod = new Object[32];
 
-        myprod[0] = m_oId == null ? UUID.randomUUID().toString() : m_oId;
+        myprod[0] = productId == null ? UUID.randomUUID().toString() : productId;
         myprod[1] = m_jRef.getText();
         myprod[2] = m_jCode.getText();
         myprod[3] = m_jCodetype.getSelectedItem();
@@ -566,45 +565,45 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
         calculatePriceSellTax();
         calculateGP();
     }
-    
-    private void setValues(Object value){
+
+    private void setValues(Object value) {
         Object[] myprod = (Object[]) value;
 
-        m_jTitle.setText(Formats.STRING.formatValue((String)myprod[1])
-                + " - " + Formats.STRING.formatValue((String)myprod[4]));
-        m_oId = (String)myprod[0];
-        m_jRef.setText(Formats.STRING.formatValue((String)myprod[1]));
-        m_jCode.setText(Formats.STRING.formatValue((String)myprod[2]));
+        m_jTitle.setText(Formats.STRING.formatValue((String) myprod[1])
+                + " - " + Formats.STRING.formatValue((String) myprod[4]));
+        productId = (String) myprod[0];
+        m_jRef.setText(Formats.STRING.formatValue((String) myprod[1]));
+        m_jCode.setText(Formats.STRING.formatValue((String) myprod[2]));
         m_jCodetype.setSelectedItem(myprod[3]);
-        m_jName.setText(Formats.STRING.formatValue((String)myprod[4]));
-        m_jPriceBuy.setText(Formats.CURRENCY.formatValue((Double)myprod[5]));
-        setPriceSell(myprod[6]);
+        m_jName.setText(Formats.STRING.formatValue((String) myprod[4]));
+        m_jPriceBuy.setText(Formats.CURRENCY.formatValue((Double) myprod[5]));
+        setPriceSell((Double) myprod[6]);
         m_CategoryModel.setSelectedKey(myprod[7]);
         taxcatmodel.setSelectedKey(myprod[8]);
         attmodel.setSelectedKey(myprod[9]);
-        m_jstockcost.setText(Formats.CURRENCY.formatValue((Double)myprod[10]));
-        m_jstockvolume.setText(Formats.DOUBLE.formatValue((Double)myprod[11]));
+        m_jstockcost.setText(Formats.CURRENCY.formatValue((Double) myprod[10]));
+        m_jstockvolume.setText(Formats.DOUBLE.formatValue((Double) myprod[11]));
 //  JG 3 feb 16 speedup   m_jImage.setImage((BufferedImage) myprod[12]); 
-        m_jImage.setImage(findImage(m_oId));
+        m_jImage.setImage(findImage(productId));
         m_jComment.setSelected(((Boolean) myprod[13]));
         m_jScale.setSelected(((Boolean) myprod[14]));
         m_jConstant.setSelected(((Boolean) myprod[15]));
         m_jPrintKB.setSelected(((Boolean) myprod[16]));
         m_jSendStatus.setSelected(((Boolean) myprod[17]));
         m_jService.setSelected(((Boolean) myprod[18]));
-        txtAttributes.setText(Formats.BYTEA.formatValue((byte[])myprod[19]));
-        m_jDisplay.setText(Formats.STRING.formatValue((String)myprod[20]));
+        txtAttributes.setText(Formats.BYTEA.formatValue((byte[]) myprod[19]));
+        m_jDisplay.setText(Formats.STRING.formatValue((String) myprod[20]));
         m_jVprice.setSelected(((Boolean) myprod[21]));
         m_jVerpatrib.setSelected(((Boolean) myprod[22]));
-        m_jTextTip.setText(Formats.STRING.formatValue((String)myprod[23]));
+        m_jTextTip.setText(Formats.STRING.formatValue((String) myprod[23]));
         m_jCheckWarrantyReceipt.setSelected(((Boolean) myprod[24]));
-        m_jStockUnits.setText(Formats.DOUBLE.formatValue((Double)myprod[25]));
+        m_jStockUnits.setText(Formats.DOUBLE.formatValue((Double) myprod[25]));
         m_jPrintTo.setSelectedItem(myprod[26]);
         m_SuppliersModel.setSelectedKey(myprod[27]);
         m_UomModel.setSelectedKey(myprod[28]);
-        m_jdate.setText(Formats.DATE.formatValue((Date)myprod[29]));
+        m_jdate.setText(Formats.DATE.formatValue((Date) myprod[29]));
         m_jInCatalog.setSelected(((Boolean) myprod[30]));
-        m_jCatalogOrder.setText(Formats.INT.formatValue((Integer)myprod[31]));
+        m_jCatalogOrder.setText(Formats.INT.formatValue((Integer) myprod[31]));
     }
 
     /**
@@ -671,10 +670,12 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
 
     public void resetTranxTable() {
 
+        /*
         jTableProductStock.getColumnModel().getColumn(0).setPreferredWidth(100);
         jTableProductStock.getColumnModel().getColumn(1).setPreferredWidth(50);
         jTableProductStock.getColumnModel().getColumn(2).setPreferredWidth(50);
         jTableProductStock.getColumnModel().getColumn(3).setPreferredWidth(50);
+        */
 
         jTableProductStock.repaint();
 
@@ -788,38 +789,38 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
         }
     }
 
+    private void selectorBackgroundColor() {
+        bckgColor = JColorChooser.showDialog(this, "", Color.WHITE);
+    }
+
     private void setDisplay(int btn) {
 
         String htmlString = (m_jDisplay.getText());
-        String ohtmlString = "<html><center>" + m_jName.getText();
 
         switch (btn) {
             case 1:
                 m_jDisplay.insert("<br>", m_jDisplay.getCaretPosition());
                 break;
             case 2:
-                JColorChooser jcs = new JColorChooser();
-                jcs.getSelectionModel().addChangeListener((e) -> {
-
-                    String hexcolor = color2HexString(jcs.getColor());
-                    m_jDisplay.insert("<font color=" + hexcolor + ">", m_jDisplay.getCaretPosition());
-                });
+                Color colo = JColorChooser.showDialog(this, "", Color.WHITE);
+                String hexcolor = color2HexString(colo);
+                m_jDisplay.insert("<font color=" + hexcolor + ">", m_jDisplay.getCaretPosition());
                 break;
             case 3:
                 m_jDisplay.insert("<font size=+2>",
-                         m_jDisplay.getCaretPosition());
+                        m_jDisplay.getCaretPosition());
                 break;
             case 4:
                 m_jDisplay.insert("<font size=-2>",
-                         m_jDisplay.getCaretPosition());
+                        m_jDisplay.getCaretPosition());
                 break;
             case 5:
-                m_jDisplay.insert("<b> </b>",
-                         m_jDisplay.getCaretPosition());
+                m_jDisplay.insert("<b>",
+                        m_jDisplay.getCaretPosition());
                 break;
             case 6:
-                m_jDisplay.insert("<i> </i>",
-                         m_jDisplay.getCaretPosition());
+                m_jDisplay.insert("<i>",
+                        m_jDisplay.getCaretPosition());
                 break;
             case 7:
 // defaults to file:/ for local disk
@@ -832,17 +833,17 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
                 File selectedFile = fc.getSelectedFile();
                 if (selectedFile != null) {
                     m_jDisplay.insert("<img src=file:" + selectedFile.getAbsolutePath() + ">",
-                             m_jDisplay.getCaretPosition());
+                            m_jDisplay.getCaretPosition());
                 }
                 break;
 
             case 8:
-                htmlString = ohtmlString;
+                htmlString = "<html>" + m_jName.getText();
                 m_jDisplay.setText(htmlString);
                 break;
             case 9:
                 m_jDisplay.insert("<div style=background-color:black;color:white;padding:10px;>",
-                         m_jDisplay.getCaretPosition());
+                        m_jDisplay.getCaretPosition());
                 break;
             default:
                 htmlString += "";
@@ -853,6 +854,9 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
     private void setButtonHTML() {
 
         jButtonHTML.setText(m_jDisplay.getText());
+        if (bckgColor != null) {
+            jButtonHTML.setBackground(bckgColor);
+        }
     }
 
     public String color2HexString(Color color) {
@@ -891,13 +895,13 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
         if (!reportlock) {
             reportlock = true;
 
-            Double dPriceSell = (Double) pricesell;
+            Double dPriceSell = pricesell;
 
             if (dPriceSell == null) {
                 m_jPriceSellTax.setText(null);
             } else {
                 double dTaxRate = taxeslogic.getTaxRate((TaxCategoryInfo) taxcatmodel.getSelectedItem());
-                m_jPriceSellTax.setText(Formats.CURRENCY.formatValue(dPriceSell.doubleValue() * (1.0 + dTaxRate)));
+                m_jPriceSellTax.setText(Formats.CURRENCY.formatValue(dPriceSell * (1.0 + dTaxRate)));
             }
             reportlock = false;
         }
@@ -909,14 +913,12 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
             reportlock = true;
 
             Double dPriceBuy = readCurrency(m_jPriceBuy.getText());
-            Double dPriceSell = (Double) pricesell;
+            Double dPriceSell = readCurrency(m_jPriceSell.getText());
 
             if (dPriceBuy == null || dPriceSell == null) {
                 m_jGrossProfit.setText(null);
             } else {
-                m_jGrossProfit.setText(Formats.PERCENT.formatValue(
-                        (dPriceSell.doubleValue() - dPriceBuy.doubleValue())
-                        / dPriceSell.doubleValue()));
+                m_jGrossProfit.setText(Formats.PERCENT.formatValue((dPriceSell - dPriceBuy) / dPriceSell));
             }
             reportlock = false;
         }
@@ -933,7 +935,7 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
             if (dMargin == null || dPriceBuy == null) {
                 setPriceSell(null);
             } else {
-                setPriceSell(dPriceBuy.doubleValue() * (1.0 + dMargin.doubleValue()));
+                setPriceSell(dPriceBuy * (1.0 + dMargin));
             }
 
             reportlock = false;
@@ -952,18 +954,18 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
                 setPriceSell(null);
             } else {
                 double dTaxRate = taxeslogic.getTaxRate((TaxCategoryInfo) taxcatmodel.getSelectedItem());
-                setPriceSell(dPriceSellTax.doubleValue() / (1.0 + dTaxRate));
+                setPriceSell(dPriceSellTax / (1.0 + dTaxRate));
             }
 
             reportlock = false;
         }
     }
 
-    private void setPriceSell(Object value) {
+    private void setPriceSell(Double value) {
 
         if (!priceselllock) {
             priceselllock = true;
-            pricesell = (Double)value;
+            pricesell = value;
             m_jPriceSell.setText(Formats.CURRENCY.formatValue(pricesell));
             priceselllock = false;
         }
@@ -1090,7 +1092,7 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
 
     private static Double readCurrency(String sValue) {
         try {
-            return (Double) Formats.CURRENCY.parseValue(sValue);
+            return Formats.CURRENCY.parseValue(sValue);
         } catch (BasicException e) {
             return null;
         }
@@ -1098,7 +1100,7 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
 
     private static Double readPercent(String sValue) {
         try {
-            return (Double) Formats.PERCENT.parseValue(sValue);
+            return Formats.PERCENT.parseValue(sValue);
         } catch (BasicException e) {
             return null;
         }
@@ -1351,8 +1353,8 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
                                     .addComponent(m_jRef, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(m_jCode, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(12, 12, 12)
-                                .addComponent(m_jCodetype, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addComponent(m_jCodetype, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(56, 56, 56))
         );
         jPanel1Layout.setVerticalGroup(
@@ -2018,6 +2020,7 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
             }
         });
 
+        colourChooser.setText("Bck");
         colourChooser.setToolTipText(bundle.getString("tooltip.prodhtmldisplayColourChooser")); // NOI18N
         colourChooser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2040,33 +2043,30 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(m_jTextTip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(jBtnStyle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jBtnBreak, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addComponent(jBtnColour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jBtnLarge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jBtnSmall, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addGap(13, 13, 13)
-                                        .addComponent(colourChooser)
-                                        .addGap(49, 49, 49)
-                                        .addComponent(jButtonHTML, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jBtnColour, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(colourChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jBtnLarge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jBtnSmall, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jBtnBold, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jBtnItalic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jBtnImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jBtnImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButtonHTML, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(m_jTextTip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2089,14 +2089,14 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
                         .addComponent(jBtnStyle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jBtnBreak, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonHTML, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(colourChooser))
-                .addGap(18, 18, 18)
+                .addComponent(colourChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(m_jTextTip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(130, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButtonHTML, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(94, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(AppLocal.getIntString("label.button"), jPanel4); // NOI18N
@@ -2111,12 +2111,14 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
     }//GEN-LAST:event_jButtonHTMLActionPerformed
 
     private void jBtnXmlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnXmlActionPerformed
-        txtAttributes.setText(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>  \n"
-                + "<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n"
-                + "<properties>\n"
-                + "    <entry key=\"identifier\">value</entry>\n"
-                + "</properties>");
+        if (txtAttributes.getText() == null || txtAttributes.getText().isBlank()) {
+            txtAttributes.setText(
+                    "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>  \n"
+                    + "<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n"
+                    + "<properties>\n"
+                    + "    <entry key=\"identifier\">value</entry>\n"
+                    + "</properties>");
+        }
     }//GEN-LAST:event_jBtnXmlActionPerformed
 
     private void jBtnSmallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnSmallActionPerformed
@@ -2164,15 +2166,11 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
         setDisplay(btn);
     }//GEN-LAST:event_jBtnStyleActionPerformed
 
-    private void colourChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colourChooserActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_colourChooserActionPerformed
-
     private void m_jbtndateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jbtndateActionPerformed
 
         Date date;
         try {
-            date = (Date) Formats.TIMESTAMP.parseValue(m_jdate.getText());
+            date = Formats.TIMESTAMP.parseValue(m_jdate.getText());
         } catch (BasicException e) {
             date = null;
         }
@@ -2183,10 +2181,9 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
     }//GEN-LAST:event_m_jbtndateActionPerformed
 
     private void jBtnShowTransActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnShowTransActionPerformed
-        
-        if (m_oId != null) {
-            String pId = m_oId.toString();
-            StockTableModel stockModel = new StockTableModel(getProductOfName(pId));
+
+        if (productId != null) {
+            StockTableModel stockModel = new StockTableModel(getProductOfName(productId));
             jTableProductStock.setModel(stockModel);
             if (stockModel.getRowCount() > 0) {
                 jTableProductStock.setVisible(true);
@@ -2248,7 +2245,7 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
 
         if (evt.getClickCount() == 2) {
-            String uuidString = m_oId.toString();
+            String uuidString = productId.toString();
             StringSelection stringSelection = new StringSelection(uuidString);
             Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
             clpbrd.setContents(stringSelection, null);
@@ -2257,6 +2254,10 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
                     AppLocal.getIntString("message.uuidcopy"));
         }
     }//GEN-LAST:event_jLabel1MouseClicked
+
+    private void colourChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colourChooserActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_colourChooserActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton colourChooser;

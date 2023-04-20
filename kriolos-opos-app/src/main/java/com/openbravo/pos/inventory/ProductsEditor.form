@@ -113,9 +113,9 @@
                                       </Group>
                                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                                       <Component id="m_jCodetype" min="-2" pref="126" max="-2" attributes="0"/>
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
@@ -1505,30 +1505,18 @@
                               <Component id="jScrollPane3" alignment="0" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jLabel21" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="m_jTextTip" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
                                       <Component id="jBtnStyle" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jBtnBreak" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="jBtnColour" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="jBtnLarge" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="jBtnSmall" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-                                              <Component id="colourChooser" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
-                                              <Component id="jButtonHTML" min="-2" max="-2" attributes="0"/>
-                                          </Group>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="jBtnColour" max="32767" attributes="0"/>
+                                          <Component id="colourChooser" max="32767" attributes="0"/>
                                       </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jBtnLarge" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jBtnSmall" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jBtnBold" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
@@ -1536,10 +1524,18 @@
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Component id="jBtnImage" min="-2" max="-2" attributes="0"/>
                                   </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jLabel21" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jButtonHTML" min="-2" max="-2" attributes="0"/>
+                                          <Component id="m_jTextTip" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace min="63" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1567,16 +1563,15 @@
                           <Component id="jBtnBreak" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jButtonHTML" min="-2" max="-2" attributes="0"/>
-                          <Component id="colourChooser" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="colourChooser" min="-2" pref="32" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel21" min="-2" max="-2" attributes="0"/>
                           <Component id="m_jTextTip" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="130" max="32767" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jButtonHTML" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="94" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1826,6 +1821,7 @@
             </Component>
             <Container class="javax.swing.JButton" name="colourChooser">
               <Properties>
+                <Property name="text" type="java.lang.String" value="Bck"/>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="pos_messages.properties" key="tooltip.prodhtmldisplayColourChooser" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
