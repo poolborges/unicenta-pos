@@ -81,6 +81,7 @@ public class SessionDBMySQL implements SessionDB {
      */
     @Override
     public SentenceExec resetSequenceSentence(Session s, String sequence) {
-        return new SequenceForMySQL(s, "UPDATE "+sequence+" SET ID=1");
+        var seq = new SequenceForMySQL(s,sequence);
+        return seq.reset();
     }    
 }

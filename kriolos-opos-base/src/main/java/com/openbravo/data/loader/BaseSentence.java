@@ -19,16 +19,14 @@ import com.openbravo.basic.BasicException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
+ * Base Statement implementation
  *
- * @author JG uniCenta
+ * @author JG uniCenta, poolborges
+ * @param <T>
  */
 public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T>, SentenceExec {
-
-    protected final static Logger LOGGER = Logger.getLogger(BaseSentence.class.getName());
 
     public abstract DataResultSet<T> openExec(Object params) throws BasicException;
 
@@ -43,15 +41,16 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
 
     @Override
     public final int exec(Object params) throws BasicException {
-        DataResultSet<T> SRS = openExec(params);
-        if (SRS == null) {
-            LOGGER.log(Level.WARNING, "openExec return ResultSet is NULL");
-            throw new BasicException(LocalRes.getIntString("exception.noupdatecount"));
+        int count = -1;
+        try (DataResultSet<T> SRS = openExec(params)) {
+            requireNonNull(SRS);
+            count = SRS.updateCount();
+        } catch (BasicException ex) {
+            throw new BasicException(ex);
+        } finally {
+            closeExec();
         }
-        int iResult = SRS.updateCount();
-        SRS.close();
-        closeExec();
-        return iResult;
+        return count;
     }
 
     @Override
@@ -59,14 +58,17 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
         return list(null);
     }
 
-
     @Override
     public final List<T> list(Object params) throws BasicException {
-        DataResultSet<T> SRS = openExec(params);
-        List<T> aSO = fetchAll(SRS);
-        SRS.close();
-        closeExec();
-        return aSO;
+        List<T> list = Collections.<T>emptyList();
+        try (DataResultSet<T> dataResultSet = openExec(params)) {
+            list = fetchAll(dataResultSet);
+        } catch (BasicException ex) {
+            throw new BasicException(ex);
+        } finally {
+            closeExec();
+        }
+        return list;
     }
 
     @Override
@@ -76,36 +78,29 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
 
     @Override
     public final List<T> listPage(Object params, int offset, int length) throws BasicException {
-        List<T> aSO = Collections.<T>emptyList();
-        try {
-            DataResultSet<T> resultSet = openExec(params);
-            fetchPage(resultSet, offset, length);
-            resultSet.close();
-        } catch (Exception ex) {
+        List<T> list = Collections.<T>emptyList();
+        try (DataResultSet<T> resultSet = openExec(params)) {
+            list = fetchPage(resultSet, offset, length);
+        } catch (BasicException ex) {
             throw new BasicException(ex);
         } finally {
             closeExec();
         }
 
-        return aSO;
+        return list;
     }
 
     @Override
     public final T find() throws BasicException {
-        return find((Object)null);
+        return find((Object) null);
     }
 
     @Override
     public final T find(Object... params) throws BasicException {
         T obj = null;
-        try {
-            DataResultSet<T> resultSet = openExec(params);
-            if (resultSet != null) {
-                obj = fetchOne(resultSet);
-                resultSet.close();
-            }
-
-        } catch (Exception ex) {
+        try (DataResultSet<T> resultSet = openExec(params)) {
+            obj = fetchOne(resultSet);
+        } catch (BasicException ex) {
             throw new BasicException(ex);
         } finally {
             closeExec();
@@ -114,58 +109,52 @@ public abstract class BaseSentence<T> implements SentenceList<T>, SentenceFind<T
         return obj;
     }
 
-    public final List<T> fetchAll(DataResultSet<T> resultSet) throws BasicException {
-        if (resultSet == null) {
-            LOGGER.log(Level.WARNING, "fetchAll param DataResultSet is NULL");
-            throw new BasicException(LocalRes.getIntString("exception.nodataset"));
-        }
+    private List<T> fetchAll(DataResultSet<T> resultSet) throws BasicException {
+        requireNonNull(resultSet);
 
-        List<T> aSO = new ArrayList<>();
+        List<T> list = new ArrayList<>();
         while (resultSet.next()) {
-            aSO.add(resultSet.getCurrent());
+            list.add(resultSet.getCurrent());
         }
-        return aSO;
+        return list;
     }
 
-    public final List<T> fetchPage(DataResultSet<T> resultSet, int offset, int length) throws BasicException {
+    private List<T> fetchPage(DataResultSet<T> resultSet, int offset, int length) throws BasicException {
+        requireNonNull(resultSet);
+        requirePositive(offset);
+        requirePositive(length);
 
-        if (resultSet == null) {
-            LOGGER.log(Level.WARNING, "fetchAll param DataResultSet is NULL");
-            throw new BasicException(LocalRes.getIntString("exception.nodataset"));
-        }
-
-        if (offset < 0 || length < 0) {
-            LOGGER.log(Level.WARNING, "fetchPage param offset,length are negative");
-            throw new BasicException(LocalRes.getIntString("exception.nonegativelimits"));
-        }
-
-        // Skip los primeros que no me importan
+        //skip
         while (offset > 0 && resultSet.next()) {
             offset--;
         }
+        
+        List<T> list = new ArrayList<>();
 
-        // me traigo tantos como me han dicho
-        List<T> aSO = new ArrayList<>();
-        if (offset == 0) {
-            while (length > 0 && resultSet.next()) {
-                length--;
-                aSO.add(resultSet.getCurrent());
-            }
+        while (offset == 0 && length > 0 && resultSet.next()) {
+            list.add(resultSet.getCurrent());
+            length--;
         }
-        return aSO;
+
+        return list;
     }
 
-    public final T fetchOne(DataResultSet<T> resultSet) throws BasicException {
+    private T fetchOne(DataResultSet<T> resultSet) throws BasicException {
+        requireNonNull(resultSet);
+        return resultSet.next() ? resultSet.getCurrent(): null;
+    }
 
+    private void requireNonNull(DataResultSet<T> resultSet) throws BasicException {
         if (resultSet == null) {
-            LOGGER.log(Level.WARNING, "fetchAll param DataResultSet is NULL");
-            throw new BasicException(LocalRes.getIntString("exception.nodataset"));
+            throw new BasicException(LocalRes.getIntString("exception.nodataset"),
+                    new Exception("DataResultSet should not be null"));
         }
+    }
 
-        if (resultSet.next()) {
-            return resultSet.getCurrent();
-        } else {
-            return null;
+    private void requirePositive(int value) throws BasicException {
+        if (value < 0) {
+            throw new BasicException(LocalRes.getIntString("exception.nonegativelimits"),
+                    new Exception(String.format("Excpected positive value, but %s", value)));
         }
     }
 

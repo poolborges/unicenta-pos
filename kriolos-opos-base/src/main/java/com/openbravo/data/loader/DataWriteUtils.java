@@ -17,125 +17,139 @@
 package com.openbravo.data.loader;
 
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- *
- * @author  adrian
+ * Utility class to get SQL string representation of some classes.
+ * 
+ * @author  adrian, poolborges
  */
-public class DataWriteUtils {
-    private final static Logger LOGGER = Logger.getLogger(DataWriteUtils.class.getName());
-    private static DateFormat tsf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); 
+public abstract class DataWriteUtils {
     
-    
-    /** Creates a new instance of DataWriteUtils */
-    public DataWriteUtils() {
-    }
+    private final static DateFormat TSF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); 
     
     /**
-     *
-     * @param obj
-     * @return
+     * Get Object SQL string represention.
+     *   Support instanceof Double, Integer, Boolean, String, Date, byte[]
+     * 
+     * @param value 
+     * @return string representation
      */
-    public static String getSQLValue(Object obj) {
-        if (obj == null) {
+    public static String getSQLValue(Object value) {
+        if (value == null) {
             return "NULL";
-        } else if (obj instanceof Double) {
-            return getSQLValue((Double) obj);
-        } else if (obj instanceof Integer) {
-            return getSQLValue((Integer) obj);
-        } else if (obj instanceof Boolean) {
-            return getSQLValue((Boolean) obj);
-        } else if (obj instanceof String) {
-            return getSQLValue((String) obj);
-        } else if (obj instanceof Date) {
-            return getSQLValue((Date) obj);
-        }else if (obj instanceof byte[]){
-            return getSQLValue((byte[])obj);
+        } else if (value instanceof Double) {
+            return getSQLValue((Double) value);
+        } else if (value instanceof Integer) {
+            return getSQLValue((Integer) value);
+        } else if (value instanceof Boolean) {
+            return getSQLValue((Boolean) value);
+        } else if (value instanceof String) {
+            return getSQLValue((String) value);
+        } else if (value instanceof Date) {
+            return getSQLValue((Date) value);
+        }else if (value instanceof byte[]){
+            return getSQLValue((byte[])value);
         }else {
-            return getSQLValue(obj.toString());
+            return getSQLValue(value.toString());
         }            
     }
     
     /**
-     *
-     * @param iValue
-     * @return
+     * Get string represention of Integer. 
+     * 
+     * @param value
+     * @return string representatin of interger, otherwich "NULL" 
+     * 
+     * @see Integer#toString()
      */
-    public static String getSQLValue(Integer iValue) {
-        if (iValue == null) {
+    public static String getSQLValue(Integer value) {
+        if (value == null) {
             return "NULL";
         } else {
-            return iValue.toString();
+            return value.toString();
         }
     }
     
     /**
-     *
-     * @param dValue
-     * @return
+     * Get Double SQL string representation.  
+     * 
+     * @param value
+     * @return string of value or "NULL" if value is null
+     * 
+     * @see Double#toString()
      */
-    public static String getSQLValue(Double dValue) {
-        if (dValue == null) {
+    public static String getSQLValue(Double value) {
+        if (value == null) {
             return "NULL";
         } else {
-            return dValue.toString();
+            return value.toString();
         }
     }
     
     /**
-     *
-     * @param bValue
-     * @return
+     * Get SQL string boolean representation. 
+     * 
+     * @param value boolean value
+     * @return  "TRUE" or "FALSE" or "NULL"
+     * 
+     * @see Boolean#toString()
      */
-    public static String getSQLValue(Boolean bValue) {
-        if (bValue == null) {
+    public static String getSQLValue(Boolean value) {
+        if (value == null) {
             return "NULL";
         } else {
-            return bValue.booleanValue() ? "TRUE" : "FALSE";
+            return value ? "TRUE" : "FALSE";
         }
     }
     
     /**
-     *
-     * @param sValue
-     * @return
+     * Get String SQL represention. 
+     * 
+     *    eg: Paulo would represented as 'Paulo'
+     * 
+     * @param value string 
+     * @return the string enclosure by 'EXAMPLE OF STRING'
+     * 
+     * @see this#getEscaped
      */
-    public static String getSQLValue(String sValue) {
-        if (sValue == null) {
+    public static String getSQLValue(String value) {
+        if (value == null) {
             return "NULL";
         } else {
-            return '\'' + getEscaped(sValue) + '\'';
+            return '\'' + getEscaped(value) + '\'';
         }
     }
     
     /**
+     * Get Date SQL representation. 
+     * 
+     *   SQL example return {ts 'yyyy-MM-dd HH:mm:ss.SSS'}
      *
-     * @param dValue
-     * @return
+     * @param value
+     * @return return in formated as {ts 'yyyy-MM-dd HH:mm:ss.SSS'}
      */
-    public static String getSQLValue(Date dValue) {
-        if (dValue == null) {
+    public static String getSQLValue(Date value) {
+        if (value == null) {
             return "NULL";
         } else {
-            return "{ts '" + tsf.format(dValue) + "'}";
+            return "{ts '" + TSF.format(value) + "'}";
         }
     }
     
     /**
+     * Escape special charater with. 
+     * Example special "\", "\n", "\r", ""
      *
-     * @param sValue
-     * @return
+     * @param value string
+     * @return escaped string
      */
-    public static String getEscaped(String sValue) {
+    public static String getEscaped(String value) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < sValue.length(); i++) {
-            switch (sValue.charAt(i)) {
+        for (int i = 0; i < value.length(); i++) {
+            switch (value.charAt(i)) {
                 case '\\':
                     sb.append("\\\\");
                     break;
@@ -149,19 +163,26 @@ public class DataWriteUtils {
                     sb.append("\\r");
                     break;
                 default: 
-                    sb.append(sValue.charAt(i));
+                    sb.append(value.charAt(i));
                     break;
             }
         }
         return sb.toString();
     }
 
-    public static String getSQLValue(byte[] bValue) {
+    /**
+     * Get byte array SQL string representation
+     * Use String(byte[], UTF-8)
+     * 
+     * @param value byte array (byte[])
+     * @return "NULL" if null, or converted UTF-F string eclosure with ''
+     */
+    public static String getSQLValue(byte[] value) {
         String res = "NULL";
-        if (bValue == null) {
+        if (value == null) {
             return res;
         } else {
-            res = new String(bValue, StandardCharsets.UTF_8);
+            res = new String(value, StandardCharsets.UTF_8);
             return "'" + res + "'";
         }
     }

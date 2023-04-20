@@ -30,6 +30,7 @@ public class SerializerWriteString implements SerializerWrite {
 
     private SerializerWriteString() {}
 
+    @Override
     public void writeValues(DataWrite dp, Object parameters) throws BasicException {
 
         int posi = 1;
@@ -37,13 +38,13 @@ public class SerializerWriteString implements SerializerWrite {
             if (parameters instanceof Object[]) {
                 
                 for (Object param : (Object[]) parameters) {
-                    Datas.STRING.setValue(dp, posi, (String) param);
+                    Datas.STRING.setValue(dp, posi++, (String) param);
                 }
             } else {
                 Datas.STRING.setValue(dp, 1, (String) parameters);
             }
 
-        } catch (Exception ex) {
+        } catch (BasicException ex) {
             LOGGER.log(Level.WARNING, "Exception while set value for parameter on posi: "+posi,ex);
             throw new BasicException(ex);
         }

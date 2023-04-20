@@ -33,41 +33,41 @@ public class StaticSentence<W extends Object, T> extends JDBCBaseSentence<T> {
 
     protected static final Logger LOGGER = Logger.getLogger(StaticSentence.class.getName());
 
-    protected ISQLBuilderStatic m_sentence;
+    protected ISQLBuilderStatic m_SqlBuilder;
     protected SerializerWrite<W> m_SerWrite = null;
     protected SerializerRead<T> m_SerRead = null;
     protected Statement m_Stmt;
 
-    public StaticSentence(Session s, ISQLBuilderStatic sentence, SerializerWrite<W> serwrite, SerializerRead<T> serread) {
+    public StaticSentence(Session s, ISQLBuilderStatic sqlBuilder, SerializerWrite<W> serwrite, SerializerRead<T> serread) {
         super(s);
-        m_sentence = sentence;
+        m_SqlBuilder = sqlBuilder;
         m_SerWrite = serwrite;
         m_SerRead = serread;
         m_Stmt = null;
     }
 
-    public StaticSentence(Session s, ISQLBuilderStatic sentence) {
-        this(s, sentence, null, null);
+    public StaticSentence(Session s, ISQLBuilderStatic sqlBuilder) {
+        this(s, sqlBuilder, null, null);
     }
 
-    public StaticSentence(Session s, ISQLBuilderStatic sentence, SerializerWrite<W> serwrite) {
-        this(s, sentence, serwrite, null);
+    public StaticSentence(Session s, ISQLBuilderStatic sqlBuilder, SerializerWrite<W> serwrite) {
+        this(s, sqlBuilder, serwrite, null);
     }
 
-    public StaticSentence(Session s, String sentence, SerializerWrite<W> serwrite, SerializerRead<T> serread) {
-        this(s, new NormalBuilder(sentence), serwrite, serread);
+    public StaticSentence(Session s, String sqlStatement, SerializerWrite<W> serwrite, SerializerRead<T> serread) {
+        this(s, new NormalBuilder(sqlStatement), serwrite, serread);
     }
 
-    public StaticSentence(Session s, String sentence, SerializerWrite<W> serwrite) {
-        this(s, new NormalBuilder(sentence), serwrite, null);
+    public StaticSentence(Session s, String sqlStatement, SerializerWrite<W> serwrite) {
+        this(s, new NormalBuilder(sqlStatement), serwrite, null);
     }
 
-    public StaticSentence(Session s, String sentence, SerializerRead<T> serread) {
-        this(s, new NormalBuilder(sentence), null, serread);
+    public StaticSentence(Session s, String sqlStatement, SerializerRead<T> serread) {
+        this(s, new NormalBuilder(sqlStatement), null, serread);
     }
 
-    public StaticSentence(Session s, String sentence) {
-        this(s, new NormalBuilder(sentence), null, null);
+    public StaticSentence(Session s, String sqlStatement) {
+        this(s, new NormalBuilder(sqlStatement), null, null);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class StaticSentence<W extends Object, T> extends JDBCBaseSentence<T> {
         log(params);
         try {
 
-            sentence = m_sentence.getSQL(m_SerWrite, params);
+            sentence = m_SqlBuilder.getSQL(m_SerWrite, params);
 
             LOGGER.log(Level.FINE, "Executing SQL sentence : {0}", sentence);
 

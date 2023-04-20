@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
@@ -21,41 +20,45 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author  adrian
+ * @author adrian
  */
 public class QBFBuilder implements ISQLBuilderStatic {
-   
+
     private static final Logger LOGGER = Logger.getLogger("com.openbravo.data.loader.QBFBuilder");
-    private final String m_sSentNullFilter;     // la sentencia que se devuelve cuando el filtro es vacio
-    private final String m_sSentBeginPart;      // La sentencia que se devuelve es m_sSentBeginPart + ( filtro ) + m_sSentEndPart
-    private final String m_sSentEndPart;
-    private final String[] m_asFindFields;    
     
-//    /** Creates a new instance of QBFBuilder */
-//    public QBFBuilder(TableDefinition tb, String[] asFindFields) {
-//        StringBuilder sent = new StringBuilder();
-//        sent.append("select ");
-//        for (int i = 0; i < tb.getFields().length; i ++) {
-//            if (i > 0) {
-//                sent.append(", ");
-//            }
-//            sent.append(tb.getFields()[i]);
-//        }
-//        sent.append(" from ");
-//        sent.append(tb.getTableName());
-//        m_sSentNullFilter = sent.toString();
-//        sent.append(" where ");
-//        m_sSentBeginPart = sent.toString();
-//        m_sSentEndPart = "";
-//        m_asFindFields = asFindFields;
-//    }
+    private final String m_sSentNullFilter;     // For null filter
+    private final String m_sSentBeginPart;      // m_sSentBeginPart + ( filtro ) + m_sSentEndPart
+    private final String m_sSentEndPart;
+    private final String[] m_asFindFields;
 
     /**
+     * 
+     * @param tb
+     * @param asFindFields 
+     */
+    public QBFBuilder(TableDefinition tb, String[] asFindFields) {
+        StringBuilder sent = new StringBuilder();
+        sent.append("select ");
+        for (int i = 0; i < tb.getFields().length; i++) {
+            if (i > 0) {
+                sent.append(", ");
+            }
+            sent.append(tb.getFields()[i]);
+        }
+        sent.append(" from ");
+        sent.append(tb.getTableName());
+        m_sSentNullFilter = sent.toString();
+        sent.append(" where ");
+        m_sSentBeginPart = sent.toString();
+        m_sSentEndPart = "";
+        m_asFindFields = asFindFields;
+    }
+    /**
      *
-     * @param sSentence
+     * @param sSentence SQL Statement
      * @param asFindFields
      */
-        public QBFBuilder(String sSentence, String[] asFindFields) {
+    public QBFBuilder(String sSentence, String[] asFindFields) {
         int iPos = sSentence.indexOf("?(QBF_FILTER)");
         if (iPos < 0) {
             m_sSentBeginPart = sSentence;
@@ -78,37 +81,37 @@ public class QBFBuilder implements ISQLBuilderStatic {
      */
     @Override
     public String getSQL(SerializerWrite sw, Object params) throws BasicException {
-        
-        QBFParameter mydw = new QBFParameter(m_asFindFields);
+
+        QBFDataWrite dwrite = new QBFDataWrite(m_asFindFields);
         if (sw == null || params == null) {
             return m_sSentNullFilter;
         } else {
-            sw.writeValues(mydw, params);
-            String sFilter = mydw.getFilter();
-            if (sFilter.length() == 0) { 
-                return m_sSentNullFilter; // no hay filtro
+            sw.writeValues(dwrite, params);
+            String sFilter = dwrite.getFilter();
+            if (sFilter.length() == 0) {
+                return m_sSentNullFilter;
             } else {
                 return m_sSentBeginPart + "(" + sFilter + ")" + m_sSentEndPart; // incluimos el filtro
             }
-        }          
-    }  
-    
-    private static class QBFParameter implements DataWrite {
-    
+        }
+    }
+
+    private static class QBFDataWrite implements DataWrite {
+
         private final String[] m_asFindFields;
         private final QBFCompareEnum[] m_aiCondFields;
         private final String[] m_aParams;
-        
-        public QBFParameter(String[] asFindFields) {
+
+        public QBFDataWrite(String[] asFindFields) {
             m_asFindFields = asFindFields;
             m_aiCondFields = new QBFCompareEnum[asFindFields.length];
             m_aParams = new String[asFindFields.length];
-            
-            for( int i = 0; i < m_aParams.length; i++) {
+
+            for (int i = 0; i < m_aParams.length; i++) {
                 m_aParams[i] = DataWriteUtils.getSQLValue((Object) null);
             }
         }
-        
+
         @Override
         public void setDouble(int paramIndex, Double value) throws BasicException {
             if ((paramIndex - 1) % 2 == 0) {
@@ -116,7 +119,8 @@ public class QBFBuilder implements ISQLBuilderStatic {
             } else {
                 m_aParams[(paramIndex - 1) / 2] = DataWriteUtils.getSQLValue(value);
             }
-        }        
+        }
+
         @Override
         public void setBoolean(int paramIndex, Boolean value) throws BasicException {
             if ((paramIndex - 1) % 2 == 0) {
@@ -124,7 +128,8 @@ public class QBFBuilder implements ISQLBuilderStatic {
             } else {
                 m_aParams[(paramIndex - 1) / 2] = DataWriteUtils.getSQLValue(value);
             }
-        }        
+        }
+
         @Override
         public void setInt(int paramIndex, Integer value) throws BasicException {
             if ((paramIndex - 1) % 2 == 0) {
@@ -132,7 +137,8 @@ public class QBFBuilder implements ISQLBuilderStatic {
             } else {
                 m_aParams[(paramIndex - 1) / 2] = DataWriteUtils.getSQLValue(value);
             }
-        }       
+        }
+
         @Override
         public void setString(int paramIndex, String value) throws BasicException {
             if ((paramIndex - 1) % 2 == 0) {
@@ -140,7 +146,8 @@ public class QBFBuilder implements ISQLBuilderStatic {
             } else {
                 m_aParams[(paramIndex - 1) / 2] = DataWriteUtils.getSQLValue(value);
             }
-        }        
+        }
+
         @Override
         public void setTimestamp(int paramIndex, java.util.Date value) throws BasicException {
             if ((paramIndex - 1) % 2 == 0) {
@@ -156,6 +163,7 @@ public class QBFBuilder implements ISQLBuilderStatic {
 //                throw new DataException("Param type not allowed");
 //            }            
 //        }
+
         @Override
         public void setBytes(int paramIndex, byte[] value) throws BasicException {
             if ((paramIndex - 1) % 2 == 0) {
@@ -164,6 +172,7 @@ public class QBFBuilder implements ISQLBuilderStatic {
                 throw new BasicException("Param type not allowed");
             }
         }
+
         @Override
         public void setObject(int paramIndex, Object value) throws BasicException {
             if ((paramIndex - 1) % 2 == 0) {
@@ -176,38 +185,36 @@ public class QBFBuilder implements ISQLBuilderStatic {
                 m_aParams[(paramIndex - 1) / 2] = DataWriteUtils.getSQLValue(value);
             }
         }
-        
+
         public String getFilter() {
-            // El retorno debe ser siempre una expresion valida puesto que no se donde sera insertada.
-            
             StringBuilder sFilter = new StringBuilder();
-            
-            String sItem;                
-            for (int i = 0; i < m_asFindFields.length; i ++) {
-                sItem = m_aiCondFields[i].getExpression(m_asFindFields[i], m_aParams[i]);           
+
+            String sItem;
+            for (int i = 0; i < m_asFindFields.length; i++) {
+                sItem = m_aiCondFields[i].getExpression(m_asFindFields[i], m_aParams[i]);
                 if (sItem != null) {
                     if (sFilter.length() > 0) {
                         sFilter.append(" AND ");
                     }
                     sFilter.append(sItem);
-                }                
+                }
             }
 
             return sFilter.toString();
         }
-        
+
         private void logMissinQBF(int paramIndex, Object value) {
             String valueS = value != null ? value.toString() : "null";
-            LOGGER.warning(String.format("Expected comparator for QBF on paramIndex: %d value: %s", 
+            LOGGER.warning(String.format("Expected comparator for QBF on paramIndex: %d value: %s",
                     paramIndex, valueS));
         }
-        
+
         private String exceptionMessage(int paramIndex, Object value) {
             String valueS = value != null ? value.toString() : "null";
             return String.format("%s <<<DETAILED>>> paramIndex: %d value: %s",
-                    LocalRes.getIntString("exception.nocompare"), 
-                    paramIndex, 
+                    LocalRes.getIntString("exception.nocompare"),
+                    paramIndex,
                     valueS);
         }
-    }   
+    }
 }

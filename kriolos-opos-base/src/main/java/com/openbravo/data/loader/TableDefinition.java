@@ -41,7 +41,7 @@ public class TableDefinition<T> {
      * @param s session
      * @param tablename Table Name
      * @param fieldname Fields name
-     * @param fieldtran
+     * @param fieldtran Field label (Translation or i18n)
      * @param fielddata Fields datatype
      * @param fieldformat Field format
      * @param idinx     IDs position of 
@@ -176,7 +176,7 @@ public class TableDefinition<T> {
     }
 
     public SentenceExec getDeleteSentence() {
-        return new PreparedSentenceJDBC(m_s,getDeleteSQL(), fielddata, idinx);
+        return new PreparedSentenceExec(m_s,getDeleteSQL(), fielddata, idinx);
     }
 
     private SentenceExec getDeleteSentence(SerializerWrite<T> sw) {
@@ -204,7 +204,7 @@ public class TableDefinition<T> {
     }
     
     public SentenceExec getInsertSentence(int[] fieldindx) {
-        return new PreparedSentenceJDBC(m_s,getInsertSQL(fieldindx), fielddata, fieldindx);
+        return new PreparedSentenceExec(m_s,getInsertSQL(fieldindx), fielddata, fieldindx);
     }
     
     private String getInsertSQL(int[] fieldindx) {
@@ -246,7 +246,7 @@ public class TableDefinition<T> {
     }
 
     public SentenceExec getUpdateSentence(int[] fieldindx) {
-        return new PreparedSentenceJDBC(m_s,getUpdateSQL(fieldindx), fielddata, updateStatementParams(fieldindx));
+        return new PreparedSentenceExec(m_s,getUpdateSQL(fieldindx), fielddata, updateStatementParams(fieldindx));
     }
     
     private String getUpdateSQL(int[] fieldindx) {

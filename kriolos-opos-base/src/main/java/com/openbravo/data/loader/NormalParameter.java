@@ -18,7 +18,6 @@ package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 /**
  *
@@ -26,13 +25,12 @@ import java.util.logging.Logger;
  */
 public class NormalParameter implements DataWrite {
 
-    private final static Logger LOGGER = Logger.getLogger(NormalParameter.class.getName());
-    private String m_sSentence;
-    private ArrayList<Object> m_aParams;
+    private final String m_sSentence;
+    private final ArrayList<Object> m_aParams;
 
     public NormalParameter(String sSentence) {
         m_sSentence = sSentence;
-        m_aParams = new ArrayList();
+        m_aParams = new ArrayList<>();
     }
 
     @Override
@@ -69,7 +67,6 @@ public class NormalParameter implements DataWrite {
     public void setBytes(int paramIndex, byte[] bValue) throws BasicException {
         ensurePlace(paramIndex - 1);
         m_aParams.set(paramIndex - 1, DataWriteUtils.getSQLValue(bValue));
-        //throw new BasicException(LocalRes.getIntString("exception.noparamtype"));
     }
 
     @Override
@@ -94,10 +91,8 @@ public class NormalParameter implements DataWrite {
         while ((iPos = m_sSentence.indexOf('?', iLast)) > 0) {
             sNewSentence.append(m_sSentence.substring(iLast, iPos));
             if (iCount < m_aParams.size() && m_aParams.get(iCount) != null) {
-                // el valor que viene
                 sNewSentence.append(m_aParams.get(iCount));
             } else {
-                // nulo
                 sNewSentence.append(DataWriteUtils.getSQLValue((Object) null));
             }
             iCount++;
@@ -105,6 +100,6 @@ public class NormalParameter implements DataWrite {
         }
         sNewSentence.append(m_sSentence.substring(iLast));
 
-        return sNewSentence.toString(); // sustituida
+        return sNewSentence.toString();
     }
 }
