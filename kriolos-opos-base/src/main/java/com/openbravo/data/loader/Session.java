@@ -50,7 +50,7 @@ public final class Session {
     public Session(String url, String user, String password) throws SQLException {
         this.datasource = null;
         fakeDS = new FakeDataSouce(url, user, password);
-        
+
         mConnection = null;
         m_bInTransaction = false;
 
@@ -74,6 +74,7 @@ public final class Session {
 
     /**
      * Open Connection to datasource
+     *
      * @throws SQLException
      */
     public void connect() throws SQLException {
@@ -114,6 +115,7 @@ public final class Session {
 
     /**
      * Get opened Connections
+     *
      * @return @throws SQLException
      */
     public Connection getConnection() throws SQLException {
@@ -126,65 +128,88 @@ public final class Session {
 
     /**
      * Begin Transaction
+     *
      * @throws SQLException
      */
     public void begin() throws SQLException {
-
-        if (m_bInTransaction) {
-            throw new SQLException("Transaction already started");
-        } else {
-            ensureConnection();
-            mConnection.setAutoCommit(false);
-            m_bInTransaction = true;
+        try {
+            if (m_bInTransaction) {
+                throw new SQLException("Transaction already started");
+            } else {
+                ensureConnection();
+                mConnection.setAutoCommit(false);
+                m_bInTransaction = true;
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex);
+        } finally {
+            mConnection.setAutoCommit(true);
         }
     }
 
     /**
      * Commit Transaction
+     *
      * @throws SQLException
      */
     public void commit() throws SQLException {
-        if (m_bInTransaction) {
-            m_bInTransaction = false; // lo primero salimos del estado
-            mConnection.commit();
+        try {
+            if (m_bInTransaction) {
+                m_bInTransaction = false; // lo primero salimos del estado
+                mConnection.commit();
+                mConnection.setAutoCommit(true);
+            } else {
+                throw new SQLException("Transaction not started");
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex);
+        } finally {
             mConnection.setAutoCommit(true);
-        } else {
-            throw new SQLException("Transaction not started");
         }
     }
 
     /**
      * Rollback Transaction
+     *
      * @throws SQLException
      */
     public void rollback() throws SQLException {
-        if (m_bInTransaction) {
-            m_bInTransaction = false; // lo primero salimos del estado
-            mConnection.rollback();
+        try {
+            if (m_bInTransaction) {
+                m_bInTransaction = false; // lo primero salimos del estado
+                mConnection.rollback();
+                mConnection.setAutoCommit(true);
+            } else {
+                throw new SQLException("Transaction not started");
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex);
+        } finally {
             mConnection.setAutoCommit(true);
-        } else {
-            throw new SQLException("Transaction not started");
         }
     }
 
     /**
      * is in Transaction
+     *
      * @return
      */
     public boolean isTransaction() {
         return m_bInTransaction;
     }
 
+    /**
+     * Only to be used internal, when in manual transaction
+     * @throws SQLException 
+     */
     private void ensureConnection() throws SQLException {
-        // solo se invoca si isTransaction == false
-
         boolean bclosed;
         try {
             bclosed = mConnection == null || mConnection.isClosed();
-        } catch (SQLException e) {
+        } catch (SQLException ex) {
             bclosed = true;
+            throw new SQLException(ex);
         }
-
         // reconnect if closed
         if (bclosed) {
             connect();
@@ -192,7 +217,8 @@ public final class Session {
     }
 
     /**
-     * Get URL 
+     * Get URL
+     *
      * @return @throws SQLException
      */
     public String getURL() throws SQLException {
@@ -232,9 +258,9 @@ public final class Session {
             m_sappuser = user;
             m_spassword = password;
         }
-        
-        public Connection getConnection() throws SQLException{
-        
+
+        public Connection getConnection() throws SQLException {
+
             return (m_sappuser == null && m_spassword == null)
                     ? DriverManager.getConnection(m_surl)
                     : DriverManager.getConnection(m_surl, m_sappuser, m_spassword);
