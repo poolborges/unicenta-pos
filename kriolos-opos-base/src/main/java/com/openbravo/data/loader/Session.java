@@ -79,9 +79,6 @@ public final class Session {
      */
     public void connect() throws SQLException {
 
-        // primero cerramos si no estabamos cerrados
-        close();
-
         if (this.datasource != null) {
             this.mConnection = datasource.getConnection();
         } else {
@@ -94,8 +91,10 @@ public final class Session {
 
     /**
      * Close Connection
+     *
+     * @throws java.sql.SQLException
      */
-    public void close() {
+    public void close() throws SQLException {
 
         if (mConnection != null) {
             try {
@@ -106,7 +105,7 @@ public final class Session {
                 }
                 mConnection.close();
             } catch (SQLException e) {
-                // me la como
+                throw new SQLException(e);
             } finally {
                 mConnection = null;
             }
@@ -200,7 +199,8 @@ public final class Session {
 
     /**
      * Only to be used internal, when in manual transaction
-     * @throws SQLException 
+     *
+     * @throws SQLException
      */
     private void ensureConnection() throws SQLException {
         boolean bclosed;

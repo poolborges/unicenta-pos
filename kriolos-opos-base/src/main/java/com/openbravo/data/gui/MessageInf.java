@@ -62,8 +62,8 @@ public class MessageInf {
 
     // ERROR_CODE'S
     // VARIABLES
-    private int m_iMsgNumber; // = SIGNAL_WORD (0xFF000000) | ERROR_CLASS (0x00FF0000) | ERROR_CODE (0x0000FFFF)
-    private String m_sHazard;
+    private int m_infCode; // = SIGNAL_WORD (0xFF000000) | ERROR_CLASS (0x00FF0000) | ERROR_CODE (0x0000FFFF)
+    private String m_infMessage;
     private String m_sConsequences;
     private String m_sAvoiding;
 
@@ -73,26 +73,26 @@ public class MessageInf {
     /**
      * Creates a new instance of MessageInf
      *
-     * @param iSignalWord
-     * @param sHazard
-     * @param e
+     * @param infCode
+     * @param infMessage
+     * @param infObject
      */
-    public MessageInf(int iSignalWord, String sHazard, Object e) {
-        m_iMsgNumber = iSignalWord;
-        m_sHazard = sHazard;
+    public MessageInf(int infCode, String infMessage, Object infObject) {
+        m_infCode = infCode;
+        m_infMessage = infMessage;
         m_sConsequences = "";
         m_sAvoiding = "";
-        m_eCause = e;
+        m_eCause = infObject;
     }
 
     /**
      * Creates a new instance of MessageInf
      *
-     * @param iSignalWord
-     * @param sHazard
+     * @param infCode
+     * @param infMessage
      */
-    public MessageInf(int iSignalWord, String sHazard) {
-        this(iSignalWord, sHazard, null);
+    public MessageInf(int infCode, String infMessage) {
+        this(infCode, infMessage, null);
     }
 
     /**
@@ -125,7 +125,7 @@ public class MessageInf {
      * @return
      */
     public int getSignalWord() {
-        return m_iMsgNumber & 0xFF000000;
+        return m_infCode & 0xFF000000;
     }
 
     /**
@@ -183,9 +183,9 @@ public class MessageInf {
                 sb.append("UNK_");
                 break;
         }
-        sb.append(toHex((m_iMsgNumber & 0x00FF0000) >> 16, 2));
+        sb.append(toHex((m_infCode & 0x00FF0000) >> 16, 2));
         sb.append('_');
-        sb.append(toHex(m_iMsgNumber & 0x0000FFFF, 4));
+        sb.append(toHex(m_infCode & 0x0000FFFF, 4));
         return sb.toString();
     }
 
@@ -233,9 +233,43 @@ public class MessageInf {
                 sb.append(LocalRes.getIntString("sgn.unknown"));
                 break;
         }
-        sb.append(m_sHazard);
+        sb.append(m_infMessage);
         sb.append(m_sConsequences);
         sb.append(m_sAvoiding);
         return sb.toString();
+    }
+    
+    public String getCode() {
+
+        StringBuilder sb = new StringBuilder();
+        int iSignalWord = getSignalWord();
+        switch (iSignalWord) {
+            case SGN_DANGER:
+                sb.append(LocalRes.getIntString("sgn.danger"));
+                break;
+            case SGN_WARNING:
+                sb.append(LocalRes.getIntString("sgn.warning"));
+                break;
+            case SGN_CAUTION:
+                sb.append(LocalRes.getIntString("sgn.caution"));
+                break;
+            case SGN_NOTICE:
+                sb.append(LocalRes.getIntString("sgn.notice"));
+                break;
+            case SGN_IMPORTANT:
+                sb.append(LocalRes.getIntString("sgn.important"));
+                break;
+            case SGN_SUCCESS:
+                sb.append(LocalRes.getIntString("sgn.success"));
+                break;
+            default:
+                sb.append(LocalRes.getIntString("sgn.unknown"));
+                break;
+        }
+        return sb.toString();
+    }
+    
+    public String getMessage() {
+        return m_infMessage;
     }
 }

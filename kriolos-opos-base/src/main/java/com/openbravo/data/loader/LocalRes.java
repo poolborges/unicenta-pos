@@ -16,7 +16,6 @@
 
 package com.openbravo.data.loader;
 
-import java.util.MissingResourceException;
 import com.openbravo.beans.LocaleResources;
 
 /**
@@ -26,7 +25,7 @@ import com.openbravo.beans.LocaleResources;
 public class LocalRes {
     
     // private static ResourceBundle m_Intl;
-    private static LocaleResources m_resources;
+    private final static LocaleResources m_resources;
     
     static {
         m_resources = new LocaleResources();
