@@ -31,23 +31,26 @@ public class TaxInfo implements Serializable, IKeyed {
     private static final long serialVersionUID = -2705212098856473043L;
     private String id;
     private String name;
-    private String taxcategoryid; // Product
-    private String taxcustcategoryid; // Customer
+    private String taxcategoryid; // Product Tax Category ID
+    private String taxcustcategoryid; // Customer Tax Category ID
     private String parentid;
     
     private double rate;
     private boolean cascade;
     private Integer order;
     
-    /** Creates new TaxInfo
-     * @param id
-     * @param name
-     * @param taxcategoryid
-     * @param taxcustcategoryid
-     * @param rate
-     * @param cascade
-     * @param parentid
-     * @param order */
+    /** 
+     * Creates new TaxInfo
+     * 
+     * @param id Tax ID
+     * @param name Tax name
+     * @param taxcategoryid Product Tax Category ID
+     * @param taxcustcategoryid Customer Tax Category ID
+     * @param rate Tax rate
+     * @param cascade if tax calcule is cascade
+     * @param parentid Parent Tax ID
+     * @param order (Order/Position)
+     */
     public TaxInfo(String id, String name, String taxcategoryid, String taxcustcategoryid, 
             String parentid, double rate, boolean cascade, Integer order) {
         this.id = id;
@@ -62,16 +65,17 @@ public class TaxInfo implements Serializable, IKeyed {
     }
     
     /**
-     *
-     * @return
+     * Get Tax ID
+     * 
+     * @return Tax ID
      */
     @Override
-    public Object getKey() {
+    public String getKey() {
         return id;
     }
     
     /**
-     *
+     * Set Tax ID
      * @param value
      */
     public void setID(String value) {
@@ -79,7 +83,8 @@ public class TaxInfo implements Serializable, IKeyed {
     }
     
     /**
-     *
+     *  Get Tax ID
+     * 
      * @return
      */
     public String getId() {
@@ -103,7 +108,8 @@ public class TaxInfo implements Serializable, IKeyed {
     }
 
     /**
-     * The Product's 
+     * Get Product Tax Category ID
+     * 
      * @return
      */
     public String getTaxCategoryID() {
@@ -119,7 +125,7 @@ public class TaxInfo implements Serializable, IKeyed {
     }
 
     /**
-     * The Customer
+     * Get Customer Tax Category ID
      * @return
      */
     public String getTaxCustCategoryID() {
@@ -183,7 +189,8 @@ public class TaxInfo implements Serializable, IKeyed {
     }
     
     /**
-     *
+     * Get Tax Order/Position
+     * 
      * @return
      */
     public Integer getOrder() {
@@ -195,7 +202,7 @@ public class TaxInfo implements Serializable, IKeyed {
      * @return
      */
     public Integer getApplicationOrder() {
-        return order == null ? Integer.MAX_VALUE : order.intValue();
+        return order != null ?  order: Integer.MAX_VALUE;
     }
 
     /**

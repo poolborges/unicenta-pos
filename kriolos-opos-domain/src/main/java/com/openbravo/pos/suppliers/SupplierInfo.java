@@ -19,13 +19,11 @@
 
 package com.openbravo.pos.suppliers;
 
-import com.openbravo.basic.BasicException;
-import com.openbravo.data.loader.DataRead;
 import com.openbravo.pos.domain.entity.businesspartner.BusinessPartner;
 
-/** @author Jack Gerrard */
-
-
+/** 
+ * @author Jack Gerrard 
+ */
 public class SupplierInfo extends BusinessPartner {
     
     private static final long serialVersionUID = 9093257536541L;
@@ -36,12 +34,5 @@ public class SupplierInfo extends BusinessPartner {
 
     public SupplierInfo(String id, String searchkey, String name) {
         super(id, searchkey, name);
-    }
-
-    public void readValues(DataRead dr) throws BasicException {
-        setId(dr.getString(1));
-        setName(dr.getString(2));
-    } 
-
-    
+    }    
 }

@@ -18,7 +18,9 @@ package com.openbravo.pos.customers;
 
 import com.openbravo.pos.domain.entity.businesspartner.BusinessPartner;
 
-/** @author jack gerrard, adrianromero */
+/** 
+ * @author jack gerrard, adrianromero 
+ */
 public class CustomerInfo extends BusinessPartner {
     
     private static final long serialVersionUID = 9083257536541L;

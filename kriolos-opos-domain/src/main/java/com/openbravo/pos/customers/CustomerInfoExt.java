@@ -47,7 +47,6 @@ public class CustomerInfoExt extends CustomerInfo {
     protected boolean visible;
     protected Date curdate;
     protected Double accdebt;
-    protected BufferedImage image;
     protected boolean isvip;
     protected Double discount;
     protected String prepay;
@@ -74,18 +73,6 @@ public class CustomerInfoExt extends CustomerInfo {
         return Formats.STRING.formatValue(taxcustomerid);
     }
     
-    @Override
-    public String getTaxid() {
-        return taxid;
-    }
-    @Override
-    public void setTaxid(String taxid) {
-        this.taxid = taxid;
-    }
-    public String printTaxid() {       
-        return Formats.STRING.formatValue(taxid);
-    }    
-
     public String getNotes() {
         return notes;
     }
@@ -178,7 +165,7 @@ public class CustomerInfoExt extends CustomerInfo {
      * @param amount
      * @param d
      */
-    public void updateCurDebt(Double amount, Date d) {
+    public void updateCurDebt(double amount, Date d) {
         
         accdebt = accdebt == null ? amount : accdebt + amount;
         curdate =  (new Date());

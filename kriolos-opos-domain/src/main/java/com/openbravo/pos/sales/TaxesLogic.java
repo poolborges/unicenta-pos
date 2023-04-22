@@ -45,12 +45,9 @@ public class TaxesLogic {
      */
     public TaxesLogic(List<TaxInfo> taxlist) {
         this.taxlist = taxlist;
-      
-// JG June 2013 use diamond inference
-        taxtrees = new HashMap<>();
+        this.taxtrees = new HashMap<>();
                 
-        // Order the taxlist by Application Order...
-        // JG June 2013 use diamond inference        
+        // Order the taxlist by Application Order...   
         List<TaxInfo> taxlistordered = new ArrayList<>();
         taxlistordered.addAll(taxlist);
         Collections.sort(taxlistordered, new Comparator<TaxInfo>() {
@@ -66,8 +63,7 @@ public class TaxesLogic {
             }
         });
         
-        // Generate the taxtrees
-        // JG June 2013 use diamond inference        
+        // Generate the taxtrees       
         HashMap<String, TaxesLogicElement> taxorphans = new HashMap<>();
         
         for (TaxInfo t : taxlistordered) {
@@ -102,13 +98,12 @@ public class TaxesLogic {
     }
     
     /**
-     *
-     * @param ticket
+     * Calcule Tax and set TicketInfo.setTaxes()
+     * 
+     * @param ticket TicketInfo
      * @throws TaxesException
      */
     public void calculateTaxes(TicketInfo ticket) throws TaxesException {
-  
-        // JG June 2013 use diamond inference
         List<TicketTaxInfo> tickettaxes = new ArrayList<>(); 
         
         for (TicketLineInfo line: ticket.getLines()) {
@@ -155,13 +150,19 @@ public class TaxesLogic {
         return linetaxes;       
     }
     
-    private TaxesLogicElement getTaxesApplied(TaxInfo t) throws TaxesException {
+    /**
+     * Get TaxesLogicElement
+     * @param taxinfo
+     * @return
+     * @throws TaxesException if taxinfo is null
+     */
+    private TaxesLogicElement getTaxesApplied(TaxInfo taxinfo) throws TaxesException {
         
-        if (t == null) {
+        if (taxinfo == null) {
             throw new TaxesException(new java.lang.NullPointerException("TaxInfo is null"));
         }
         
-        return taxtrees.get(t.getId());
+        return taxtrees.get(taxinfo.getId());
     }
         
     private double sumTaxes(List<TicketTaxInfo> linetaxes) {
@@ -279,7 +280,7 @@ public class TaxesLogic {
 
     /**
      *
-     * @param tcid
+     * @param tcid Customer Tax ID
      * @param customer
      * @return
      */

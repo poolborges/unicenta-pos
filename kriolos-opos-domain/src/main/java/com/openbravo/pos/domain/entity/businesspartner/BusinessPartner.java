@@ -17,7 +17,7 @@
 package com.openbravo.pos.domain.entity.businesspartner;
 
 import com.openbravo.data.loader.IKeyed;
-import com.openbravo.pos.util.StringUtils;
+import com.openbravo.format.Formats;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
@@ -121,18 +121,17 @@ public class BusinessPartner implements Serializable, IKeyed {
     }
 
     @Override
-    public Object getKey() {
-        return (Object)id;
+    public String getKey() {
+        return id;
     }
 
     public String printTaxid() {
-        return StringUtils.encodeXML(getTaxid());
+        return Formats.STRING.formatValue(taxid);
     }    
 
     public String printName() {
-        return StringUtils.encodeXML(getName());
+        return Formats.STRING.formatValue(getName());
     }
-    
     
     public BufferedImage getImage() {
         return image;
