@@ -208,6 +208,24 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
                 m_jProducts.add(jcurrTab, catid);
                 m_categoriesset.add(catid);
 
+                //SHOW ALL PRODUCT (CONSTANT) IN CATEGORIY
+                java.util.List<ProductInfoExt> prods = m_dlSales.getProductConstant();
+                for (ProductInfoExt prod : prods) {
+
+                    Image imageIcon = tnbbutton.getThumbNail(prod.getImage());
+
+                    //String tooltip = (prod.getTextTip() != null && !prod.getTextTip().isBlank()) ? prod.getTextTip() : null;
+
+                    jcurrTab.addButton(
+                            new ImageIcon(imageIcon),
+                            new SelectedAction(prod),
+                            getProductLabel(prod, true),
+                            null);
+
+                }
+                
+                
+
                 //Show ALL SUB-CATEGORIES
                 java.util.List<CategoryInfo> categories = m_dlSales.getSubcategories(catid);
                 for (CategoryInfo cat : categories) {
@@ -223,22 +241,6 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
                             new SelectedCategory(cat),
                             catName,
                             null);
-                }
-
-                //SHOW ALL PRODUCT (CONSTANT) IN CATEGORIY
-                java.util.List<ProductInfoExt> prods = m_dlSales.getProductConstant();
-                for (ProductInfoExt prod : prods) {
-
-                    Image imageIcon = tnbbutton.getThumbNail(prod.getImage());
-
-                    //String tooltip = (prod.getTextTip() != null && !prod.getTextTip().isBlank()) ? prod.getTextTip() : null;
-
-                    jcurrTab.addButton(
-                            new ImageIcon(imageIcon),
-                            new SelectedAction(prod),
-                            getProductLabel(prod, true),
-                            null);
-
                 }
 
                 //SHOW ALL PRODUCT IN CATEGORIY
