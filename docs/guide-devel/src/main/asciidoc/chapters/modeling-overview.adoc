@@ -55,6 +55,38 @@ SerializerRead <-- SerializerReadBasic
 ----
 
 
+.TicketPanel Class
+[plantuml]
+----
+@startuml
+
+interface TicketSelector
+interface TicketEditor
+
+class JTicketBag
+class JTicketsBagTicket
+class JPanelTicketSales
+class JPanelTicket {
+    abstract getJTicketsBag(): JTicketBag
+}
+
+
+TicketEditor <.. JPanelTicket
+
+JPanelTicket <-- JPanelTicketSales
+
+JTicketBag <-- JTicketsBagTicket
+
+TicketSelector <.. OrderCustomerList
+
+JPanelTicket <.. JPanelTicketEdits
+
+
+@enduml
+----
+
+
+
 === Reference
 
 * todo
