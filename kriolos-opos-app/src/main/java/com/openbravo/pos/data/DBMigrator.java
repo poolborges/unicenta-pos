@@ -17,6 +17,7 @@
 package com.openbravo.pos.data;
 
 
+import com.openbravo.basic.BasicException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -41,7 +42,7 @@ public class DBMigrator {
         //execDBMigration();
     }
 
-    public static boolean execDBMigration(com.openbravo.data.loader.Session dbSession) {
+    public static void execDBMigration(com.openbravo.data.loader.Session dbSession) throws BasicException {
         boolean res = false;
         LOGGER.info("Database Migration init");
         try {
@@ -58,13 +59,11 @@ public class DBMigrator {
             liquibase.update("pos-database-update");
             res = true;
         } catch (DatabaseException ex) {
-            LOGGER.log(Level.SEVERE, "DB Migration Exception: ", ex);
-            res = false;
+            LOGGER.log(Level.SEVERE,"DB Migration Exception: " , ex);
+            throw new BasicException("DB Migration Exception: ", ex);
         } catch (LiquibaseException | SQLException ex) {
             LOGGER.log(Level.SEVERE, "DB Migration Exception: ", ex);
-            res = false;
+            throw new BasicException("DB Migration Exception: ", ex);
         }
-        
-        return res;
     }
 }

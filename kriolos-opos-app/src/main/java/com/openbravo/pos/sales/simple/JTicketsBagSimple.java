@@ -29,24 +29,22 @@ import com.openbravo.pos.ticket.TicketInfo;
  */
 public class JTicketsBagSimple extends JTicketsBag {
     
-    /** Creates new form JTicketsBagSimple
+    /**
+     * 
      * @param app
-     * @param panelticket */
+     * @param panelticket 
+     */
     public JTicketsBagSimple(AppView app, TicketsEditor panelticket) {
         
         super(app, panelticket);
         
         initComponents();
     }
-    
-    /**
-     *
-     */
+
+    @Override
     public void activate() {
         
         m_panelticket.setActiveTicket(new TicketInfo(), null);
-        
-        // Authorization
         m_jDelTicket.setEnabled(m_App.hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));
 
     }

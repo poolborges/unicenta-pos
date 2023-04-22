@@ -60,7 +60,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>kriolos-opos-i18n</artifactId>
+            <artifactId>kriolos-opos-i18n_pt</artifactId>
         </dependency>
 
         <dependency> 

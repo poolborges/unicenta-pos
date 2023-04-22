@@ -15,6 +15,9 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.forms;
 
+import com.openbravo.basic.BasicException;
+import com.openbravo.data.gui.JMessageDialog;
+import com.openbravo.data.gui.MessageInf;
 import java.awt.BorderLayout;
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -66,28 +69,34 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
         getContentPane().add(splashScreen, BorderLayout.CENTER);
 
         //LOAD APP PANEL
-        if (m_rootapp.initApp()) {
+        try {
+            m_rootapp.initApp();
             getContentPane().remove(splashScreen);
 
             getContentPane().add(m_rootapp, BorderLayout.CENTER);
             sendInitEnvent();
 
-        } else {
+        } catch (BasicException ex) {
             //LOAD CONFIG PANEL
-            int opionRes = JOptionPane.showConfirmDialog(this,
-                    AppLocal.getIntString("message.databasechange"),
-                    "Connection", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+
+            int opionRes = JMessageDialog.showConfirmDialog(this, 
+                    new MessageInf(MessageInf.SGN_DANGER, 
+                            "<html>Application fail to start<br>Do you want to open the configuration panel?", ex));
+
+            /*opionRes = JOptionPane.showConfirmDialog(this,
+                    "<html>Application fail to start<br>Do you want to open the configuration panel?",
+                    "Application Error", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            
+            */
             if (opionRes == JOptionPane.YES_OPTION) {
                 //JFrmConfig jFrmConfig = new JFrmConfig(m_props);
                 //jFrmConfig.setVisible(true);
 
                 JPanelConfiguration config = new JPanelConfiguration(m_props);
-                config.setCloseListener(new JPanelConfiguration.CloseEventListener() {
-                    @Override
-                    public void windowClosed(JPanelConfiguration.CloseEvent e) {
-                        dispose();         //This frame
-                        System.exit(0);    //Exit JVM
-                    }
+                config.setCloseListener((JPanelConfiguration.CloseEvent e) -> {
+                    //This will be call when user press save or close button on config panel
+                    dispose();
+                    System.exit(0);
                 });
 
                 getContentPane().remove(splashScreen);
@@ -98,6 +107,7 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
             }
         }
 
+        // THIS IS NEED HERE TO PRESENT CONFIG PANEL
         String screenmode = m_props.getProperty("machine.screenmode");
         if (null == screenmode) {
             modeWindow();

@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.time.Instant;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -85,7 +86,7 @@ public class JRootApp extends JPanel implements AppView {
         //m_jLblTitle.repaint();
     }
 
-    public boolean initApp() {
+    public void initApp() throws BasicException{
 
         applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 
@@ -94,19 +95,17 @@ public class JRootApp extends JPanel implements AppView {
 
         } catch (BasicException e) {
             LOGGER.log(Level.WARNING, "Exception on DB createSession", e);
-            JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_DANGER, e.getMessage(), e));
-            return false;
+            throw new BasicException("Exception on DB createSession", e);
         }
 
         m_dlSystem = (DataLogicSystem) getBean("com.openbravo.pos.forms.DataLogicSystem");
 
         LOGGER.log(Level.INFO, "DB Migration execution Starting");
-        if (com.openbravo.pos.data.DBMigrator.execDBMigration(session)) {
-            //return false;
-            LOGGER.log(Level.INFO, "DB Migration execution Finished: OK");
-        }else {
-            JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_DANGER, "Database migration faile, Cannot continue"));
-            return false;
+        try {
+            com.openbravo.pos.data.DBMigrator.execDBMigration(session);
+            LOGGER.log(Level.INFO, "Database verification or migration done sucessfully");
+        }catch(BasicException ex) {
+            throw new BasicException("Database verification fail", ex);
         }
 
         logStartup();
@@ -114,8 +113,8 @@ public class JRootApp extends JPanel implements AppView {
         hostSavedProperties = m_dlSystem.getResourceAsProperties(getHostID());
 
         if (checkActiveCash()) {
-            LOGGER.log(Level.WARNING, "checkActiveCash return : true");
-            return false;
+            LOGGER.log(Level.WARNING, "Fail on verify ActiveCash");
+            throw new BasicException("Fail on verify ActiveCash");
         }
 
         setInventoryLocation();
@@ -127,8 +126,6 @@ public class JRootApp extends JPanel implements AppView {
         setStatusBarPanel();
 
         showLoginPanel();
-
-        return true;
     }
 
     private void setTitlePanel() {
@@ -400,7 +397,11 @@ public class JRootApp extends JPanel implements AppView {
         if (closeAppView()) {
             releaseResources();
             if(session != null){
-                session.close();
+                try {
+                    session.close();
+                } catch (SQLException ex) {
+                    LOGGER.log(Level.WARNING, "", ex);
+                }
             }
             java.awt.Window parent = SwingUtilities.getWindowAncestor(this);
             if(parent != null){

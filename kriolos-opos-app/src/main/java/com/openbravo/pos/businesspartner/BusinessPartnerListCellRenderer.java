@@ -14,8 +14,9 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package com.openbravo.pos.customers;
+package com.openbravo.pos.businesspartner;
 
+import com.openbravo.pos.domain.entity.businesspartner.BusinessPartner;
 import com.openbravo.pos.resources.ImageResources;
 
 import java.awt.Component;
@@ -25,16 +26,18 @@ import javax.swing.JList;
 
 /**
  *
- * @author JG uniCenta
+ * @author JG uniCenta, poolborges
  */
-public class CustomerRenderer extends DefaultListCellRenderer {
+public class BusinessPartnerListCellRenderer<BusinessPartner> extends DefaultListCellRenderer {
                 
-    private final Icon icocustomer;
+    private final Icon icon;
 
-    /** Creates a new instance of CustomerRenderer */
-    public CustomerRenderer() {
+    /** 
+     * Creates a new instance of CustomerRenderer 
+     */
+    public BusinessPartnerListCellRenderer() {
 
-        icocustomer = ImageResources.ICON_CUSTOMER.getIcon();
+        icon = ImageResources.ICON_CUSTOMER.getIcon();
         
     }
 
@@ -43,7 +46,7 @@ public class CustomerRenderer extends DefaultListCellRenderer {
             int index, boolean isSelected, boolean cellHasFocus) {
         super.getListCellRendererComponent(list, null, index, isSelected, cellHasFocus);
 
-        setIcon(icocustomer);
+        setIcon(icon);
         setText(value.toString());
         
         return this;

@@ -26,15 +26,13 @@ import com.openbravo.pos.sales.TicketsEditor;
 import com.openbravo.pos.ticket.TicketInfo;
 import com.openbravo.pos.util.ThumbNailBuilder;
 import java.awt.Component;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -46,7 +44,7 @@ import javax.swing.event.EventListenerList;
  */
 public class OrderCustomerList extends JPanel implements TicketSelector {
 
-    protected static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.customers.CustomersList");
+    protected static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.customers.OrderCustomerList");
     private static final long serialVersionUID = 1L;
 
     protected AppView application;
@@ -55,13 +53,14 @@ public class OrderCustomerList extends JPanel implements TicketSelector {
     protected EventListenerList listeners = new EventListenerList();
     private final DataLogicCustomers dataLogicCustomers;
     private final DataLogicReceipts dataLogicReceipts;
+    private final ThumbNailBuilder thumbNailBuilderWithDefault;
 
     public OrderCustomerList(DataLogicCustomers dlCustomers, AppView app, TicketsEditor panelticket) {
         this.application = app;
         this.panelticket = panelticket;
         this.dataLogicCustomers = dlCustomers;
         this.dataLogicReceipts = (DataLogicReceipts) application.getBean("com.openbravo.pos.sales.DataLogicReceipts");
-
+        this.thumbNailBuilderWithDefault = new ThumbNailBuilder(90, 98, "/com/openbravo/images/no_image.png");
         initComponents();
     }
 
@@ -88,7 +87,7 @@ public class OrderCustomerList extends JPanel implements TicketSelector {
 
                 List<CustomerInfoExt> customers = null;
                 List<SharedTicketInfo> ticketList = null;
-                
+
                 long currentTime = System.currentTimeMillis();
                 try {
                     LOGGER.log(Level.INFO, "Time of getCustomersWithOutImage {0}", (System.currentTimeMillis() - currentTime));
@@ -142,21 +141,20 @@ public class OrderCustomerList extends JPanel implements TicketSelector {
                     if (customer != null) {
 
                         String ticketName = ticket.getName();
-                        BufferedImage image = null;
-                        ThumbNailBuilder tnbbutton = new ThumbNailBuilder(90, 98, "/com/openbravo/images/no_image.png");;
+                        Image thumbImage = thumbNailBuilderWithDefault.getThumbNail();
                         try {
-                            image = dataLogicCustomers.getCustomerInfo(customer.getId()).getImage();
+                            BufferedImage image = dataLogicCustomers.getCustomerInfo(customer.getId()).getImage();
                             if (image != null) {
-                                tnbbutton = new ThumbNailBuilder(90, 98, image);
+                                thumbImage = thumbNailBuilderWithDefault.getThumbNail(image);
                             }
                         } catch (BasicException ex) {
                             LOGGER.log(Level.WARNING, "Exception on getting entity image", ex);
                         }
 
-                        ImageIcon icon = new ImageIcon(tnbbutton.getThumbNail());
+                        ImageIcon icon = new ImageIcon(thumbImage);
                         flowTab.addButton(
-                                icon, 
-                                new SelectedCustomerAction(ticket.getId()), 
+                                icon,
+                                new SelectedCustomerAction(ticket.getId()),
                                 ticketName,
                                 ticketName);
                     }
@@ -206,15 +204,6 @@ public class OrderCustomerList extends JPanel implements TicketSelector {
 
         currentTicket = panelticket.getActiveTicket().getId();
 
-        // save current ticket
-//        if (currentTicket != null) {
-//            try {
-//                dataLogicReceipts.insertSharedTicket(currentTicket, panelticket.getActiveTicket());
-//            } catch (BasicException e) {
-//                new MessageInf(e).show(this);
-//            }
-//        }
-        // set ticket
         // BEGIN TRANSACTION
         TicketInfo ticket = dataLogicReceipts.getSharedTicket(id);
         if (ticket == null) {
@@ -229,15 +218,6 @@ public class OrderCustomerList extends JPanel implements TicketSelector {
         // END TRANSACTION                 
     }
 
-//    private void synchroniseData() {
-//        try {
-    // get tickets only from selected customer or show all
-    // add newest tickets from provider
-//            orderSynchroniseHelper.synchSharedTickets(panelticket.getActiveTicket());
-//        } catch (Exception e) {
-//            LOGGER.log(Level.WARNING, "Error synchronise orders", e);
-//        }
-//    }
     private void fireTicketSelectionChanged(String ticketId) {
         EventListener[] l = listeners.getListeners(ActionListener.class);
         ActionEvent e = null;

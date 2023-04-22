@@ -157,7 +157,7 @@ public final class FloorsEditor extends JPanel implements EditorRecord {
         setMinimumSize(new java.awt.Dimension(91, 125));
         setLayout(new java.awt.BorderLayout());
 
-        jPanel1.setPreferredSize(new java.awt.Dimension(150, 100));
+        jPanel1.setPreferredSize(new java.awt.Dimension(150, 64));
         jPanel1.setLayout(null);
 
         jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N

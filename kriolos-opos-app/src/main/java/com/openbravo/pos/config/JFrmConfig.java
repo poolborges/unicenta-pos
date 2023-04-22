@@ -116,6 +116,7 @@ public class JFrmConfig extends javax.swing.JFrame {
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(800, 600));
         setSize(new java.awt.Dimension(0, 0));
 
         setSize(new java.awt.Dimension(808, 794));

@@ -62,7 +62,9 @@ public class JTicketsBagShared extends JTicketsBag {
 
         initComponents();
 
-        //m_jReprintTickets.setVisible(false);
+        m_jReprintTickets.setVisible(true);
+        
+        LOGGER.log(System.Logger.Level.INFO, "JTicketsBagShared ");
     }
 
     /**
@@ -74,6 +76,8 @@ public class JTicketsBagShared extends JTicketsBag {
 
         m_jDelTicket.setEnabled(m_App.hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));
         m_jDelTicket.setEnabled(m_App.hasPermission("sales.DeleteTicket"));
+        
+        LOGGER.log(System.Logger.Level.INFO, "JTicketsBagShared ");
     }
 
     /**
@@ -222,14 +226,11 @@ public class JTicketsBagShared extends JTicketsBag {
             TicketInfo ticket = new TicketInfo();
             LOGGER.log(System.Logger.Level.DEBUG, "newTicket has id: " + ticket.getId());
             m_panelticket.setActiveTicket(ticket, null);
-
-            saveCurrentTicket();
             updateCount();
 
         } catch (Exception ex) {
             LOGGER.log(System.Logger.Level.WARNING, "Exception while exec newTicket: ", ex);
         }
-
     }
 
     /**

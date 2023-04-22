@@ -116,20 +116,24 @@ public class JDialogNewCustomer extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(AppLocal.getIntString("label.customer")); // NOI18N
-        setPreferredSize(new java.awt.Dimension(610, 430));
+        setMaximumSize(new java.awt.Dimension(960, 600));
+        setMinimumSize(new java.awt.Dimension(480, 360));
+        setPreferredSize(new java.awt.Dimension(700, 480));
         setResizable(false);
 
         formPanel.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        formPanel.setMaximumSize(new java.awt.Dimension(695, 420));
+        formPanel.setPreferredSize(new java.awt.Dimension(695, 420));
 
         javax.swing.GroupLayout formPanelLayout = new javax.swing.GroupLayout(formPanel);
         formPanel.setLayout(formPanelLayout);
         formPanelLayout.setHorizontalGroup(
             formPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 635, Short.MAX_VALUE)
+            .addGap(0, 700, Short.MAX_VALUE)
         );
         formPanelLayout.setVerticalGroup(
             formPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 347, Short.MAX_VALUE)
+            .addGap(0, 420, Short.MAX_VALUE)
         );
 
         getContentPane().add(formPanel, java.awt.BorderLayout.NORTH);
@@ -169,7 +173,7 @@ public class JDialogNewCustomer extends javax.swing.JDialog {
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.SOUTH);
 
-        setSize(new java.awt.Dimension(651, 455));
+        setSize(new java.awt.Dimension(714, 487));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

@@ -46,9 +46,11 @@ public abstract class JTicketsBag extends JPanel {
      */
     protected TicketsEditor m_panelticket;    
     
-    /** Creates new form JTicketsBag
+    /**
+     * 
      * @param oApp
-     * @param panelticket */
+     * @param panelticket 
+     */
     public JTicketsBag(AppView oApp, TicketsEditor panelticket) {        
         m_App = oApp;     
         m_panelticket = panelticket;        
@@ -56,18 +58,18 @@ public abstract class JTicketsBag extends JPanel {
     }
     
     /**
-     *
+     * Active panel (Call on active panel)
      */
     public abstract void activate();
 
     /**
-     *
+     * Desactive panel (Call on Desactive)
      * @return
      */
     public abstract boolean deactivate();
 
     /**
-     *
+     * Delete Current tocket
      */
     public abstract void deleteTicket();
     
@@ -93,13 +95,13 @@ public abstract class JTicketsBag extends JPanel {
     public static JTicketsBag createTicketsBag(String sName, AppView app, TicketsEditor panelticket) {
         switch (sName) {
             case "standard":
-                // return new JTicketsBagMulti(oApp, user, panelticket);
                 return new JTicketsBagShared(app, panelticket);
             case "restaurant":
                 return new JTicketsBagRestaurantMap(app, panelticket);
+            case "simple":
             default:
-                // "simple"
                 return new JTicketsBagSimple(app, panelticket);
+            
         }
     }   
 }

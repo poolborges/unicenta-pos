@@ -51,7 +51,6 @@ public class JPanelTicketSales extends JPanelTicket {
      */
     @Override
     protected Component getSouthComponent() {
-        // Este metodo esta sendo chamado antes do init()
         LOGGER.log(System.Logger.Level.DEBUG,"JPanelTicketSales :: getSouthComponent");
         m_cat = new JCatalog(dlSales);
         m_cat.addActionListener(new CatalogListener());

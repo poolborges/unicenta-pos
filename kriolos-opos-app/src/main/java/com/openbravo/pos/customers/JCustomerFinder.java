@@ -16,6 +16,7 @@
 
 package com.openbravo.pos.customers;
 
+import com.openbravo.pos.businesspartner.BusinessPartnerListCellRenderer;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.QBFCompareEnum;
 import com.openbravo.data.user.EditorCreator;
@@ -118,7 +119,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
 
         lpr = new ListProviderCreator(dlCustomers.getCustomerList(), this);
 
-        jListCustomers.setCellRenderer(new CustomerRenderer());
+        jListCustomers.setCellRenderer(new BusinessPartnerListCellRenderer());
 
         getRootPane().setDefaultButton(jcmdOK);
 
@@ -439,7 +440,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLblName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -453,7 +454,7 @@ public class JCustomerFinder extends javax.swing.JDialog implements EditorCreato
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addComponent(jLblTaxID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(m_jtxtTaxID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(m_jtxtTaxID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLblEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)

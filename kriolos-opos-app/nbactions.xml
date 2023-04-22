@@ -39,10 +39,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <actionName>CUSTOM-JasperDesignViewer</actionName>
         <displayName>JasperDesignViewer</displayName>
         <goals>
-            <goal>compile</goal> 
             <goal>exec:java</goal>
             <goal>-Dexec.mainClass="net.sf.jasperreports.view.JasperDesignViewer"</goal>
             <goal>-Dexec.args="-XML -Fsrc/main/resources/com/openbravo/reports/products.jrxml"</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-RunSwingx</actionName>
+        <displayName>run-SwingX</displayName>
+        <goals>
+            <goal>exec:java</goal>
+            <goal>-Dexec.mainClass="org.jdesktop.swingx.color.EyeDropperColorChooserPanel"</goal>
         </goals>
     </action>
 </actions>

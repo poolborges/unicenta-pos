@@ -20,8 +20,6 @@ import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.basic.BasicException;
-import com.openbravo.beans.JEditorTextDialog;
-import com.openbravo.beans.JIntegerDialog;
 import com.openbravo.beans.JPasswordDialog;
 import com.openbravo.data.gui.ComboBoxValModel;
 import com.openbravo.data.gui.ListKeyed;
@@ -239,7 +237,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         m_jPanelBag.add(m_ticketsbag.getBagComponent(), BorderLayout.LINE_START);
         add(m_ticketsbag.getNullComponent(), "null");
 
-        catcontainer.add(getSouthComponent(), BorderLayout.CENTER);
+        m_jPanelCatalog.add(getSouthComponent(), BorderLayout.CENTER);
     }
 
     @Override
@@ -261,14 +259,12 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             closeAllDialogs();
             switch (getTicketsbag()) {
                 case "restaurant":
-                    if ("false".equals(m_App.getProperties().getProperty("till.autoLogoffrestaurant"))) {
-                        deactivate();
-                        ((JRootApp) m_App).closeAppView();
-                        break;
-                    }
-
                     deactivate();
-                    setActiveTicket(null, null);
+                    if ("false".equals(m_App.getProperties().getProperty("till.autoLogoffrestaurant"))) {
+                        ((JRootApp) m_App).closeAppView();
+                    } else {
+                        setActiveTicket(null, null);
+                    }
                     break;
 
                 default:
@@ -307,7 +303,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     @Override
     public void activate() throws BasicException {
 
-        LOGGER.log(System.Logger.Level.DEBUG, "JPanelTicket.activate");
+        LOGGER.log(System.Logger.Level.INFO, "JPanelTicket.activate");
 
         Action logout = new logout();
         String autoLogoff = (m_App.getProperties().getProperty("till.autoLogoff"));
@@ -478,6 +474,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     private void refreshTicket() {
 
+        CardLayout cl = (CardLayout) (getLayout());
+
         if (m_oTicket == null) {
             m_jTicketId.setText(null);
             m_ticketlines.clearTicketLines();
@@ -485,6 +483,17 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             m_jTaxesEuros.setText(null);
             m_jTotalEuros.setText(null);
             jCheckStock.setText(null);
+
+            checkStock();
+            stateToZero();
+            repaint();
+
+            cl.show(this, "null");
+
+            if ((m_oTicket != null) && (m_oTicket.getLinesCount() == 0)) {
+                resetSouthComponent();
+            }
+
         } else {
             if (m_oTicket.getTicketType() == TicketInfo.RECEIPT_REFUND) {
                 m_jEditLine.setVisible(false);
@@ -506,16 +515,22 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             if (m_oTicket.getLinesCount() == 0) {
                 resetSouthComponent();
             }
+
+            countArticles();
+            printPartialTotals();
+            stateToZero();
+            repaint();
+
+            cl.show(this, "ticket");
+            if (m_oTicket.getLinesCount() == 0) {
+                resetSouthComponent();
+            }
+
+            m_jKeyFactory.setText(null);
+            java.awt.EventQueue.invokeLater(() -> {
+                m_jKeyFactory.requestFocus();
+            });
         }
-
-        CardLayout cl = (CardLayout) (getLayout());
-        cl.show(this, "ticket");
-
-        checkStock();
-        countArticles();
-        stateToZero();
-        printPartialTotals();
-        repaint();
     }
 
     private void countArticles() {
@@ -579,7 +594,19 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     private void addTicketLine(ProductInfoExt oProduct, double dMul, double dPrice) {
-        if (m_oTicket != null) {
+
+        LOGGER.log(System.Logger.Level.INFO, "Product onoProduct.isVprice: ", oProduct.isVprice());
+        if (oProduct.isVprice()) {
+            TaxInfo tax = taxeslogic.getTaxInfo(oProduct.getTaxCategoryID(), m_oTicket.getCustomer());
+
+            if (m_jaddtax.isSelected()) {
+                dPrice /= (1 + tax.getRate());
+            }
+
+            addTicketLine(new TicketLineInfo(oProduct, dMul, dPrice, tax,
+                    (java.util.Properties) (oProduct.getProperties().clone())));
+
+        } else {
             CustomerInfoExt customer = m_oTicket.getCustomer();
 
             // get the line product tax
@@ -594,8 +621,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             refreshTicket();
 
             j_btnRemotePrt.setEnabled(true);
-        } else {
-            Toolkit.getDefaultToolkit().beep();
         }
 
     }
@@ -657,7 +682,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             visorTicketLine(oLine);
             printPartialTotals();
             stateToZero();
-            checkStock();
             countArticles();
 
             executeEvent(m_oTicket, m_oTicketExt, "ticket.change");
@@ -714,7 +738,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         visorTicketLine(null);
         printPartialTotals();
         stateToZero();
-        checkStock();
         countArticles();
 
     }
@@ -733,12 +756,13 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     private double includeTaxes(String tcid, double dValue) {
-        TaxInfo tax = null;
-        if (m_oTicket != null) {
-            tax = taxeslogic.getTaxInfo(tcid, m_oTicket.getCustomer());
+        if (m_jaddtax.isSelected()) {
+            TaxInfo tax = taxeslogic.getTaxInfo(tcid, m_oTicket.getCustomer());
+            double dTaxRate = tax == null ? 0.0 : tax.getRate();
+            return dValue / (1.0 + dTaxRate);
+        } else {
+            return dValue;
         }
-        double dTaxRate = tax == null ? 0.0 : tax.getRate();
-        return dValue / (1.0 + dTaxRate);
     }
 
     private double excludeTaxes(String tcid, double dValue) {
@@ -827,7 +851,12 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                         .getIntString("message.noproduct")).show(this);
                 stateToZero();
             } else {
-                addTicketLine(oProduct, 1.0, dPriceSell);
+                if (m_jaddtax.isSelected()) {
+                    TaxInfo tax = taxeslogic.getTaxInfo(oProduct.getTaxCategoryID(), m_oTicket.getCustomer());
+                    addTicketLine(oProduct, 1.0, dPriceSell / (1.0 + tax.getRate()));
+                } else {
+                    addTicketLine(oProduct, 1.0, dPriceSell);
+                }
             }
         } catch (BasicException ex) {
             LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
@@ -1107,6 +1136,10 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                                     break;
                             }
 
+                            if (m_jaddtax.isSelected()) {
+                                dPriceSell = oProduct.getPriceSellTax(tax);
+                            }
+
                             addTicketLine(oProduct, dUnits, dPriceSell);
                         }
                     } catch (BasicException ex) {
@@ -1181,7 +1214,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                                 dUnits = 1;                                             // no sellprice to calculate so must be 1 Unit
                             }
 
-                            addTicketLine(oProduct, dUnits, dPriceSell / (1.0 + tax.getRate()));
+                            if (m_jaddtax.isSelected()) {
+                                addTicketLine(oProduct, dUnits, dPriceSell);
+                            } else {
+                                addTicketLine(oProduct, dUnits, dPriceSell / (1.0 + tax.getRate()));
+                            }
                         }
                     } catch (BasicException ex) {
                         LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
@@ -1706,9 +1743,9 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
                             if ("restaurant".equals(m_App.getProperties()
                                     .getProperty("machine.ticketsbag")) && !ticket.getOldTicket()) {
-                                restDB.clearCustomerNameInTable(ticketext.toString());
-                                restDB.clearWaiterNameInTable(ticketext.toString());
-                                restDB.clearTicketIdInTable(ticketext.toString());
+                                restDB.clearCustomerNameInTable(ticketext);
+                                restDB.clearWaiterNameInTable(ticketext);
+                                restDB.clearTicketIdInTable(ticketext);
                             }
                         }
                     }
@@ -2065,17 +2102,17 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     public void checkStock() {
 
-        int tckLineIndex = m_ticketlines.getSelectedIndex();
-
-        LOGGER.log(System.Logger.Level.INFO, "Check stock for ticketlines (Selected Index): " + tckLineIndex);
-
-        if (tckLineIndex >= 0) {
+        int i = m_ticketlines.getSelectedIndex();
+        if (i >= 0) {
+            if (listener != null) {
+                listener.stop();
+            }
             try {
-                TicketLineInfo line = m_oTicket.getLine(tckLineIndex);
+                TicketLineInfo line = m_oTicket.getLine(i);
                 String pId = line.getProductID();
-
                 String location = m_App.getInventoryLocation();
-                ProductStock checkProduct = dlSales.getProductStockState(pId, location);
+                ProductStock checkProduct;
+                checkProduct = dlSales.getProductStockState(pId, location);
 
                 if (checkProduct != null) {
 
@@ -2085,15 +2122,38 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                         jCheckStock.setForeground(Color.darkGray);
                     }
 
-                    double dUnits = checkProduct.getUnits();
-                    jCheckStock.setText(Integer.toString((int) dUnits));
+                    String content;
+
+                    if (!location.equals(checkProduct.getLocation())) {
+                        content = AppLocal.getIntString("message.location.current");
+                        JFrame frame = new JFrame();
+                        JOptionPane.showMessageDialog(frame,
+                                content,
+                                "Info",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        double dUnits = checkProduct.getUnits();
+                        int iUnits;
+                        iUnits = (int) dUnits;
+
+                        jCheckStock.setText(Integer.toString(iUnits));
+                    }
+
                 } else {
-                    jCheckStock.setText("");
+                    jCheckStock.setText(null);
                 }
             } catch (BasicException ex) {
-                LOGGER.log(System.Logger.Level.WARNING, "Exception on check stock for ticketline " + tckLineIndex, ex);
+                LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
+            } finally {
+
+                if (listener != null) {
+                    listener.restart();
+                }
             }
+        } else {
+            Toolkit.getDefaultToolkit().beep();
         }
+
     }
 
     public void checkCustomer() {
@@ -2206,8 +2266,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        m_jPanContainer = new javax.swing.JPanel();
-        m_jOptions = new javax.swing.JPanel();
+        m_jPanelContainer = new javax.swing.JPanel();
+        m_jPanelMainToolbar = new javax.swing.JPanel();
         m_jPanelBag = new javax.swing.JPanel();
         jTBtnShow = new javax.swing.JToggleButton();
         m_jbtnScale = new javax.swing.JButton();
@@ -2218,9 +2278,9 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         jBtnCustomer = new javax.swing.JButton();
         m_jPanelScripts = new javax.swing.JPanel();
         m_jPanelBagExt = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
+        m_jPanelBagExtDefaultEmpty = new javax.swing.JPanel();
         m_jPanelTicket = new javax.swing.JPanel();
-        jPanelLinesToolbar = new javax.swing.JPanel();
+        m_jPanelLinesToolbar = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         m_jDelete = new javax.swing.JButton();
         m_jList = new javax.swing.JButton();
@@ -2228,36 +2288,35 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         jEditAttributes = new javax.swing.JButton();
         jCheckStock = new javax.swing.JButton();
         m_jPanelLines = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
+        m_jPanelLinesSum = new javax.swing.JPanel();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 32767));
         m_jTicketId = new javax.swing.JLabel();
         m_jPanelTotals = new javax.swing.JPanel();
-        m_jLblTotalEuros3 = new javax.swing.JLabel();
-        m_jLblTotalEuros2 = new javax.swing.JLabel();
-        m_jLblTotalEuros1 = new javax.swing.JLabel();
+        m_jLblSubTotalEuros = new javax.swing.JLabel();
+        m_jLblTaxEuros = new javax.swing.JLabel();
+        m_jLblTotalEuros = new javax.swing.JLabel();
         m_jSubtotalEuros = new javax.swing.JLabel();
         m_jTaxesEuros = new javax.swing.JLabel();
         m_jTotalEuros = new javax.swing.JLabel();
         m_jContEntries = new javax.swing.JPanel();
         m_jPanEntries = new javax.swing.JPanel();
         m_jNumberKeys = new com.openbravo.beans.JNumberKeys();
-        m_jPor = new javax.swing.JLabel();
         jPanelScanner = new javax.swing.JPanel();
         m_jPrice = new javax.swing.JLabel();
         m_jEnter = new javax.swing.JButton();
-        jPanelTax = new javax.swing.JPanel();
+        m_jPor = new javax.swing.JLabel();
         m_jKeyFactory = new javax.swing.JTextField();
+        m_jaddtax = new javax.swing.JCheckBox();
         m_jTax = new javax.swing.JComboBox();
-        m_jaddtax = new javax.swing.JToggleButton();
-        catcontainer = new javax.swing.JPanel();
+        m_jPanelCatalog = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(255, 204, 153));
         setOpaque(false);
         setLayout(new java.awt.CardLayout());
 
-        m_jPanContainer.setLayout(new java.awt.BorderLayout());
+        m_jPanelContainer.setLayout(new java.awt.BorderLayout());
 
-        m_jOptions.setLayout(new java.awt.BorderLayout());
+        m_jPanelMainToolbar.setLayout(new java.awt.BorderLayout());
 
         m_jPanelBag.setAutoscrolls(true);
         m_jPanelBag.setMaximumSize(new java.awt.Dimension(10, 10));
@@ -2379,30 +2438,30 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
         m_jPanelBag.add(m_jButtons);
 
-        m_jOptions.add(m_jPanelBag, java.awt.BorderLayout.PAGE_START);
+        m_jPanelMainToolbar.add(m_jPanelBag, java.awt.BorderLayout.PAGE_START);
 
         m_jPanelScripts.setPreferredSize(new java.awt.Dimension(200, 60));
         m_jPanelScripts.setLayout(new java.awt.BorderLayout());
 
         m_jPanelBagExt.setPreferredSize(new java.awt.Dimension(20, 60));
 
-        jPanel1.setMinimumSize(new java.awt.Dimension(235, 50));
-        jPanel1.setPreferredSize(new java.awt.Dimension(10, 55));
-        m_jPanelBagExt.add(jPanel1);
+        m_jPanelBagExtDefaultEmpty.setMinimumSize(new java.awt.Dimension(235, 50));
+        m_jPanelBagExtDefaultEmpty.setPreferredSize(new java.awt.Dimension(10, 55));
+        m_jPanelBagExt.add(m_jPanelBagExtDefaultEmpty);
 
         m_jPanelScripts.add(m_jPanelBagExt, java.awt.BorderLayout.PAGE_START);
 
-        m_jOptions.add(m_jPanelScripts, java.awt.BorderLayout.CENTER);
+        m_jPanelMainToolbar.add(m_jPanelScripts, java.awt.BorderLayout.CENTER);
         m_jPanelScripts.getAccessibleContext().setAccessibleDescription("");
 
-        m_jPanContainer.add(m_jOptions, java.awt.BorderLayout.NORTH);
+        m_jPanelContainer.add(m_jPanelMainToolbar, java.awt.BorderLayout.NORTH);
 
         m_jPanelTicket.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         m_jPanelTicket.setLayout(new java.awt.BorderLayout());
 
-        jPanelLinesToolbar.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jPanelLinesToolbar.setPreferredSize(new java.awt.Dimension(75, 270));
-        jPanelLinesToolbar.setLayout(new java.awt.BorderLayout());
+        m_jPanelLinesToolbar.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        m_jPanelLinesToolbar.setPreferredSize(new java.awt.Dimension(75, 270));
+        m_jPanelLinesToolbar.setLayout(new java.awt.BorderLayout());
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
         jPanel2.setPreferredSize(new java.awt.Dimension(70, 250));
@@ -2498,16 +2557,16 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         });
         jPanel2.add(jCheckStock);
 
-        jPanelLinesToolbar.add(jPanel2, java.awt.BorderLayout.NORTH);
+        m_jPanelLinesToolbar.add(jPanel2, java.awt.BorderLayout.NORTH);
 
-        m_jPanelTicket.add(jPanelLinesToolbar, java.awt.BorderLayout.LINE_START);
+        m_jPanelTicket.add(m_jPanelLinesToolbar, java.awt.BorderLayout.LINE_START);
 
         m_jPanelLines.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         m_jPanelLines.setPreferredSize(new java.awt.Dimension(450, 240));
         m_jPanelLines.setLayout(new java.awt.BorderLayout());
 
-        jPanel4.setLayout(new java.awt.BorderLayout());
-        jPanel4.add(filler2, java.awt.BorderLayout.LINE_START);
+        m_jPanelLinesSum.setLayout(new java.awt.BorderLayout());
+        m_jPanelLinesSum.add(filler2, java.awt.BorderLayout.LINE_START);
 
         m_jTicketId.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         m_jTicketId.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -2518,28 +2577,28 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         m_jTicketId.setPreferredSize(new java.awt.Dimension(300, 40));
         m_jTicketId.setRequestFocusEnabled(false);
         m_jTicketId.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        jPanel4.add(m_jTicketId, java.awt.BorderLayout.CENTER);
+        m_jPanelLinesSum.add(m_jTicketId, java.awt.BorderLayout.CENTER);
 
         m_jPanelTotals.setPreferredSize(new java.awt.Dimension(375, 60));
         m_jPanelTotals.setLayout(new java.awt.GridLayout(2, 3, 4, 0));
 
-        m_jLblTotalEuros3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        m_jLblTotalEuros3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_jLblTotalEuros3.setLabelFor(m_jSubtotalEuros);
-        m_jLblTotalEuros3.setText(AppLocal.getIntString("label.subtotalcash")); // NOI18N
-        m_jPanelTotals.add(m_jLblTotalEuros3);
+        m_jLblSubTotalEuros.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        m_jLblSubTotalEuros.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        m_jLblSubTotalEuros.setLabelFor(m_jSubtotalEuros);
+        m_jLblSubTotalEuros.setText(AppLocal.getIntString("label.subtotalcash")); // NOI18N
+        m_jPanelTotals.add(m_jLblSubTotalEuros);
 
-        m_jLblTotalEuros2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        m_jLblTotalEuros2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_jLblTotalEuros2.setLabelFor(m_jSubtotalEuros);
-        m_jLblTotalEuros2.setText(AppLocal.getIntString("label.taxcash")); // NOI18N
-        m_jPanelTotals.add(m_jLblTotalEuros2);
+        m_jLblTaxEuros.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        m_jLblTaxEuros.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        m_jLblTaxEuros.setLabelFor(m_jSubtotalEuros);
+        m_jLblTaxEuros.setText(AppLocal.getIntString("label.taxcash")); // NOI18N
+        m_jPanelTotals.add(m_jLblTaxEuros);
 
-        m_jLblTotalEuros1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        m_jLblTotalEuros1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_jLblTotalEuros1.setLabelFor(m_jTotalEuros);
-        m_jLblTotalEuros1.setText(AppLocal.getIntString("label.totalcash")); // NOI18N
-        m_jPanelTotals.add(m_jLblTotalEuros1);
+        m_jLblTotalEuros.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        m_jLblTotalEuros.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        m_jLblTotalEuros.setLabelFor(m_jTotalEuros);
+        m_jLblTotalEuros.setText(AppLocal.getIntString("label.totalcash")); // NOI18N
+        m_jPanelTotals.add(m_jLblTotalEuros);
 
         m_jSubtotalEuros.setBackground(m_jEditLine.getBackground());
         m_jSubtotalEuros.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
@@ -2580,13 +2639,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         m_jTotalEuros.setRequestFocusEnabled(false);
         m_jPanelTotals.add(m_jTotalEuros);
 
-        jPanel4.add(m_jPanelTotals, java.awt.BorderLayout.LINE_END);
+        m_jPanelLinesSum.add(m_jPanelTotals, java.awt.BorderLayout.LINE_END);
 
-        m_jPanelLines.add(jPanel4, java.awt.BorderLayout.SOUTH);
+        m_jPanelLines.add(m_jPanelLinesSum, java.awt.BorderLayout.SOUTH);
 
         m_jPanelTicket.add(m_jPanelLines, java.awt.BorderLayout.CENTER);
-
-        m_jPanContainer.add(m_jPanelTicket, java.awt.BorderLayout.CENTER);
 
         m_jContEntries.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         m_jContEntries.setMinimumSize(new java.awt.Dimension(300, 350));
@@ -2595,7 +2652,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         m_jPanEntries.setPreferredSize(new java.awt.Dimension(300, 350));
         m_jPanEntries.setLayout(new javax.swing.BoxLayout(m_jPanEntries, javax.swing.BoxLayout.Y_AXIS));
 
-        m_jNumberKeys.setMinimumSize(new java.awt.Dimension(300, 300));
+        m_jNumberKeys.setMaximumSize(new java.awt.Dimension(300, 300));
+        m_jNumberKeys.setMinimumSize(new java.awt.Dimension(250, 250));
         m_jNumberKeys.setPreferredSize(new java.awt.Dimension(250, 250));
         m_jNumberKeys.addJNumberEventListener(new com.openbravo.beans.JNumberEventListener() {
             public void keyPerformed(com.openbravo.beans.JNumberEvent evt) {
@@ -2604,12 +2662,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         });
         m_jPanEntries.add(m_jNumberKeys);
 
-        m_jPor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        m_jPor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_jPor.setRequestFocusEnabled(false);
-        m_jPanEntries.add(m_jPor);
-
         jPanelScanner.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        jPanelScanner.setMaximumSize(new java.awt.Dimension(300, 105));
 
         m_jPrice.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
         m_jPrice.setForeground(new java.awt.Color(76, 197, 237));
@@ -2631,32 +2685,10 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             }
         });
 
-        javax.swing.GroupLayout jPanelScannerLayout = new javax.swing.GroupLayout(jPanelScanner);
-        jPanelScanner.setLayout(jPanelScannerLayout);
-        jPanelScannerLayout.setHorizontalGroup(
-            jPanelScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelScannerLayout.createSequentialGroup()
-                .addContainerGap(30, Short.MAX_VALUE)
-                .addComponent(m_jPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addComponent(m_jEnter, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jPanelScannerLayout.setVerticalGroup(
-            jPanelScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelScannerLayout.createSequentialGroup()
-                .addGroup(jPanelScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(m_jEnter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(m_jPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
-        m_jPanEntries.add(jPanelScanner);
-
-        m_jContEntries.add(m_jPanEntries, java.awt.BorderLayout.NORTH);
-
-        jPanelTax.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jPanelTax.setPreferredSize(new java.awt.Dimension(276, 44));
+        m_jPor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        m_jPor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        m_jPor.setText("AS");
+        m_jPor.setRequestFocusEnabled(false);
 
         m_jKeyFactory.setEditable(false);
         m_jKeyFactory.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
@@ -2677,47 +2709,72 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             }
         });
 
+        m_jaddtax.setToolTipText(bundle.getString("tooltip.switchtax")); // NOI18N
+        m_jaddtax.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_jaddtaxActionPerformed(evt);
+            }
+        });
+
         m_jTax.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         m_jTax.setToolTipText(bundle.getString("tooltip.salestaxswitch")); // NOI18N
         m_jTax.setFocusable(false);
 
-        m_jaddtax.setToolTipText(bundle.getString("tooltip.switchtax")); // NOI18N
-
-        javax.swing.GroupLayout jPanelTaxLayout = new javax.swing.GroupLayout(jPanelTax);
-        jPanelTax.setLayout(jPanelTaxLayout);
-        jPanelTaxLayout.setHorizontalGroup(
-            jPanelTaxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelTaxLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(m_jKeyFactory, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+        javax.swing.GroupLayout jPanelScannerLayout = new javax.swing.GroupLayout(jPanelScanner);
+        jPanelScanner.setLayout(jPanelScannerLayout);
+        jPanelScannerLayout.setHorizontalGroup(
+            jPanelScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelScannerLayout.createSequentialGroup()
+                .addGroup(jPanelScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelScannerLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanelScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(m_jPor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(m_jKeyFactory, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(jPanelScannerLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(m_jaddtax)))
+                .addGroup(jPanelScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelScannerLayout.createSequentialGroup()
+                        .addComponent(m_jPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 2, Short.MAX_VALUE))
+                    .addComponent(m_jTax, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(m_jTax, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(m_jaddtax, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(m_jEnter, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        jPanelTaxLayout.setVerticalGroup(
-            jPanelTaxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelTaxLayout.createSequentialGroup()
-                .addGroup(jPanelTaxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(m_jTax, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
-                    .addGroup(jPanelTaxLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(m_jKeyFactory))
-                    .addComponent(m_jaddtax, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 4, Short.MAX_VALUE))
+        jPanelScannerLayout.setVerticalGroup(
+            jPanelScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelScannerLayout.createSequentialGroup()
+                .addComponent(m_jPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(m_jTax, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanelScannerLayout.createSequentialGroup()
+                .addGroup(jPanelScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(m_jEnter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanelScannerLayout.createSequentialGroup()
+                        .addComponent(m_jPor)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(m_jKeyFactory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(m_jaddtax, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        m_jContEntries.add(jPanelTax, java.awt.BorderLayout.CENTER);
+        m_jPanEntries.add(jPanelScanner);
 
-        m_jPanContainer.add(m_jContEntries, java.awt.BorderLayout.LINE_END);
+        m_jContEntries.add(m_jPanEntries, java.awt.BorderLayout.LINE_START);
 
-        catcontainer.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        catcontainer.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        catcontainer.setLayout(new java.awt.BorderLayout());
-        m_jPanContainer.add(catcontainer, java.awt.BorderLayout.SOUTH);
+        m_jPanelTicket.add(m_jContEntries, java.awt.BorderLayout.LINE_END);
 
-        add(m_jPanContainer, "ticket");
+        m_jPanelContainer.add(m_jPanelTicket, java.awt.BorderLayout.CENTER);
+
+        m_jPanelCatalog.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        m_jPanelCatalog.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        m_jPanelCatalog.setLayout(new java.awt.BorderLayout());
+        m_jPanelContainer.add(m_jPanelCatalog, java.awt.BorderLayout.SOUTH);
+
+        add(m_jPanelContainer, "ticket");
     }// </editor-fold>//GEN-END:initComponents
 
     private void m_jbtnScaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jbtnScaleActionPerformed
@@ -2825,6 +2882,19 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             scriptEngine.put("user", m_App.getAppUserView().getUser());
             scriptEngine.put("sales", this);
             scriptEngine.put("pickupid", m_oTicket.getPickupId());
+
+            //TODO PB_NOTE MUST BE IMPROVE HERE
+            Boolean warrantyPrint = warrantyCheck(m_oTicket);
+            scriptEngine.put("ticket", m_oTicket);
+            scriptEngine.put("place", m_oTicketExt);
+            scriptEngine.put("taxes", taxcollection);
+            scriptEngine.put("taxeslogic", taxeslogic);
+            scriptEngine.put("user", m_App.getAppUserView().getUser());
+            scriptEngine.put("sales", this);
+            scriptEngine.put("taxesinc", m_jaddtax.isSelected());
+            scriptEngine.put("warranty", warrantyPrint);
+            scriptEngine.put("pickupid", getPickupString(m_oTicket));
+
             scriptEngine.eval(rScript);
 
         } catch (ScriptException ex) {
@@ -2890,57 +2960,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     private void jCheckStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckStockActionPerformed
 
-        if (listener != null) {
-            listener.stop();
-        }
-
-        int i = m_ticketlines.getSelectedIndex();
-        if (i < 0) {
-            Toolkit.getDefaultToolkit().beep();
-        } else {
-            try {
-                TicketLineInfo line = m_oTicket.getLine(i);
-                String pId = line.getProductID();
-                String location = m_App.getInventoryLocation();
-                ProductStock checkProduct;
-                checkProduct = dlSales.getProductStockState(pId, location);
-
-                if (checkProduct != null) {
-
-                    if (checkProduct.getUnits() <= 0) {
-                        jCheckStock.setForeground(Color.magenta);
-                    } else {
-                        jCheckStock.setForeground(Color.darkGray);
-                    }
-
-                    String content;
-
-                    if (!location.equals(checkProduct.getLocation())) {
-                        content = AppLocal.getIntString("message.location.current");
-                        JFrame frame = new JFrame();
-                        JOptionPane.showMessageDialog(frame,
-                                content,
-                                "Info",
-                                JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        double dUnits = checkProduct.getUnits();
-                        int iUnits;
-                        iUnits = (int) dUnits;
-
-                        jCheckStock.setText(Integer.toString(iUnits));
-                    }
-
-                } else {
-                    jCheckStock.setText(null);
-                }
-            } catch (BasicException ex) {
-                LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
-            }
-        }
-
-        if (listener != null) {
-            listener.restart();
-        }
+        checkStock();
     }//GEN-LAST:event_jCheckStockActionPerformed
 
     private void jCheckStockMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCheckStockMouseClicked
@@ -3026,13 +3046,17 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             m_jPanelBagExt.setVisible(false);
         }
         refreshTicket();
+        m_jKeyFactory.requestFocus();
     }//GEN-LAST:event_jTBtnShowActionPerformed
 
     private void jBtnCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnCustomerActionPerformed
         if (listener != null) {
             listener.stop();
         }
-        Object[] options = {"Create", "Find", "Cancel"};
+        Object[] options = {
+            AppLocal.getIntString("cboption.create"),
+            AppLocal.getIntString("cboption.find"),
+            AppLocal.getIntString("label.cancel")};
 
         int n = JOptionPane.showOptionDialog(this,
                 AppLocal.getIntString("message.customeradd"),
@@ -3150,20 +3174,19 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         // TODO add your handling code here:
     }//GEN-LAST:event_m_jKeyFactoryActionPerformed
 
+    private void m_jaddtaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jaddtaxActionPerformed
+        m_jKeyFactory.requestFocus();
+    }//GEN-LAST:event_m_jaddtaxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnReprint1;
     private javax.swing.JButton btnSplit;
-    private javax.swing.JPanel catcontainer;
     private javax.swing.Box.Filler filler2;
     private javax.swing.JButton jBtnCustomer;
     private javax.swing.JButton jCheckStock;
     private javax.swing.JButton jEditAttributes;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanelLinesToolbar;
     private javax.swing.JPanel jPanelScanner;
-    private javax.swing.JPanel jPanelTax;
     private javax.swing.JToggleButton jTBtnShow;
     private javax.swing.JButton j_btnRemotePrt;
     private javax.swing.JPanel m_jButtons;
@@ -3172,17 +3195,21 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private javax.swing.JButton m_jEditLine;
     private javax.swing.JButton m_jEnter;
     private javax.swing.JTextField m_jKeyFactory;
-    private javax.swing.JLabel m_jLblTotalEuros1;
-    private javax.swing.JLabel m_jLblTotalEuros2;
-    private javax.swing.JLabel m_jLblTotalEuros3;
+    private javax.swing.JLabel m_jLblSubTotalEuros;
+    private javax.swing.JLabel m_jLblTaxEuros;
+    private javax.swing.JLabel m_jLblTotalEuros;
     private javax.swing.JButton m_jList;
     private com.openbravo.beans.JNumberKeys m_jNumberKeys;
-    private javax.swing.JPanel m_jOptions;
-    private javax.swing.JPanel m_jPanContainer;
     private javax.swing.JPanel m_jPanEntries;
     private javax.swing.JPanel m_jPanelBag;
     private javax.swing.JPanel m_jPanelBagExt;
+    private javax.swing.JPanel m_jPanelBagExtDefaultEmpty;
+    private javax.swing.JPanel m_jPanelCatalog;
+    private javax.swing.JPanel m_jPanelContainer;
     private javax.swing.JPanel m_jPanelLines;
+    private javax.swing.JPanel m_jPanelLinesSum;
+    private javax.swing.JPanel m_jPanelLinesToolbar;
+    private javax.swing.JPanel m_jPanelMainToolbar;
     private javax.swing.JPanel m_jPanelScripts;
     private javax.swing.JPanel m_jPanelTicket;
     private javax.swing.JPanel m_jPanelTotals;
@@ -3193,7 +3220,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private javax.swing.JLabel m_jTaxesEuros;
     private javax.swing.JLabel m_jTicketId;
     private javax.swing.JLabel m_jTotalEuros;
-    private javax.swing.JToggleButton m_jaddtax;
+    private javax.swing.JCheckBox m_jaddtax;
     private javax.swing.JButton m_jbtnScale;
     // End of variables declaration//GEN-END:variables
 

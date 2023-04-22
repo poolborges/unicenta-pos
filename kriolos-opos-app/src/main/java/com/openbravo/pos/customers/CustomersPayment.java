@@ -255,7 +255,6 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel2 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
@@ -366,6 +365,9 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
 
         jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.Y_AXIS));
 
+        m_jKeys.setMaximumSize(new java.awt.Dimension(250, 250));
+        m_jKeys.setMinimumSize(new java.awt.Dimension(250, 250));
+        m_jKeys.setPreferredSize(new java.awt.Dimension(250, 250));
         m_jKeys.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 m_jKeysActionPerformed(evt);
@@ -374,16 +376,23 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         jPanel4.add(m_jKeys);
 
         jPanel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        jPanel5.setLayout(new java.awt.GridBagLayout());
+        jPanel5.setMinimumSize(new java.awt.Dimension(164, 100));
+        jPanel5.setPreferredSize(new java.awt.Dimension(170, 100));
+        jPanel5.setLayout(new javax.swing.BoxLayout(jPanel5, javax.swing.BoxLayout.Y_AXIS));
 
         editorcard.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        editorcard.setPreferredSize(new java.awt.Dimension(200, 30));
-        jPanel5.add(editorcard, new java.awt.GridBagConstraints());
+        editorcard.setMaximumSize(new java.awt.Dimension(2147483647, 30));
+        editorcard.setMinimumSize(new java.awt.Dimension(100, 30));
+        editorcard.setPreferredSize(new java.awt.Dimension(100, 30));
+        jPanel5.add(editorcard);
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
         jButton1.setFocusPainted(false);
         jButton1.setFocusable(false);
-        jButton1.setMargin(new java.awt.Insets(8, 14, 8, 14));
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setMargin(new java.awt.Insets(14, 14, 8, 14));
+        jButton1.setMaximumSize(new java.awt.Dimension(104, 44));
+        jButton1.setMinimumSize(new java.awt.Dimension(104, 44));
         jButton1.setPreferredSize(new java.awt.Dimension(110, 45));
         jButton1.setRequestFocusEnabled(false);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -391,14 +400,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                 jButton1ActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-        jPanel5.add(jButton1, gridBagConstraints);
+        jPanel5.add(jButton1);
 
         jPanel4.add(jPanel5);
 
@@ -421,6 +423,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         txtCard.setEditable(false);
         txtCard.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         txtCard.setFocusable(false);
+        txtCard.setMinimumSize(new java.awt.Dimension(64, 30));
         txtCard.setPreferredSize(new java.awt.Dimension(0, 30));
         txtCard.setRequestFocusEnabled(false);
 
@@ -456,6 +459,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         txtName.setEditable(false);
         txtName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         txtName.setFocusable(false);
+        txtName.setMinimumSize(new java.awt.Dimension(64, 30));
         txtName.setPreferredSize(new java.awt.Dimension(0, 30));
         txtName.setRequestFocusEnabled(false);
 
@@ -475,6 +479,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         txtTaxId.setEditable(false);
         txtTaxId.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         txtTaxId.setFocusable(false);
+        txtTaxId.setMinimumSize(new java.awt.Dimension(64, 30));
         txtTaxId.setPreferredSize(new java.awt.Dimension(150, 30));
         txtTaxId.setRequestFocusEnabled(false);
 
@@ -521,7 +526,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                                     .addComponent(txtNotes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(txtPrePay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
+                        .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(txtMaxdebt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -535,7 +540,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtCurdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -120,7 +120,7 @@ public class JBusinessPartnerFinder extends javax.swing.JDialog implements Edito
 
         lpr = new ListProviderCreator(dlCustomers.getCustomerList(), this);
 
-        jListBPartner.setCellRenderer(new CustomerRenderer());
+        jListBPartner.setCellRenderer(new BusinessPartnerListCellRenderer());
 
         getRootPane().setDefaultButton(jcmdOK);
 

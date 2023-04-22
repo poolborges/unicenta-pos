@@ -530,7 +530,7 @@ public class JTicketsBagRestaurantRes extends javax.swing.JPanel implements Edit
                                 .addGap(4, 4, 4)
                                 .addComponent(m_jtxtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanNorthLayout.createSequentialGroup()
-                                .addGap(22, 22, 22)
+                                .addGap(0, 0, 0)
                                 .addComponent(m_jPanelList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap())
                     .addGroup(jPanNorthLayout.createSequentialGroup()
@@ -580,7 +580,7 @@ public class JTicketsBagRestaurantRes extends javax.swing.JPanel implements Edit
                     .addGroup(jPanNorthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.CENTER, jPanNorthLayout.createSequentialGroup()
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(42, 42, 42)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jbtnShowCalendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(m_jPanelTime, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(m_jPanelList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -605,7 +605,7 @@ public class JTicketsBagRestaurantRes extends javax.swing.JPanel implements Edit
         jPanSouth.setLayout(jPanSouthLayout);
         jPanSouthLayout.setHorizontalGroup(
             jPanSouthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1015, Short.MAX_VALUE)
+            .addGap(0, 1000, Short.MAX_VALUE)
             .addGroup(jPanSouthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanSouthLayout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
