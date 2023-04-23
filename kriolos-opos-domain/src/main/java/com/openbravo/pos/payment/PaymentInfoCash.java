@@ -1,18 +1,21 @@
-//    KrOS POS  - Open Source Point Of Sale
-//    Copyright (c) 2009-2018 uniCenta
+//    uniCenta oPOS  - Touch Friendly Point Of Sale
+//    Copyright © 2009-2020 uniCenta
+//    https://unicenta.com
 //
-//    This program is free software: you can redistribute it and/or modify
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
 //    the Free Software Foundation, either version 3 of the License, or
 //    (at your option) any later version.
 //
-//    This program is distributed in the hope that it will be useful,
+//   uniCenta oPOS is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.openbravo.pos.payment;
 
@@ -21,11 +24,9 @@ import com.openbravo.format.Formats;
 public class PaymentInfoCash extends PaymentInfo {
 
     private double prePayAmount = 0.0;
-    private double m_dPaid;
+    private double m_dPaid = 0.0;
     private double m_dTotal;
-    private double m_dTendered;
-    private String m_dCardName =null;
-//    private double m_dTip;    
+    private double m_dTendered;   
     
     /**
      * Creates a new instance of PaymentInfoCash
@@ -40,20 +41,24 @@ public class PaymentInfoCash extends PaymentInfo {
     }
 
     /**
-     * Creates a new instance of PaymentInfoCash
-     * @param dTotal
-     * @param dPaid
+     * PaymentInfoCash
+     * 
+     * @param dTotal total to Pay
+     * @param dPaid total paid (e.g: Given by Customer)
      * @param dTendered
-     * @param prePayAmount
+     * @param prePayAmount Prepay Amount
      */
     public PaymentInfoCash(double dTotal, double dPaid, double dTendered, double prePayAmount) {
         this(dTotal, dTendered, dPaid);
         this.prePayAmount = prePayAmount;
     }
     
-    /** Creates a new instance of PaymentInfoCash
-     * @param dTotal
-     * @param dPaid */
+    /** 
+     * PaymentInfoCash
+     * 
+     * @param dTotal total to Pay
+     * @param dPaid total paid (e.g: Given by Customer)
+     */
     public PaymentInfoCash(double dTotal, double dPaid) {
         m_dTotal = dTotal;
         m_dPaid = dPaid;
@@ -61,8 +66,7 @@ public class PaymentInfoCash extends PaymentInfo {
     
     @Override
     public PaymentInfo copyPayment() {
-       return new PaymentInfoCash(m_dTotal, m_dPaid, m_dTendered, prePayAmount);
-//        return new PaymentInfoCash(m_dTotal, m_dPaid, prePayAmount);        
+       return new PaymentInfoCash(m_dTotal, m_dPaid, m_dTendered, prePayAmount);        
     }
 
     @Override
@@ -78,9 +82,7 @@ public class PaymentInfoCash extends PaymentInfo {
     public double getTotal() {
         return m_dTotal;
     }
-//    public double getTip() {
-//        return m_dTip;
-//    }
+
     @Override
     public double getPaid() {
         return m_dPaid;
@@ -98,14 +100,11 @@ public class PaymentInfoCash extends PaymentInfo {
 
     @Override
     public String getCardName() {
-       return m_dCardName;
+       return null;
    }     
 
     public boolean hasPrePay() {
-        if (prePayAmount > 0) {
-            return true;
-        }
-        return false;
+        return prePayAmount > 0;
     }
 
     public double getPrePaid() {

@@ -281,7 +281,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      * @return
      * @throws BasicException
      */
-    public final ProductInfoExt getProductInfoByCode(String sCode) throws BasicException {      
+    public final ProductInfoExt getProductInfoByCode(String sCode) throws BasicException {
         return new PreparedSentence<String, ProductInfoExt>(s,
                 "SELECT "
                 + "ID, "
@@ -1610,15 +1610,14 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     }
 
     /**
-     *
+     * Save Ticket information (Receipt, Payments, Ticket, TaxLine, TicketLine, Customer debt, Voucher)
      * @param ticket
      * @param location
      * @throws BasicException
      */
     public final void saveTicket(final TicketInfo ticket, final String location) throws BasicException {
 
-        Transaction t;
-        t = new Transaction(s) {
+        Transaction t = new Transaction(s) {
             @Override
             public Object transact() throws BasicException {
 
@@ -1642,6 +1641,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                     }
                 }
 
+                //Ticket Properties
                 byte[] properties = null;
                 try {
                     ByteArrayOutputStream o = new ByteArrayOutputStream();
@@ -1651,6 +1651,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
                 }
 
+                //Receipt Writer
                 SerializerWrite<Object[]> sw = new SerializerWriteBasicExt(
                         new Datas[]{Datas.STRING, Datas.STRING, Datas.TIMESTAMP, Datas.BYTES, Datas.STRING},
                         new int[]{0, 1, 2, 3, 4});
@@ -1661,6 +1662,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                     properties,
                     ticket.getProperty("person")};
 
+                //Receipt Prepared
                 new PreparedSentence(s,
                         "INSERT INTO receipts (ID, MONEY, DATENEW, ATTRIBUTES, PERSON) VALUES (?, ?, ?, ?, ?)",
                         sw)
@@ -1684,7 +1686,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                         sw)
                         .exec(params);
 
-                // update status of existing ticket
+                //Ticket: Update status (This is Receipt or TicketType: 0)
                 new PreparedSentence(s,
                         "UPDATE tickets SET STATUS = ? "
                         + "WHERE TICKETTYPE = 0 AND TICKETID = ?",
@@ -1698,6 +1700,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                             }
                         });
 
+                //Ticket Lines
                 SentenceExec ticketlineinsert = new PreparedSentenceExec(s,
                         "INSERT INTO ticketlines (TICKET, LINE, "
                         + "PRODUCT, ATTRIBUTESETINSTANCE_ID, "
@@ -1723,6 +1726,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                     }
                 }
 
+                //Payments
                 final Payments payments = new Payments();
                 SentenceExec paymentinsert = new PreparedSentence(s,
                         "INSERT INTO payments (ID, RECEIPT, PAYMENT, TOTAL, TRANSID, RETURNMSG, "
@@ -1733,22 +1737,25 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                     payments.addPayment(p.getName(), p.getTotal(), p.getPaid(), ticket.getReturnMessage(), p.getVoucher());
                 });
                 while (payments.getSize() >= 1) {
+
+                    pName = payments.getFirstElement();
+                    getTotal = payments.getPaidAmount(pName);
+                    getTendered = payments.getTendered(pName);
+                    getRetMsg = payments.getRtnMessage(pName);
+                    getVoucher = payments.getVoucher(pName);
+                    payments.removeFirst(pName);
+                    
                     paymentinsert.exec(new DataParams() {
+
                         @Override
                         public void writeValues() throws BasicException {
-                            pName = payments.getFirstElement();
-                            getTotal = payments.getPaidAmount(pName);
-                            getTendered = payments.getTendered(pName);
-                            getRetMsg = payments.getRtnMessage(pName);
-                            getVoucher = payments.getVoucher(pName);
-                            payments.removeFirst(pName);
 
                             setString(1, UUID.randomUUID().toString());
                             setString(2, ticket.getId());
                             setString(3, pName);
                             setDouble(4, getTotal);
                             setString(5, ticket.getTransactionID());
-                            setBytes(6, (byte[]) Formats.BYTEA.parseValue(getRetMsg));
+                            setBytes(6, Formats.BYTEA.parseValue(getRetMsg));
                             setDouble(7, getTendered);
                             setString(8, getCardName);
                             setString(9, getVoucher);
@@ -1756,10 +1763,12 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                         }
                     });
 
+                    // Payment method: Disable that Voucher
                     if (payments.getVoucher(pName) != null) {
                         getVoucherNonActive().exec(payments.getVoucher(pName));
                     }
 
+                    //Payment method: Add debt to Customer Account
                     if ("debt".equals(pName) || "debtpaid".equals(pName)) {
                         ticket.getCustomer().updateCurDebt(getTotal, ticket.getDate());
                         getDebtUpdate().exec(new DataParams() {
@@ -1774,6 +1783,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                     }
                 }
 
+                //TAX Lines
                 SentenceExec taxlinesinsert = new PreparedSentence(s,
                         "INSERT INTO taxlines (ID, RECEIPT, TAXID, BASE, AMOUNT)  "
                         + "VALUES (?, ?, ?, ?, ?)",

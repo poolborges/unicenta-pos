@@ -1,41 +1,57 @@
-//    KrOS POS  - Open Source Point Of Sale
-//    Copyright (c) 2009-2018 uniCenta
+//    uniCenta oPOS  - Touch Friendly Point Of Sale
+//    Copyright © 2009-2020 uniCenta
+//    https://unicenta.com
 //
-//    This program is free software: you can redistribute it and/or modify
+//    This file is part of uniCenta oPOS
+//
+//    uniCenta oPOS is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
 //    the Free Software Foundation, either version 3 of the License, or
 //    (at your option) any later version.
 //
-//    This program is distributed in the hope that it will be useful,
+//   uniCenta oPOS is distributed in the hope that it will be useful,
 //    but WITHOUT ANY WARRANTY; without even the implied warranty of
 //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//    along with uniCenta oPOS.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.openbravo.pos.payment;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 
 public class PaymentInfoList {
     
-    private LinkedList<PaymentInfo> m_apayment;
-    
-    /** Creates a new instance of PaymentInfoComposed */
+    private final LinkedList<PaymentInfo> m_apayment;
+
     public PaymentInfoList() {
-// JG 16 May 12 use diamond inference
         m_apayment = new LinkedList<>();
     }
         
+    /**
+     * Get total in all PaymentInfo
+     * @return 
+     */
     public double getTotal() {
         
         double dTotal = 0.0;
-        Iterator<PaymentInfo> i = m_apayment.iterator();
-        while (i.hasNext()) {
-            PaymentInfo p = i.next();
+        for (PaymentInfo p : m_apayment) {
             dTotal += p.getTotal();
+        }
+        
+        return dTotal;
+    }
+    
+    /**
+     * Get total payd in all PaymentInfo
+     * @return 
+     */
+    public double getPaidTotal() {
+        
+        double dTotal = 0.0;
+        for (PaymentInfo p : m_apayment) {
+            dTotal += p.getPaid();
         }
         
         return dTotal;

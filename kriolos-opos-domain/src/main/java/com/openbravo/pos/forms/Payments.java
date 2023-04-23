@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.forms;
 
 import java.util.HashMap;
@@ -23,23 +22,21 @@ import java.util.HashMap;
  * @author Jack Gerrard
  */
 public class Payments {
-    private Double amount;
-    private Double tendered;
-    private final HashMap paymentPaid;
-    private final HashMap paymentTendered;
-    private final HashMap rtnMessage;
-    private String name;
-    private final HashMap paymentVoucher;
+
+    private final HashMap<String, Double> paymentPaid;
+    private final HashMap<String, Double> paymentTendered;
+    private final HashMap<String, String> rtnMessage;
+    private final HashMap<String, String> paymentVoucher;
 
     /**
      *
      */
     public Payments() {
-    paymentPaid =  new HashMap();
-    paymentTendered =  new HashMap();
-    rtnMessage = new HashMap();
-    paymentVoucher = new HashMap();
-     
+        paymentPaid = new HashMap<>();
+        paymentTendered = new HashMap<>();
+        rtnMessage = new HashMap<>();
+        paymentVoucher = new HashMap<>();
+
     }
 
     /**
@@ -49,19 +46,18 @@ public class Payments {
      * @param pTendered
      * @param rtnMsg
      */
-
-    public void addPayment (String pName, Double pAmountPaid, Double pTendered, String rtnMsg){    
-        if (paymentPaid.containsKey(pName)){
-            paymentPaid.put(pName,Double.parseDouble(paymentPaid.get(pName).toString()) + pAmountPaid);
-            paymentTendered.put(pName,Double.parseDouble(paymentTendered.get(pName).toString()) + pTendered); 
-            rtnMessage.put(pName, rtnMsg);           
-        }else {    
+    public void addPayment(String pName, Double pAmountPaid, Double pTendered, String rtnMsg) {
+        if (paymentPaid.containsKey(pName)) {
+            paymentPaid.put(pName, paymentPaid.get(pName) + pAmountPaid);
+            paymentTendered.put(pName, paymentTendered.get(pName) + pTendered);
+            rtnMessage.put(pName, rtnMsg);
+        } else {
             paymentPaid.put(pName, pAmountPaid);
-            paymentTendered.put(pName,pTendered);
-            rtnMessage.put(pName, rtnMsg); 
-        }        
+            paymentTendered.put(pName, pTendered);
+            rtnMessage.put(pName, rtnMsg);
+        }
     }
-    
+
     /**
      *
      * @param pName
@@ -70,34 +66,24 @@ public class Payments {
      * @param rtnMsg
      * @param pVoucher
      */
-    public void addPayment (String pName, Double pAmountPaid, Double pTendered, String rtnMsg, String pVoucher){
-        if (paymentPaid.containsKey(pName)){
-            paymentPaid.put(pName,Double.parseDouble(paymentPaid.get(pName).toString()) + pAmountPaid);
-            paymentTendered.put(pName,Double.parseDouble(paymentTendered.get(pName).toString()) + pTendered); 
+    public void addPayment(String pName, Double pAmountPaid, Double pTendered, String rtnMsg, String pVoucher) {
+        if (paymentPaid.containsKey(pName)) {
+            paymentPaid.put(pName, paymentPaid.get(pName) + pAmountPaid);
+            paymentTendered.put(pName, paymentTendered.get(pName) + pTendered);
             rtnMessage.put(pName, rtnMsg);
             paymentVoucher.put(pName, pVoucher);
-            
-        }else {    
+
+        } else {
             paymentPaid.put(pName, pAmountPaid);
-            paymentTendered.put(pName,pTendered);
+            paymentTendered.put(pName, pTendered);
             rtnMessage.put(pName, rtnMsg);
-            if (pVoucher !=null) {
-                paymentVoucher.put(pName, pVoucher);                            
+            if (pVoucher != null) {
+                paymentVoucher.put(pName, pVoucher);
             } else {
                 pVoucher = "0";
-                paymentVoucher.put(pName, pVoucher);                
+                paymentVoucher.put(pName, pVoucher);
             }
-        }        
-    }
-    
-
-    /**
-     *
-     * @param pName
-     * @return
-     */
-    public Double getTendered (String pName){
-        return(Double.parseDouble(paymentTendered.get(pName).toString()));
+        }
     }
 
     /**
@@ -105,16 +91,8 @@ public class Payments {
      * @param pName
      * @return
      */
-    public Double getPaidAmount (String pName){
-        return(Double.parseDouble(paymentPaid.get(pName).toString()));
-    }
-
-    /**
-     *
-     * @return
-     */
-    public Integer getSize(){
-        return (paymentPaid.size());
+    public Double getTendered(String pName) {
+        return paymentTendered.get(pName);
     }
 
     /**
@@ -122,24 +100,41 @@ public class Payments {
      * @param pName
      * @return
      */
-    public String getRtnMessage(String pName){
-        return (rtnMessage.get(pName).toString());
-    }
-    
-    public String getVoucher(String pName){
-        return (paymentVoucher.get(pName).toString());    
+    public Double getPaidAmount(String pName) {
+        return paymentPaid.get(pName);
     }
 
-    public String getFirstElement(){
-        String rtnKey= paymentPaid.keySet().iterator().next().toString();
-        return(rtnKey);
+    /**
+     *
+     * @return
+     */
+    public Integer getSize() {
+        return paymentPaid.size();
+    }
+
+    /**
+     *
+     * @param pName
+     * @return
+     */
+    public String getRtnMessage(String pName) {
+        return rtnMessage.get(pName);
+    }
+
+    public String getVoucher(String pName) {
+        return paymentVoucher.get(pName);
+    }
+
+    public String getFirstElement() {
+        String rtnKey = paymentPaid.keySet().iterator().next();
+        return rtnKey;
     }
 
     /**
      *
      * @param pName
      */
-    public void removeFirst (String pName){
+    public void removeFirst(String pName) {
         paymentPaid.remove(pName);
         paymentTendered.remove(pName);
         rtnMessage.remove(pName);

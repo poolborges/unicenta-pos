@@ -32,42 +32,41 @@ public class PaymentInfoTicket extends PaymentInfo implements SerializableRead {
     private String m_sVoucher;
 
     /**
-     * Used by with: Cheque, Bank , Slip
+     * Used For: Cheque, Bank , Slip, Voucher
      *
-     * @param dTicket
-     * @param sName
+     * @param ticketAmount Amount
+     * @param sName Name for purpose (e.g: cheque,  bank, slip, voucherin, debt, debtpaid, cashrefund)
      */
-    public PaymentInfoTicket(double dTicket, String sName) {
-        this(0.0, sName, null, null);
+    public PaymentInfoTicket(double ticketAmount, String sName) {
+        this(ticketAmount, sName, null, null);
     }
 
     /**
-     * Used by with: Voucher
+     * Used For: Voucher
      *
-     * @param dTicket
-     * @param sName
-     * @param transactionID
-     * @param sVoucher
+     * @param ticketAmount Amount
+     * @param sName Name for purpose (e.g: cheque,  bank, slip, voucherin, debt, debtpaid, cashrefund)
+     * @param transactionID Transaction ID (Context of what)
+     * @param sVoucher Voucher Number
      */
-    public PaymentInfoTicket(double dTicket, String sName, String transactionID, String sVoucher) {
+    public PaymentInfoTicket(double ticketAmount, String sName, String transactionID, String sVoucher) {
         m_sName = sName;
-        m_dTicket = dTicket;
+        m_dTicket = ticketAmount;
         m_transactionID = transactionID;
         m_sVoucher = sVoucher;
         m_dCardName = null;
         m_dTendered = 0.00;
-
     }
 
     /**
-     * Used by with: Voucher
+     * Used for: Voucher
      *
-     * @param dTicket
-     * @param sName
-     * @param sVoucher
+     * @param ticketAmount
+     * @param sName Name for purpose (e.g: cheque,  bank, slip, voucherin, debt, debtpaid, cashrefund)
+     * @param sVoucher Voucher Number
      */
-    public PaymentInfoTicket(double dTicket, String sName, String sVoucher) {
-        this(dTicket, sName, null, sVoucher);
+    public PaymentInfoTicket(double ticketAmount, String sName, String sVoucher) {
+        this(ticketAmount, sName, null, sVoucher);
     }
 
     public PaymentInfoTicket() {
