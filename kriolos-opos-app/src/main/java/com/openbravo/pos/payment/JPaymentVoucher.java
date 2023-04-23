@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.payment;
 
 import com.openbravo.basic.BasicException;
@@ -37,37 +36,39 @@ import java.util.List;
  * @author JG uniCenta
  */
 public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInterface {
-    
-    private final JPaymentNotifier m_notifier;
-    
-    private DataLogicSales dlSales;
-    private DataLogicCustomers dlCustomers;    
-    private ComboBoxValModel m_VoucherModel;
-    private SentenceList m_sentvouch;
-    private VoucherInfo m_voucherInfo;    
-    
-    private double m_dTicket;
-    private double m_dTotal;  
 
-    private final String m_sVoucher; // "voucherin", "voucherout"
-    private String m_sVoucher1;
-   
-    /** Creates new form JPaymentTicket
+    private final JPaymentNotifier m_notifier;
+
+    private DataLogicSales dlSales;
+    private DataLogicCustomers dlCustomers;
+    private ComboBoxValModel m_VoucherModel;
+    private SentenceList<VoucherInfo> m_sentvouch;
+
+    private double voucherAmount;
+    private double m_dTotalToPay;
+
+    private final String m_sVoucherType; // "voucherin", "voucherout"
+    private String m_sVoucherNumber;
+
+    /**
+     * Creates new form JPaymentTicket
+     *
      * @param app
      * @param notifier
-     * @param sVoucher */
+     * @param sVoucher should be "voucherin", "voucherout"
+     */
     public JPaymentVoucher(AppView app, JPaymentNotifier notifier, String sVoucher) {
 
         m_notifier = notifier;
-        m_sVoucher = sVoucher;
-        m_dTotal=0.0;
-        
+        m_sVoucherType = sVoucher;
+        voucherAmount = 0.0;
+        m_dTotalToPay = 0.0;
+
         init(app);
 
         m_jTendered.addPropertyChangeListener("Edition", new RecalculateState());
-//        m_jTendered.addEditorKeys(m_jKeys);
-
     }
+
     private void init(AppView app) {
 
         try {
@@ -75,21 +76,20 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
             dlCustomers = (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
             m_sentvouch = dlSales.getVoucherList();
 
-            initComponents();        
+            initComponents();
 
             m_VoucherModel = new ComboBoxValModel();
-            List a = m_sentvouch.list();
-//            a.add(0, null);
+            List<VoucherInfo> a = m_sentvouch.list();
 
             m_VoucherModel = new ComboBoxValModel(a);
             m_jVoucher.setModel(m_VoucherModel);
 
-            webLblcustomerName.setText(null);            
-            
+            webLblcustomerName.setText(null);
+
         } catch (BasicException ex) {
         }
-    }    
-    
+    }
+
     /**
      *
      * @param customerext
@@ -97,18 +97,15 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
      * @param transID
      */
     @Override
-    public void activate(CustomerInfoExt customerext, double dTotal,String transID) {
-    
-            m_dTotal = dTotal;
-            
-            m_jTendered.reset();
-//            m_jTendered.activate();
+    public void activate(CustomerInfoExt customerext, double dTotal, String transID) {
 
-            m_jKeys.setEnabled(false);
-            m_jTendered.setEnabled(false);            
-            
-            printState();
-        }
+        m_dTotalToPay = dTotal;
+        m_jTendered.reset();
+        m_jKeys.setEnabled(false);
+        m_jTendered.setEnabled(false);
+
+        setStates(null);
+    }
 
     /**
      *
@@ -118,63 +115,57 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
     public Component getComponent() {
         return this;
     }
-    
+
     /**
      *
      * @return
      */
     @Override
     public PaymentInfo executePayment() {
-/*        try {
-            String id = m_VoucherModel.getSelectedKey().toString();
-            VoucherInfo m_voucherInfo = dlCustomers.getVoucherInfo(id);
+        return new PaymentInfoTicket(voucherAmount, m_sVoucherType, m_sVoucherNumber);
 
-        } catch (BasicException ex) {
-        }
-            if (m_dTicket>m_dTotal){
-                return new VoucherPaymentInfo(m_dTotal, m_sPaper,m_voucherInfo.getVoucherNumber());
-            }else{
-                return new VoucherPaymentInfo(m_dTicket, m_sPaper,m_voucherInfo.getVoucherNumber());
-            }         
-*/
-        try {
-            String id = m_VoucherModel.getSelectedKey().toString();
-            VoucherInfo m_voucherInfo1 = dlCustomers.getVoucherInfo(id);
-            m_sVoucher1 = m_voucherInfo1.getVoucherNumber();                    
-        } catch (BasicException ex) {
-        }
-            return new PaymentInfoTicket(m_dTicket, m_sVoucher, m_sVoucher1);                    
-        
-    }    
-    
-    private void printState() {
-
-        Double value = m_jTendered.getValue();
-        if (value == null) {
-            m_dTicket = 0.0;
-        } else {
-            m_dTicket = value;
-        } 
-        
-        m_jMoneyEuros.setText(Formats.CURRENCY.formatValue(m_dTicket));
-        
-        int iCompare = RoundUtils.compare(m_dTicket, m_dTotal);
-        
-        // it is allowed to pay more
-        m_notifier.setStatus(m_dTicket > 0.0, iCompare >= 0);
     }
 
     private class RecalculateState implements PropertyChangeListener {
+
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            printState();
+            int iCompare = RoundUtils.compare(voucherAmount, m_dTotalToPay);
+            m_notifier.setStatus(voucherAmount > 0.0, iCompare >= 0);
         }
-    }    
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    }
+
+    private void setStates(VoucherInfo m_voucherInfo) {
+
+        cleanStates();
+        if (m_voucherInfo != null) {
+            if ("A".equals(m_voucherInfo.getStatus())) {
+
+                voucherAmount = m_voucherInfo.getAmount();
+                m_jTendered.setDoubleValue(voucherAmount);
+                m_jMoneyEuros.setText(Formats.CURRENCY.formatValue(voucherAmount));
+                webLblcustomerName.setText(m_voucherInfo.getCustomerName());
+                m_sVoucherNumber = m_voucherInfo.getVoucherNumber();
+                voucherStatus.setText("Available");
+            } else if ("D".equals(m_voucherInfo.getStatus())) {
+                voucherStatus.setText("Redeemed");
+            }
+        }
+    }
+
+    private void cleanStates() {
+        m_sVoucherNumber = null;
+        voucherAmount = 0.0;
+        m_jMoneyEuros.setText(null);
+        m_jTendered.setDoubleValue(null);
+        webLblcustomerName.setText(null);
+        voucherStatus.setText(null);
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -311,36 +302,21 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
     }// </editor-fold>//GEN-END:initComponents
 
     private void m_jVoucherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jVoucherActionPerformed
-    
-        m_jMoneyEuros.setText(null);
 
-        if (m_VoucherModel.getSelectedKey()!=null){
+        VoucherInfo m_voucherInfo = null;
+        if (m_VoucherModel.getSelectedKey() != null) {
             try {
-
                 String id = m_VoucherModel.getSelectedKey().toString();
-                VoucherInfo m_voucherInfo = dlCustomers.getVoucherInfo(id);
-
-                if (m_voucherInfo != null){
-                    m_jTendered.setDoubleValue(m_voucherInfo.getAmount());
-                    m_jMoneyEuros.setText(Formats.CURRENCY.formatValue(m_voucherInfo.getAmount()));
-                    webLblcustomerName.setText(m_voucherInfo.getCustomerName());
-                    
-                    if ("A".equals(m_voucherInfo.getStatus())) {
-                        voucherStatus.setText("Available");    
-                    } else if ("D".equals(m_voucherInfo.getStatus())) {
-                        voucherStatus.setText("Redeemed");                        
-                    }
-
-                    printState();
-                }
+                m_voucherInfo = dlCustomers.getVoucherInfo(id);
             } catch (BasicException ex) {
-//                ex.printStackTrace();
-            }
 
+            }
         }
+
+        setStates(m_voucherInfo);
     }//GEN-LAST:event_m_jVoucherActionPerformed
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
@@ -357,5 +333,5 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
     private javax.swing.JLabel webLblCustomer;
     private javax.swing.JLabel webLblcustomerName;
     // End of variables declaration//GEN-END:variables
-    
+
 }

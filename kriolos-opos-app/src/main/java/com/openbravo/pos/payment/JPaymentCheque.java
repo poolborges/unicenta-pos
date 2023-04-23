@@ -35,7 +35,6 @@ public class JPaymentCheque extends javax.swing.JPanel implements JPaymentInterf
 
     private double m_dPaid;
     private double m_dTotal;
-    private Boolean priceWith00;
     
     /** Creates new form JPaymentCash
      * @param notifier */
@@ -47,19 +46,6 @@ public class JPaymentCheque extends javax.swing.JPanel implements JPaymentInterf
         
         m_jTendered.addPropertyChangeListener("Edition", new RecalculateState());
         m_jTendered.addEditorKeys(m_jKeys);
-        
- /* added JDL 11.05.13        
-        AppConfig m_config =  AppConfig.getInstance();        
-        m_config.load();        
-        priceWith00 =("true".equals(m_config.getProperty("till.pricewith00")));
-        if (priceWith00) {
-            // use '00' instead of '.'
-            m_jKeys.dotIs00(true);
-        }
-        m_config=null;
-*/ 
-        
-        
     }
     
     /**

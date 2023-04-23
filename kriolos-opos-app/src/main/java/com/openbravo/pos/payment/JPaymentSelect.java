@@ -48,7 +48,6 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
     private static final long serialVersionUID = 1L;
 
     private PaymentInfoList m_aPaymentInfo;
-    private boolean printselected;
 
     private boolean accepted;
 
@@ -82,14 +81,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
     protected JPaymentSelect(java.awt.Dialog parent, boolean modal, ComponentOrientation o) {
         super(parent, modal);
         initComponents();
-
-        m_jButtonPrint.setVisible(true);
         this.applyComponentOrientation(o);
-        if (printselected) {
-            jlblPrinterStatus.setText("Printer ON");
-        } else {
-            jlblPrinterStatus.setText("Printer OFF");
-        }
     }
 
     public void init(AppView app) {
@@ -98,42 +90,74 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
         dlCustomers = (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
         dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
 
-        printselected = false;
-        if (printselected) {
+        m_jButtonPrint.setVisible(true);
+        setPrintSelected(!Boolean.parseBoolean(app.getProperties().getProperty("till.receiptprintoff")));
+        setPrintSelectedLabel();
+    }
+
+    private void setPrintSelectedLabel() {
+        if (m_jButtonPrint.isSelected()) {
             jlblPrinterStatus.setText(AppLocal.getIntString("jpaymentselect.printer.on", "Printer on"));
         } else {
             jlblPrinterStatus.setText(AppLocal.getIntString("jpaymentselect.printer.off", "Printer off"));
         }
-
     }
 
     public void setPrintSelected(boolean value) {
-        printselected = value;
+        m_jButtonPrint.setSelected(value);
     }
 
     public boolean isPrintSelected() {
-        return printselected;
+        return m_jButtonPrint.isSelected();
     }
 
+    /**
+     * List of PaymentInfo
+     * @return 
+     */
     public List<PaymentInfo> getSelectedPayments() {
         return m_aPaymentInfo.getPayments();
     }
+    
+    /**
+     * Get PaymentInfoList
+     * @return 
+     */
+    public PaymentInfoList getPaymentInfoList() {
+        return m_aPaymentInfo;
+    }
+
+    /**
+     * Get total
+     *
+     * @return
+     */
+    public double getTotal() {
+        return m_aPaymentInfo.getTotal();
+    }
+
+    /**
+     * Get total Paid
+     *
+     * @return
+     */
+    public double getPaidTotal() {
+        return m_aPaymentInfo.getPaidTotal();
+    }
+    
 
     public boolean showDialog(double total, CustomerInfoExt customerext, double deposit) {
         m_aPaymentInfo = new PaymentInfoList();
         accepted = false;
-        total -= deposit;
+        total = total - deposit;
         m_dTotal = total;
 
         this.customerext = customerext;
-        m_jButtonPrint.setVisible(true);
-        m_jButtonPrint.setSelected(printselected);
+        setPrintSelected(!Boolean.parseBoolean(app.getProperties().getProperty("till.receiptprintoff")));
+        setPrintSelectedLabel();
         m_jTotalEuros.setText(Formats.CURRENCY.formatValue(m_dTotal));
 
         addTabs();
-
-        // gets the print button state
-        printselected = m_jButtonPrint.isSelected();
 
         // remove all tabs        
         m_jTabPayment.removeAll();
@@ -151,19 +175,15 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
         this.customerext = customerext;
 
         setPrintSelected(!Boolean.parseBoolean(app.getProperties().getProperty("till.receiptprintoff")));
-        m_jButtonPrint.setSelected(printselected);
+        setPrintSelectedLabel();
         m_jTotalEuros.setText(Formats.CURRENCY.formatValue(m_dTotal));
 
-        if (printselected) {
-            jlblPrinterStatus.setText("Printer ON");
-        } else {
-            jlblPrinterStatus.setText("Printer OFF");
-        }
-
-        //       m_jPayTotal.setText(Formats.CURRENCY.formatValue(m_dTotal));
-// N. Deppe 08/11/2018
-// Fix issue where dialog keeps moving lower and lower on the screen
-// Get the size of the screen, and center the dialog in the window
+        /** 
+         * m_jPayTotal.setText(Formats.CURRENCY.formatValue(m_dTotal));
+         * N. Deppe 08/11/2018
+         * Fix issue where dialog keeps moving lower and lower on the screen
+         * Get the size of the screen, and center the dialog in the window
+         */
         Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension thisDim = this.getSize();
         int x = (screenDim.width - thisDim.width) / 2;
@@ -180,12 +200,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
             getRootPane().setDefaultButton(m_jButtonOK);
             printState();
             setVisible(true);
-        }
-
-        // gets the print button state
-        printselected = m_jButtonPrint.isSelected();
-
-        // remove all tabs        
+        }     
         m_jTabPayment.removeAll();
 
         return accepted;
@@ -217,7 +232,6 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
             jpayinterface.getComponent().applyComponentOrientation(getComponentOrientation());
 
             String title = AppLocal.getIntString(jpay.getLabelKey());
-            
 
             m_jTabPayment.addTab(
                     fixedStringRithPad(AppLocal.getIntString(jpay.getLabelKey())),
@@ -227,15 +241,14 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
         }
     }
 
-    
     private String fixedStringRithPad(final String text) {
         return fixedStringRithPad(text, 10);
     }
-    
+
     private String fixedStringRithPad(String text, int length) {
-        
-        if(text.length() > length){
-            text = text.substring(0, length-1);
+
+        if (text.length() > length) {
+            text = text.substring(0, length - 1);
         }
         return StringUtils.rightPad(text, length, "");
     }
@@ -586,6 +599,9 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(AppLocal.getIntString("payment.title")); // NOI18N
+        setMaximumSize(new java.awt.Dimension(800, 600));
+        setMinimumSize(new java.awt.Dimension(600, 400));
+        setPreferredSize(new java.awt.Dimension(600, 400));
         setResizable(false);
 
         jPanel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -796,7 +812,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
 
     private void m_jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jButtonOKActionPerformed
 
-        SwingWorker<Object,Object> worker = new SwingWorker<>() {
+        SwingWorker<Object, Object> worker = new SwingWorker<>() {
             @Override
             protected Object doInBackground() throws Exception {
                 setReturnPayment(

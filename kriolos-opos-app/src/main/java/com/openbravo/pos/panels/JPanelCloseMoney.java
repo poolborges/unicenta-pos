@@ -77,16 +77,11 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
     
     private AppUser m_User;
     
-    private final ComboBoxValModel m_ReasonModel;  
     
     /** Creates new form JPanelCloseMoney */
     public JPanelCloseMoney() {
         initComponents();                   
-
-        m_ReasonModel = new ComboBoxValModel();
-        m_ReasonModel.add(AppLocal.getIntString("cboption.preview"));
-        m_ReasonModel.add(AppLocal.getIntString("cboption.reprint"));               
-        jCBCloseCash.setModel(m_ReasonModel);                
+             
     }
     
     /**
@@ -102,7 +97,7 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
         m_TTP = new TicketParser(m_App.getDeviceTicket(), m_dlSystem);
 
         m_jTicketTable.setDefaultRenderer(Object.class, new TableRendererBasic(
-            new Formats[] {new FormatsPayment(), Formats.CURRENCY}));
+            new Formats[] {new FormatsPayment(), Formats.CURRENCY, Formats.INT}));
         m_jTicketTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         m_jScrollTableTicket.getVerticalScrollBar().setPreferredSize(new Dimension(25,25));       
         m_jTicketTable.getTableHeader().setReorderingAllowed(false);         
@@ -213,14 +208,17 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
             m_jSalesTaxes.setText(m_PaymentsToClose.printSalesTaxes());
             m_jSalesTotal.setText(m_PaymentsToClose.printSalesTotal());
         }          
-        
+
         m_jTicketTable.setModel(m_PaymentsToClose.getPaymentsModel());
                 
         TableColumnModel jColumns = m_jTicketTable.getColumnModel();
-        jColumns.getColumn(0).setPreferredWidth(200);
+        jColumns.getColumn(0).setPreferredWidth(100);
         jColumns.getColumn(0).setResizable(false);
         jColumns.getColumn(1).setPreferredWidth(100);
         jColumns.getColumn(1).setResizable(false);
+        jColumns.getColumn(2).setPreferredWidth(100);
+        jColumns.getColumn(2).setResizable(false);   
+
         
         m_jsalestable.setModel(m_PaymentsToClose.getSalesModel());
         
@@ -436,7 +434,8 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
         jLabel6 = new javax.swing.JLabel();
         m_jCloseCash = new javax.swing.JButton();
         m_jPrintCash = new javax.swing.JButton();
-        jCBCloseCash = new javax.swing.JComboBox<>();
+        m_jPrintCash1 = new javax.swing.JButton();
+        m_jPrintCash2 = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -530,7 +529,6 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
         m_jTicketTable.setFocusable(false);
         m_jTicketTable.setIntercellSpacing(new java.awt.Dimension(0, 1));
         m_jTicketTable.setRequestFocusEnabled(false);
-        m_jTicketTable.setShowVerticalLines(false);
         m_jScrollTableTicket.setViewportView(m_jTicketTable);
 
         jPanel1.add(m_jScrollTableTicket, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 95, -1, -1));
@@ -585,7 +583,6 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
         m_jsalestable.setFocusable(false);
         m_jsalestable.setIntercellSpacing(new java.awt.Dimension(0, 1));
         m_jsalestable.setRequestFocusEnabled(false);
-        m_jsalestable.setShowVerticalLines(false);
         m_jScrollSales.setViewportView(m_jsalestable);
 
         jPanel1.add(m_jScrollSales, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 250, -1, -1));
@@ -626,8 +623,8 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
 
         m_jPrintCash.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         m_jPrintCash.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/printer.png"))); // NOI18N
-        m_jPrintCash.setText(AppLocal.getIntString("button.printcash")); // NOI18N
-        m_jPrintCash.setToolTipText(bundle.getString("tooltip.btn.partialcash")); // NOI18N
+        m_jPrintCash.setText(AppLocal.getIntString("cboption.preview")); // NOI18N
+        m_jPrintCash.setToolTipText(AppLocal.getIntString("cboption.preview")); // NOI18N
         m_jPrintCash.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         m_jPrintCash.setIconTextGap(2);
         m_jPrintCash.setMaximumSize(new java.awt.Dimension(85, 33));
@@ -638,17 +635,39 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
                 m_jPrintCashActionPerformed(evt);
             }
         });
-        jPanel1.add(m_jPrintCash, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 450, -1, -1));
+        jPanel1.add(m_jPrintCash, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 450, -1, -1));
 
-        jCBCloseCash.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jCBCloseCash.setToolTipText(AppLocal.getIntString("tooltip.closecashactions")); // NOI18N
-        jCBCloseCash.setPreferredSize(new java.awt.Dimension(150, 45));
-        jCBCloseCash.addActionListener(new java.awt.event.ActionListener() {
+        m_jPrintCash1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        m_jPrintCash1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/printer.png"))); // NOI18N
+        m_jPrintCash1.setText(AppLocal.getIntString("cboption.reprint")); // NOI18N
+        m_jPrintCash1.setToolTipText(bundle.getString("cboption.reprint")); // NOI18N
+        m_jPrintCash1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        m_jPrintCash1.setIconTextGap(2);
+        m_jPrintCash1.setMaximumSize(new java.awt.Dimension(85, 33));
+        m_jPrintCash1.setMinimumSize(new java.awt.Dimension(85, 33));
+        m_jPrintCash1.setPreferredSize(new java.awt.Dimension(150, 45));
+        m_jPrintCash1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCBCloseCashActionPerformed(evt);
+                m_jPrintCash1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jCBCloseCash, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 450, -1, -1));
+        jPanel1.add(m_jPrintCash1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 450, -1, -1));
+
+        m_jPrintCash2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        m_jPrintCash2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/printer.png"))); // NOI18N
+        m_jPrintCash2.setText(AppLocal.getIntString("button.printcash")); // NOI18N
+        m_jPrintCash2.setToolTipText(bundle.getString("tooltip.btn.partialcash")); // NOI18N
+        m_jPrintCash2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        m_jPrintCash2.setIconTextGap(2);
+        m_jPrintCash2.setMaximumSize(new java.awt.Dimension(85, 33));
+        m_jPrintCash2.setMinimumSize(new java.awt.Dimension(85, 33));
+        m_jPrintCash2.setPreferredSize(new java.awt.Dimension(150, 45));
+        m_jPrintCash2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_jPrintCash2ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(m_jPrintCash2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 450, -1, -1));
 
         add(jPanel1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -746,18 +765,16 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
 
     }//GEN-LAST:event_m_jPrintCashActionPerformed
 
-    private void jCBCloseCashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBCloseCashActionPerformed
-        if(jCBCloseCash.getSelectedIndex() == 0){
-            printPayments("Printer.CloseCash.Preview");  
-        }
-        if(jCBCloseCash.getSelectedIndex() == 1) {
-            m_App.getAppUserView().showTask("com.openbravo.pos.panels.JPanelCloseMoneyReprint");
-        }  
-    }//GEN-LAST:event_jCBCloseCashActionPerformed
+    private void m_jPrintCash1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jPrintCash1ActionPerformed
+        printPayments("Printer.CloseCash.Preview"); 
+    }//GEN-LAST:event_m_jPrintCash1ActionPerformed
+
+    private void m_jPrintCash2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jPrintCash2ActionPerformed
+        m_App.getAppUserView().showTask("com.openbravo.pos.panels.JPanelCloseMoneyReprint");
+    }//GEN-LAST:event_m_jPrintCash2ActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> jCBCloseCash;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -779,6 +796,8 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
     private javax.swing.JTextField m_jMinDate;
     private javax.swing.JTextField m_jNoCashSales;
     private javax.swing.JButton m_jPrintCash;
+    private javax.swing.JButton m_jPrintCash1;
+    private javax.swing.JButton m_jPrintCash2;
     private javax.swing.JTextField m_jSales;
     private javax.swing.JTextField m_jSalesSubtotal;
     private javax.swing.JTextField m_jSalesTaxes;

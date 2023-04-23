@@ -18,6 +18,11 @@ package com.openbravo.pos.payment;
 
 import java.awt.*;
 
+/**
+ * PaymentSelect for Receipt Payment
+ * 
+ * @author adrianromero
+ */
 public class JPaymentSelectReceipt extends JPaymentSelect {
 
     private static final long serialVersionUID = 1L;
@@ -63,6 +68,6 @@ public class JPaymentSelectReceipt extends JPaymentSelect {
 
     @Override
     protected PaymentInfo getDefaultPayment(double total) {
-        return new PaymentInfoCash(total, total);        
+        return new PaymentInfoCash(total, 0);        
     }
 }

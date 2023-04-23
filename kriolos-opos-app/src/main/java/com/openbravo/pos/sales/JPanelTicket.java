@@ -1679,6 +1679,20 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         if (m_App.hasPermission("sales.Total")) {
 
             try {
+                
+                JPaymentSelect paymentdialog = null;
+                if (ticket.getTicketType() == TicketInfo.RECEIPT_NORMAL) {
+
+                    paymentdialog = JPaymentSelectReceipt.getDialog(this);
+                } else if (ticket.getTicketType() == TicketInfo.RECEIPT_REFUND) {
+                    paymentdialog = JPaymentSelectRefund.getDialog(this);
+                }
+
+                if (paymentdialog == null) {
+
+                }
+
+                paymentdialog.init(m_App);
 
                 taxeslogic.calculateTaxes(ticket);
                 if (ticket.getTotal() >= 0.0) {
@@ -1692,9 +1706,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
                     printTicket("Printer.TicketTotal", ticket, ticketext);
 
-                    JPaymentSelect paymentdialog = ticket.getTicketType() == TicketInfo.RECEIPT_NORMAL
-                            ? paymentdialogreceipt
-                            : paymentdialogrefund;
                     paymentdialog.setPrintSelected("true".equals(m_jbtnconfig.getProperty("printselected", "true")));
 
                     paymentdialog.setTransactionID(ticket.getTransactionID());
@@ -1703,12 +1714,20 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
                         ticket.setPayments(paymentdialog.getSelectedPayments());
 
+                        String LOG = "Ticket payment Ticket total: "+ticket.getTotal()
+                                + ";Dialog total: "+paymentdialog.getTotal() 
+                                +" ;Dialog paid: "+paymentdialog.getPaidTotal()
+                                +" ;Payments Selected: "+paymentdialog.getSelectedPayments().size();
+                       
+                        LOGGER.log(System.Logger.Level.INFO, LOG);
+                       
                         ticket.setUser(m_App.getAppUserView().getUser().getUserInfo());
                         ticket.setActiveCash(m_App.getActiveCashIndex());
                         ticket.setDate(new Date());
 
-                        if (executeEvent(ticket, ticketext, "ticket.save") == null) {
-
+                        Object scriptResult = executeEvent(ticket, ticketext, "ticket.save");
+                        
+                        if (scriptResult == null){
                             try {
                                 dlSales.saveTicket(ticket, m_App.getInventoryLocation());
                             } catch (BasicException ex) {
