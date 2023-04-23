@@ -43,30 +43,24 @@ public class DeviceTicket {
 
     private static final Logger logger = Logger.getLogger("com.openbravo.pos.printer.DeviceTicket");
 
+    private DevicePrinter n_devicePrinterPanel;
     private DeviceFiscalPrinter m_deviceFiscal;
     private DeviceDisplay m_devicedisplay;
     private DevicePrinter m_nullprinter;
     private Map<String, DevicePrinter> m_deviceprinters;
-    private List<DevicePrinter> m_deviceprinterslist;
 
     /**
      *
      * Creates a new instance of DeviceTicket
      */
     public DeviceTicket() {
-        // Una impresora solo de pantalla.
-
+        
+        n_devicePrinterPanel = new DevicePrinterPanel();
         m_deviceFiscal = new DeviceFiscalPrinterNull();
-
         m_devicedisplay = new DeviceDisplayNull();
-
         m_nullprinter = new DevicePrinterNull();
         m_deviceprinters = new HashMap<>();
-        m_deviceprinterslist = new ArrayList<>();
-
-        DevicePrinter p = new DevicePrinterPanel();
-        m_deviceprinters.put("1", p);
-        m_deviceprinterslist.add(p);
+        addPrinter("1", n_devicePrinterPanel);
     }
 
     /**
@@ -80,7 +74,6 @@ public class DeviceTicket {
 
         m_nullprinter = new DevicePrinterNull();
         m_deviceprinters = new HashMap<>();
-        m_deviceprinterslist = new ArrayList<>();
 
         initDeviceFiscalPrinter(props);
         initDeviceDisplay(props, pws);
@@ -204,7 +197,8 @@ public class DeviceTicket {
     }
 
     private void initDeviceDisplay(AppProperties props, PrinterWritterPool pws) {
-        StringParser sd = new StringParser(props.getProperty("machine.display"));
+        String deviceUri = props.getProperty("machine.display");
+        StringParser sd = new StringParser(deviceUri);
         String sDisplayType = sd.nextToken(':');
         String sDisplayParam1 = sd.nextToken(',');
         String sDisplayParam2 = sd.nextToken(',');
@@ -255,14 +249,13 @@ public class DeviceTicket {
                     break;
             }
         } catch (TicketPrinterException e) {
-            logger.log(Level.WARNING, e.getMessage(), e);
+            logger.log(Level.WARNING, "Exception init device display "+deviceUri, e);
             m_devicedisplay = new DeviceDisplayNull(e.getMessage());
         }
     }
 
     private void addPrinter(String sPrinterIndex, DevicePrinter p) {
         m_deviceprinters.put(sPrinterIndex, p);
-        m_deviceprinterslist.add(p);
     }
 
     /**
@@ -279,7 +272,7 @@ public class DeviceTicket {
         public PrinterWritter getPrinterWritter(String con, String port) throws TicketPrinterException {
 
             String skey = con + "-->" + port;
-            PrinterWritter pw = (PrinterWritter) m_apool.get(skey);
+            PrinterWritter pw = m_apool.get(skey);
             if (pw == null) {
 
                 switch (con) {
@@ -336,13 +329,13 @@ public class DeviceTicket {
         DevicePrinter printer = m_deviceprinters.get(key);
         return printer == null ? m_nullprinter : printer;
     }
-
+    
     /**
      *
      * @return Device printer list
      */
     public List<DevicePrinter> getDevicePrinterAll() {
-        return m_deviceprinterslist;
+        return new ArrayList<>(m_deviceprinters.values());
     }
 
     /**
