@@ -95,24 +95,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </dependency>
         
         <!-- JavaPOS
-        <dependency> 
-            <groupId>org.javapos</groupId>  
-            <artifactId>javapos</artifactId>  
-            <version>1.14.3</version>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sleepycat</groupId>
-                    <artifactId>je</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.javapos</groupId>
-            <artifactId>javapos-contracts</artifactId>
-            <version>1.14.3</version>
-        </dependency>
-         -->   
+       <dependency> 
+           <groupId>org.javapos</groupId>  
+           <artifactId>javapos</artifactId>  
+           <version>1.14.3</version>
+           <scope>compile</scope>
+           <exclusions>
+               <exclusion>
+                   <groupId>com.sleepycat</groupId>
+                   <artifactId>je</artifactId>
+               </exclusion>
+           </exclusions>
+       </dependency>
+       <dependency>
+           <groupId>org.javapos</groupId>
+           <artifactId>javapos-contracts</artifactId>
+           <version>1.14.3</version>
+       </dependency>
+        -->   
         
         <!-- JDBC runtime DEPENDENCIES -->
         <dependency> 
@@ -150,6 +150,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <groupId>net.sf.jasperreports</groupId>  
             <artifactId>jasperreports-fonts</artifactId>  
             <version>${jasperreports.version}</version> 
+            <scope>runtime</scope>
+        </dependency>
+        <dependency> <!-- Used by JasperReport to generate xsl files -->
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.2.3</version>
             <scope>runtime</scope>
         </dependency>
         
