@@ -16,22 +16,17 @@
  */
 package com.openbravo.pos.scale;
 
+import static com.openbravo.pos.scale.AbstractSerialScale.LOGGER;
 import gnu.io.*;
 import java.io.*;
 import java.util.TooManyListenersException;
+import java.util.logging.Level;
 
 /**
  *
  * @author JG uniCenta
  */
-public class ScaleSamsungEsp implements Scale, SerialPortEventListener {
-    
-    private CommPortIdentifier m_PortIdPrinter;
-    private SerialPort m_CommPortPrinter;  
-    
-    private String m_sPortScale;
-    private OutputStream m_out;
-    private InputStream m_in;
+public class ScaleSamsungEsp extends AbstractSerialScale implements Scale, SerialPortEventListener {
 
     private static final int SCALE_READY = 0;
     private static final int SCALE_READING = 1;
@@ -41,12 +36,8 @@ public class ScaleSamsungEsp implements Scale, SerialPortEventListener {
     private double m_dWeightDecimals;
     private int m_iStatusScale;
         
-    /** Creates a new instance of ScaleComm
-     * @param sPortPrinter */
     public ScaleSamsungEsp(String sPortPrinter) {
-        m_sPortScale = sPortPrinter;
-        m_out = null;
-        m_in = null;
+        super(sPortPrinter);
         
         m_iStatusScale = SCALE_READY; 
         m_dWeightBuffer = 0.0;
@@ -58,35 +49,25 @@ public class ScaleSamsungEsp implements Scale, SerialPortEventListener {
      * @return
      */
     @Override
-    public Double readWeight() {
+    public Double readWeight() throws ScaleException{
         
         synchronized(this) {
 
             if (m_iStatusScale != SCALE_READY) {
-                try {
-                    wait(1000);
-                } catch (InterruptedException e) {
-                }
+                waitFor(1000);
                 if (m_iStatusScale != SCALE_READY) {
-                    // bascula tonta.
                     m_iStatusScale = SCALE_READY;
                 }
             }
             
-            // Ya estamos en SCALE_READY
             m_dWeightBuffer = 0.0;
             m_dWeightDecimals = 1.0;
             write(new byte[] {0x24}); // $
             flush();             
             
-            // Esperamos un ratito
-            try {
-                wait(1000);
-            } catch (InterruptedException e) {
-            }
+            waitFor(1000);
             
             if (m_iStatusScale == SCALE_READY) {
-                // hemos recibido cositas o si no hemos recibido nada estamos a 0.0
                 double dWeight = m_dWeightBuffer / m_dWeightDecimals;
                 m_dWeightBuffer = 0.0;
                 m_dWeightDecimals = 1.0;
@@ -100,43 +81,12 @@ public class ScaleSamsungEsp implements Scale, SerialPortEventListener {
         }
     }
     
-    private void flush() {
-        try {
-            m_out.flush();
-        } catch (IOException e) {
-        }        
-    }
-    
-    private void write(byte[] data) {
-        try {  
-            if (m_out == null) {
-                m_PortIdPrinter = CommPortIdentifier.getPortIdentifier(m_sPortScale); // Tomamos el puerto                   
-                m_CommPortPrinter = (SerialPort) m_PortIdPrinter.open("PORTID", 2000); // Abrimos el puerto       
-
-                m_out = m_CommPortPrinter.getOutputStream(); // Tomamos el chorro de escritura   
-                m_in = m_CommPortPrinter.getInputStream();
-                
-                m_CommPortPrinter.addEventListener(this);
-                m_CommPortPrinter.notifyOnDataAvailable(true);
-                
-                m_CommPortPrinter.setSerialPortParams(4800, 
-                        SerialPort.DATABITS_8, 
-                        SerialPort.STOPBITS_1, 
-                        SerialPort.PARITY_ODD); // Configuramos el puerto
-            }
-            m_out.write(data);
-        } catch (NoSuchPortException | PortInUseException | UnsupportedCommOperationException | TooManyListenersException | IOException e) {
-        }        
-    }
-    
     /**
      *
      * @param e
      */
     @Override
     public void serialEvent(SerialPortEvent e) {
-
-	// Determine type of event.
 	switch (e.getEventType()) {
             case SerialPortEvent.BI:
             case SerialPortEvent.OE:
@@ -162,7 +112,7 @@ public class ScaleSamsungEsp implements Scale, SerialPortEventListener {
                         } else if ((b > 0x002F && b < 0x003A) || b == 0x002E){
                             synchronized(this) {
                                 if (m_iStatusScale == SCALE_READY) {
-                                    m_dWeightBuffer = 0.0; // se supone que esto debe estar ya garantizado
+                                    m_dWeightBuffer = 0.0;
                                     m_dWeightDecimals = 1.0;
                                     m_iStatusScale = SCALE_READING;
                                 }
@@ -176,15 +126,24 @@ public class ScaleSamsungEsp implements Scale, SerialPortEventListener {
                                 }
                             }
                         } else {
-                            // caracteres invalidos, reseteamos.
-                            m_dWeightBuffer = 0.0; // se supone que esto debe estar ya garantizado
+                            m_dWeightBuffer = 0.0;
                             m_dWeightDecimals = 1.0;
                             m_iStatusScale = SCALE_READY;
                         }
                     }
 
-                } catch (IOException eIO) {}
+                } catch (IOException ex) {
+                    LOGGER.log(Level.WARNING, "Exception on serialEvent", ex);
+                }
                 break;
         }
-    }       
+    } 
+    
+    @Override
+    protected SerialPortParams getSerialPortParams() {
+        return new AbstractSerialScale.SerialPortParams(4800, 
+                        SerialPort.DATABITS_8, 
+                        SerialPort.STOPBITS_1, 
+                        SerialPort.PARITY_ODD);
+    }
 }

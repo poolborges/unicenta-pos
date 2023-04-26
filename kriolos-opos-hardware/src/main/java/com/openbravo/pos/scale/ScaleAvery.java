@@ -18,70 +18,52 @@ package com.openbravo.pos.scale;
 
 import gnu.io.*;
 import java.io.*;
-import java.util.TooManyListenersException;
+import java.util.logging.Level;
 
 /**
- *  
+ *
  * @author Ryan Airey, Feb 2017.
  */
-public class ScaleAvery implements Scale, SerialPortEventListener {
-   
-    private CommPortIdentifier m_PortIdPrinter;
-    private SerialPort m_CommPortPrinter;  
-    
-    private String m_sPortScale;
-    private OutputStream m_out;
-    private InputStream m_in;
+public class ScaleAvery extends AbstractSerialScale implements Scale, SerialPortEventListener {
 
     private static final int SCALE_READY = 0;
     private static final int SCALE_READING = 1;
     private static final int SCALE_READINGDECIMALS = 2;
     private static int SCALE_NOMORE = 1;
-    
+
     private double m_dWeightBuffer;
     private double m_dWeightDecimals;
     private int m_iStatusScale;
-        
+
     public ScaleAvery(String sPortPrinter) {
-        m_sPortScale = sPortPrinter;
-        m_out = null;
-        m_in = null;
-        
-        m_iStatusScale = SCALE_READY; 
+        super(sPortPrinter);
+
+        m_iStatusScale = SCALE_READY;
         m_dWeightBuffer = 0.0;
         m_dWeightDecimals = 1.0;
-      
-    }
-    
-    @Override
-    public Double readWeight() {
-        synchronized(this) {
-            if (m_iStatusScale != SCALE_READY) {
-                try {
-                    wait(1000);
-                } catch (InterruptedException e) {
-                }
-                if (m_iStatusScale != SCALE_READY) {
 
+    }
+
+    @Override
+    public Double readWeight() throws ScaleException {
+        synchronized (this) {
+            if (m_iStatusScale != SCALE_READY) {
+                waitFor(1000);
+                if (m_iStatusScale != SCALE_READY) {
                     m_iStatusScale = SCALE_READY;
                 }
             }
-            
+
             m_dWeightBuffer = 0.0;
             m_dWeightDecimals = 1.0;
-            
-            // Send command to get data from scale
-            write(new byte[] {0x0057});
+
+            write(new byte[]{0x0057});
             flush();
-            write(new byte[] {0x000D});
-                        try {
-                wait(1000);
-            } catch (InterruptedException e) {
-            }
-            
+            write(new byte[]{0x000D});
+            waitFor(1000);
+
             if (m_iStatusScale == SCALE_READY) {
                 double dWeight = m_dWeightBuffer / m_dWeightDecimals;
-//            System.out.println(" ----- ScaleAvery : readWeight --- if   ------ "+dWeight);
                 m_dWeightBuffer = 0.0;
                 m_dWeightDecimals = 1.0;
                 return dWeight;
@@ -93,46 +75,11 @@ public class ScaleAvery implements Scale, SerialPortEventListener {
             }
         }
     }
-    
-    private void flush() {
-        try {
-            m_out.flush();
-        } catch (IOException e) {
-        }        
-    }
-    
-    private void write(byte[] data) {
-        try {  
-            
-            
-            if (m_out == null) {
-                
-                m_PortIdPrinter = CommPortIdentifier.getPortIdentifier(m_sPortScale);                  
-                m_CommPortPrinter = (SerialPort) m_PortIdPrinter.open("PORTID", 2000);      
-                m_out = m_CommPortPrinter.getOutputStream();  
-                m_in = m_CommPortPrinter.getInputStream();
-                
-                m_CommPortPrinter.addEventListener(this);
-                m_CommPortPrinter.notifyOnDataAvailable(true);
-                
-                m_CommPortPrinter.setSerialPortParams(9600, 
-                        SerialPort.DATABITS_7, 
-                        SerialPort.STOPBITS_1, 
-                        SerialPort.PARITY_EVEN);
-            }
-            m_out.write(data);
-            
-        } catch (NoSuchPortException | PortInUseException 
-                | UnsupportedCommOperationException | TooManyListenersException 
-                | IOException e) {
-//        System.out.println(" Exception While Writing the Data, Might be Serial Dll Missing or COM Port not Supported, Or COM Port already in use"); 
-        }        
-    }
-    
+
     @Override
     public void serialEvent(SerialPortEvent e) {
 
-	switch (e.getEventType()) {
+        switch (e.getEventType()) {
             case SerialPortEvent.BI:
             case SerialPortEvent.OE:
             case SerialPortEvent.FE:
@@ -147,34 +94,36 @@ public class ScaleAvery implements Scale, SerialPortEventListener {
             try {
                 while (m_in.available() > 0) {
                     int b = m_in.read();
-                    if (b==0x0003 || b==3) {
+                    if (b == 0x0003 || b == 3) {
                         synchronized (this) {
                             SCALE_NOMORE = 1;
                             m_iStatusScale = SCALE_READY;
-                            notifyAll(); }
-                    } else if (b == 0x004C || b==76) {
+                            notifyAll();
+                        }
+                    } else if (b == 0x004C || b == 76) {
                         synchronized (this) {
-                            SCALE_NOMORE = 0; }
-                    } else if (SCALE_NOMORE==0){
+                            SCALE_NOMORE = 0;
+                        }
+                    } else if (SCALE_NOMORE == 0) {
                         m_iStatusScale = SCALE_READY;
-                    } else if (b > 0x002F 
-                            && b < 0x003A 
-                            && SCALE_NOMORE==1 
+                    } else if (b > 0x002F
+                            && b < 0x003A
+                            && SCALE_NOMORE == 1
                             || b == 0x002E) {
-                        synchronized(this) {
-                        if (m_iStatusScale == SCALE_READY) {
-                            m_dWeightBuffer = 0.0;
-                            m_dWeightDecimals = 1.0;
-                            m_iStatusScale = SCALE_READING;
-                        }
-                        if (b == 0x002E) {
-                            m_iStatusScale = SCALE_READINGDECIMALS;
-                        } else {
-                            m_dWeightBuffer = m_dWeightBuffer * 10.0 + b - 0x0030;
-                            if (m_iStatusScale == SCALE_READINGDECIMALS) {
-                                m_dWeightDecimals *= 10.0;
+                        synchronized (this) {
+                            if (m_iStatusScale == SCALE_READY) {
+                                m_dWeightBuffer = 0.0;
+                                m_dWeightDecimals = 1.0;
+                                m_iStatusScale = SCALE_READING;
                             }
-                        }
+                            if (b == 0x002E) {
+                                m_iStatusScale = SCALE_READINGDECIMALS;
+                            } else {
+                                m_dWeightBuffer = m_dWeightBuffer * 10.0 + b - 0x0030;
+                                if (m_iStatusScale == SCALE_READINGDECIMALS) {
+                                    m_dWeightDecimals *= 10.0;
+                                }
+                            }
                         }
                     } else {
                         m_dWeightBuffer = 0.0;
@@ -182,10 +131,18 @@ public class ScaleAvery implements Scale, SerialPortEventListener {
                         m_iStatusScale = SCALE_READY;
                     }
                 }
-            } catch (IOException eIO) {
-//                    System.out.println(" Error At serialEvent due to unknowen response data from scale "); 
+            } catch (IOException ex) {
+                LOGGER.log(Level.WARNING, "Exception on serialEvent", ex);
             }
-                break;
-            }
+            break;
         }
     }
+
+    @Override
+    protected AbstractSerialScale.SerialPortParams getSerialPortParams() {
+        return new AbstractSerialScale.SerialPortParams(9600,
+                SerialPort.DATABITS_7,
+                SerialPort.STOPBITS_1,
+                SerialPort.PARITY_EVEN);
+    }
+}

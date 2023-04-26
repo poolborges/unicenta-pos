@@ -16,72 +16,53 @@
  */
 package com.openbravo.pos.scale;
 
+import static com.openbravo.pos.scale.AbstractSerialScale.LOGGER;
 import gnu.io.*;
 import java.io.*;
-import java.util.TooManyListenersException;
+import java.util.logging.Level;
 
 /**
  *
  * @author JG uniCenta
  */
-public class ScaleComm implements Scale, SerialPortEventListener {
-    
-    private String m_sPortScale;
-    private CommPortIdentifier m_PortIdPrinter;
-    private SerialPort m_CommPortPrinter;      
-    private OutputStream m_out;
-    private InputStream m_in;
+public class ScaleComm extends AbstractSerialScale implements Scale, SerialPortEventListener {
 
     private static final int SCALE_READY = 0;
     private static final int SCALE_READING = 1;
-    
+
     private double m_dWeightBuffer;
     private int m_iStatusScale;
-        
-    /** Creates a new instance of ScaleComm
-     * @param sPortPrinter */
+
     public ScaleComm(String sPortPrinter) {
-        m_sPortScale = sPortPrinter;
-        m_out = null;
-        m_in = null;
-        
-        m_iStatusScale = SCALE_READY; 
+        super(sPortPrinter);
+
+        m_iStatusScale = SCALE_READY;
         m_dWeightBuffer = 0.0;
     }
-    
+
     /**
      *
      * @return
      */
     @Override
-    public Double readWeight() {
-        
-        synchronized(this) {
+    public Double readWeight() throws ScaleException {
+
+        synchronized (this) {
 
             if (m_iStatusScale != SCALE_READY) {
-                try {
-                    wait(1000);
-                } catch (InterruptedException e) {
-                }
+                waitFor(1000);
                 if (m_iStatusScale != SCALE_READY) {
-                    // bascula tonta.
                     m_iStatusScale = SCALE_READY;
                 }
             }
-            
-            // Ya estamos en SCALE_READY
+
             m_dWeightBuffer = 0.0;
-            write(new byte[] {0x05});
-            flush();             
-            
-            // Esperamos un ratito
-            try {
-                wait(1000);
-            } catch (InterruptedException e) {
-            }
-            
+            write(new byte[]{0x05});
+            flush();
+
+            waitFor(1000);
+
             if (m_iStatusScale == SCALE_READY) {
-                // a value as been readed.
                 double dWeight = m_dWeightBuffer / 1000.0;
                 m_dWeightBuffer = 0.0;
                 return dWeight;
@@ -92,36 +73,7 @@ public class ScaleComm implements Scale, SerialPortEventListener {
             }
         }
     }
-    
-    private void flush() {
-        try {
-            m_out.flush();
-        } catch (IOException e) {
-        }        
-    }
-    
-    private void write(byte[] data) {
-        try {  
-            if (m_out == null) {
-                m_PortIdPrinter = CommPortIdentifier.getPortIdentifier(m_sPortScale); // Tomamos el puerto                   
-                m_CommPortPrinter = (SerialPort) m_PortIdPrinter.open("PORTID", 2000); // Abrimos el puerto       
 
-                m_out = m_CommPortPrinter.getOutputStream(); // Tomamos el chorro de escritura   
-                m_in = m_CommPortPrinter.getInputStream();
-                
-                m_CommPortPrinter.addEventListener(this);
-                m_CommPortPrinter.notifyOnDataAvailable(true);
-                
-                m_CommPortPrinter.setSerialPortParams(4800, 
-                        SerialPort.DATABITS_8, 
-                        SerialPort.STOPBITS_1, 
-                        SerialPort.PARITY_ODD); // Configuramos el puerto
-            }
-            m_out.write(data);
-        } catch (NoSuchPortException | PortInUseException | UnsupportedCommOperationException | TooManyListenersException | IOException e) {
-        }        
-    }
-    
     /**
      *
      * @param e
@@ -129,8 +81,8 @@ public class ScaleComm implements Scale, SerialPortEventListener {
     @Override
     public void serialEvent(SerialPortEvent e) {
 
-	// Determine type of event.
-	switch (e.getEventType()) {
+        // Determine type of event.
+        switch (e.getEventType()) {
             case SerialPortEvent.BI:
             case SerialPortEvent.OE:
             case SerialPortEvent.FE:
@@ -143,33 +95,41 @@ public class ScaleComm implements Scale, SerialPortEventListener {
                 break;
             case SerialPortEvent.DATA_AVAILABLE:
                 try {
-                    while (m_in.available() > 0) {
-                        int b = m_in.read();
+                while (m_in.available() > 0) {
+                    int b = m_in.read();
 
-                        if (b == 0x001E) { // RS ASCII
-                            // Fin de lectura
-                            synchronized (this) {
-                                m_iStatusScale = SCALE_READY;
-                                notifyAll();
-                            }
-                        } else if (b > 0x002F && b < 0x003A){
-                            synchronized(this) {
-                                if (m_iStatusScale == SCALE_READY) {
-                                    m_dWeightBuffer = 0.0; // se supone que esto debe estar ya garantizado
-                                    m_iStatusScale = SCALE_READING;
-                                }
-                                m_dWeightBuffer = m_dWeightBuffer * 10.0 + b - 0x0030;
-                            }
-                        } else {
-                            // caracteres invalidos, reseteamos.
-                            m_dWeightBuffer = 0.0; // se supone que esto debe estar ya garantizado
+                    if (b == 0x001E) { // RS ASCII
+                        synchronized (this) {
                             m_iStatusScale = SCALE_READY;
+                            notifyAll();
                         }
+                    } else if (b > 0x002F && b < 0x003A) {
+                        synchronized (this) {
+                            if (m_iStatusScale == SCALE_READY) {
+                                m_dWeightBuffer = 0.0;
+                                m_iStatusScale = SCALE_READING;
+                            }
+                            m_dWeightBuffer = m_dWeightBuffer * 10.0 + b - 0x0030;
+                        }
+                    } else {
+                        m_dWeightBuffer = 0.0;
+                        m_iStatusScale = SCALE_READY;
                     }
+                }
 
-                } catch (IOException eIO) {}
-                break;
+            } catch (IOException ex) {
+                LOGGER.log(Level.WARNING, "Exception on serialEvent", ex);
+            }
+            break;
         }
 
-    }       
+    }
+
+    @Override
+    protected SerialPortParams getSerialPortParams() {
+        return new AbstractSerialScale.SerialPortParams(4800,
+                SerialPort.DATABITS_8,
+                SerialPort.STOPBITS_1,
+                SerialPort.PARITY_ODD);
+    }
 }

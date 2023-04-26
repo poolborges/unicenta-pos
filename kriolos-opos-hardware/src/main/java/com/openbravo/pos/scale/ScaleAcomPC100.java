@@ -18,23 +18,13 @@ package com.openbravo.pos.scale;
 
 import gnu.io.*;
 import java.io.*;
-import java.util.TooManyListenersException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author uniCenta + H Singh
  */
-public class ScaleAcomPC100 implements Scale, SerialPortEventListener {
-
-    private final static Logger LOGGER = Logger.getLogger(ScaleAcomPC100.class.getName());
-    private CommPortIdentifier m_PortIdPrinter;
-    private SerialPort m_CommPortPrinter;
-
-    private final String m_sPortScale;
-    private OutputStream m_out;
-    private InputStream m_in;
+public class ScaleAcomPC100 extends AbstractSerialScale implements Scale, SerialPortEventListener {
 
     private static final int SCALE_READY = 0;
     private static final int SCALE_READING = 1;
@@ -51,9 +41,7 @@ public class ScaleAcomPC100 implements Scale, SerialPortEventListener {
      * @param sPortPrinter
      */
     public ScaleAcomPC100(String sPortPrinter) {
-        m_sPortScale = sPortPrinter;
-        m_out = null;
-        m_in = null;
+        super(sPortPrinter);
         m_iStatusScale = SCALE_READY;
         m_dWeightBuffer = 0.0;
         m_dWeightDecimals = 1.0;
@@ -64,19 +52,12 @@ public class ScaleAcomPC100 implements Scale, SerialPortEventListener {
      * @return
      */
     @Override
-    public Double readWeight() {
+    public Double readWeight() throws ScaleException {
 
         synchronized (this) {
 
             if (m_iStatusScale != SCALE_READY) {
-                try {
-                    wait(200);
-                } catch (InterruptedException e) {
-                    LOGGER.log(Level.WARNING, null, e);
-                }
-                if (m_iStatusScale != SCALE_READY) {
-                    m_iStatusScale = SCALE_READY;
-                }
+                waitFor(200);
             }
 
             m_dWeightBuffer = 0.0;
@@ -84,11 +65,7 @@ public class ScaleAcomPC100 implements Scale, SerialPortEventListener {
             write(new byte[]{0x57, 0X0D}); // $
             flush();
 
-            try {
-                wait(200);
-            } catch (InterruptedException e) {
-                LOGGER.log(Level.WARNING, null, e);
-            }
+            waitFor(200);
 
             if (m_iStatusScale == SCALE_READY) {
                 double dWeight = m_dWeightBuffer / m_dWeightDecimals;
@@ -101,38 +78,6 @@ public class ScaleAcomPC100 implements Scale, SerialPortEventListener {
                 m_dWeightDecimals = 1.0;
                 return 0.0;
             }
-        }
-    }
-
-    private void flush() {
-        try {
-            m_out.flush();
-        } catch (IOException e) {
-            LOGGER.log(Level.WARNING, null, e);
-        }
-    }
-
-    private void write(byte[] data) {
-        try {
-            if (m_out == null) {
-                m_PortIdPrinter = CommPortIdentifier.getPortIdentifier(m_sPortScale);
-                m_CommPortPrinter = (SerialPort) m_PortIdPrinter.open("PORTID", 2000);
-
-                m_out = m_CommPortPrinter.getOutputStream();
-                m_in = m_CommPortPrinter.getInputStream();
-
-                m_CommPortPrinter.addEventListener(this);
-                m_CommPortPrinter.notifyOnDataAvailable(true);
-
-                m_CommPortPrinter.setSerialPortParams(9600,
-                        SerialPort.DATABITS_7,
-                        SerialPort.STOPBITS_1,
-                        SerialPort.PARITY_EVEN);
-            }
-            m_out.write(data);
-        } catch (NoSuchPortException | PortInUseException | UnsupportedCommOperationException
-                | TooManyListenersException | IOException e) {
-            LOGGER.log(Level.WARNING, null, e);
         }
     }
 
@@ -165,25 +110,29 @@ public class ScaleAcomPC100 implements Scale, SerialPortEventListener {
 
                 m_sScaleReading = m_sScaleReading + new String(readBuffer);
 
-                try {
-                    int start = m_sScaleReading.indexOf((char) 10);
-                    int end = m_sScaleReading.indexOf((char) 3);
+                int start = m_sScaleReading.indexOf((char) 10);
+                int end = m_sScaleReading.indexOf((char) 3);
 
-                    if (start >= 0 && end >= 0) {
+                if (start >= 0 && end >= 0) {
 
-                        start = m_sScaleReading.indexOf((char) 10);
-                        end = m_sScaleReading.indexOf((char) 75);
-                        m_dWeightBuffer = Double.parseDouble(m_sScaleReading.substring(start + 1, end));
-                        m_sScaleReading = "";
-                    }
-                } catch (IndexOutOfBoundsException ex) {
-                    LOGGER.log(Level.WARNING, "IndexOutOfBoundsException, message not complete yet.", ex);
+                    start = m_sScaleReading.indexOf((char) 10);
+                    end = m_sScaleReading.indexOf((char) 75);
+                    m_dWeightBuffer = Double.parseDouble(m_sScaleReading.substring(start + 1, end));
+                    m_sScaleReading = "";
                 }
 
-            } catch (IOException eIO) {
-                LOGGER.log(Level.WARNING, "IOException", eIO);
+            } catch (IOException | IndexOutOfBoundsException ex) {
+                LOGGER.log(Level.WARNING, "Exception on serialEvent", ex);
             }
             break;
         }
+    }
+
+    @Override
+    protected AbstractSerialScale.SerialPortParams getSerialPortParams() {
+        return new AbstractSerialScale.SerialPortParams(9600,
+                SerialPort.DATABITS_7,
+                SerialPort.STOPBITS_1,
+                SerialPort.PARITY_EVEN);
     }
 }
