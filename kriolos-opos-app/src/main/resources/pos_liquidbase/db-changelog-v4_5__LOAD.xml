@@ -652,7 +652,7 @@
             <column name="category" value="000"/>
             <column name="custcategory" value="NULL"/>
             <column name="parentid" value="NULL"/>
-            <column name="rate" value="0"/>
+            <column name="rate" valueNumeric="0"/>
             <column name="ratecascade" valueBoolean="FALSE"/>
             <column name="rateorder" value="NULL"/>
         </insert>
@@ -662,7 +662,7 @@
             <column name="category" value="001"/>
             <column name="custcategory" value="NULL"/>
             <column name="parentid" value="NULL"/>
-            <column name="rate" value="0.15"/>
+            <column name="rate" valueNumeric="0.15"/>
             <column name="ratecascade" valueBoolean="FALSE"/>
             <column name="rateorder" value="NULL"/>
         </insert>
@@ -672,7 +672,7 @@
             <column name="category" value="002"/>
             <column name="custcategory" value="NULL"/>
             <column name="parentid" value="NULL"/>
-            <column name="rate" value="0"/>
+            <column name="rate" valueNumeric="0"/>
             <column name="ratecascade" valueBoolean="FALSE"/>
             <column name="rateorder" value="NULL"/>
         </insert>
@@ -787,16 +787,16 @@
     
     <changeSet author="pauloborges (manual)" id="1603928315936-2600">
         <insert tableName="pickup_number">
-            <column name="id" value="1"/>
+            <column name="id" valueNumeric="1"/>
         </insert>
         <insert tableName="ticketsnum">
-            <column name="id" value="1"/>
+            <column name="id" valueNumeric="1"/>
         </insert>
         <insert tableName="ticketsnum_payment">
-            <column name="id" value="1"/>
+            <column name="id" valueNumeric="1"/>
         </insert>
         <insert tableName="ticketsnum_refund">
-            <column name="id" value="1"/>
+            <column name="id" valueNumeric="1"/>
         </insert>
     </changeSet>
     
