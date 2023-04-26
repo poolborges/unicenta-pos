@@ -6,3 +6,5 @@
 .classpath
 .project
 /build
+/docs/guide-devel/src/main/asciidoc/.asciidoctor/
+/docs/guide-devel/src/main/asciidoc/images/

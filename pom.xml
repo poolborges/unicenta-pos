@@ -149,6 +149,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>kriolos-opos-hardware</module>
         <module>kriolos-opos-domain</module>
         <module>kriolos-opos-i18n</module>
+        <module>kriolos-opos-i18n_pt</module>
         <module>kriolos-opos-app</module>
         <module>docs</module>
     </modules>
