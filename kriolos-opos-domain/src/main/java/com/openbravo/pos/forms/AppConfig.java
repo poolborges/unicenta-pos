@@ -16,8 +16,6 @@
 package com.openbravo.pos.forms;
 
 import com.openbravo.format.Formats;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppProperties;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
