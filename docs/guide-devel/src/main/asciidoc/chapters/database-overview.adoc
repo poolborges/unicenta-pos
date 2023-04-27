@@ -182,6 +182,34 @@ Maritme
 |LONGVARBINARY  |16MB = 16777215 bits
 |====
 
+=== Connection 
+
+.Connection MySQL
+----
+com.mysql.cj.jdbc.Driver
+jdbc:mysql://localhost:3306/kriolopos?characterEncoding=utf8
+----
+
+.Connection MariaDB
+----
+org.mariadb.jdbc.Driver
+jdbc:mariadb://localhost:3306/kriolopos?characterEncoding=utf8
+jdbc:mariadb://localhost:3306/{DB_SCHEMA_NAME}?characterEncoding=utf8
+----
+
+.Connection HSQLDB
+----
+org.hsqldb.jdbcDriver
+jdbc:hsqldb:file:C:\Users\kriol\kriolopos-db;shutdown=true
+jdbc:hsqldb:file:" + (new File(new File(System.getProperty("user.home")), AppLocal.APP_DB + "-db")).getAbsolutePath() + ";shutdown=true"
+----
+
+.Connection
+----
+jdbc:derby:~/kriolospos/posdb;create=true
+----
+
+
 === References
 
 * https://mariadb.com/kb/en/silent-column-changes/
