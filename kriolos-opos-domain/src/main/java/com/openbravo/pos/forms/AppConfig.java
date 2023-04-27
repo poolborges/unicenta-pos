@@ -287,24 +287,24 @@ public class AppConfig implements AppProperties {
         propConfig.setProperty("override.pin", "");
 
         propConfig.setProperty("db.driverlib", "");
-        propConfig.setProperty("db.engine", "MySQL");
-        propConfig.setProperty("db.driver", "com.mysql.jdbc.Driver");
+        propConfig.setProperty("db.engine", "");
+        propConfig.setProperty("db.driver", "");
 
 // primary DB
         propConfig.setProperty("db.name", "Main DB");
-        propConfig.setProperty("db.URL", "jdbc:mysql://localhost:3306/");
-        propConfig.setProperty("db.schema", "unicentaopos");
-        propConfig.setProperty("db.options", "?zeroDateTimeBehavior=convertToNull");
-        propConfig.setProperty("db.user", "username");
-        propConfig.setProperty("db.password", "password");
+        propConfig.setProperty("db.URL", "jdbc:hsqldb:file:~\\kriolopos\\");
+        propConfig.setProperty("db.schema", "kriolopos");
+        propConfig.setProperty("db.options", ";shutdown=true");
+        propConfig.setProperty("db.user", "kriolopos");
+        propConfig.setProperty("db.password", "kriolopos");
 
 // secondary DB        
         propConfig.setProperty("db1.name", "");
         propConfig.setProperty("db1.URL", "jdbc:mysql://localhost:3306/");
-        propConfig.setProperty("db1.schema", "unicentaopos");
+        propConfig.setProperty("db1.schema", "kriolopos");
         propConfig.setProperty("db1.options", "?zeroDateTimeBehavior=convertToNull");
-        propConfig.setProperty("db1.user", "");
-        propConfig.setProperty("db1.password", "");
+        propConfig.setProperty("db1.user", "kriolopos");
+        propConfig.setProperty("db1.password", "kriolopos");
 
         propConfig.setProperty("machine.hostname", getLocalHostName());
 
