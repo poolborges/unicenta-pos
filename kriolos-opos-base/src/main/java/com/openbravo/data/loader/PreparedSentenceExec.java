@@ -29,35 +29,52 @@ import java.util.Date;
  *
  * @author pauloborges
  */
-public final class PreparedSentenceExec implements SentenceExec {
+public class PreparedSentenceExec<W extends Object, T> extends JDBCBaseSentence<T> {
 
     protected final static System.Logger LOGGER = System.getLogger(PreparedSentenceExec.class.getName());
 
-    private final Session session;
     private final String sql;
     //private PrepareStatementWriter preBuilder;
     private final SerializerWrite serwrite;
+    private final SerializerRead<T> serread;
+    private PreparedStatement preparedStatement;
 
     public PreparedSentenceExec(Session session, String sqlSentence, Datas[] param, int[] index) {
-        this.session = session;
+        super(session);
         this.sql = sqlSentence;
-        //this.preBuilder = new PrepareStatementWriter(param, index);
         serwrite = new SerializerWriteBasicExt(param, index);
+        serread = null;
     }
-    
+
     public PreparedSentenceExec(Session session, String sqlSentence, SerializerWrite serwrite) {
-        this.session = session;
+        super(session);
         this.sql = sqlSentence;
         //this.preBuilder = new PrepareStatementWriter(param, index);
         this.serwrite = serwrite;
+        serread = null;
+    }
+
+    public PreparedSentenceExec(Session session, String sqlSentence, SerializerWrite serwrite, SerializerRead<T> serread) {
+        super(session);
+        this.sql = sqlSentence;
+        //this.preBuilder = new PrepareStatementWriter(param, index);
+        this.serwrite = serwrite;
+        this.serread = serread;
+    }
+    
+    public PreparedSentenceExec(Session session, String sqlSentence,SerializerRead<T> serread) {
+        super(session);
+        this.sql = sqlSentence;
+        //this.preBuilder = new PrepareStatementWriter(param, index);
+        this.serwrite = null;
+        this.serread = serread;
     }
 
     /**
      *
      * @return @throws BasicException
      */
-    @Override
-    public int exec() throws BasicException {
+    private int exec1() throws BasicException {
         int rowsAffected = 0;
         try (PreparedStatement preparedStatement = session.getConnection().prepareStatement(sql)) {
             rowsAffected = preparedStatement.executeUpdate();
@@ -78,8 +95,7 @@ public final class PreparedSentenceExec implements SentenceExec {
      * @return
      * @throws BasicException
      */
-    @Override
-    public int exec(Object param) throws BasicException {
+    private int exec2(Object param) throws BasicException {
         int rowsAffected = 0;
 
         if (param instanceof Object[]) {
@@ -87,8 +103,9 @@ public final class PreparedSentenceExec implements SentenceExec {
         } else {
             try (PreparedStatement preparedStatement = session.getConnection().prepareStatement(sql)) {
                 //preBuilder.prepare(preparedStatement, param);
-
-                serwrite.writeValues(new PreparedSentenceDataWrite(preparedStatement), param);
+                if (serwrite != null) {
+                    serwrite.writeValues(new PreparedSentenceDataWrite(preparedStatement), param);
+                }
 
                 rowsAffected = preparedStatement.executeUpdate();
             } catch (SQLException sqlex) {
@@ -111,8 +128,9 @@ public final class PreparedSentenceExec implements SentenceExec {
 
         LOGGER.log(System.Logger.Level.INFO, "SQL: " + sql);
         try (PreparedStatement preparedStatement = session.getConnection().prepareStatement(sql)) {
-            //preBuilder.prepare(preparedStatement, params);
-            serwrite.writeValues(new PreparedSentenceDataWrite(preparedStatement), params);
+            if (serwrite != null) {
+                serwrite.writeValues(new PreparedSentenceDataWrite(preparedStatement), params);
+            }
             rowsAffected = preparedStatement.executeUpdate();
         } catch (SQLException sqlex) {
             LOGGER.log(System.Logger.Level.WARNING, "Exception while execute SQL: " + sql, sqlex);
@@ -120,6 +138,70 @@ public final class PreparedSentenceExec implements SentenceExec {
         }
 
         return rowsAffected;
+    }
+
+    @Override
+    public DataResultSet<T> moreResults() throws BasicException {
+        DataResultSet<T> result = null;
+        try {
+            if (preparedStatement != null) {
+                if (preparedStatement.getMoreResults()) {
+                    result = new JDBCDataResultSet<>(preparedStatement.getResultSet(), serread);
+                } else {
+                    int resCount = preparedStatement.getUpdateCount();
+                    if (resCount < 0) {
+                        result = null;
+                    } else {
+                        result = new UpdateDataResultSet<>(resCount);
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(System.Logger.Level.ERROR, "Exception while execute moreResult: ", ex);
+            throw new BasicException(ex);
+        }
+
+        return result;
+    }
+
+    @Override
+    public void closeExec() throws BasicException {
+        if (preparedStatement != null) {
+            try {
+                preparedStatement.close();
+            } catch (SQLException ex) {
+                throw new BasicException(ex);
+            } finally {
+                preparedStatement = null;
+            }
+        }
+    }
+
+    @Override
+    public DataResultSet<T> openExec(Object params) throws BasicException {
+        DataResultSet<T> result;
+        LOGGER.log(System.Logger.Level.INFO, "SQL: " + sql);
+        try {
+            preparedStatement = session.getConnection().prepareStatement(sql);
+            if (serwrite != null) {
+                serwrite.writeValues(new PreparedSentenceDataWrite(preparedStatement), params);
+            }
+            if (preparedStatement.execute()) {
+                result = new JDBCDataResultSet<>(preparedStatement.getResultSet(), serread);
+            } else {
+                int resCount = preparedStatement.getUpdateCount();
+                if (resCount < 0) {
+                    result = null;
+                } else {
+                    result = new UpdateDataResultSet<>(resCount);
+                }
+            }
+        } catch (SQLException sqlex) {
+            LOGGER.log(System.Logger.Level.WARNING, "Exception while execute openExec with SQL: " + sql, sqlex);
+            throw new BasicException(sqlex);
+        }
+
+        return result;
     }
 
     private final static class PrepareStatementWriter {

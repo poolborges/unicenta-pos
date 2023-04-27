@@ -44,7 +44,7 @@ public class SequenceForGeneric extends BaseSentence {
                 session,
                 "UPDATE seqnumber SET seqnum = ? WHERE tablename = ?",
                 new SerializerWriteBasicExt(
-                        new Datas[]{Datas.STRING, Datas.STRING},
+                        new Datas[]{Datas.INT, Datas.STRING},
                         new int[]{0, 1}));
     }
 
@@ -55,23 +55,23 @@ public class SequenceForGeneric extends BaseSentence {
      * @throws BasicException
      */
     @Override
-    public DataResultSet openExec(Object params) throws BasicException {
+    public DataResultSet<Integer> openExec(Object params) throws BasicException {
 
         Integer dt = (Integer) selectSetence.find(new Object[]{this.tableName});
 
-        Logger.getLogger(SequenceForGeneric.class.getName()).log(Level.INFO, "FOUND SEQUENCE: ", dt);
+        LOGGER.log(Level.INFO, "FOUND SEQUENCE: "+this.tableName +"; seq: "+ dt);
         
         if (dt == null) {
          dt = insert(1);
         }
 
-        Logger.getLogger(SequenceForGeneric.class.getName()).log(Level.INFO, "CURRENT SEQUENCE: ", dt);
+        LOGGER.log(Level.INFO, "CURRENT SEQUENCE: "+this.tableName +"; seq: "+ dt);
+        dt +=1;
 
-        updateSentence.exec(new Object[]{this.tableName});
+        updateSentence.exec(new Object[]{dt+1, this.tableName});
 
-        DataResultSet drs = selectSetence.openExec(new Object[]{this.tableName});
-
-        Logger.getLogger(SequenceForGeneric.class.getName()).log(Level.INFO, "RESULT SEQUENCE: ", drs);
+        DataResultSet<Integer> drs = selectSetence.openExec(new Object[]{this.tableName});
+        LOGGER.log(Level.INFO, "RESULT SEQUENCE: "+this.tableName +"; seq: "+ dt);
 
         return drs;
     }
@@ -91,10 +91,9 @@ public class SequenceForGeneric extends BaseSentence {
 
         try {
             openExec(null);
-            //Force to Insert Sequence (0) for a tableName
-
+            return selectSetence;
         } catch (Exception ex) {
-            Logger.getLogger(SequenceForGeneric.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, "Exception execute reset", ex);
         }
 
         return null;
@@ -102,7 +101,7 @@ public class SequenceForGeneric extends BaseSentence {
 
     private int insert(int num) throws BasicException {
 
-        Logger.getLogger(SequenceForGeneric.class.getName()).log(Level.INFO, "INSERT SEQUENCE: ", num);
+        LOGGER.log(Level.INFO, "INSERT SEQUENCE: "+this.tableName +"; seq: "+ num);
         var ins = new PreparedSentence(session, "INSERT INTO seqnumber (tablename, seqnum) VALUES(?, ?)", new SerializerWriteBasicExt(
                 new Datas[]{Datas.STRING, Datas.INT},
                 new int[]{0, 1}));
