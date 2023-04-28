@@ -1,5 +1,5 @@
-//    KrOS POS
-//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    KriolOS POS
+//    Copyright (c) 2019-2023 KriolOS
 //    
 //
 //     
@@ -15,7 +15,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with KrOS POS.  If not, see <http://www.gnu.org/licenses/>.
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.openbravo.pos.ticket;
 

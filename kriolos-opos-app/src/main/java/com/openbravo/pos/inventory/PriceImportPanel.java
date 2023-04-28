@@ -1,5 +1,5 @@
-//    KrOS POS  - Open Source Point Of Sale
-//    Copyright (c) 2009-2018 uniCenta
+//    KriolOS POS
+//    Copyright (c) 2019-2023 KriolOS
 //    Portions Contributed by: John D L 2013
 //
 //    This program is free software: you can redistribute it and/or modify

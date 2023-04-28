@@ -1,5 +1,5 @@
-//    KrOS POS  - Open Source Point Of Sale
-//    Copyright (c) 2009-2018 uniCenta
+//    KriolOS POS
+//    Copyright (c) 2019-2023 KriolOS
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -132,7 +132,6 @@ public class StockQtyImport extends JPanel implements JPanelView {
       LOGGER.log(Level.WARNING, null, ex);
     }
 
-// last used folder stored in unicentaopos.properties
     last_folder = props.getProperty("CSV.last_folder");
     config_file = props.getConfigFile();
 

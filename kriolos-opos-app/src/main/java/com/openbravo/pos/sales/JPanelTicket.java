@@ -1,5 +1,5 @@
-//    KrOS POS  - Open Source Point Of Sale
-//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    KriolOS POS
+//    Copyright (c) 2019-2023 KriolOS
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -971,7 +971,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             *      ManufacturerCode and ProductCode must be exactly 10 digits
             *      If code begins with 0 then is actually a UPC-A with prepended 0
             *        
-            *  KrOS POS Retailer instore uses these RULES
+            *  KriolOS POS Retailer instore uses these RULES
             *  Prefixes 020 to 029 are set aside for Retailer internal use 
             *  This means that CCCC becomes price/weight values
             *  Prefixes 978 and 979 are set aside for ISBN - Future use
@@ -1152,7 +1152,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 /* Note: if begins 02 then its a standard                 
 // UPC-A max value limitation is 4 digit price
 // UPC-A Extended uses State digit to give 5 digit price
-// KrOS POS does not support UPC-A Extended at this time                
+// KriolOS POS does not support UPC-A Extended at this time                
 // Identifier   Prod    State   Cost    CheckCode
 // I            PPPPP   S       CCCC    K                        
 // 1            23456   7       8901    2
@@ -3244,7 +3244,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     // End of variables declaration//GEN-END:variables
 
     /* Remote Orders Display
-    We only know about KrOS POS orders and won't try and handle any 
+    We only know about KriolOS POS orders and won't try and handle any 
     that are injected from an external source
      */
     public void remoteOrderDisplay() {

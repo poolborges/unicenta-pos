@@ -1,5 +1,5 @@
-//    KrOS POS  - Open Source Point Of Sale
-//    Copyright (c) 2009-2019 uniCenta & previous Openbravo POS works
+//    KriolOS POS
+//    Copyright (c) 2009-2019 uniCenta
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by

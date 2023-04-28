@@ -1,5 +1,5 @@
 //    KrOS POS
-//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    Copyright (c) 2019-2023 KriolOS
 //    
 //
 //     

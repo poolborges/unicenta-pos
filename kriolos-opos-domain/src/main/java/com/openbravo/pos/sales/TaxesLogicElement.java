@@ -1,4 +1,4 @@
-//    KrOS POS  - Open Source Point Of Sale
+//    KriolOS POS
 //    Copyright (c) 2009-20167
 //    2008-2013 Openbravo, S.L.
 //

@@ -26,8 +26,8 @@
  * http://www.jaspersoft.com
  */
 //    Portions:
-//    KrOS POS
-//    Copyright (c) 2009-2017 uniCenta
+//    KriolOS POS
+//    Copyright (c) 2019-2023 KriolOS
 //    
 //    author Jack Gerrard
 // This class is a copy of net.sf.jasperreports.engine.print.JRPrinterAWT

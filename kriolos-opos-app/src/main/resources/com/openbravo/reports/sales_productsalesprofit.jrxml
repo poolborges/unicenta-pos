@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-    KrOS POS - Open Source Point Of Sale
-    Copyright (c) 2009-2018 uniCenta.
+    KriolOS POS - Open Source Point Of Sale
+    Copyright (c) 2019-2023 KriolOS.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -43,8 +43,8 @@
      products.`PRICEBUY`,
      products.`PRICESELL`
 FROM
-     `unicentaopos`.`ticketlines` ticketlines INNER JOIN `unicentaopos`.`receipts` receipts ON ticketlines.`TICKET` = receipts.`ID`
-     LEFT OUTER JOIN `unicentaopos`.`products` products ON ticketlines.`PRODUCT` = products.`ID`
+     `ticketlines` ticketlines INNER JOIN `receipts` receipts ON ticketlines.`TICKET` = receipts.`ID`
+     LEFT OUTER JOIN `products` products ON ticketlines.`PRODUCT` = products.`ID`
 GROUP BY
      ticketlines.PRODUCT
 ORDER BY

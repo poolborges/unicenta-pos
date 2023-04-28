@@ -1,5 +1,5 @@
 //    KrOS POS
-//    Copyright (c) 2009-2017 uniCenta
+//    Copyright (c) 2019-2023 KriolOS
 //    
 //
 //     

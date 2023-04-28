@@ -1,5 +1,5 @@
-//    KrOS POS  - Open Source Point Of Sale
-//    Copyright (c) 2009-2018 uniCenta & previous Openbravo POS works
+//    KriolOS POS
+//    Copyright (c) 2019-2023 KriolOS
 //
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -354,9 +354,9 @@ public class AppConfig implements AppProperties {
         propConfig.setProperty("paper.standard.height", "698");
         propConfig.setProperty("paper.standard.mediasizename", "A4");
 
-        propConfig.setProperty("tkt.header1", "KrOS POS");
+        propConfig.setProperty("tkt.header1", "KriolOS POS");
         propConfig.setProperty("tkt.header2", "Open Source Point Of Sale");
-        propConfig.setProperty("tkt.header3", "Copyright (c) 2009-2018 KrOS POS");
+        propConfig.setProperty("tkt.header3", "Copyright (c) 2020-2023 KriolOS");
         propConfig.setProperty("tkt.header4", "Change header text in Configuration");
 
         propConfig.setProperty("tkt.footer1", "Change footer text in Configuration");

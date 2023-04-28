@@ -1,6 +1,5 @@
-//    KrOS POS  - Open Source Point Of Sale
-//    Copyright (c) 2009-2015 uniCenta & previous Openbravo POS works
-//    http://www.unicenta.com
+//    KriolOS POS
+//    Copyright (c) 2019-2023 KriolOS
 //
 //    
 //

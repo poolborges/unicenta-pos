@@ -1,5 +1,5 @@
-//    KrOS POS
-//    Copyright (c) 2009-2018 uniCenta
+//    KriolOS POS
+//    Copyright (c) 2019-2023 KriolOS
 //    
 //
 //     
@@ -15,7 +15,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with KrOS POS.  If not, see <http://www.gnu.org/licenses/>.
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.suppliers;
 
 import com.openbravo.basic.BasicException;
@@ -46,7 +46,7 @@ import javax.swing.event.EventListenerList;
 
 /**
  *
- * @author JG uniCenta - outline/prep for uniCenta mobile + eCommerce connector
+ * @author JG uniCenta - outline/prep for  eCommerce connector
  */
 public class OrderSupplierList extends JPanel implements SupplierTicketSelector {
 

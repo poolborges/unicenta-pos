@@ -1,5 +1,5 @@
---    KrOS POS - Open Source Point Of Sale
---    Copyright (c) 2009-2017 uniCenta
+--    KriolOS POS - Open Source Point Of Sale
+--    Copyright (c) 2019-2023 KriolOS
 --    
 --    This program is free software: you can redistribute it and/or modify
 --    it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ CREATE TABLE IF NOT EXISTS `applications` (
 	PRIMARY KEY  ( `id` )
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT = Compact;
 
--- INSERT INTO applications(id, name, version) VALUES("unicentaopos", "KrOS POS", "4.2Beta");
 
 /* Header line. Object: attribute. Script date: 23/07/2016 08:00:00 */
 CREATE TABLE IF NOT EXISTS `attribute` (

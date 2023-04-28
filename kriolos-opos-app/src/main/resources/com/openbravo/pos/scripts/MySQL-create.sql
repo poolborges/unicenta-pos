@@ -1,5 +1,5 @@
---    KrOS POS - Open Source Point Of Sale
---    Copyright (c) 2009-2017 uniCenta
+--    KriolOS POS - Open Source Point Of Sale
+--    Copyright (c) 2019-2023 KriolOS
 --    
 --    This program is free software: you can redistribute it and/or modify
 --    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,9 @@
 --    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /*
- * Script created by Jack, uniCenta 27/08/2015 08:42:37.
+ * Script created by Jack, 27/08/2015 08:42:37.
  *
- * Creating for version unicentaopos43. Feb 2017
+ * Creating for version 43. Feb 2017
 */
 
 /* Header line. Object: applications. Script date: 27/08/2015 08:42:37. */
