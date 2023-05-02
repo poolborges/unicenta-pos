@@ -8,10 +8,15 @@
                     http://www.liquibase.org/xml/ns/pro 
                     http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.8.xsd 
                     http://www.liquibase.org/xml/ns/dbchangelog 
-                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
-     
-    <include file="pos_liquidbase/db-changelog-v4_5.xml"/>
-    <include file="pos_liquidbase/db-changelog-v4_5__LOAD.xml"/>
-    <include file="pos_liquidbase/db-changelog-v5_0.xml"/>
-    
+                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">    
+    <changeSet author="pauloborges (nanual)" id="20230502-01">
+        <createTable tableName="seqnumber">
+            <column name="tablename" type="VARCHAR(100)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueNumeric="0" name="seqnum" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
