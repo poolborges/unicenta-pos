@@ -60,10 +60,12 @@ public class JTicketsBagShared extends JTicketsBag {
         dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
         dlSystem = (DataLogicSystem) m_App.getBean("com.openbravo.pos.forms.DataLogicSystem");
 
+        showList = m_App.hasPermission("sales.ShowList");
+
         initComponents();
 
         m_jReprintTickets.setVisible(true);
-        
+
         LOGGER.log(System.Logger.Level.INFO, "JTicketsBagShared ");
     }
 
@@ -72,12 +74,14 @@ public class JTicketsBagShared extends JTicketsBag {
      */
     @Override
     public void activate() {
-        selectValidTicket();
-
+        LOGGER.log(System.Logger.Level.INFO, "Active panel");
+        updateCount();
         m_jDelTicket.setEnabled(m_App.hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));
         m_jDelTicket.setEnabled(m_App.hasPermission("sales.DeleteTicket"));
         
-        LOGGER.log(System.Logger.Level.INFO, "JTicketsBagShared ");
+        TicketInfo ticket = new TicketInfo();
+        LOGGER.log(System.Logger.Level.INFO, "newTicket has id: " + ticket.getId());
+        m_panelticket.setActiveTicket(ticket, null);
     }
 
     /**
@@ -86,16 +90,12 @@ public class JTicketsBagShared extends JTicketsBag {
      */
     @Override
     public boolean deactivate() {
-
         saveCurrentTicket();
         m_panelticket.setActiveTicket(null, null);
 
         return true;
     }
 
-    /**
-     *
-     */
     @Override
     public void deleteTicket() {
 
@@ -106,7 +106,7 @@ public class JTicketsBagShared extends JTicketsBag {
                     "Ticket Deleted",
                     0.0
                 });
-        selectValidTicket();
+        updateCount();
     }
 
     public void updateCount() {
@@ -116,15 +116,18 @@ public class JTicketsBagShared extends JTicketsBag {
 
             if (count > 0) {
                 m_jListTickets.setText(Integer.toString(count));
+                if (showList) {
+                    m_jListTickets.doClick();
+                }
             } else {
                 m_jListTickets.setText("");
             }
 
-            LOGGER.log(System.Logger.Level.DEBUG, "Shared SharedTicket: " + count);
+            LOGGER.log(System.Logger.Level.DEBUG, "Count shared ticket: " + count);
         } catch (BasicException ex) {
-            LOGGER.log(System.Logger.Level.WARNING, "Exception updateCount: ", ex);
-            new MessageInf(ex).show(this);
             m_jListTickets.setText("");
+            LOGGER.log(System.Logger.Level.WARNING, "Exception Count shared ticket: ", ex);
+            new MessageInf(ex).show(this);
         }
     }
 
@@ -159,16 +162,16 @@ public class JTicketsBagShared extends JTicketsBag {
                             m_panelticket.getActiveTicket().getPickupId());
 
                     m_jListTickets.setText("*");
-                    LOGGER.log(System.Logger.Level.DEBUG, "SAVED Current Ticket ID: ", ticketID);
+                    LOGGER.log(System.Logger.Level.INFO, "SAVED Current Ticket ID: ", ticketID);
                 } else {
-                    LOGGER.log(System.Logger.Level.DEBUG, "NOT SAVED Current Ticket because has no line/item, Ticket ID: ", ticketID);
+                    LOGGER.log(System.Logger.Level.INFO, "NOT SAVED Current Ticket because has no line/item, Ticket ID: ", ticketID);
                 }
             } catch (BasicException e) {
-                LOGGER.log(System.Logger.Level.WARNING, "Exception saveCurrentTicket: "+ticketID, e);
+                LOGGER.log(System.Logger.Level.WARNING, "Exception saveCurrentTicket: " + ticketID, e);
                 new MessageInf(e).show(this);
             }
         } else {
-            LOGGER.log(System.Logger.Level.WARNING, "NOT SAVED Current Ticket because ActiveTicket is NULL");
+            LOGGER.log(System.Logger.Level.INFO, "NOT SAVED Current Ticket because ActiveTicket is NULL");
         }
 
         updateCount();
@@ -182,7 +185,6 @@ public class JTicketsBagShared extends JTicketsBag {
             LOGGER.log(System.Logger.Level.WARNING, "NOT FOUND Shared TICKET for id: " + id);
             throw new BasicException(AppLocal.getIntString("message.noticket"));
         } else {
-            dlReceipts.getPickupId(id);
             Integer pickUp = dlReceipts.getPickupId(id);
             dlReceipts.deleteSharedTicket(id);
             m_panelticket.setActiveTicket(ticket, null);
@@ -195,25 +197,6 @@ public class JTicketsBagShared extends JTicketsBag {
     private void setActiveReprintTicket(String id) throws BasicException {
         //TicketInfo ticket = dlSales.getReprintTicket(id);
         LOGGER.log(System.Logger.Level.WARNING, "NOT IMPLEMENTED setActiveReprintTicket");
-    }
-
-    private void selectValidTicket() {
-        updateCount();
-
-        try {
-            List<SharedTicketInfo> l = dlReceipts.getSharedTicketList();
-            if (l.isEmpty()) {
-                m_jListTickets.setText("");
-            } else {
-                showList = m_App.hasPermission("sales.ShowList");
-                if (showList) {
-                    m_jListTickets.doClick();
-                }
-            }
-        } catch (BasicException e) {
-            LOGGER.log(System.Logger.Level.WARNING, "Exception selectValidTicket: ", e);
-            new MessageInf(e).show(this);
-        }
     }
 
     private void newTicket() {
@@ -231,6 +214,38 @@ public class JTicketsBagShared extends JTicketsBag {
         } catch (Exception ex) {
             LOGGER.log(System.Logger.Level.WARNING, "Exception while exec newTicket: ", ex);
         }
+    }
+
+    protected void setEnabledPanel(boolean enabled) {
+        jPanel1.setEnabled(enabled);
+    }
+
+    protected void disableAllButtons() {
+        m_jDelTicket.setEnabled(false);
+        m_jNewTicket.setEnabled(false);
+        m_jReprintTickets.setEnabled(false);
+        m_jListTickets.setEnabled(false);
+        m_jHold.setEnabled(false);
+    }
+
+    protected void setEnabledButtonDel(boolean enabled) {
+        m_jDelTicket.setEnabled(enabled);
+    }
+
+    protected void setEnabledButtonNew(boolean enabled) {
+        m_jNewTicket.setEnabled(enabled);
+    }
+
+    protected void setEnabledButtonReprint(boolean enabled) {
+        m_jReprintTickets.setEnabled(enabled);
+    }
+
+    protected void setEnabledButtonList(boolean enabled) {
+        m_jListTickets.setEnabled(enabled);
+    }
+
+    protected void setEnabledButtonExpand(boolean enabled) {
+        m_jHold.setEnabled(enabled);
     }
 
     /**
@@ -400,7 +415,7 @@ public class JTicketsBagShared extends JTicketsBag {
 
         boolean pinOK = false;
 
-        if (m_panelticket.getActiveTicket()!= null) {
+        if (m_panelticket.getActiveTicket() != null) {
 
             if (m_App.getProperties().getProperty("override.check").equals("true")) {
                 String pin = m_App.getProperties().getProperty("override.pin");
