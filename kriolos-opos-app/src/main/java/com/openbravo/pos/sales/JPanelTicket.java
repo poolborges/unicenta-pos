@@ -249,6 +249,18 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         return m_App.getProperties().getProperty("machine.ticketsbag");
     }
 
+    private boolean isRestaurantMode() {
+        return "restaurant".equals(getTicketsbag());
+    }
+
+    private boolean isAutoLogoutRestaurant() {
+        return "true".equals(m_App.getProperties().getProperty("till.autoLogoffrestaurant"));
+    }
+
+    private boolean isAutoLogout() {
+        return "true".equals(m_App.getProperties().getProperty("till.autoLogoff"));
+    }
+
     private class logout extends AbstractAction {
 
         public logout() {
@@ -257,19 +269,16 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         @Override
         public void actionPerformed(ActionEvent ae) {
             closeAllDialogs();
-            switch (getTicketsbag()) {
-                case "restaurant":
-                    deactivate();
-                    if ("false".equals(m_App.getProperties().getProperty("till.autoLogoffrestaurant"))) {
-                        ((JRootApp) m_App).closeAppView();
-                    } else {
-                        setActiveTicket(null, null);
-                    }
-                    break;
-
-                default:
-                    deactivate();
+            if (isRestaurantMode()) {
+                deactivate();
+                if (isAutoLogoutRestaurant()) {
                     ((JRootApp) m_App).closeAppView();
+                } else {
+                    setActiveTicket(null, null);
+                }
+            } else {
+                deactivate();
+                ((JRootApp) m_App).closeAppView();
             }
         }
     }
@@ -306,14 +315,12 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         LOGGER.log(System.Logger.Level.INFO, "JPanelTicket.activate");
 
         Action logout = new logout();
-        String autoLogoff = (m_App.getProperties().getProperty("till.autoLogoff"));
-
-        if (autoLogoff != null && autoLogoff.equals("true")) {
-            Integer delay = 0;
+        if (isAutoLogout()) {
             try {
-                delay = Integer.parseInt(m_App.getProperties().getProperty("till.autotimer"));
+                int delay = Integer.parseInt(m_App.getProperties().getProperty("till.autotimer"));
                 delay *= 1000;
-                if (delay != 0) {
+                //Should be more that 1s (1000 milisecond)
+                if (delay > 1000) {
                     listener = new InactivityListener(logout, delay);
                     listener.start();
                 }
@@ -393,54 +400,53 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     /**
      *
-     * @param oTicket
+     * @param ticketInfo
      * @param oTicketExt
      */
     @Override
-    public void setActiveTicket(TicketInfo oTicket, String oTicketExt) {
+    public void setActiveTicket(TicketInfo ticketInfo, String oTicketExt) {
+        m_oTicket = ticketInfo;
+        m_oTicketExt = oTicketExt;
 
         LOGGER.log(System.Logger.Level.DEBUG, "JPanelTicket setActiveTicket: " + oTicketExt);
-        switch (getTicketsbag()) {
-            case "restaurant":
-                if ("true".equals(m_App.getProperties().getProperty("till.autoLogoffrestaurant"))) {
-                    if (listener != null) {
-                        listener.restart();
-                    }
-                }
-        }
-
-        m_oTicket = oTicket;
-        m_oTicketExt = oTicketExt;
 
         if (m_oTicket != null) {
             m_oTicket.setUser(m_App.getAppUserView().getUser().getUserInfo());
             m_oTicket.setActiveCash(m_App.getActiveCashIndex());
             m_oTicket.setDate(new Date());
+        }
 
-            if ("restaurant".equals(getTicketsbag())
-                    && !oTicket.getOldTicket()) {
-                if (restDB.getCustomerNameInTable(m_oTicketExt) == null) {
-                    if (m_oTicket.getCustomer() != null) {
-                        restDB.setCustomerNameInTable(m_oTicket.getCustomer().toString(), m_oTicketExt);
-                    }
+        if (isRestaurantMode()) {
+            if (isAutoLogoutRestaurant()) {
+                if (listener != null) {
+                    listener.restart();
                 }
-                if (restDB.getWaiterNameInTable(m_oTicketExt) == null
-                        || "".equals(restDB.getWaiterNameInTable(m_oTicketExt))) {
-                    restDB.setWaiterNameInTable(m_App.getAppUserView().getUser().getName(), m_oTicketExt);
-                }
+            }
+
+            j_btnRemotePrt.setVisible(m_App.hasPermission("sales.PrintKitchen"));
+            if (m_App.hasPermission("sales.PrintRemote")) {
+                j_btnRemotePrt.setEnabled(true);
+            } else {
+                j_btnRemotePrt.setEnabled(false);
+            }
+
+            if (!m_oTicket.getOldTicket()) {
                 restDB.setTicketIdInTable(m_oTicket.getId(), m_oTicketExt);
             }
-        }
 
-        if ((m_oTicket != null) && (((Boolean.parseBoolean(m_App.getProperties()
-                .getProperty("table.showwaiterdetails")))
-                || (Boolean.valueOf(m_App.getProperties().getProperty(
-                        "table.showcustomerdetails")))))) {
-        }
+            if (Boolean.parseBoolean(m_App.getProperties().getProperty("table.showcustomerdetails"))) {
+                if (restDB.getCustomerNameInTable(m_oTicketExt) == null && m_oTicket.getCustomer() != null) {
+                    restDB.setCustomerNameInTable(m_oTicket.getCustomer().toString(), m_oTicketExt);
+                }
+            }
 
-        if ((m_oTicket != null) && (((Boolean.valueOf(m_App.getProperties()
-                .getProperty("table.showcustomerdetails")))
-                || (Boolean.parseBoolean(m_App.getProperties().getProperty("table.showwaiterdetails")))))) {
+            if (Boolean.parseBoolean(m_App.getProperties().getProperty("table.showwaiterdetails"))) {
+                String waiter = restDB.getWaiterNameInTable(m_oTicketExt);
+                if (waiter == null || waiter.isBlank()) {
+                    restDB.setWaiterNameInTable(m_App.getAppUserView().getUser().getName(), m_oTicketExt);
+                }
+            }
+
             if (restDB.getTableMovedFlag(m_oTicket.getId())) {
                 restDB.moveCustomer(m_oTicketExt, m_oTicket.getId());
             }
@@ -449,17 +455,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         if (m_oTicket != null) {
             executeEvent(m_oTicket, m_oTicketExt, "ticket.show");
         }
-
-        if ("restaurant".equals(getTicketsbag())) {
-            j_btnRemotePrt.setVisible(m_App.hasPermission("sales.PrintKitchen"));
-        }
-
-        if (m_App.hasPermission("sales.PrintRemote")) {
-            j_btnRemotePrt.setEnabled(true);
-        } else {
-            j_btnRemotePrt.setEnabled(false);
-        }
-
         refreshTicket();
     }
 
@@ -1643,10 +1638,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                         //Delete will create a empty ticket
                         m_ticketsbag.deleteTicket();
 
-                        String autoLogoff = (m_App.getProperties().getProperty("till.autoLogoff"));
-                        String autoLogoffRes = m_App.getProperties().getProperty("till.autoLogoffrestaurant");
-                        if ("true".equals(autoLogoff)) {
-                            if ("restaurant".equals(getTicketsbag()) && ("true".equals(autoLogoffRes))) {
+                        if (isAutoLogout()) {
+                            if (isRestaurantMode() && isAutoLogoutRestaurant()) {
                                 deactivate();
                             } else {
                                 ((JRootApp) m_App).closeAppView();
@@ -1679,27 +1672,27 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         if (m_App.hasPermission("sales.Total")) {
 
             try {
-                
+
+                LOGGER.log(System.Logger.Level.INFO, "TicketInfo type (0:Receipt; 1:Refund) is " + ticket.getTicketType());
                 JPaymentSelect paymentdialog = null;
                 if (ticket.getTicketType() == TicketInfo.RECEIPT_NORMAL) {
-
                     paymentdialog = JPaymentSelectReceipt.getDialog(this);
                 } else if (ticket.getTicketType() == TicketInfo.RECEIPT_REFUND) {
                     paymentdialog = JPaymentSelectRefund.getDialog(this);
                 }
 
-                if (paymentdialog == null) {
-
+                if (paymentdialog != null) {
+                    paymentdialog.init(m_App);
+                } else {
+                    //SHOULD THROW EXCEPTION HERE
                 }
-
-                paymentdialog.init(m_App);
 
                 taxeslogic.calculateTaxes(ticket);
                 if (ticket.getTotal() >= 0.0) {
                     ticket.resetPayments();
                 }
 
-                if (executeEvent(ticket, ticketext, "ticket.total") == null) {
+                if (paymentdialog != null && executeEvent(ticket, ticketext, "ticket.total") == null) {
                     if (listener != null) {
                         listener.stop();
                     }
@@ -1714,20 +1707,20 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
                         ticket.setPayments(paymentdialog.getSelectedPayments());
 
-                        String LOG = "Ticket payment Ticket total: "+ticket.getTotal()
-                                + ";Dialog total: "+paymentdialog.getTotal() 
-                                +" ;Dialog paid: "+paymentdialog.getPaidTotal()
-                                +" ;Payments Selected: "+paymentdialog.getSelectedPayments().size();
-                       
+                        String LOG = "Ticket payment Ticket total: " + ticket.getTotal()
+                                + ";Dialog total: " + paymentdialog.getTotal()
+                                + " ;Dialog paid: " + paymentdialog.getPaidTotal()
+                                + " ;Payments Selected: " + paymentdialog.getSelectedPayments().size();
+
                         LOGGER.log(System.Logger.Level.INFO, LOG);
-                       
+
                         ticket.setUser(m_App.getAppUserView().getUser().getUserInfo());
                         ticket.setActiveCash(m_App.getActiveCashIndex());
                         ticket.setDate(new Date());
 
                         Object scriptResult = executeEvent(ticket, ticketext, "ticket.save");
-                        
-                        if (scriptResult == null){
+
+                        if (scriptResult == null) {
                             try {
                                 dlSales.saveTicket(ticket, m_App.getInventoryLocation());
                             } catch (BasicException ex) {
@@ -3115,7 +3108,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     try {
                         CustomerInfoExt customerExt = dlSales.loadCustomerExt(customerInfo.getId());
                         m_oTicket.setCustomer(customerExt);
-                        if ("restaurant".equals(getTicketsbag())) {
+                        if (isRestaurantMode()) {
                             restDB.setCustomerNameInTableByTicketId(customerExt.getName(), m_oTicket.getId());
                         }
 
@@ -3131,7 +3124,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     }
                 } else {
                     m_oTicket.setCustomer(null);
-                    if ("restaurant".equals(getTicketsbag())) {
+                    if (isRestaurantMode()) {
                         restDB.setCustomerNameInTableByTicketId(null, m_oTicket.getId());
                     }
                     Notify("notify.customerremove");
@@ -3151,7 +3144,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     if (finder.getSelectedCustomer() != null) {
                         try {
                             m_oTicket.setCustomer(dlSales.loadCustomerExt(finder.getSelectedCustomer().getId()));
-                            if ("restaurant".equals(getTicketsbag())) {
+                            if (isRestaurantMode()) {
                                 restDB.setCustomerNameInTableByTicketId(dlSales.loadCustomerExt(finder.getSelectedCustomer().getId()).toString(), m_oTicket.getId());
                             }
 
