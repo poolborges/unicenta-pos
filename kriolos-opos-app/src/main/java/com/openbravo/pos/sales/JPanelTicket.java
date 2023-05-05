@@ -414,47 +414,43 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             m_oTicket.setUser(m_App.getAppUserView().getUser().getUserInfo());
             m_oTicket.setActiveCash(m_App.getActiveCashIndex());
             m_oTicket.setDate(new Date());
-        }
 
-        if (isRestaurantMode()) {
-            if (isAutoLogoutRestaurant()) {
-                if (listener != null) {
-                    listener.restart();
+            if (isRestaurantMode()) {
+                if (isAutoLogoutRestaurant()) {
+                    if (listener != null) {
+                        listener.restart();
+                    }
+                }
+
+                j_btnRemotePrt.setVisible(m_App.hasPermission("sales.PrintRemote"));
+                j_btnRemotePrt.setEnabled(m_App.hasPermission("sales.PrintRemote"));
+
+                if (!m_oTicket.getOldTicket()) {
+                    restDB.setTicketIdInTable(m_oTicket.getId(), m_oTicketExt);
+                }
+
+                if (Boolean.parseBoolean(m_App.getProperties().getProperty("table.showcustomerdetails"))) {
+                    String custname = restDB.getCustomerNameInTable(m_oTicketExt);
+                    if (m_oTicket.getCustomer() != null &&  (custname == null || custname.isBlank())) {
+                        restDB.setCustomerNameInTable(m_oTicket.getCustomer().getName(), m_oTicketExt);
+                    }
+                }
+
+                if (Boolean.parseBoolean(m_App.getProperties().getProperty("table.showwaiterdetails"))) {
+                    String waiter = restDB.getWaiterNameInTable(m_oTicketExt);
+                    if (waiter == null || waiter.isBlank()) {
+                        restDB.setWaiterNameInTable(m_App.getAppUserView().getUser().getName(), m_oTicketExt);
+                    }
+                }
+
+                if (restDB.getTableMovedFlag(m_oTicket.getId())) {
+                    restDB.moveCustomer(m_oTicketExt, m_oTicket.getId());
                 }
             }
 
-            j_btnRemotePrt.setVisible(m_App.hasPermission("sales.PrintKitchen"));
-            if (m_App.hasPermission("sales.PrintRemote")) {
-                j_btnRemotePrt.setEnabled(true);
-            } else {
-                j_btnRemotePrt.setEnabled(false);
-            }
-
-            if (!m_oTicket.getOldTicket()) {
-                restDB.setTicketIdInTable(m_oTicket.getId(), m_oTicketExt);
-            }
-
-            if (Boolean.parseBoolean(m_App.getProperties().getProperty("table.showcustomerdetails"))) {
-                if (restDB.getCustomerNameInTable(m_oTicketExt) == null && m_oTicket.getCustomer() != null) {
-                    restDB.setCustomerNameInTable(m_oTicket.getCustomer().toString(), m_oTicketExt);
-                }
-            }
-
-            if (Boolean.parseBoolean(m_App.getProperties().getProperty("table.showwaiterdetails"))) {
-                String waiter = restDB.getWaiterNameInTable(m_oTicketExt);
-                if (waiter == null || waiter.isBlank()) {
-                    restDB.setWaiterNameInTable(m_App.getAppUserView().getUser().getName(), m_oTicketExt);
-                }
-            }
-
-            if (restDB.getTableMovedFlag(m_oTicket.getId())) {
-                restDB.moveCustomer(m_oTicketExt, m_oTicket.getId());
-            }
-        }
-
-        if (m_oTicket != null) {
             executeEvent(m_oTicket, m_oTicketExt, "ticket.show");
         }
+
         refreshTicket();
     }
 
