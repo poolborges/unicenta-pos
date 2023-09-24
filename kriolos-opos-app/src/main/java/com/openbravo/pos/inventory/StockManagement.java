@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.inventory;
 
 import com.openbravo.pos.forms.DataLogicSales;
@@ -58,15 +57,15 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 /**
- * Date : Aug 2017
- * Updated : Dec 2016 
+ * Date : Aug 2017 Updated : Dec 2016
+ *
  * @author jack gerrard
  */
 public class StockManagement extends JPanel implements JPanelView {
-    
-    private final AppView m_App;                                                
+
+    private final AppView m_App;
     private final String user;
-    
+
     private final DataLogicSystem m_dlSystem;
     private final DataLogicSales m_dlSales;
     private final DataLogicSuppliers m_dlSuppliers;
@@ -74,67 +73,68 @@ public class StockManagement extends JPanel implements JPanelView {
 
     private final CatalogSelector m_cat;
     private final ComboBoxValModel m_ReasonModel;
-    
-    private final SentenceList m_sentlocations;
-    private ComboBoxValModel m_LocationsModel;   
-    private ComboBoxValModel m_LocationsModelDes;     
+
+    private final SentenceList<LocationInfo> m_sentlocations;
+    private ComboBoxValModel m_LocationsModel;
+    private ComboBoxValModel m_LocationsModelDes;
 
     private final SentenceList m_sentsuppliers;
-    private ComboBoxValModel m_SuppliersModel;       
-    
+    private ComboBoxValModel m_SuppliersModel;
+
     private final JInventoryLines m_invlines;
-    
+
     private int NUMBER_STATE = 0;
     private int MULTIPLY = 0;
     private static final int DEFAULT = 0;
     private static final int ACTIVE = 1;
     private static final int DECIMAL = 2;
-    
+
     private List<ProductStock> productStockList;
-    private ProductStockTableModel stockModel;   
-    
+    private ProductStockTableModel stockModel;
+
     private final static int NUMBERZERO = 0;
     private final static int NUMBERVALID = 1;
-    
+
     private final static int NUMBER_INPUTZERO = 0;
     private final static int NUMBER_INPUTZERODEC = 1;
     private final static int NUMBER_INPUTINT = 2;
-    private final static int NUMBER_INPUTDEC = 3; 
-    private final static int NUMBER_PORZERO = 4; 
-    private final static int NUMBER_PORZERODEC = 5; 
-    private final static int NUMBER_PORINT = 6; 
-    private final static int NUMBER_PORDEC = 7; 
-    
+    private final static int NUMBER_INPUTDEC = 3;
+    private final static int NUMBER_PORZERO = 4;
+    private final static int NUMBER_PORZERODEC = 5;
+    private final static int NUMBER_PORINT = 6;
+    private final static int NUMBER_PORDEC = 7;
+
     private int m_iNumberStatus;
     private int m_iNumberStatusInput;
     private int m_iNumberStatusPor;
     private StringBuffer m_sBarcode;
-   
-      
-    /** Creates new form StockManagement
-     * @param app 
-    */
+
+    /**
+     * Creates new form StockManagement
+     *
+     * @param app
+     */
     public StockManagement(AppView app) {
-        
+
         m_App = app;
         m_dlSystem = (DataLogicSystem) m_App.getBean("com.openbravo.pos.forms.DataLogicSystem");
         m_dlSales = (DataLogicSales) m_App.getBean("com.openbravo.pos.forms.DataLogicSales");
-        m_dlSuppliers = (DataLogicSuppliers) m_App.getBean("com.openbravo.pos.suppliers.DataLogicSuppliers");        
+        m_dlSuppliers = (DataLogicSuppliers) m_App.getBean("com.openbravo.pos.suppliers.DataLogicSuppliers");
         m_TTP = new TicketParser(m_App.getDeviceTicket(), m_dlSystem);
 
         initComponents();
-        
+
         user = m_App.getAppUserView().getUser().getName();
 
         jNumberKeys.setEnabled(true);
 
         lblTotalQtyValue.setText(null);
         lbTotalValue.setText(null);
-        
+
         m_sentlocations = m_dlSales.getLocationsList();
-        m_LocationsModel =  new ComboBoxValModel();        
+        m_LocationsModel = new ComboBoxValModel();
         m_LocationsModelDes = new ComboBoxValModel();
-        
+
         m_ReasonModel = new ComboBoxValModel();
 
         m_ReasonModel.add(MovementReason.IN_PURCHASE);                          //Supplier Purchase
@@ -149,23 +149,23 @@ public class StockManagement extends JPanel implements JPanelView {
         m_ReasonModel.add(MovementReason.OUT_SAMPLE);                           //Given Sample
         m_ReasonModel.add(MovementReason.OUT_USED);                             //Used item   
         m_ReasonModel.add(MovementReason.OUT_CROSSING);                         //Inter-Location move
-        
+
         m_jreason.setModel(m_ReasonModel);
-        
+
         m_sentsuppliers = m_dlSuppliers.getSupplierList();
-        m_SuppliersModel =  new ComboBoxValModel();         
-        
+        m_SuppliersModel = new ComboBoxValModel();
+
         m_cat = new JCatalog(m_dlSales);
         m_cat.addActionListener(new CatalogListener());
         catcontainer.add(m_cat.getComponent(), BorderLayout.CENTER);
- 
+
         m_invlines = new JInventoryLines();
         jPanel5.add(m_invlines, BorderLayout.CENTER);
 
-        jTableProductStock.setVisible(false); 
-        
+        jTableProductStock.setVisible(false);
+
     }
-     
+
     /**
      *
      * @return
@@ -191,22 +191,22 @@ public class StockManagement extends JPanel implements JPanelView {
     @Override
     public void activate() throws BasicException {
         m_cat.loadCatalog();
-        
-        java.util.List l = m_sentlocations.list();
-        m_LocationsModel = new ComboBoxValModel(l);
+
+        java.util.List<LocationInfo> l = m_sentlocations.list();
+        m_LocationsModel = new ComboBoxValModel<LocationInfo>(l);
         m_jLocation.setModel(m_LocationsModel);
         m_LocationsModelDes = new ComboBoxValModel(l);
         m_jLocationDes.setModel(m_LocationsModelDes);
-        
+
         java.util.List sl = m_sentsuppliers.list();
         m_SuppliersModel = new ComboBoxValModel(sl);
         m_jSupplier.setModel(m_SuppliersModel);
 
         stateToInsert();
-        
+
         java.awt.EventQueue.invokeLater(() -> {
             jTextField1.requestFocus();
-        });        
+        });
     }
 
     /**
@@ -215,17 +215,17 @@ public class StockManagement extends JPanel implements JPanelView {
     public void stateToInsert() {
 
         m_jdate.setText(Formats.TIMESTAMP.formatValue(DateUtils.getTodayMinutes()));
-        m_ReasonModel.setSelectedItem(MovementReason.IN_PURCHASE); 
-        m_LocationsModel.setSelectedKey(m_App.getInventoryLocation());     
+        m_ReasonModel.setSelectedItem(MovementReason.IN_PURCHASE);
+        m_LocationsModel.setSelectedKey(m_App.getInventoryLocation());
 //        m_LocationsModel.setSelectedFirst();
-        m_LocationsModelDes.setSelectedKey(m_App.getInventoryLocation());         
+        m_LocationsModelDes.setSelectedKey(m_App.getInventoryLocation());
         m_jcodebar.setText(null);
-        m_SuppliersModel.setSelectedFirst();            
-        m_jSupplierDoc.setText(null);         
+        m_SuppliersModel.setSelectedFirst();
+        m_jSupplierDoc.setText(null);
         m_invlines.clear();
         resetTranxTable();
     }
-    
+
     /**
      *
      * @return
@@ -234,62 +234,65 @@ public class StockManagement extends JPanel implements JPanelView {
     public boolean deactivate() {
 
         if (m_invlines.getCount() > 0) {
-            int res = JOptionPane.showConfirmDialog(this, 
-                    LocalRes.getIntString("message.wannasave"), 
-                    LocalRes.getIntString("title.editor"), 
-                    JOptionPane.YES_NO_CANCEL_OPTION, 
+            int res = JOptionPane.showConfirmDialog(this,
+                    LocalRes.getIntString("message.wannasave"),
+                    LocalRes.getIntString("title.editor"),
+                    JOptionPane.YES_NO_CANCEL_OPTION,
                     JOptionPane.QUESTION_MESSAGE);
             if (res == JOptionPane.YES_OPTION) {
                 saveData();
                 return true;
-            } else return res == JOptionPane.NO_OPTION;
+            } else {
+                return res == JOptionPane.NO_OPTION;
+            }
         } else {
             return true;
-        }        
-    }    
+        }
+    }
 
     private void addLine(ProductInfoExt oProduct, double dpor, double dprice) {
         m_invlines.addLine(new InventoryLine(oProduct, dpor, dprice));
         showStockTable();
     }
-    
+
     private void deleteLine(int index) {
-        if (index < 0){
+        if (index < 0) {
             Toolkit.getDefaultToolkit().beep();
         } else {
-            m_invlines.deleteLine(index); 
+            m_invlines.deleteLine(index);
             clearStockTable();
-            showStockTable();     
-           
-        }        
+            showStockTable();
+
+        }
     }
-    
+
     private void incProduct(ProductInfoExt product, double units) {
 
         MovementReason reason = (MovementReason) m_ReasonModel.getSelectedItem();
-        addLine(product, units, reason.isInput() 
+        addLine(product, units, reason.isInput()
                 ? product.getPriceBuy()
                 : product.getPriceSell());
     }
-    
+
     private void incProductByCode(String sCode) {
         incProductByCode(sCode, 1.0);
     }
+
     private void incProductByCode(String sCode, double dQuantity) {
-        
+
         try {
             ProductInfoExt oProduct = m_dlSales.getProductInfoByCode(sCode);
-            if (oProduct == null) {                  
-                Toolkit.getDefaultToolkit().beep();                   
+            if (oProduct == null) {
+                Toolkit.getDefaultToolkit().beep();
             } else {
                 incProduct(oProduct, dQuantity);
             }
-        } catch (BasicException eData) {       
+        } catch (BasicException eData) {
             MessageInf msg = new MessageInf(eData);
-            msg.show(this);            
+            msg.show(this);
         }
     }
-    
+
     private List<ProductStock> getProductOfName(String pId) {
 
         try {
@@ -307,137 +310,139 @@ public class StockManagement extends JPanel implements JPanelView {
                 productList.add(productStock);
             }
         });
-        
+
         repaint();
 
         return productList;
     }
-    
+
     public void resetTranxTable() {
-        
-        jTableProductStock.getColumnModel().getColumn(0).setPreferredWidth(50);                    
-        jTableProductStock.getColumnModel().getColumn(1).setPreferredWidth(50);                            
-        jTableProductStock.getColumnModel().getColumn(2).setPreferredWidth(50);                
-        jTableProductStock.getColumnModel().getColumn(3).setPreferredWidth(50);        
+
+        jTableProductStock.getColumnModel().getColumn(0).setPreferredWidth(50);
+        jTableProductStock.getColumnModel().getColumn(1).setPreferredWidth(50);
+        jTableProductStock.getColumnModel().getColumn(2).setPreferredWidth(50);
+        jTableProductStock.getColumnModel().getColumn(3).setPreferredWidth(50);
         jTableProductStock.getColumnModel().getColumn(4).setPreferredWidth(50);
         jTableProductStock.getColumnModel().getColumn(5).setPreferredWidth(50);
-        
+
         jTableProductStock.repaint();
     }
-    
+
     public void clearStockTable() {
 
-        ProductStockTableModel model =(ProductStockTableModel)jTableProductStock.getModel();
-        
-        while(model.getRowCount() > 0) {
-            for (int i = 0; i < model.getRowCount(); ++i){
-                model.stockList.removeAll(productStockList);
-            }           
+        TableModel tModel = jTableProductStock.getModel();
+        if (tModel != null) {
+            ProductStockTableModel model = (ProductStockTableModel) tModel;
+
+            while (model.getRowCount() > 0) {
+                for (int i = 0; i < model.getRowCount(); ++i) {
+                    model.stockList.removeAll(productStockList);
+                }
+            }
         }
-        
+
         lblTotalQtyValue.setText(null);
-        lbTotalValue.setText(null);  
+        lbTotalValue.setText(null);
 
         jTableProductStock.repaint();
     }
-    
+
     public void showStockTable() {
 
         String pId = null;
         int i = m_invlines.getSelectedRow();
-        
+
         if (i < 0) {
-            Toolkit.getDefaultToolkit().beep();            
+            Toolkit.getDefaultToolkit().beep();
         } else {
             InventoryLine line = m_invlines.getLine(i);
             pId = line.getProductID();
         }
         if (pId != null) {
             stockModel = new StockManagement.ProductStockTableModel(getProductOfName(pId));
-            
+
             jTableProductStock.setModel((TableModel) stockModel);
-            if (stockModel.getRowCount()> 0){
+            if (stockModel.getRowCount() > 0) {
                 jTableProductStock.setVisible(true);
-            }else{
+            } else {
                 jTableProductStock.setVisible(false);
                 JOptionPane.showMessageDialog(null,
-                    AppLocal.getIntString("message.nostocklocation"),                        
-                    AppLocal.getIntString("message.title.nostocklocation"),                    
-                JOptionPane.INFORMATION_MESSAGE);
+                        AppLocal.getIntString("message.nostocklocation"),
+                        AppLocal.getIntString("message.title.nostocklocation"),
+                        JOptionPane.INFORMATION_MESSAGE);
             }
             sumStockTable();
             resetTranxTable();
-        }         
-        
+        }
+
     }
-    
+
     public void sumStockTable() {
         double totalQty = 0;
-        double totalVal = 0;  
+        double totalVal = 0;
         double lQty = 0;
-        double lVal = 0;        
-        
+        double lVal = 0;
+
         for (int i = 0; i < stockModel.getRowCount(); i++) {
             totalQty += Double.parseDouble(stockModel.getValueAt(i, 1).toString());
-            totalVal += Double.parseDouble(stockModel.getValueAt(i, 5).toString());                                 
+            totalVal += Double.parseDouble(stockModel.getValueAt(i, 5).toString());
 // deliberately explicit
             totalVal = Math.round(totalVal * 100);
-            totalVal = totalVal/100;
+            totalVal = totalVal / 100;
         }
-        
+
         int i = m_invlines.getSelectedRow();
         lQty = m_invlines.getLine(i).getMultiply();
         lVal = m_invlines.getLine(i).getPrice() * lQty;
 // deliberately explicit
         lVal = Math.round(lVal * 100);
-        lVal = lVal/100;
-        
-        MovementReason reason = (MovementReason) m_ReasonModel.getSelectedItem();        
-       
-        if(reason == MovementReason.OUT_BREAK 
-            || reason==MovementReason.OUT_FREE || reason==MovementReason.OUT_REFUND
-            || reason==MovementReason.OUT_SALE || reason==MovementReason.OUT_SAMPLE 
-            || reason==MovementReason.OUT_SUBTRACT || reason==MovementReason.OUT_USED) {
+        lVal = lVal / 100;
+
+        MovementReason reason = (MovementReason) m_ReasonModel.getSelectedItem();
+
+        if (reason == MovementReason.OUT_BREAK
+                || reason == MovementReason.OUT_FREE || reason == MovementReason.OUT_REFUND
+                || reason == MovementReason.OUT_SALE || reason == MovementReason.OUT_SAMPLE
+                || reason == MovementReason.OUT_SUBTRACT || reason == MovementReason.OUT_USED) {
             lblTotalQtyValue.setText(Double.toString(totalQty -= lQty));
-            lbTotalValue.setText(Double.toString(totalVal -= lVal));                         
+            lbTotalValue.setText(Double.toString(totalVal -= lVal));
         } else {
             lblTotalQtyValue.setText(Double.toString(lQty += totalQty));
-            lbTotalValue.setText(Double.toString(lVal += totalVal));             
+            lbTotalValue.setText(Double.toString(lVal += totalVal));
         }
 
-        
-    } 
-    
+    }
+
     private void addUnits(double dUnits) {
-        int i  = m_invlines.getSelectedRow();
-        if (i >= 0 ) {
+        int i = m_invlines.getSelectedRow();
+        if (i >= 0) {
             InventoryLine inv = m_invlines.getLine(i);
             double dunits = inv.getMultiply() + dUnits;
             if (dunits <= 0.0) {
                 deleteLine(i);
-            } else {            
+            } else {
                 inv.setMultiply(inv.getMultiply() + dUnits);
                 m_invlines.setLine(i, inv);
             }
 
-            sumStockTable();            
+            sumStockTable();
         }
     }
-    
+
     private void setUnits(double dUnits) {
-        int i  = m_invlines.getSelectedRow();
-        if (i >= 0 ) {
-            InventoryLine inv = m_invlines.getLine(i);         
+        int i = m_invlines.getSelectedRow();
+        if (i >= 0) {
+            InventoryLine inv = m_invlines.getLine(i);
             inv.setMultiply(dUnits);
             m_invlines.setLine(i, inv);
         }
     }
-    
+
     private void stateTransition(char cTrans) {
         if (cTrans == '\n') {
             m_jEnter.doClick();
         }
-        if (cTrans == '\u007f') { 
+        if (cTrans == '\u007f') {
             m_jcodebar.setText(null);
             NUMBER_STATE = DEFAULT;
         } else if (cTrans == '*') {
@@ -468,7 +473,7 @@ public class StockManagement extends JPanel implements JPanelView {
         } else if (cTrans == '.') {
             if (m_jcodebar.getText() == null || m_jcodebar.getText().equals("")) {
                 m_jcodebar.setText("0.");
-            } else if (NUMBER_STATE != DECIMAL){
+            } else if (NUMBER_STATE != DECIMAL) {
                 m_jcodebar.setText(m_jcodebar.getText() + cTrans);
             }
             NUMBER_STATE = DECIMAL;
@@ -487,21 +492,21 @@ public class StockManagement extends JPanel implements JPanelView {
             }
             if (NUMBER_STATE != DECIMAL) {
                 NUMBER_STATE = ACTIVE;
-            }   
+            }
         } else if (Character.isAlphabetic(cTrans)) {
-            if (m_jcodebar.getText() == null) {               
+            if (m_jcodebar.getText() == null) {
                 m_jcodebar.setText("" + cTrans);
             } else {
                 m_jcodebar.setText(m_jcodebar.getText() + cTrans);
             }
             if (NUMBER_STATE != DECIMAL) {
                 NUMBER_STATE = ACTIVE;
-            }            
+            }
 
         } else {
             Toolkit.getDefaultToolkit().beep();
         }
-    }    
+    }
 
     /**
      *
@@ -510,16 +515,16 @@ public class StockManagement extends JPanel implements JPanelView {
     protected void buttonTransition(ProductInfoExt prod) {
 
 //        if (m_iNumberStatusInput == NUMBERZERO && m_iNumberStatusPor == NUMBERZERO) {
-            incProduct(prod);              
+        incProduct(prod);
 //        } else {
 //            Toolkit.getDefaultToolkit().beep();
 //        }      
     }
-    
+
     private void saveData() {
         try {
 
-            Date d = (Date) Formats.TIMESTAMP.parseValue(m_jdate.getText());
+            Date d = Formats.TIMESTAMP.parseValue(m_jdate.getText());
             MovementReason reason = (MovementReason) m_ReasonModel.getSelectedItem();
 
             if (reason == MovementReason.OUT_CROSSING) {
@@ -529,17 +534,17 @@ public class StockManagement extends JPanel implements JPanelView {
                         m_App.getAppUserView().getUser().getName(),
                         (SupplierInfo) m_SuppliersModel.getSelectedItem(),
                         m_invlines.getLines(),
-                        m_jSupplierDoc.getText()                        
-                    ));
+                        m_jSupplierDoc.getText()
+                ));
                 saveData(new InventoryRecord(
                         d, MovementReason.IN_MOVEMENT,
                         (LocationInfo) m_LocationsModelDes.getSelectedItem(),
                         m_App.getAppUserView().getUser().getName(),
                         (SupplierInfo) m_SuppliersModel.getSelectedItem(),
                         m_invlines.getLines(),
-                        m_jSupplierDoc.getText()                        
-                    ));                
-            } else {  
+                        m_jSupplierDoc.getText()
+                ));
+            } else {
                 saveData(new InventoryRecord(
                         d, reason,
                         (LocationInfo) m_LocationsModel.getSelectedItem(),
@@ -547,25 +552,25 @@ public class StockManagement extends JPanel implements JPanelView {
                         (SupplierInfo) m_SuppliersModel.getSelectedItem(),
                         m_invlines.getLines(),
                         m_jSupplierDoc.getText()
-                    ));
+                ));
             }
-            
-            stateToInsert();  
+
+            stateToInsert();
         } catch (BasicException eData) {
-            MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE, 
+            MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE,
                     AppLocal.getIntString("message.cannotsaveinventorydata"), eData);
             msg.show(this);
-        }             
+        }
     }
-        
+
     private void saveData(InventoryRecord rec) throws BasicException {
 
         SentenceExec sent = m_dlSales.getStockDiaryInsert1();
-        
+
         for (int i = 0; i < m_invlines.getCount(); i++) {
             InventoryLine inv = rec.getLines().get(i);
 
-            sent.exec(new Object[] {
+            sent.exec(new Object[]{
                 UUID.randomUUID().toString(),
                 rec.getDate(),
                 rec.getReason().getKey(),
@@ -579,16 +584,16 @@ public class StockManagement extends JPanel implements JPanelView {
                 rec.getSupplierDoc()
             });
         }
-        
+
         clearStockTable();
-        printTicket(rec);   
+        printTicket(rec);
     }
-    
+
     private void printTicket(InventoryRecord invrec) {
 
         String sresource = m_dlSystem.getResourceAsXML("Printer.Inventory");
         if (sresource == null) {
-            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, 
+            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
                     AppLocal.getIntString("message.cannotprintticket"));
             msg.show(this);
         } else {
@@ -597,8 +602,8 @@ public class StockManagement extends JPanel implements JPanelView {
                 script.put("inventoryrecord", invrec);
                 m_TTP.printTicket(script.eval(sresource).toString());
 
-            } catch (    ScriptException | TicketPrinterException e) {
-                MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, 
+            } catch (ScriptException | TicketPrinterException e) {
+                MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
                         AppLocal.getIntString("message.cannotprintticket"), e);
                 msg.show(this);
             }
@@ -606,26 +611,27 @@ public class StockManagement extends JPanel implements JPanelView {
     }
 
     class ProductStockTableModel extends AbstractTableModel {
-        
-        String loc = AppLocal.getIntString("label.tblProdHeaderCol1");
-        String qty = AppLocal.getIntString("label.tblProdHeaderCol2");
-        String max = AppLocal.getIntString("label.tblProdHeaderCol3");
-        String min = AppLocal.getIntString("label.tblProdHeaderCol4");
-        String buy = AppLocal.getIntString("label.tblProdHeaderCol5");
-        String val = AppLocal.getIntString("label.tblProdHeaderCol6");                
 
-        List<ProductStock> stockList;
-      
+        private static final long serialVersionUID = 1L;
+
+        private String loc = AppLocal.getIntString("label.tblProdHeaderCol1");
+        private String qty = AppLocal.getIntString("label.tblProdHeaderCol2");
+        private String max = AppLocal.getIntString("label.tblProdHeaderCol3");
+        private String min = AppLocal.getIntString("label.tblProdHeaderCol4");
+        private String buy = AppLocal.getIntString("label.tblProdHeaderCol5");
+        private String val = AppLocal.getIntString("label.tblProdHeaderCol6");
+
+        private List<ProductStock> stockList;
+
         String[] columnNames = {loc, qty, max, min, buy, val};
-        
-        
+
         public ProductStockTableModel(List<ProductStock> list) {
             stockList = list;
         }
-        
+
         @Override
         public int getColumnCount() {
-            return 6;            
+            return 6;
         }
 
         @Override
@@ -636,31 +642,7 @@ public class StockManagement extends JPanel implements JPanelView {
         @Override
         public Object getValueAt(int row, int column) {
             ProductStock productStock = stockList.get(row);
-            
-            switch (column) {
-                case 0:
-                    return productStock.getLocation();                                        
-                case 1:
-                    return productStock.getUnits();
-                case 2:
-                    return productStock.getMinimum();
-                case 3:
-                    return productStock.getMaximum();
-                case 4:
-                    return productStock.getPriceSell();  
-                case 5:
-                    return productStock.getUnits() * productStock.getPriceSell();                     
-                case 6:
-                    return productStock.getProductId();                    
-                default:
-                    return "";
-            }            
-            
-        }
 
-        public Object setValueAt(int row, int column) {
-            ProductStock productStock = stockList.get(row);
-        
             switch (column) {
                 case 0:
                     return productStock.getLocation();
@@ -671,88 +653,111 @@ public class StockManagement extends JPanel implements JPanelView {
                 case 3:
                     return productStock.getMaximum();
                 case 4:
-                    return productStock.getPriceSell();  
+                    return productStock.getPriceSell();
                 case 5:
                     return productStock.getUnits() * productStock.getPriceSell();
                 case 6:
-                    return productStock.getProductId();                  
+                    return productStock.getProductId();
                 default:
                     return "";
             }
-        }        
-        
+
+        }
+
+        public Object setValueAt(int row, int column) {
+            ProductStock productStock = stockList.get(row);
+
+            switch (column) {
+                case 0:
+                    return productStock.getLocation();
+                case 1:
+                    return productStock.getUnits();
+                case 2:
+                    return productStock.getMinimum();
+                case 3:
+                    return productStock.getMaximum();
+                case 4:
+                    return productStock.getPriceSell();
+                case 5:
+                    return productStock.getUnits() * productStock.getPriceSell();
+                case 6:
+                    return productStock.getProductId();
+                default:
+                    return "";
+            }
+        }
+
         @Override
         public String getColumnName(int col) {
             return columnNames[col];
         }
-        
-    }
-  
-    
-    private class CatalogListener implements ActionListener {
-        
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            
-            String sQty = m_jcodebar.getText();
-            if (sQty != null) {
-                Double dQty = (Double.valueOf(sQty)==0) ? 1.0 : Double.valueOf(sQty);
-                incProduct( (ProductInfoExt) e.getSource(), dQty);
-                m_jcodebar.setText(null);
-            } else {
-                incProduct( (ProductInfoExt) e.getSource(),1.0);
-            }
-        }  
-    } 
-    
-    private void removeInvLine(int index){
-    
-        if (index < 0){
-            Toolkit.getDefaultToolkit().beep();
-        } else {
-            m_invlines.deleteLine(index); 
-            clearStockTable();
-            showStockTable();     
-           
-        } 
 
     }
+
+    private class CatalogListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            String sQty = m_jcodebar.getText();
+            if (sQty != null) {
+                Double dQty = (Double.valueOf(sQty) == 0) ? 1.0 : Double.valueOf(sQty);
+                incProduct((ProductInfoExt) e.getSource(), dQty);
+                m_jcodebar.setText(null);
+            } else {
+                incProduct((ProductInfoExt) e.getSource(), 1.0);
+            }
+        }
+    }
+
+    private void removeInvLine(int index) {
+
+        if (index < 0) {
+            Toolkit.getDefaultToolkit().beep();
+        } else {
+            m_invlines.deleteLine(index);
+            clearStockTable();
+            showStockTable();
+
+        }
+
+    }
+
     /**
      *
      * @param index
      */
     public void deleteTicket(int index) {
-             
-        while(index < m_invlines.getCount()) {
-                m_invlines.deleteLine(index); 
+
+        while (index < m_invlines.getCount()) {
+            m_invlines.deleteLine(index);
         }
-         
+
     }
 
     private void incProduct(ProductInfoExt prod) {
 
-        incProduct(1.0, prod);          
+        incProduct(1.0, prod);
     }
 
     private void incProduct(double dPor, ProductInfoExt prod) {
-        
-        addLine(prod, dPor, prod.getPriceBuy());      
+
+        addLine(prod, dPor, prod.getPriceBuy());
     }
-    
-    private void stateToZero(){
+
+    private void stateToZero() {
         m_sBarcode = new StringBuffer();
-            
+
         m_iNumberStatus = NUMBER_INPUTZERO;
         m_iNumberStatusInput = NUMBERZERO;
         m_iNumberStatusPor = NUMBERZERO;
         repaint();
     }
-    
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1135,7 +1140,7 @@ public class StockManagement extends JPanel implements JPanelView {
 
     }//GEN-LAST:event_jNumberKeysKeyPerformed
 
-    
+
     private void m_jreasonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jreasonActionPerformed
 
         m_jLocationDes.setEnabled(m_ReasonModel.getSelectedItem() == MovementReason.OUT_CROSSING);
@@ -1171,7 +1176,7 @@ public class StockManagement extends JPanel implements JPanelView {
     }//GEN-LAST:event_m_jEnterActionPerformed
 
     private void m_jSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jSupplierActionPerformed
-/*        if (m_jSupplier != null) {
+        /*        if (m_jSupplier != null) {
             catcontainer.setEnabled(false);            
             jNumberKeys.setEnabled(true);
             m_jcodebar.setEnabled(true);
@@ -1193,20 +1198,20 @@ public class StockManagement extends JPanel implements JPanelView {
             m_jBtnShowStock.setEnabled(false);
             
        }
-*/        
+         */
     }//GEN-LAST:event_m_jSupplierActionPerformed
 
     private void m_jBtnShowStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jBtnShowStockActionPerformed
 
         showStockTable();
-        
+
     }//GEN-LAST:event_m_jBtnShowStockActionPerformed
 
     private void m_jDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jDeleteActionPerformed
 
         int i = m_invlines.getSelectedRow();
 
-        if (i < 0){
+        if (i < 0) {
             Toolkit.getDefaultToolkit().beep();
         } else {
             removeInvLine(i);
@@ -1230,12 +1235,12 @@ public class StockManagement extends JPanel implements JPanelView {
             Toolkit.getDefaultToolkit().beep();
         } else {
             InventoryLine line = m_invlines.getLine(i);
-            
+
             JFrame frame = new JFrame("New Price Buy");
-            String spricebuy = JOptionPane.showInputDialog(frame, 
+            String spricebuy = JOptionPane.showInputDialog(frame,
                     AppLocal.getIntString("message.enterbuyprice"),
                     JOptionPane.INFORMATION_MESSAGE);
-            
+
             if (spricebuy != null) {
                 double dpricebuy = Double.parseDouble(spricebuy);
                 line.setPrice(dpricebuy);
@@ -1261,7 +1266,7 @@ public class StockManagement extends JPanel implements JPanelView {
                     m_invlines.setLine(i, line);
                 }
             } catch (BasicException ex) {
-                MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, 
+                MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
                         AppLocal.getIntString("message.cannotfindattributes"), ex);
                 msg.show(this);
             }
@@ -1271,23 +1276,23 @@ public class StockManagement extends JPanel implements JPanelView {
     private void m_jBtnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jBtnDeleteActionPerformed
 
         int res = JOptionPane.showConfirmDialog(this,
-            AppLocal.getIntString("message.wannadelete"),
-            AppLocal.getIntString("title.editor"),
-            JOptionPane.YES_NO_OPTION, 
-            JOptionPane.QUESTION_MESSAGE);
+                AppLocal.getIntString("message.wannadelete"),
+                AppLocal.getIntString("title.editor"),
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
 
         if (res == JOptionPane.YES_OPTION) {
 
             int i = 0;
-            while(i < m_invlines.getCount()) {
+            while (i < m_invlines.getCount()) {
                 m_invlines.deleteLine(i);
             }
-                                     
-            clearStockTable();
-            showStockTable();           
 
-            jTableProductStock.repaint();             
-        }    
+            clearStockTable();
+            showStockTable();
+
+            jTableProductStock.repaint();
+        }
 
     }//GEN-LAST:event_m_jBtnDeleteActionPerformed
 
@@ -1338,5 +1343,5 @@ public class StockManagement extends JPanel implements JPanelView {
     private javax.swing.JLabel webLblQty;
     private javax.swing.JLabel webLblValue;
     // End of variables declaration//GEN-END:variables
-    
+
 }
