@@ -19,6 +19,7 @@ package com.openbravo.pos.inventory;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.DataRead;
 import com.openbravo.data.loader.SerializerRead;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -27,7 +28,9 @@ import java.util.Date;
  * Used in Product stock tab to display all this Product's
  * location values
  */
-public class ProductStock {
+public class ProductStock implements Serializable{
+
+    private static final long serialVersionUID = 1L;
 
     String pId;
     String location;
