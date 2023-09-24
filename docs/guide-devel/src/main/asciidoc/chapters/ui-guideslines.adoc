@@ -1,0 +1,55 @@
+[[ui-guidelines]]
+== UI Guidelines
+
+
+
+
+=== References
+
+
+Human Interface guidelines
+
+* https://en.wikipedia.org/wiki/Human_interface_guidelines
+
+Desktop Platforms
+
+* Netbeans Platform
+* Eclipse Platform
+* Intellij Platform 
+
+=== Eclipse Platform 
+
+
+Docs 
+
+* User Interface Guidelines
+** https://wiki.eclipse.org/User_Interface_Guidelines
+* Platform UI 
+** https://wiki.eclipse.org/Platform_UI
+* Eclipse User Interface Guidelines
+** https://www.eclipse.org/articles/Article-UI-Guidelines/Index.html
+
+Misc Links
+
+* https://eclipse.dev/eclipse/platform-ui/
+* https://www.researchgate.net/figure/Eclipse-Platform-user-interface_fig1_234794560
+
+=== Netbeans Platform
+
+
+
+Misc Links 
+
+* https://www.researchgate.net/figure/Eclipse-Platform-user-interface_fig1_234794560
+* https://netbeans.apache.org/tutorials/67/nbm-quick-start.html
+
+
+=== Intellij Platform
+
+
+Docs 
+
+*  IntelliJ Platform UI Guidelines
+** https://jetbrains.design/intellij
+* Plugins 
+** https://plugins.jetbrains.com/docs/intellij/user-interface-components.html
