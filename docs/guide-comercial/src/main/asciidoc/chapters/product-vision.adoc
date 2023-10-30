@@ -1,0 +1,18 @@
+[[gd-vision]]
+== Project's Vision
+
+This version SHOULD provide Long Term Support (LTS) for comercial users.
+
+=== Web Application 
+
+
+* Moderm Web aplication
+* REST API 
+
+
+
+
+=== Reference
+
+* todo
+

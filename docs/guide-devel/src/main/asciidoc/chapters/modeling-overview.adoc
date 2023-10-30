@@ -3,7 +3,7 @@
 
 TODO write overview here
 
-=== Data Loader UML
+=== Data Loader
 
 .Data Loader Class Diagram
 [plantuml]
@@ -54,6 +54,8 @@ SerializerRead <-- SerializerReadBasic
 @enduml
 ----
 
+
+=== Ticket Panel
 
 .TicketPanel Class
 [plantuml]

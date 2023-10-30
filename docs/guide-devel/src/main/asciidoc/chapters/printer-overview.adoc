@@ -3,7 +3,8 @@
 
 == Example 
 
-
+.Example
+[source, xml]
 ----
 <output>
     <fiscalreceipt>
@@ -21,15 +22,35 @@
 
 == Start Elements
 
-* opendrawer
-* buzzer
-* play
-* ticket
-* display
-* fiscalreceipt
-* fiscalzreport
-* fiscalxreport
+.XML Elements
+|====
+|Element |Description
 
+|opendrawer
+|
+
+|buzzer
+|
+
+|play
+|
+
+|ticket
+|
+
+|display
+|
+
+|fiscalreceipt
+|
+
+|fiscalzreport
+|
+
+|fiscalxreport
+|
+
+|====
 
 === OutputType
 
@@ -80,7 +101,7 @@ Hooks
 * OutputType: 2 (ticket)
 * OutputPrinter: (default: 1) - Will set the printer where every thing will send
 ** From attr: 'printer'
-** 
+** ...
 
 .Example __ticket__ element
 [source,xml]
@@ -144,6 +165,7 @@ Hooks
 [plantuml]
 ----
 @startuml
+
 interface Printer 
 
 interface RendererPrinter
@@ -179,7 +201,7 @@ interface FiscalReceiptPrintr
 interface DevicePrinter
 interface DeviceFiscalPrinter
 interface DeviceDisplay
-class DeviceFiscalPrinterJavaPOS as dfp
+class DeviceFiscalPrinterJavaPOS
 
 class DeviceTicket {
 

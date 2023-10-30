@@ -23,6 +23,7 @@
     
     <modules>
         <module>guide-devel</module>
+        <module>guide-comercial</module>
     </modules>
      
     <profiles>
