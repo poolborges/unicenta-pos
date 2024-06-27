@@ -522,7 +522,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </activation>
             
             <properties>
-                <jacoco.version>0.8.8</jacoco.version>
+                <jacoco.version>0.8.12</jacoco.version>
                 <jacoco.unittest.file>${project.build.directory}/jacoco.exec</jacoco.unittest.file>
                 <jacoco.itest.file>${project.build.directory}/jacoco-it.exec</jacoco.itest.file>
                 <jacoco.agent.jar>${project.build.directory}/jacoco-agent.jar</jacoco.agent.jar>
