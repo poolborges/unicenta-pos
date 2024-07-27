@@ -24,14 +24,49 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </goals>
     </action>
     <action>
-            <actionName>CUSTOM-QA</actionName>
-            <displayName>QA</displayName>
-            <goals>
-                <goal>test</goal>
-            </goals>
-            <activatedProfiles>
-                <activatedProfile>qa</activatedProfile>
-                <activatedProfile>reporting</activatedProfile>
-            </activatedProfiles>
-        </action>
+        <actionName>CUSTOM-QA</actionName>
+        <displayName>QA</displayName>
+        <goals>
+            <goal>test</goal>
+        </goals>
+        <activatedProfiles>
+            <activatedProfile>qa</activatedProfile>
+            <activatedProfile>reporting</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
+        <actionName>CUSTOM-ExecApp</actionName>
+        <displayName>Run</displayName>
+        <goals>
+            <goal>exec:java</goal>
+            <goal>-pl kriolos-opos-app</goal>
+        </goals>
+        <properties>
+            <exec.vmArgs></exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+            <exec.mainClass>com.openbravo.pos.forms.StartPOS</exec.mainClass>
+            <exec.executable>java</exec.executable>
+            <exec.appArgs></exec.appArgs>
+        </properties>
+    </action>
+    <action>
+        <actionName>CUSTOM-debug</actionName>
+        <displayName>Debug</displayName>
+        <packagings>
+            <packaging>jar</packaging>
+        </packagings>
+        <goals>
+            <goal>process-classes</goal>
+            <goal>exec:java</goal>
+            <goal>-pl kriolos-opos-app</goal>
+        </goals>
+        <properties>
+            <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+            <exec.mainClass>com.openbravo.pos.forms.StartPOS</exec.mainClass>
+            <exec.executable>java</exec.executable>
+            <exec.appArgs></exec.appArgs>
+            <jpda.listen>true</jpda.listen>
+        </properties>
+    </action>
+
 </actions>

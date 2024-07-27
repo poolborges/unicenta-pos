@@ -26,6 +26,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </goals>
     </action>
     <action>
+        <actionName>debug</actionName>
+        <packagings>
+            <packaging>jar</packaging>
+        </packagings>
+        <goals>
+            <goal>process-classes</goal>
+            <goal>exec:java</goal>
+        </goals>
+        <properties>
+            <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+            <exec.mainClass>com.openbravo.pos.forms.StartPOS</exec.mainClass>
+            <exec.executable>java</exec.executable>
+            <exec.appArgs></exec.appArgs>
+            <jpda.listen>true</jpda.listen>
+        </properties>
+    </action>
+    <action>
         <actionName>CUSTOM-run-StartPOS</actionName>
         <displayName>run-StartPOS</displayName>
         <goals>
