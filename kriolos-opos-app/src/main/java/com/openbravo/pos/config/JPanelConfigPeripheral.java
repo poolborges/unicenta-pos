@@ -128,192 +128,30 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         webSwtch_iButton.addActionListener(dirty);
         webSlider.addChangeListener(dirty);
 
-// printers
-        jcboMachinePrinter.addItem("Not defined");
-        jcboMachinePrinter.addItem("screen");
-        jcboMachinePrinter.addItem("printer");
-        jcboMachinePrinter.addItem("epson");
-        jcboMachinePrinter.addItem("tmu220");
-        jcboMachinePrinter.addItem("star");
-        jcboMachinePrinter.addItem("ODP1000");
-        jcboMachinePrinter.addItem("ithaca");
-        jcboMachinePrinter.addItem("surepos");
-        jcboMachinePrinter.addItem("plain");
-        jcboMachinePrinter.addItem("javapos");
+        setupMachinePrinterOptions(jcboMachinePrinter);
+        setupMode(jcboConnPrinter);
+        setupCommonSerialPortList(jcboSerialPrinter);
+        // Ptinter 2
+        setupMachinePrinterOptions(jcboMachinePrinter2);
+        setupMode(jcboConnPrinter2);
+        setupCommonSerialPortList(jcboSerialPrinter2);
+        //Printer 3
+        setupMachinePrinterOptions(jcboMachinePrinter3);
+        setupMode(jcboConnPrinter3);
+        setupCommonSerialPortList(jcboSerialPrinter3);
+        //Printer 4
+        setupMachinePrinterOptions(jcboMachinePrinter4);
+        setupMode(jcboConnPrinter4);
+        setupCommonSerialPortList(jcboSerialPrinter4);
+        //Printer 5
+        setupMachinePrinterOptions(jcboMachinePrinter5);
+        setupMode(jcboConnPrinter5);
+        setupCommonSerialPortList(jcboSerialPrinter5);
+        //Printer 6
+        setupMachinePrinterOptions(jcboMachinePrinter6);
+        setupMode(jcboConnPrinter6);
+        setupCommonSerialPortList(jcboSerialPrinter6);
 
-        jcboConnPrinter.addItem("file");
-        jcboConnPrinter.addItem("serial");
-
-        jcboSerialPrinter.addItem("COM1");
-        jcboSerialPrinter.addItem("COM2");
-        jcboSerialPrinter.addItem("COM3");
-        jcboSerialPrinter.addItem("COM4");
-        jcboSerialPrinter.addItem("COM5");
-        jcboSerialPrinter.addItem("COM6");
-        jcboSerialPrinter.addItem("COM7");
-        jcboSerialPrinter.addItem("COM8");
-        jcboSerialPrinter.addItem("LPT1");
-        jcboSerialPrinter.addItem("/dev/ttyS0");
-        jcboSerialPrinter.addItem("/dev/ttyS1");
-        jcboSerialPrinter.addItem("/dev/ttyS2");
-        jcboSerialPrinter.addItem("/dev/ttyS3");
-        jcboSerialPrinter.addItem("/dev/ttyS4");
-        jcboSerialPrinter.addItem("/dev/ttyS5");
-
-        jcboMachinePrinter2.addItem("Not defined");
-        jcboMachinePrinter2.addItem("screen");
-        jcboMachinePrinter2.addItem("printer");
-        jcboMachinePrinter2.addItem("epson");
-        jcboMachinePrinter2.addItem("tmu220");
-        jcboMachinePrinter2.addItem("star");
-        jcboMachinePrinter2.addItem("ODP1000");
-        jcboMachinePrinter2.addItem("ithaca");
-        jcboMachinePrinter2.addItem("surepos");
-        jcboMachinePrinter2.addItem("plain");
-        jcboMachinePrinter2.addItem("javapos");
-
-        jcboConnPrinter2.addItem("file");
-        jcboConnPrinter2.addItem("serial");
-
-        jcboSerialPrinter2.addItem("COM1");
-        jcboSerialPrinter2.addItem("COM2");
-        jcboSerialPrinter2.addItem("COM3");
-        jcboSerialPrinter2.addItem("COM4");
-        jcboSerialPrinter2.addItem("COM5");
-        jcboSerialPrinter2.addItem("COM6");
-        jcboSerialPrinter2.addItem("COM7");
-        jcboSerialPrinter2.addItem("COM8");        
-        jcboSerialPrinter2.addItem("LPT1");
-        jcboSerialPrinter2.addItem("/dev/ttyS0");
-        jcboSerialPrinter2.addItem("/dev/ttyS1");
-        jcboSerialPrinter2.addItem("/dev/ttyS2");
-        jcboSerialPrinter2.addItem("/dev/ttyS3");
-        jcboSerialPrinter2.addItem("/dev/ttyS4");
-        jcboSerialPrinter2.addItem("/dev/ttyS5");
-
-        jcboMachinePrinter3.addItem("Not defined");
-        jcboMachinePrinter3.addItem("screen");
-        jcboMachinePrinter3.addItem("printer");
-        jcboMachinePrinter3.addItem("epson");
-        jcboMachinePrinter3.addItem("tmu220");
-        jcboMachinePrinter3.addItem("star");
-        jcboMachinePrinter3.addItem("ODP1000");
-        jcboMachinePrinter3.addItem("ithaca");
-        jcboMachinePrinter3.addItem("surepos");
-        jcboMachinePrinter3.addItem("plain");
-        jcboMachinePrinter3.addItem("javapos");
-
-        jcboConnPrinter3.addItem("file");
-        jcboConnPrinter3.addItem("serial");
-
-        jcboSerialPrinter3.addItem("COM1");
-        jcboSerialPrinter3.addItem("COM2");
-        jcboSerialPrinter3.addItem("COM3");
-        jcboSerialPrinter3.addItem("COM4");
-        jcboSerialPrinter3.addItem("COM5");
-        jcboSerialPrinter3.addItem("COM6");
-        jcboSerialPrinter3.addItem("COM7");
-        jcboSerialPrinter3.addItem("COM8");        
-        jcboSerialPrinter3.addItem("LPT1");
-        jcboSerialPrinter3.addItem("/dev/ttyS0");
-        jcboSerialPrinter3.addItem("/dev/ttyS1");
-        jcboSerialPrinter3.addItem("/dev/ttyS2");
-        jcboSerialPrinter3.addItem("/dev/ttyS3");
-        jcboSerialPrinter3.addItem("/dev/ttyS4");
-        jcboSerialPrinter3.addItem("/dev/ttyS5");
-
-        jcboMachinePrinter4.addItem("Not defined");
-        jcboMachinePrinter4.addItem("screen");
-        jcboMachinePrinter4.addItem("printer");
-        jcboMachinePrinter4.addItem("epson");
-        jcboMachinePrinter4.addItem("tmu220");
-        jcboMachinePrinter4.addItem("star");
-        jcboMachinePrinter4.addItem("ODP1000");
-        jcboMachinePrinter4.addItem("ithaca");
-        jcboMachinePrinter4.addItem("surepos");
-        jcboMachinePrinter4.addItem("plain");
-        jcboMachinePrinter4.addItem("javapos");
-
-        jcboConnPrinter4.addItem("file");
-        jcboConnPrinter4.addItem("serial");
-
-        jcboSerialPrinter4.addItem("COM1");
-        jcboSerialPrinter4.addItem("COM2");
-        jcboSerialPrinter4.addItem("COM3");
-        jcboSerialPrinter4.addItem("COM4");
-        jcboSerialPrinter4.addItem("COM5");
-        jcboSerialPrinter4.addItem("COM6");
-        jcboSerialPrinter4.addItem("COM7");
-        jcboSerialPrinter4.addItem("COM8");        
-        jcboSerialPrinter4.addItem("LPT1");
-        jcboSerialPrinter4.addItem("/dev/ttyS0");
-        jcboSerialPrinter4.addItem("/dev/ttyS1");
-        jcboSerialPrinter4.addItem("/dev/ttyS2");
-        jcboSerialPrinter4.addItem("/dev/ttyS3");
-        jcboSerialPrinter4.addItem("/dev/ttyS4");
-        jcboSerialPrinter4.addItem("/dev/ttyS5");
-        
-        jcboMachinePrinter5.addItem("Not defined");
-        jcboMachinePrinter5.addItem("screen");
-        jcboMachinePrinter5.addItem("printer");
-        jcboMachinePrinter5.addItem("epson");
-        jcboMachinePrinter5.addItem("tmu220");
-        jcboMachinePrinter5.addItem("star");
-        jcboMachinePrinter5.addItem("ODP1000");
-        jcboMachinePrinter5.addItem("ithaca");
-        jcboMachinePrinter5.addItem("surepos");
-        jcboMachinePrinter5.addItem("plain");
-        jcboMachinePrinter5.addItem("javapos");
-
-        jcboConnPrinter5.addItem("file");
-        jcboConnPrinter5.addItem("serial");
-
-        jcboSerialPrinter5.addItem("COM1");
-        jcboSerialPrinter5.addItem("COM2");
-        jcboSerialPrinter5.addItem("COM3");
-        jcboSerialPrinter5.addItem("COM4");
-        jcboSerialPrinter5.addItem("COM5");
-        jcboSerialPrinter5.addItem("COM6");
-        jcboSerialPrinter5.addItem("COM7");
-        jcboSerialPrinter5.addItem("COM8");        
-        jcboSerialPrinter5.addItem("LPT1");
-        jcboSerialPrinter5.addItem("/dev/ttyS0");
-        jcboSerialPrinter5.addItem("/dev/ttyS1");
-        jcboSerialPrinter5.addItem("/dev/ttyS2");
-        jcboSerialPrinter5.addItem("/dev/ttyS3");
-        jcboSerialPrinter5.addItem("/dev/ttyS4");
-        jcboSerialPrinter5.addItem("/dev/ttyS5");
-     
-        jcboMachinePrinter6.addItem("Not defined");
-        jcboMachinePrinter6.addItem("screen");
-        jcboMachinePrinter6.addItem("printer");
-        jcboMachinePrinter6.addItem("epson");
-        jcboMachinePrinter6.addItem("tmu220");
-        jcboMachinePrinter6.addItem("star");
-        jcboMachinePrinter6.addItem("ODP1000");
-        jcboMachinePrinter6.addItem("ithaca");
-        jcboMachinePrinter6.addItem("surepos");
-        jcboMachinePrinter6.addItem("plain");
-        jcboMachinePrinter6.addItem("javapos");
-
-        jcboConnPrinter6.addItem("file");
-        jcboConnPrinter6.addItem("serial");
-
-        jcboSerialPrinter6.addItem("COM1");
-        jcboSerialPrinter6.addItem("COM2");
-        jcboSerialPrinter6.addItem("COM3");
-        jcboSerialPrinter6.addItem("COM4");
-        jcboSerialPrinter6.addItem("COM5");
-        jcboSerialPrinter6.addItem("COM6");
-        jcboSerialPrinter6.addItem("COM7");
-        jcboSerialPrinter6.addItem("COM8");        
-        jcboSerialPrinter6.addItem("LPT1");
-        jcboSerialPrinter6.addItem("/dev/ttyS0");
-        jcboSerialPrinter6.addItem("/dev/ttyS1");
-        jcboSerialPrinter6.addItem("/dev/ttyS2");
-        jcboSerialPrinter6.addItem("/dev/ttyS3");
-        jcboSerialPrinter6.addItem("/dev/ttyS4");
-        jcboSerialPrinter6.addItem("/dev/ttyS5");
         
        
         // Display
@@ -327,22 +165,7 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
 
         jcboConnDisplay.addItem("serial");
         jcboConnDisplay.addItem("file");
-
-        jcboSerialDisplay.addItem("COM1");
-        jcboSerialDisplay.addItem("COM2");
-        jcboSerialDisplay.addItem("COM3");
-        jcboSerialDisplay.addItem("COM4");
-        jcboSerialDisplay.addItem("COM5");
-        jcboSerialDisplay.addItem("COM6");
-        jcboSerialDisplay.addItem("COM7");
-        jcboSerialDisplay.addItem("COM8");        
-        jcboSerialDisplay.addItem("LPT1");
-        jcboSerialDisplay.addItem("/dev/ttyS0");
-        jcboSerialDisplay.addItem("/dev/ttyS1");
-        jcboSerialDisplay.addItem("/dev/ttyS2");
-        jcboSerialDisplay.addItem("/dev/ttyS3");
-        jcboSerialDisplay.addItem("/dev/ttyS4");
-        jcboSerialDisplay.addItem("/dev/ttyS5");
+        setupCommonSerialPortList(jcboSerialDisplay);
 
         
         // Scale
@@ -355,40 +178,12 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         jcboMachineScale.addItem("dialog1");
         jcboMachineScale.addItem("mtind221");        
         jcboMachineScale.addItem("samsungesp");
-
-        jcboSerialScale.addItem("COM1");
-        jcboSerialScale.addItem("COM2");
-        jcboSerialScale.addItem("COM3");
-        jcboSerialScale.addItem("COM4");
-        jcboSerialScale.addItem("COM5");
-        jcboSerialScale.addItem("COM6");
-        jcboSerialScale.addItem("COM7");
-        jcboSerialScale.addItem("COM8");        
-        jcboSerialScale.addItem("/dev/ttyS0");
-        jcboSerialScale.addItem("/dev/ttyS1");
-        jcboSerialScale.addItem("/dev/ttyS2");
-        jcboSerialScale.addItem("/dev/ttyS3");
-        jcboSerialScale.addItem("/dev/ttyS4");
-        jcboSerialScale.addItem("/dev/ttyS5");
+        setupCommonSerialPortList(jcboSerialScale);
 
         // Scanner
         jcboMachineScanner.addItem("Not defined");
         jcboMachineScanner.addItem("scanpal2");
-
-        jcboSerialScanner.addItem("COM1");
-        jcboSerialScanner.addItem("COM2");
-        jcboSerialScanner.addItem("COM3");
-        jcboSerialScanner.addItem("COM4");
-        jcboSerialScanner.addItem("COM5");
-        jcboSerialScanner.addItem("COM6");
-        jcboSerialScanner.addItem("COM7");
-        jcboSerialScanner.addItem("COM8");        
-        jcboSerialScanner.addItem("/dev/ttyS0");
-        jcboSerialScanner.addItem("/dev/ttyS1");
-        jcboSerialScanner.addItem("/dev/ttyS2");
-        jcboSerialScanner.addItem("/dev/ttyS3");
-        jcboSerialScanner.addItem("/dev/ttyS4");
-        jcboSerialScanner.addItem("/dev/ttyS5");
+        setupCommonSerialPortList(jcboSerialScanner);
 
         // Printers
         cboPrinters.addItem("(Default)");
@@ -396,6 +191,46 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         for (String name : printernames) {
             cboPrinters.addItem(name);
         }
+    }
+
+    private void setupCommonSerialPortList(javax.swing.JComboBox jcbo) {
+        jcbo.addItem("COM1");
+        jcbo.addItem("COM2");
+        jcbo.addItem("COM3");
+        jcbo.addItem("COM4");
+        jcbo.addItem("COM5");
+        jcbo.addItem("COM6");
+        jcbo.addItem("COM7");
+        jcbo.addItem("COM8");
+        jcbo.addItem("LPT1");
+        jcbo.addItem("/dev/ttyS0");
+        jcbo.addItem("/dev/ttyS1");
+        jcbo.addItem("/dev/ttyS2");
+        jcbo.addItem("/dev/ttyS3");
+        jcbo.addItem("/dev/ttyS4");
+        jcbo.addItem("/dev/ttyS5");
+    }
+
+    private void setupMachinePrinterOptions(javax.swing.JComboBox jcbo) {
+        // printers
+        jcbo.addItem("Not defined");
+        jcbo.addItem("screen");
+        jcbo.addItem("printer");
+        jcbo.addItem("epson");
+        jcbo.addItem("tmu220");
+        jcbo.addItem("star");
+        jcbo.addItem("ODP1000");
+        jcbo.addItem("ithaca");
+        jcbo.addItem("surepos");
+        jcbo.addItem("plain");
+        jcbo.addItem("javapos");
+    }
+    
+    private void setupMode(javax.swing.JComboBox jcboConn){
+        jcboConn.addItem("file");
+        jcboConn.addItem("serial");
+        jcboConn.addItem("usb");
+        jcboConn.addItem("network");
     }
 
     /**
@@ -1160,13 +995,13 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         jPanel5.setPreferredSize(new java.awt.Dimension(450, 30));
         m_jPrinterParams1.add(jPanel5, "empty");
 
-        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
         jPanel6.setPreferredSize(new java.awt.Dimension(450, 30));
 
         jlblConnPrinter.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jlblConnPrinter.setText(AppLocal.getIntString("label.machinedisplayconn")); // NOI18N
         jlblConnPrinter.setPreferredSize(new java.awt.Dimension(50, 30));
 
+        jcboConnPrinter.setEditable(true);
         jcboConnPrinter.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jcboConnPrinter.setMinimumSize(new java.awt.Dimension(80, 28));
         jcboConnPrinter.setPreferredSize(new java.awt.Dimension(80, 30));
@@ -1262,13 +1097,13 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         jPanel7.setPreferredSize(new java.awt.Dimension(200, 30));
         m_jPrinterParams2.add(jPanel7, "empty");
 
-        jPanel8.setBackground(new java.awt.Color(255, 255, 255));
         jPanel8.setPreferredSize(new java.awt.Dimension(450, 30));
 
         jlblConnPrinter2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jlblConnPrinter2.setText(AppLocal.getIntString("label.machinedisplayconn")); // NOI18N
         jlblConnPrinter2.setPreferredSize(new java.awt.Dimension(50, 30));
 
+        jcboConnPrinter2.setEditable(true);
         jcboConnPrinter2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jcboConnPrinter2.setMinimumSize(new java.awt.Dimension(80, 28));
         jcboConnPrinter2.setPreferredSize(new java.awt.Dimension(80, 30));
@@ -1364,13 +1199,13 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         jPanel9.setPreferredSize(new java.awt.Dimension(200, 30));
         m_jPrinterParams3.add(jPanel9, "empty");
 
-        jPanel10.setBackground(new java.awt.Color(255, 255, 255));
         jPanel10.setPreferredSize(new java.awt.Dimension(450, 30));
 
         jlblConnPrinter3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jlblConnPrinter3.setText(AppLocal.getIntString("label.machinedisplayconn")); // NOI18N
         jlblConnPrinter3.setPreferredSize(new java.awt.Dimension(50, 30));
 
+        jcboConnPrinter3.setEditable(true);
         jcboConnPrinter3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jcboConnPrinter3.setMinimumSize(new java.awt.Dimension(80, 28));
         jcboConnPrinter3.setPreferredSize(new java.awt.Dimension(80, 30));
@@ -1466,13 +1301,13 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         jPanel14.setPreferredSize(new java.awt.Dimension(200, 30));
         m_jPrinterParams4.add(jPanel14, "empty");
 
-        jPanel15.setBackground(new java.awt.Color(255, 255, 255));
         jPanel15.setPreferredSize(new java.awt.Dimension(450, 30));
 
         jlblConnPrinter4.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jlblConnPrinter4.setText(AppLocal.getIntString("label.machinedisplayconn")); // NOI18N
         jlblConnPrinter4.setPreferredSize(new java.awt.Dimension(50, 30));
 
+        jcboConnPrinter4.setEditable(true);
         jcboConnPrinter4.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jcboConnPrinter4.setMinimumSize(new java.awt.Dimension(80, 28));
         jcboConnPrinter4.setPreferredSize(new java.awt.Dimension(80, 30));
@@ -1568,13 +1403,13 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         jPanel20.setPreferredSize(new java.awt.Dimension(200, 30));
         m_jPrinterParams5.add(jPanel20, "empty");
 
-        jPanel21.setBackground(new java.awt.Color(255, 255, 255));
         jPanel21.setPreferredSize(new java.awt.Dimension(450, 30));
 
         jlblConnPrinter5.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jlblConnPrinter5.setText(AppLocal.getIntString("label.machinedisplayconn")); // NOI18N
         jlblConnPrinter5.setPreferredSize(new java.awt.Dimension(50, 30));
 
+        jcboConnPrinter5.setEditable(true);
         jcboConnPrinter5.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jcboConnPrinter5.setMinimumSize(new java.awt.Dimension(80, 28));
         jcboConnPrinter5.setPreferredSize(new java.awt.Dimension(80, 30));
@@ -1670,13 +1505,13 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         jPanel23.setPreferredSize(new java.awt.Dimension(200, 30));
         m_jPrinterParams6.add(jPanel23, "empty");
 
-        jPanel25.setBackground(new java.awt.Color(255, 255, 255));
         jPanel25.setPreferredSize(new java.awt.Dimension(450, 30));
 
         jlblConnPrinter6.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jlblConnPrinter6.setText(AppLocal.getIntString("label.machinedisplayconn")); // NOI18N
         jlblConnPrinter6.setPreferredSize(new java.awt.Dimension(50, 30));
 
+        jcboConnPrinter6.setEditable(true);
         jcboConnPrinter6.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jcboConnPrinter6.setPreferredSize(new java.awt.Dimension(80, 30));
         jcboConnPrinter6.addActionListener(new java.awt.event.ActionListener() {
@@ -1771,7 +1606,6 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         jPanel16.setPreferredSize(new java.awt.Dimension(400, 30));
         m_jScaleParams.add(jPanel16, "empty");
 
-        jPanel17.setBackground(new java.awt.Color(255, 255, 255));
         jPanel17.setPreferredSize(new java.awt.Dimension(400, 30));
 
         jlblPrinterPort4.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1813,7 +1647,6 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         jPanel24.setPreferredSize(new java.awt.Dimension(400, 30));
         m_jScannerParams.add(jPanel24, "empty");
 
-        jPanel19.setBackground(new java.awt.Color(255, 255, 255));
         jPanel19.setPreferredSize(new java.awt.Dimension(400, 30));
 
         jcboSerialScanner.setEditable(true);

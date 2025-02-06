@@ -623,8 +623,8 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
 
         m_jPrintCashPreview.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         m_jPrintCashPreview.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/printer.png"))); // NOI18N
-        m_jPrintCashPreview.setText(AppLocal.getIntString("cboption.preview")); // NOI18N
-        m_jPrintCashPreview.setToolTipText(AppLocal.getIntString("cboption.preview")); // NOI18N
+        m_jPrintCashPreview.setText(AppLocal.getIntString("cboption.preview.text")); // NOI18N
+        m_jPrintCashPreview.setToolTipText(AppLocal.getIntString("tooltip.btn.partialcash")); // NOI18N
         m_jPrintCashPreview.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         m_jPrintCashPreview.setIconTextGap(2);
         m_jPrintCashPreview.setMaximumSize(new java.awt.Dimension(85, 33));
@@ -639,7 +639,7 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
 
         m_jPrintCash1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         m_jPrintCash1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/printer.png"))); // NOI18N
-        m_jPrintCash1.setText(AppLocal.getIntString("button.printcash")); // NOI18N
+        m_jPrintCash1.setText(AppLocal.getIntString("cboption.preview.text")); // NOI18N
         m_jPrintCash1.setToolTipText(bundle.getString("cboption.reprint")); // NOI18N
         m_jPrintCash1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         m_jPrintCash1.setIconTextGap(2);
