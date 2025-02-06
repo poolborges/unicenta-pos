@@ -39,9 +39,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <artifact.build.scmbuildtime>${git.buildDate}</artifact.build.scmbuildtime>
         
         
-        <mysql.version>8.0.29</mysql.version>
+        <mysql.version>8.0.32</mysql.version>
         <jasperreports.version>6.20.0</jasperreports.version>
-        <flatlaf.version>2.0.2</flatlaf.version>
+        <flatlaf.version>2.6</flatlaf.version>
     </properties>
 
     <dependencies>
@@ -66,12 +66,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <dependency> 
             <groupId>commons-codec</groupId>  
             <artifactId>commons-codec</artifactId>  
-            <version>1.15</version> 
+            <version>1.17.1</version> 
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
+            <version>3.15.0</version>
         </dependency>  
         
 
@@ -124,13 +124,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>2.7.1</version>
+            <version>2.7.2</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
-            <version>3.1.0</version>
+            <version>3.1.4</version>
             <scope>runtime</scope>
         </dependency>
         
@@ -157,7 +157,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <dependency>
             <groupId>com.fifesoft</groupId>
             <artifactId>rsyntaxtextarea</artifactId>
-            <version>3.1.6</version>
+            <version>3.2.0</version>
         </dependency>
 
         <!-- Swing Date Picker 
@@ -226,14 +226,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         <dependency> 
             <groupId>org.netbeans.external</groupId>  
-            <artifactId>AbsoluteLayout</artifactId>  
-            <version>${netbeans.version}</version> 
+            <artifactId>AbsoluteLayout</artifactId>
         </dependency> 
         <!-- Netbeans Module - Swing Validation: On NBM Need extra lib -->
         <dependency>
             <groupId>org.netbeans.modules</groupId>
             <artifactId>org-netbeans-modules-swing-validation</artifactId>
-            <version>${netbeans.version}</version>
         </dependency>
     </dependencies>  
     <build>

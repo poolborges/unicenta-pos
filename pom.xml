@@ -199,6 +199,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <scope>test</scope>
             </dependency>
             
+            <!-- Netbeans Module - Layput -->
+            <dependency> 
+                <groupId>org.netbeans.external</groupId>  
+                <artifactId>AbsoluteLayout</artifactId>  
+                <version>${netbeans.version}</version> 
+            </dependency> 
+            <!-- Netbeans Module - Swing Validation: On NBM Need extra lib -->
+            <dependency>
+                <groupId>org.netbeans.modules</groupId>
+                <artifactId>org-netbeans-modules-swing-validation</artifactId>
+                <version>${netbeans.version}</version>
+            </dependency>
+            
             <!-- JAXB version:2.3.3 Provide javax. packages-->
             <dependency>
                 <groupId>jakarta.xml.bind</groupId>
@@ -222,20 +235,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
-                <version>5.9.2</version>
+                <version>5.10.3</version>
                 <scope>test</scope>
             </dependency>
             
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
-                <version>5.9.2</version>
+                <version>5.10.3</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-params</artifactId>
-                <version>5.9.2</version>
+                <version>5.10.3</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -248,7 +261,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <plugin>   
                     <groupId>org.apache.netbeans.utilities</groupId>
                     <artifactId>nbm-maven-plugin</artifactId>
-                    <version>4.7</version>
+                    <version>4.8</version>
                     <extensions>true</extensions>
                     <configuration>   
                         <brandingToken>${brandingToken}</brandingToken>
@@ -268,17 +281,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <plugin> 
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.1.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.2.2</version>
+                    <version>3.4.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>3.0.0-M7</version>
                     <configuration>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <tagNameFormat>v@{project.version}</tagNameFormat>
@@ -287,7 +300,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.6.1</version>
                 </plugin>
                 <!-- Test Coverage reports -->
                 <plugin>
@@ -324,7 +337,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.10.1</version>
+                    <version>3.13.0</version>
                     <configuration>
                         <showWarnings>true</showWarnings>
                         <showDeprecation>true</showDeprecation>
@@ -338,13 +351,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>2.5.2</version>
+                    <version>3.1.2</version>
                 </plugin>
                 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.9.1</version>
+                    <version>3.12.1</version>
                 </plugin>
                 
                 <!-- License -->
@@ -603,7 +616,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <version>3.0.0-M7</version>
+                        <version>3.3.0</version>
                         <configuration>
                             <reuseForks>true</reuseForks>
                             <!-- Sets the VM argument line used when unit tests are run. -->
@@ -614,7 +627,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>3.0.0-M5</version>
+                        <version>3.2.5</version>
                         <configuration>
                             <reuseForks>true</reuseForks>
                             <argLine>${failsafe.jacoco.args}</argLine>
@@ -813,7 +826,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-project-info-reports-plugin</artifactId>
-                        <version>3.1.1</version>
+                        <version>3.4.2</version>
                         <reportSets>
                             <reportSet>
                                 <reports>
@@ -834,7 +847,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-jxr-plugin</artifactId>
-                        <version>3.0.0</version>
+                        <version>3.3.0</version>
                         <reportSets>
                             <reportSet>
                                 <id>aggregate</id>
@@ -886,7 +899,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-report-plugin</artifactId>
-                        <version>3.0.0-M7</version>
+                        <version>3.0.0-M9</version>
                         <configuration>
                             <aggregate>true</aggregate>
                         </configuration>
@@ -903,7 +916,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.2.0</version>
+                        <version>3.6.3</version>
                         <configuration>
                     
                             <charset>UTF-8</charset>
