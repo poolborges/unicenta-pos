@@ -54,7 +54,7 @@ public class DeviceTicket {
      * Creates a new instance of DeviceTicket
      */
     public DeviceTicket() {
-        
+
         n_devicePrinterPanel = new DevicePrinterPanel();
         m_deviceFiscal = new DeviceFiscalPrinterNull();
         m_devicedisplay = new DeviceDisplayNull();
@@ -249,7 +249,7 @@ public class DeviceTicket {
                     break;
             }
         } catch (TicketPrinterException e) {
-            logger.log(Level.WARNING, "Exception init device display "+deviceUri, e);
+            logger.log(Level.WARNING, "Exception init device display " + deviceUri, e);
             m_devicedisplay = new DeviceDisplayNull(e.getMessage());
         }
     }
@@ -285,6 +285,11 @@ public class DeviceTicket {
                         pw = new PrinterWritterFile(port);
                         m_apool.put(skey, pw);
                         break;
+                    case "usb":
+                        //pw = new PrinterWritterRaw(port);
+                        throw new TicketPrinterException("Not supported USB DEVICES: with connection string: " + port);
+                        //this.m_apool.put(skey, pw);
+                        //break;
                     case "network":
                         String[] str = port.split("\\:");
                         String hostAddr = str[0];
@@ -329,7 +334,7 @@ public class DeviceTicket {
         DevicePrinter printer = m_deviceprinters.get(key);
         return printer == null ? m_nullprinter : printer;
     }
-    
+
     /**
      *
      * @return Device printer list

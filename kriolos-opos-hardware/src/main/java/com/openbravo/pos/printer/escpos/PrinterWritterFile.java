@@ -16,9 +16,11 @@
  */
 package com.openbravo.pos.printer.escpos;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,11 +29,11 @@ import java.util.logging.Logger;
  * @author JG uniCenta
  */
 public class PrinterWritterFile extends PrinterWritter {
-    
+
     private static final Logger LOGGER = Logger.getLogger(PrinterWritterFile.class.getName());
-    private String m_sFilePrinter;
+    private final String m_sFilePrinter;
     private OutputStream m_out;
-    
+
     /**
      *
      * @param sFilePrinter
@@ -47,45 +49,50 @@ public class PrinterWritterFile extends PrinterWritter {
      */
     @Override
     protected void internalWrite(byte[] data) {
-        try {  
+
+        try {
+            File file = new File(m_sFilePrinter);
+            if (!file.exists()) {
+                Files.createFile(file.toPath());
+            }
             if (m_out == null) {
                 m_out = new FileOutputStream(m_sFilePrinter);  // No poner append = true.
             }
             m_out.write(data);
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Exception on write", e);
-        }    
+            LOGGER.log(Level.SEVERE, "Exception on write to file: "+m_sFilePrinter, e);
+        }
     }
-    
+
     /**
      *
      */
     @Override
     protected void internalFlush() {
-        try {  
+        try {
             if (m_out != null) {
                 m_out.flush();
                 m_out.close();
                 m_out = null;
             }
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Exception on flush: ", e);
-        }    
+            LOGGER.log(Level.SEVERE, "Exception on flush to file: "+m_sFilePrinter, e);
+        }
     }
-    
+
     /**
      *
      */
     @Override
     protected void internalClose() {
-        try {  
+        try {
             if (m_out != null) {
                 m_out.flush();
                 m_out.close();
                 m_out = null;
             }
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Exception on close: ", e);
-        }    
-    }    
+            LOGGER.log(Level.SEVERE, "Exception on close file: "+m_sFilePrinter, e);
+        }
+    }
 }

@@ -24,18 +24,23 @@ class JTicket extends javax.swing.JPanel {
     
     private static final int H_GAP = 8;
     private static final int V_GAP = 8;
-    private static final int COLUMNS = 46;
-    private static final int LINEWIDTH = COLUMNS * 7;    
+    private final int COLUMNS;// = 46;
+    private final int LINEWIDTH;// = COLUMNS * 7;    
     
     private final BasicTicket basict;
     private final Map desktophints;
    
     /** Creates new form JTicket */
-    public JTicket(BasicTicket t) {
-        
+    public JTicket(BasicTicket t, int columns) {
+        this.COLUMNS = columns;
+        this.LINEWIDTH = COLUMNS * 7;
         basict = t;
         desktophints = (Map) Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
         initComponents();
+    }
+    
+    public JTicket(BasicTicket t) {
+        this(t, 47);
     }
     
     @Override
