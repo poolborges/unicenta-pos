@@ -71,8 +71,8 @@ public class JavaPrinterTest {
             throw new IllegalStateException("Printer not found");
         }
         
-        try (FileInputStream fis = new FileInputStream("C:/Users/DEV/Desktop/Recibo.pdf")) {
-            Doc pdfDoc = new SimpleDoc(fis, DocFlavor.INPUT_STREAM.AUTOSENSE, null);
+        try (FileInputStream fis = new FileInputStream("./README.adoc")) {
+            Doc pdfDoc = new SimpleDoc(fis, DocFlavor.INPUT_STREAM.TEXT_PLAIN_UTF_8, null);
             DocPrintJob printJob = myService.createPrintJob();
             printJob.print(pdfDoc, new HashPrintRequestAttributeSet());
         }
