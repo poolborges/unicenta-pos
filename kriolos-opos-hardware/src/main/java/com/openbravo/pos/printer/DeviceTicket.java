@@ -29,6 +29,7 @@ import com.openbravo.pos.printer.screen.DevicePrinterPanel;
 import com.openbravo.pos.util.StringParser;
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,6 +115,8 @@ public class DeviceTicket {
         int iPrinterIndex = 1;
         String sPrinterIndex = Integer.toString(iPrinterIndex);
         String sprinter = props.getProperty("machine.printer");
+        
+        List<String> serialNamesAlternative = Arrays.asList( "serial", "rxtx", "file");
 
         while (sprinter != null && !"".equals(sprinter)) {
 
@@ -121,10 +124,12 @@ public class DeviceTicket {
             String sPrinterType = sp.nextToken(':');
             String sPrinterParam1 = sp.nextToken(',');
             String sPrinterParam2 = sp.nextToken(',');
+            
+            
+            logger.log(Level.WARNING, "Printer device: "+sprinter);
 
-            if ("serial".equals(sPrinterType)
-                    || "rxtx".equals(sPrinterType)
-                    || "file".equals(sPrinterType)) {
+            //Special Case for Epson ( [serial|rxtx|file]:param1,param2
+            if (serialNamesAlternative.contains(sPrinterType)) {
                 sPrinterParam2 = sPrinterParam1;
                 sPrinterParam1 = sPrinterType;
                 sPrinterType = "epson";
@@ -253,6 +258,16 @@ public class DeviceTicket {
             m_devicedisplay = new DeviceDisplayNull(e.getMessage());
         }
     }
+    
+    public static String[] getDisplayDeviceTypes(){
+        String[] devices = {"screen", "window", "dual", "epson", "surepos", "ld200", "javapos", "led8"};
+        return devices;
+    }
+    
+    public static String[] getPrinterDeviceTypes(){
+        String[] devices = {"screen", "window", "dual", "epson", "surepos", "ld200", "javapos", "led8"};
+        return devices;
+    }
 
     private void addPrinter(String sPrinterIndex, DevicePrinter p) {
         m_deviceprinters.put(sPrinterIndex, p);
@@ -286,7 +301,7 @@ public class DeviceTicket {
                         m_apool.put(skey, pw);
                         break;
                     case "usb":
-                        //pw = new PrinterWritterRaw(port);
+                        pw = new PrinterWritterRaw(port);
                         throw new TicketPrinterException("Not supported USB DEVICES: with connection string: " + port);
                         //this.m_apool.put(skey, pw);
                         //break;

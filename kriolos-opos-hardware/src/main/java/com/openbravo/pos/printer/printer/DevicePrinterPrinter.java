@@ -54,12 +54,9 @@ public class DevicePrinterPrinter implements DevicePrinter {
     private static final Logger logger = Logger.getLogger("com.openbravo.pos.printer.printer.DevicePrinterPrinter");
 
     private Component parent;
-    /*name of a printer*/
-    private String m_sName;
-    /*a ticket to print*/
+    private String printerName;
 //    private BasicTicketForPrinter m_ticketcurrent;
     private BasicTicket m_ticketcurrent;
-    /*system printer*/
     private PrintService printservice;
 
 //    // For Page Size 72mm x 200mm && MediaSizeName A4.
@@ -99,7 +96,7 @@ public class DevicePrinterPrinter implements DevicePrinter {
     public DevicePrinterPrinter(Component parent, String printername, int imageable_x, int imageable_y, int imageable_width, int imageable_height, String mediasizename) {
 
         this.parent = parent;
-        m_sName = "Printer"; // "AppLocal.getIntString("printer.screen");
+        this.printerName = printername; //"Printer"; // "AppLocal.getIntString("printer.screen");
         m_ticketcurrent = null;
         printservice = ReportUtils.getPrintService(printername);
 
@@ -113,11 +110,11 @@ public class DevicePrinterPrinter implements DevicePrinter {
     /**
      * Getter that returns the name of a printer
      *
-     * @return m_sName a name of a printer
+     * @return name of a printer
      */
     @Override
     public String getPrinterName() {
-        return m_sName;
+        return this.printerName;
     }
 
     /**
@@ -209,6 +206,23 @@ public class DevicePrinterPrinter implements DevicePrinter {
     public void endLine() {
         m_ticketcurrent.endLine();
     }
+    
+    private PrintService selectPrintService(){
+        PrintService prtservice = null;
+        String[] printers = ReportUtils.getPrintNames();
+        if (printers.length == 0) {
+            logger.warning("No printers was found");
+            prtservice = null;
+        } else {
+            SelectPrinter selectprinter = SelectPrinter.getSelectPrinter(parent, printers);
+            selectprinter.setVisible(true);
+            if (selectprinter.isOK()) {
+                prtservice = ReportUtils.getPrintService(selectprinter.getPrintService());
+            }
+        }
+
+        return prtservice;
+    }
 
     /**
      * Method that is responsible for ending and printing a ticket<br>
@@ -222,25 +236,15 @@ public class DevicePrinterPrinter implements DevicePrinter {
 
             PrintService ps;
 
-            if (printservice == null) {
-                String[] printers = ReportUtils.getPrintNames();
-                if (printers.length == 0) {
-                    logger.warning("No printers was found");
-                    ps = null;
-                } else {
-                    SelectPrinter selectprinter = SelectPrinter.getSelectPrinter(parent, printers);
-                    selectprinter.setVisible(true);
-                    if (selectprinter.isOK()) {
-                        ps = ReportUtils.getPrintService(selectprinter.getPrintService());
-                    } else {
-                        ps = null;
-                    }
-                }
-            } else {
+            if (printservice != null) {
                 ps = printservice;
+            } else {
+                ps = selectPrintService();
             }
-
+            
             if (ps != null)  {
+                
+                logger.log(Level.WARNING, "Printing with Printer: "+this.printerName);
 
                 PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
                 aset.add(OrientationRequested.PORTRAIT);
@@ -254,7 +258,7 @@ public class DevicePrinterPrinter implements DevicePrinter {
             }
 
         } catch (PrintException ex) {
-            logger.log(Level.WARNING, "Printer error", ex);
+            logger.log(Level.WARNING, "Exception printing with printer: "+this.printerName, ex);
             JMessageDialog.showMessage(parent, new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.printererror"), ex));
         }
 

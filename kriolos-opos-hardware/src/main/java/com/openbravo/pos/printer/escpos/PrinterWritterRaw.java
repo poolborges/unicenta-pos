@@ -39,32 +39,34 @@ public final class PrinterWritterRaw extends PrinterWritter {
     private static final Logger LOGGER = Logger.getLogger(PrinterWritterRaw.class.getName());
     
     private byte[] m_printData;
-    private PrintService m_printService;
+    private PrintService printService;
     private final DocFlavor DOC_Flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
-    private PrinterBuffer m_buff = null;
+    private PrinterBuffer printerBuffer = null;
     private final static String DOC_NAME = "Ticket";
+    private final String printerName;
 
 
-    public PrinterWritterRaw(String sRawPrinter) {
-        m_printData = null;
-        m_buff = new PrinterBuffer();
+    public PrinterWritterRaw(String printerName) {
+        this.printerName = printerName;
+        this.m_printData = null;
+        this.printerBuffer = new PrinterBuffer();
 
         init();
 
         PrintService[] services = PrintServiceLookup.lookupPrintServices(DOC_Flavor, null);
         for (PrintService ps : services) {
-            if (ps.getName().contains(sRawPrinter)) {
+            if (ps.getName().contains(printerName)) {
                 // if we have found the prineter the start our print routine
-                m_printService = ps;
+                printService = ps;
                 write(ESCPOS.INIT);
-                return;
+                break;
             }
         }
     }
 
     public void init() {
         byte[] inicode = concatByteArrays(ESCPOS.SELECT_PRINTER, new UnicodeTranslatorInt().getCodeTable());
-        m_printData = concatByteArrays(inicode, m_printData);
+        this.m_printData = concatByteArrays(inicode, this.m_printData);
     }
 
     @Override
@@ -74,7 +76,7 @@ public final class PrinterWritterRaw extends PrinterWritter {
 
     @Override
     public void write(String sValue) {
-        m_buff.putData(sValue.getBytes());
+        printerBuffer.putData(sValue.getBytes());
     }
 
     @Override
@@ -109,9 +111,9 @@ public final class PrinterWritterRaw extends PrinterWritter {
     }
 
     private void printJob() {
-        if (null != m_printService) {
+        if (null != printService) {
             try {
-                DocPrintJob pj = m_printService.createPrintJob();
+                DocPrintJob pj = printService.createPrintJob();
                 DocAttributeSet docattributes = new HashDocAttributeSet();
 
                 docattributes.add(new DocumentName(DOC_NAME, Locale.getDefault()));
