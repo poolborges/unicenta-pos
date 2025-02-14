@@ -41,6 +41,7 @@ import com.openbravo.pos.payment.JPaymentSelectRefund;
 import com.openbravo.pos.printer.TicketParser;
 import com.openbravo.pos.printer.TicketPrinterException;
 import com.openbravo.pos.printer.screen.DeviceDisplayAdvance;
+import com.openbravo.pos.reports.JPanelReport;
 import com.openbravo.pos.sales.restaurant.RestaurantDBUtils;
 import com.openbravo.pos.scale.ScaleException;
 import com.openbravo.pos.scripting.ScriptEngine;
@@ -1889,18 +1890,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
         try {
 
-            JasperReport jr;
-
-            InputStream in = getClass().getResourceAsStream(resourcefile + ".ser");
-            if (in == null) {
-                // read and compile the report
-                JasperDesign jd = JRXmlLoader.load(getClass().getResourceAsStream(resourcefile + ".jrxml"));
-                jr = JasperCompileManager.compileReport(jd);
-            } else {
-                try (ObjectInputStream oin = new ObjectInputStream(in)) {
-                    jr = (JasperReport) oin.readObject();
-                }
-            }
+            JasperReport jr = JPanelReport.createJasperReport(resourcefile);
 
             Map reportparams = new HashMap();
 
@@ -1921,9 +1911,9 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
             JRPrinterAWT300.printPages(jp, 0, jp.getPages().size() - 1, service);
 
-        } catch (JRException | IOException | ClassNotFoundException ex) {
+        } catch (JRException ex) {
             LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
-            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadreport"), ex);
+            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadreport") +"<br>"+ resourcefile, ex);
             msg.show(this);
         }
     }

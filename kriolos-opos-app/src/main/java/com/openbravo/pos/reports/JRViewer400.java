@@ -493,7 +493,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
      *
      */
     public void gotoHyperlink(JRPrintHyperlink hyperlink) {
-        switch (hyperlink.getHyperlinkTypeValue()) {
+        switch (hyperlink.getHyperlinkType()) {
             case REFERENCE: {
                 if (isOnlyHyperlinkListener()) {
                     System.out.println("Hyperlink reference : " + hyperlink.getHyperlinkReference());
@@ -1588,7 +1588,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
                     hyperlink = (JRPrintHyperlink) element;
                 }
                 boolean hasHyperlink = !hasImageMap
-                        && hyperlink != null && hyperlink.getHyperlinkTypeValue() != HyperlinkTypeEnum.NONE;
+                        && hyperlink != null && hyperlink.getHyperlinkType() != HyperlinkTypeEnum.NONE;
                 boolean hasTooltip = hyperlink != null && hyperlink.getHyperlinkTooltip() != null;
 
                 if (hasHyperlink || hasImageMap || hasTooltip) {
@@ -1676,7 +1676,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
         public void mouseMoved(MouseEvent e) {
             JRPrintImageAreaHyperlink imageArea = getImageMapArea(e);
             if (imageArea != null
-                    && imageArea.getHyperlink().getHyperlinkTypeValue() != HyperlinkTypeEnum.NONE) {
+                    && imageArea.getHyperlink().getHyperlinkType() != HyperlinkTypeEnum.NONE) {
                 e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             } else {
                 e.getComponent().setCursor(Cursor.getDefaultCursor());
@@ -1735,7 +1735,7 @@ public final class JRViewer400 extends javax.swing.JPanel implements JRHyperlink
 
     protected String getFallbackTooltip(JRPrintHyperlink hyperlink) {
         String toolTip = null;
-        switch (hyperlink.getHyperlinkTypeValue()) {
+        switch (hyperlink.getHyperlinkType()) {
             case REFERENCE: {
                 toolTip = hyperlink.getHyperlinkReference();
                 break;

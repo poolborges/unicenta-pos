@@ -40,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         
         <mysql.version>9.2.0</mysql.version>
-        <jasperreports.version>6.20.0</jasperreports.version>
+        <jasperreports.version>7.0.1</jasperreports.version>
         <flatlaf.version>2.6</flatlaf.version>
     </properties>
 
@@ -151,6 +151,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <artifactId>jasperreports-fonts</artifactId>  
             <version>${jasperreports.version}</version> 
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-charts</artifactId>
+            <version>${jasperreports.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-jdt</artifactId>
+            <version>${jasperreports.version}</version>
         </dependency>
         <dependency> <!-- Used by JasperReport to generate xsl files -->
             <groupId>org.apache.poi</groupId>

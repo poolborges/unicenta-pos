@@ -147,7 +147,7 @@ public class JRPrinterAWT300 implements Printable {
 
         printJob.setJobName(AppLocal.APP_NAME+" Printer - " + jasperPrint.getName());
 
-        switch (jasperPrint.getOrientationValue()) {
+        switch (jasperPrint.getOrientation()) {
             case LANDSCAPE: {
                 pageFormat.setOrientation(PageFormat.LANDSCAPE);
                 paper.setSize(jasperPrint.getPageHeight(), jasperPrint.getPageWidth());
