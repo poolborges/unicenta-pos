@@ -21,9 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <groupId>io.github.kriolos.opos</groupId>
         <artifactId>kriolos-opos-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../</relativePath> 
-    </parent>  
-    <groupId>io.github.kriolos.opos</groupId>  
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <artifactId>kriolos-opos-app</artifactId> 
     <packaging>jar</packaging>
     <name>Kriolos.POS.App</name> 
@@ -37,7 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <artifact.build.scmnumber>${git.buildNumber}</artifact.build.scmnumber>
         <artifact.build.scmrevision>${git.revision}</artifact.build.scmrevision>
         <artifact.build.scmbuildtime>${git.buildDate}</artifact.build.scmbuildtime>
-        
+
         
         <mysql.version>8.0.32</mysql.version>
         <jasperreports.version>6.20.0</jasperreports.version>
@@ -131,6 +131,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
             <version>3.1.4</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.2.224</version>
             <scope>runtime</scope>
         </dependency>
         
@@ -257,8 +263,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <!-- ValidationAPI and NBM WRAPPER  -->
                     <dependency>
                         <groupId>org.netbeans.external</groupId> 
-                        <artifactId>ValidationAPI</artifactId> 
-                        <version>${netbeans.version}</version>
+                        <artifactId>ValidationAPI</artifactId>
+                        <version>RELEASE180</version>
                         <scope>compile</scope>
                     </dependency>
        
@@ -286,6 +292,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <id>run-JFrmConfig</id>
             <properties>
                 <exec.mainClass>com.openbravo.pos.config.JFrmConfig</exec.mainClass>
+                <!--
+                <exec.mainClass>com.openbravo.pos.sales.JResetPickupID</exec.mainClass>
+                <exec.mainClass>com.unicenta.pos.transfer.TransferPanel</exec.mainClass>
+                -->
             </properties>
         </profile>
         
@@ -303,14 +313,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <plugin>
                         <groupId>org.liquibase</groupId>
                         <artifactId>liquibase-maven-plugin</artifactId>
-                        <version>${liquibase.version}</version>
                         <configuration>                  
                             <propertyFile>src/main/resources/pos_liquidbase/liquibase.properties</propertyFile>
                         </configuration> 
                         <dependencies>
                             <dependency> 
-                                <groupId>mysql</groupId>  
-                                <artifactId>mysql-connector-java</artifactId>  
+                                <groupId>com.mysql</groupId>
+                                <artifactId>mysql-connector-j</artifactId>
                                 <version>${mysql.version}</version> 
                             </dependency> 
                         </dependencies>               
