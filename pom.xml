@@ -29,10 +29,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         
-        <netbeans.version>RELEASE140</netbeans.version>
+        <netbeans.version>RELEASE240</netbeans.version>
         <brandingToken>kriolos_obiz</brandingToken>
         
         <project.github-url>http://kriolos.github.io/kriolos-opos</project.github-url>
@@ -62,7 +62,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <failIfNoTests>false</failIfNoTests>
         
         <!-- Kotlin -->
-        <kotlin.version>1.6.10</kotlin.version>
+        <kotlin.version>1.7.22</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         
         <!-- dependencies/library version --> 
@@ -231,6 +231,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <version>${lombok.version}</version>
                 <scope>provided</scope>
             </dependency>
+
+            <!-- ValidationAPI and NBM WRAPPER  -->
+            <dependency>
+                <groupId>org.netbeans.external</groupId>
+                <artifactId>ValidationAPI</artifactId>
+                <version>RELEASE180</version>
+            </dependency>
             
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
@@ -238,7 +245,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <version>5.10.3</version>
                 <scope>test</scope>
             </dependency>
-            
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
@@ -380,6 +386,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <exclude>**/src/test/resources/**</exclude>
                         </excludes>
                     </configuration>
+                </plugin>
+
+
+                <plugin>
+                    <groupId>org.liquibase</groupId>
+                    <artifactId>liquibase-maven-plugin</artifactId>
+                    <version>${liquibase.version}</version>
                 </plugin>
                 
             </plugins>
