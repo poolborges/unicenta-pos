@@ -86,9 +86,9 @@ public class JMessageDialog extends javax.swing.JDialog {
         myMsg.getRootPane().setDefaultButton(myMsg.jcmdOK);
 
         myMsg.jlblIcon.setIcon(inf.getSignalWordIcon());
-        myMsg.jlblIcon.setText(inf.getCode() +" "+ inf.getErrorCodeMsg());
+        myMsg.jlblIcon.setText(inf.getCode() + " " + inf.getErrorCodeMsg());
         myMsg.jlblMessage.setText(inf.getMessage());
-        
+
         myMsg.jcmdCancel.setEnabled(showConfirm);
         myMsg.jcmdCancel.setVisible(showConfirm);
 
@@ -238,15 +238,17 @@ public class JMessageDialog extends javax.swing.JDialog {
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.SOUTH);
 
-        setSize(new java.awt.Dimension(482, 305));
+        setSize(new java.awt.Dimension(482, 345));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jcmdMoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcmdMoreActionPerformed
 
-        jcmdMore.setEnabled(false);
-        jscrException.setVisible(true);
-        setSize(getWidth(), 310);
+        if (jscrException.isVisible()) {
+            jscrException.setVisible(false);
+        } else {
+            jscrException.setVisible(true);
+        }
         validate();
 
     }//GEN-LAST:event_jcmdMoreActionPerformed

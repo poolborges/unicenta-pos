@@ -252,8 +252,7 @@ public abstract class JPanelReport extends JPanel implements JPanelView, BeanFac
 
         } catch (MissingResourceException | JRException |BasicException ex) {
             LOGGER.log(Level.SEVERE, "Exception lauch report file: "+reportFilename, ex);
-            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadreportdata") + "<br>"+reportFilename, ex);
-            msg.show(this);
+            MessageInf.showDialogWarn(this, "<html>"+AppLocal.getIntString("message.cannotloadreportdata") + "<br>"+reportFilename, ex);
         } finally {
             m_App.waitCursorEnd();
         }

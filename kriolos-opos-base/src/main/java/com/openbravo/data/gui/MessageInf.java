@@ -111,6 +111,14 @@ public class MessageInf {
     public void show(Component parent) {
         JMessageDialog.showMessage(parent, this);
     }
+    
+    public static void showDialog(Component parent, int infCode, String infMessage, Object infObject){
+        new MessageInf(infCode, infMessage, infObject).show(parent);
+    }
+    
+    public static void showDialogWarn(Component parent, String infMessage, Object infObject){
+        new MessageInf(MessageInf.SGN_WARNING, infMessage, infObject).show(parent);
+    }
 
     /**
      *
