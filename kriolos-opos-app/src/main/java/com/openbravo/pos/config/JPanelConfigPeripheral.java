@@ -158,6 +158,8 @@ public class JPanelConfigPeripheral extends javax.swing.JPanel implements PanelC
         jcboMachineDisplay.addItem("Not defined");
         jcboMachineDisplay.addItem("screen");
         jcboMachineDisplay.addItem("window");
+        jcboMachineDisplay.addItem("dual");
+        jcboMachineDisplay.addItem("led");
         jcboMachineDisplay.addItem("javapos");
         jcboMachineDisplay.addItem("epson");
         jcboMachineDisplay.addItem("ld200");

@@ -1813,6 +1813,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         LOGGER.log(System.Logger.Level.INFO, "Reading resource id: " + sresourcename);
         String sresource = dlSystem.getResourceAsXML(sresourcename);
         if (sresource == null) {
+            LOGGER.log(System.Logger.Level.WARNING, "NOTFOUND content for resource id: " + sresourcename);
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotprintticket"));
             msg.show(JPanelTicket.this);
         } else {
@@ -1824,6 +1825,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     ticket.setPickupId(0);
                 }
             }
+   
             try {
                 ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
 
@@ -1840,13 +1842,14 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 script.put("place", ticketext);
                 script.put("warranty", warrantyPrint);
                 script.put("pickupid", getPickupString(ticket));
-
+                
+                //TODO - MUST present to the progress o printing processing
                 refreshTicket();
-
-                m_TTP.printTicket(script.eval(sresource).toString(), ticket);
-
+                
+                String processTemaplated = script.eval(sresource).toString();
+                m_TTP.printTicket(processTemaplated, ticket);
             } catch (ScriptException | TicketPrinterException ex) {
-                LOGGER.log(System.Logger.Level.WARNING, "Exception on processing resource id: " + sresourcename, ex);
+                LOGGER.log(System.Logger.Level.WARNING, "Exception on processing/Print resource id: " + sresourcename, ex);
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotprintticket"), ex);
                 msg.show(JPanelTicket.this);
             }
