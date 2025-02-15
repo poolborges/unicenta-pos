@@ -183,12 +183,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <version>1.3.4</version> 
         </dependency> -->
      
-        <!-- Kotlin -->
+        <!-- Kotlin
         <dependency> 
             <groupId>org.jetbrains.kotlin</groupId>  
             <artifactId>kotlin-stdlib</artifactId> 
         </dependency>
-        
+         -->
         <!-- flatlaf - Swing LaF -->
         <dependency>
             <groupId>com.formdev</groupId>
@@ -283,6 +283,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.openbravo.pos.forms.StartPOS</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>   
     </build>  
