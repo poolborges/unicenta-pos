@@ -3096,92 +3096,35 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private javax.swing.JButton m_jbtnScale;
     // End of variables declaration//GEN-END:variables
 
-    /* Remote Orders Display
-    We only know about KriolOS POS orders and won't try and handle any 
-    that are injected from an external source
-     */
+    /* Remote Orders Display - Utils methods */
     public void remoteOrderDisplay() {
-        remoteOrderDisplay(remoteOrderId(), 1, true);
+        getRemoteOrderDisplay().remoteOrderDisplay(1, true);
     }
 
-    public void remoteOrderDisplay(String id) {
-        remoteOrderDisplay(id, 1, true);
+    /* Remote Orders Display - Utils methods */
+    public void remoteOrderDisplay(String orderId) {
+        remoteOrderDisplay(orderId, 1, true);
     }
 
-    public void remoteOrderDisplay(Integer display) {
-        remoteOrderDisplay(remoteOrderId(), display, false);
+    /* Remote Orders Display - Utils methods */
+    public void remoteOrderDisplay(int display) {
+        getRemoteOrderDisplay().remoteOrderDisplay(display, false);
     }
 
+    /* Remote Orders Display - Utils methods */
     public String remoteOrderId() {
-
-        if ((m_oTicket.getCustomer() != null)) {
-            return m_oTicket.getCustomer().getName();
-        } else if (m_oTicketExt != null) {
-            return m_oTicketExt;
-        } else {
-            if (m_oTicket.getPickupId() == 0) {
-                try {
-                    m_oTicket.setPickupId(dlSales.getNextPickupIndex());
-                } catch (BasicException ex) {
-                    LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
-                    m_oTicket.setPickupId(0);
-                }
-            }
-
-            return getPickupString(m_oTicket);
-        }
+        return getRemoteOrderDisplay().remoteOrderId();
     }
 
-    public void remoteOrderDisplay(String id, Integer display, boolean primary) {
-
-        try {
-            dlSystem.deleteOrder(id);
-        } catch (BasicException ex) {
-            LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
-        }
-
-        for (int i = 0; i < m_oTicket.getLinesCount(); i++) {
-            try {
-                if (primary) {
-                    if ((m_oTicket.getLine(i).getProperty("display") == null)
-                            || ("".equals(m_oTicket.getLine(i).getProperty("display")))) {
-                        display = 1;
-                    } else {
-                        display = Integer.parseInt(m_oTicket.getLine(i).getProperty("display"));
-                    }
-                }
-
-                dlSystem.addOrder(getPickupString(m_oTicket),
-                        (int) m_oTicket.getLine(i).getMultiply(),
-                        m_oTicket.getLine(i).getProductName(),
-                        m_oTicket.getLine(i).getProductAttSetInstDesc(),
-                        m_oTicket.getLine(i).getProperty("notes"),
-                        id,
-                        null,
-                        display,
-                        null,
-                        null);
-
-                /* this block for future - right now we're deleting all ticketlines
-    and resending for consistency with actual ticketlines
-                dlSystem.updateOrder(getPickupString(m_oTicket)
-                        , (int) m_oTicket.getLine(i).getMultiply()
-                        , m_oTicket.getLine(i).getProductName()
-                        , m_oTicket.getLine(i).getProductAttSetInstDesc()
-                        , m_oTicket.getLine(i).getProperty("notes")
-                        , id
-                        , null
-                        , display
-                        , null
-                        , null);                
-                 */
-            } catch (BasicException ex) {
-                LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
-            }
-        }
+    /* Remote Orders Display - Utils methods */
+    public void remoteOrderDisplay(String orderId, int display, boolean primary) {
+        getRemoteOrderDisplay().remoteOrderDisplay(orderId, display, primary);
     }
 
-
+    /* Remote Orders Display - Utils methods */
+    private RemoteOrderDisplay getRemoteOrderDisplay(){
+        return new RemoteOrderDisplay(m_App, m_oTicket, m_oTicketExt, getPickupString(m_oTicket));
+    }
 
     private class LogoutAction extends AbstractAction {
 
