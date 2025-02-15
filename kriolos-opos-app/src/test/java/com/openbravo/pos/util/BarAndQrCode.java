@@ -42,13 +42,18 @@ public class BarAndQrCode {
         f.setBounds(100, 50, 500, 300);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+
+        String[] codes = new String[]{"QRCODE",
+                "CODE128", "CODE93", "CODE39",
+                "EAN13", "EAN8",
+                "UPCE", "UPCA",
+                "CODABAR", "POSTNET"};
+
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
         panel.setLayout(layout);
 
         JTextField enterText = new JTextField("Paulo Borges");
-
-        Image customer = BarcodeImage.getBarcode128(enterText.getText());
 
         com.openbravo.data.gui.JImageEditor imgPanel = new com.openbravo.data.gui.JImageEditor();
         imgPanel.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -58,40 +63,20 @@ public class BarAndQrCode {
         imgPanel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         imgPanel2.setPreferredSize(new java.awt.Dimension(250, 250));
 
-        String[] codes = new String[]{"QRCODE", "CODE128", "CODABAR", "CODE39", "EAN8", "EAN13", "UPCA"};
+
+        //default value
+        String codeTypeInitial = codes[0];
+        imgPanel.setImage((BufferedImage) BarcodeImage.getCode(enterText.getText(), codeTypeInitial));
+        imgPanel2.setImage(com.openbravo.pos.util.BarcodeUtils.getCode(enterText.getText(),codeTypeInitial));
+
 
         JComboBox<String> _fontCombo = new JComboBox<>(codes);         // JComboBox of fonts
         _fontCombo.setSelectedItem("128"); // Select initial font
         _fontCombo.addActionListener((ActionEvent e) -> {
             String codeType = (String) _fontCombo.getSelectedItem();
 
+            imgPanel.setImage((BufferedImage) BarcodeImage.getCode(enterText.getText(), codeType));
             imgPanel2.setImage(com.openbravo.pos.util.BarcodeUtils.getCode(enterText.getText(),codeType));
-            switch (codeType) {
-
-                case "QRCODE":
-                    imgPanel.setImage((BufferedImage) BarcodeImage.getQRCode(enterText.getText()));
-                    break;
-
-                case "CODE39":
-                    imgPanel.setImage((BufferedImage) BarcodeImage.getBarcodeCode39(enterText.getText()));
-                    break;
-
-                case "CODE128":
-                    imgPanel.setImage((BufferedImage) BarcodeImage.getBarcode128(enterText.getText()));
-                    break;
-
-                case "EAN8":
-                    imgPanel.setImage((BufferedImage) BarcodeImage.getBarcodeEAN8(enterText.getText()));
-                    break;
-
-                case "EAN13":
-                    imgPanel.setImage((BufferedImage) BarcodeImage.getBarcodeEAN13(enterText.getText()));
-                    break;
-                    
-                case "UPCA":
-                    imgPanel.setImage((BufferedImage) BarcodeImage.getBarcodeUPCA(enterText.getText()));
-                    break;
-            }
         });
 
         panel.add(enterText);

@@ -20,6 +20,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.oned.*;
 import com.google.zxing.qrcode.QRCodeWriter;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -46,6 +47,50 @@ import org.krysalis.barcode4j.output.java2d.Java2DCanvasProvider;
  */
 public class BarcodeImage {
 
+    public static Image getCode(String textCode, String codeType){
+        switch (codeType) {
+            case "QR_CODE":
+            case "QRCODE":
+            case "QR-CODE":
+                return getQRCode(textCode);
+            case "CODE_128":
+            case "CODE128":
+            case "CODE-128":
+                return getBarcodeCode128(textCode);
+            case "CODE_93":
+            case "CODE93":
+            case "CODE-93":
+                return getBarcodeCode39(textCode);
+            case "CODE_39":
+            case "CODE39":
+            case "CODE-39":
+                return getBarcodeCode39(textCode);
+            case "EAN_13":
+            case "EAN13":
+            case "EAN-13":
+                return getBarcodeEAN13(textCode);
+            case "EAN_8":
+            case "EAN8":
+            case "EAN-8":
+                return getBarcodeEAN8(textCode);
+            case "CODABAR":
+                return getBarcodeCodabar(textCode);
+            case "UPC_E":
+            case "UPCE":
+            case "UPC-E":
+                return getBarcodeUPCE(textCode);
+            case "UPC_A":
+            case "UPCA":
+            case "UPC-A":
+                return getBarcodeUPCA(textCode);
+            case "POSTNET":
+                return getBarcodePOSTNET(textCode);
+            case "Interleaved2Of5":
+                return getBarcodeInterleaved2Of5(textCode);
+        }
+
+        return null;
+    }
     /**
      *
      * @param value
@@ -134,6 +179,9 @@ public class BarcodeImage {
         return getBarcode(value, barcode);
     }
 
+    public static Image getBarcodeCode128(String value) {
+        return getBarcode128(value);
+    }
     /**
      *
      * @param value

@@ -20,13 +20,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.Writer;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.oned.CodaBarWriter;
-import com.google.zxing.oned.Code128Writer;
-import com.google.zxing.oned.Code39Writer;
-import com.google.zxing.oned.EAN13Writer;
-import com.google.zxing.oned.EAN8Writer;
-import com.google.zxing.oned.UPCAWriter;
-import com.google.zxing.oned.UPCEWriter;
+import com.google.zxing.oned.*;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.openbravo.format.Formats;
@@ -111,24 +105,35 @@ public class BarcodeUtils {
             switch (codeType) {
                 case "QR_CODE":
                 case "QRCODE":
+                case "QR-CODE":
                     return getQRCode(codeText, bcWidth);
                 case "CODE_39":
                 case "CODE39":
+                case "CODE-39":
                     writer = new Code39Writer();
                     this.byteMatrix = writer.encode(codeText, BarcodeFormat.CODE_39, bcWidth, bcHeight, hintMap);
                     return createBarcode();
+                case "CODE_93":
+                case "CODE93":
+                case "CODE-93":
+                    writer = new Code93Writer();
+                    this.byteMatrix = writer.encode(codeText, BarcodeFormat.CODE_93, bcWidth, bcHeight, hintMap);
+                    return createBarcode();
                 case "CODE_128":
                 case "CODE128":
+                case "CODE-128":
                     writer = new Code128Writer();
                     this.byteMatrix = writer.encode(codeText, BarcodeFormat.CODE_128, bcWidth, bcHeight, hintMap);
                     return createBarcode();
                 case "EAN_13":
                 case "EAN13":
+                case "EAN-13":
                     writer = new EAN13Writer();
                     this.byteMatrix = writer.encode(codeText, BarcodeFormat.EAN_13, bcWidth, bcHeight, hintMap);
                     return createBarcode();
                 case "EAN_8":
                 case "EAN8":
+                case "EAN-8":
                     writer = new EAN8Writer();
                     this.byteMatrix = writer.encode(codeText, BarcodeFormat.EAN_8, bcWidth, bcHeight, hintMap);
                     return createBarcode();
@@ -138,11 +143,13 @@ public class BarcodeUtils {
                     return createBarcode();
                 case "UPC_A":
                 case "UPCA":
+                case "UPC-A":
                     writer = new UPCAWriter();
                     this.byteMatrix = writer.encode(codeText, BarcodeFormat.UPC_A, bcWidth, bcHeight, hintMap);
                     return createBarcode();
                 case "UPC_E":
                 case "UPCE":
+                case "UPC-E":
                     writer = new UPCEWriter();
                     this.byteMatrix = writer.encode(codeText, BarcodeFormat.UPC_E, bcWidth, bcHeight, hintMap);
                     return createBarcode();
