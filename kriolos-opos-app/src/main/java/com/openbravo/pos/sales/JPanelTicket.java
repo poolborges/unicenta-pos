@@ -137,6 +137,57 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     //private Integer count = 0;
     //private Integer oCount = 0;
 
+
+    public static class TicketConstants {
+        /**
+         * Ticket Events(event key :string): Ticket event 'show'
+         */
+        public static final String EV_TICKET_SHOW = "ticket.show";
+
+        /**
+         * Ticket Events (eventKey :string):  Ticket event 'change'
+         * Event: 'ticket.change' (Ticket changed)
+         */
+        public static final String EV_TICKET_CHANGE = "ticket.change";
+
+        /**
+         * Ticket Events (eventKey :string):  Ticket event 'close'
+         * Event: 'ticket.close' (Ticket closed)
+         */
+        public static final String EV_TICKET_CLOSE = "ticket.close";
+
+        /**
+         * Ticket Events (eventKey :string):  Ticket event 'save'
+         * Event: 'ticket.save' (Ticket saved)
+         */
+        public static final String EV_TICKET_SAVE = "ticket.save";
+
+        /**
+         * Ticket Events (eventKey :string):  Ticket event 'total'
+         * Event: 'ticket.total' (Ticket total)
+         */
+        public static final String EV_TICKET_TOTAL = "ticket.total";
+
+        /**
+         * Ticket Property (property :boolean['true'|'false'):  Ticket property 'updated'
+         * Property: 'ticket.updated' (TicketLine was updated)
+         */
+        public static final String PROP_TICKET_UPDATED = "ticket.updated";
+
+        /**
+         * Ticket Resource (resource: XML): Ticket resource
+         * Resource: 'Ticket.Buttons' (Define which buttons to show in Top Menu)
+         */
+        public static final String RES_TICKET_BUTTONS = "Ticket.Buttons";
+
+        /**
+         * Ticket Resource (resource: XML): Ticket resource: TicketLine Panel configuration
+         * Resource: 'Ticket.Line' (Define which TicketLine attribute to show in TicketLinePanel)
+         */
+        public static final String RES_TICKET_LINES =  "Ticket.Line";
+
+    }
+
     /**
      * Creates new form JTicketView
      */
@@ -175,7 +226,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         }
 
         LOGGER.log(System.Logger.Level.DEBUG, "JPanelTicket.init: criar: Ticket.Line");
-        m_ticketlines = new JTicketLines(dlSystem.getResourceAsXML("Ticket.Line"));
+        m_ticketlines = new JTicketLines(dlSystem.getResourceAsXML(TicketConstants.RES_TICKET_LINES));
         m_jPanelLines.add(m_ticketlines, java.awt.BorderLayout.CENTER);
         m_TTP = new TicketParser(m_App.getDeviceTicket(), dlSystem);
 
@@ -198,7 +249,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     private void initExtButtons() {
         // Script event buttons
-        String resourceName = "Ticket.Buttons";
+        String resourceName = TicketConstants.RES_TICKET_BUTTONS;
 
         String sConfigRes = getResourceAsXML(resourceName);
 
@@ -449,7 +500,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 }
             }
 
-            executeEvent(m_oTicket, m_oTicketExt, "ticket.show");
+            executeEvent(m_oTicket, m_oTicketExt, TicketConstants.EV_TICKET_SHOW);
         }
 
         refreshTicket();
@@ -555,6 +606,10 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             }
         }
         return pinOK;
+    }
+
+    private boolean isOverrideCheckEnabled(){
+        return m_App.getProperties().getProperty("override.check").equals("true");
     }
 
     private void printPartialTotals() {
@@ -676,7 +731,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             stateToZero();
             countArticles();
 
-            executeEvent(m_oTicket, m_oTicketExt, "ticket.change");
+            executeEvent(m_oTicket, m_oTicketExt, TicketConstants.EV_TICKET_CHANGE);
         } else {
             Toolkit.getDefaultToolkit().beep();
         }
@@ -1426,30 +1481,30 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     TicketLineInfo newline = new TicketLineInfo(m_oTicket.getLine(i));
                     //If it's a refund + button means one unit less
                     if (m_oTicket.getTicketType() == TicketInfo.RECEIPT_REFUND) {
-                        if (m_App.getProperties().getProperty("override.check").equals("true")) {
+                        if (isOverrideCheckEnabled()) {
                             //oCount = count - 1;  //increment existing line  
 
                             if (changeCount()) {
                                 newline.setMultiply(newline.getMultiply() - 1.0);
-                                newline.setProperty("ticket.updated", "true");
+                                newline.setProperty(TicketConstants.PROP_TICKET_UPDATED, "true");
                                 paintTicketLine(i, newline);
                             }
                         } else {
                             newline.setMultiply(newline.getMultiply() - 1.0);
-                            newline.setProperty("ticket.updated", "true");
+                            newline.setProperty(TicketConstants.PROP_TICKET_UPDATED, "true");
                             paintTicketLine(i, newline);
                         }
                     } else {
-                        if (m_App.getProperties().getProperty("override.check").equals("true")) {
+                        if (isOverrideCheckEnabled()) {
                             //oCount = count + 1;  //increment existing line  
                             if (changeCount()) {
                                 newline.setMultiply(newline.getMultiply() + 1.0);
-                                newline.setProperty("ticket.updated", "true");
+                                newline.setProperty(TicketConstants.PROP_TICKET_UPDATED, "true");
                                 paintTicketLine(i, newline);
                             }
                         } else {
                             newline.setMultiply(newline.getMultiply() + 1.0);
-                            newline.setProperty("ticket.updated", "true");
+                            newline.setProperty(TicketConstants.PROP_TICKET_UPDATED, "true");
                             paintTicketLine(i, newline);
                         }
                     }
@@ -1466,16 +1521,16 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     TicketLineInfo newline = new TicketLineInfo(m_oTicket.getLine(i));
 
                     if (m_oTicket.getTicketType() == TicketInfo.RECEIPT_REFUND) {
-                        if (m_App.getProperties().getProperty("override.check").equals("true")) {
+                        if (isOverrideCheckEnabled()) {
                             //oCount = count - 1;  //increment existing line  
                             if (changeCount()) {
                                 newline.setMultiply(newline.getMultiply() - 1.0);
-                                newline.setProperty("ticket.updated", "true");
+                                newline.setProperty(TicketConstants.PROP_TICKET_UPDATED, "true");
                                 paintTicketLine(i, newline);
                             }
                         } else {
                             newline.setMultiply(newline.getMultiply() - 1.0);
-                            newline.setProperty("ticket.updated", "true");
+                            newline.setProperty(TicketConstants.PROP_TICKET_UPDATED, "true");
                             paintTicketLine(i, newline);
                         }
 
@@ -1485,17 +1540,17 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                             paintTicketLine(i, newline);
                         }
                     } else {
-                        if (m_App.getProperties().getProperty("override.check").equals("true")) {
+                        if (isOverrideCheckEnabled()) {
                             //oCount = count - 1;  //increment existing line  
 
                             if (changeCount()) {
                                 newline.setMultiply(newline.getMultiply() - 1.0);
-                                newline.setProperty("ticket.updated", "true");
+                                newline.setProperty(TicketConstants.PROP_TICKET_UPDATED, "true");
                                 paintTicketLine(i, newline);
                             }
                         } else {
                             newline.setMultiply(newline.getMultiply() - 1.0);
-                            newline.setProperty("ticket.updated", "true");
+                            newline.setProperty(TicketConstants.PROP_TICKET_UPDATED, "true");
                             paintTicketLine(i, newline);
                         }
 
@@ -1519,33 +1574,33 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     TicketLineInfo newline = new TicketLineInfo(m_oTicket.getLine(i));
 
                     if (m_oTicket.getTicketType() == TicketInfo.RECEIPT_REFUND) {
-                        if (m_App.getProperties().getProperty("override.check").equals("true")) {
+                        if (isOverrideCheckEnabled()) {
                             //oCount = count - 1;  //increment existing line  
                             if (changeCount()) {
                                 newline.setMultiply(-dPor);
-                                newline.setProperty("ticket.updated", "true");
+                                newline.setProperty(TicketConstants.PROP_TICKET_UPDATED, "true");
                                 newline.setPrice(Math.abs(newline.getPrice()));
                                 paintTicketLine(i, newline);
                             }
                         } else {
                             newline.setMultiply(-dPor);
-                            newline.setProperty("ticket.updated", "true");
+                            newline.setProperty(TicketConstants.PROP_TICKET_UPDATED, "true");
                             newline.setPrice(Math.abs(newline.getPrice()));
                             paintTicketLine(i, newline);
                         }
                     } else {
-                        if (m_App.getProperties().getProperty("override.check").equals("true")) {
+                        if (isOverrideCheckEnabled()) {
                             //oCount = count + 1;  //increment existing line  
 
                             if (changeCount()) {
                                 newline.setMultiply(dPor);
-                                newline.setProperty("ticket.updated", "true");
+                                newline.setProperty(TicketConstants.PROP_TICKET_UPDATED, "true");
                                 newline.setPrice(Math.abs(newline.getPrice()));
                                 paintTicketLine(i, newline);
                             }
                         } else {
                             newline.setMultiply(dPor);
-                            newline.setProperty("ticket.updated", "true");
+                            newline.setProperty(TicketConstants.PROP_TICKET_UPDATED, "true");
                             newline.setPrice(Math.abs(newline.getPrice()));
                             paintTicketLine(i, newline);
                         }
@@ -1564,34 +1619,34 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     TicketLineInfo newline = new TicketLineInfo(m_oTicket.getLine(i));
 
                     if (m_oTicket.getTicketType() == TicketInfo.RECEIPT_REFUND) {
-                        if (m_App.getProperties().getProperty("override.check").equals("true")) {
+                        if (isOverrideCheckEnabled()) {
                             //oCount = count - 1;  //increment existing line  
 
                             if (changeCount()) {
                                 newline.setMultiply(-dPor);
-                                newline.setProperty("ticket.updated", "true");
+                                newline.setProperty(TicketConstants.PROP_TICKET_UPDATED, "true");
                                 newline.setPrice(Math.abs(newline.getPrice()));
                                 paintTicketLine(i, newline);
                             }
                         } else {
                             newline.setMultiply(-dPor);
-                            newline.setProperty("ticket.updated", "true");
+                            newline.setProperty(TicketConstants.PROP_TICKET_UPDATED, "true");
                             newline.setPrice(Math.abs(newline.getPrice()));
                             paintTicketLine(i, newline);
                         }
                     } else {
-                        if (m_App.getProperties().getProperty("override.check").equals("true")) {
+                        if (isOverrideCheckEnabled()) {
                             //oCount = count - 1;  //increment existing line  
 
                             if (changeCount()) {
                                 newline.setMultiply(dPor);
-                                newline.setProperty("ticket.updated", "true");
+                                newline.setProperty(TicketConstants.PROP_TICKET_UPDATED, "true");
                                 newline.setPrice(Math.abs(newline.getPrice()));
                                 paintTicketLine(i, newline);
                             }
                         } else {
                             newline.setMultiply(dPor);
-                            newline.setProperty("ticket.updated", "true");
+                            newline.setProperty(TicketConstants.PROP_TICKET_UPDATED, "true");
                             newline.setPrice(Math.abs(newline.getPrice()));
                             paintTicketLine(i, newline);
                         }
@@ -1689,7 +1744,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     ticket.resetPayments();
                 }
 
-                if (paymentdialog != null && executeEvent(ticket, ticketext, "ticket.total") == null) {
+                if (paymentdialog != null && executeEvent(ticket, ticketext, TicketConstants.EV_TICKET_TOTAL) == null) {
                     if (listener != null) {
                         listener.stop();
                     }
@@ -1715,7 +1770,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                         ticket.setActiveCash(m_App.getActiveCashIndex());
                         ticket.setDate(new Date());
 
-                        Object scriptResult = executeEvent(ticket, ticketext, "ticket.save");
+                        Object scriptResult = executeEvent(ticket, ticketext, TicketConstants.EV_TICKET_SAVE);
 
                         if (scriptResult == null) {
                             try {
@@ -1726,7 +1781,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                                 msg.show(this);
                             }
 
-                            String eventName = "ticket.close";
+                            String eventName = TicketConstants.EV_TICKET_CLOSE;
                             try {
                                 executeEvent(ticket, ticketext, eventName,
                                         new ScriptArg("print", paymentdialog.isPrintSelected()),
@@ -1950,7 +2005,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 if (advDisplay.hasFeature(2)) {
 
                     //TODO EVALUATE PERFORMANCE TO CREATE THIS EVERY TIME
-                    JTicketLines m_ticketlines2 = new JTicketLines(this.dlSystem.getResourceAsXML("Ticket.Line"));
+                    JTicketLines m_ticketlines2 = new JTicketLines(this.dlSystem.getResourceAsXML(TicketConstants.RES_TICKET_LINES));
                     m_ticketlines2.setTicketTableFont(new Font("Arial", 0, 18));
                     m_ticketlines2.clearTicketLines();
                     for (int j = 0; JPanelTicket.this.m_oTicket != null && j < JPanelTicket.this.m_oTicket.getLinesCount(); j++) {
@@ -2944,7 +2999,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
         if (m_oTicket.getLinesCount() > 0) {
             ReceiptSplit splitdialog = ReceiptSplit.getDialog(this,
-                    dlSystem.getResourceAsXML("Ticket.Line"), dlSales, dlCustomers, taxeslogic);
+                    dlSystem.getResourceAsXML(TicketConstants.RES_TICKET_LINES), dlSales, dlCustomers, taxeslogic);
 
             TicketInfo ticket1 = m_oTicket.copyTicket();
             TicketInfo ticket2 = new TicketInfo();
