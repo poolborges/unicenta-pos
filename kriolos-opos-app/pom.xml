@@ -156,11 +156,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports-charts</artifactId>
             <version>${jasperreports.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports-jdt</artifactId>
             <version>${jasperreports.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-pdf</artifactId>
+            <version>${jasperreports.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency> <!-- Used by JasperReport to generate xsl files -->
             <groupId>org.apache.poi</groupId>
