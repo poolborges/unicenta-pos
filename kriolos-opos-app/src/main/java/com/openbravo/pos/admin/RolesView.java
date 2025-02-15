@@ -21,6 +21,10 @@ import com.openbravo.data.user.DirtyManager;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rtextarea.RTextScrollPane;
+
 import java.awt.Component;
 import java.util.UUID;
 
@@ -32,12 +36,20 @@ public final class RolesView extends javax.swing.JPanel implements EditorRecord 
     
     private String m_oId;
 
+    private final RSyntaxTextArea m_RSyntaxTextArea;
+    private final RTextScrollPane m_RTextScrollPane;
+
     public RolesView(DirtyManager dirty) {
+        m_RSyntaxTextArea = new RSyntaxTextArea(20, 60);
+        m_RSyntaxTextArea.setCodeFoldingEnabled(true);
+        m_RSyntaxTextArea.getDocument().addDocumentListener(dirty);
+        m_RSyntaxTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_XML);
+        m_RTextScrollPane = new RTextScrollPane(m_RSyntaxTextArea);
+
         initComponents();
-        
+
         m_jName.getDocument().addDocumentListener(dirty);
-        m_jText.getDocument().addDocumentListener(dirty);
-        
+
         writeValueEOF();
     }
     
@@ -45,18 +57,18 @@ public final class RolesView extends javax.swing.JPanel implements EditorRecord 
     public void writeValueEOF() {
         m_oId = null;
         m_jName.setText(null);
-        m_jText.setText(null);
+        m_RSyntaxTextArea.setText(null);
         m_jName.setEnabled(false);
-        m_jText.setEnabled(false);
+        m_RSyntaxTextArea.setEnabled(false);
     }
     
     @Override
     public void writeValueInsert() {
         m_oId = UUID.randomUUID().toString();
         m_jName.setText(null);
-        m_jText.setText(null);
+        m_RSyntaxTextArea.setText(null);
         m_jName.setEnabled(true);
-        m_jText.setEnabled(true);
+        m_RSyntaxTextArea.setEnabled(true);
     }
     
     @Override
@@ -65,10 +77,10 @@ public final class RolesView extends javax.swing.JPanel implements EditorRecord 
         Object[] role = (Object[]) value;
         m_oId = (String)role[0];
         m_jName.setText(Formats.STRING.formatValue((String)role[1]));
-        m_jText.setText(Formats.BYTEA.formatValue((byte[])role[2]));
-        m_jText.setCaretPosition(0);
+        m_RSyntaxTextArea.setText(Formats.BYTEA.formatValue((byte[])role[2]));
+        m_RSyntaxTextArea.setCaretPosition(0);
         m_jName.setEnabled(false);
-        m_jText.setEnabled(false);
+        m_RSyntaxTextArea.setEnabled(false);
     }
 
     @Override
@@ -77,10 +89,10 @@ public final class RolesView extends javax.swing.JPanel implements EditorRecord 
         Object[] role = (Object[]) value;
         m_oId = (String)role[0];
         m_jName.setText(Formats.STRING.formatValue((String)role[1]));
-        m_jText.setText(Formats.BYTEA.formatValue((byte[])role[2]));
-        m_jText.setCaretPosition(0);
+        m_RSyntaxTextArea.setText(Formats.BYTEA.formatValue((byte[])role[2]));
+        //m_RSyntaxTextArea.setCaretPosition(0);
         m_jName.setEnabled(true);
-        m_jText.setEnabled(true);
+        m_RSyntaxTextArea.setEnabled(true);
     }
 
     @Override
@@ -89,7 +101,7 @@ public final class RolesView extends javax.swing.JPanel implements EditorRecord 
         Object[] role = new Object[3];
         role[0] = m_oId == null ? UUID.randomUUID().toString() : m_oId;
         role[1] = m_jName.getText();
-        role[2] = Formats.BYTEA.parseValue(m_jText.getText());
+        role[2] = Formats.BYTEA.parseValue(m_RSyntaxTextArea.getText());
         return role;
     }
 
@@ -109,14 +121,9 @@ public final class RolesView extends javax.swing.JPanel implements EditorRecord 
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
-        jScrollPane1 = new javax.swing.JScrollPane();
-        m_jText = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
         m_jName = new javax.swing.JTextField();
 
-        m_jText.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jScrollPane1.setViewportView(m_jText);
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel2.setText(AppLocal.getIntString("label.namem")); // NOI18N
@@ -130,7 +137,7 @@ public final class RolesView extends javax.swing.JPanel implements EditorRecord 
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
+                    .addComponent(m_RTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -145,7 +152,7 @@ public final class RolesView extends javax.swing.JPanel implements EditorRecord 
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(m_jName, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
+                .addComponent(m_RTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -153,9 +160,9 @@ public final class RolesView extends javax.swing.JPanel implements EditorRecord 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane1;
+    //private javax.swing.JScrollPane m_RTextScrollPane;
     private javax.swing.JTextField m_jName;
-    private javax.swing.JTextArea m_jText;
+    //private javax.swing.JTextArea m_RSyntaxTextArea;
     // End of variables declaration//GEN-END:variables
     
 }
