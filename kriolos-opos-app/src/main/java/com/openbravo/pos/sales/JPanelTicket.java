@@ -64,9 +64,6 @@ import java.awt.Window;
 import static java.awt.Window.getWindows;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.util.*;
 import javax.print.PrintService;
 import javax.swing.AbstractAction;
@@ -79,8 +76,6 @@ import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRMapArrayDataSource;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 /**
  *
@@ -136,57 +131,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private AppProperties m_config;
     //private Integer count = 0;
     //private Integer oCount = 0;
-
-
-    public static class TicketConstants {
-        /**
-         * Ticket Events(event key :string): Ticket event 'show'
-         */
-        public static final String EV_TICKET_SHOW = "ticket.show";
-
-        /**
-         * Ticket Events (eventKey :string):  Ticket event 'change'
-         * Event: 'ticket.change' (Ticket changed)
-         */
-        public static final String EV_TICKET_CHANGE = "ticket.change";
-
-        /**
-         * Ticket Events (eventKey :string):  Ticket event 'close'
-         * Event: 'ticket.close' (Ticket closed)
-         */
-        public static final String EV_TICKET_CLOSE = "ticket.close";
-
-        /**
-         * Ticket Events (eventKey :string):  Ticket event 'save'
-         * Event: 'ticket.save' (Ticket saved)
-         */
-        public static final String EV_TICKET_SAVE = "ticket.save";
-
-        /**
-         * Ticket Events (eventKey :string):  Ticket event 'total'
-         * Event: 'ticket.total' (Ticket total)
-         */
-        public static final String EV_TICKET_TOTAL = "ticket.total";
-
-        /**
-         * Ticket Property (property :boolean['true'|'false'):  Ticket property 'updated'
-         * Property: 'ticket.updated' (TicketLine was updated)
-         */
-        public static final String PROP_TICKET_UPDATED = "ticket.updated";
-
-        /**
-         * Ticket Resource (resource: XML): Ticket resource
-         * Resource: 'Ticket.Buttons' (Define which buttons to show in Top Menu)
-         */
-        public static final String RES_TICKET_BUTTONS = "Ticket.Buttons";
-
-        /**
-         * Ticket Resource (resource: XML): Ticket resource: TicketLine Panel configuration
-         * Resource: 'Ticket.Line' (Define which TicketLine attribute to show in TicketLinePanel)
-         */
-        public static final String RES_TICKET_LINES =  "Ticket.Line";
-
-    }
 
     /**
      * Creates new form JTicketView
@@ -313,28 +257,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         return "true".equals(m_App.getProperties().getProperty("till.autoLogoff"));
     }
 
-    private class logout extends AbstractAction {
-
-        public logout() {
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            closeAllDialogs();
-            if (isRestaurantMode()) {
-                deactivate();
-                if (isAutoLogoutRestaurant()) {
-                    ((JRootApp) m_App).closeAppView();
-                } else {
-                    setActiveTicket(null, null);
-                }
-            } else {
-                deactivate();
-                ((JRootApp) m_App).closeAppView();
-            }
-        }
-    }
-
     private void closeAllDialogs() {
         Window[] windows = getWindows();
 
@@ -366,14 +288,14 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
         LOGGER.log(System.Logger.Level.INFO, "JPanelTicket.activate");
 
-        Action logout = new logout();
+        Action logoutAction = new LogoutAction();
         if (isAutoLogout()) {
             try {
                 int delay = Integer.parseInt(m_App.getProperties().getProperty("till.autotimer"));
                 delay *= 1000;
                 //Should be more that 1s (1000 milisecond)
                 if (delay > 1000) {
-                    listener = new InactivityListener(logout, delay);
+                    listener = new InactivityListener(logoutAction, delay);
                     listener.start();
                 }
             } catch (NumberFormatException ex) {
@@ -2109,40 +2031,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         }
     }
 
-    /**
-     *
-     */
-    public static class ScriptArg {
-
-        private final String key;
-        private final Object value;
-
-        /**
-         *
-         * @param key
-         * @param value
-         */
-        public ScriptArg(String key, Object value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        /**
-         *
-         * @return
-         */
-        public String getKey() {
-            return key;
-        }
-
-        /**
-         *
-         * @return
-         */
-        public Object getValue() {
-            return value;
-        }
-    }
 
     private String setTempjPrice(String jPrice) {
         jPrice = jPrice.replace(".", "");
@@ -2239,78 +2127,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     content,
                     "Customer Discount Info",
                     JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    /**
-     *
-     */
-    public class ScriptObject {
-
-        private final TicketInfo ticket;
-        private final String ticketext;
-
-        private int selectedindex;
-
-        private ScriptObject(TicketInfo ticket, String ticketext) {
-            this.ticket = ticket;
-            this.ticketext = ticketext;
-        }
-
-        /**
-         *
-         * @return
-         */
-        public double getInputValue() {
-            if (m_iNumberStatusInput == NUMBERVALID && m_iNumberStatusPor == NUMBERZERO) {
-                return JPanelTicket.this.getInputValue();
-            } else {
-                return 0.0;
-            }
-        }
-
-        /**
-         *
-         * @return
-         */
-        public int getSelectedIndex() {
-            return selectedindex;
-        }
-
-        /**
-         *
-         * @param i
-         */
-        public void setSelectedIndex(int i) {
-            selectedindex = i;
-        }
-
-        /**
-         *
-         * @param resourcefile
-         */
-        public void printReport(String resourcefile) {
-            JPanelTicket.this.printReport(resourcefile, ticket, ticketext);
-        }
-
-        /**
-         *
-         * @param sresourcename
-         */
-        public void printTicket(String sresourcename) {
-            JPanelTicket.this.printTicket(sresourcename, ticket, ticketext);
-            j_btnRemotePrt.setEnabled(false);
-        }
-
-        public Object evalScript(String code, ScriptArg... args) throws ScriptException {
-
-            ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
-
-            for (ScriptArg arg : args) {
-                script.put(arg.getKey(), arg.getValue());
-            }
-
-            return script.eval(code);
         }
     }
 
@@ -3364,5 +3180,190 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             }
         }
     }
+
+
+
+    private class LogoutAction extends AbstractAction {
+
+        public LogoutAction() {
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            closeAllDialogs();
+            if (isRestaurantMode()) {
+                deactivate();
+                if (isAutoLogoutRestaurant()) {
+                    ((JRootApp) m_App).closeAppView();
+                } else {
+                    setActiveTicket(null, null);
+                }
+            } else {
+                deactivate();
+                ((JRootApp) m_App).closeAppView();
+            }
+        }
+    }
+
+    /**
+     * Script Argument
+     */
+    public static class ScriptArg {
+
+        private final String key;
+        private final Object value;
+
+        /**
+         *
+         * @param key
+         * @param value
+         */
+        public ScriptArg(String key, Object value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        /**
+         *
+         * @return
+         */
+        public String getKey() {
+            return key;
+        }
+
+        /**
+         *
+         * @return
+         */
+        public Object getValue() {
+            return value;
+        }
+    }
+
+    /**
+     * Script Object
+     */
+    public class ScriptObject {
+
+        private final TicketInfo ticket;
+        private final String ticketext;
+
+        private int selectedindex;
+
+        private ScriptObject(TicketInfo ticket, String ticketext) {
+            this.ticket = ticket;
+            this.ticketext = ticketext;
+        }
+
+        /**
+         *
+         * @return
+         */
+        public double getInputValue() {
+            if (m_iNumberStatusInput == NUMBERVALID && m_iNumberStatusPor == NUMBERZERO) {
+                return JPanelTicket.this.getInputValue();
+            } else {
+                return 0.0;
+            }
+        }
+
+        /**
+         *
+         * @return
+         */
+        public int getSelectedIndex() {
+            return selectedindex;
+        }
+
+        /**
+         *
+         * @param i
+         */
+        public void setSelectedIndex(int i) {
+            selectedindex = i;
+        }
+
+        /**
+         *
+         * @param resourcefile
+         */
+        public void printReport(String resourcefile) {
+            JPanelTicket.this.printReport(resourcefile, ticket, ticketext);
+        }
+
+        /**
+         *
+         * @param sresourcename
+         */
+        public void printTicket(String sresourcename) {
+            JPanelTicket.this.printTicket(sresourcename, ticket, ticketext);
+            j_btnRemotePrt.setEnabled(false);
+        }
+
+        public Object evalScript(String code, ScriptArg... args) throws ScriptException {
+
+            ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
+
+            for (ScriptArg arg : args) {
+                script.put(arg.getKey(), arg.getValue());
+            }
+
+            return script.eval(code);
+        }
+    }
+
+    /**
+     * JPnaleTicket constant defined in a single place
+     */
+    private static class TicketConstants {
+        /**
+         * Ticket Events(event key :string): Ticket event 'show'
+         */
+        public static final String EV_TICKET_SHOW = "ticket.show";
+
+        /**
+         * Ticket Events (eventKey :string):  Ticket event 'change'
+         * Event: 'ticket.change' (Ticket changed)
+         */
+        public static final String EV_TICKET_CHANGE = "ticket.change";
+
+        /**
+         * Ticket Events (eventKey :string):  Ticket event 'close'
+         * Event: 'ticket.close' (Ticket closed)
+         */
+        public static final String EV_TICKET_CLOSE = "ticket.close";
+
+        /**
+         * Ticket Events (eventKey :string):  Ticket event 'save'
+         * Event: 'ticket.save' (Ticket saved)
+         */
+        public static final String EV_TICKET_SAVE = "ticket.save";
+
+        /**
+         * Ticket Events (eventKey :string):  Ticket event 'total'
+         * Event: 'ticket.total' (Ticket total)
+         */
+        public static final String EV_TICKET_TOTAL = "ticket.total";
+
+        /**
+         * Ticket Property (property :boolean['true'|'false'):  Ticket property 'updated'
+         * Property: 'ticket.updated' (TicketLine was updated)
+         */
+        public static final String PROP_TICKET_UPDATED = "ticket.updated";
+
+        /**
+         * Ticket Resource (resource: XML): Ticket resource
+         * Resource: 'Ticket.Buttons' (Define which buttons to show in Top Menu)
+         */
+        public static final String RES_TICKET_BUTTONS = "Ticket.Buttons";
+
+        /**
+         * Ticket Resource (resource: XML): Ticket resource: TicketLine Panel configuration
+         * Resource: 'Ticket.Line' (Define which TicketLine attribute to show in TicketLinePanel)
+         */
+        public static final String RES_TICKET_LINES =  "Ticket.Line";
+
+    }
+
 
 }
