@@ -206,7 +206,7 @@ public class JPrincipalApp extends JPanel implements AppUserView {
                 LOGGER.log(Level.INFO, "NO PERMISSION on call class: : " + sTaskClass);
                 JMessageDialog.showMessage(this,
                         new MessageInf(MessageInf.SGN_WARNING,
-                                AppLocal.getIntString("message.notpermissions")));
+                                AppLocal.getIntString("message.notpermissions"), "<html>"+sTaskClass));
             }
             m_appview.waitCursorEnd();
         } catch (Exception e) {
