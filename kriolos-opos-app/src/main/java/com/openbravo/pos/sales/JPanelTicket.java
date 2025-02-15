@@ -156,14 +156,14 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
         jTBtnShow.setSelected(false);
 
-        if (Boolean.valueOf(m_App.getProperties().getProperty("till.amountattop"))) {
+        if (Boolean.valueOf(getAppProperty("till.amountattop"))) {
             m_jPanEntries.remove(jPanelScanner);
             m_jPanEntries.remove(m_jNumberKeys);
             m_jPanEntries.add(jPanelScanner);
             m_jPanEntries.add(m_jNumberKeys);
         }
 
-        priceWith00 = ("true".equals(m_App.getProperties().getProperty("till.pricewith00")));
+        priceWith00 = ("true".equals(getAppProperty("till.pricewith00")));
 
         if (priceWith00) {
             m_jNumberKeys.dotIs00(true);
@@ -242,7 +242,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     private String getTicketsbag() {
-        return m_App.getProperties().getProperty("machine.ticketsbag");
+        return getAppProperty("machine.ticketsbag");
     }
 
     private boolean isRestaurantMode() {
@@ -250,11 +250,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     private boolean isAutoLogoutRestaurant() {
-        return "true".equals(m_App.getProperties().getProperty("till.autoLogoffrestaurant"));
+        return "true".equals(getAppProperty("till.autoLogoffrestaurant"));
     }
 
     private boolean isAutoLogout() {
-        return "true".equals(m_App.getProperties().getProperty("till.autoLogoff"));
+        return "true".equals(getAppProperty("till.autoLogoff"));
     }
 
     private void closeAllDialogs() {
@@ -291,7 +291,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         Action logoutAction = new LogoutAction();
         if (isAutoLogout()) {
             try {
-                int delay = Integer.parseInt(m_App.getProperties().getProperty("till.autotimer"));
+                int delay = Integer.parseInt(getAppProperty("till.autotimer"));
                 delay *= 1000;
                 //Should be more that 1s (1000 milisecond)
                 if (delay > 1000) {
@@ -328,7 +328,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             taxcategoriesmodel.setSelectedKey(taxesid);
         }
 
-        m_jaddtax.setSelected((Boolean.parseBoolean(m_App.getProperties().getProperty("till.taxincluded"))));
+        m_jaddtax.setSelected((Boolean.parseBoolean(getAppProperty("till.taxincluded"))));
         if (m_App.getAppUserView().getUser().hasPermission("sales.ChangeTaxOptions")) {
             m_jTax.setVisible(true);
             m_jaddtax.setVisible(true);
@@ -403,14 +403,14 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     restDB.setTicketIdInTable(m_oTicket.getId(), m_oTicketExt);
                 }
 
-                if (Boolean.parseBoolean(m_App.getProperties().getProperty("table.showcustomerdetails"))) {
+                if (Boolean.parseBoolean(getAppProperty("table.showcustomerdetails"))) {
                     String custname = restDB.getCustomerNameInTable(m_oTicketExt);
                     if (m_oTicket.getCustomer() != null &&  (custname == null || custname.isBlank())) {
                         restDB.setCustomerNameInTable(m_oTicket.getCustomer().getName(), m_oTicketExt);
                     }
                 }
 
-                if (Boolean.parseBoolean(m_App.getProperties().getProperty("table.showwaiterdetails"))) {
+                if (Boolean.parseBoolean(getAppProperty("table.showwaiterdetails"))) {
                     String waiter = restDB.getWaiterNameInTable(m_oTicketExt);
                     if (waiter == null || waiter.isBlank()) {
                         restDB.setWaiterNameInTable(m_App.getAppUserView().getUser().getName(), m_oTicketExt);
@@ -515,8 +515,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
         if (m_oTicket != null) {
 
-            if (m_App.getProperties().getProperty("override.check").equals("true")) {
-                String pin = m_App.getProperties().getProperty("override.pin");
+            if (getAppProperty("override.check").equals("true")) {
+                String pin = getAppProperty("override.pin");
                 String iValue = JPasswordDialog.showEditor(this, AppLocal.getIntString("title.override.enterpin"));
 
                 if (iValue != null && iValue.equals(pin)) {
@@ -531,7 +531,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     private boolean isOverrideCheckEnabled(){
-        return m_App.getProperties().getProperty("override.check").equals("true");
+        return getAppProperty("override.check").equals("true");
     }
 
     private void printPartialTotals() {
@@ -896,7 +896,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 String sCode = m_sBarcode.toString();
                 String sCodetype = "EAN";                                           // Declare EAN. It's default        
 
-                if ("true".equals(m_App.getProperties().getProperty("machine.barcodetype"))) {
+                if ("true".equals(getAppProperty("machine.barcodetype"))) {
                     sCodetype = "UPC";
                 } else {
                     sCodetype = "EAN";                                              // Ensure not null   
@@ -1777,7 +1777,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             return ("0");
         }
         String tmpPickupId = Integer.toString(pTicket.getPickupId());
-        String pickupSize = (m_App.getProperties().getProperty("till.pickupsize"));
+        String pickupSize = (getAppProperty("till.pickupsize"));
         if (pickupSize != null && (Integer.parseInt(pickupSize) >= tmpPickupId.length())) {
             while (tmpPickupId.length() < (Integer.parseInt(pickupSize))) {
                 tmpPickupId = "0" + tmpPickupId;
@@ -1807,7 +1807,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             try {
                 ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
 
-                if (Boolean.parseBoolean(m_App.getProperties().getProperty("receipt.newlayout"))) {
+                if (Boolean.parseBoolean(getAppProperty("receipt.newlayout"))) {
                     script.put("taxes", ticket.getTaxLines());
                 } else {
                     script.put("taxes", taxcollection);
@@ -1884,7 +1884,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
             JasperPrint jp = JasperFillManager.fillReport(jr, reportparams, new JRMapArrayDataSource(new Object[]{reportfields}));
 
-            PrintService service = ReportUtils.getPrintService(m_App.getProperties().getProperty("machine.printername"));
+            PrintService service = ReportUtils.getPrintService(getAppProperty("machine.printername"));
 
             JRPrinterAWT300.printPages(jp, 0, jp.getPages().size() - 1, service);
 
@@ -3095,6 +3095,16 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private javax.swing.JCheckBox m_jaddtax;
     private javax.swing.JButton m_jbtnScale;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * Internal Class utils methods, MUST never open to publics
+     */
+
+    /* Application Property */
+    private String getAppProperty(String propertyName){
+       return  m_App.getProperties().getProperty(propertyName);
+    }
+
 
     /* Remote Orders Display - Utils methods */
     public void remoteOrderDisplay() {
