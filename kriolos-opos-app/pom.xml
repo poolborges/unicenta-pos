@@ -80,12 +80,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <groupId>org.swinglabs.swingx</groupId>  
             <artifactId>swingx-all</artifactId>  
             <version>1.6.5-1</version> 
-        </dependency> 
-        <dependency> 
-            <groupId>org.swinglabs</groupId>  
-            <artifactId>swing-layout</artifactId>  
-            <version>1.0.3</version> 
-        </dependency> 
+        </dependency>
         
         <!-- CVS File Parser --> 
         <dependency> 
