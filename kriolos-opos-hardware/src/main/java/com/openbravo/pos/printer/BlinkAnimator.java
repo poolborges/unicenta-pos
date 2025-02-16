@@ -40,8 +40,8 @@ public class BlinkAnimator extends BaseAnimator {
     public void setTiming(int i) {
         
         if ((i % 10) < 5) {
-            currentLine1 = "";
-            currentLine2 = "";
+            currentLine1 = " ".repeat(baseLine1.length());
+            currentLine2 = " ".repeat(baseLine2.length());
         } else {
             currentLine1 = baseLine1;
             currentLine2 = baseLine2;
