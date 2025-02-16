@@ -221,4 +221,25 @@ public class ThumbNailBuilder {
         g2d.dispose();
         return bi;
     }
+
+    /**
+     * Create Image with White color
+     * @param width Image with
+     * @param height Image height
+     * @return Image
+     */
+    public static BufferedImage createImage(int width, int height) {
+        return ThumbNailBuilder.createImage(width, height, Color.WHITE);
+    }
+
+    public static BufferedImage createImage(int width, int height, Color color) {
+        BufferedImage bi = new BufferedImage(width, height, 3);
+        Graphics2D g2d = bi.createGraphics();
+        g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
+        g2d.setColor(color);
+        g2d.fillRect(0, 0, bi.getWidth(), bi.getHeight());
+        //g2d.drawImage(bi, 0, 0, width, height, null);
+        g2d.dispose();
+        return bi;
+    }
 }
