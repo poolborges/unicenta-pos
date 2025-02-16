@@ -2,8 +2,6 @@ package com.openbravo.pos.printer.screen;
 
 import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.printer.DeviceDisplay;
-import com.openbravo.pos.printer.screen.DeviceDisplayPanel;
 import com.openbravo.pos.util.ThumbNailBuilder;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -20,14 +18,13 @@ import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class DeviceDisplayWindowDualScreen extends JFrame implements DeviceDisplay, DeviceDisplayAdvance {
+public class DeviceDisplayWindowDualScreen extends JFrame implements DeviceDisplayAdvance {
 
     private static final long serialVersionUID = 1L;
 
@@ -55,9 +52,21 @@ public class DeviceDisplayWindowDualScreen extends JFrame implements DeviceDispl
 
     JFrame display_frame = new JFrame();
 
+    JPanel m_jTicketLines = new JPanel();
+    
+    /**
+     * Resolution 
+     * 1024x384 (8x3 tiles de 128px) or (16x6 tiles de 64px)
+     */
+
+    private static final int PRODUCT_IMAGE_SIZE_WIDTH = 300;
+    private static final int PRODUCT_IMAGE_SIZE_HEIGHT = 300;
+
     private final DateFormat m_hourminformat = new SimpleDateFormat("h:mm a");
 
     private Timer tDateTime;
+
+    private final BufferedImage PRODUCT_DEFAULT_IMAGE;
 
     public DeviceDisplayWindowDualScreen() {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -102,6 +111,7 @@ public class DeviceDisplayWindowDualScreen extends JFrame implements DeviceDispl
         this.m_jContainer.add(this.m_jPanDisplay, "First");
         this.m_jContainer.add(this.m_display.getDisplayComponent(), "Before");
         this.m_jListContainer.setLayout(new BorderLayout());
+        this.m_jListContainer.add((Component) this.m_jTicketLines);
         this.m_jContainer.add(this.m_jListContainer, "Center");
         this.display_frame.add(this.m_jContainer);
         this.display_frame.setDefaultCloseOperation(2);
@@ -119,6 +129,10 @@ public class DeviceDisplayWindowDualScreen extends JFrame implements DeviceDispl
             }
         });
         this.display_frame.setVisible(true);
+
+        this.PRODUCT_DEFAULT_IMAGE = ThumbNailBuilder.createImage(PRODUCT_IMAGE_SIZE_WIDTH, PRODUCT_IMAGE_SIZE_HEIGHT);
+        this.m_jImage.setIcon(new ImageIcon(this.PRODUCT_DEFAULT_IMAGE));
+
         initComponents();
     }
     
@@ -174,13 +188,20 @@ public class DeviceDisplayWindowDualScreen extends JFrame implements DeviceDispl
 
     @Override
     public boolean setProductImage(BufferedImage img) {
-        BufferedImage resizeImg = ThumbNailBuilder.resize(img, 400, 384);
-        this.m_jImage.setIcon((img == null) ? null : new ImageIcon(resizeImg));
+        BufferedImage resizeImg;
+        if(img != null && (img.getWidth() > 0)){
+            resizeImg = ThumbNailBuilder.resize(img, PRODUCT_IMAGE_SIZE_WIDTH, PRODUCT_IMAGE_SIZE_HEIGHT);
+        }else {
+            resizeImg = this.PRODUCT_DEFAULT_IMAGE;
+        }
+
+        this.m_jImage.setIcon((resizeImg == null) ? null : new ImageIcon(resizeImg));
         return true;
     }
 
     @Override
     public boolean setTicketLines(JPanel ticketlines) {
+        this.m_jTicketLines = ticketlines;
         this.m_jListContainer.add((Component) ticketlines);
         return true;
     }
@@ -201,6 +222,8 @@ public class DeviceDisplayWindowDualScreen extends JFrame implements DeviceDispl
 
     @Override
     public void repaintLines() {
+        m_jTicketLines.revalidate();
+        m_jListContainer.revalidate();
     }
 
 }

@@ -1,9 +1,11 @@
 package com.openbravo.pos.printer.screen;
 
+import com.openbravo.pos.printer.DeviceDisplay;
+
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
-public interface DeviceDisplayAdvance {
+public interface DeviceDisplayAdvance extends DeviceDisplay {
 
     public static final int PRODUCT_IMAGE = 1;
     public static final int TICKETLINES = 2;

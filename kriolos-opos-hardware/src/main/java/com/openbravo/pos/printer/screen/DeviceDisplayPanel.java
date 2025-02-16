@@ -120,17 +120,19 @@ public class DeviceDisplayPanel extends JPanel implements DeviceDisplay {
     
     @Override
     protected void paintComponent(Graphics g) {
-        
+        super.paintComponent(g);
+        /*
         paintBorder(g);
         
         Graphics2D g2d = (Graphics2D) g;     
         
         Insets i = getInsets();
         
-        //g.setColor(getBackground());
+        g.setColor(getBackground());
         g2d.setPaint(new GradientPaint(getWidth() - i.left - i.right - 50, getHeight() - i.top - i.bottom - 50, getBackground()
                                      , getWidth() - i.left - i.right, getHeight() - i.top - i.bottom, new Color(0xf0f0f0), true));
         g2d.fillRect(i.left, i.top, getWidth() - i.left - i.right, getHeight() - i.top - i.bottom);
+        */
 
     }
     
