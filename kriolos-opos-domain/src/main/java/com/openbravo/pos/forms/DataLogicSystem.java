@@ -797,10 +797,10 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
             Datas.STRING, // Attributes
             Datas.STRING, // Notes
             Datas.STRING, // TicketId
-            Datas.STRING, // OrderTime
+            Datas.TIMESTAMP, // OrderTime
             Datas.INT,    // DisplayId
             Datas.INT,    // Auxiliary
-            Datas.STRING  // CompleteTime
+            Datas.TIMESTAMP  // CompleteTime
         }));
         m_addOrder.exec(new Object[]{orderId, qty, details, attributes, notes, ticketId,
                 ordertime, displayId, auxiliary, completetime});
