@@ -404,7 +404,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
                 if (Boolean.parseBoolean(getAppProperty("table.showcustomerdetails"))) {
                     String custname = restDB.getCustomerNameInTable(m_oTicketExt);
-                    if (m_oTicket.getCustomer() != null &&  (custname == null || custname.isBlank())) {
+                    if (m_oTicket.getCustomer() != null && (custname == null || custname.isBlank())) {
                         restDB.setCustomerNameInTable(m_oTicket.getCustomer().getName(), m_oTicketExt);
                     }
                 }
@@ -529,7 +529,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         return pinOK;
     }
 
-    private boolean isOverrideCheckEnabled(){
+    private boolean isOverrideCheckEnabled() {
         return getAppProperty("override.check").equals("true");
     }
 
@@ -657,13 +657,13 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             Toolkit.getDefaultToolkit().beep();
         }
     }
-    
-    private TicketLineInfo getSelectedTicketLineInfo(){
+
+    private TicketLineInfo getSelectedTicketLineInfo() {
         int i = m_ticketlines.getSelectedIndex();
         return getTicketLineInfo(i);
     }
-    
-    private TicketLineInfo getTicketLineInfo(int index){
+
+    private TicketLineInfo getTicketLineInfo(int index) {
         return m_oTicket.getLine(index);
     }
 
@@ -1811,7 +1811,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     ticket.setPickupId(0);
                 }
             }
-   
+
             try {
                 ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
 
@@ -1828,10 +1828,10 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 script.put("place", ticketext);
                 script.put("warranty", warrantyPrint);
                 script.put("pickupid", getPickupString(ticket));
-                
+
                 //TODO - MUST present to the progress o printing processing
                 refreshTicket();
-                
+
                 String processTemaplated = script.eval(sresource).toString();
                 m_TTP.printTicket(processTemaplated, ticket);
             } catch (ScriptException | TicketPrinterException ex) {
@@ -1898,7 +1898,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
         } catch (JRException ex) {
             LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
-            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadreport") +"<br>"+ resourcefile, ex);
+            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadreport") + "<br>" + resourcefile, ex);
             msg.show(this);
         }
     }
@@ -1907,52 +1907,52 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         var deviceDisplay = m_App.getDeviceTicket().getDeviceDisplay();
         if (deviceDisplay != null && deviceDisplay instanceof DeviceDisplayAdvance) {
             DeviceDisplayAdvance advDisplay = (DeviceDisplayAdvance) deviceDisplay;
-            
+
             //TODO EVALUATE PERFORMANCE TO CREATE THIS EVERY TIME
             JTicketLines m_ticketlines2 = new JTicketLines(this.dlSystem.getResourceAsXML(TicketConstants.RES_TICKET_LINES));
             m_ticketlines2.setTicketTableFont(new Font("Arial", 0, 18));
 
             this.m_ticketlines.addListSelectionListener((ListSelectionEvent e) -> {
                 EventQueue.invokeLater(() -> {
-                DeviceDisplayAdvance advDisplay1 = (DeviceDisplayAdvance) JPanelTicket.this.m_App.getDeviceTicket().getDeviceDisplay();
-                int ticketLineIndex = JPanelTicket.this.m_ticketlines.getSelectedIndex();
-                // FEATURE 1
-                if (advDisplay1.hasFeature(1) && !e.getValueIsAdjusting()) {
-                    if (ticketLineIndex >= 0) {
-                        try {
-                            String sProductId = JPanelTicket.this.m_oTicket.getLine(ticketLineIndex).getProductID();
-                            if (sProductId != null) {
-                                ProductInfoExt prod = JPanelTicket.this.dlSales.getProductInfo(sProductId);
-                                if (prod == null) {
-                                    prod = dlSales.getProductInfoByCode(sProductId);
+                    DeviceDisplayAdvance advDisplay1 = (DeviceDisplayAdvance) JPanelTicket.this.m_App.getDeviceTicket().getDeviceDisplay();
+                    int ticketLineIndex = JPanelTicket.this.m_ticketlines.getSelectedIndex();
+                    // FEATURE 1
+                    if (advDisplay1.hasFeature(1) && !e.getValueIsAdjusting()) {
+                        if (ticketLineIndex >= 0) {
+                            try {
+                                String sProductId = JPanelTicket.this.m_oTicket.getLine(ticketLineIndex).getProductID();
+                                if (sProductId != null) {
+                                    ProductInfoExt prod = JPanelTicket.this.dlSales.getProductInfo(sProductId);
+                                    if (prod == null) {
+                                        prod = dlSales.getProductInfoByCode(sProductId);
+                                    }
+                                    if (prod != null) {
+                                        advDisplay1.setProductImage(prod.getImage());
+                                    }
                                 }
-                                if (prod != null) {
-                                    advDisplay1.setProductImage(prod.getImage());
-                                }
+                            } catch (BasicException ex) {
+                                LOGGER.log(System.Logger.Level.WARNING, "", ex);
                             }
-                        } catch (BasicException ex) {
-                            LOGGER.log(System.Logger.Level.WARNING, "", ex);
                         }
                     }
-                }
 
-                //FEATURE 2
-                if (advDisplay.hasFeature(2)) {
+                    //FEATURE 2
+                    if (advDisplay.hasFeature(2)) {
 
-                    
-                    m_ticketlines2.clearTicketLines();
-                    for (int j = 0; JPanelTicket.this.m_oTicket != null && j < JPanelTicket.this.m_oTicket.getLinesCount(); j++) {
-                        m_ticketlines2.insertTicketLine(j, JPanelTicket.this.m_oTicket.getLine(j));
+                        m_ticketlines2.clearTicketLines();
+                        for (int j = 0; JPanelTicket.this.m_oTicket != null && j < JPanelTicket.this.m_oTicket.getLinesCount(); j++) {
+                            m_ticketlines2.insertTicketLine(j, JPanelTicket.this.m_oTicket.getLine(j));
+                        }
+                        m_ticketlines2.setSelectedIndex(ticketLineIndex);
+
+                        advDisplay.setTicketLines(m_ticketlines2);
                     }
-                    m_ticketlines2.setSelectedIndex(ticketLineIndex);
-
-                    advDisplay.setTicketLines(m_ticketlines2);
-                }
+                });
             });
         }
 
     }
-    
+
     private void visorTicketLine(TicketLineInfo oLine) {
         if (oLine == null) {
             m_App.getDeviceTicket().getDeviceDisplay().clearVisor();
@@ -2041,7 +2041,6 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             m_ticketlines.setSelectedIndex(m_oTicket.getLinesCount() - 1);
         }
     }
-
 
     private String setTempjPrice(String jPrice) {
         jPrice = jPrice.replace(".", "");
@@ -3112,8 +3111,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
      */
 
     /* Application Property */
-    private String getAppProperty(String propertyName){
-       return  m_App.getProperties().getProperty(propertyName);
+    private String getAppProperty(String propertyName) {
+        return m_App.getProperties().getProperty(propertyName);
     }
 
 
@@ -3143,7 +3142,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     /* Remote Orders Display - Utils methods */
-    private RemoteOrderDisplay getRemoteOrderDisplay(){
+    private RemoteOrderDisplay getRemoteOrderDisplay() {
         return new RemoteOrderDisplay(m_App, m_oTicket, m_oTicketExt, getPickupString(m_oTicket));
     }
 
@@ -3280,54 +3279,55 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
      * JPnaleTicket constant defined in a single place
      */
     private static class TicketConstants {
+
         /**
          * Ticket Events(event key :string): Ticket event 'show'
          */
         public static final String EV_TICKET_SHOW = "ticket.show";
 
         /**
-         * Ticket Events (eventKey :string):  Ticket event 'change'
-         * Event: 'ticket.change' (Ticket changed)
+         * Ticket Events (eventKey :string): Ticket event 'change' Event:
+         * 'ticket.change' (Ticket changed)
          */
         public static final String EV_TICKET_CHANGE = "ticket.change";
 
         /**
-         * Ticket Events (eventKey :string):  Ticket event 'close'
-         * Event: 'ticket.close' (Ticket closed)
+         * Ticket Events (eventKey :string): Ticket event 'close' Event:
+         * 'ticket.close' (Ticket closed)
          */
         public static final String EV_TICKET_CLOSE = "ticket.close";
 
         /**
-         * Ticket Events (eventKey :string):  Ticket event 'save'
-         * Event: 'ticket.save' (Ticket saved)
+         * Ticket Events (eventKey :string): Ticket event 'save' Event:
+         * 'ticket.save' (Ticket saved)
          */
         public static final String EV_TICKET_SAVE = "ticket.save";
 
         /**
-         * Ticket Events (eventKey :string):  Ticket event 'total'
-         * Event: 'ticket.total' (Ticket total)
+         * Ticket Events (eventKey :string): Ticket event 'total' Event:
+         * 'ticket.total' (Ticket total)
          */
         public static final String EV_TICKET_TOTAL = "ticket.total";
 
         /**
-         * Ticket Property (property :boolean['true'|'false'):  Ticket property 'updated'
-         * Property: 'ticket.updated' (TicketLine was updated)
+         * Ticket Property (property :boolean['true'|'false'): Ticket property
+         * 'updated' Property: 'ticket.updated' (TicketLine was updated)
          */
         public static final String PROP_TICKET_UPDATED = "ticket.updated";
 
         /**
-         * Ticket Resource (resource: XML): Ticket resource
-         * Resource: 'Ticket.Buttons' (Define which buttons to show in Top Menu)
+         * Ticket Resource (resource: XML): Ticket resource Resource:
+         * 'Ticket.Buttons' (Define which buttons to show in Top Menu)
          */
         public static final String RES_TICKET_BUTTONS = "Ticket.Buttons";
 
         /**
-         * Ticket Resource (resource: XML): Ticket resource: TicketLine Panel configuration
-         * Resource: 'Ticket.Line' (Define which TicketLine attribute to show in TicketLinePanel)
+         * Ticket Resource (resource: XML): Ticket resource: TicketLine Panel
+         * configuration Resource: 'Ticket.Line' (Define which TicketLine
+         * attribute to show in TicketLinePanel)
          */
-        public static final String RES_TICKET_LINES =  "Ticket.Line";
+        public static final String RES_TICKET_LINES = "Ticket.Line";
 
     }
-
 
 }
