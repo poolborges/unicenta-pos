@@ -34,6 +34,7 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
@@ -130,6 +131,14 @@ public class JTicketLines extends javax.swing.JPanel {
      */
     public void removeListSelectionListener(ListSelectionListener l) {
         m_jTicketTable.getSelectionModel().removeListSelectionListener(l);
+    }
+    
+    public void addTableModelListener(TableModelListener listener){
+        m_jTicketTable.getModel().addTableModelListener(listener);
+    }
+    
+    public void removeTableModelListener(TableModelListener listener){
+        m_jTicketTable.getModel().removeTableModelListener(listener);
     }
 
     /**

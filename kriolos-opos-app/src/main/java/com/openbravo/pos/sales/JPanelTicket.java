@@ -54,17 +54,14 @@ import com.openbravo.pos.ticket.TicketLineInfo;
 import com.openbravo.pos.util.InactivityListener;
 import com.openbravo.pos.reports.JRPrinterAWT300;
 import com.openbravo.pos.util.ReportUtils;
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.Toolkit;
-import java.awt.Window;
+
+import java.awt.*;
+
 import static java.awt.Window.getWindows;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.util.*;
+import java.util.List;
 import javax.print.PrintService;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -74,6 +71,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRMapArrayDataSource;
 
@@ -657,6 +656,15 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         } else {
             Toolkit.getDefaultToolkit().beep();
         }
+    }
+    
+    private TicketLineInfo getSelectedTicketLineInfo(){
+        int i = m_ticketlines.getSelectedIndex();
+        return getTicketLineInfo(i);
+    }
+    
+    private TicketLineInfo getTicketLineInfo(int index){
+        return m_oTicket.getLine(index);
     }
 
     private void removeTicketLine(int i) {
@@ -1899,8 +1907,13 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         var deviceDisplay = m_App.getDeviceTicket().getDeviceDisplay();
         if (deviceDisplay != null && deviceDisplay instanceof DeviceDisplayAdvance) {
             DeviceDisplayAdvance advDisplay = (DeviceDisplayAdvance) deviceDisplay;
+            
+            //TODO EVALUATE PERFORMANCE TO CREATE THIS EVERY TIME
+            JTicketLines m_ticketlines2 = new JTicketLines(this.dlSystem.getResourceAsXML(TicketConstants.RES_TICKET_LINES));
+            m_ticketlines2.setTicketTableFont(new Font("Arial", 0, 18));
 
             this.m_ticketlines.addListSelectionListener((ListSelectionEvent e) -> {
+                EventQueue.invokeLater(() -> {
                 DeviceDisplayAdvance advDisplay1 = (DeviceDisplayAdvance) JPanelTicket.this.m_App.getDeviceTicket().getDeviceDisplay();
                 int ticketLineIndex = JPanelTicket.this.m_ticketlines.getSelectedIndex();
                 // FEATURE 1
@@ -1926,9 +1939,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 //FEATURE 2
                 if (advDisplay.hasFeature(2)) {
 
-                    //TODO EVALUATE PERFORMANCE TO CREATE THIS EVERY TIME
-                    JTicketLines m_ticketlines2 = new JTicketLines(this.dlSystem.getResourceAsXML(TicketConstants.RES_TICKET_LINES));
-                    m_ticketlines2.setTicketTableFont(new Font("Arial", 0, 18));
+                    
                     m_ticketlines2.clearTicketLines();
                     for (int j = 0; JPanelTicket.this.m_oTicket != null && j < JPanelTicket.this.m_oTicket.getLinesCount(); j++) {
                         m_ticketlines2.insertTicketLine(j, JPanelTicket.this.m_oTicket.getLine(j));
@@ -1941,7 +1952,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         }
 
     }
-
+    
     private void visorTicketLine(TicketLineInfo oLine) {
         if (oLine == null) {
             m_App.getDeviceTicket().getDeviceDisplay().clearVisor();

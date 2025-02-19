@@ -53,6 +53,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </activatedProfiles>
     </action>
     <action>
+        <actionName>CUSTOM-run-JFrmConfig</actionName>
+        <displayName>run-JFrmConfig</displayName>
+        <goals>
+            <goal>exec:java</goal>
+            <goal>-Dexec.mainClass="com.openbravo.pos.config.JFrmConfig"</goal>
+        </goals>
+    </action>
+    <action>
         <actionName>CUSTOM-JasperDesignViewer</actionName>
         <displayName>JasperDesignViewer</displayName>
         <goals>
