@@ -74,3 +74,33 @@ Links
 * http://jpos.org 
 * http://gihub.com/jpos
 
+== Serial Device on Java
+
+
+.Future version to be used
+[source,xml]
+----
+<dependency>
+    <groupId>com.fazecast</groupId>
+    <artifactId>jSerialComm</artifactId>
+    <version>2.11.0</version>
+</dependency>
+
+<!-- https://github.com/Fazecast/jSerialComm -->
+----
+
+
+.Current in use (Compatible with RxTx)
+[source, xml]
+----
+<dependency>
+    <groupId>com.neuronrobotics</groupId>
+    <artifactId>nrjavaserial</artifactId>
+    <version>5.2.1</version>
+</dependency>
+----
+
+== Unicode 
+
+
+Code Page 1252 (Windows-1252):

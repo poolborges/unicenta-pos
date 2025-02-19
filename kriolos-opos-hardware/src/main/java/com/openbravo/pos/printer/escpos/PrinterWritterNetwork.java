@@ -16,8 +16,8 @@ public class PrinterWritterNetwork extends PrinterWritter {
     private Socket clientSocket;
     private OutputStream outStream;
 
-    public PrinterWritterNetwork(String sFilePrinter, int hostPort) {
-        this.hostAddress = sFilePrinter;
+    public PrinterWritterNetwork(String hostAddress, int hostPort) {
+        this.hostAddress = hostAddress;
         this.m_iPort = hostPort;
         this.clientSocket = null;
         this.outStream = null;
@@ -26,13 +26,14 @@ public class PrinterWritterNetwork extends PrinterWritter {
     @Override
     protected void internalWrite(byte[] data) {
         try {
-            if (this.outStream == null) {
+            if (this.outStream == null || this.clientSocket == null) {
+                LOGGER.log(Level.INFO, "PrinterNetwork connet to host: "+this.hostAddress + ", port: "+this.m_iPort);
                 this.clientSocket = new Socket(this.hostAddress, this.m_iPort);
                 this.outStream = new DataOutputStream(this.clientSocket.getOutputStream());
             }
             this.outStream.write(data);
         } catch (IOException e) {
-            LOGGER.log(Level.WARNING, "Exception on write", e);
+            LOGGER.log(Level.WARNING, "Exception on write network at host: "+this.hostAddress + ", port: "+this.m_iPort, e);
         }
     }
 
@@ -49,7 +50,7 @@ public class PrinterWritterNetwork extends PrinterWritter {
                 this.clientSocket = null;
             }
         } catch (IOException e) {
-            LOGGER.log(Level.WARNING, "Exception on flush", e);
+            LOGGER.log(Level.WARNING, "Exception on flush to network at host: "+this.hostAddress + ", port: "+this.m_iPort, e);
         }
     }
 
@@ -62,11 +63,14 @@ public class PrinterWritterNetwork extends PrinterWritter {
                 this.outStream = null;
             }
             if(clientSocket != null){
+                LOGGER.log(Level.INFO, "PrinterNetwork connet to " 
+                        + "host: "+ this.clientSocket.getInetAddress().getHostAddress() 
+                        + ", port: "+this.clientSocket.getPort());
                 this.clientSocket.close();
                 this.clientSocket = null;
             }
         } catch (IOException e) {
-            LOGGER.log(Level.WARNING, "Exception on close", e);
+            LOGGER.log(Level.WARNING, "Exception on close network at host: "+this.hostAddress + ", port: "+this.m_iPort, e);
         }
     }
 }
