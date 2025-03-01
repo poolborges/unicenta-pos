@@ -244,9 +244,11 @@ public class JMessageDialog extends javax.swing.JDialog {
 
     private void jcmdMoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcmdMoreActionPerformed
 
-        if (jscrException.isVisible()) {
+        jcmdMore.setEnabled(true);
+        setSize(getWidth(), 310);
+        if(jscrException.isVisible()){
             jscrException.setVisible(false);
-        } else {
+        }else{
             jscrException.setVisible(true);
         }
         validate();
