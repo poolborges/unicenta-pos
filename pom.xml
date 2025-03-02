@@ -16,7 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.kriolos.opos</groupId>
     <artifactId>kriolos-opos-parent</artifactId>
@@ -26,72 +27,74 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <url>https://github.com/kriolos/kriolos-opos</url>
     <description>KriolOS.POS (Kriol Open Source Point Of Sales)</description>
-    
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        
+
         <netbeans.version>RELEASE240</netbeans.version>
         <brandingToken>kriolos_obiz</brandingToken>
-        
+
         <project.github-url>http://kriolos.github.io/kriolos-opos</project.github-url>
 
         <!-- MISC config-->
         <clover-maven-plugin.version>4.4.1</clover-maven-plugin.version>
         <spotbug.version>4.7.2.0</spotbug.version>
         <maven-pmd-plugin.version>3.14.0</maven-pmd-plugin.version>
-        
+
         <!-- Javadoc config -->
         <javadoc.excluded.packages/>
         <asciidoclet.version>1.5.6</asciidoclet.version>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        
+
         <!-- checkstyle config -->
-        <checkstyle.plugin.version>3.1.2</checkstyle.plugin.version>
+        <checkstyle.plugin.version>3.6.0</checkstyle.plugin.version>
         <checkstyle.excludes/>
-        
+
         <!-- owasp config -->
         <owasp.dependency.check.version>6.1.5</owasp.dependency.check.version>
-        <owasp>none</owasp> <!-- owasp phase verify or use 'none' for disable -->
+        <!-- owasp phase verify or use 'none' for disable -->
+        <owasp>none</owasp>
         <owasp.plugin.version>6.1.5</owasp.plugin.version>
-        <owasp.plugin.autoUpdate>false</owasp.plugin.autoUpdate> <!-- definir como false quando houver problema com repository NIST -->
+        <!-- Set as false when you have issue with repository NIST -->
+        <owasp.plugin.autoUpdate>false</owasp.plugin.autoUpdate>
         <owasp.plugin.failBuildOnAnyVulnerability>false</owasp.plugin.failBuildOnAnyVulnerability>
-        
-        <!-- surefire config --> 
+
+        <!-- surefire config -->
         <failIfNoTests>false</failIfNoTests>
-        
+
         <!-- Kotlin -->
         <kotlin.version>1.7.22</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-        
-        <!-- dependencies/library version --> 
+
+        <!-- dependencies/library version -->
 
         <liquibase.version>4.8.0</liquibase.version>
-        
+
         <javax.activation.version>1.2.0</javax.activation.version>
         <jaxb.api.version>2.3.4</jaxb.api.version>
-        <lombok.version>1.18.16</lombok.version>
+        <lombok.version>1.18.36</lombok.version>
 
     </properties>
-    
+
     <organization>
         <name>Paulo Borges</name> <!-- To be Chnge for a Organization Name -->
     </organization>
     <inceptionYear>2022</inceptionYear>
-    
+
     <scm>
         <connection>scm:git:https://github.com/poolborges/unicenta-pos.git</connection>
         <developerConnection>scm:git:https://github.com/poolborges/unicenta-pos.git</developerConnection>
         <url>https://github.com/poolborges/unicenta-pos</url>
         <tag>HEAD</tag>
     </scm>
-    
+
     <issueManagement>
         <system>Github</system>
         <url>https://github.com/poolborges/unicenta-pos/issues</url>
     </issueManagement>
-    
+
     <distributionManagement>
         <site>
             <id>https://poolborges.github.io/unicenta-pos</id>
@@ -102,12 +105,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <url>https://maven.pkg.github.com/poolborges/${project.artifactId}</url>
         </repository>
     </distributionManagement>
-    
+
     <ciManagement>
         <system>GitHub Action</system>
         <url>https://github.com/poolborges/unicenta-pos/actions</url>
     </ciManagement>
-    
+
     <licenses>
         <license>
             <name>GNU General Public License, version 3</name>
@@ -136,7 +139,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </roles>
         </developer>
     </developers>
-    
+
     <contributors>
         <contributor>
             <name>Maria Semedo</name>
@@ -153,7 +156,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>kriolos-opos-app</module>
         <module>docs</module>
     </modules>
-    
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -186,10 +189,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <artifactId>kriolos-opos-i18n_pt</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            
-            <dependency> 
-                <groupId>org.jetbrains.kotlin</groupId>  
-                <artifactId>kotlin-stdlib</artifactId>  
+
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib</artifactId>
                 <version>${kotlin.version}</version>
             </dependency>
             <dependency>
@@ -198,20 +201,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <version>${kotlin.version}</version>
                 <scope>test</scope>
             </dependency>
-            
+
             <!-- Netbeans Module - Layput -->
-            <dependency> 
-                <groupId>org.netbeans.external</groupId>  
-                <artifactId>AbsoluteLayout</artifactId>  
-                <version>${netbeans.version}</version> 
-            </dependency> 
+            <dependency>
+                <groupId>org.netbeans.external</groupId>
+                <artifactId>AbsoluteLayout</artifactId>
+                <version>${netbeans.version}</version>
+            </dependency>
             <!-- Netbeans Module - Swing Validation: On NBM Need extra lib -->
             <dependency>
                 <groupId>org.netbeans.modules</groupId>
                 <artifactId>org-netbeans-modules-swing-validation</artifactId>
                 <version>${netbeans.version}</version>
             </dependency>
-            
+
             <!-- JAXB version:2.3.3 Provide javax. packages-->
             <dependency>
                 <groupId>jakarta.xml.bind</groupId>
@@ -238,7 +241,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <artifactId>ValidationAPI</artifactId>
                 <version>RELEASE180</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
@@ -259,7 +262,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </dependency>
         </dependencies>
     </dependencyManagement>
-    
+
     <build>
         <defaultGoal>install</defaultGoal>
         <pluginManagement>
@@ -268,17 +271,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.6.1</version>
+                    <version>3.7.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>3.4.1</version>
                 </plugin>
-                <plugin> 
+                <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.5.0</version>
                 </plugin>
 
                 <plugin>
@@ -288,7 +291,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <configuration>
                         <showWarnings>true</showWarnings>
                         <showDeprecation>true</showDeprecation>
-                        <debug>true</debug> 
+                        <debug>true</debug>
                         <debuglevel>lines,vars,source</debuglevel>
                         <compilerArgs>
                             <arg>-Xlint:all</arg>
@@ -296,11 +299,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     </configuration>
                 </plugin>
 
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${checkstyle.plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>10.21.3</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>org.projectlombok</groupId>
+                    <artifactId>lombok-maven-plugin</artifactId>
+                    <version>1.18.20.0</version>
+                </plugin>
+
             </plugins>
         </pluginManagement>
-        
+
         <plugins>
-            <!-- Generate ${project.build.directory} ${project.build.outputDirectory}/META-INF/uild.properties --> 
+            <!-- Generate ${project.build.directory} ${project.build.outputDirectory}/META-INF/build.properties -->
             <plugin>
                 <groupId>de.smartics.maven.plugin</groupId>
                 <artifactId>buildmetadata-maven-plugin</artifactId>
@@ -318,7 +339,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>templating-maven-plugin</artifactId>
-                <version>1.0.0</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>filter-src</id>
@@ -351,11 +372,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.6.0</version>
-                <configuration>
-                    <configLocation>config/sun_checks.xml</configLocation>
-                </configuration>
             </plugin>
         </plugins>
     </reporting>
+    <profiles>
+        <profile>
+            <id>checkstyle</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <configLocation>src/config/sun_checks.xml</configLocation>
+                                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
