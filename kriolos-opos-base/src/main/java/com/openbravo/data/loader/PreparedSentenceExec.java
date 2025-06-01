@@ -108,6 +108,7 @@ public class PreparedSentenceExec<W extends Object, T> extends JDBCBaseSentence<
                 }
 
                 rowsAffected = preparedStatement.executeUpdate();
+                preparedStatement.getConnection().commit();
             } catch (SQLException sqlex) {
                 LOGGER.log(System.Logger.Level.WARNING, "Exception while execute SQL: " + sql, sqlex);
                 throw new BasicException(sqlex);
