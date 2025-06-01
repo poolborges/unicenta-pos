@@ -64,9 +64,11 @@ public class JTicketsBagSharedList extends javax.swing.JDialog {
      */
     public String showTicketsList(java.util.List<SharedTicketInfo> atickets, DataLogicReceipts dlReceipts) {
 
+        m_sDialogTicket = null;
+
         for (SharedTicketInfo aticket : atickets) {
 
-            String label = aticket.getName();
+            String label = aticket.getName() + " : "+aticket.getUserName();
             try {
                 TicketInfo ticket2 = dlReceipts.getSharedTicket(aticket.getId());
                 if(ticket2 != null){
@@ -90,8 +92,6 @@ public class JTicketsBagSharedList extends javax.swing.JDialog {
                     AppLocal.getIntString("message.sharedtickettitle"),
                     JOptionPane.OK_OPTION);
         }
-        
-        m_sDialogTicket = null;
 
         return m_sDialogTicket;
     }

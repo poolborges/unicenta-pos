@@ -19,10 +19,7 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.beans.JIntegerDialog;
 import com.openbravo.beans.JPasswordDialog;
 import com.openbravo.data.gui.MessageInf;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.DataLogicSales;
-import com.openbravo.pos.forms.DataLogicSystem;
+import com.openbravo.pos.forms.*;
 import com.openbravo.pos.sales.DataLogicReceipts;
 import com.openbravo.pos.sales.JTicketsBag;
 import com.openbravo.pos.sales.ReprintTicketInfo;
@@ -154,17 +151,17 @@ public class JTicketsBagShared extends JTicketsBag {
         TicketInfo ticketInfo = m_panelticket.getActiveTicket();
         if (ticketInfo != null) {
             String ticketID = m_panelticket.getActiveTicket().getId();
+            int pickupId = m_panelticket.getActiveTicket().getPickupId();
             try {
                 //SAVE Ticket with at less One line
                 if (ticketInfo.getLinesCount() >= 1) {
-                    dlReceipts.insertSharedTicket(ticketID,
-                            m_panelticket.getActiveTicket(),
-                            m_panelticket.getActiveTicket().getPickupId());
+                    dlReceipts.insertSharedTicket(ticketID, m_panelticket.getActiveTicket(),pickupId);
 
                     m_jListTickets.setText("*");
-                    LOGGER.log(System.Logger.Level.INFO, "SAVED Current Ticket ID: ", ticketID);
+                    LOGGER.log(System.Logger.Level.INFO, "SAVED Current Ticket ID: "+ticketID);
                 } else {
-                    LOGGER.log(System.Logger.Level.INFO, "NOT SAVED Current Ticket because has no line/item, Ticket ID: ", ticketID);
+                    LOGGER.log(System.Logger.Level.INFO, "NOT SAVED Current Ticket because has no line/item, Ticket ID: "+ticketID);
+                    //new MessageInf(new BasicException("Cannot save current Ticket because has no line/item")).show(this);
                 }
             } catch (BasicException e) {
                 LOGGER.log(System.Logger.Level.WARNING, "Exception saveCurrentTicket: " + ticketID, e);
@@ -369,37 +366,31 @@ public class JTicketsBagShared extends JTicketsBag {
 
                 try {
                     if (!m_App.hasPermission("sales.ViewSharedTicket")) {
-                        JOptionPane.showMessageDialog(null,
+                        JOptionPane.showMessageDialog(JTicketsBagShared.this,
                                 AppLocal.getIntString("message.sharedticket"),
                                 AppLocal.getIntString("message.sharedtickettitle"),
                                 JOptionPane.INFORMATION_MESSAGE);
                     } else {
 
+                        List<SharedTicketInfo> listSharedTicket = null;
+                        AppUser appuser = m_App.getAppUserView().getUser();
                         //String roleId = m_App.getAppUserView().getUser().getRole();
                         if (m_App.hasPermission("sales.ViewSharedTicket")
                                 || m_App.hasPermission("sales.Override")) {
-                            List<SharedTicketInfo> l = dlReceipts.getSharedTicketList();
-                            JTicketsBagSharedList listDialog = JTicketsBagSharedList.newJDialog(JTicketsBagShared.this);
-                            String id = listDialog.showTicketsList(l, dlReceipts);
+                            listSharedTicket = dlReceipts.getSharedTicketList();
 
-                            if (id != null) {
-                                saveCurrentTicket();
-                                setActiveTicket(id);
-                            }
                         } else {
+                            listSharedTicket = dlReceipts.getUserSharedTicketList(appuser.getId());
+                        }
 
-                            String appuser = m_App.getAppUserView().getUser().getId();
-                            List<SharedTicketInfo> l = dlReceipts.getUserSharedTicketList(
-                                    appuser);
+                        LOGGER.log(System.Logger.Level.INFO, "Shared ticket found "+ listSharedTicket.size() +" tickets for  user: "+appuser.getName());
 
-                            JTicketsBagSharedList listDialog = JTicketsBagSharedList.newJDialog(JTicketsBagShared.this);
+                        JTicketsBagSharedList listDialog = JTicketsBagSharedList.newJDialog(JTicketsBagShared.this);
+                        String id = listDialog.showTicketsList(listSharedTicket, dlReceipts);
 
-                            String id = listDialog.showTicketsList(l, dlReceipts);
-
-                            if (id != null) {
-                                saveCurrentTicket();
-                                setActiveTicket(id);
-                            }
+                        if (id != null) {
+                            saveCurrentTicket();
+                            setActiveTicket(id);
                         }
                     }
                 } catch (BasicException e) {
