@@ -6,5 +6,8 @@
 .classpath
 .project
 /build
-/docs/guide-devel/src/main/asciidoc/.asciidoctor/
-/docs/guide-devel/src/main/asciidoc/images/
+/docs/**/asciidoc/.asciidoctor/
+/docs/**/asciidoc/images/
+/.dbase/
+/**/kriolopos.lck
+/**/kriolopos.log
