@@ -218,18 +218,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <artifactId>thumbnailator</artifactId>
             <version>0.4.17</version>
         </dependency>
-        
-        <!-- Migration Library -->
+
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <version>${liquibase.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.xml.bind</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         
         <!-- JAX XML-->

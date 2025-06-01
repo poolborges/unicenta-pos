@@ -34,7 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <maven.compiler.target>17</maven.compiler.target>
 
         <netbeans.version>RELEASE240</netbeans.version>
-        <brandingToken>kriolos_obiz</brandingToken>
 
         <project.github-url>http://kriolos.github.io/kriolos-opos</project.github-url>
 
@@ -69,11 +68,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 
         <!-- dependencies/library version -->
-
-        <liquibase.version>4.8.0</liquibase.version>
-
-        <javax.activation.version>1.2.0</javax.activation.version>
-        <jaxb.api.version>2.3.4</jaxb.api.version>
         <lombok.version>1.18.36</lombok.version>
 
     </properties>
@@ -259,6 +253,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <artifactId>junit-jupiter-params</artifactId>
                 <version>5.10.3</version>
                 <scope>test</scope>
+            </dependency>
+            
+            <!-- Migration Library -->
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>4.32.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
