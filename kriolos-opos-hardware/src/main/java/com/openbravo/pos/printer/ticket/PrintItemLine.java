@@ -84,7 +84,7 @@ public class PrintItemLine implements PrintItem {
         for (int i = 0; i < m_atext.size(); i++) {
             StyledText t = m_atext.get(i);
             g.setFont(ps.getFont(font, t.style));
-            g.drawString(t.text, left, (float) y);
+            g.drawString(t.text, (float)left, (float) y);
             left += g.getFontMetrics().getStringBounds(t.text, g).getWidth();
         }
     }
