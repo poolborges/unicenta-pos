@@ -80,7 +80,7 @@ public class PrintItemLine implements PrintItem {
     public void draw(Graphics2D g, int x, int y, int width) {
 
         MyPrinterState ps = new MyPrinterState(textsize);
-        float left = x;
+        double left = x;
         for (int i = 0; i < m_atext.size(); i++) {
             StyledText t = m_atext.get(i);
             g.setFont(ps.getFont(font, t.style));
