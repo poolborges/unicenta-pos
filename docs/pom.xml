@@ -24,6 +24,7 @@
     <modules>
         <module>guide-devel</module>
         <module>guide-comercial</module>
+        <module>guide-user</module>
     </modules>
      
     <profiles>
