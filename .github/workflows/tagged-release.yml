@@ -1,5 +1,5 @@
-# This workflow will build 
-name: "tagged-release"
+# This workflow will build and generate the distribuition
+name: "Tagged Release"
 
 on:
   push:
@@ -22,13 +22,18 @@ jobs:
         distribution: 'adopt'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn package -Pdocs-gen,distribuition -B --file pom.xml
     - name: Release Binary
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        #automatic_release_tag: "latest"
+        title: "Latest Build"
         prerelease: false
         files: |
           LICENSE.txt
           CHANGELOG.txt
-          target/*.jar
+          kriolos-opos-app/target/*.zip
+          docs/guide-comercial/target/generated-docs/pdf/kriolos-pos-*.pdf
+          docs/guide-devel/target/generated-docs/pdf/kriolos-pos-*.pdf
+          docs/guide-user/target/generated-docs/pdf/kriolos-pos-*.pdf
