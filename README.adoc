@@ -23,8 +23,8 @@ endif::[]
 
 [[doc]]
 = Kriol Open Source Point Of Sales
-:author: Copyright (c) 2020-2022 KriolOS.
-:revnumber: 2022-08-23
+:author: Copyright (c) KriolOS Team.
+:revnumber: 2025-08-26
 :revdate: {last-update-label} {docdatetime}
 :version-label!:
 
@@ -39,12 +39,18 @@ image:https://codecov.io/github/poolborges/unicenta-pos/coverage.svg["Code Cover
 image:https://img.shields.io/badge/License-GPLv3-blue.svg["License: GPL v3", link="https://www.gnu.org/licenses/gpl-3.0.en.html"]
 image:https://badges.crowdin.net/krpos/localized.svg["Crowdin/Translation Status", link="https://crowdin.com/project/krpos"]
 
-== Stats
+=== Stats
 
 image:https://img.shields.io/github/issues-pr-raw/poolborges/unicenta-pos["GitHub Pull Requests", link="https://github.com/poolborges/unicenta-pos/pulls"]
 image:https://img.shields.io/badge/team-committers-green["GitHub Committers", link="https://github.com/orgs/kriolos/teams/obiz-core-team/members"]
 image:https://img.shields.io/github/contributors/poolborges/unicenta-pos["GitHub Contributors", link="https://github.com/poolborges/unicenta-pos/contributors"]
 image:https://img.shields.io/github/commit-activity/m/poolborges/unicenta-pos["GitHub Commit Activity", link="https://github.com/poolborges/unicenta-pos/commits"]
+
+=== Release and Download
+
+image:https://img.shields.io/github/release-date-pre/poolborges/unicenta-pos.svg["GitHub pre-release", link="https://github.com/poolborges/unicenta-pos/releases"]
+image:https://img.shields.io/github/release/poolborges/unicenta-pos.svg["GitHub release", link="https://github.com/poolborges/unicenta-pos/releases"]
+image:https://img.shields.io/github/downloads/poolborges/unicenta-pos/total["GitHub all releases", link="https://github.com/poolborges/unicenta-pos/releases"]
 
 endif::[]
 
