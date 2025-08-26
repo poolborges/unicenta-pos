@@ -14,8 +14,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
-<actions>
+--><actions>
     <action>
         <actionName>run</actionName>
         <displayName>StartPOS</displayName>
@@ -77,4 +76,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <goal>-Dexec.mainClass="org.jdesktop.swingx.color.EyeDropperColorChooserPanel"</goal>
         </goals>
     </action>
+    <action>
+            <actionName>CUSTOM-Distribuition</actionName>
+            <displayName>Distribuition</displayName>
+            <goals>
+                <goal>package</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>distribuition</activatedProfile>
+            </activatedProfiles>
+        </action>
 </actions>
