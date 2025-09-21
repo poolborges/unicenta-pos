@@ -53,8 +53,6 @@ public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelCon
         jcboDBDriver.addItem("MariaDB");
         jcboDBDriver.addItem("MySQL");
         jcboDBDriver.addItem("HSQLDB");
-        jcboDBDriver.addItem("PostgreSQL");
-        jcboDBDriver.addItem("Derby");
         jcboDBDriver.setSelectedIndex(0);
         multiDB.addActionListener(dirty);        
         

@@ -237,15 +237,9 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
             con=s.getConnection();  
             String sdbmanager = m_dlSystem.getDBVersion();           
 
-            if (isDBPostgre()) {
-                SQL = "SELECT * " +
-                        "FROM draweropened " +
-                        "WHERE TICKETID = 'No Sale' AND OPENDATE > " + "'" + m_PaymentsToClose.printDateStart() + "'";
-            } else {
-                SQL = "SELECT * " +
+            SQL = "SELECT * " +
                         "FROM draweropened " +
                         "WHERE TICKETID = 'No Sale' AND OPENDATE > {fn TIMESTAMP('" + m_PaymentsToClose.getDateStartDerby() + "')}";
-            }
 
             stmt = (Statement) con.createStatement();      
             rs = stmt.executeQuery(SQL);
@@ -256,15 +250,9 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
 
 // Get Ticket DELETES & Line Voids            
             dresult=0;
-            if (isDBPostgre()) {
-                SQL = "SELECT * " +
+            SQL = "SELECT * " +
                         "FROM lineremoved " +
-                        "WHERE REMOVEDDATE > " + "'" + m_PaymentsToClose.printDateStart() + "'";                        
-            } else {
-                SQL = "SELECT * " +
-                        "FROM lineremoved " +
-                        "WHERE REMOVEDDATE > {fn TIMESTAMP('" + m_PaymentsToClose.getDateStartDerby() + "')}";                        
-            }
+                        "WHERE REMOVEDDATE > {fn TIMESTAMP('" + m_PaymentsToClose.getDateStartDerby() + "')}"; 
 
             stmt = (Statement) con.createStatement();      
             rs = stmt.executeQuery(SQL);
@@ -377,10 +365,6 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
         }
     }
     
-    private boolean isDBPostgre(){
-        return "PostgreSQL".equals(m_dlSystem.getDBVersion());
-    }
-
     private class FormatsPayment extends Formats {
         @Override
         protected String formatValueInt(Object value) {

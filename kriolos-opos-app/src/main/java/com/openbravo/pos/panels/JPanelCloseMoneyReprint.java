@@ -219,17 +219,10 @@ public class JPanelCloseMoneyReprint extends JPanel implements JPanelView, BeanF
                 result=0;
                 s=m_App.getSession();
                 con=s.getConnection();  
-                String sdbmanager = m_dlSystem.getDBVersion();           
-
-                if ("PostgreSQL".equals(sdbmanager)) {
-                    SQL = "SELECT * " +
-                        "FROM draweropened " +
-                        "WHERE TICKETID = 'No Sale' AND OPENDATE > " + "'" + m_PaymentsClosed.printDateStart() + "'";
-                } else {
-                    SQL = "SELECT * " +
-                        "FROM draweropened " +
-                        "WHERE TICKETID = 'No Sale' AND DATE(OPENDATE) = " + "'" + m_PaymentsClosed.printDateStart() + "'";                        
-                }
+                String sdbmanager = m_dlSystem.getDBVersion();   
+                SQL = "SELECT * " +
+                    "FROM draweropened " +
+                    "WHERE TICKETID = 'No Sale' AND DATE(OPENDATE) = " + "'" + m_PaymentsClosed.printDateStart() + "'"; 
 
                 stmt = (Statement) con.createStatement();      
                 rs = stmt.executeQuery(SQL);
@@ -239,15 +232,9 @@ public class JPanelCloseMoneyReprint extends JPanel implements JPanelView, BeanF
             
                 rs=null;
                 dresult=0;
-                if ("PostgreSQL".equals(sdbmanager)) {
-                    SQL = "SELECT * " +
+                SQL = "SELECT * " +
                         "FROM lineremoved " +
-                        "WHERE TICKETID = 'Void' AND REMOVEDDATE > " + "'" + m_PaymentsClosed.printDateStart() + "'";
-                } else {
-                    SQL = "SELECT * " +
-                        "FROM lineremoved " +
-                        "WHERE TICKETID = 'Void' AND DATE(REMOVEDDATE) = " + "'" + m_PaymentsClosed.printDateStart() + "'";                        
-                }
+                        "WHERE TICKETID = 'Void' AND DATE(REMOVEDDATE) = " + "'" + m_PaymentsClosed.printDateStart() + "'"; 
 
                 stmt = (Statement) con.createStatement();      
                 rs = stmt.executeQuery(SQL);
