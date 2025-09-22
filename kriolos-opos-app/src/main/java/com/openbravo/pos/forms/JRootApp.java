@@ -461,9 +461,7 @@ public class JRootApp extends JPanel implements AppView {
         } catch (SQLException e) {
             url = "";
         }
-        m_jHost.setText("<html>" + appFileProperties.getHost() + " ;WareHouse: " + sWareHouse + "<br>" + url + "</html>");
-        //statusBarPanel.setVisible(!(Boolean.valueOf(appFileProperties.getProperty("till.hideinfo"))));
-        statusBarPanel.setVisible(false);
+        m_jHost.setText("<html>" + appFileProperties.getHost() + " ;<b>WareHouse<b>: " + sWareHouse + "<br>" + url + "</html>");
     }
 
     /**
