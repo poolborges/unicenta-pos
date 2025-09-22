@@ -72,12 +72,12 @@ public class JTicketsBagSharedList extends javax.swing.JDialog {
             try {
                 TicketInfo ticket2 = dlReceipts.getSharedTicket(aticket.getId());
                 if(ticket2 != null){
-                    label = " - " + ticket2.printTotal();
+                    label += " : " + ticket2.printTotal();
                 }else{
                     LOGGER.log(Level.SEVERE, "Cannot recovery TicketInfo for ticket Id: "+aticket.getId());
                 }
             } catch (BasicException ex) {
-                label = "!";
+                label += "!!!!!";
                 LOGGER.log(Level.SEVERE, "Exception on recovery TicketInfo for ticket Id: "+aticket.getId(), ex);
             }
 
@@ -154,7 +154,7 @@ public class JTicketsBagSharedList extends javax.swing.JDialog {
             setRequestFocusEnabled(false);
             setMargin(new Insets(8, 14, 8, 14));
             setFont(new java.awt.Font("Dialog", 0, 14));
-            setBackground(new java.awt.Color(220, 220, 220));
+            //setBackground(new java.awt.Color(220, 220, 220));
             addActionListener(new ActionListenerImpl());
             setText(label);
         }
@@ -214,8 +214,8 @@ public class JTicketsBagSharedList extends javax.swing.JDialog {
         m_jButtonCancel.setText(AppLocal.getIntString("button.close")); // NOI18N
         m_jButtonCancel.setFocusPainted(false);
         m_jButtonCancel.setFocusable(false);
-        m_jButtonCancel.setMargin(new java.awt.Insets(8, 16, 8, 16));
-        m_jButtonCancel.setPreferredSize(new java.awt.Dimension(80, 45));
+        m_jButtonCancel.setMargin(new java.awt.Insets(8, 8, 8, 8));
+        m_jButtonCancel.setPreferredSize(new java.awt.Dimension(100, 45));
         m_jButtonCancel.setRequestFocusEnabled(false);
         m_jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

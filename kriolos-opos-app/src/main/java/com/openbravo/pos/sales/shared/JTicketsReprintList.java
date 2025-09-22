@@ -382,8 +382,8 @@ TicketInfo ticket = dlSales.getReprintTicket(Id);
         m_jButtonCancel.setText(AppLocal.getIntString("button.close")); // NOI18N
         m_jButtonCancel.setFocusPainted(false);
         m_jButtonCancel.setFocusable(false);
-        m_jButtonCancel.setMargin(new java.awt.Insets(8, 16, 8, 16));
-        m_jButtonCancel.setPreferredSize(new java.awt.Dimension(80, 45));
+        m_jButtonCancel.setMargin(new java.awt.Insets(8, 8, 8, 8));
+        m_jButtonCancel.setPreferredSize(new java.awt.Dimension(100, 45));
         m_jButtonCancel.setRequestFocusEnabled(false);
         m_jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
