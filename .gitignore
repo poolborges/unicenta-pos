@@ -9,5 +9,6 @@
 /docs/**/asciidoc/.asciidoctor/
 /docs/**/asciidoc/images/
 /.dbase/
+/**/kriolopos/
 /**/kriolopos.lck
 /**/kriolopos.log
