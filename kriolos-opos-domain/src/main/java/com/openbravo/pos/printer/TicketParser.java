@@ -19,6 +19,7 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.printer.escpos.DeviceDisplayLED8;
 import com.openbravo.pos.ticket.TicketInfo;
+import com.openbravo.pos.util.AudioUtils;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Reader;
@@ -291,13 +292,7 @@ public class TicketParser extends DefaultHandler {
         switch (m_iOutputType) {
             case OUTPUT_NONE:
                 if ("play".equals(qName)) {
-                    try {
-                        //TODO MUST found alternative AudioClip is Deprecated
-                        //AudioClip oAudio = Applet.newAudioClip(getClass().getClassLoader().getResource(text.toString()));
-                        //oAudio.play();
-                    } catch (Exception fnfe) {
-                        //throw new ResourceNotFoundException( fnfe.getMessage() );
-                    }
+                    AudioUtils.play(this.text.toString());
                     text = null;
                 }
                 break;
