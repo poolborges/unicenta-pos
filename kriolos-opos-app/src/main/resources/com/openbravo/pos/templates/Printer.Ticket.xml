@@ -219,8 +219,7 @@
                     <line><text>${paymentline.printCardNumber()}</text></line>
                     <line></line>
                     <line size="1"><text align="left" length="10">AMOUNT</text><text align ="right" length="32">${paymentline.printTotal()}</text></line>
-                    <text align ="left" length="22">Expiration Date:</text>
-                    <text>${paymentline.printExpirationDate()}</text></line>
+                    <line size="1"><text align ="left" length="22">Expiration Date:</text><text>${paymentline.printExpirationDate()}</text></line>
                     <line><text>Operation : </text><text>${paymentline.printTransactionID()}</text></line>
                     <line><text>Auth Code : </text><text>${paymentline.printAuthorization()}</text></line>
                     <line></line>
