@@ -298,7 +298,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     listener.start();
                 }
             } catch (NumberFormatException ex) {
-                LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
+                LOGGER.log(System.Logger.Level.WARNING, "Exception on set auto logout timer: ", ex);
             }
         }
 
@@ -1796,6 +1796,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     private void printTicket(String sresourcename, TicketInfo ticket, String ticketext) {
 
+        String processTemaplated = "";
         LOGGER.log(System.Logger.Level.INFO, "Reading resource id: " + sresourcename);
         String sresource = dlSystem.getResourceAsXML(sresourcename);
         if (sresource == null) {
@@ -1832,10 +1833,11 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 //TODO - MUST present to the progress o printing processing
                 refreshTicket();
 
-                String processTemaplated = script.eval(sresource).toString();
+                processTemaplated = script.eval(sresource).toString();
                 m_TTP.printTicket(processTemaplated, ticket);
             } catch (ScriptException | TicketPrinterException ex) {
                 LOGGER.log(System.Logger.Level.WARNING, "Exception on processing/Print resource id: " + sresourcename, ex);
+                LOGGER.log(System.Logger.Level.DEBUG, "Exeception PROCESSED TEMPLATE: \n\r+++++++++++++\n\r " + processTemaplated + "\n\r+++++++++++++\n\r");
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotprintticket"), ex);
                 msg.show(JPanelTicket.this);
             }
