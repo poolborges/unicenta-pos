@@ -33,7 +33,7 @@ public class JTicketContainer extends javax.swing.JPanel {
 
     private int H_GAP = 8;
     private int V_GAP = 8;
-
+    private int lastVerticalPosition = 0;
     private final int screenWidth;
     
     public JTicketContainer() {
@@ -80,7 +80,6 @@ public class JTicketContainer extends javax.swing.JPanel {
         int iMaxx = 0;
         int numComponents = getComponentCount();
         for (int pos = 0; pos < numComponents; pos++) {
-            System.out.println("=========== doLayout"+ "N: "+ pos +"; X: "+x + "; Y: "+y + "; MAX_X: "+iMaxx + "; MAX_Y: "+iMaxy +"; columns: "+columns);
             Component comp = getComponent(pos);
             Dimension dc = comp.getPreferredSize();
             comp.setBounds(x, y, dc.width, dc.height);
@@ -93,6 +92,8 @@ public class JTicketContainer extends javax.swing.JPanel {
                 y += this.V_GAP + iMaxy;
                 iMaxy = 0;
             }
+            
+            lastVerticalPosition = y;
         }
     }
     
@@ -100,7 +101,7 @@ public class JTicketContainer extends javax.swing.JPanel {
         add(ticket);
         doLayout();
         revalidate();
-        scrollRectToVisible(new Rectangle(0, getPreferredSize().height - 1, 1, 1));
+        scrollRectToVisible(new Rectangle(0, lastVerticalPosition, 1, 1));
     }
     
     public void removeAllTickets() {

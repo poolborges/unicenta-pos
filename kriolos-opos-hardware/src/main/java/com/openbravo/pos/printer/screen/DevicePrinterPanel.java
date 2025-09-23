@@ -45,8 +45,9 @@ public class DevicePrinterPanel extends javax.swing.JPanel implements DevicePrin
         m_ticketcurrent = null;
        
         m_jTicketContainer = new JTicketContainer();
-        m_jScrollView.setViewportView(m_jTicketContainer);
-        this.m_jScrollView.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        m_jScrollView.setViewportView(m_jTicketContainer); 
+        m_jScrollView.getVerticalScrollBar().setValue(0);
+        m_jScrollView.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
     }
     
     /**

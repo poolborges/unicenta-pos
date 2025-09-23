@@ -22,7 +22,7 @@ import java.util.Map;
 
 class JTicket extends javax.swing.JPanel {
     
-    private static final int DEFAULT_COLUMNS = 48;
+    private static final int DEFAULT_COLUMNS = 47;
     private static final int H_GAP = 8;
     private static final int V_GAP = 8;
     private final int columns;      // = 46;
