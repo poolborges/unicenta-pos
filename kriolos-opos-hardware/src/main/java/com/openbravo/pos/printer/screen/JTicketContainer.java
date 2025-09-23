@@ -18,52 +18,46 @@ package com.openbravo.pos.printer.screen;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.Rectangle;
-
-// JG 16 May 12 replace
-// import java.awt.*;
-// import java.awt.event.*;
-// import java.awt.image.*;
-// import java.util.*;
-// import java.awt.print.*;
-
-// import javax.swing.*;
-// import javax.swing.border.*;
-// import javax.swing.event.*;
+import java.awt.Toolkit;
 
 /**
  *
  * @author  Adrian
  */
-class JTicketContainer extends javax.swing.JPanel {
+public class JTicketContainer extends javax.swing.JPanel {
 
-    protected int H_GAP = 8;
-    protected int V_GAP = 8;
+    private static final long serialVersionUID = 1L;
+
+    private int H_GAP = 8;
+    private int V_GAP = 8;
+
+    private final int screenWidth;
     
-    /** Creates new form JTicketContainer */
     public JTicketContainer() {
         initComponents();
-        setLayout(null);
+         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        this.screenWidth = ((ge.getScreenDevices()).length == 1) ? (Toolkit.getDefaultToolkit().getScreenSize()).width : ge.getDefaultScreenDevice().getDisplayMode().getWidth();
     }
 
     @Override
     public Dimension getPreferredSize() { 
         
-        Insets ins = getInsets();
+       Insets ins = getInsets();
         int iMaxx = 0;
-        int iMaxy = ins.top + V_GAP;
+        int iMaxy = ins.top + this.V_GAP;
         int n = getComponentCount();
-        for(int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             Component comp = getComponent(i);
             Dimension dc = comp.getPreferredSize();
             if (dc.width > iMaxx) {
                 iMaxx = dc.width;
             }
-            iMaxy += V_GAP + dc.height;
+            iMaxy += this.V_GAP + dc.height;
         }
-
-        return new Dimension(iMaxx + 2 * H_GAP + ins.left + ins.right, iMaxy + ins.bottom);
+        return new Dimension(iMaxx + 2 * this.H_GAP + ins.left + ins.right, iMaxy + ins.bottom);
     }
 
     @Override
@@ -79,32 +73,38 @@ class JTicketContainer extends javax.swing.JPanel {
     @Override
     public void doLayout() {
         Insets ins = getInsets();
-        int x = ins.left + H_GAP;
-        int y = ins.top + V_GAP;
-
-        int n = getComponentCount();
-        for(int i = 0; i < n; i++) {
-            Component comp = getComponent(i);
+        int x = ins.left + this.H_GAP;
+        int y = ins.top + this.V_GAP;
+        int columns = this.screenWidth / (getPreferredSize()).width;
+        int iMaxy = 0;
+        int iMaxx = 0;
+        int numComponents = getComponentCount();
+        for (int pos = 0; pos < numComponents; pos++) {
+            System.out.println("=========== doLayout"+ "N: "+ pos +"; X: "+x + "; Y: "+y + "; MAX_X: "+iMaxx + "; MAX_Y: "+iMaxy +"; columns: "+columns);
+            Component comp = getComponent(pos);
             Dimension dc = comp.getPreferredSize();
-            
             comp.setBounds(x, y, dc.width, dc.height);
-            y += V_GAP + dc.height;
+            x += this.H_GAP + dc.width;
+            if (dc.height > iMaxy) {
+                iMaxy = dc.height;
+            }
+            if ((pos + 1) % columns == 0) {
+                x = ins.left + this.H_GAP;
+                y += this.V_GAP + iMaxy;
+                iMaxy = 0;
+            }
         }
     }
     
     public void addTicket(JTicket ticket) {
-                
         add(ticket);
-        
         doLayout();
         revalidate();
         scrollRectToVisible(new Rectangle(0, getPreferredSize().height - 1, 1, 1));
     }
     
     public void removeAllTickets() {
-        
         removeAll();
-        
         doLayout();
         revalidate();
         scrollRectToVisible(new Rectangle(0, 0, 1, 1));   
@@ -120,7 +120,7 @@ class JTicketContainer extends javax.swing.JPanel {
 
         setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         setPreferredSize(new java.awt.Dimension(700, 600));
-        setLayout(new java.awt.BorderLayout());
+        setLayout(null);
     }// </editor-fold>//GEN-END:initComponents
     
     

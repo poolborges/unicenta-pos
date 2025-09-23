@@ -302,9 +302,8 @@ public class DeviceTicket {
                         break;
                     case "usb":
                         pw = new PrinterWritterRaw(port);
-                        throw new TicketPrinterException("Not supported USB DEVICES: with connection string: " + port);
-                        //this.m_apool.put(skey, pw);
-                        //break;
+                        this.m_apool.put(skey, pw);
+                        break;
                     case "network":
                         String[] str = port.split("\\:");
                         String hostAddr = str[0];

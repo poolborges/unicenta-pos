@@ -23,6 +23,7 @@ import com.openbravo.pos.printer.ticket.BasicTicketForScreen;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -45,6 +46,7 @@ public class DevicePrinterPanel extends javax.swing.JPanel implements DevicePrin
        
         m_jTicketContainer = new JTicketContainer();
         m_jScrollView.setViewportView(m_jTicketContainer);
+        this.m_jScrollView.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }
     
     /**

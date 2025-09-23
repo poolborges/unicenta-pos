@@ -29,9 +29,9 @@ import jpos.JposException;
  */
 public class DeviceFiscalPrinterJavaPOS extends javax.swing.JPanel implements DeviceFiscalPrinter  {
     
-    private String m_sName;
+    private final String m_sName;
     
-    private FiscalPrinter m_fiscal;
+    private final FiscalPrinter m_fiscal;
     
     /** Creates new form DeviceFiscalPrinterJavaPOSPanel
      * @param sDeviceFiscalPrinterName
@@ -163,13 +163,11 @@ public class DeviceFiscalPrinterJavaPOS extends javax.swing.JPanel implements De
     }
     
     @Override
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
     
         m_fiscal.setDeviceEnabled(false);
         m_fiscal.release();
-        m_fiscal.close();
-        
-        super.finalize();       
+        m_fiscal.close();    
     } 
     
     private int roundFiscal(double value) {

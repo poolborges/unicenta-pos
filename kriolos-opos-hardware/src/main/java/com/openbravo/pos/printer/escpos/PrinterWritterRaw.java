@@ -41,7 +41,7 @@ public final class PrinterWritterRaw extends PrinterWritter {
     private byte[] m_printData;
     private PrintService printService;
     private final DocFlavor DOC_Flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
-    private PrinterBuffer printerBuffer = null;
+
     private final static String DOC_NAME = "Ticket";
     private final String printerName;
 
@@ -49,7 +49,6 @@ public final class PrinterWritterRaw extends PrinterWritter {
     public PrinterWritterRaw(String printerName) {
         this.printerName = printerName;
         this.m_printData = null;
-        this.printerBuffer = new PrinterBuffer();
 
         init();
 
@@ -76,7 +75,7 @@ public final class PrinterWritterRaw extends PrinterWritter {
 
     @Override
     public void write(String sValue) {
-        printerBuffer.putData(sValue.getBytes());
+        m_printData = concatByteArrays(m_printData,sValue.getBytes());
     }
 
     @Override
@@ -127,35 +126,6 @@ public final class PrinterWritterRaw extends PrinterWritter {
             } finally {
                 m_printData = null;
             }
-        }
-    }
-
-    private class PrinterBuffer {
-
-        private final LinkedList<Object> m_list;
-
-        /**
-         * Creates a new instance of PrinterBuffer
-         */
-        public PrinterBuffer() {
-            m_list = new LinkedList<>();
-        }
-
-        public synchronized void putData(Object data) {
-            m_list.addFirst(data);
-            notifyAll();
-        }
-
-        public synchronized Object getData() {
-            while (m_list.isEmpty()) {
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    LOGGER.log(Level.WARNING, "Exception on wait: ", e);
-                }
-            }
-            notifyAll();
-            return m_list.removeLast();
         }
     }
 }
