@@ -62,6 +62,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <groupId>${project.groupId}</groupId>
             <artifactId>kriolos-opos-i18n_pt</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>kriolos-opos-assets-image</artifactId>
+        </dependency>
 
         <dependency> 
             <groupId>commons-codec</groupId>  

@@ -141,6 +141,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </contributors>
 
     <modules>
+        <module>kriolos-opos-assets-image</module>
         <module>kriolos-opos-thirdparty</module>
         <module>kriolos-opos-base</module>
         <module>kriolos-opos-hardware</module>
