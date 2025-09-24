@@ -184,6 +184,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <artifactId>kriolos-opos-i18n_pt</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-assets-image</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
