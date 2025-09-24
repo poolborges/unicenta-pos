@@ -29,7 +29,7 @@ import javax.swing.JPanel;
  *
  * @author poolb
  */
-public class DisplayTest {
+public class CustomerDisplayTest {
 
     public static void main(String[] args) {
 
@@ -51,7 +51,7 @@ public class DisplayTest {
         javax.swing.Timer m_tTimeTimer = new javax.swing.Timer(10000, new PrintTimeAction(device)); 
         m_tTimeTimer.start();
         
-        device.setTitle("Customer Display Dest");
+        device.setTitle("Customer Display Test");
         
         device.setCustomerImage(ThumbNailBuilder.createImage(100, 100, Color.YELLOW));
         
@@ -69,12 +69,21 @@ public class DisplayTest {
         int min = 0;
         int max = 4;
         Random rand = new Random();
-
-// nextInt as provided by Random is exclusive of the top value so you need to add 1 
-
+        
+        int counter = max;
 
         public PrintTimeAction(){
         
+        }
+        
+        private int next(){
+            // int randomNum = rand.nextInt(min,max);
+            counter++;
+            if(counter > max){
+                counter = min;
+            }
+            
+            return counter;
         }
         
         public PrintTimeAction(DeviceDisplayWindowDualScreen device){
@@ -84,11 +93,11 @@ public class DisplayTest {
         @Override
         public void actionPerformed(ActionEvent evt) {
             
-            int randomNum = rand.nextInt((max - min) + 1) + min;
+           int randomNum = next();
             
-            //device.writeVisor(randomNum, "Linha 1", "Linha 2");
+            device.writeVisor(randomNum, "Linha 1."+randomNum, "Linha 2."+randomNum);
             
-            device.writeVisor(DeviceDisplayBase.ANIMATION_BLINK, "Linha 1."+randomNum, "Linha 2."+randomNum);
+            //device.writeVisor(DeviceDisplayBase.ANIMATION_CURTAIN, "Linha 1."+randomNum, "Linha 2."+randomNum);
         }        
     }   
 }
