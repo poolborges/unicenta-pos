@@ -102,5 +102,16 @@ Links
 
 == Unicode 
 
+* Code Page 1252 (Windows-1252):
 
-Code Page 1252 (Windows-1252):
+
+== Java USB API 
+
+JSR 80: JavaTM USB API
+
+* https://jcp.org/ja/jsr/detail?id=80
+* src/main/resource/javax.usb.properties
+
+USB4Java 
+
+* http://usb4java.org/
