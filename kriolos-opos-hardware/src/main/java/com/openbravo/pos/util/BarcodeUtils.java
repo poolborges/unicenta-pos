@@ -161,6 +161,10 @@ public class BarcodeUtils {
     }
 
     private BufferedImage createBarcode() {
+        return createBarcode(null);
+    }
+    
+    private BufferedImage createBarcode(String codeText) {
         int imageWidth = this.byteMatrix.getWidth();
         int imageHeight = this.byteMatrix.getHeight();
         int fontSize = 12;
@@ -179,18 +183,20 @@ public class BarcodeUtils {
             }
         }
         
+        if(codeText != null){
         
-        //Set X position 
-        int textX = imageWidth / 4;
-        // Set Y position
-        int textY = areaHeigth-4;
-        
-        //GENERATE HUMAN REDABLE IN BOTTON POSITION
-        //Font font = graphics.getFont().deriveFont((float)fontSize);
-        Font font = new Font("Monospaced", Font.PLAIN, fontSize);
-        graphics.setFont(font);
-        graphics.setColor(Color.BLACK);
-        graphics.drawString("Paulo Borges", textX, textY);
+            //Set X position 
+            int textX = imageWidth / 4;
+            // Set Y position
+            int textY = areaHeigth-4;
+
+            //GENERATE HUMAN REDABLE IN BOTTON POSITION
+            //Font font = graphics.getFont().deriveFont((float)fontSize);
+            Font font = new Font("Monospaced", Font.PLAIN, fontSize);
+            graphics.setFont(font);
+            graphics.setColor(Color.BLACK);
+            graphics.drawString(codeText, textX, textY);
+        }
 
         return this.image;
     }
