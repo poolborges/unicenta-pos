@@ -32,98 +32,77 @@ import org.krysalis.barcode4j.output.java2d.Java2DCanvasProvider;
  */
 public class PrintItemBarcode implements PrintItem {
 
-    /**
-     *
-     */
-    protected AbstractBarcodeBean m_barcode;
+    private AbstractBarcodeBean m_barcode;
+    private final String m_sType;
+    private final String m_sPosition;
+    private final String m_sCode;
+    private final double scale;
+    private int m_iWidth;
+    private int m_iHeight;
 
-    /**
-     *
-     */
-    protected String m_sCode;
-
-    /**
-     *
-     */
-    protected int m_iWidth;
-
-    /**
-     *
-     */
-    protected int m_iHeight;
-
-    /**
-     *
-     */
-    protected double scale;
-
-    /** Creates a new instance of PrinterItemBarcode
-     * @param type
-     * @param position
-     * @param code
-     * @param scale */
     public PrintItemBarcode(String type, String position, String code, double scale) {
-
-        m_sCode = code;
+        this.m_sType = type;
+        this.m_sPosition = position;
+        this.m_sCode = code;
         this.scale = scale;
 
-        if (DevicePrinter.BARCODE_CODE128.equals(type)) {
+        if (DevicePrinter.BARCODE_CODE128.equals(m_sType)) {
             m_barcode = new Code128Bean();
         } else {
             m_barcode = new EAN13Bean();
         }
 
-        if (m_barcode != null) {
-            m_barcode.setModuleWidth(1.0);
-            m_barcode.setBarHeight(40.0);
-            m_barcode.setFontSize(10.0);
-            m_barcode.setQuietZone(10.0);
-            m_barcode.doQuietZone(true);
-            if (DevicePrinter.POSITION_NONE.equals(position)) {
-                m_barcode.setMsgPosition(HumanReadablePlacement.HRP_NONE);
-            } else {
-                m_barcode.setMsgPosition(HumanReadablePlacement.HRP_BOTTOM);
-            }
-            BarcodeDimension dim = m_barcode.calcDimensions(m_sCode);
-            m_iWidth = (int) dim.getWidth(0);
-            m_iHeight = (int) dim.getHeight(0);
+        m_barcode.setModuleWidth(1.0);
+        m_barcode.setBarHeight(40.0);
+        m_barcode.setFontSize(10.0);
+        m_barcode.setQuietZone(10.0);
+        m_barcode.doQuietZone(true);
+        if (DevicePrinter.POSITION_NONE.equals(m_sPosition)) {
+            m_barcode.setMsgPosition(HumanReadablePlacement.HRP_NONE);
+        } else {
+            m_barcode.setMsgPosition(HumanReadablePlacement.HRP_BOTTOM);
         }
+        BarcodeDimension dim = m_barcode.calcDimensions(m_sCode);
+
+        m_iWidth = (int) dim.getWidth(0);
+        m_iHeight = (int) dim.getHeight(0);
+
     }
 
-    /**
-     *
-     * @param g
-     * @param x
-     * @param y
-     * @param width
-     */
     @Override
-    public void draw(Graphics2D g, int x, int y, int width) {
-
-        if (m_barcode != null) {
-            Graphics2D g2d = (Graphics2D) g;
-
-            AffineTransform oldt = g2d.getTransform();
+    public void draw(Graphics2D graphics2D, int xAxis, int yAxis, int width) {
         
-            g2d.translate(x - 10 + (width - (int)(m_iWidth * scale)) / 2, y + 10);
-            g2d.scale(scale, scale);
+      /*
+        System.out.println("PrintItemBarcode.draw: "+ new Date().getTime() +
+                "; Type: " +this.m_sType+
+                "; Position: " +this.m_sPosition+
+                "; Code: "+this.m_sCode +
+                "; Scale: " +this.scale+
+                "; Width: "+m_iWidth+
+                "; Height: "+m_iHeight+
+                "; XAxis: " +xAxis+
+                "; YAxis: " +yAxis+
+                "; Width: " +width);
+        */
 
-            try {
-                m_barcode.generateBarcode(new Java2DCanvasProvider(g2d, 0), m_sCode);
-            } catch (IllegalArgumentException e) {
-                g2d.drawRect(0, 0, m_iWidth, m_iHeight);
-                g2d.drawLine(0, 0, m_iWidth, m_iHeight);
-                g2d.drawLine(m_iWidth, 0, 0, m_iHeight);
-            }
+        Graphics2D g2d = graphics2D;
 
-            g2d.setTransform(oldt);
+        AffineTransform oldt = g2d.getTransform();
+
+        g2d.translate(xAxis - 10 + (width - (int) (m_iWidth * scale)) / 2, yAxis + 10);
+        g2d.scale(scale, scale);
+
+        try {
+            m_barcode.generateBarcode(new Java2DCanvasProvider(g2d, 0), m_sCode);
+        } catch (IllegalArgumentException e) {
+            g2d.drawRect(0, 0, m_iWidth, m_iHeight);
+            g2d.drawLine(0, 0, m_iWidth, m_iHeight);
+            g2d.drawLine(m_iWidth, 0, 0, m_iHeight);
         }
+
+        g2d.setTransform(oldt);
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public int getHeight() {
         return (int) (m_iHeight * scale) + 20;
