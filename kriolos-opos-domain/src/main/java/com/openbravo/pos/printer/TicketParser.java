@@ -28,7 +28,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -45,10 +47,8 @@ public class TicketParser extends DefaultHandler {
 
     private static final Logger LOGGER = Logger.getLogger(TicketParser.class.getName());
 
-    private static SAXParser m_sp = null;
-
-    private DeviceTicket printer;
-    private DataLogicSystem dataLogicSystem;
+    private final DeviceTicket printer;
+    private final DataLogicSystem dataLogicSystem;
 
     private StringBuilder currentText;
 
@@ -81,48 +81,56 @@ public class TicketParser extends DefaultHandler {
     private String ticketId;
     private String pickupId;
 
-
     public TicketParser(DeviceTicket printer, DataLogicSystem system) {
         this.printer = printer;
         this.dataLogicSystem = system;
         this.today = Calendar.getInstance().getTime();
     }
 
-    public void printTicket(String sIn, TicketInfo ticket) throws TicketPrinterException {
+    public void printTicket(String xmlInput, TicketInfo ticket) throws TicketPrinterException {
         this.currentUser = ticket.getName();
-        this.ticketId = Integer.toString(ticket.getTicketId());
-        this.pickupId = Integer.toString(ticket.getPickupId());
+        this.ticketId = (ticket.getTicketId() == 0) ? "No Sale" : Integer.toString(ticket.getTicketId());
+        this.pickupId = (ticket.getPickupId() == 0) ? "No PickupId" : Integer.toString(ticket.getPickupId());
 
-        if (ticket.getTicketId() == 0) {
-            this.ticketId = "No Sale";
+        try (Reader in = new StringReader(xmlInput)) {
+            printTicket(in);
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "I/O error closing StringReader.", e);
         }
-        if (ticket.getPickupId() == 0) {
-            this.pickupId = "No PickupId";
-        }
-        printTicket(new StringReader(sIn));
 
     }
 
-    public void printTicket(String sIn) throws TicketPrinterException {
-        printTicket(new StringReader(sIn));
+    public void printTicket(String xmlInput) throws TicketPrinterException {
+        try (Reader in = new StringReader(xmlInput)) {
+            printTicket(in);
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "I/O error closing StringReader.", e);
+        }
     }
 
     public void printTicket(Reader in) throws TicketPrinterException {
-
+        SAXParserFactory spf = SAXParserFactory.newInstance();
         try {
+            // XXE Prevention: Disable DTD processing and external entity access
+            spf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            spf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            spf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            spf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            spf.setXIncludeAware(false);
 
-            if (m_sp == null) {
-                SAXParserFactory spf = SAXParserFactory.newInstance();
-                m_sp = spf.newSAXParser();
-            }
-            m_sp.parse(new InputSource(in), this);
+            // A new parser instance for each call ensures thread safety
+            SAXParser sp = spf.newSAXParser();
+            sp.parse(new InputSource(in), this);
 
-        } catch (ParserConfigurationException ePC) {
-            throw new TicketPrinterException("exception.parserconfig", ePC);
-        } catch (SAXException eSAX) {
-            throw new TicketPrinterException("exception.xmlfile", eSAX);
-        } catch (IOException eIO) {
-            throw new TicketPrinterException("exception.iofile", eIO);
+        } catch (ParserConfigurationException ex) {
+            LOGGER.log(Level.SEVERE, "Parser configuration error.", ex);
+            throw new TicketPrinterException("exception.parserconfig", ex);
+        } catch (SAXException ex) {
+            LOGGER.log(Level.SEVERE, "XML parsing error.", ex);
+            throw new TicketPrinterException("exception.xmlfile", ex);
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, "I/O error during parsing.", ex);
+            throw new TicketPrinterException("exception.iofile", ex);
         }
     }
 
@@ -157,9 +165,9 @@ public class TicketParser extends DefaultHandler {
                         // Cashdrawer has been activated record the data in the table
                         try {
                             dataLogicSystem.execDrawerOpened(
-                                    //new Object[] {df.format(dNow),cUser,ticketId});
                                     new Object[]{currentUser, ticketId});
                         } catch (BasicException ex) {
+                            LOGGER.log(Level.SEVERE, "Failed to log drawer opened event.", ex);
                         }
                         break;
                     case "play":
@@ -173,17 +181,8 @@ public class TicketParser extends DefaultHandler {
                     case "display":
                         outputType = OUTPUT_DISPLAY;
                         String animation = attributes.getValue("animation");
-                        if ("scroll".equals(animation)) {
-                            visorAnimation = DeviceDisplayBase.ANIMATION_SCROLL;
-                        } else if ("flyer".equals(animation)) {
-                            visorAnimation = DeviceDisplayBase.ANIMATION_FLYER;
-                        } else if ("blink".equals(animation)) {
-                            visorAnimation = DeviceDisplayBase.ANIMATION_BLINK;
-                        } else if ("curtain".equals(animation)) {
-                            visorAnimation = DeviceDisplayBase.ANIMATION_CURTAIN;
-                        } else { // "none"
-                            visorAnimation = DeviceDisplayBase.ANIMATION_NULL;
-                        }
+
+                        visorAnimation = parseAnimation(animation);
                         visorLine1 = null;
                         visorLine2 = null;
                         outputPrinter = null;
@@ -218,13 +217,8 @@ public class TicketParser extends DefaultHandler {
                             | ("true".equals(attributes.getValue("underline"))
                             ? DevicePrinter.STYLE_UNDERLINE : DevicePrinter.STYLE_PLAIN);
                     String sAlign = attributes.getValue("align");
-                    if ("right".equals(sAlign)) {
-                        textAlignment = DevicePrinter.ALIGN_RIGHT;
-                    } else if ("center".equals(sAlign)) {
-                        textAlignment = DevicePrinter.ALIGN_CENTER;
-                    } else {
-                        textAlignment = DevicePrinter.ALIGN_LEFT;
-                    }
+                    
+                    textAlignment = parseTextAlignment(sAlign);
                     textLength = parseInt(attributes.getValue("length"), 0);
                 }
                 break;
@@ -238,13 +232,7 @@ public class TicketParser extends DefaultHandler {
                 } else if ("text".equals(qName)) {
                     currentText = new StringBuilder();
                     String sAlign = attributes.getValue("align");
-                    if ("right".equals(sAlign)) {
-                        textAlignment = DevicePrinter.ALIGN_RIGHT;
-                    } else if ("center".equals(sAlign)) {
-                        textAlignment = DevicePrinter.ALIGN_CENTER;
-                    } else {
-                        textAlignment = DevicePrinter.ALIGN_LEFT;
-                    }
+                    textAlignment = parseTextAlignment(sAlign);
                     textLength = parseInt(attributes.getValue("length"));
                 }
                 break;
@@ -275,20 +263,19 @@ public class TicketParser extends DefaultHandler {
                     currentText = null;
                 }
                 break;
-         
+
             case OUTPUT_TICKET:
                 if ("logo".equals(qName)) {
                     //Star TSP700 to print stored logo image JDL
-                    outputPrinter.printLogo();     
+                    outputPrinter.printLogo();
                 } else if ("image".equals(qName)) {
                     try {
-                        // BufferedImage image = ImageIO.read(getClass().getClassLoader().getResourceAsStream(m_sText.toString()));
                         BufferedImage image = dataLogicSystem.getResourceAsImage(currentText.toString());
                         if (image != null) {
                             outputPrinter.printImage(image);
                         }
-                    } catch (Exception fnfe) {
-                        //throw new ResourceNotFoundException( fnfe.getMessage() );
+                    } catch (Exception ex) {
+                        LOGGER.log(Level.SEVERE, "Failed to load image resource.", ex);
                     }
                     currentText = null;
                 } else if ("barcode".equals(qName)) {
@@ -297,18 +284,8 @@ public class TicketParser extends DefaultHandler {
                             currentText.toString());
                     currentText = null;
                 } else if ("text".equals(qName)) {
-                    if (textLength > 0) {
-                        switch (textAlignment) {
-                            case DevicePrinter.ALIGN_RIGHT:
-                                outputPrinter.printText(textStyle, DeviceTicket.alignRight(currentText.toString(), textLength));
-                                break;
-                            case DevicePrinter.ALIGN_CENTER:
-                                outputPrinter.printText(textStyle, DeviceTicket.alignCenter(currentText.toString(), textLength));
-                                break;
-                            default: // DevicePrinter.ALIGN_LEFT
-                                outputPrinter.printText(textStyle, DeviceTicket.alignLeft(currentText.toString(), textLength));
-                                break;
-                        }
+                    if (textLength > 0 ) {
+                        outputPrinter.printText(textStyle, DeviceTicket.alignText(textAlignment, currentText.toString(), textLength));
                     } else {
                         outputPrinter.printText(textStyle, currentText.toString());
                     }
@@ -389,6 +366,41 @@ public class TicketParser extends DefaultHandler {
         }
     }
 
+    /**
+     * Helper to parse text alignment attribute.
+     */
+    private int parseTextAlignment(String align) {
+        return switch (readString(align, "left")) {
+            case "right" ->
+                DevicePrinter.ALIGN_RIGHT;
+            case "center" ->
+                DevicePrinter.ALIGN_CENTER;
+            default ->
+                DevicePrinter.ALIGN_LEFT;
+        };
+    }
+
+    /**
+     * Parses the animation attribute string.
+     *
+     * @param animationString The animation string from XML.
+     * @return The corresponding animation constant.
+     */
+    private int parseAnimation(String animationString) {
+        return switch (readString(animationString, "none")) {
+            case "scroll" ->
+                DeviceDisplayBase.ANIMATION_SCROLL;
+            case "flyer" ->
+                DeviceDisplayBase.ANIMATION_FLYER;
+            case "blink" ->
+                DeviceDisplayBase.ANIMATION_BLINK;
+            case "curtain" ->
+                DeviceDisplayBase.ANIMATION_CURTAIN;
+            default ->
+                DeviceDisplayBase.ANIMATION_NULL;
+        };
+    }
+
     private int parseInt(String sValue, int iDefault) {
         try {
             return Integer.parseInt(sValue);
@@ -413,11 +425,7 @@ public class TicketParser extends DefaultHandler {
         return parseDouble(sValue, 0.0);
     }
 
-    private String readString(String sValue, String sDefault) {
-        if (sValue == null || sValue.equals("")) {
-            return sDefault;
-        } else {
-            return sValue;
-        }
+    private String readString(String value, String defaultValue) {
+        return (value == null) ? defaultValue : value;
     }
 }
