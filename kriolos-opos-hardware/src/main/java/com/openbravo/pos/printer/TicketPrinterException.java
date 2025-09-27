@@ -22,25 +22,15 @@ package com.openbravo.pos.printer;
  */
 public class TicketPrinterException extends java.lang.Exception {
 
-    /**
-     *
-     */
+    private static final long serialVersionUID = 1L;
+
     public TicketPrinterException() {
+        super();
     }
 
-    /**
-     *
-     * @param msg
-     */
     public TicketPrinterException(String msg) {
         super(msg);
     }
-
-    /**
-     *
-     * @param msg
-     * @param cause
-     */
     public TicketPrinterException(String msg, Throwable cause) {
         super(msg, cause);
     }
