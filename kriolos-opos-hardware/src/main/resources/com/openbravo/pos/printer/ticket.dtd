@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <!ELEMENT output (ticket | display | opendrawer | play | )*>
 
-<!ELEMENT ticket (line | image | barcode | cut)*>
+<!ELEMENT ticket (line | image | barcode | cut | qrcode)*>
 <!ATTLIST ticket printer CDATA "0">
 
 <!ELEMENT line (text)*>
@@ -34,6 +34,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <!ELEMENT barcode (#PCDATA)>
 <!ATTLIST barcode type (EAN13 | CODE128) "EAN13">
+
+<!ELEMENT qrcode (#PCDATA)>
+<!ATTLIST qrcode quality (L | M | Q | H) "M">
+<!ATTLIST qrcode version (1 | 2 | 3 | 4 | 40) "1">
 
 <!ELEMENT display (line)*>
 <!ATTLIST display animation (scroll | flyer | blink | curtain | none) "none">
