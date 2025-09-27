@@ -26,6 +26,9 @@ import com.openbravo.pos.printer.TicketPrinterException;
 import com.openbravo.pos.scale.DeviceScale;
 import com.openbravo.pos.scanpal2.DeviceScanner;
 import com.openbravo.pos.scanpal2.DeviceScannerFactory;
+import com.openbravo.pos.scripting.ScriptEngine;
+import com.openbravo.pos.scripting.ScriptException;
+import com.openbravo.pos.scripting.ScriptFactory;
 import java.awt.CardLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Cursor;
@@ -355,9 +358,16 @@ public class JRootApp extends JPanel implements AppView {
             m_DeviceTicket.getDeviceDisplay().writeVisor(AppLocal.APP_NAME, AppLocal.APP_VERSION);
         } else {
             try {
-                m_TicketParser.printTicket(sresource);
+                ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
+                script.put("appname", AppLocal.APP_NAME);
+                script.put("appShortDescription", AppLocal.APP_SHORT_DESCRIPTION);
+                String xmlContent = script.eval(sresource).toString();
+                m_TicketParser.printTicket(xmlContent);
             } catch (TicketPrinterException eTP) {
                 m_DeviceTicket.getDeviceDisplay().writeVisor(AppLocal.APP_NAME, AppLocal.APP_VERSION);
+            }
+            catch (ScriptException ex) {
+                Exceptions.printStackTrace(ex);
             }
         }
     }

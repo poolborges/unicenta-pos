@@ -25,7 +25,7 @@
 <!-- <display animation="curtain"> -->
 
    <display animation="none">
-        <line><text align="center" length="20">KriolOS POS</text></line>
-        <line><text align="center" length="20">Touch Friendly POS</text></line>
+        <line><text align="center" length="20">${appname}</text></line>
+        <line><text align="center" length="20">${appShortDescription}</text></line>
     </display>
 </output>

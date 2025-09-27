@@ -28,6 +28,7 @@ public class AppLocal {
     public static final String APP_NAME = "KriolPOS";
     public static final String APP_ID = "kriolos-opos";
     public static final String APP_VERSION = "1.0.0-SNAPSHOT";
+    public static String APP_SHORT_DESCRIPTION = "Agile management of your business!";
 
     private static final LocaleResources m_resources;
     
