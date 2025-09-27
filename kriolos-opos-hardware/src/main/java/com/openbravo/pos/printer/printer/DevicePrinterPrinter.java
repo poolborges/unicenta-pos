@@ -40,9 +40,10 @@ import javax.print.attribute.standard.OrientationRequested;
 import javax.swing.JComponent;
 
 /**
- *Class DevicePrinterPrinter is responsible for printing tickets using system <br>
- * printers. It takes into consideration if a user set a printer as a receipt <br>
- * printer or not. 
+ * DevicePrinterPrinter is responsible for printing tickets using system printers. 
+ * 
+ * It takes into consideration if a user set a printer as a receipt printer or not. 
+ * 
  * <p>For receipt printers lenght of a receipt must be calculated in this class.</p>
  * <p>For normal printers number of pages must be calculated dynamically in the <br>
  * class PrintableTicket @see com.openbravo.pos.printer.printer.PrintableTicket
@@ -55,7 +56,6 @@ public class DevicePrinterPrinter implements DevicePrinter {
 
     private Component parent;
     private String printerName;
-//    private BasicTicketForPrinter m_ticketcurrent;
     private BasicTicket m_ticketcurrent;
     private PrintService printservice;
 
