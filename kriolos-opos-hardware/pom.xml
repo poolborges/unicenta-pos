@@ -46,6 +46,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </dependency>
         
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>kriolos-opos-assets-image</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
             <groupId>com.neuronrobotics</groupId>
             <artifactId>nrjavaserial</artifactId>
             <version>5.2.1</version>
@@ -55,20 +61,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <dependency> 
             <groupId>org.javapos</groupId>  
             <artifactId>javapos</artifactId>  
-            <version>1.14.3</version>
+            <version>1.15.7</version>
             <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sleepycat</groupId>
-                    <artifactId>je</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.javapos</groupId>
             <artifactId>javapos-contracts</artifactId>
-            <version>1.14.3</version>
+            <version>1.15.0</version>
         </dependency> 
+        -->
         
         <!-- ISO 8583-1:2003 Financial transaction card originated messages
         <dependency>
@@ -87,25 +89,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </exclusions>
         </dependency>-->
         
-        <!-- BARCODE -->
+        <!-- Barcode4J -->
         <dependency> 
-            <groupId>net.sf.barcode4j</groupId>  
-            <artifactId>barcode4j</artifactId>  
-            <version>2.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.ant</groupId>
-                    <artifactId>ant</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>avalon-framework</groupId>
-                    <artifactId>avalon-framework-impl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>com.singingbush</groupId>
+            <artifactId>barcode4j</artifactId>
+            <version>2.4.0</version>
         </dependency>
         
         <!-- USB -->  
@@ -124,16 +112,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <artifactId>usb-api</artifactId>  
             <version>1.0.2</version> 
         </dependency>
+        <!-- QrCode com.google.zxing -->
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
-            <version>3.5.1</version>
+            <version>3.5.3</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
-            <version>3.5.1</version>
+            <version>3.5.3</version>
             <type>jar</type>
         </dependency>
     </dependencies>
