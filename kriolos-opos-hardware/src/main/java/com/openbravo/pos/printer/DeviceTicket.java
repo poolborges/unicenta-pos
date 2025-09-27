@@ -397,6 +397,17 @@ public class DeviceTicket {
         }
     }
 
+    public static String alignText(int textAlignment, String text, int textLength) {
+          return switch (textAlignment) {
+            case DevicePrinter.ALIGN_RIGHT ->
+                alignRight(text, textLength);
+            case DevicePrinter.ALIGN_CENTER ->
+                alignCenter(text, textLength);
+            default ->
+                //DevicePrinter.ALIGN_LEFT
+                alignLeft(text, textLength);
+        };
+    }
     /**
      *
      * @param sLine
@@ -443,7 +454,7 @@ public class DeviceTicket {
     }
 
     /**
-     *
+     * Text Aligment 'Center' with default text length of 42
      * @param sLine
      * @return Equalise Left/Right spacing
      */
