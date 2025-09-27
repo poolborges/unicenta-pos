@@ -43,11 +43,11 @@ public class ListUSB {
         UsbServices services = UsbHostManager.getUsbServices();
         UsbHub root = services.getRootUsbHub();
 
-        System.out.println("=== LIST USB");
+        System.out.println("=== LIST USB: javax.usb.*");
         listPeripherique(root);
-        System.out.println("=== LIST USB *****");
+        System.out.println("=== LIST USB: javax.usb.*");
         listDevices(root);
-        System.out.println("=== LIST USB");
+        System.out.println("=== LIST USB: org.usb4java.*");
         listUSB();
     }
 
