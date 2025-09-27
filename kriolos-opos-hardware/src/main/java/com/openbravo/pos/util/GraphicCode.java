@@ -19,31 +19,66 @@ package com.openbravo.pos.util;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.Writer;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.oned.*;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.openbravo.basic.BasicException;
 import com.openbravo.format.Formats;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class BarcodeUtils {
+/**
+ * Util class to generate 1D (Baarcode) and 2D(QrCode) 
+ * @author psb
+ */
+public class GraphicCode {
 
-    private BitMatrix byteMatrix;
+    /**
+     * Generate Barcode (EAN13) image with default size (width: 200, heigth: 50)
+     * @param barcodeText
+     * @return Image
+     * @throws Exception 
+     */
+    public static BufferedImage generateEAN13BarcodeImage(String barcodeText) throws Exception {
+        return generateEAN13BarcodeImage(barcodeText, 200, 50);
+    }
 
-    private BufferedImage image;
-    
-    private String hredablecode;
+    public static BufferedImage generateEAN13BarcodeImage(String barcodeText,
+            int width,int height) throws Exception {
+        EAN13Writer barcodeWriter = new EAN13Writer();
+        BitMatrix bitMatrix = barcodeWriter.encode(barcodeText, BarcodeFormat.EAN_13, width, height);
 
-    public BufferedImage getQRCode(String textcode, int size) {
+        return MatrixToImageWriter.toBufferedImage(bitMatrix);
+    }
+
+    public static BufferedImage generateQRCodeImage(String barcodeText) throws Exception {
+        return generateQRCodeImage(barcodeText, 150);
+    }
+    public static BufferedImage generateQRCodeImage(String barcodeText, int sizeWH) throws Exception {
+        QRCodeWriter barcodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix
+                = barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, sizeWH, sizeWH);
+
+        return MatrixToImageWriter.toBufferedImage(bitMatrix);
+    }
+
+    public static BufferedImage getQRCode(String textcode) {
+        return getQRCode(textcode, 150);
+    }
+    public static  BufferedImage getQRCode(String textcode, int size) {
+        BitMatrix bitMatrix = null;
         try {
             if (textcode.startsWith("zatcaksa:")) {
                 String[] tlvs = textcode.substring(9).split("#");
@@ -65,39 +100,41 @@ public class BarcodeUtils {
             hintMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
             hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
-            this.byteMatrix = qrCodeWriter.encode(textcode, BarcodeFormat.QR_CODE, size, size, hintMap);
-            int imageWidth = this.byteMatrix.getWidth();
-            this.image = new BufferedImage(imageWidth, imageWidth, 1);
-            this.image.createGraphics();
-            Graphics2D graphics = (Graphics2D) this.image.getGraphics();
+            bitMatrix = qrCodeWriter.encode(textcode, BarcodeFormat.QR_CODE, size, size, hintMap);
+            int imageWidth = bitMatrix.getWidth();
+            BufferedImage image = new BufferedImage(imageWidth, imageWidth, 1);
+            image.createGraphics();
+            Graphics2D graphics = (Graphics2D) image.getGraphics();
             graphics.setColor(Color.WHITE);
             graphics.fillRect(0, 0, imageWidth, imageWidth);
             graphics.setColor(Color.BLACK);
             for (int i = 0; i < imageWidth; i++) {
                 for (int j = 0; j < imageWidth; j++) {
-                    if (this.byteMatrix.get(i, j)) {
+                    if (bitMatrix.get(i, j)) {
                         graphics.fillRect(i, j, 1, 1);
                     }
                 }
             }
-            return this.image;
-        } catch (Exception e) {
+        } catch (WriterException | BasicException | IOException e) {
             return null;
         }
+        
+        return  bitMatrix != null ? MatrixToImageWriter.toBufferedImage(bitMatrix) : null;
     }
 
     public static BufferedImage getCode(String textcode, String codeType) {
-        return new BarcodeUtils().getBarcode(textcode, codeType, 0, 0);
-    }
-    
-    public BufferedImage getBarcode(String textcode, String codeType) {
         return getBarcode(textcode, codeType, 0, 0);
     }
 
-    public BufferedImage getBarcode(String codeText, String codeType, int bcWidth, int bcHeight) {
+    public static  BufferedImage getBarcode(String textcode, String codeType) {
+        return getBarcode(textcode, codeType, 0, 0);
+    }
+
+    public static  BufferedImage getBarcode(String codeText, String codeType, int bcWidth, int bcHeight) {
         bcWidth = (codeText.length() >= 8) ? 200 : bcWidth;
         bcWidth = (bcWidth == 0) ? 150 : bcWidth;
         bcHeight = (bcHeight == 0) ? 20 : bcHeight;
+        BitMatrix bitMatrix = null;
         try {
             Writer writer;
             HashMap<EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap<>();
@@ -111,84 +148,82 @@ public class BarcodeUtils {
                 case "CODE39":
                 case "CODE-39":
                     writer = new Code39Writer();
-                    this.byteMatrix = writer.encode(codeText, BarcodeFormat.CODE_39, bcWidth, bcHeight, hintMap);
-                    return createBarcode();
+                    bitMatrix = writer.encode(codeText, BarcodeFormat.CODE_39, bcWidth, bcHeight, hintMap);
+                    break;
                 case "CODE_93":
                 case "CODE93":
                 case "CODE-93":
                     writer = new Code93Writer();
-                    this.byteMatrix = writer.encode(codeText, BarcodeFormat.CODE_93, bcWidth, bcHeight, hintMap);
-                    return createBarcode();
+                    bitMatrix = writer.encode(codeText, BarcodeFormat.CODE_93, bcWidth, bcHeight, hintMap);
+                    break;
                 case "CODE_128":
                 case "CODE128":
                 case "CODE-128":
                     writer = new Code128Writer();
-                    this.byteMatrix = writer.encode(codeText, BarcodeFormat.CODE_128, bcWidth, bcHeight, hintMap);
-                    return createBarcode();
+                    bitMatrix = writer.encode(codeText, BarcodeFormat.CODE_128, bcWidth, bcHeight, hintMap);
+                    break;
                 case "EAN_13":
                 case "EAN13":
                 case "EAN-13":
                     writer = new EAN13Writer();
-                    this.byteMatrix = writer.encode(codeText, BarcodeFormat.EAN_13, bcWidth, bcHeight, hintMap);
-                    return createBarcode();
+                    bitMatrix = writer.encode(codeText, BarcodeFormat.EAN_13, bcWidth, bcHeight, hintMap);
+                    break;
                 case "EAN_8":
                 case "EAN8":
                 case "EAN-8":
                     writer = new EAN8Writer();
-                    this.byteMatrix = writer.encode(codeText, BarcodeFormat.EAN_8, bcWidth, bcHeight, hintMap);
-                    return createBarcode();
+                    bitMatrix = writer.encode(codeText, BarcodeFormat.EAN_8, bcWidth, bcHeight, hintMap);
+                    break;
                 case "CODABAR":
                     writer = new CodaBarWriter();
-                    this.byteMatrix = writer.encode(codeText, BarcodeFormat.CODABAR, bcWidth, bcHeight, hintMap);
-                    return createBarcode();
+                    bitMatrix = writer.encode(codeText, BarcodeFormat.CODABAR, bcWidth, bcHeight, hintMap);
+                    break;
                 case "UPC_A":
                 case "UPCA":
                 case "UPC-A":
                     writer = new UPCAWriter();
-                    this.byteMatrix = writer.encode(codeText, BarcodeFormat.UPC_A, bcWidth, bcHeight, hintMap);
-                    return createBarcode();
+                    bitMatrix = writer.encode(codeText, BarcodeFormat.UPC_A, bcWidth, bcHeight, hintMap);
+                    break;
                 case "UPC_E":
                 case "UPCE":
                 case "UPC-E":
                     writer = new UPCEWriter();
-                    this.byteMatrix = writer.encode(codeText, BarcodeFormat.UPC_E, bcWidth, bcHeight, hintMap);
-                    return createBarcode();
+                    bitMatrix = writer.encode(codeText, BarcodeFormat.UPC_E, bcWidth, bcHeight, hintMap);
+                    break;
             }
         } catch (Exception ex) {
-            Logger.getLogger(BarcodeUtils.class.getName()).log(Level.SEVERE, (String) null, (Throwable) ex);
+            Logger.getLogger(GraphicCode.class.getName()).log(Level.SEVERE, (String) null, (Throwable) ex);
         }
-        return null;
+        
+        return  bitMatrix != null ? MatrixToImageWriter.toBufferedImage(bitMatrix) : null;
     }
 
-    private BufferedImage createBarcode() {
-        return createBarcode(null);
-    }
-    
-    private BufferedImage createBarcode(String codeText) {
-        int imageWidth = this.byteMatrix.getWidth();
-        int imageHeight = this.byteMatrix.getHeight();
+
+    private static BufferedImage createBarcode(BitMatrix bitMatrix, String codeText) {
+        int imageWidth = bitMatrix.getWidth();
+        int imageHeight = bitMatrix.getHeight();
         int fontSize = 12;
         int areaHeigth = imageHeight + fontSize + 2;
-        this.image = new BufferedImage(imageWidth, areaHeigth, BufferedImage.TYPE_INT_RGB);
-        this.image.createGraphics();
-        Graphics2D graphics = (Graphics2D) this.image.getGraphics();
+        BufferedImage image = new BufferedImage(imageWidth, areaHeigth, BufferedImage.TYPE_INT_RGB);
+        image.createGraphics();
+        Graphics2D graphics = (Graphics2D) image.getGraphics();
         graphics.setColor(Color.WHITE);
         graphics.fillRect(0, 0, imageWidth, areaHeigth);
         graphics.setColor(Color.BLACK);
         for (int i = 0; i < imageWidth; i++) {
             for (int j = 0; j < imageHeight; j++) {
-                if (this.byteMatrix.get(i, j)) {
+                if (bitMatrix.get(i, j)) {
                     graphics.fillRect(i, j, 1, 1);
                 }
             }
         }
-        
-        if(codeText != null){
-        
+
+        if (codeText != null) {
+
             //Set X position 
             int textX = imageWidth / 4;
             // Set Y position
-            int textY = areaHeigth-4;
+            int textY = areaHeigth - 4;
 
             //GENERATE HUMAN REDABLE IN BOTTON POSITION
             //Font font = graphics.getFont().deriveFont((float)fontSize);
@@ -198,6 +233,6 @@ public class BarcodeUtils {
             graphics.drawString(codeText, textX, textY);
         }
 
-        return this.image;
+        return image;
     }
 }

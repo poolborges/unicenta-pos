@@ -41,7 +41,7 @@ import org.krysalis.barcode4j.impl.upcean.UPCEBean;
 import org.krysalis.barcode4j.output.java2d.Java2DCanvasProvider;
 
 /**
- *
+ * @deprecated by poolborges in 2025/09/24. 
  * @author adrian
  */
 public class BarcodeImage {
