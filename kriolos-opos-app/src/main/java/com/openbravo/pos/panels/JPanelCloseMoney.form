@@ -552,7 +552,7 @@
               <Image iconType="3" name="/com/openbravo/images/printer.png"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="pos_messages.properties" key="cboption.preview.text" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="pos_messages.properties" key="button.partialcash" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="pos_messages.properties" key="tooltip.btn.partialcash" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
@@ -587,10 +587,10 @@
               <Image iconType="3" name="/com/openbravo/images/printer.png"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="pos_messages.properties" key="cboption.preview.text" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="pos_messages.properties" key="button.closecashpreview" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="pos_messages.properties" key="cboption.reprint" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="pos_messages.properties" key="tooltip.btn.closecashpreview" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="2"/>
             <Property name="iconTextGap" type="int" value="2"/>
@@ -622,10 +622,10 @@
               <Image iconType="3" name="/com/openbravo/images/printer.png"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="pos_messages.properties" key="cboption.reprint" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="pos_messages.properties" key="button.closecashreprint" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="pos_messages.properties" key="tooltip.btn.partialcash" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="pos_messages.properties" key="tooltip.btn.closecashreprint" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="2"/>
             <Property name="iconTextGap" type="int" value="2"/>
