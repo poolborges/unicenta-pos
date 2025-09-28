@@ -58,20 +58,20 @@ public class SequenceForGeneric extends BaseSentence {
     public DataResultSet<Integer> openExec(Object params) throws BasicException {
 
         Integer dt = (Integer) selectSetence.find(new Object[]{this.tableName});
-
-        LOGGER.log(Level.INFO, "FOUND SEQUENCE: "+this.tableName +"; seq: "+ dt);
         
+        LOGGER.log(Level.INFO, "SEQUENCE CURRENT: "+this.tableName +"; seq: "+ dt);
         if (dt == null) {
          dt = insert(1);
         }
-
-        LOGGER.log(Level.INFO, "CURRENT SEQUENCE: "+this.tableName +"; seq: "+ dt);
+        
         dt +=1;
+        
+        LOGGER.log(Level.INFO, "SEQUENCE NEXT: "+this.tableName +"; seq: "+ dt);
 
-        updateSentence.exec(new Object[]{dt+1, this.tableName});
+        updateSentence.exec(new Object[]{dt, this.tableName});
 
         DataResultSet<Integer> drs = selectSetence.openExec(new Object[]{this.tableName});
-        LOGGER.log(Level.INFO, "RESULT SEQUENCE: "+this.tableName +"; seq: "+ dt);
+        LOGGER.log(Level.INFO, "SEQUENCE SELECTED: "+this.tableName +"; seq: "+ dt);
 
         return drs;
     }

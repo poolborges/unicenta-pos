@@ -75,7 +75,7 @@ public class SessionDBDerby implements SessionDB {
      */
     @Override
     public SentenceFind getSequenceSentence(Session s, String sequence) {
-        return new SequenceForDerby(s, sequence);
+        return new SequenceForGeneric(s, sequence);
     }
     
     /**
@@ -86,6 +86,7 @@ public class SessionDBDerby implements SessionDB {
      */
     @Override
     public SentenceExec resetSequenceSentence(Session s, String sequence) {
-        return new SequenceForDerby(s, sequence);    
-}
+        var seq = new SequenceForGeneric(s, sequence);
+        return seq.reset(); 
+    }
 }

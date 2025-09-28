@@ -69,7 +69,7 @@ public class SessionDBOracle implements SessionDB {
      * @return
      */
     public SentenceFind getSequenceSentence(Session s, String sequence) {
-        return new StaticSentence(s, "SELECT " + sequence + ".NEXTVAL FROM DUAL", null, SerializerReadInteger.INSTANCE);
+        return new SequenceForGeneric(s, sequence);
     }
 
     /**
@@ -79,6 +79,7 @@ public class SessionDBOracle implements SessionDB {
      * @return
      */
     public SentenceExec resetSequenceSentence(Session s, String sequence) {
-        return new StaticSentence(s, "SELECT " + sequence + ".NEXTVAL FROM DUAL", null, SerializerReadInteger.INSTANCE);
+        var seq = new SequenceForGeneric(s, sequence);
+        return seq.reset();
     }
 }

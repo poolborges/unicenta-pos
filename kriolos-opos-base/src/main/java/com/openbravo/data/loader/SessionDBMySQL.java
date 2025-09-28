@@ -70,7 +70,7 @@ public class SessionDBMySQL implements SessionDB {
      */
     @Override
     public SentenceFind getSequenceSentence(Session s, String sequence) {
-        return new SequenceForMySQL(s, sequence);
+        return new SequenceForGeneric(s, sequence);
     }
    
     /**
@@ -81,7 +81,7 @@ public class SessionDBMySQL implements SessionDB {
      */
     @Override
     public SentenceExec resetSequenceSentence(Session s, String sequence) {
-        var seq = new SequenceForMySQL(s,sequence);
+        var seq = new SequenceForGeneric(s, sequence);
         return seq.reset();
     }    
 }

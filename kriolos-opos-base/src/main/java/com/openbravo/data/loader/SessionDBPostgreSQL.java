@@ -75,7 +75,7 @@ public class SessionDBPostgreSQL implements SessionDB {
      */
     @Override
     public SentenceFind getSequenceSentence(Session s, String sequence) {
-        return new StaticSentence(s, "SELECT NEXTVAL('" + sequence + "')", null, SerializerReadInteger.INSTANCE);
+        return new SequenceForGeneric(s, sequence);
     }
     
     /**
@@ -86,6 +86,7 @@ public class SessionDBPostgreSQL implements SessionDB {
      */
     @Override
     public SentenceExec resetSequenceSentence(Session s, String sequence){
-        return new StaticSentence(s, "ALTER SEQUENCE " + sequence + " RESTART WITH '0'", null, SerializerReadInteger.INSTANCE);   
+        var seq = new SequenceForGeneric(s, sequence);
+        return seq.reset();  
     }
 }

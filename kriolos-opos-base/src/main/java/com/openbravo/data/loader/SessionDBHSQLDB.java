@@ -76,7 +76,6 @@ public class SessionDBHSQLDB implements SessionDB {
     @Override
     public SentenceFind getSequenceSentence(Session s, String sequence) {
         return new SequenceForGeneric(s, sequence);
-        //return new StaticSentence(s, "CALL NEXT VALUE FOR " + sequence, null, SerializerReadInteger.INSTANCE);
     }
     
     /**
@@ -87,8 +86,7 @@ public class SessionDBHSQLDB implements SessionDB {
      */
     @Override
     public SentenceExec resetSequenceSentence(Session s, String sequence) {
-        SequenceForGeneric seqGeneric = new SequenceForGeneric(s, sequence);
-        return seqGeneric.reset();
-        //return new StaticSentence(s, "CALL NEXT VALUE FOR " + sequence, null, SerializerReadInteger.INSTANCE);
+        var seq = new SequenceForGeneric(s, sequence);
+        return seq.reset();
     }    
 }
