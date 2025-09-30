@@ -23,8 +23,6 @@ package com.openbravo.basic;
 public class BasicException extends java.lang.Exception {
 
     private static final long serialVersionUID = 1L;
-
-    public BasicException() {}
     
     public BasicException(String msg) {
         super(msg);
