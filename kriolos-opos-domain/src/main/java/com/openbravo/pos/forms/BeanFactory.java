@@ -20,11 +20,7 @@ package com.openbravo.pos.forms;
  *
  * @author adrianromero
  */
+@FunctionalInterface
 public interface BeanFactory {
-    
-    /**
-     *
-     * @return
-     */
     public Object getBean();
 }

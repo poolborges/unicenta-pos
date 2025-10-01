@@ -20,11 +20,7 @@ package com.openbravo.pos.payment;
  *
  * @author JG uniCenta
  */
+@FunctionalInterface
 public interface PaymentGateway {
-
-    /**
-     *
-     * @param payinfo
-     */
     public void execute(PaymentInfoMagcard payinfo);
 }
