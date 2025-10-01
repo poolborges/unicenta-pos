@@ -20,6 +20,7 @@ import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -55,8 +56,9 @@ public class JPrincipalApp extends JPanel implements AppUserView {
         m_appuser = appuser;
 
         m_dlSystem = (DataLogicSystem) m_appview.getBean("com.openbravo.pos.forms.DataLogicSystem");
-
-        m_appuser.fillPermissions(m_dlSystem);
+        AppUserPermissionsLoader aupLoader = new AppUserPermissionsLoader(m_dlSystem);
+        Set<String> userPermissions = aupLoader.getPermissionsForRole(m_appuser.getRole());
+        m_appuser.fillPermissions(userPermissions);
 
         initComponents();
         applyComponentOrientation(m_appview.getComponentOrientation());

@@ -15,160 +15,88 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.forms;
 
-import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.ticket.UserInfo;
 import com.openbravo.pos.util.Hashcypher;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Icon;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 /**
  *
  * @author adrianromero
+ * @author poolborges (update: 2025-10-01)
  */
 public class AppUser {
+    
+    private final String id;
+    private final String username;
+    private final String card;
+    private String password;
+    private final String role;
+    private final Icon icon;
 
-    private static final Logger logger = Logger.getLogger("com.openbravo.pos.forms.AppUser");
+    private final Set<String> permissions = new HashSet<>();
 
-    private static SAXParser m_sp = null;
-    private final String m_sId;
-    private final String m_sName;
-    private final String m_sCard;
-    private String m_sPassword;
-    private final String m_sRole;
-    private final Icon m_Icon;
-
-    private final Set<String> m_apermissions = new HashSet<>();
-
-
-    /**
-     * Creates a new instance of AppUser
-     *
-     * @param id
-     * @param name
-     * @param card
-     * @param password
-     * @param icon
-     * @param role
-     */
     public AppUser(String id, String name, String password, String card, String role, Icon icon) {
-        m_sId = id;
-        m_sName = name;
-        m_sPassword = password;
-        m_sCard = card;
-        m_sRole = role;
-        m_Icon = icon;
+        this.id = id;
+        this.username = name;
+        this.password = password;
+        this.card = card;
+        this.role = role;
+        this.icon = icon;
+        
+        
+        // DEFAULT Permissions for all users
+        permissions.add("com.openbravo.pos.forms.JPanelMenu");
+        permissions.add("Menu.Exit");
     }
 
-    /**
-     * Gets the User's button icon
-     */
     public Icon getIcon() {
-        return m_Icon;
+        return icon;
     }
 
-    /**
-     * Get the user's ID
-     */
     public String getId() {
-        return m_sId;
+        return id;
     }
 
-    /**
-     * Get the User's Name
-     */
     public String getName() {
-        return m_sName;
+        return username;
     }
 
-    /**
-     * Set the User's Password
-     */
     public void setPassword(String sValue) {
-        m_sPassword = sValue;
+        password = sValue;
     }
 
-    /**
-     * Get the User's Password
-     */
     public String getPassword() {
-        return m_sPassword;
+        return password;
     }
 
-    /**
-     * Get the User's Role
-     */
     public String getRole() {
-        return m_sRole;
+        return role;
     }
 
-    /**
-     * Get the User's Card
-     */
     public String getCard() {
-        return m_sCard;
+        return card;
     }
 
-    /**
-     * Validate User's Password
-     *
-     * @return
-     */
     public boolean authenticate() {
-        return m_sPassword == null || m_sPassword.equals("") || m_sPassword.startsWith("empty:");
+        return password == null || password.equals("") || password.startsWith("empty:");
     }
 
-    /**
-     * Eval User's Password
-     *
-     * @param sPwd
-     * @return
-     */
     public boolean authenticate(String sPwd) {
-        return Hashcypher.authenticate(sPwd, m_sPassword);
+        return Hashcypher.authenticate(sPwd, password);
     }
 
     /**
      * Load User's Permissions
      *
-     * @param dlSystem
+     * @param permissions
      */
-    public void fillPermissions(DataLogicSystem dlSystem) {
+    public void fillPermissions(Set<String> permissions) {
 
-        // Permissions for all users
-        m_apermissions.add("com.openbravo.pos.forms.JPanelMenu");
-        m_apermissions.add("Menu.Exit");
-
-        String sRolePermisions = dlSystem.findRolePermissions(m_sRole);
-
-        if (sRolePermisions != null) {
-            try {
-                if (m_sp == null) {
-                    SAXParserFactory spf = SAXParserFactory.newInstance();
-                    m_sp = spf.newSAXParser();
-                }
-                m_sp.parse(new InputSource(new StringReader(sRolePermisions)), new ConfigurationHandler());
-
-            } catch (ParserConfigurationException ePC) {
-                logger.log(Level.WARNING, "exception.parserconfig", ePC);
-            } catch (SAXException eSAX) {
-                logger.log(Level.WARNING, "exception.xmlfile", eSAX);
-            } catch (IOException eIO) {
-                logger.log(Level.WARNING, "exception.iofile", eIO);
-            }
+        if (permissions != null) {
+            this.permissions.addAll(permissions);
         }
-
     }
 
     /**
@@ -178,43 +106,10 @@ public class AppUser {
      * @return
      */
     public boolean hasPermission(String classname) {
-
-        return (m_apermissions == null) ? false : m_apermissions.contains(classname);
+        return permissions.contains(classname);
     }
 
-    /**
-     * Get User's ID/Name
-     *
-     * @return
-     */
     public UserInfo getUserInfo() {
-        return new UserInfo(m_sId, m_sName);
+        return new UserInfo(id, username);
     }
-
-    private class ConfigurationHandler extends DefaultHandler {
-
-        @Override
-        public void startDocument() throws SAXException {
-        }
-
-        @Override
-        public void endDocument() throws SAXException {
-        }
-
-        @Override
-        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-            if ("class".equals(qName)) {
-                m_apermissions.add(attributes.getValue("name"));
-            }
-        }
-
-        @Override
-        public void endElement(String uri, String localName, String qName) throws SAXException {
-        }
-
-        @Override
-        public void characters(char[] ch, int start, int length) throws SAXException {
-        }
-    }
-
 }
