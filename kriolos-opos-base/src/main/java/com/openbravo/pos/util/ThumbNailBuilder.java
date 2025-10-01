@@ -56,28 +56,27 @@ public class ThumbNailBuilder {
     }
 
     public ThumbNailBuilder(int width, int height, String img) {
+        LOGGER.info("Loading image from classloader with path: " + img);
+        BufferedImage bufImage = getImageFomClassLoader(img);
+        init(width, height, bufImage);
+    }
+
+    public static BufferedImage getImageFomClassLoader(String imagePath) {
+        InputStream inputStrem = ThumbNailBuilder.class.getClassLoader().getResourceAsStream(imagePath);
+        BufferedImage bufImage = null;
         try {
-            LOGGER.info("Loading image: " + img);
-            InputStream inputStrem = getClass().getClassLoader().getResourceAsStream(img);
-            BufferedImage bufImage = null;
             if (inputStrem != null) {
                 bufImage = ImageIO.read(inputStrem);
             } else {
-
-                inputStrem = ThumbNailBuilder.class.getResource(img).openStream();
-
+                inputStrem = ThumbNailBuilder.class.getResource(imagePath).openStream();
                 if (inputStrem != null) {
                     bufImage = ImageIO.read(inputStrem);
-                } else {
-                    //Creating of EMPTY IMAGE
-                    bufImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
                 }
             }
-            init(width, height, bufImage);
         } catch (IOException ex) {
-            LOGGER.log(Level.WARNING, "Exception loading resource image" + img, ex);
-            init(width, height, null);
+            LOGGER.log(Level.WARNING, "Exception loading image from classloader with path:" + imagePath, ex);
         }
+        return bufImage;
     }
 
     private void init(int width, int height, Image imgdef) {
@@ -224,6 +223,7 @@ public class ThumbNailBuilder {
 
     /**
      * Create Image with White color
+     *
      * @param width Image with
      * @param height Image height
      * @return Image
