@@ -20,6 +20,7 @@ import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.printer.escpos.DeviceDisplayLED8;
 import com.openbravo.pos.ticket.TicketInfo;
 import com.openbravo.pos.util.AudioUtils;
+import com.openbravo.pos.util.SAXParserUtils;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Reader;
@@ -103,15 +104,9 @@ public class TicketParser extends DefaultHandler {
     }
 
     public void printTicket(Reader in) throws TicketPrinterException {
-        SAXParserFactory spf = SAXParserFactory.newInstance();
+        
         try {
-            // XXE Prevention: Disable DTD processing and external entity access
-            spf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-            spf.setFeature("http://xml.org/sax/features/external-general-entities", false);
-            spf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-            spf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            spf.setXIncludeAware(false);
-
+            SAXParserFactory spf = SAXParserUtils.newSecureInstance();
             // A new parser instance for each call ensures thread safety
             SAXParser sp = spf.newSAXParser();
             sp.parse(new InputSource(in), this);
