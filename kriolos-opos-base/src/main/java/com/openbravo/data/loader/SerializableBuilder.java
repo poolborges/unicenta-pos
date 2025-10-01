@@ -20,11 +20,7 @@ package com.openbravo.data.loader;
  *
  * @author JG uniCenta
  */
+@FunctionalInterface
 public interface SerializableBuilder {
-    
-    /**
-     *
-     * @return
-     */
     public SerializableRead createNew();
 }

@@ -22,11 +22,7 @@ package com.openbravo.data.loader;
  * Created on 27 de febrero de 2007, 22:08
  *
  */
+@FunctionalInterface
 public interface IKeyed {
-    
-    /**
-     *
-     * @return
-     */
     public Object getKey();    
 }

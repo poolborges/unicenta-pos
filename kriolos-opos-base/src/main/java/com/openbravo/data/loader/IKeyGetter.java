@@ -20,12 +20,7 @@ package com.openbravo.data.loader;
  *
  * @author JG uniCenta
  */
+@FunctionalInterface
 public interface IKeyGetter {
-
-    /**
-     *
-     * @param value
-     * @return
-     */
     public Object getKey(Object value);
 }

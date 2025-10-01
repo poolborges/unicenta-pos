@@ -20,11 +20,7 @@ package com.openbravo.data.user;
  *
  * @author JG uniCenta
  */
+@FunctionalInterface
 public interface EditorListener extends java.util.EventListener {
-    
-    /**
-     *
-     * @param value
-     */
     public void updateValue(Object value); 
 }

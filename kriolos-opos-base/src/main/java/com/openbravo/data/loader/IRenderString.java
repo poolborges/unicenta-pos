@@ -20,12 +20,7 @@ package com.openbravo.data.loader;
  *
  * @author JG uniCenta
  */
+@FunctionalInterface
 public interface IRenderString {
-    
-    /**
-     *
-     * @param value
-     * @return
-     */
     public String getRenderString(Object value);    
 }
