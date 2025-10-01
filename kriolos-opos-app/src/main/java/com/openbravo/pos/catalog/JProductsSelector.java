@@ -30,6 +30,8 @@ import javax.swing.SwingConstants;
  */
 public class JProductsSelector extends javax.swing.JPanel {
 
+    private static final long serialVersionUID = 1L;
+
     private final JFlowPanel flowpanel;
 
     public JProductsSelector() {

@@ -54,38 +54,21 @@ public class JCatalogTab extends javax.swing.JPanel {
     }
 
     public void addButton(Icon icon, ActionListener actionListener, String text, String textTip) {
-        JButton btn = new JButton();
-        if(icon != null){
-            btn.setIcon(icon);
-        }
-        addButton(btn, actionListener, text, textTip);
+        
+        CatalogItem item = new CatalogItem(text);
+        item.setTextTip(textTip);
+        //item.setImage((ImageIcon)icon);
+        ProductCardV1 prodCard = new ProductCardV1(item, actionListener);
+   
+        
+        flowpanel.add(prodCard);
     }
     
-    public void addButton(JButton btn, ActionListener actionListener, String text,  String textTip){
-        
-        if (textTip != null) {
-            btn.setToolTipText(textTip);
-        }
-        
-        if(text != null){
-            btn.setText(text);
-        }
-
-        btn.setFocusPainted(false);
-        btn.setFocusable(false);
-        btn.setRequestFocusEnabled(false);
-        btn.setHorizontalTextPosition(SwingConstants.CENTER);
-        btn.setVerticalTextPosition(SwingConstants.CENTER);
-        btn.setFont(new java.awt.Font("Arial Bold", 0, 12));
-        btn.setMargin(new Insets(2, 2, 2, 2));
-        btn.setMaximumSize(new java.awt.Dimension(CATALOG_BUTTON_WITH, CATALOG_BUTTON_HEIGHT));
-        btn.setMinimumSize(new java.awt.Dimension(CATALOG_BUTTON_WITH, CATALOG_BUTTON_HEIGHT));
-        btn.setPreferredSize(new java.awt.Dimension(CATALOG_BUTTON_WITH, CATALOG_BUTTON_HEIGHT));
-        btn.applyComponentOrientation(getComponentOrientation());
-        btn.addActionListener(actionListener);
-
-        flowpanel.add(btn);
+    public void addCatalogItem(CatalogItem catalogItem, ActionListener actionListener) {
+        ProductCardV2 prodCard = new ProductCardV2(catalogItem, actionListener);
+        flowpanel.add(prodCard);
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
