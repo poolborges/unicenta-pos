@@ -377,6 +377,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     </execution>
                 </executions>
             </plugin>
+            
+            <!-- 
+            TO Force module-info.java verification if exist in all subproject
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
 
         </plugins>
 
