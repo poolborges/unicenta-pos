@@ -24,4 +24,12 @@ module kriolos.opos.base {
     
     exports com.openbravo.basic;
     exports com.openbravo.beans; 
+    exports com.openbravo.data.gui; 
+    exports com.openbravo.data.loader; 
+    exports com.openbravo.data.model; 
+    exports com.openbravo.data.user; 
+    exports com.openbravo.editor;  
+    exports com.openbravo.format; 
+    exports com.openbravo.pos.forms; 
+    exports com.openbravo.pos.util;
 }
