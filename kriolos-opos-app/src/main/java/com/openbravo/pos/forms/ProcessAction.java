@@ -23,12 +23,7 @@ import com.openbravo.data.gui.MessageInf;
  *
  * @author adrianromero
  */
+@FunctionalInterface
 public interface ProcessAction {
-   
-    /**
-     *
-     * @return
-     * @throws BasicException
-     */
     public MessageInf execute() throws BasicException;
 }
