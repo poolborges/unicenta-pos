@@ -35,20 +35,18 @@ public class ProductCardV2 extends JPanel {
 
     public ProductCardV2(CatalogItem item, ActionListener listener) {
 
-        /**
-         * Get default border Color.LIGHT_GRAY Color defaultTextFieldBorderColor
-         * = UIManager.getColor("TextField.border");
-         *
-         * LineBorder lineBorder = (LineBorder) this.getBorder(); Color
-         * defaultButtonBorder = lineBorder.getLineColor();
-         */
         // Get the default border from UIManager
         Color baseBorderColor;
         try {
-            LineBorder defaultButtonBorder = (LineBorder) UIManager.getBorder("Button.border");
-            baseBorderColor = defaultButtonBorder != null ? defaultButtonBorder.getLineColor() : Color.LIGHT_GRAY;
+            Border buttonBorder = UIManager.getBorder("Button.border");
+            if (buttonBorder instanceof LineBorder border) {
+                baseBorderColor = border.getLineColor();
+            }else {
+                baseBorderColor = Color.LIGHT_GRAY;
+            }
         }
         catch (Exception ex) {
+            //EX OMMITED
             baseBorderColor = Color.LIGHT_GRAY;
         }
 
