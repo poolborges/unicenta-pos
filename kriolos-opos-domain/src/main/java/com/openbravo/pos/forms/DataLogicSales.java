@@ -56,6 +56,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -64,7 +65,7 @@ import java.util.logging.Logger;
  * @author jackgerrard
  */
 public class DataLogicSales extends BeanFactoryDataSingle {
-
+    
     protected Session s;
 
     protected Datas[] auxiliarDatas;
@@ -82,8 +83,8 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     private String getRetMsg;
     private String getVoucher;
 
-    public static final String DEBT = "debt";
-    public static final String DEBT_PAID = "debtpaid";
+    private static final String PAYMENT_METHOD_DEBT = "debt";
+    private static final String PAYMENT_METHOD_DEBTPAID = "debtpaid";
     private static final String PREPAY = "prepay";
     private static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.forms.DataLogicSales");
 
@@ -1047,7 +1048,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
         if (Id == null) {
             return null;
         } else {
-            Object[] record = (Object[]) new StaticSentence(s,
+            Object[] ticketInfoObjArray = (Object[]) new StaticSentence(s,
                     "SELECT "
                     + "T.TICKETID, "
                     + "SUM(PM.TOTAL), "
@@ -1063,7 +1064,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                     + "WHERE T.TICKETID = ?",
                     SerializerWriteString.INSTANCE,
                     new SerializerReadBasic(new Datas[]{Datas.SERIALIZABLE})).find(Id);
-            return record == null ? null : (TicketInfo) record[0];
+            return ticketInfoObjArray == null ? null : (TicketInfo) ticketInfoObjArray[0];
         }
     }
 
@@ -1637,7 +1638,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                             ticket.setTicketId(getNextTicketPaymentIndex());
                             break;
                         default:
-                            throw new BasicException();
+                            throw new BasicException("Ticket with unsupported TicketType. TicketType is: "+ticket.getTicketType());
                     }
                 }
 
@@ -1648,7 +1649,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                     ticket.getProperties().storeToXML(o, AppLocal.APP_NAME, "UTF-8");
                     properties = o.toByteArray();
                 } catch (IOException e) {
-
+                    LOGGER.log(Level.WARNING, "Cannot convert ticket properties to XML ", e);
                 }
 
                 //Receipt Writer
@@ -1769,7 +1770,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                     }
 
                     //Payment method: Add debt to Customer Account
-                    if ("debt".equals(pName) || "debtpaid".equals(pName)) {
+                    if (PAYMENT_METHOD_DEBT.equals(pName) || PAYMENT_METHOD_DEBTPAID.equals(pName)) {
                         ticket.getCustomer().updateCurDebt(getTotal, ticket.getDate());
                         getDebtUpdate().exec(new DataParams() {
 
@@ -1864,7 +1865,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
                 // update customer debts
                 for (PaymentInfo p : ticket.getPayments()) {
-                    if ("debt".equals(p.getName()) || "debtpaid".equals(p.getName())) {
+                    if (PAYMENT_METHOD_DEBT.equals(p.getName()) || PAYMENT_METHOD_DEBTPAID.equals(p.getName())) {
 
                         // udate customer fields...
                         ticket.getCustomer().updateCurDebt(-p.getTotal(), ticket.getDate());
@@ -2679,7 +2680,6 @@ public class DataLogicSales extends BeanFactoryDataSingle {
         return new SentenceExecTransaction(s) {
             @Override
             public int execInTransaction(Object[] params) throws BasicException {
-                Object[] values = params;
                 int i = new PreparedSentence(s,
                         "INSERT INTO customers ("
                         + "ID, "
@@ -2736,7 +2736,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
         return new SentenceExecTransaction(s) {
             @Override
             public int execInTransaction(Object[] params) throws BasicException {
-                Object[] values = params;
+                
                 int i = new PreparedSentence(s,
                         "UPDATE customers SET "
                         + "ID = ?, "
@@ -2776,36 +2776,11 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                                     21, 22, 23, 24, 25,
                                     26, 0}))
                         .exec(params);
-
-                /*                
- * Use this block workflow as template to pump LOYALTY, MEMBERSHIP & etc
- * updates to internal or external DB table               
-                if (i > 0) {
-                    if (((Boolean)values[n0])) {
-			if (new PreparedSentence(s
-                                , "UPDATE tablename SET FIELD = ? WHERE CUSTOMER = ?"
-                                , new SerializerWriteBasicExt(customersRow.getDatas()
-                                , new int[] {n1, 0})).exec(params) == 0) {
-                            new PreparedSentence(s
-				, "INSERT INTO other_tablename (CUSTOMER, FIELD) VALUES (?, ?)"
-                                , new SerializerWriteBasicExt(productsRow.getDatas(), new int[] {0, n1})).exec(params);
-                            }
-			} else {
-                            new PreparedSentence(s
-				, "DELETE FROM FIELD WHERE CUSTOMER = ?"
-				, new SerializerWriteBasicExt(customersRow.getDatas(), new int[] {0})).exec(params);
-			}
-		}
-                 */
                 return i;
             }
         };
     }
 
-    /**
-     *
-     * @return
-     */
     public final SentenceExec getCustomerDelete() {
         return new SentenceExecTransaction(s) {
             @Override
