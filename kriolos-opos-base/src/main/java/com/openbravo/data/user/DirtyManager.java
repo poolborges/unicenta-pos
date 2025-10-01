@@ -27,92 +27,67 @@ import java.beans.*;
  */
 public class DirtyManager implements DocumentListener, ChangeListener, ActionListener, PropertyChangeListener {
     
-    private boolean m_bDirty;    
+    private boolean isDirty;    
 
-    /**
-     *
-     */
-    private final List<DirtyListener> listeners = new ArrayList();
-    
-    /** Creates a new instance of DirtyManager */
+    private final List<DirtyListener> listeners = new ArrayList<>();
+
     public DirtyManager() {
-        m_bDirty = false;
+        isDirty = false;
     }
-    
-    /**
-     *
-     * @param l
-     */
+
     public void addDirtyListener(DirtyListener l) {
         listeners.add(l);
     }
 
-    /**
-     *
-     * @param l
-     */
     public void removeDirtyListener(DirtyListener l) {
         listeners.remove(l);
     }
 
-    /**
-     *
-     */
     protected void fireChangedDirty() {
-        
         listeners.stream().forEach((DirtyListener listener) -> {
-            listener.changedDirty(m_bDirty);
+            listener.changedDirty(isDirty);
         });
     }
-    
-    /**
-     *
-     * @param bValue
-     */
-    public void setDirty(boolean bValue) {
-        
-        if (m_bDirty != bValue) {
-            m_bDirty = bValue;
+
+    public void setDirty(boolean dirty) {
+        if (isDirty != dirty) {
+            isDirty = dirty;
             fireChangedDirty();
         }
     }
 
-    /**
-     *
-     * @return
-     */
     public boolean isDirty() {
-        return m_bDirty;
+        return isDirty;
     }
     
     @Override
-    public void changedUpdate(DocumentEvent e) {
+    public void changedUpdate(DocumentEvent evt) {
         setDirty(true);
     }
+    
     @Override
-    public void insertUpdate(DocumentEvent e) {
+    public void insertUpdate(DocumentEvent evt) {
+        setDirty(true);
+    }   
+    
+    @Override
+    public void removeUpdate(DocumentEvent evt) {
         setDirty(true);
     }    
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        setDirty(true);
-    }    
     
     @Override
-    public void stateChanged(ChangeEvent e) {
+    public void stateChanged(ChangeEvent evt) {
         setDirty(true);
     }
     
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent evt) {
         setDirty(true);
     }
     
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        //if ("image".equals(evt.getPropertyName())) {
-            setDirty(true);
-        //}
+        setDirty(true);
     }
     
 }

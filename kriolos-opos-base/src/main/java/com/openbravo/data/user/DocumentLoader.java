@@ -23,18 +23,6 @@ package com.openbravo.data.user;
  *
  */
 public interface DocumentLoader {
-    
-    /**
-     *
-     * @param key
-     * @return
-     */
     public Object getValue(Object key);
-
-    /**
-     *
-     * @param value
-     * @return
-     */
     public Object getKey(Object value);
 }
