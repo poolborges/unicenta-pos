@@ -22,18 +22,10 @@ import com.openbravo.data.loader.Session;
 import com.openbravo.data.user.DirtyManager;
 import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.DriverWrapper;
 import com.openbravo.pos.util.AltEncrypter;
-import com.openbravo.pos.util.DirectoryEvent;
 import java.awt.Component;
 import java.awt.HeadlessException;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
