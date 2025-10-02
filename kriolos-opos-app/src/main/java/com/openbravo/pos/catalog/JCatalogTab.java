@@ -65,7 +65,7 @@ public class JCatalogTab extends javax.swing.JPanel {
     }
     
     public void addCatalogItem(CatalogItem catalogItem, ActionListener actionListener) {
-        ProductCardV2 prodCard = new ProductCardV2(catalogItem, actionListener);
+        ProductCardV1 prodCard = new ProductCardV1(catalogItem, actionListener);
         flowpanel.add(prodCard);
     }
     
