@@ -1,0 +1,345 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="closedpos" language="java" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="16afe47d-f65b-44bc-909f-aacfa599ad60">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import>net.sf.jasperreports.engine.*</import>
+	<import>java.util.*</import>
+	<import>net.sf.jasperreports.engine.data.*</import>
+	<parameter name="ARG" forPrompting="false" class="java.lang.Object"/>
+	<query language="sql"><![CDATA[SELECT
+CLOSEDCASH.HOST,
+CLOSEDCASH.HOSTSEQUENCE,
+CLOSEDCASH.MONEY,
+CLOSEDCASH.DATESTART,
+CLOSEDCASH.DATEEND,
+PAYMENTS.PAYMENT,
+SUM(PAYMENTS.TOTAL) AS TOTAL
+FROM CLOSEDCASH, PAYMENTS
+WHERE CLOSEDCASH.MONEY = PAYMENTS.MONEY
+GROUP BY CLOSEDCASH.HOST, CLOSEDCASH.MONEY, CLOSEDCASH.DATESTART, CLOSEDCASH.DATEEND, PAYMENTS.PAYMENT
+ORDER BY CLOSEDCASH.HOST, CLOSEDCASH.DATESTART]]></query>
+	<field name="TOTAL" class="java.lang.Double"/>
+	<field name="HOST" class="java.lang.String"/>
+	<field name="MONEY" class="java.lang.String"/>
+	<field name="DATESTART" class="java.util.Date"/>
+	<field name="DATEEND" class="java.util.Date"/>
+	<field name="PAYMENT" class="java.lang.String"/>
+	<field name="HOSTSEQUENCE" class="java.lang.Integer"/>
+	<variable name="BIGTOTAL" calculation="Sum" class="java.lang.Double">
+		<expression><![CDATA[$F{TOTAL}]]></expression>
+		<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="PARTIALTOTAL" resetType="Group" calculation="Sum" resetGroup="byhost" class="java.lang.Double">
+		<expression><![CDATA[$F{TOTAL}]]></expression>
+		<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="DAYTOTAL" resetType="Group" calculation="Sum" resetGroup="bymoney" class="java.lang.Double">
+		<expression><![CDATA[$F{TOTAL}]]></expression>
+		<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
+	</variable>
+	<group name="byhost">
+		<expression><![CDATA[$F{HOST}]]></expression>
+		<groupHeader>
+			<band height="20">
+				<element kind="textField" uuid="db4cc2b2-2c98-4268-9c5a-138ec5bb4c06" key="textField-1" mode="Opaque" x="110" y="2" width="130" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="11.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Middle">
+					<paragraph lineSpacing="Single"/>
+					<expression><![CDATA[$F{HOST}]]></expression>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					</box>
+				</element>
+				<element kind="textField" uuid="8343c5de-ec43-4313-996b-25b5debb6a7c" key="textField-23" mode="Opaque" x="0" y="2" width="110" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Middle">
+					<paragraph lineSpacing="Single"/>
+					<expression><![CDATA[$R{label.host}]]></expression>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					</box>
+				</element>
+				<element kind="textField" uuid="80b1a811-d5e9-48e1-8a8c-aea2ec24de09" key="textField-11" mode="Opaque" x="251" y="2" width="100" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Top">
+					<paragraph lineSpacing="Single"/>
+					<expression><![CDATA[$R{label.closedate}]]></expression>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					</box>
+				</element>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<element kind="textField" uuid="cbfd5a61-8a00-4dc0-a7e8-c11cd80f1bdf" key="textField-5" mode="Opaque" x="435" y="2" width="100" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">
+					<paragraph lineSpacing="Single"/>
+					<expression><![CDATA[com.openbravo.format.Formats.CURRENCY.formatValue($V{PARTIALTOTAL})]]></expression>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					</box>
+				</element>
+				<element kind="line" uuid="cfe630b4-2d9b-4128-a5a6-5fc4ca75c9a9" key="line-3" mode="Opaque" x="435" y="0" width="100" height="1" forecolor="#000000" backcolor="#FFFFFF">
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+				</element>
+				<element kind="textField" uuid="b9868c0d-d928-4731-8c26-559fe6898d22" key="textField-15" mode="Opaque" x="325" y="2" width="110" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">
+					<paragraph lineSpacing="Single"/>
+					<expression><![CDATA[$R{label.terminaltotal}]]></expression>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					</box>
+				</element>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="bymoney">
+		<expression><![CDATA[$F{MONEY}]]></expression>
+		<groupHeader>
+			<band height="16">
+				<element kind="textField" uuid="0bd9ff6b-485d-4eae-a804-3100c66e6a63" key="textField-4" mode="Opaque" x="251" y="0" width="110" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">
+					<paragraph lineSpacing="Single"/>
+					<expression><![CDATA[com.openbravo.format.Formats.TIMESTAMP.formatValue($F{DATESTART})]]></expression>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					</box>
+				</element>
+				<element kind="textField" uuid="8435423c-af11-47f3-8239-f134d540c47d" key="textField-4" mode="Opaque" x="371" y="0" width="110" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="true" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Top">
+					<paragraph lineSpacing="Single"/>
+					<expression><![CDATA[com.openbravo.format.Formats.TIMESTAMP.formatValue($F{DATEEND})]]></expression>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					</box>
+				</element>
+				<element kind="textField" uuid="7125ea68-e577-4958-898e-711a273bec73" key="textField-23" mode="Opaque" x="0" y="0" width="110" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Middle">
+					<paragraph lineSpacing="Single"/>
+					<expression><![CDATA[$R{label.hostsequence}]]></expression>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					</box>
+				</element>
+				<element kind="staticText" uuid="0f825806-e969-45b5-9263-ff48a2196931" key="staticText-6" mode="Transparent" x="361" y="0" width="10" height="15" rotation="None" fontName="SansSerif" fontSize="12.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Center" vTextAlign="Top">
+					<paragraph lineSpacing="Single"/>
+					<text><![CDATA[-
+]]></text>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					</box>
+				</element>
+				<element kind="textField" uuid="ae5cdd00-4233-47b2-989d-233cf9bcf31d" x="110" y="0" width="100" height="15" fontName="SansSerif">
+					<expression><![CDATA[$F{HOSTSEQUENCE}]]></expression>
+				</element>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<element kind="textField" uuid="6af58989-0b19-41ad-ac82-669f2f42a3be" key="textField-5" mode="Opaque" x="435" y="2" width="100" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">
+					<paragraph lineSpacing="Single"/>
+					<expression><![CDATA[com.openbravo.format.Formats.CURRENCY.formatValue($V{DAYTOTAL})]]></expression>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					</box>
+				</element>
+				<element kind="line" uuid="9545b475-b823-4cbe-abfb-9a171918ac98" key="line-1" mode="Opaque" x="435" y="0" width="100" height="1" forecolor="#000000" backcolor="#FFFFFF">
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+				</element>
+				<element kind="textField" uuid="f3c0bdf9-3748-4cee-9dca-6f2a74cac9f7" key="textField-14" mode="Opaque" x="325" y="2" width="110" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">
+					<paragraph lineSpacing="Single"/>
+					<expression><![CDATA[$R{label.partialtotal}]]></expression>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+					</box>
+				</element>
+			</band>
+		</groupFooter>
+	</group>
+	<background/>
+	<title height="52">
+		<element kind="textField" uuid="bf6bf711-bd6c-42bc-b392-cd31a3c74797" key="textField-8" mode="Transparent" x="50" y="33" width="110" height="15" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="true" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Middle">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[com.openbravo.format.Formats.TIMESTAMP.formatValue((java.util.Date)((Object[])((Object[])$P{ARG})[0])[1])]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="873a60a6-3c44-4e3a-90eb-b0d1b28400a1" key="textField-9" mode="Transparent" x="170" y="33" width="110" height="15" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="true" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Middle">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[com.openbravo.format.Formats.TIMESTAMP.formatValue((java.util.Date)((Object[])((Object[])$P{ARG})[0])[3])]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="e0c4f3ee-655e-4f9f-abe2-139ee1175f46" key="staticText-6" mode="Transparent" x="160" y="33" width="10" height="15" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Center" vTextAlign="Middle">
+			<paragraph lineSpacing="Single"/>
+			<text><![CDATA[-
+]]></text>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			</box>
+		</element>
+		<element kind="rectangle" uuid="2033576c-7199-4e2a-ae1d-b58083bfab6e" key="rectangle-1" mode="Opaque" x="0" y="50" width="535" height="2" forecolor="#33CCFF" backcolor="#33CCFF" radius="5">
+			<pen lineWidth="0.25" lineStyle="Solid"/>
+		</element>
+		<element kind="textField" uuid="355ec385-ebf6-4c40-8ad8-6f690f3d1d49" key="textField-21" mode="Transparent" x="0" y="0" width="375" height="30" forecolor="#33CCFF" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="14.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Top">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$R{label.title}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="9aedeb58-bf47-4be9-af4c-6d27a9c63018" key="textField-19" mode="Opaque" x="400" y="0" width="135" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$R{label.printed}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="492c521a-6898-4b07-9bea-5f38ccc74bae" key="textField" x="400" y="15" width="135" height="15" fontName="SansSerif" fontSize="10.0" evaluationTime="Report" pattern="dd/MM/yyyy h.mm a" blankWhenNull="false" hTextAlign="Right">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+		<element kind="textField" uuid="a77fb8a7-d45a-4bdf-91f0-539ed64f1358" key="textField-10" mode="Opaque" x="0" y="33" width="50" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Middle">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$R{label.period}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
+	</title>
+	<pageHeader/>
+	<columnHeader/>
+	<detail>
+		<band height="17">
+			<element kind="textField" uuid="5efa72ed-9373-4517-ac98-3b0b731b3069" key="textField-20" mode="Opaque" x="110" y="0" width="225" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Top">
+				<paragraph lineSpacing="Single"/>
+				<expression><![CDATA[str("transpayment." + $F{PAYMENT})]]></expression>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="0e01585f-785f-4dd4-b1cb-33d78d86580f" key="textField-3" mode="Opaque" x="435" y="0" width="100" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">
+				<paragraph lineSpacing="Single"/>
+				<expression><![CDATA[com.openbravo.format.Formats.CURRENCY.formatValue($F{TOTAL})]]></expression>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+			</element>
+		</band>
+	</detail>
+	<columnFooter/>
+	<pageFooter height="30">
+		<element kind="textField" uuid="bd3a268c-6a4d-42c4-bcc1-59ab31cacecd" key="textField-6" mode="Opaque" x="485" y="10" width="20" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="0e329d4a-ed3a-44fc-be4d-091c65e7a4bc" key="textField-7" mode="Opaque" x="515" y="10" width="20" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" evaluationTime="Report" pattern="" blankWhenNull="false" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Top">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="c3d20b59-cb5f-4e2e-840a-94169cce49b4" key="staticText-5" mode="Opaque" x="505" y="10" width="10" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Center" vTextAlign="Top">
+			<paragraph lineSpacing="Single"/>
+			<text><![CDATA[/]]></text>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			</box>
+		</element>
+		<element kind="line" uuid="6a0ebb80-231e-4329-8699-2e18974b7f2a" key="line-3" mode="Opaque" x="0" y="5" width="535" height="1" forecolor="#000000" backcolor="#FFFFFF">
+			<pen lineWidth="0.25" lineStyle="Solid"/>
+		</element>
+		<element kind="staticText" uuid="a986572d-aafa-4439-8587-e534782f2bb5" key="staticText-6" x="0" y="10" width="100" height="15" fontName="SansSerif" fontSize="8.0">
+			<text><![CDATA[rpt:closedpos]]></text>
+		</element>
+	</pageFooter>
+	<summary height="30">
+		<element kind="textField" uuid="ff20d0d8-1707-4e5b-971d-446053012bb9" key="textField-16" mode="Opaque" x="325" y="7" width="110" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="11.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$R{label.total}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="53512823-8d49-4401-bf75-93f182b917e0" key="textField-5" mode="Opaque" x="435" y="7" width="100" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="11.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[com.openbravo.format.Formats.CURRENCY.formatValue($V{BIGTOTAL})]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			</box>
+		</element>
+		<element kind="line" uuid="95e88a42-c394-40b4-ba64-119f76f80e30" key="line-3" mode="Opaque" x="435" y="5" width="100" height="1" forecolor="#000000" backcolor="#FFFFFF">
+			<pen lineWidth="0.25" lineStyle="Solid"/>
+		</element>
+	</summary>
+</jasperReport>

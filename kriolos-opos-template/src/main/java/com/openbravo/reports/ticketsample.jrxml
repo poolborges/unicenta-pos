@@ -1,0 +1,128 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="ticketsample" language="java" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="e4815fa6-4211-4036-b5d8-9e0203f21ea9">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import>net.sf.jasperreports.engine.*</import>
+	<import>java.util.*</import>
+	<import>net.sf.jasperreports.engine.data.*</import>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<field name="TICKET" class="com.openbravo.pos.ticket.TicketInfo"/>
+	<field name="PLACE" class="java.lang.String"/>
+	<field name="TAXESLOGIC" class="java.lang.Object"/>
+	<background splitType="Stretch"/>
+	<title height="96" splitType="Stretch">
+		<element kind="image" uuid="4ed01b77-4987-44bf-94ec-c58881ba13a1" key="image-1" x="0" y="1" width="276" height="83" scaleImage="RealSize">
+			<expression><![CDATA["reports/com/openbravo/reports/logo.png"]]></expression>
+		</element>
+		<element kind="textField" uuid="c0242fdb-e841-4ad5-ab05-1f23562d71e8" key="textField-2" x="276" y="2" width="250" height="16" blankWhenNull="false" hTextAlign="Right" vTextAlign="Middle">
+			<expression><![CDATA[$F{TICKET}.printTicketHeaderLine1()]]></expression>
+		</element>
+		<element kind="textField" uuid="132bca10-55c9-46cd-af75-610b262f15ee" key="textField-2" x="276" y="17" width="250" height="16" blankWhenNull="false" hTextAlign="Right" vTextAlign="Middle">
+			<expression><![CDATA[$F{TICKET}.printTicketHeaderLine2()]]></expression>
+		</element>
+		<element kind="textField" uuid="66f76ef9-27d1-4436-a1b5-1db451b79f63" key="textField-2" x="276" y="32" width="250" height="16" blankWhenNull="false" hTextAlign="Right" vTextAlign="Middle">
+			<expression><![CDATA[$F{TICKET}.printTicketHeaderLine3()]]></expression>
+		</element>
+		<element kind="textField" uuid="9433df7e-cadb-453f-8d20-71d818f0eba2" key="textField-2" x="276" y="47" width="250" height="16" blankWhenNull="false" hTextAlign="Right" vTextAlign="Middle">
+			<expression><![CDATA[$F{TICKET}.printTicketHeaderLine4()]]></expression>
+		</element>
+		<element kind="textField" uuid="864d3d51-3a29-4246-8db8-775866425f77" key="textField-2" x="276" y="62" width="250" height="16" blankWhenNull="false" hTextAlign="Right" vTextAlign="Middle">
+			<expression><![CDATA[$F{TICKET}.printTicketHeaderLine5()]]></expression>
+		</element>
+		<element kind="textField" uuid="a549e687-1227-43a1-9029-62b3350a2ab7" key="textField-2" x="276" y="77" width="250" height="16" blankWhenNull="false" hTextAlign="Right" vTextAlign="Middle">
+			<expression><![CDATA[$F{TICKET}.printTicketHeaderLine6()]]></expression>
+		</element>
+	</title>
+	<pageHeader splitType="Stretch"/>
+	<columnHeader splitType="Stretch"/>
+	<detail>
+		<band height="253" splitType="Stretch">
+			<element kind="rectangle" uuid="83c8ceb0-43ca-40ee-a4e0-b69408c24904" key="rectangle-3" x="10" y="169" width="517" height="1"/>
+			<element kind="rectangle" uuid="7ccb8dbe-2c37-4ed6-97a4-bc8dba06279b" key="rectangle-2" x="312" y="7" width="215" height="85"/>
+			<element kind="rectangle" uuid="208a5eca-9258-4dfe-9623-bd0c8f04a956" key="rectangle-1" x="10" y="7" width="302" height="85"/>
+			<element kind="textField" uuid="007eeca1-9e02-436e-bdae-1b6547b19364" key="textField-2" x="128" y="11" width="160" height="21" blankWhenNull="false">
+				<expression><![CDATA[$F{TICKET}.printId()]]></expression>
+			</element>
+			<element kind="staticText" uuid="21d86c7c-f359-4ae0-b1e8-7dcf35443ae1" key="staticText-3" x="19" y="11" width="109" height="21" pdfFontName="Helvetica-Bold" bold="true">
+				<text><![CDATA[Receipt]]></text>
+			</element>
+			<element kind="staticText" uuid="60287ccc-9018-41ee-bb74-9db39e679527" key="staticText-4" x="19" y="32" width="109" height="21" pdfFontName="Helvetica-Bold" bold="true">
+				<text><![CDATA[Date]]></text>
+			</element>
+			<element kind="textField" uuid="9de75355-1489-439c-9acc-424848a38998" key="textField-3" x="128" y="32" width="160" height="21" blankWhenNull="false">
+				<expression><![CDATA[$F{TICKET}.printDate()]]></expression>
+			</element>
+			<element kind="staticText" uuid="ac022351-4afe-4e5e-a7f6-1cea5facf901" key="staticText-5" x="19" y="53" width="109" height="21" pdfFontName="Helvetica-Bold" bold="true">
+				<text><![CDATA[Account]]></text>
+			</element>
+			<element kind="textField" uuid="99c8ab08-ff3c-435c-bb39-1643dc4e838a" key="textField-4" x="324" y="11" width="190" height="19" blankWhenNull="false">
+				<printWhenExpression><![CDATA[Boolean.valueOf($F{TICKET}.getCustomer() != null)]]></printWhenExpression>
+				<expression><![CDATA[$F{TICKET}.getCustomer().getName()]]></expression>
+			</element>
+			<element kind="textField" uuid="4db5aff2-3219-49b2-8db7-4cb48358bb3e" key="textField-5" x="128" y="53" width="160" height="21" blankWhenNull="false">
+				<printWhenExpression><![CDATA[Boolean.valueOf($F{TICKET}.getCustomer() != null)]]></printWhenExpression>
+				<expression><![CDATA[$F{TICKET}.getCustomer().getTaxid()]]></expression>
+			</element>
+			<element kind="textField" uuid="19412683-3790-47f2-816e-09d3936eb6c9" key="textField-6" x="324" y="199" width="188" height="19" fontSize="12.0" pdfFontName="Helvetica-Bold" blankWhenNull="false" bold="true" hTextAlign="Right">
+				<expression><![CDATA[$F{TICKET}.printTax()]]></expression>
+			</element>
+			<element kind="textField" uuid="56aa24f9-b900-4fee-8521-10791a9e92a9" key="textField-7" x="324" y="218" width="188" height="19" fontSize="12.0" pdfFontName="Helvetica-Bold" blankWhenNull="false" bold="true" hTextAlign="Right">
+				<expression><![CDATA[$F{TICKET}.printTotal()]]></expression>
+			</element>
+			<element kind="textField" uuid="2ae0f4f7-bd15-4f2f-86f7-e4d298d56944" key="textField-8" x="324" y="180" width="188" height="19" fontSize="12.0" pdfFontName="Helvetica-Bold" blankWhenNull="false" bold="true" hTextAlign="Right">
+				<expression><![CDATA[$F{TICKET}.printSubTotal()]]></expression>
+			</element>
+			<element kind="subreport" uuid="36ca1eed-1b44-494b-a51c-881ed1239266" key="subreport-1" x="10" y="100" width="517" height="65" usingCache="true">
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{TICKET}.getLines())]]></dataSourceExpression>
+				<expression><![CDATA[JasperCompileManager.compileReport(
+                                    net.sf.jasperreports.engine.xml.JRXmlLoader.load(
+                                        getClass().getResourceAsStream("/com/openbravo/reports/ticketsample_lines.jrxml")))]]></expression>
+			</element>
+			<element kind="staticText" uuid="c94b1551-d20a-4145-846e-af63b6b942e7" key="staticText-6" x="164" y="180" width="160" height="19" pdfFontName="Helvetica-Bold" bold="true">
+				<text><![CDATA[Subtotal]]></text>
+			</element>
+			<element kind="staticText" uuid="0a731f94-c4b3-435f-9358-87af44670d7b" key="staticText-8" x="164" y="199" width="160" height="19" pdfFontName="Helvetica-Bold" bold="true">
+				<text><![CDATA[Taxes]]></text>
+			</element>
+			<element kind="staticText" uuid="227f3d50-e51c-40e6-b325-c1438a26be10" key="staticText-9" x="164" y="218" width="160" height="19" pdfFontName="Helvetica-Bold" bold="true">
+				<text><![CDATA[Total]]></text>
+			</element>
+			<element kind="textField" uuid="c02da605-0382-45a6-84c8-924b81079fdb" key="textField-4" x="324" y="31" width="190" height="19" blankWhenNull="false">
+				<printWhenExpression><![CDATA[Boolean.valueOf($F{TICKET}.getCustomer() != null)]]></printWhenExpression>
+				<expression><![CDATA[$F{TICKET}.getCustomer().getAddress()]]></expression>
+			</element>
+			<element kind="textField" uuid="65eba4ef-093c-4261-84e4-f4d704a4cc4d" key="textField-4" x="324" y="51" width="190" height="19" blankWhenNull="false">
+				<printWhenExpression><![CDATA[Boolean.valueOf($F{TICKET}.getCustomer() != null)]]></printWhenExpression>
+				<expression><![CDATA[$F{TICKET}.getCustomer().getPostal()]]></expression>
+			</element>
+		</band>
+	</detail>
+	<columnFooter splitType="Stretch"/>
+	<pageFooter height="137" splitType="Stretch">
+		<element kind="line" uuid="e7026c38-d875-4852-8569-8adaa8119e78" x="1" y="2" width="534" height="1"/>
+		<element kind="textField" uuid="3fb73960-4dc7-462a-91b2-6424b1192ae7" key="textField-2" x="0" y="5" width="534" height="21" blankWhenNull="false" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$F{TICKET}.printTicketFooterLine1()]]></expression>
+		</element>
+		<element kind="textField" uuid="1e4f0f60-d47a-4f4f-9315-098c0283c981" key="textField-2" x="0" y="26" width="534" height="21" blankWhenNull="false" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$F{TICKET}.printTicketFooterLine2()]]></expression>
+		</element>
+		<element kind="textField" uuid="8b401ee1-15b3-4ae8-b0f5-e4436f857de9" key="textField-2" x="0" y="46" width="534" height="21" blankWhenNull="false" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$F{TICKET}.printTicketFooterLine3()]]></expression>
+		</element>
+		<element kind="textField" uuid="6b50c6fd-2406-4bea-9dee-5699cdca6e15" key="textField-2" x="0" y="66" width="534" height="21" blankWhenNull="false" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$F{TICKET}.printTicketFooterLine4()]]></expression>
+		</element>
+		<element kind="textField" uuid="8312c4d7-1782-43a2-aab8-387be734b4ba" key="textField-2" x="0" y="86" width="534" height="21" blankWhenNull="false" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$F{TICKET}.printTicketFooterLine5()]]></expression>
+		</element>
+		<element kind="textField" uuid="5c3fde1d-9bd8-42e4-9c83-fab162c77cf2" key="textField-2" x="0" y="106" width="534" height="21" blankWhenNull="false" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$F{TICKET}.printTicketFooterLine6()]]></expression>
+		</element>
+	</pageFooter>
+	<summary height="19" splitType="Stretch"/>
+</jasperReport>

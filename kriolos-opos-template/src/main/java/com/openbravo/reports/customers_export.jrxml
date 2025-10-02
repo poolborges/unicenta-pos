@@ -1,0 +1,180 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="customers_list" language="java" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="97ba0ac8-addd-4763-8f9b-c8f8f3150cc8">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import>net.sf.jasperreports.engine.*</import>
+	<import>java.util.*</import>
+	<import>net.sf.jasperreports.engine.data.*</import>
+	<query language="sql"><![CDATA[SELECT ID,TAXID,NAME,FIRSTNAME,LASTNAME,ADDRESS,ADDRESS2,CITY,POSTAL,EMAIL,PHONE
+FROM CUSTOMERS
+ORDER BY NAME]]></query>
+	<field name="ID" class="java.lang.String"/>
+	<field name="NAME" class="java.lang.String"/>
+	<field name="FIRSTNAME" class="java.lang.String"/>
+	<field name="LASTNAME" class="java.lang.String"/>
+	<field name="ADDRESS" class="java.lang.String"/>
+	<field name="ADDRESS2" class="java.lang.String"/>
+	<field name="CITY" class="java.lang.String"/>
+	<field name="POSTAL" class="java.lang.String"/>
+	<field name="PHONE" class="java.lang.String"/>
+	<field name="EMAIL" class="java.lang.String"/>
+	<field name="TAXID" class="java.lang.String"/>
+	<background/>
+	<title/>
+	<columnHeader height="15">
+		<element kind="textField" uuid="18fcf1a8-d7dd-43ad-8f20-a8881fc800a1" key="textField-21" mode="Opaque" x="50" y="2" width="80" height="13" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="8.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="true" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Bottom">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$R{label.name}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="ce7a470a-b6ed-492e-b138-448de0fa8924" key="textField-23" mode="Opaque" x="129" y="2" width="60" height="13" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="8.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="true" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Bottom">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$R{label.firstname}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="cfa9b6e7-df23-45f5-9bb6-0341143d4a59" key="textField-23" mode="Opaque" x="189" y="2" width="80" height="13" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="8.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="true" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Bottom">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$R{label.lastname}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="dd897435-e86a-41e6-a819-427111578e17" key="textField-24" mode="Opaque" x="269" y="2" width="100" height="13" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="8.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="true" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Bottom">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$R{label.address}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="34c56822-f1e1-480b-929a-3afca6a2b84e" key="textField-25" mode="Opaque" x="369" y="2" width="80" height="13" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="8.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="true" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Bottom">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$R{label.address2}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="67393b9c-d93b-4afc-8461-b1b82d9a1b8e" key="textField-26" mode="Opaque" x="449" y="2" width="80" height="13" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="8.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="true" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Bottom">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$R{label.city}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="46045f12-a74c-418f-8b90-02507e35502e" key="textField-2" mode="Opaque" x="529" y="2" width="51" height="13" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="8.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="true" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Bottom">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$R{label.postal}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="6aac07dd-40ca-465e-9ec4-434fbe789bb7" key="textField-28" x="580" y="2" width="100" height="13" fontName="SansSerif" fontSize="8.0" blankWhenNull="true" bold="true" vTextAlign="Bottom">
+			<expression><![CDATA[$R{label.telephone}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="3e753110-5037-462e-9e1b-0b2483dc2388" key="textField-29" x="680" y="2" width="100" height="13" fontName="SansSerif" fontSize="8.0" blankWhenNull="true" bold="true" vTextAlign="Bottom">
+			<expression><![CDATA[$R{label.email}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="e6e590e4-c869-41ef-9189-ba71af707e13" key="textField-21" mode="Opaque" x="0" y="1" width="50" height="13" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="8.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="true" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Bottom">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$R{label.taxid}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="13">
+			<element kind="textField" uuid="a9a9c52c-bccb-4502-8ce1-b76243304fef" key="textField" x="50" y="0" width="80" height="13" fontName="SansSerif" fontSize="8.0" pdfFontName="Helvetica-Bold" blankWhenNull="true" bold="false">
+				<expression><![CDATA[$F{NAME}]]></expression>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="c5cbb421-a5de-47c1-ac64-caf8a9a06b25" key="textField-12" x="269" y="0" width="100" height="13" fontName="SansSerif" fontSize="8.0" blankWhenNull="true">
+				<expression><![CDATA[$F{ADDRESS}]]></expression>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="356042cf-4e4c-4b11-bf98-475062f7f89e" x="369" y="0" width="80" height="13" fontSize="8.0" blankWhenNull="true">
+				<expression><![CDATA[$F{ADDRESS2}]]></expression>
+			</element>
+			<element kind="textField" uuid="f613d56d-4bab-4672-8535-47d25bdfb1d7" x="449" y="0" width="80" height="13" fontSize="8.0" blankWhenNull="true">
+				<expression><![CDATA[$F{CITY}]]></expression>
+			</element>
+			<element kind="textField" uuid="5c962840-6bec-4282-81eb-5cfd68941a69" x="529" y="0" width="51" height="13" fontSize="8.0" blankWhenNull="true">
+				<expression><![CDATA[$F{POSTAL}]]></expression>
+			</element>
+			<element kind="textField" uuid="fa6daa2f-08eb-4b60-b535-f7807517ac60" x="189" y="0" width="80" height="13" fontSize="8.0" blankWhenNull="true">
+				<expression><![CDATA[$F{LASTNAME}]]></expression>
+			</element>
+			<element kind="textField" uuid="09d8f0dd-3909-4a11-9bd6-0ff81a6a4446" x="580" y="0" width="100" height="13" fontSize="8.0" blankWhenNull="true">
+				<expression><![CDATA[$F{PHONE}]]></expression>
+			</element>
+			<element kind="textField" uuid="857b7688-14fe-46d7-b925-8baaf0e20ea4" x="680" y="0" width="100" height="13" fontSize="8.0" blankWhenNull="true">
+				<expression><![CDATA[$F{EMAIL}]]></expression>
+			</element>
+			<element kind="textField" uuid="8fd25ffb-94d2-43de-aa5b-07273a49c42d" x="129" y="0" width="60" height="13" fontSize="8.0" blankWhenNull="true">
+				<expression><![CDATA[$F{FIRSTNAME}]]></expression>
+			</element>
+			<element kind="textField" uuid="8473d511-87a3-477c-b074-3354f453316e" key="textField" x="0" y="0" width="50" height="13" fontName="SansSerif" fontSize="8.0" pdfFontName="Helvetica-Bold" blankWhenNull="true" bold="false">
+				<expression><![CDATA[$F{TAXID}]]></expression>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+		</band>
+	</detail>
+	<columnFooter/>
+</jasperReport>

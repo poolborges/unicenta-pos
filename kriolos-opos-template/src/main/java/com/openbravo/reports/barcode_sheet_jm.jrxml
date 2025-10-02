@@ -1,0 +1,46 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="barcodesheet_jm" language="java" columnCount="2" printOrder="Horizontal" pageWidth="240" pageHeight="77" columnWidth="113" columnSpacing="10" leftMargin="2" rightMargin="2" topMargin="4" bottomMargin="4" uuid="f6bed442-aab6-4ba8-893d-fbcaa7c91a0c" ignorePagination="true">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="2.9282000000000012"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import>net.sf.jasperreports.engine.*</import>
+	<import>java.util.*</import>
+	<import>net.sf.jasperreports.engine.data.*</import>
+	<query language="sql"><![CDATA[]]></query>
+	<field name="NAME" class="java.lang.String"/>
+	<field name="CODE" class="java.lang.String"/>
+	<field name="CODETYPE" class="java.lang.String"/>
+	<field name="TOTALPRICE" class="java.lang.Double"/>
+	<sortField name="NAME"/>
+	<detail>
+		<band height="69" splitType="Stretch">
+			<element kind="rectangle" uuid="4ae63ad1-9ffb-4c65-bc80-10b563ec211b" x="0" y="0" width="112" height="62" forecolor="#999999" radius="4">
+				<pen lineWidth="0.5" lineStyle="Dashed"/>
+			</element>
+			<element kind="staticText" uuid="446dede3-2bdd-4b38-9c44-912e07e941c4" x="0" y="1" width="113" height="11" fontName="Arial" fontSize="9.0" hTextAlign="Center">
+				<text><![CDATA[Jardin Majorelle]]></text>
+			</element>
+			<element kind="textField" uuid="1e7f3ccf-4a73-4195-a17d-1bf00e9cca8f" x="0" y="13" width="113" height="10" fontName="Arial" fontSize="7.0" hTextAlign="Center">
+				<expression><![CDATA[$F{NAME}]]></expression>
+			</element>
+			<element kind="textField" uuid="084f7c1c-bd10-41d0-af98-f3778cc9f8b2" x="0" y="24" width="113" height="11" fontName="Arial" fontSize="8.0" pattern="###0.00" blankWhenNull="true" hTextAlign="Center">
+				<expression><![CDATA[com.openbravo.format.Formats.DOUBLE.formatValue($F{TOTALPRICE}) + " " + "DHs"]]></expression>
+			</element>
+			<element kind="image" uuid="c1481322-43a3-410a-8db9-b90433749a30" key="image-1" x="0" y="37" width="113" height="24" scaleImage="RetainShape" hImageAlign="Center" vImageAlign="Bottom">
+				<expression><![CDATA[($F{CODETYPE}.equals("EAN-13") ? com.openbravo.pos.util.BarcodeImage.getBarcodeEAN13($F{CODE}) :
+    ($F{CODETYPE}.equals("EAN-8") ? com.openbravo.pos.util.BarcodeImage.getBarcodeEAN8($F{CODE}) :
+        ($F{CODETYPE}.equals("UPC-A") ? com.openbravo.pos.util.BarcodeImage.getBarcodeUPCA($F{CODE}) :
+            ($F{CODETYPE}.equals("UPC-A") ? com.openbravo.pos.util.BarcodeImage.getBarcodeUPCE($F{CODE}) :
+                ($F{CODETYPE}.equals("CODE128") ? com.openbravo.pos.util.BarcodeImage.getBarcode128($F{CODE}) :
+                    com.openbravo.pos.util.BarcodeImage.getBarcodeUPCE($F{CODE})
+                )
+            )
+        )
+    )
+)]]></expression>
+			</element>
+		</band>
+	</detail>
+</jasperReport>

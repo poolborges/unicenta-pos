@@ -1,0 +1,44 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="barcodesheet" language="java" columnCount="5" printOrder="Horizontal" pageWidth="595" pageHeight="841" columnWidth="114" leftMargin="11" rightMargin="11" topMargin="31" bottomMargin="31" uuid="4d71c84d-61d4-4e4b-bf7b-18b390b64bc1">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import>net.sf.jasperreports.engine.*</import>
+	<import>java.util.*</import>
+	<import>net.sf.jasperreports.engine.data.*</import>
+	<query language="sql"><![CDATA[]]></query>
+	<field name="CODE" class="java.lang.String"/>
+	<field name="CODETYPE" class="java.lang.String"/>
+	<field name="NAME" class="java.lang.String"/>
+	<sortField name="NAME"/>
+	<background splitType="Stretch"/>
+	<title splitType="Stretch"/>
+	<pageHeader splitType="Stretch"/>
+	<columnHeader splitType="Stretch"/>
+	<detail>
+		<band height="50" splitType="Stretch">
+			<element kind="elementGroup"/>
+			<element kind="textField" uuid="df4e7476-bcb4-4804-bf23-806190bff70e" x="0" y="30" width="113" height="20" hTextAlign="Center">
+				<expression><![CDATA[$F{CODE}]]></expression>
+			</element>
+			<element kind="image" uuid="bdf0fb1f-66e5-4bb6-b49b-d5f95329cbc6" key="image-1" x="0" y="0" width="113" height="30" scaleImage="RetainShape" hImageAlign="Center" vImageAlign="Bottom">
+				<expression><![CDATA[($F{CODETYPE}.equals("EAN-13") ? com.openbravo.pos.util.BarcodeImage.getBarcodeEAN13($F{CODE}) :
+    ($F{CODETYPE}.equals("EAN-8") ? com.openbravo.pos.util.BarcodeImage.getBarcodeEAN8($F{CODE}) :
+        ($F{CODETYPE}.equals("UPC-A") ? com.openbravo.pos.util.BarcodeImage.getBarcodeUPCA($F{CODE}) :
+            ($F{CODETYPE}.equals("UPC-A") ? com.openbravo.pos.util.BarcodeImage.getBarcodeUPCE($F{CODE}) :
+                ($F{CODETYPE}.equals("CODE128") ? com.openbravo.pos.util.BarcodeImage.getBarcode128($F{CODE}) :
+                    com.openbravo.pos.util.BarcodeImage.getBarcodeUPCE($F{CODE})
+                )
+            )
+        )
+    )
+)]]></expression>
+			</element>
+		</band>
+	</detail>
+	<columnFooter splitType="Stretch"/>
+	<pageFooter splitType="Stretch"/>
+	<summary splitType="Stretch"/>
+</jasperReport>

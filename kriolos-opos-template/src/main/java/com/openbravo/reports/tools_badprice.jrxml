@@ -1,0 +1,117 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="report name" language="java" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="15987076-6905-46e4-b51a-9c9615b6ef47">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<query language="sql"><![CDATA[SELECT REFERENCE, NAME, CODE, PRICEBUY, PRICESELL FROM CSVIMPORT
+WHERE CSVERROR ='New product']]></query>
+	<field name="reference" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="code" class="java.lang.String"/>
+	<field name="pricebuy" class="java.lang.Double"/>
+	<field name="pricesell" class="java.lang.Double"/>
+	<background splitType="Stretch"/>
+	<title height="52" splitType="Stretch">
+		<element kind="textField" uuid="19f02d2f-0bb1-4cea-81e4-8095a9d37afb" key="textField-1" mode="Transparent" x="0" y="0" width="260" height="30" forecolor="#33CCFF" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="14.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Top">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$R{label.title}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="d479827c-4821-45df-af73-a7f3b09f1a93" key="textField-10" mode="Opaque" x="400" y="0" width="135" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$R{label.printed}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="cf95204a-ff45-4b6a-9c5d-965f23d78e2e" key="textField" x="400" y="15" width="135" height="15" fontName="SansSerif" fontSize="10.0" evaluationTime="Report" pattern="dd/MM/yyyy h.mm a" blankWhenNull="false" hTextAlign="Right">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+		<element kind="rectangle" uuid="e97d0f5e-9f69-4bce-ba7a-3fc412e0e9d7" key="rectangle-1" mode="Opaque" x="0" y="50" width="535" height="2" forecolor="#33CCFF" backcolor="#33CCFF" radius="5">
+			<pen lineWidth="0.25" lineStyle="Solid"/>
+		</element>
+	</title>
+	<columnHeader height="18" splitType="Stretch">
+		<element kind="textField" uuid="d940fd28-47e3-422e-aab2-2160e0042c66" x="0" y="0" width="53" height="15" markup="none" fontName="SansSerif" bold="true">
+			<expression><![CDATA[$R{label.reference}]]></expression>
+		</element>
+		<element kind="textField" uuid="9f0c364c-570d-4418-ba66-0e151191793e" x="53" y="0" width="94" height="15" markup="none" fontName="SansSerif" bold="true">
+			<expression><![CDATA[$R{label.barcode}]]></expression>
+		</element>
+		<element kind="textField" uuid="573cbd4b-cd05-4de1-be1c-da010a04af3f" x="157" y="0" width="251" height="15" markup="none" fontName="SansSerif" bold="true">
+			<expression><![CDATA[$R{label.name}]]></expression>
+		</element>
+		<element kind="textField" uuid="d4f54251-41b8-49b6-a6c0-55d957f0ce94" x="420" y="0" width="52" height="15" markup="none" fontName="SansSerif" bold="true" hTextAlign="Right">
+			<expression><![CDATA[$R{label.pricebuy}]]></expression>
+		</element>
+		<element kind="textField" uuid="b8199229-4385-46a4-ac60-ac46eef6999f" x="483" y="0" width="52" height="15" markup="none" fontName="SansSerif" bold="true" hTextAlign="Right">
+			<expression><![CDATA[$R{label.pricesell}]]></expression>
+		</element>
+		<element kind="line" uuid="5aa41ab9-332b-4dfc-9730-2d08431632d9" x="0" y="17" width="535" height="1"/>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<element kind="textField" uuid="a8516e02-cd88-4f74-9da0-1682a51a4af2" x="0" y="0" width="53" height="13" fontName="SansSerif">
+				<expression><![CDATA[$F{reference}]]></expression>
+			</element>
+			<element kind="textField" uuid="2f319bd0-18c5-42e5-95f1-808fd845e6e7" x="53" y="0" width="94" height="13" fontName="SansSerif">
+				<expression><![CDATA[$F{code}]]></expression>
+			</element>
+			<element kind="textField" uuid="fe22b326-175d-4584-ac3b-c283a97c8024" x="157" y="0" width="251" height="13" fontName="SansSerif">
+				<expression><![CDATA[$F{name}]]></expression>
+			</element>
+			<element kind="textField" uuid="68174882-7465-46de-946c-3e23720afab9" x="420" y="0" width="52" height="13" fontName="SansSerif" hTextAlign="Right">
+				<expression><![CDATA[com.openbravo.format.Formats.CURRENCY.formatValue($F{pricebuy})]]></expression>
+			</element>
+			<element kind="textField" uuid="36839cd5-65af-457e-a321-982014e9bad8" x="483" y="0" width="52" height="13" fontName="SansSerif" hTextAlign="Right">
+				<expression><![CDATA[com.openbravo.format.Formats.CURRENCY.formatValue($F{pricesell})]]></expression>
+			</element>
+		</band>
+	</detail>
+	<pageFooter height="30">
+		<element kind="staticText" uuid="607fee4c-b6ae-4d91-b86e-c0e5cb52d42f" x="0" y="10" width="100" height="15" fontName="SansSerif" fontSize="8.0">
+			<text><![CDATA[rpt:badprice]]></text>
+		</element>
+		<element kind="staticText" uuid="8be7258b-6f6d-452c-b807-0608be281566" key="staticText-7" mode="Opaque" x="505" y="5" width="10" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Center" vTextAlign="Top">
+			<paragraph lineSpacing="Single"/>
+			<text><![CDATA[/]]></text>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="2312b2ab-45f3-4983-a646-9007b428233a" key="textField-16" mode="Opaque" x="485" y="5" width="20" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			</box>
+		</element>
+		<element kind="textField" uuid="1e8ce404-b141-453f-8231-b437435a94be" key="textField-17" mode="Opaque" x="515" y="5" width="20" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" evaluationTime="Report" pattern="" blankWhenNull="false" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Top">
+			<paragraph lineSpacing="Single"/>
+			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
+			<box>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+			</box>
+		</element>
+		<element kind="line" uuid="f78e0e27-d759-4be6-a0fd-b0f85a09c3dc" key="line-5" mode="Opaque" x="0" y="1" width="535" height="1" forecolor="#000000" backcolor="#FFFFFF">
+			<pen lineWidth="0.25" lineStyle="Solid"/>
+		</element>
+	</pageFooter>
+</jasperReport>

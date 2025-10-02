@@ -1,0 +1,48 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="ticketsample_lines" language="java" columnCount="1" pageWidth="535" pageHeight="802" whenNoDataType="NoPages" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="e4815fa6-4211-4036-b5d8-8e0203f22ea1">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<import>net.sf.jasperreports.engine.*</import>
+	<import>java.util.*</import>
+	<import>net.sf.jasperreports.engine.data.*</import>
+	<field name="productName" class="java.lang.String"/>
+	<field name="_THIS" class="com.openbravo.pos.ticket.TicketLineInfo"/>
+	<background height="31" splitType="Stretch"/>
+	<title splitType="Stretch"/>
+	<pageHeader height="24" splitType="Stretch">
+		<element kind="rectangle" uuid="f1bc6930-c957-43c2-9278-fa6ccf59fec1" key="rectangle-1" stretchType="NoStretch" x="0" y="0" width="517" height="24"/>
+		<element kind="staticText" uuid="5f69f6b9-09c1-4cab-bf9f-d10a938c6c82" key="staticText-1" x="12" y="5" width="149" height="14" pdfFontName="Helvetica-Bold" bold="true">
+			<text><![CDATA[Name]]></text>
+		</element>
+		<element kind="staticText" uuid="6b0dfa09-fda2-4016-9763-c198f957eb23" key="staticText-2" x="176" y="5" width="113" height="14" pdfFontName="Helvetica-Bold" bold="true" hTextAlign="Right">
+			<text><![CDATA[Price]]></text>
+		</element>
+		<element kind="staticText" uuid="48926300-e57a-4ea5-b65d-f9f80660005f" key="staticText-4" x="360" y="5" width="136" height="14" pdfFontName="Helvetica-Bold" bold="true" hTextAlign="Right">
+			<text><![CDATA[Total]]></text>
+		</element>
+		<element kind="staticText" uuid="3492d9bb-f456-4dda-b65b-196f6f04d92f" key="staticText-5" x="289" y="5" width="71" height="14" pdfFontName="Helvetica-Bold" bold="true" hTextAlign="Right">
+			<text><![CDATA[Units]]></text>
+		</element>
+	</pageHeader>
+	<columnHeader splitType="Stretch"/>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<element kind="rectangle" uuid="b65e0f99-2c9b-4380-a477-bc2944a1d856" key="rectangle-2" stretchType="NoStretch" x="0" y="0" width="517" height="20"/>
+			<element kind="textField" uuid="3f703ad5-c6a2-4399-ad02-69457196f753" key="textField-1" x="12" y="0" width="149" height="18" linkType="None" linkTarget="Self" blankWhenNull="false">
+				<expression><![CDATA[$F{productName}]]></expression>
+			</element>
+			<element kind="textField" uuid="a08f16d2-9776-4b6c-97f1-e31afdf25f43" key="textField-2" x="360" y="0" width="136" height="18" linkType="None" linkTarget="Self" blankWhenNull="false" hTextAlign="Right">
+				<expression><![CDATA[$F{_THIS}.printSubValue()]]></expression>
+			</element>
+			<element kind="textField" uuid="c6f59e5f-03e9-4181-9978-8a737f0e3976" key="textField-3" x="176" y="0" width="113" height="18" linkType="None" linkTarget="Self" blankWhenNull="false" hTextAlign="Right">
+				<expression><![CDATA[$F{_THIS}.printPrice()]]></expression>
+			</element>
+			<element kind="textField" uuid="91f41310-d198-4707-814f-ed9697e584c2" key="textField-4" x="289" y="0" width="71" height="18" linkType="None" linkTarget="Self" blankWhenNull="false" hTextAlign="Right">
+				<expression><![CDATA[$F{_THIS}.printMultiply()]]></expression>
+			</element>
+		</band>
+	</detail>
+	<columnFooter splitType="Stretch"/>
+	<pageFooter height="37" splitType="Stretch"/>
+	<summary splitType="Stretch"/>
+</jasperReport>
