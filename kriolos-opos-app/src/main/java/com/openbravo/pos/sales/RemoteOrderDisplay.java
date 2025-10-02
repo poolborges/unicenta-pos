@@ -95,20 +95,6 @@ public class RemoteOrderDisplay {
                         display,
                         null,
                         null);
-
-                /* this block for future - right now we're deleting all ticketlines
-    and resending for consistency with actual ticketlines
-                dlSystem.updateOrder(getPickupString(m_oTicket)
-                        , (int) m_oTicket.getLine(i).getMultiply()
-                        , m_oTicket.getLine(i).getProductName()
-                        , m_oTicket.getLine(i).getProductAttSetInstDesc()
-                        , m_oTicket.getLine(i).getProperty("notes")
-                        , id
-                        , null
-                        , display
-                        , null
-                        , null);
-                 */
             } catch (BasicException ex) {
                 LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
             }
