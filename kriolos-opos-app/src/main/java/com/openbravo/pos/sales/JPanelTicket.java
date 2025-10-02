@@ -97,15 +97,15 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private final static int NUMBER_PORDEC = 7;
     private final static long serialVersionUID = 1L;
 
-    protected JTicketLines m_ticketlines;
-    protected JPanelButtons m_jbtnconfig;
-    protected AppView m_App;
-    protected DataLogicSystem dlSystem;
-    protected DataLogicSales dlSales;
-    protected DataLogicCustomers dlCustomers;
-    protected TicketsEditor m_panelticket;
-    protected TicketInfo m_oTicket;
-    protected String m_oTicketExt;
+    private JTicketLines m_ticketlines;
+    private JPanelButtons m_jbtnconfig;
+    private AppView m_App;
+    private DataLogicSystem dlSystem;
+    private DataLogicSales dlSales;
+    private DataLogicCustomers dlCustomers;
+    private TicketsEditor m_panelticket;
+    private TicketInfo m_oTicket;
+    private String m_oTicketExt;
 
     private int m_iNumberStatus;
     private int m_iNumberStatusInput;
@@ -276,6 +276,26 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 LOGGER.log(System.Logger.Level.ERROR, "Exception on save current ticket: " + currentTicket, ex);
             }
         }
+    }
+    
+    protected JTicketLines getTicketlines(){
+        return m_ticketlines;
+    }
+    
+    protected JPanelButtons getTicketButtons(){
+        return  m_jbtnconfig;
+    }
+    
+    protected String getTicketId(){
+        return m_oTicketExt;
+    }
+    
+    protected AppView getAppView(){
+        return m_App;
+    }
+    
+    protected DataLogicSales getDataLogicSales(){
+        return dlSales;
     }
 
     /**

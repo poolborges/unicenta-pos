@@ -57,33 +57,31 @@ public class JPanelTicketEdits extends JPanelTicket {
     }    
 
     public void showCatalog() {
-        m_jbtnconfig.setVisible(true);
+        getTicketButtons().setVisible(true);
         m_catandlines.showCatalog();
     }
     
 
     public void showRefundLines(List<TicketLineInfo> aRefundLines) {
-        // anado las lineas de refund
-        // m_reflines.setLines(aRefundLines);
-        m_jbtnconfig.setVisible(false);
+        getTicketButtons().setVisible(false);
         m_catandlines.showRefundLines(aRefundLines);
     }
 
     @Override
     protected JTicketsBag getJTicketsBag() {
-        return new JTicketsBagTicket(m_App, this);
+        return new JTicketsBagTicket(getAppView(), this);
     }
 
     @Override
     protected Component getSouthComponent() {
 
-        m_catandlines = new JTicketCatalogLines(m_App, this,                
-                "true".equals(m_jbtnconfig.getProperty("pricevisible")),
-                "true".equals(m_jbtnconfig.getProperty("taxesincluded")),
-                Integer.parseInt(m_jbtnconfig.getProperty("img-width", "64")),
-                Integer.parseInt(m_jbtnconfig.getProperty("img-height", "54")));
+        m_catandlines = new JTicketCatalogLines(getAppView(), this,                
+                "true".equals(getTicketButtons().getProperty("pricevisible")),
+                "true".equals(getTicketButtons().getProperty("taxesincluded")),
+                Integer.parseInt(getTicketButtons().getProperty("img-width", "64")),
+                Integer.parseInt(getTicketButtons().getProperty("img-height", "54")));
         m_catandlines.setPreferredSize(new Dimension(0,
-                Integer.parseInt(m_jbtnconfig.getProperty("cat-height", "245"))));
+                Integer.parseInt(getTicketButtons().getProperty("cat-height", "245"))));
         m_catandlines.addActionListener(new CatalogListener());
         return m_catandlines;
     } 

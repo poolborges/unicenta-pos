@@ -37,7 +37,7 @@ public class JPanelTicketSales extends JPanelTicket {
 
     public JPanelTicketSales(AppView app) {
         super(app);
-        m_ticketlines.addListSelectionListener(new CatalogSelectionListener());
+        getTicketlines().addListSelectionListener(new CatalogSelectionListener());
     }
 
     @Override
@@ -52,7 +52,7 @@ public class JPanelTicketSales extends JPanelTicket {
     @Override
     protected Component getSouthComponent() {
         LOGGER.log(System.Logger.Level.DEBUG,"JPanelTicketSales :: getSouthComponent");
-        m_cat = new JCatalog(dlSales);
+        m_cat = new JCatalog(getDataLogicSales());
         m_cat.addActionListener(new CatalogListener());
         return m_cat.getComponent();
     }
@@ -64,7 +64,7 @@ public class JPanelTicketSales extends JPanelTicket {
 
     @Override
     protected JTicketsBag getJTicketsBag() {
-        return JTicketsBag.createTicketsBag(m_App.getProperties().getProperty("machine.ticketsbag"), m_App, this);
+        return JTicketsBag.createTicketsBag(getAppView().getProperties().getProperty("machine.ticketsbag"), getAppView(), this);
     }
 
     @Override
@@ -96,17 +96,17 @@ public class JPanelTicketSales extends JPanelTicket {
         public void valueChanged(ListSelectionEvent e) {
 
             if (!e.getValueIsAdjusting()) {
-                int i = m_ticketlines.getSelectedIndex();
+                int i = getTicketlines().getSelectedIndex();
 
                 if (i >= 0) {
                     // Look for the first non auxiliar product.
-                    while (i >= 0 && m_oTicket.getLine(i).isProductCom()) {
+                    while (i >= 0 && getActiveTicket().getLine(i).isProductCom()) {
                         i--;
                     }
 
                     // Show the accurate catalog panel...
                     if (i >= 0) {
-                        m_cat.showCatalogPanel(m_oTicket.getLine(i).getProductID());
+                        m_cat.showCatalogPanel(getActiveTicket().getLine(i).getProductID());
                     } else {
                         m_cat.showCatalogPanel(null);
                     }
