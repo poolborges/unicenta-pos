@@ -17,6 +17,7 @@
 
 package com.openbravo.pos.epm;
 
+import com.openbravo.pos.forms.JPanelView;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.BeanFactoryException;
 import com.openbravo.pos.forms.BeanFactoryApp;
@@ -25,7 +26,6 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.beans.JFlowPanel;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.format.Formats;
-import com.openbravo.pos.forms.*;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.Date;

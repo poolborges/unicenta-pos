@@ -19,6 +19,7 @@
 
 package com.openbravo.pos.imports;
 
+import com.openbravo.pos.forms.JPanelView;
 import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.AppLocal;

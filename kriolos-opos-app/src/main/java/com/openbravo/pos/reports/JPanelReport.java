@@ -15,6 +15,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.reports;
 
+import com.openbravo.pos.forms.JPanelView;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.BeanFactoryApp;
@@ -26,7 +27,6 @@ import com.openbravo.data.loader.BaseSentence;
 import com.openbravo.data.loader.SentenceList;
 import com.openbravo.data.loader.Session;
 import com.openbravo.data.user.EditorCreator;
-import com.openbravo.pos.forms.*;
 import com.openbravo.pos.sales.TaxesLogic;
 import java.awt.BorderLayout;
 import java.io.IOException;
@@ -42,8 +42,6 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 /**
  *

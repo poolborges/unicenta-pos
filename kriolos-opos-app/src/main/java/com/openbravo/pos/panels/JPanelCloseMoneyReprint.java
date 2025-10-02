@@ -16,6 +16,7 @@
 
 package com.openbravo.pos.panels;
 
+import com.openbravo.pos.forms.JPanelView;
 import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.forms.AppUser;
 import com.openbravo.pos.forms.AppView;
@@ -25,12 +26,8 @@ import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.gui.TableRendererBasic;
-import com.openbravo.data.loader.Datas;
-import com.openbravo.data.loader.SerializerWriteBasic;
 import com.openbravo.data.loader.Session;
-import com.openbravo.data.loader.StaticSentence;
 import com.openbravo.format.Formats;
-import com.openbravo.pos.forms.*;
 import com.openbravo.pos.printer.TicketParser;
 import com.openbravo.pos.printer.TicketPrinterException;
 import com.openbravo.pos.scripting.ScriptEngine;

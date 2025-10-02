@@ -17,6 +17,8 @@ package com.openbravo.pos.forms;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.Session;
+import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.forms.AppProperties;
 import com.openbravo.pos.util.AltEncrypter;
 import java.awt.Component;
 import java.sql.SQLException;

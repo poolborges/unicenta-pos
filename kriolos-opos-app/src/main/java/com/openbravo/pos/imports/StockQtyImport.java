@@ -17,6 +17,8 @@
 
 package com.openbravo.pos.imports;
 
+import com.openbravo.pos.forms.JPanelView;
+import com.openbravo.pos.forms.AppViewConnection;
 import com.csvreader.CsvReader;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.Datas;

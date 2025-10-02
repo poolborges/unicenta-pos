@@ -15,6 +15,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.inventory;
 
+import com.openbravo.pos.forms.JPanelView;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.basic.BasicException;

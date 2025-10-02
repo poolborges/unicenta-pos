@@ -16,6 +16,7 @@
 
 package com.openbravo.pos.customers;
 
+import com.openbravo.pos.forms.JPanelView;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.forms.AppView;
@@ -26,7 +27,6 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.user.DirtyManager;
 import com.openbravo.format.Formats;
-import com.openbravo.pos.forms.*;
 import com.openbravo.pos.payment.JPaymentSelect;
 import com.openbravo.pos.payment.JPaymentSelectCustomer;
 import com.openbravo.pos.payment.PaymentInfo;
