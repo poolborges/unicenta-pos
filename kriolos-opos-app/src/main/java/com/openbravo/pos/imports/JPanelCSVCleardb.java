@@ -148,7 +148,10 @@ public class JPanelCSVCleardb extends JPanel implements JPanelView {
 
         jEnableButton.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jEnableButton.setText(bundle.getString("label.csvenableclear")); // NOI18N
-        jEnableButton.setPreferredSize(new java.awt.Dimension(250, 30));
+        jEnableButton.setMaximumSize(new java.awt.Dimension(67, 45));
+        jEnableButton.setMinimumSize(new java.awt.Dimension(67, 45));
+        jEnableButton.setName(""); // NOI18N
+        jEnableButton.setPreferredSize(new java.awt.Dimension(250, 45));
         jEnableButton.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jEnableButtonStateChanged(evt);
