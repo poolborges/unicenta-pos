@@ -91,31 +91,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </dependency>
         
         <!-- CVS File Parser --> 
-        <dependency> 
+        <dependency>
             <groupId>net.sourceforge.javacsv</groupId>  
             <artifactId>javacsv</artifactId>  
             <version>2.0</version> 
-        </dependency>
-        
-        <!-- JavaPOS
-       <dependency> 
-           <groupId>org.javapos</groupId>  
-           <artifactId>javapos</artifactId>  
-           <version>1.14.3</version>
-           <scope>compile</scope>
-           <exclusions>
-               <exclusion>
-                   <groupId>com.sleepycat</groupId>
-                   <artifactId>je</artifactId>
-               </exclusion>
-           </exclusions>
-       </dependency>
-       <dependency>
-           <groupId>org.javapos</groupId>
-           <artifactId>javapos-contracts</artifactId>
-           <version>1.14.3</version>
-       </dependency>
-        -->   
+        </dependency>    
         
         <!-- JDBC runtime DEPENDENCIES -->
         <dependency> 
