@@ -123,7 +123,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private TaxesLogic taxeslogic;
     private JPaymentSelect paymentdialogreceipt;
     private JPaymentSelect paymentdialogrefund;
-    private InactivityListener listener;
+    private InactivityListener inactivityListener;
     private DataLogicReceipts dlReceipts = null;
     private Boolean priceWith00;
     private RestaurantDBUtils restDB;
@@ -294,8 +294,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 delay *= 1000;
                 //Should be more that 1s (1000 milisecond)
                 if (delay > 1000) {
-                    listener = new InactivityListener(logoutAction, delay);
-                    listener.start();
+                    inactivityListener = new InactivityListener(logoutAction, delay);
+                    inactivityListener.start();
                 }
             } catch (NumberFormatException ex) {
                 LOGGER.log(System.Logger.Level.WARNING, "Exception on set auto logout timer: ", ex);
@@ -356,8 +356,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     @Override
     public boolean deactivate() {
         LOGGER.log(System.Logger.Level.DEBUG, "JPanelTicket.deactivate");
-        if (listener != null) {
-            listener.stop();
+        if (inactivityListener != null) {
+            inactivityListener.stop();
         }
 
         saveCurrentTicket();
@@ -390,8 +390,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
             if (isRestaurantMode()) {
                 if (isAutoLogoutRestaurant()) {
-                    if (listener != null) {
-                        listener.restart();
+                    if (inactivityListener != null) {
+                        inactivityListener.restart();
                     }
                 }
 
@@ -1646,8 +1646,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }
 
     private boolean closeTicket(TicketInfo ticket, String ticketext) {
-        if (listener != null) {
-            listener.stop();
+        if (inactivityListener != null) {
+            inactivityListener.stop();
         }
         boolean resultok = false;
 
@@ -1675,8 +1675,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 }
 
                 if (paymentdialog != null && executeEvent(ticket, ticketext, TicketConstants.EV_TICKET_TOTAL) == null) {
-                    if (listener != null) {
-                        listener.stop();
+                    if (inactivityListener != null) {
+                        inactivityListener.stop();
                     }
 
                     printTicket("Printer.TicketTotal", ticket, ticketext);
@@ -2060,8 +2060,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
         int i = m_ticketlines.getSelectedIndex();
         if (i >= 0) {
-            if (listener != null) {
-                listener.stop();
+            if (inactivityListener != null) {
+                inactivityListener.stop();
             }
             try {
                 TicketLineInfo line = m_oTicket.getLine(i);
@@ -2102,8 +2102,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 LOGGER.log(System.Logger.Level.WARNING, "Exception on: ", ex);
             } finally {
 
-                if (listener != null) {
-                    listener.restart();
+                if (inactivityListener != null) {
+                    inactivityListener.restart();
                 }
             }
         } else {
@@ -2720,8 +2720,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }//GEN-LAST:event_m_jListActionPerformed
 
     private void jEditAttributesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jEditAttributesActionPerformed
-        if (listener != null) {
-            listener.stop();
+        if (inactivityListener != null) {
+            inactivityListener.stop();
         }
         int i = m_ticketlines.getSelectedIndex();
         // no line selected (-1)
@@ -2750,8 +2750,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             }
         }
 
-        if (listener != null) {
-            listener.restart();
+        if (inactivityListener != null) {
+            inactivityListener.restart();
         }
 }//GEN-LAST:event_jEditAttributesActionPerformed
 
@@ -2849,8 +2849,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     private void jCheckStockMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCheckStockMouseClicked
         if (evt.getClickCount() == 2) {
-            if (listener != null) {
-                listener.stop();
+            if (inactivityListener != null) {
+                inactivityListener.stop();
             }
 
             int i = m_ticketlines.getSelectedIndex();
@@ -2915,8 +2915,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 }
             }
 
-            if (listener != null) {
-                listener.restart();
+            if (inactivityListener != null) {
+                inactivityListener.restart();
             }
         }
     }//GEN-LAST:event_jCheckStockMouseClicked
@@ -2934,8 +2934,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     }//GEN-LAST:event_jTBtnShowActionPerformed
 
     private void jBtnCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnCustomerActionPerformed
-        if (listener != null) {
-            listener.stop();
+        if (inactivityListener != null) {
+            inactivityListener.stop();
         }
         Object[] options = {
             AppLocal.getIntString("cboption.create"),
