@@ -15,7 +15,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.menu;
 
-import com.openbravo.beans.JPasswordDialog;
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.forms.AppLocal;
@@ -54,37 +53,38 @@ public class JRootMenu {
     private final AppUserView appview;
     private final ViewManager viewManager = new ViewManager();
 
-    public JRootMenu(Component _parent, AppUserView _appview) {
-        parent = _parent;
-        appview = _appview;
+    public JRootMenu(Component parent, AppUserView appview) {
+        this.parent = parent;
+        this.appview = appview;
     }
-    
-    public ViewManager getViewManager(){
+
+    public ViewManager getViewManager() {
         return viewManager;
     }
 
-    public void setRootMenu(JScrollPane m_jPanelLeft, DataLogicSystem m_dlSystem) {
+    public void setRootMenu(JScrollPane objJScrollPane, DataLogicSystem dlSystem) {
+        Component menuComponent = null;
+        
+        LOGGER.log(Level.FINE, "Loading Root.Menu from database resource");
         try {
+            String menuScrip = dlSystem.getResourceAsText("Menu.Root");
+            menuComponent = getScriptMenu(menuScrip);
 
-            String menuScrip = m_dlSystem.getResourceAsText("Menu.Root");
-            Component menuComponent = getScriptMenu(menuScrip);
-
-            if (menuComponent != null) {
-                m_jPanelLeft.setViewportView(menuComponent);
-            } else {
+            if (menuComponent == null) {
                 String pah = "/com/openbravo/pos/templates/Menu.Root.bs";
-                LOGGER.log(Level.FINE, "Root.Men lookup classpath: " + pah);
+                LOGGER.log(Level.FINE, "Loading Root.Menu from classpath: " + pah);
                 menuScrip = StringUtils.readResource(pah);
                 menuComponent = getScriptMenu(menuScrip);
-                if (menuComponent != null) {
-                    m_jPanelLeft.setViewportView(menuComponent);
-                } else {
-                    LOGGER.log(Level.SEVERE, "Failed on build Root.Menu from class path: " + pah);
-                }
             }
 
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Exception on setup Root.Menu", e);
+            if (menuComponent != null) {
+                objJScrollPane.setViewportView(menuComponent);
+            } else {
+                LOGGER.log(Level.SEVERE, "Failed on build Root.Menu");
+            }
+        }
+        catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, "Exception on setup Root.Menu", ex);
         }
     }
 
@@ -104,7 +104,8 @@ public class JRootMenu {
             eng.put("menu", menu);
             eng.eval(menutext);
             menuComponent = menu.getTaskPane();
-        } catch (ScriptException ex) {
+        }
+        catch (ScriptException ex) {
             LOGGER.log(Level.SEVERE, "Exception on eval Menu.Root ", ex);
             LOGGER.log(Level.WARNING, "Exception on eval Menu.Root ", menutext);
         }
@@ -112,89 +113,70 @@ public class JRootMenu {
         return menuComponent;
     }
 
-    public class ScriptMenu implements Menu{
+    public class ScriptMenu implements Menu {
 
         private final JXTaskPaneContainer taskPane;
         private final Component parent;
         private final AppUserView appview;
 
-        public ScriptMenu(Component _parent, AppUserView _appview) {
-            parent = _parent;
-            appview = _appview;
-            taskPane = new JXTaskPaneContainer();
-            taskPane.applyComponentOrientation(parent.getComponentOrientation());
+        public ScriptMenu(Component parent, AppUserView appview) {
+            this.parent = parent;
+            this.appview = appview;
+            this.taskPane = new JXTaskPaneContainer();
+            this.taskPane.applyComponentOrientation(this.parent.getComponentOrientation());
         }
 
         @Override
-        public ScriptGroup addGroup(String key) {
-            ScriptGroup group = new ScriptGroup(key, parent, appview);
-            taskPane.add(group.getTaskGroup());
+        public ScriptMenuGroup addGroup(String key) {
+            ScriptMenuGroup group = new ScriptMenuGroup(key, parent, appview);
+            this.taskPane.add(group.getTaskGroup());
             return group;
         }
-        
-        public void setSystemAction() {
-            /*
-            addAction(new ChangePasswordAction(parent, appview,
-                    "/com/openbravo/images/password.png", "Menu.ChangePassword"));
-            
-            addAction(new ExitAction(parent, appview,
-                    "/com/openbravo/images/logout.png", "Menu.Exit"));
-            
-            
-            menudef.addMenuItem(new ChangePasswordAction(parent, m_appview,
-                    "/com/openbravo/images/password.png", "Menu.ChangePassword"));
-            
-            
-            menudef.addMenuItem(new ExitAction(parent, m_appview,
-                    "/com/openbravo/images/logout.png", "Menu.Exit"));
-            */
-        }
-        
 
         public JXTaskPaneContainer getTaskPane() {
             return taskPane;
         }
     }
 
-    public class ScriptGroup implements Menu.MenuGroup{
+    public class ScriptMenuGroup implements Menu.MenuGroup {
 
         private final JXTaskPane taskGroup;
-        private final AppUserView m_appview;
+        private final AppUserView appUserView;
         private final Component parent;
 
-        private ScriptGroup(String key, Component _parent, AppUserView _appview) {
-            m_appview = _appview;
-            parent = _parent;
-            taskGroup = new JXTaskPane();
-            taskGroup.applyComponentOrientation(parent.getComponentOrientation());
-            taskGroup.setFocusable(false);
-            taskGroup.setRequestFocusEnabled(false);
-            taskGroup.setTitle(AppLocal.getIntString(key));
-            taskGroup.setVisible(false);
-            taskGroup.setFont(new java.awt.Font("Arial", 0, 16));
+        private ScriptMenuGroup(String key, Component parent, AppUserView appUserView) {
+            this.appUserView = appUserView;
+            this.parent = parent;
+            this.taskGroup = new JXTaskPane();
+            this.taskGroup.applyComponentOrientation(this.parent.getComponentOrientation());
+            this.taskGroup.setFocusable(false);
+            this.taskGroup.setRequestFocusEnabled(false);
+            this.taskGroup.setTitle(AppLocal.getIntString(key));
+            this.taskGroup.setVisible(false);
+            this.taskGroup.setFont(new java.awt.Font("Arial", 0, 16));
         }
 
         @Override
         public void addPanel(String icon, String key, String classname) {
-            addAction(new MenuPanelAction(m_appview, icon, key, classname));
+            addAction(new MenuPanelAction(this.appUserView, icon, key, classname));
         }
 
         @Override
         public void addExecution(String icon, String key, String classname) {
-            addAction(new MenuExecAction(m_appview, icon, key, classname));
+            addAction(new MenuExecAction(this.appUserView, icon, key, classname));
         }
 
         @Override
         public ScriptSubmenu addSubmenu(String icon, String key, String classname) {
-            ScriptSubmenu submenu = new ScriptSubmenu(m_appview, key);
+            ScriptSubmenu submenu = new ScriptSubmenu(appUserView, key);
             viewManager.getPreparedViews().put(classname, new JPanelMenu(submenu.getMenuDefinition()));
-            addAction(new MenuPanelAction(m_appview, icon, key, classname));
+            addAction(new MenuPanelAction(appUserView, icon, key, classname));
             return submenu;
         }
 
         private void addAction(Action act) {
 
-            AppUser m_appuser = m_appview.getUser();
+            AppUser m_appuser = appUserView.getUser();
             if (m_appuser.hasPermission((String) act.getValue(AppUserView.ACTION_TASKNAME))) {
                 Component c = taskGroup.add(act);
                 c.applyComponentOrientation(parent.getComponentOrientation());
@@ -206,7 +188,7 @@ public class JRootMenu {
                 }
             }
         }
-        
+
         public JXTaskPane getTaskGroup() {
             return taskGroup;
         }
@@ -214,21 +196,25 @@ public class JRootMenu {
         @Override
         public void addChangePasswordAction() {
             
+           addAction(new ChangePasswordAction(parent, appview,
+                    "/com/openbravo/images/password.png", "Menu.ChangePassword"));
         }
 
         @Override
         public void addExitAction() {
-            
+            addAction(new ExitAction(parent, appview,
+                    "/com/openbravo/images/logout.png", "Menu.Exit"));
         }
+ 
     }
 
-    public class ScriptSubmenu implements Menu.Submenu{
+    public class ScriptSubmenu implements Menu.Submenu {
 
         private final MenuDefinition menudef;
-        private final AppUserView m_appview;
+        private final AppUserView appUserView;
 
-        private ScriptSubmenu(AppUserView _appview, String key) {
-            m_appview = _appview;
+        private ScriptSubmenu(AppUserView appUserView, String key) {
+            this.appUserView = appUserView;
             menudef = new MenuDefinition(key);
         }
 
@@ -239,19 +225,19 @@ public class JRootMenu {
 
         @Override
         public void addPanel(String icon, String key, String classname) {
-            menudef.addMenuItem(new MenuPanelAction(m_appview, icon, key, classname));
+            menudef.addMenuItem(new MenuPanelAction(appUserView, icon, key, classname));
         }
 
         @Override
         public void addExecution(String icon, String key, String classname) {
-            menudef.addMenuItem(new MenuExecAction(m_appview, icon, key, classname));
+            menudef.addMenuItem(new MenuExecAction(appUserView, icon, key, classname));
         }
 
         @Override
         public ScriptSubmenu addSubmenu(String icon, String key, String classname) {
-            ScriptSubmenu submenu = new ScriptSubmenu(m_appview, key);
+            ScriptSubmenu submenu = new ScriptSubmenu(appUserView, key);
             viewManager.getPreparedViews().put(classname, new JPanelMenu(submenu.getMenuDefinition()));
-            menudef.addMenuItem(new MenuPanelAction(m_appview, icon, key, classname));
+            menudef.addMenuItem(new MenuPanelAction(appUserView, icon, key, classname));
             return submenu;
         }
 
@@ -261,6 +247,8 @@ public class JRootMenu {
     }
 
     private class ChangePasswordAction extends AbstractAction {
+
+        private static final long serialVersionUID = 1L;
 
         private final Component parent;
         private final AppUserView appview;
@@ -278,24 +266,31 @@ public class JRootMenu {
         public void actionPerformed(ActionEvent evt) {
 
             try {
+                JMessageDialog.showMessage(parent,
+                        new MessageInf(MessageInf.SGN_WARNING,
+                                AppLocal.getIntString("message.cannotchangepassword")));
+                /*TODO 
                 AppUser m_appuser = appview.getUser();
                 String sNewPassword = JPasswordDialog.changePassword(parent, m_appuser.getPassword());
-                /*
+ 
                 if (sNewPassword != null) {
                     DataLogicSystem m_dlSystem = (DataLogicSystem) appview.getBean("com.openbravo.pos.forms.DataLogicSystem");
                     m_dlSystem.execChangePassword(new Object[]{sNewPassword, m_appuser.getId()});
                     m_appuser.setPassword(sNewPassword);
                 }
-                 */
-            } catch (Exception e) {
+*/
+            }
+            catch (Exception ex) {
                 JMessageDialog.showMessage(parent,
                         new MessageInf(MessageInf.SGN_WARNING,
-                                AppLocal.getIntString("message.cannotchangepassword")));
+                                AppLocal.getIntString("message.cannotchangepassword"), ex));
             }
         }
     }
 
     private class ExitAction extends AbstractAction {
+
+        private static final long serialVersionUID = 1L;
 
         private final AppUserView m_appview;
 
@@ -335,7 +330,7 @@ public class JRootMenu {
         public Action getActionfirst() {
             return m_actionfirst;
         }
-        
+
         public void setActionfirst(Action actionfirst) {
             m_actionfirst = actionfirst;
         }
