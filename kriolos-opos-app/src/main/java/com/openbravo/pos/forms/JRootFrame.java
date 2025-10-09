@@ -83,15 +83,7 @@ public class JRootFrame extends javax.swing.JFrame implements AppMessage {
                     new MessageInf(MessageInf.SGN_DANGER, 
                             "<html>Application fail to start<br>Do you want to open the configuration panel?", ex));
 
-            /*opionRes = JOptionPane.showConfirmDialog(this,
-                    "<html>Application fail to start<br>Do you want to open the configuration panel?",
-                    "Application Error", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            
-            */
             if (opionRes == JOptionPane.YES_OPTION) {
-                //JFrmConfig jFrmConfig = new JFrmConfig(m_props);
-                //jFrmConfig.setVisible(true);
-
                 JPanelConfiguration config = new JPanelConfiguration(m_props);
                 config.setCloseListener((JPanelConfiguration.CloseEvent e) -> {
                     //This will be call when user press save or close button on config panel

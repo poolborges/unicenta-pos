@@ -84,9 +84,6 @@ public class JRootApp extends JPanel implements AppView {
         initComponents();
 
         appFileProperties = props;
-        //TODO load Windows Title 
-        //m_jLblTitle.setText(m_dlSystem.getResourceAsText("Window.Title"));
-        //m_jLblTitle.repaint();
     }
 
     public void initApp() throws BasicException{
@@ -132,6 +129,14 @@ public class JRootApp extends JPanel implements AppView {
     }
 
     private void setTitlePanel() {
+        
+        String customTile = m_dlSystem.getResourceAsText("Window.Title");
+        if(customTile == null){
+        
+        }
+        
+        appTitleLabel.setText(customTile);
+        appTitleLabel.repaint();
 
         /*Timer show Date Hour:min:seg
         javax.swing.Timer clockTimer = new javax.swing.Timer(1000, new ActionListener() {
@@ -145,9 +150,6 @@ public class JRootApp extends JPanel implements AppView {
         });
 
         clockTimer.start();*/
-        
-        //Remove Panel Title
-        remove(m_jPanelTitle);
         
     }
 
@@ -373,8 +375,8 @@ public class JRootApp extends JPanel implements AppView {
     }
 
     private void showView(String view) {
-        CardLayout cl = (CardLayout) (m_jPanelContainer.getLayout());
-        cl.show(m_jPanelContainer, view);
+        CardLayout cl = (CardLayout) (contentContainerPanel.getLayout());
+        cl.show(contentContainerPanel, view);
     }
 
     private void openAppView(AppUser user) {
@@ -384,11 +386,11 @@ public class JRootApp extends JPanel implements AppView {
 
             m_principalapp = new JPrincipalApp(this, user);
 
-            jPanel3.add(m_principalapp.getNotificator());
-            jPanel3.revalidate();
+            statusBarSecondPanel.add(m_principalapp.getNotificator());
+            statusBarSecondPanel.revalidate();
 
             String viewID = "_" + m_principalapp.getUser().getId();
-            m_jPanelContainer.add(m_principalapp, viewID);
+            contentContainerPanel.add(m_principalapp, viewID);
             showView(viewID);
 
             m_principalapp.activate();
@@ -423,6 +425,7 @@ public class JRootApp extends JPanel implements AppView {
         }
     }
 
+    @Override
     public boolean closeAppView() {
 
         if (m_principalapp == null) {
@@ -430,11 +433,11 @@ public class JRootApp extends JPanel implements AppView {
         } else if (!m_principalapp.deactivate()) {
             return false;
         } else {
-            jPanel3.remove(m_principalapp.getNotificator());
-            jPanel3.revalidate();
-            jPanel3.repaint();
+            statusBarSecondPanel.remove(m_principalapp.getNotificator());
+            statusBarSecondPanel.revalidate();
+            statusBarSecondPanel.repaint();
 
-            m_jPanelContainer.remove(m_principalapp);
+            contentContainerPanel.remove(m_principalapp);
             m_principalapp = null;
 
             //showLoginPanel();
@@ -451,7 +454,7 @@ public class JRootApp extends JPanel implements AppView {
                     openAppView(user);
                 }
             });
-            m_jPanelContainer.add(mAuthPanel, "login");
+            contentContainerPanel.add(mAuthPanel, "login");
         }
         showView("login");
     }
@@ -471,7 +474,7 @@ public class JRootApp extends JPanel implements AppView {
         } catch (SQLException e) {
             url = "";
         }
-        m_jHost.setText("<html>" + appFileProperties.getHost() + " ;<b>WareHouse<b>: " + sWareHouse + "<br>" + url + "</html>");
+        appInfoLabel.setText("<html>" + appFileProperties.getHost() + " ;<b>WareHouse<b>: " + sWareHouse + "<br>" + url + "</html>");
     }
 
     /**
@@ -482,98 +485,98 @@ public class JRootApp extends JPanel implements AppView {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        m_jPanelTitle = new javax.swing.JPanel();
-        m_jLblTitle = new javax.swing.JLabel();
-        poweredby = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        m_jPanelContainer = new javax.swing.JPanel();
+        topPanel = new javax.swing.JPanel();
+        appTitleLabel = new javax.swing.JLabel();
+        appPowerByLabel = new javax.swing.JLabel();
+        appTopLabel = new javax.swing.JLabel();
+        contentContainerPanel = new javax.swing.JPanel();
         statusBarPanel = new javax.swing.JPanel();
-        panelTask = new javax.swing.JPanel();
-        m_jHost = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        m_jClose = new javax.swing.JButton();
+        statusBarFirstPanel = new javax.swing.JPanel();
+        appInfoLabel = new javax.swing.JLabel();
+        statusBarSecondPanel = new javax.swing.JPanel();
+        appExitButton = new javax.swing.JButton();
 
         setEnabled(false);
         setPreferredSize(new java.awt.Dimension(1024, 768));
         setLayout(new java.awt.BorderLayout());
 
-        m_jPanelTitle.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, javax.swing.UIManager.getDefaults().getColor("Button.darkShadow")));
-        m_jPanelTitle.setPreferredSize(new java.awt.Dimension(449, 40));
-        m_jPanelTitle.setLayout(new java.awt.BorderLayout());
+        topPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, javax.swing.UIManager.getDefaults().getColor("Button.darkShadow")));
+        topPanel.setPreferredSize(new java.awt.Dimension(449, 40));
+        topPanel.setLayout(new java.awt.BorderLayout());
 
-        m_jLblTitle.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
-        m_jLblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_jLblTitle.setText("Kriol Point of Sales (krPoS)");
-        m_jPanelTitle.add(m_jLblTitle, java.awt.BorderLayout.CENTER);
+        appTitleLabel.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
+        appTitleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        appTitleLabel.setText("Point of Sales (POS)");
+        topPanel.add(appTitleLabel, java.awt.BorderLayout.CENTER);
 
-        poweredby.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        poweredby.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
-        poweredby.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        poweredby.setMaximumSize(new java.awt.Dimension(180, 34));
-        poweredby.setPreferredSize(new java.awt.Dimension(180, 34));
-        m_jPanelTitle.add(poweredby, java.awt.BorderLayout.LINE_END);
+        appPowerByLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        appPowerByLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
+        appPowerByLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        appPowerByLabel.setMaximumSize(new java.awt.Dimension(180, 34));
+        appPowerByLabel.setPreferredSize(new java.awt.Dimension(180, 34));
+        topPanel.add(appPowerByLabel, java.awt.BorderLayout.LINE_END);
 
-        jLabel2.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel2.setPreferredSize(new java.awt.Dimension(180, 34));
-        m_jPanelTitle.add(jLabel2, java.awt.BorderLayout.LINE_START);
+        appTopLabel.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
+        appTopLabel.setForeground(new java.awt.Color(102, 102, 102));
+        appTopLabel.setPreferredSize(new java.awt.Dimension(180, 34));
+        topPanel.add(appTopLabel, java.awt.BorderLayout.LINE_START);
 
-        add(m_jPanelTitle, java.awt.BorderLayout.NORTH);
+        add(topPanel, java.awt.BorderLayout.NORTH);
 
-        m_jPanelContainer.setLayout(new java.awt.CardLayout());
-        add(m_jPanelContainer, java.awt.BorderLayout.CENTER);
+        contentContainerPanel.setLayout(new java.awt.CardLayout());
+        add(contentContainerPanel, java.awt.BorderLayout.CENTER);
 
         statusBarPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, javax.swing.UIManager.getDefaults().getColor("Button.darkShadow")));
         statusBarPanel.setLayout(new javax.swing.BoxLayout(statusBarPanel, javax.swing.BoxLayout.LINE_AXIS));
 
-        panelTask.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        statusBarFirstPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        m_jHost.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        m_jHost.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/display.png"))); // NOI18N
-        m_jHost.setText("*Hostname");
-        m_jHost.setMaximumSize(new java.awt.Dimension(200, 32));
-        m_jHost.setMinimumSize(new java.awt.Dimension(200, 32));
-        m_jHost.setPreferredSize(new java.awt.Dimension(200, 32));
-        panelTask.add(m_jHost);
+        appInfoLabel.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        appInfoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/display.png"))); // NOI18N
+        appInfoLabel.setText("*Hostname");
+        appInfoLabel.setMaximumSize(new java.awt.Dimension(200, 32));
+        appInfoLabel.setMinimumSize(new java.awt.Dimension(200, 32));
+        appInfoLabel.setPreferredSize(new java.awt.Dimension(200, 32));
+        statusBarFirstPanel.add(appInfoLabel);
 
-        statusBarPanel.add(panelTask);
+        statusBarPanel.add(statusBarFirstPanel);
 
-        jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+        statusBarSecondPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
-        m_jClose.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        m_jClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/exit.png"))); // NOI18N
-        m_jClose.setText(AppLocal.getIntString("button.exit")); // NOI18N
-        m_jClose.setFocusPainted(false);
-        m_jClose.setFocusable(false);
-        m_jClose.setPreferredSize(new java.awt.Dimension(100, 50));
-        m_jClose.setRequestFocusEnabled(false);
-        m_jClose.addActionListener(new java.awt.event.ActionListener() {
+        appExitButton.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        appExitButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/exit.png"))); // NOI18N
+        appExitButton.setText(AppLocal.getIntString("button.exit")); // NOI18N
+        appExitButton.setFocusPainted(false);
+        appExitButton.setFocusable(false);
+        appExitButton.setPreferredSize(new java.awt.Dimension(100, 50));
+        appExitButton.setRequestFocusEnabled(false);
+        appExitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                m_jCloseActionPerformed(evt);
+                appExitButtonActionPerformed(evt);
             }
         });
-        jPanel3.add(m_jClose);
+        statusBarSecondPanel.add(appExitButton);
 
-        statusBarPanel.add(jPanel3);
+        statusBarPanel.add(statusBarSecondPanel);
 
         add(statusBarPanel, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void m_jCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jCloseActionPerformed
+    private void appExitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_appExitButtonActionPerformed
         tryToClose();
-    }//GEN-LAST:event_m_jCloseActionPerformed
+    }//GEN-LAST:event_appExitButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JButton m_jClose;
-    private javax.swing.JLabel m_jHost;
-    private javax.swing.JLabel m_jLblTitle;
-    private javax.swing.JPanel m_jPanelContainer;
-    private javax.swing.JPanel m_jPanelTitle;
-    private javax.swing.JPanel panelTask;
-    private javax.swing.JLabel poweredby;
+    private javax.swing.JButton appExitButton;
+    private javax.swing.JLabel appInfoLabel;
+    private javax.swing.JLabel appPowerByLabel;
+    private javax.swing.JLabel appTitleLabel;
+    private javax.swing.JLabel appTopLabel;
+    private javax.swing.JPanel contentContainerPanel;
+    private javax.swing.JPanel statusBarFirstPanel;
     private javax.swing.JPanel statusBarPanel;
+    private javax.swing.JPanel statusBarSecondPanel;
+    private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables
 }

@@ -22,7 +22,7 @@
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
   <SubComponents>
-    <Container class="javax.swing.JPanel" name="m_jPanelTitle">
+    <Container class="javax.swing.JPanel" name="topPanel">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
@@ -43,13 +43,13 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="m_jLblTitle">
+        <Component class="javax.swing.JLabel" name="appTitleLabel">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="16" style="1"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Kriol Point of Sales (krPoS)"/>
+            <Property name="text" type="java.lang.String" value="Point of Sales (POS)"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="JRootApp_m_jLblTitle"/>
@@ -60,7 +60,7 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="javax.swing.JLabel" name="poweredby">
+        <Component class="javax.swing.JLabel" name="appPowerByLabel">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -82,7 +82,7 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel2">
+        <Component class="javax.swing.JLabel" name="appTopLabel">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="16" style="1"/>
@@ -105,7 +105,7 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="m_jPanelContainer">
+    <Container class="javax.swing.JPanel" name="contentContainerPanel">
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
           <BorderConstraints direction="Center"/>
@@ -132,13 +132,13 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
       <SubComponents>
-        <Container class="javax.swing.JPanel" name="panelTask">
+        <Container class="javax.swing.JPanel" name="statusBarFirstPanel">
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout">
             <Property name="alignment" type="int" value="0"/>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="m_jHost">
+            <Component class="javax.swing.JLabel" name="appInfoLabel">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="11" style="0"/>
@@ -160,13 +160,13 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel3">
+        <Container class="javax.swing.JPanel" name="statusBarSecondPanel">
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout">
             <Property name="alignment" type="int" value="2"/>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="m_jClose">
+            <Component class="javax.swing.JButton" name="appExitButton">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="12" style="0"/>
@@ -185,7 +185,7 @@
                 <Property name="requestFocusEnabled" type="boolean" value="false"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="m_jCloseActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="appExitButtonActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
