@@ -31,53 +31,44 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="m_jBarcode" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jLabel1" min="-2" max="-2" attributes="1"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="m_jCategory" min="-2" max="-2" attributes="1"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="jBtnReset" min="-2" pref="52" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="jLabel2" min="-2" max="-2" attributes="1"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="m_jCboName" min="-2" max="-2" attributes="1"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="m_jName" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
+                      <Component id="jLabel2" min="-2" max="-2" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Component id="m_jCboName" min="-2" max="-2" attributes="1"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="m_jName" pref="166" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
+                      <Component id="jLabel4" min="-2" max="-2" attributes="1"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="m_jCboPriceBuy" min="-2" max="-2" attributes="2"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="m_jPriceBuy" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel4" min="-2" max="-2" attributes="1"/>
+                              <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="m_jCboPriceBuy" min="-2" max="-2" attributes="2"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="m_jPriceBuy" min="-2" max="-2" attributes="0"/>
+                              <Component id="m_jBarcode" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel3" min="-2" max="-2" attributes="1"/>
+                              <Component id="jLabel1" min="-2" max="-2" attributes="1"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="m_jCboPriceSell" min="-2" max="-2" attributes="1"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="m_jPriceSell" max="32767" attributes="0"/>
+                              <Component id="m_jCategory" min="-2" max="-2" attributes="1"/>
                           </Group>
                       </Group>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="jBtnReset" min="-2" pref="52" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jLabel3" min="-2" max="-2" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Component id="m_jCboPriceSell" min="-2" max="-2" attributes="1"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="m_jPriceSell" max="32767" attributes="0"/>
                   </Group>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

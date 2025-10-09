@@ -3,13 +3,13 @@
 <Form version="1.2" maxVersion="1.2" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[480, 230]"/>
+      <Dimension value="[430, 230]"/>
     </Property>
     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[480, 230]"/>
+      <Dimension value="[430, 230]"/>
     </Property>
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[480, 230]"/>
+      <Dimension value="[430, 230]"/>
     </Property>
   </Properties>
   <AuxValues>
@@ -42,14 +42,14 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="m_jCboPriceBuy" min="-2" max="-2" attributes="2"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="m_jPriceBuy" min="-2" max="-2" attributes="0"/>
+                      <Component id="m_jPriceBuy" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jLabel3" min="-2" max="-2" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="m_jCboPriceSell" min="-2" max="-2" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="m_jPriceSell" min="-2" max="-2" attributes="0"/>
+                      <Component id="m_jPriceSell" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
