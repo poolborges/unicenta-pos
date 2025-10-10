@@ -13,38 +13,34 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
-import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
  * @author JG uniCenta
- * @param <T>
  */
-public class SerializerReadClass<T extends SerializableRead> implements SerializerRead<SerializableRead> {
+public class SerializerWriteDate implements SerializerWrite<Date> {
 
-    private static final Logger LOGGER = Logger.getLogger(SerializerReadClass.class.getName());
-    private final Class<T> m_clazz;
+    private final static Logger LOGGER = Logger.getLogger(SerializerWriteDate.class.getName());
+    public static final SerializerWrite<Date> INSTANCE = new SerializerWriteDate();
 
-    public SerializerReadClass(Class<T> clazz) {
-        m_clazz = clazz;
-    }
+    private SerializerWriteDate() {}
 
     @Override
-    public T readValues(DataRead dr) throws BasicException {
-        T sr = null;
+    public void writeValues(DataWrite dp, Date parameters) throws BasicException {
+
+        int posi = 1;
         try {
-            sr = m_clazz.getDeclaredConstructor().newInstance();
-            sr.readValues(dr);
-        } catch (java.lang.InstantiationException | IllegalAccessException | ClassCastException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
-            LOGGER.log(Level.WARNING, "Exception on casting or read value ", ex);
+             Datas.TIMESTAMP.setValue(dp, posi, parameters);
+
+        } catch (BasicException ex) {
+            LOGGER.log(Level.WARNING, "Exception while set value for parameter on posi: "+posi,ex);
+            throw new BasicException(ex);
         }
-        
-        return sr;
     }
 }

@@ -35,7 +35,16 @@ public abstract class Formats<T> {
     private final static String DEFAULT_PERCENT_FORMAT = "#,##0.##%";
     private final static String DEFAULT_HOURMIN_FORMAT = "H:mm:ss";
     private final static String DEFAULT_SIMPLEDATE_FORMAT = "dd-MM-yyyy";
-    
+
+    /**
+     *
+     * "yyyy-MM-dd HH:mm:ss.SSS" => "03 out. 2025 01:22:48.000".
+     * "yyyy-MM-dd HH:mm:ss" => "2025-10-03 01:22:48" 
+     * "dd MMM yyyy HH:mm:ss" => "03 out. 2025 01:22:48"
+     *
+     */
+    private final static String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
     public final static Formats<Object> NULL = new FormatsNULL();
     public final static Formats<Integer> INT = new FormatsINT();
     public final static Formats<String> STRING = new FormatsSTRING();
@@ -49,6 +58,7 @@ public abstract class Formats<T> {
     public final static Formats<byte[]> BYTEA = new FormatsBYTEA();
     public final static Formats<Date> HOURMIN = new FormatsHOURMIN();
     public final static Formats<Date> SIMPLEDATE = new FormatsSIMPLEDATE();
+    public final static Formats<Date> DATETIME = new FormatsDATETIME();
 
     //Support those format up
     private static NumberFormat m_integerformat = NumberFormat.getIntegerInstance();
@@ -83,7 +93,7 @@ public abstract class Formats<T> {
             try {
                 return parseValueInt(value);
             } catch (ParseException e) {
-                throw new BasicException(e.getMessage(), e);
+                throw new BasicException("Exception parsing value: " + value, e);
             }
         }
     }
@@ -293,7 +303,7 @@ public abstract class Formats<T> {
 
         @Override
         protected String formatValueInt(Date value) {
-            return m_datetimeformat.format( value);
+            return m_datetimeformat.format(value);
         }
 
         @Override
@@ -302,6 +312,30 @@ public abstract class Formats<T> {
                 return m_datetimeformat.parse(value);
             } catch (ParseException e) {
                 return m_dateformat.parse(value);
+            }
+        }
+
+        @Override
+        public int getAlignment() {
+            return javax.swing.SwingConstants.CENTER;
+        }
+    }
+
+    private static final class FormatsDATETIME extends Formats<Date> {
+
+        final SimpleDateFormat dateFormat = new SimpleDateFormat(DEFAULT_DATETIME_FORMAT);
+
+        @Override
+        protected String formatValueInt(Date value) {
+            return dateFormat.format(value);
+        }
+
+        @Override
+        protected Date parseValueInt(String value) throws ParseException {
+            try {
+                return dateFormat.parse(value);
+            } catch (ParseException e) {
+                return dateFormat.parse(value);
             }
         }
 
