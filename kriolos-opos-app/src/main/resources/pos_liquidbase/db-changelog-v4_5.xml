@@ -6,9 +6,9 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext 
                     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd 
                     http://www.liquibase.org/xml/ns/pro 
-                    http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.8.xsd 
+                    http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.9.xsd 
                     http://www.liquibase.org/xml/ns/dbchangelog 
-                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
     <changeSet author="pauloborges (generated)" id="1603928315936-1">
         <createTable tableName="applications">
             <column name="id" type="VARCHAR(255)">
@@ -43,7 +43,7 @@
             <column name="attribute_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="value" type="VARCHAR(255)"/>
+            <column name="value" type="VARCHAR(255)"/>         
         </createTable>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-4">
@@ -915,8 +915,15 @@
             <column defaultValue="A" name="status" type="CHAR(1)"/>
         </createTable>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-53">
+    <changeSet author="pauloborges (generated)" id="1603928315936-53" dbms="!sqlite">
         <addUniqueConstraint columnNames="location, product, attributesetinstance_id" constraintName="stockcurrent_inx" tableName="stockcurrent"/>
+    </changeSet>
+    <changeSet author="pauloborges (manual)" id="1603928315936-53-sqlite" dbms="!sqlite">
+        <createIndex tableName="stockcurrent" unique="true" indexName="stockcurrent_inx">
+            <column name="location"/>
+            <column name="product"/>
+            <column name="attributesetinstance_id"/>
+        </createIndex>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-54">
         <createIndex indexName="attinst_att" tableName="attributeinstance">
@@ -1253,136 +1260,136 @@
             <column name="ticketid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-120">
+    <changeSet author="pauloborges (generated)" id="1603928315936-120" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="attribute_id" baseTableName="attributeinstance" constraintName="attinst_att" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attribute" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-121">
+    <changeSet author="pauloborges (generated)" id="1603928315936-121" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="attributesetinstance_id" baseTableName="attributeinstance" constraintName="attinst_set" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attributesetinstance" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-122">
+    <changeSet author="pauloborges (generated)" id="1603928315936-122" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="attributeset_id" baseTableName="attributesetinstance" constraintName="attsetinst_set" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attributeset" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-123">
+    <changeSet author="pauloborges (generated)" id="1603928315936-123" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="attribute_id" baseTableName="attributeuse" constraintName="attuse_att" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attribute" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-124">
+    <changeSet author="pauloborges (generated)" id="1603928315936-124" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="attributeset_id" baseTableName="attributeuse" constraintName="attuse_set" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attributeset" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-125">
+    <changeSet author="pauloborges (generated)" id="1603928315936-125" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="attribute_id" baseTableName="attributevalue" constraintName="attval_att" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attribute" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-126">
+    <changeSet author="pauloborges (generated)" id="1603928315936-126" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="parentid" baseTableName="categories" constraintName="categories_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="categories" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-127">
+    <changeSet author="pauloborges (generated)" id="1603928315936-127" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="taxcategory" baseTableName="customers" constraintName="customers_taxcat" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="taxcustcategories" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-128">
+    <changeSet author="pauloborges (generated)" id="1603928315936-128" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="pplid" baseTableName="leaves" constraintName="leaves_pplid" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="people" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-129">
+    <changeSet author="pauloborges (generated)" id="1603928315936-129" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="receipt" baseTableName="payments" constraintName="payments_fk_receipt" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="receipts" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-130">
+    <changeSet author="pauloborges (generated)" id="1603928315936-130" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="role" baseTableName="people" constraintName="people_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="roles" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-131">
+    <changeSet author="pauloborges (generated)" id="1603928315936-131" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="attributeset_id" baseTableName="products" constraintName="products_attrset_fk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attributeset" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-132">
+    <changeSet author="pauloborges (generated)" id="1603928315936-132" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="product" baseTableName="products_bundle" constraintName="products_bundle_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-133">
+    <changeSet author="pauloborges (generated)" id="1603928315936-133" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="product_bundle" baseTableName="products_bundle" constraintName="products_bundle_fk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-134">
+    <changeSet author="pauloborges (generated)" id="1603928315936-134" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="product" baseTableName="products_cat" constraintName="products_cat_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-135">
+    <changeSet author="pauloborges (generated)" id="1603928315936-135" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="product" baseTableName="products_com" constraintName="products_com_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-136">
+    <changeSet author="pauloborges (generated)" id="1603928315936-136" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="product2" baseTableName="products_com" constraintName="products_com_fk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-137">
+    <changeSet author="pauloborges (generated)" id="1603928315936-137" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="category" baseTableName="products" constraintName="products_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="categories" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-138">
+    <changeSet author="pauloborges (generated)" id="1603928315936-138" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="taxcat" baseTableName="products" constraintName="products_taxcat_fk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="taxcategories" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-139">
+    <changeSet author="pauloborges (generated)" id="1603928315936-139" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="money" baseTableName="receipts" constraintName="receipts_fk_money" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="money" referencedTableName="closedcash" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-140">
+    <changeSet author="pauloborges (generated)" id="1603928315936-140" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="id" baseTableName="reservation_customers" constraintName="res_cust_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="reservations" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-141">
+    <changeSet author="pauloborges (generated)" id="1603928315936-141" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="customer" baseTableName="reservation_customers" constraintName="res_cust_fk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="customers" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-142">
+    <changeSet author="pauloborges (generated)" id="1603928315936-142" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="breakid" baseTableName="shift_breaks" constraintName="shift_breaks_breakid" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="breaks" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-143">
+    <changeSet author="pauloborges (generated)" id="1603928315936-143" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="shiftid" baseTableName="shift_breaks" constraintName="shift_breaks_shiftid" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="shifts" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-144">
+    <changeSet author="pauloborges (generated)" id="1603928315936-144" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="attributesetinstance_id" baseTableName="stockcurrent" constraintName="stockcurrent_attsetinst" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attributesetinstance" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-145">
+    <changeSet author="pauloborges (generated)" id="1603928315936-145" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="product" baseTableName="stockcurrent" constraintName="stockcurrent_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-146">
+    <changeSet author="pauloborges (generated)" id="1603928315936-146" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="location" baseTableName="stockcurrent" constraintName="stockcurrent_fk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="locations" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-147">
+    <changeSet author="pauloborges (generated)" id="1603928315936-147" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="attributesetinstance_id" baseTableName="stockdiary" constraintName="stockdiary_attsetinst" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attributesetinstance" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-148">
+    <changeSet author="pauloborges (generated)" id="1603928315936-148" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="product" baseTableName="stockdiary" constraintName="stockdiary_fk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-149">
+    <changeSet author="pauloborges (generated)" id="1603928315936-149" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="location" baseTableName="stockdiary" constraintName="stockdiary_fk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="locations" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-150">
+    <changeSet author="pauloborges (generated)" id="1603928315936-150" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="location" baseTableName="stocklevel" constraintName="stocklevel_location" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="locations" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-151">
+    <changeSet author="pauloborges (generated)" id="1603928315936-151" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="product" baseTableName="stocklevel" constraintName="stocklevel_product" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-152">
+    <changeSet author="pauloborges (generated)" id="1603928315936-152" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="category" baseTableName="taxes" constraintName="taxes_cat_fk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="taxcategories" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-153">
+    <changeSet author="pauloborges (generated)" id="1603928315936-153" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="custcategory" baseTableName="taxes" constraintName="taxes_custcat_fk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="taxcustcategories" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-154">
+    <changeSet author="pauloborges (generated)" id="1603928315936-154" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="parentid" baseTableName="taxes" constraintName="taxes_taxes_fk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="taxes" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-155">
+    <changeSet author="pauloborges (generated)" id="1603928315936-155" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="receipt" baseTableName="taxlines" constraintName="taxlines_receipt" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="receipts" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-156">
+    <changeSet author="pauloborges (generated)" id="1603928315936-156" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="taxid" baseTableName="taxlines" constraintName="taxlines_tax" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="taxes" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-157">
+    <changeSet author="pauloborges (generated)" id="1603928315936-157" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="attributesetinstance_id" baseTableName="ticketlines" constraintName="ticketlines_attsetinst" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="attributesetinstance" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-158">
+    <changeSet author="pauloborges (generated)" id="1603928315936-158" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="product" baseTableName="ticketlines" constraintName="ticketlines_fk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="products" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-159">
+    <changeSet author="pauloborges (generated)" id="1603928315936-159" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="taxid" baseTableName="ticketlines" constraintName="ticketlines_fk_3" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="taxes" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-160">
+    <changeSet author="pauloborges (generated)" id="1603928315936-160" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="ticket" baseTableName="ticketlines" constraintName="ticketlines_fk_ticket" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tickets" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-161">
+    <changeSet author="pauloborges (generated)" id="1603928315936-161" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="customer" baseTableName="tickets" constraintName="tickets_customers_fk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="customers" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-162">
+    <changeSet author="pauloborges (generated)" id="1603928315936-162" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="person" baseTableName="tickets" constraintName="tickets_fk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="people" validate="true"/>
     </changeSet>
-    <changeSet author="pauloborges (generated)" id="1603928315936-163">
+    <changeSet author="pauloborges (generated)" id="1603928315936-163" dbms="!sqlite">
         <addForeignKeyConstraint baseColumnNames="id" baseTableName="tickets" constraintName="tickets_fk_id" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="receipts" validate="true"/>
     </changeSet>
 </databaseChangeLog>

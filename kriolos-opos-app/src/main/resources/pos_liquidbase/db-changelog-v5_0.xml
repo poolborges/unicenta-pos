@@ -6,9 +6,9 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext 
                     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd 
                     http://www.liquibase.org/xml/ns/pro 
-                    http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.8.xsd 
+                    http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.9.xsd 
                     http://www.liquibase.org/xml/ns/dbchangelog 
-                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">    
+                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">    
     <changeSet author="pauloborges (nanual)" id="20230502-01">
         <createTable tableName="seqnumber">
             <column name="tablename" type="VARCHAR(100)">
