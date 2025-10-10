@@ -52,6 +52,7 @@ import com.openbravo.pos.sales.TicketsEditor;
 import com.openbravo.pos.ticket.TicketInfo;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Date;
 
 /**
  *
@@ -60,31 +61,29 @@ import java.awt.event.MouseEvent;
 public class JTicketsBagRestaurantMap extends JTicketsBag {
     
 
-    private java.util.List<Place> m_aplaces;
-    private java.util.List<Floor> m_afloors;
+    private java.util.List<Place> placeList;
+    private java.util.List<Floor> floorList;
 
-    private JTicketsBagRestaurant m_restaurantmap;
-    private final JTicketsBagRestaurantRes m_jreservations;
-    private Place m_PlaceCurrent;
-    private Place m_PlaceClipboard;
+    private JTicketsBagRestaurant ticketsBagRestaurant;
+    private final JTicketsBagRestaurantRes ticketsBagRestaurantRes;
+    private Place placeCurrent;
+    private Place placeClipboard;
     private CustomerInfo customer;
 
     private DataLogicReceipts dlReceipts = null;
-    private DataLogicSales dlSales = null;
     private DataLogicSystem dlSystem = null;
-    private final RestaurantDBUtils restDB;
+    private final RestaurantDBUtils restaurantDB;
     private static final Icon ICO_OCU_SM = new ImageIcon(Place.class.getResource("/com/openbravo/images/edit_group_sm.png"));
     private static final Icon ICO_WAITER = new NullIcon(1, 1);
     private static final Icon ICO_FRE = new NullIcon(22, 22);
     private String waiterDetails;
     private String customerDetails;
     private String tableName;
-    private Boolean transBtns;
-    private Boolean actionEnabled = true;
+    private boolean transBtns;
+    private boolean actionEnabled = true;
     private int newX;
     private int newY;
-    private AppView m_app;
-    private Boolean showLayout = false;
+    private boolean showLayout = false;
 
     /**
      * Creates new form JTicketsBagRestaurant
@@ -96,16 +95,15 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
 
         super(app, panelticket);
 
-        restDB = new RestaurantDBUtils(app);
+        restaurantDB = new RestaurantDBUtils(app);
         transBtns = AppConfig.getInstance().getBoolean("table.transbtn");
 
         dlReceipts = (DataLogicReceipts) app.getBean("com.openbravo.pos.sales.DataLogicReceipts");
-        dlSales = (DataLogicSales) m_App.getBean("com.openbravo.pos.forms.DataLogicSales");
         dlSystem = (DataLogicSystem) m_App.getBean("com.openbravo.pos.forms.DataLogicSystem");
 
-        m_restaurantmap = new JTicketsBagRestaurant(app, this);
-        m_PlaceCurrent = null;
-        m_PlaceClipboard = null;
+        ticketsBagRestaurant = new JTicketsBagRestaurant(app, this);
+        placeCurrent = null;
+        placeClipboard = null;
         customer = null;
 
         try {
@@ -114,11 +112,11 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                     "SELECT ID, NAME, IMAGE FROM floors ORDER BY NAME",
                     null,
                     new SerializerReadClass(Floor.class));
-            m_afloors = sent.list();
+            floorList = sent.list();
 
         } catch (BasicException ex) {
             LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
-            m_afloors = new ArrayList<>();
+            floorList = new ArrayList<>();
         }
         try {
             SentenceList sent = new StaticSentence(
@@ -126,17 +124,17 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                     "SELECT ID, NAME, SEATS, X, Y, FLOOR, CUSTOMER, WAITER, TICKETID, TABLEMOVED FROM places ORDER BY FLOOR",
                     null,
                     new SerializerReadClass(Place.class));
-            m_aplaces = sent.list();
+            placeList = sent.list();
         } catch (BasicException ex) {
             LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
-            m_aplaces = new ArrayList<>();
+            placeList = new ArrayList<>();
         }
 
         initComponents();
 
         m_jbtnSave.setVisible(false);
 
-        if (m_afloors.size() > 1) {
+        if (floorList.size() > 1) {
             JTabbedPane jTabFloors = new JTabbedPane();
             jTabFloors.applyComponentOrientation(getComponentOrientation());
             jTabFloors.setBorder(new javax.swing.border.EmptyBorder(new Insets(5, 5, 5, 5)));
@@ -145,7 +143,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
             jTabFloors.setRequestFocusEnabled(false);
             m_jPanelMap.add(jTabFloors, BorderLayout.CENTER);
 
-            m_afloors.stream().map((f) -> {
+            floorList.stream().map((f) -> {
                 f.getContainer().applyComponentOrientation(getComponentOrientation());
                 return f;
             }).forEach((f) -> {
@@ -158,8 +156,8 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                 jScrCont.setViewportView(jPanCont);
                 jPanCont.add(f.getContainer());
             });
-        } else if (m_afloors.size() == 1) {
-            Floor f = m_afloors.get(0);
+        } else if (floorList.size() == 1) {
+            Floor f = floorList.get(0);
             f.getContainer().applyComponentOrientation(getComponentOrientation());
 
             JPanel jPlaces = new JPanel();
@@ -182,12 +180,12 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
 
         Floor currfloor = null;
 
-        for (Place pl : m_aplaces) {
+        for (Place pl : placeList) {
             int iFloor = 0;
 
             if (currfloor == null || !currfloor.getID().equals(pl.getFloor())) {
                 do {
-                    currfloor = m_afloors.get(iFloor++);
+                    currfloor = floorList.get(iFloor++);
                 } while (!currfloor.getID().equals(pl.getFloor()));
             }
 
@@ -222,8 +220,8 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
             pl.getButton().addActionListener(new MyActionListener(pl));
         }
 
-        m_jreservations = new JTicketsBagRestaurantRes(app, this);
-        add(m_jreservations, "res");
+        ticketsBagRestaurantRes = new JTicketsBagRestaurantRes(app, this);
+        add(ticketsBagRestaurantRes, "res");
 
         showLayout = m_App.hasPermission("sales.Layout");
         if (showLayout) {
@@ -238,16 +236,9 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
             webLblautoRefresh.setText(java.util.ResourceBundle.getBundle("pos_messages")
                     .getString("label.autoRefreshTableMapTimerON"));
 
-            Timer autoRefreshTimer = new Timer(Integer.parseInt(m_App.getProperties()
-                    .getProperty("till.autoRefreshTimer")) * 1000, new tableMapRefresh());
-
+            int refeshTimer = Integer.parseInt(m_App.getProperties().getProperty("till.autoRefreshTimer")) * 1000;
+            Timer autoRefreshTimer = new Timer(refeshTimer, new TableMapRefreshActionListener());
             autoRefreshTimer.start();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
-                autoRefreshTimer.stop();
-            }
         } else {
             webLblautoRefresh.setText(java.util.ResourceBundle.getBundle("pos_messages")
                     .getString("label.autoRefreshTableMapTimerOFF"));
@@ -255,10 +246,15 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
 
     }
 
-    class tableMapRefresh implements ActionListener {
+    class TableMapRefreshActionListener implements ActionListener {
+        
+        public TableMapRefreshActionListener(){
+            LOGGER.log(System.Logger.Level.INFO, "Table Map Refresh ActionListener create at: "+new Date());
+        }
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            LOGGER.log(System.Logger.Level.INFO, "Table Map Refresh at: "+new Date());
             loadTickets();
             printState();
         }
@@ -279,13 +275,13 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
             m_jbtnSave.setVisible(false);
         }
 
-        m_PlaceClipboard = null;
+        placeClipboard = null;
         customer = null;
         loadTickets();
         printState();
 
         m_panelticket.setActiveTicket(new TicketInfo(), null);
-        m_restaurantmap.activate();
+        ticketsBagRestaurant.activate();
 
         showView("map");
     }
@@ -299,22 +295,22 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
 
         LOGGER.log(System.Logger.Level.INFO, "deactivate");
         if (viewTables()) {
-            m_PlaceClipboard = null;
+            placeClipboard = null;
             customer = null;
 
-            if (m_PlaceCurrent != null) {
+            if (placeCurrent != null) {
 
                 try {
-                    dlReceipts.updateSharedTicket(m_PlaceCurrent.getId(),
+                    dlReceipts.updateSharedTicket(placeCurrent.getId(),
                             m_panelticket.getActiveTicket(),
                             m_panelticket.getActiveTicket().getPickupId());
-                    dlReceipts.unlockSharedTicket(m_PlaceCurrent.getId(), null);
+                    dlReceipts.unlockSharedTicket(placeCurrent.getId(), null);
                 } catch (BasicException ex) {
                     LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
                     new MessageInf(ex).show(this);
                 }
 
-                m_PlaceCurrent = null;
+                placeCurrent = null;
 
             }
             printState();
@@ -332,7 +328,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
      */
     @Override
     protected JComponent getBagComponent() {
-        return m_restaurantmap;
+        return ticketsBagRestaurant;
     }
 
     /**
@@ -356,20 +352,20 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
      *
      */
     public void moveTicket() {
-        if (m_PlaceCurrent != null) {
+        if (placeCurrent != null) {
 
             try {
-                dlReceipts.updateRSharedTicket(m_PlaceCurrent.getId(),
+                dlReceipts.updateRSharedTicket(placeCurrent.getId(),
                         m_panelticket.getActiveTicket(), m_panelticket.getActiveTicket().getPickupId());
             } catch (BasicException ex) {
                 LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
                 new MessageInf(ex).show(this);
             }
 
-            m_PlaceClipboard = m_PlaceCurrent;
+            placeClipboard = placeCurrent;
 
             customer = null;
-            m_PlaceCurrent = null;
+            placeCurrent = null;
         }
 
         printState();
@@ -382,9 +378,9 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
      * @return
      */
     public boolean viewTables(CustomerInfo c) {
-        if (m_jreservations.deactivate()) {
+        if (ticketsBagRestaurantRes.deactivate()) {
             showView("map");
-            m_PlaceClipboard = null;
+            placeClipboard = null;
             customer = c;
             printState();
             return true;
@@ -403,20 +399,20 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
 
     public void newTicket() {
 
-        if (m_PlaceCurrent != null) {
+        if (placeCurrent != null) {
 
             try {
                 String m_lockState = null;
-                m_lockState = dlReceipts.getLockState(m_PlaceCurrent.getId(), m_lockState);
-                dlReceipts.getSharedTicket(m_PlaceCurrent.getId());
+                m_lockState = dlReceipts.getLockState(placeCurrent.getId(), m_lockState);
+                dlReceipts.getSharedTicket(placeCurrent.getId());
 
                 if ("override".equals(m_lockState)
                         || "locked".equals(m_lockState)) {
-                    dlReceipts.updateSharedTicket(m_PlaceCurrent.getId(),
+                    dlReceipts.updateSharedTicket(placeCurrent.getId(),
                             m_panelticket.getActiveTicket(),
                             m_panelticket.getActiveTicket().getPickupId());
-                    dlReceipts.unlockSharedTicket(m_PlaceCurrent.getId(), null);
-                    m_PlaceCurrent = null;
+                    dlReceipts.unlockSharedTicket(placeCurrent.getId(), null);
+                    placeCurrent = null;
                 } else {
                     JOptionPane.showMessageDialog(null,
                              AppLocal.getIntString("message.sharedticketlockoverriden"),
@@ -438,8 +434,8 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
      */
     public String getTable() {
         String id = null;
-        if (m_PlaceCurrent != null) {
-            id = m_PlaceCurrent.getId();
+        if (placeCurrent != null) {
+            id = placeCurrent.getId();
         }
         return (id);
     }
@@ -450,8 +446,8 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
      */
     public String getTableName() {
         String stableName = null;
-        if (m_PlaceCurrent != null) {
-            stableName = m_PlaceCurrent.getName();
+        if (placeCurrent != null) {
+            stableName = placeCurrent.getName();
         }
         return (stableName);
     }
@@ -462,8 +458,8 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
     @Override
     public void deleteTicket() {
 
-        if (m_PlaceCurrent != null) {
-            String id = m_PlaceCurrent.getId();
+        if (placeCurrent != null) {
+            String id = placeCurrent.getId();
             try {
                 dlReceipts.deleteSharedTicket(id);
             } catch (BasicException ex) {
@@ -471,8 +467,8 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                 new MessageInf(ex).show(this);
             }
 
-            m_PlaceCurrent.setPeople(false);
-            m_PlaceCurrent = null;
+            placeCurrent.setPeople(false);
+            placeCurrent = null;
         }
 
         printState();
@@ -496,7 +492,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
             new MessageInf(ex).show(this);
         }
 
-        m_aplaces.stream().forEach((table) -> {
+        placeList.stream().forEach((table) -> {
             table.setPeople(atickets.contains(table.getId()));
         });
     }
@@ -506,11 +502,11 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
      */
     private void printState() {
 
-        if (m_PlaceClipboard == null) {
+        if (placeClipboard == null) {
             if (customer == null) {
                 m_jText.setText(null);
 
-                m_aplaces.stream().map((place) -> {
+                placeList.stream().map((place) -> {
                     place.getButton().setEnabled(true);
                     return place;
                 }).map((place) -> {
@@ -526,14 +522,14 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                 }).map((place) -> {
                     if (Boolean.parseBoolean(m_App.getProperties().getProperty("table.showwaiterdetails"))) {
                         if (m_App.getProperties().getProperty("table.waitercolour") == null) {
-                            waiterDetails = (restDB.getWaiterNameInTable(place.getName()) == null) ? ""
+                            waiterDetails = (restaurantDB.getWaiterNameInTable(place.getName()) == null) ? ""
                                     : "<style=font-size:9px;font-weight:bold;><font color = red>"
-                                    + restDB.getWaiterNameInTableById(place.getId()) + "</font></style><br>";
+                                    + restaurantDB.getWaiterNameInTableById(place.getId()) + "</font></style><br>";
                         } else {
-                            waiterDetails = (restDB.getWaiterNameInTable(place.getName()) == null) ? ""
+                            waiterDetails = (restaurantDB.getWaiterNameInTable(place.getName()) == null) ? ""
                                     : "<style=font-size:9px;font-weight:bold;><font color ="
                                     + m_App.getProperties().getProperty("table.waitercolour") + ">"
-                                    + restDB.getWaiterNameInTableById(place.getId()) + "</font></style><br>";
+                                    + restaurantDB.getWaiterNameInTableById(place.getId()) + "</font></style><br>";
                         }
                         place.getButton().setIcon(ICO_OCU_SM);
                     } else {
@@ -543,17 +539,17 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                 }).map((place) -> {
                     if (Boolean.parseBoolean(m_App.getProperties().getProperty("table.showcustomerdetails"))) {
                         place.getButton().setIcon((Boolean.parseBoolean(m_App.getProperties().getProperty("table.showwaiterdetails"))
-                                && (restDB.getCustomerNameInTable(place.getName()) != null))
+                                && (restaurantDB.getCustomerNameInTable(place.getName()) != null))
                                 ? ICO_WAITER : ICO_OCU_SM);
                         if (m_App.getProperties().getProperty("table.customercolour") == null) {
-                            customerDetails = (restDB.getCustomerNameInTable(place.getName()) == null) ? ""
+                            customerDetails = (restaurantDB.getCustomerNameInTable(place.getName()) == null) ? ""
                                     : "<style=font-size:9px;font-weight:bold;><font color = blue>"
-                                    + restDB.getCustomerNameInTableById(place.getId()) + "</font></style><br>";
+                                    + restaurantDB.getCustomerNameInTableById(place.getId()) + "</font></style><br>";
                         } else {
-                            customerDetails = (restDB.getCustomerNameInTable(place.getName()) == null) ? ""
+                            customerDetails = (restaurantDB.getCustomerNameInTable(place.getName()) == null) ? ""
                                     : "<style=font-size:9px;font-weight:bold;><font color ="
                                     + m_App.getProperties().getProperty("table.customercolour") + ">"
-                                    + restDB.getCustomerNameInTableById(place.getId()) + "</font></style><br>";
+                                    + restaurantDB.getCustomerNameInTableById(place.getId()) + "</font></style><br>";
                         }
                     } else {
                         customerDetails = "";
@@ -588,18 +584,18 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                         }
                 ));
 
-                m_aplaces.stream().forEach((place) -> {
+                placeList.stream().forEach((place) -> {
                     place.getButton().setEnabled(!place.hasPeople());
                 });
                 m_jbtnReservations.setEnabled(false);
             }
         } else {
             m_jText.setText(AppLocal.getIntString("label.restaurantmove",
-                     new Object[]{m_PlaceClipboard.getName()
+                     new Object[]{placeClipboard.getName()
                     }
             ));
 
-            m_aplaces.stream().forEach((place) -> {
+            placeList.stream().forEach((place) -> {
                 place.getButton().setEnabled(true);
             });
 
@@ -621,11 +617,11 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
     }
 
     private void setActivePlace(Place place, TicketInfo ticket) {
-        m_PlaceCurrent = place;
-        m_panelticket.setActiveTicket(ticket, m_PlaceCurrent.getName());
+        placeCurrent = place;
+        m_panelticket.setActiveTicket(ticket, placeCurrent.getName());
 
         try {
-            dlReceipts.lockSharedTicket(m_PlaceCurrent.getId(), "locked");
+            dlReceipts.lockSharedTicket(placeCurrent.getId(), "locked");
         } catch (BasicException ex) {
             Logger.getLogger(JTicketsBagRestaurantMap.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -652,7 +648,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                 m_place.setDiffX(0);
             } else {
 
-                if (m_PlaceClipboard == null) {
+                if (placeClipboard == null) {
                     TicketInfo ticket = getTicketInfo(m_place);
                     if (ticket == null) {
                         ticket = new TicketInfo();
@@ -679,9 +675,9 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                                              JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                                     if (res == JOptionPane.YES_OPTION) {
                                         m_place.setPeople(true);
-                                        m_PlaceClipboard = null;
+                                        placeClipboard = null;
                                         setActivePlace(m_place, ticket);
-                                        dlReceipts.lockSharedTicket(m_PlaceCurrent.getId(), "locked");
+                                        dlReceipts.lockSharedTicket(placeCurrent.getId(), "locked");
                                     }
                                 }
                             } else {
@@ -690,7 +686,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                                 if (m_user.equals(ticketuser)
                                         || m_App.hasPermission("sales.Override")) {
                                     m_place.setPeople(true);
-                                    m_PlaceClipboard = null;
+                                    placeClipboard = null;
                                     m_lockState = "locked";
                                     setActivePlace(m_place, ticket);
                                 } else {
@@ -706,12 +702,12 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                     }
                 }
 // This block handles Merge
-                if (m_PlaceClipboard != null) {
-                    TicketInfo ticketclip = getTicketInfo(m_PlaceClipboard);
+                if (placeClipboard != null) {
+                    TicketInfo ticketclip = getTicketInfo(placeClipboard);
                     if (ticketclip != null) {
-                        if (m_PlaceClipboard == m_place) {
-                            Place placeclip = m_PlaceClipboard;
-                            m_PlaceClipboard = null;
+                        if (placeClipboard == m_place) {
+                            Place placeclip = placeClipboard;
+                            placeClipboard = null;
                             customer = null;
                             printState();
                             setActivePlace(placeclip, ticketclip);
@@ -724,7 +720,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                                         AppLocal.getIntString("message.mergetable"),
                                         JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                                     try {
-                                        m_PlaceClipboard.setPeople(false);
+                                        placeClipboard.setPeople(false);
                                         if (ticket.getCustomer() == null) {
                                             ticket.setCustomer(ticketclip.getCustomer());
                                         }
@@ -733,22 +729,22 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                                         });
                                         dlReceipts.updateRSharedTicket(m_place.getId(),
                                                 ticket, ticket.getPickupId());
-                                        dlReceipts.deleteSharedTicket(m_PlaceClipboard.getId());
+                                        dlReceipts.deleteSharedTicket(placeClipboard.getId());
                                     } catch (BasicException ex) {
                                         LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
                                         new MessageInf(ex).show(JTicketsBagRestaurantMap.this);
                                     }
-                                    m_PlaceClipboard = null;
+                                    placeClipboard = null;
                                     customer = null;
-                                    restDB.clearCustomerNameInTable(restDB.getTableDetails(ticketclip.getId()));
-                                    restDB.clearWaiterNameInTable(restDB.getTableDetails(ticketclip.getId()));
-                                    restDB.clearTableMovedFlag(restDB.getTableDetails(ticketclip.getId()));
-                                    restDB.clearTicketIdInTable(restDB.getTableDetails(ticketclip.getId()));
+                                    restaurantDB.clearCustomerNameInTable(restaurantDB.getTableDetails(ticketclip.getId()));
+                                    restaurantDB.clearWaiterNameInTable(restaurantDB.getTableDetails(ticketclip.getId()));
+                                    restaurantDB.clearTableMovedFlag(restaurantDB.getTableDetails(ticketclip.getId()));
+                                    restaurantDB.clearTicketIdInTable(restaurantDB.getTableDetails(ticketclip.getId()));
                                     printState();
                                     setActivePlace(m_place, ticket);
                                 } else {
-                                    Place placeclip = m_PlaceClipboard;
-                                    m_PlaceClipboard = null;
+                                    Place placeclip = placeClipboard;
+                                    placeClipboard = null;
                                     customer = null;
                                     printState();
                                     setActivePlace(placeclip, ticketclip);
@@ -766,13 +762,13 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                                     dlReceipts.insertRSharedTicket(m_place.getId(),
                                             ticketclip, ticketclip.getPickupId());
                                     m_place.setPeople(true);
-                                    dlReceipts.deleteSharedTicket(m_PlaceClipboard.getId());
-                                    m_PlaceClipboard.setPeople(false);
+                                    dlReceipts.deleteSharedTicket(placeClipboard.getId());
+                                    placeClipboard.setPeople(false);
                                 } catch (BasicException ex) {
                                     LOGGER.log(System.Logger.Level.WARNING, "Exception: ", ex);
                                     new MessageInf(ex).show(JTicketsBagRestaurantMap.this);
                                 }
-                                m_PlaceClipboard = null;
+                                placeClipboard = null;
                                 customer = null;
                                 printState();
                                 setActivePlace(m_place, ticketclip);
@@ -780,15 +776,15 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
                                 new MessageInf(MessageInf.SGN_WARNING,
                                         AppLocal.getIntString("message.tablefull"))
                                         .show(JTicketsBagRestaurantMap.this);
-                                m_PlaceClipboard.setPeople(true);
+                                placeClipboard.setPeople(true);
                                 printState();
                             }
                         }
                     } else {
                         new MessageInf(MessageInf.SGN_WARNING,
                                 AppLocal.getIntString("message.tableempty")).show(JTicketsBagRestaurantMap.this);
-                        m_PlaceClipboard.setPeople(false);
-                        m_PlaceClipboard = null;
+                        placeClipboard.setPeople(false);
+                        placeClipboard = null;
                         customer = null;
                         printState();
                     }
@@ -802,7 +798,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
      * @param btnText
      */
     public void setButtonTextBags(String btnText) {
-        m_PlaceClipboard.setButtonText(btnText);
+        placeClipboard.setButtonText(btnText);
     }
 
     /**
@@ -923,7 +919,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
     }// </editor-fold>//GEN-END:initComponents
 
     private void m_jbtnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jbtnRefreshActionPerformed
-        m_PlaceClipboard = null;
+        placeClipboard = null;
         customer = null;
         loadTickets();
         printState();
@@ -931,7 +927,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
 
     private void m_jbtnReservationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jbtnReservationsActionPerformed
         showView("res");
-        m_jreservations.activate();
+        ticketsBagRestaurantRes.activate();
     }//GEN-LAST:event_m_jbtnReservationsActionPerformed
 
     private void m_jbtnLayoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jbtnLayoutActionPerformed
@@ -942,7 +938,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
             m_jbtnLayout.setText(java.util.ResourceBundle
                     .getBundle("pos_messages").getString("button.disablelayout"));
 
-            for (Place pl : m_aplaces) {
+            for (Place pl : placeList) {
                 if (transBtns) {
                     pl.getButton().setOpaque(true);
                     pl.getButton().setContentAreaFilled(true);
@@ -955,7 +951,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
             m_jbtnLayout.setText(java.util.ResourceBundle
                     .getBundle("pos_messages").getString("button.layout"));
 
-            for (Place pl : m_aplaces) {
+            for (Place pl : placeList) {
                 if (transBtns) {
                     pl.getButton().setOpaque(false);
                     pl.getButton().setContentAreaFilled(false);
@@ -966,7 +962,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
     }//GEN-LAST:event_m_jbtnLayoutActionPerformed
 
     private void m_jbtnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jbtnSaveActionPerformed
-        for (Place pl : m_aplaces) {
+        for (Place pl : placeList) {
             try {
                 dlSystem.updatePlaces(pl.getX(), pl.getY(), pl.getId());
             } catch (BasicException ex) {
