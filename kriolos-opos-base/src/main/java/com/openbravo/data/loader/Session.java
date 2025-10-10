@@ -34,7 +34,7 @@ public final class Session {
     private final FakeDataSouce fakeDS;
 
     private Connection mConnection;
-    private boolean m_bInTransaction;
+    private boolean isTransactionBegin;
 
     private final DataSource datasource;
     public final SessionDB DB;
@@ -52,7 +52,7 @@ public final class Session {
         fakeDS = new FakeDataSouce(url, user, password);
 
         mConnection = null;
-        m_bInTransaction = false;
+        isTransactionBegin = false;
 
         connect(); // no lazy connection
 
@@ -65,7 +65,7 @@ public final class Session {
         this.fakeDS = null;
 
         mConnection = null;
-        m_bInTransaction = false;
+        isTransactionBegin = false;
 
         connect(); // no lazy connection
 
@@ -81,12 +81,14 @@ public final class Session {
 
         if (this.datasource != null) {
             this.mConnection = datasource.getConnection();
-        } else {
+        } else if(fakeDS != null) {
             this.mConnection = fakeDS.getConnection();
+        }else {
+            throw new SQLException("Cannot create Connection, because no Datasource");
         }
 
         mConnection.setAutoCommit(true);
-        m_bInTransaction = false;
+        isTransactionBegin = false;
     }
 
     /**
@@ -98,9 +100,9 @@ public final class Session {
 
         if (mConnection != null) {
             try {
-                if (m_bInTransaction) {
-                    m_bInTransaction = false; // lo primero salimos del estado
-                    mConnection.rollback();
+                if (isTransactionBegin) {
+                    isTransactionBegin = false; // lo primero salimos del estado
+                    //mConnection.rollback();
                     mConnection.setAutoCommit(true);
                 }
                 mConnection.close();
@@ -119,7 +121,7 @@ public final class Session {
      */
     public Connection getConnection() throws SQLException {
 
-        if (!m_bInTransaction) {
+        if (!isTransactionBegin) {
             ensureConnection();
         }
         return mConnection;
@@ -132,17 +134,16 @@ public final class Session {
      */
     public void begin() throws SQLException {
         try {
-            if (m_bInTransaction) {
+            if (isTransactionBegin) {
                 throw new SQLException("Transaction already started");
             } else {
                 ensureConnection();
                 mConnection.setAutoCommit(false);
-                m_bInTransaction = true;
+                isTransactionBegin = true;
             }
         } catch (SQLException ex) {
-            throw new SQLException(ex);
-        } finally {
             mConnection.setAutoCommit(true);
+            throw new SQLException(ex);
         }
     }
 
@@ -153,17 +154,16 @@ public final class Session {
      */
     public void commit() throws SQLException {
         try {
-            if (m_bInTransaction) {
-                m_bInTransaction = false; // lo primero salimos del estado
+            if (isTransactionBegin) {
+                isTransactionBegin = false; // lo primero salimos del estado
                 mConnection.commit();
                 mConnection.setAutoCommit(true);
             } else {
                 throw new SQLException("Transaction not started");
             }
         } catch (SQLException ex) {
-            throw new SQLException(ex);
-        } finally {
             mConnection.setAutoCommit(true);
+            throw new SQLException(ex);
         }
     }
 
@@ -174,17 +174,16 @@ public final class Session {
      */
     public void rollback() throws SQLException {
         try {
-            if (m_bInTransaction) {
-                m_bInTransaction = false; // lo primero salimos del estado
+            if (isTransactionBegin) {
+                isTransactionBegin = false; // lo primero salimos del estado
                 mConnection.rollback();
                 mConnection.setAutoCommit(true);
             } else {
                 throw new SQLException("Transaction not started");
             }
-        } catch (SQLException ex) {
-            throw new SQLException(ex);
-        } finally {
+        } catch (SQLException ex) { 
             mConnection.setAutoCommit(true);
+            throw new SQLException("Exception on rollback", ex);
         }
     }
 
@@ -194,7 +193,7 @@ public final class Session {
      * @return
      */
     public boolean isTransaction() {
-        return m_bInTransaction;
+        return isTransactionBegin;
     }
 
     /**
@@ -242,6 +241,8 @@ public final class Session {
                 return new SessionDBOracle();
             case "Apache Derby":
                 return new SessionDBDerby();
+            case "SQLite":
+                return new SessionDBSQLite3();
             default:
                 return new SessionDBGeneric(sdbmanager);
         }

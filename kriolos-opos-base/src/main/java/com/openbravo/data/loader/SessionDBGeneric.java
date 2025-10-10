@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.data.loader;
 
 /**
@@ -72,23 +71,14 @@ public class SessionDBGeneric implements SessionDB {
         return name;
     }
 
-    /**
-     *
-     * @param s
-     * @param sequence
-     * @return
-     */
+    @Override
     public SentenceFind getSequenceSentence(Session s, String sequence) {
-        return new StaticSentence(s, "SELECT NEXTVAL('" + sequence + "')", null, SerializerReadInteger.INSTANCE);
+        return new SequenceForGeneric(s, sequence);
     }
-    
-    /**
-     *
-     * @param s
-     * @param sequence
-     * @return
-     */
+
+    @Override
     public SentenceExec resetSequenceSentence(Session s, String sequence){
-        return new StaticSentence(s, "ALTER SEQUENCE " + sequence + " RESTART WITH 0", null, SerializerReadInteger.INSTANCE);   
-}    
+        var seq = new SequenceForGeneric(s, sequence);
+        return seq.reset();  
+    }
 }

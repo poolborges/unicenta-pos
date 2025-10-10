@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
@@ -21,51 +20,54 @@ import java.sql.SQLException;
 
 /**
  *
- * @author adrianromero
- * Created on 26 de febrero de 2007, 21:50
+ * @author adrianromero Created on 26 de febrero de 2007, 21:50
  * @param <T>
  *
  */
 public abstract class Transaction<T> {
-    
-    private Session s;
-    
-    /** Creates a new instance of Transaction
-     * @param s */
-    public Transaction(Session s) {
-        this.s = s;
+
+    private Session session;
+
+    /**
+     * Creates a new instance of Transaction
+     *
+     * @param session
+     */
+    public Transaction(Session session) {
+        this.session = session;
     }
-    
+
     /**
      *
-     * @return
-     * @throws BasicException
+     * @return @throws BasicException
      */
     public final T execute() throws BasicException {
-        
-        if (s.isTransaction()) {
+
+        if (session.isTransaction()) {
             return transact();
         } else {
             try {
-                try {    
-                    s.begin();
-                    T result = transact();
-                    s.commit();
-                    return result;
-                } catch (BasicException e) {
-                    s.rollback();
-                    throw e;
+                session.begin();
+                T result = transact();
+                session.commit();
+                return result;
+
+            } catch (BasicException ex) {
+                try {
+                    session.rollback();
+                } catch (SQLException exSQL) {
+                     throw new BasicException("Exception on Transaction rollback", exSQL);
                 }
+                throw ex;
             } catch (SQLException eSQL) {
-                throw new BasicException("Transaction error", eSQL);
+                throw new BasicException("Exception on Transaction execute", eSQL);
             }
         }
     }
-    
+
     /**
      *
-     * @return
-     * @throws BasicException
+     * @return @throws BasicException
      */
     protected abstract T transact() throws BasicException;
 }

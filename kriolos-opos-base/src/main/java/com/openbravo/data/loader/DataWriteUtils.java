@@ -28,6 +28,10 @@ import java.text.SimpleDateFormat;
  */
 public abstract class DataWriteUtils {
     
+    /**
+     * Format
+     *  SSS => Three-digit millisecond (000-999)).
+     */
     private final static DateFormat TSF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); 
     
     /**
@@ -126,16 +130,16 @@ public abstract class DataWriteUtils {
     /**
      * Get Date SQL representation. 
      * 
-     *   SQL example return {ts 'yyyy-MM-dd HH:mm:ss.SSS'}
+     *   PREVIOUS VERSION return {ts 'yyyy-MM-dd HH:mm:ss.SSS'}
      *
      * @param value
-     * @return return in formated as {ts 'yyyy-MM-dd HH:mm:ss.SSS'}
+     * @return DATETIME formated as 'yyyy-MM-dd HH:mm:ss.SSS'
      */
     public static String getSQLValue(Date value) {
         if (value == null) {
             return "NULL";
         } else {
-            return "{ts '" + TSF.format(value) + "'}";
+            return "'" + TSF.format(value) + "'";
         }
     }
     
