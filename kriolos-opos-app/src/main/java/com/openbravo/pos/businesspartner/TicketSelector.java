@@ -14,7 +14,7 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package com.openbravo.pos.suppliers;
+package com.openbravo.pos.businesspartner;
 
 import com.openbravo.basic.BasicException;
 import java.awt.Component;
@@ -24,13 +24,13 @@ import java.awt.event.ActionListener;
  *
  * @author JG uniCenta - outline/prep for  eCommerce connector
  */
-public interface SupplierTicketSelector {
+public interface TicketSelector {
 
     /**
      *
      * @throws BasicException
      */
-    public void loadSupplierss() throws BasicException;
+    public void loadPartners() throws BasicException;
 
     /**
      *

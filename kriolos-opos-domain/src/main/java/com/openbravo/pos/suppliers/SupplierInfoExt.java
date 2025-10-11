@@ -39,13 +39,10 @@ public class SupplierInfoExt extends SupplierInfo {
     protected Double curdebt;
     protected String firstname;
     protected String lastname;
-    protected String email;
-    protected String phone;
     protected String phone2;
     protected String fax;
     protected String address;
     protected String address2;
-    protected String postal;
     protected String city;
     protected String region;
     protected String country;
@@ -158,28 +155,6 @@ public class SupplierInfoExt extends SupplierInfo {
     public void setLastname(String lastname) {
         this.lastname = lastname;
     }
-
-    @Override
-    public String getEmail() {
-        return email;
-    }
-
-    @Override
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Override
-    public String getPhone() {
-        return phone;
-    }
-    @Override
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-    public String printPhone() {       
-        return Formats.STRING.formatValue(phone);
-    } 
 
     public String getPhone2() {
         return phone2;

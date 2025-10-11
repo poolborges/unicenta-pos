@@ -15,6 +15,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.customers;
 
+import com.openbravo.pos.businesspartner.TicketSelector;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.catalog.JCatalogTab;
@@ -40,7 +41,7 @@ import javax.swing.event.EventListenerList;
 
 /**
  *
- * @author JG uniCenta - outline/prep for  eCommerce connector
+ * @author JG uniCenta - outline/prep for eCommerce connector
  */
 public class OrderCustomerList extends JPanel implements TicketSelector {
 
@@ -70,11 +71,11 @@ public class OrderCustomerList extends JPanel implements TicketSelector {
     }
 
     public void reloadCustomers() throws BasicException {
-        loadCustomers();
+        loadPartners();
     }
 
     @Override
-    public void loadCustomers() throws BasicException {
+    public void loadPartners() throws BasicException {
 
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -97,35 +98,14 @@ public class OrderCustomerList extends JPanel implements TicketSelector {
                     LOGGER.log(Level.INFO, "Time of getSharedTicketList {0}", (System.currentTimeMillis() - currentTime));
                     currentTime = System.currentTimeMillis();
 
-                } catch (BasicException ex) {
+                }
+                catch (BasicException ex) {
                     LOGGER.log(Level.SEVERE, null, ex);
                 }
-                HashMap<SharedTicketInfo, CustomerInfoExt> orderMap = new HashMap<>();
+                HashMap<SharedTicketInfo, CustomerInfoExt> orderMap  = 
+                        mapSharedTicket(ticketList, customers);
 
-                for (SharedTicketInfo sharedTicketInfo : ticketList) {
-
-                    String ticketName = sharedTicketInfo.getName().trim();
-
-                    if (ticketName.contains("[") && ticketName.contains("]")) {
-
-                        // found order
-                        if (ticketName.startsWith("[")) {
-                            // order without customer
-                            orderMap.put(sharedTicketInfo, null);
-                        } else if (customers != null && !customers.isEmpty()) {
-                            // find customer to ticket
-                            for (CustomerInfoExt customer : customers) {
-                                if (customer != null) {
-                                    String name = customer.getName().trim();
-                                    if (ticketName.startsWith(name)) {
-                                        orderMap.put(sharedTicketInfo, customer);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                //
                 // sort
                 CustomerComparator bvc = new CustomerComparator(orderMap);
                 TreeMap<SharedTicketInfo, CustomerInfoExt> sortedMap = new TreeMap<>(bvc);
@@ -147,7 +127,8 @@ public class OrderCustomerList extends JPanel implements TicketSelector {
                             if (image != null) {
                                 thumbImage = thumbNailBuilderWithDefault.getThumbNail(image);
                             }
-                        } catch (BasicException ex) {
+                        }
+                        catch (BasicException ex) {
                             LOGGER.log(Level.WARNING, "Exception on getting entity image", ex);
                         }
 
@@ -163,6 +144,37 @@ public class OrderCustomerList extends JPanel implements TicketSelector {
                 LOGGER.log(Level.INFO, "Time of finished loadCustomerOrders {0}", (System.currentTimeMillis() - currentTime));
             }
         });
+    }
+
+    private HashMap<SharedTicketInfo, CustomerInfoExt> mapSharedTicket(List<SharedTicketInfo> ticketList, List<CustomerInfoExt> customers) {
+        HashMap<SharedTicketInfo, CustomerInfoExt> orderMap = new HashMap<>();
+
+        for (SharedTicketInfo sharedTicketInfo : ticketList) {
+
+            String ticketName = sharedTicketInfo.getName().trim();
+
+            if (ticketName.contains("[") && ticketName.contains("]")) {
+
+                // found order
+                if (ticketName.startsWith("[")) {
+                    // order without customer
+                    orderMap.put(sharedTicketInfo, null);
+                } else if (customers != null && !customers.isEmpty()) {
+                    // find customer to ticket
+                    for (CustomerInfoExt customer : customers) {
+                        if (customer != null) {
+                            String name = customer.getName().trim();
+                            if (ticketName.startsWith(name)) {
+                                orderMap.put(sharedTicketInfo, customer);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return orderMap;
     }
 
     /**
@@ -243,7 +255,8 @@ public class OrderCustomerList extends JPanel implements TicketSelector {
                 if (ticketId != null) {
                     setActiveTicket(ticketId);
                 }
-            } catch (BasicException ex) {
+            }
+            catch (BasicException ex) {
                 new MessageInf(ex).show(OrderCustomerList.this);
             }
         }

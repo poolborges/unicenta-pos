@@ -133,6 +133,10 @@ public class BusinessPartner implements Serializable, IKeyed {
         return Formats.STRING.formatValue(getName());
     }
     
+    public String printPhone() {       
+        return Formats.STRING.formatValue(phone);
+    } 
+    
     public BufferedImage getImage() {
         return image;
     }

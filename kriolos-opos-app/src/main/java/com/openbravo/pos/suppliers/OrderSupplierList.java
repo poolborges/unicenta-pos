@@ -21,6 +21,7 @@ package com.openbravo.pos.suppliers;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.loader.ImageUtils;
+import com.openbravo.pos.businesspartner.TicketSelector;
 import com.openbravo.pos.catalog.JCatalogTab;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
@@ -33,12 +34,9 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -48,7 +46,7 @@ import javax.swing.event.EventListenerList;
  *
  * @author JG uniCenta - outline/prep for  eCommerce connector
  */
-public class OrderSupplierList extends JPanel implements SupplierTicketSelector {
+public class OrderSupplierList extends JPanel implements TicketSelector {
 
     protected static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.suppliers.SuppliersList");
     private static final long serialVersionUID = 1L;
@@ -225,8 +223,8 @@ public class OrderSupplierList extends JPanel implements SupplierTicketSelector 
     }
 
     @Override
-    public void loadSupplierss() throws BasicException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void loadPartners() throws BasicException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     private class SelectedSupplierAction implements ActionListener {
