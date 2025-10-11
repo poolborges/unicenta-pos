@@ -24,49 +24,49 @@ public class PaymentInfoTicket extends PaymentInfo implements SerializableRead {
 
     private static final long serialVersionUID = 8865238639097L;
     
-    private double m_dTicket;
-    private String m_sName;
-    private String m_transactionID;
-    private double m_dTendered;
-    private String m_dCardName;
-    private String m_sVoucher;
+    private double amountToPay;             //Amount to Pay   (Bill Amount)
+    private String paymentMethod;           //Payment Method
+    private String transactionID;           //Transaction ID
+    private double amountTendered;          //Amount Tendered (Amount Received)
+    private String cardName;                //Card Name
+    private String voucherNumber;           //Voucher Number
 
     /**
      * Used For: Cheque, Bank , Slip, Voucher
      *
      * @param ticketAmount Amount
-     * @param sName Name for purpose (e.g: cheque,  bank, slip, voucherin, debt, debtpaid, cashrefund)
+     * @param paymentMethod Payment Method (e.g: cheque,  bank, slip, voucherin, debt, debtpaid, cashrefund)
      */
-    public PaymentInfoTicket(double ticketAmount, String sName) {
-        this(ticketAmount, sName, null, null);
+    public PaymentInfoTicket(double ticketAmount, String paymentMethod) {
+        this(ticketAmount, paymentMethod, null, null);
     }
 
     /**
      * Used For: Voucher
      *
      * @param ticketAmount Amount
-     * @param sName Name for purpose (e.g: cheque,  bank, slip, voucherin, debt, debtpaid, cashrefund)
-     * @param transactionID Transaction ID (Context of what)
-     * @param sVoucher Voucher Number
+     * @param paymentMethod Payment Method (e.g: cheque,  bank, slip, voucherin, debt, debtpaid, cashrefund)
+     * @param transactionID Transaction ID (Give the Context: what is begin payed)
+     * @param voucherNumber Voucher Number
      */
-    public PaymentInfoTicket(double ticketAmount, String sName, String transactionID, String sVoucher) {
-        m_sName = sName;
-        m_dTicket = ticketAmount;
-        m_transactionID = transactionID;
-        m_sVoucher = sVoucher;
-        m_dCardName = null;
-        m_dTendered = 0.00;
+    public PaymentInfoTicket(double ticketAmount, String paymentMethod, String transactionID, String voucherNumber) {
+        this.paymentMethod = paymentMethod;
+        this.amountToPay = ticketAmount;
+        this.transactionID = transactionID;
+        this.voucherNumber = voucherNumber;
+        this.cardName = null;
+        this.amountTendered = 0.00;
     }
 
     /**
      * Used for: Voucher
      *
      * @param ticketAmount
-     * @param sName Name for purpose (e.g: cheque,  bank, slip, voucherin, debt, debtpaid, cashrefund)
-     * @param sVoucher Voucher Number
+     * @param paymentMethod (e.g: cheque,  bank, slip, voucherin, debt, debtpaid, cashrefund)
+     * @param voucherNumber Voucher Number
      */
-    public PaymentInfoTicket(double ticketAmount, String sName, String sVoucher) {
-        this(ticketAmount, sName, null, sVoucher);
+    public PaymentInfoTicket(double ticketAmount, String paymentMethod, String voucherNumber) {
+        this(ticketAmount, paymentMethod, null, voucherNumber);
     }
 
     public PaymentInfoTicket() {
@@ -75,33 +75,33 @@ public class PaymentInfoTicket extends PaymentInfo implements SerializableRead {
 
     @Override
     public void readValues(DataRead dr) throws BasicException {
-        m_sName = dr.getString(1);
-        m_dTicket = dr.getDouble(2);
-        m_transactionID = dr.getString(3);
+        this.paymentMethod = dr.getString(1);
+        this.amountToPay = dr.getDouble(2);
+        this.transactionID = dr.getString(3);
         if (dr.getDouble(4) != null) {
-            m_dTendered = dr.getDouble(4);
+            this.amountTendered = dr.getDouble(4);
         }
-        m_dCardName = dr.getString(5);    
+        this.cardName = dr.getString(5);    
     }
 
     @Override
     public PaymentInfo copyPayment() {
-        return new PaymentInfoTicket(m_dTicket, m_sName);
+        return new PaymentInfoTicket(this.amountToPay, this.paymentMethod);
     }
 
     @Override
     public String getName() {
-        return m_sName;
+        return this.paymentMethod;
     }
 
     @Override
     public double getTotal() {
-        return m_dTicket;
+        return this.amountToPay;
     }
 
     @Override
     public String getTransactionID() {
-        return m_transactionID;
+        return this.transactionID;
     }
 
     @Override
@@ -111,7 +111,7 @@ public class PaymentInfoTicket extends PaymentInfo implements SerializableRead {
 
     @Override
     public double getChange() {
-        return m_dTendered - m_dTicket;
+        return this.amountTendered - this.amountToPay;
     }
 
     @Override
@@ -121,31 +121,31 @@ public class PaymentInfoTicket extends PaymentInfo implements SerializableRead {
 
     @Override
     public String getCardName() {
-        return m_dCardName;
+        return this.cardName;
     }
 
     public String printPaid() {
-        return Formats.CURRENCY.formatValue(m_dTicket);
+        return Formats.CURRENCY.formatValue(this.amountToPay);
     }
 
     public String printVoucherTotal() {
-        return Formats.CURRENCY.formatValue(-m_dTicket);
+        return Formats.CURRENCY.formatValue(-this.amountToPay);
     }
 
     public String printChange() {
-        return Formats.CURRENCY.formatValue(m_dTendered - m_dTicket);
+        return Formats.CURRENCY.formatValue(getChange());
     }
 
     public String printTendered() {
-        return Formats.CURRENCY.formatValue(m_dTendered);
+        return Formats.CURRENCY.formatValue(this.amountTendered);
     }
 
     @Override
     public String getVoucher() {
-        return m_sVoucher;
+        return this.voucherNumber;
     }
 
     public String printVoucher() {
-        return m_sVoucher;
+        return this.voucherNumber;
     }
 }
