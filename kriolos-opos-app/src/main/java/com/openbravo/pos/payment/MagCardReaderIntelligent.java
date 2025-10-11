@@ -18,9 +18,9 @@ package com.openbravo.pos.payment;
 
 public final class MagCardReaderIntelligent implements MagCardReader {
     
-    private String m_sHolderName;
-    private String m_sCardNumber;
-    private String m_sExpirationDate;
+    private String cardHolderName;
+    private String cardNumber;
+    private String cardExpirationDate;
     
     private StringBuffer m_sField;
     
@@ -28,96 +28,121 @@ public final class MagCardReaderIntelligent implements MagCardReader {
     private static final int READING_NUMBER = 1;
     private static final int READING_DATE = 2;
     private static final int READING_FINISHED = 3;
-    private int m_iAutomState;
+    private int readingState;
             
     /** Creates a new instance of BasicMagCardReader */
     public MagCardReaderIntelligent() {
         reset();
     }
  
+    @Override
     public String getReaderName() {
         return "Basic magnetic card reader";
     }
     
+    @Override
     public void reset() {
-        m_sHolderName = null;
-        m_sCardNumber = null;
-        m_sExpirationDate = null;
+        cardHolderName = null;
+        cardNumber = null;
+        cardExpirationDate = null;
         m_sField = new StringBuffer();
-        m_iAutomState = READING_HOLDER;
+        readingState = READING_HOLDER;
     }
     
+    @Override
     public void appendChar(char c) {
        
-        switch (m_iAutomState) {
+        switch (readingState) {
             case READING_HOLDER:
             case READING_FINISHED:
-                if (c == 0x0009) {
-                    m_sHolderName = m_sField.toString();
+            switch (c) {
+                case 0x0009:
+                    cardHolderName = m_sField.toString();
                     m_sField = new StringBuffer();
-                    m_iAutomState = READING_NUMBER;
-                } else if (c == 0x000A) {
-                    m_sHolderName = null;
-                    m_sCardNumber = null;
-                    m_sExpirationDate = null;
+                    readingState = READING_NUMBER;
+                    break;
+                case 0x000A:
+                    cardHolderName = null;
+                    cardNumber = null;
+                    cardExpirationDate = null;
                     m_sField = new StringBuffer();
-                    m_iAutomState = READING_HOLDER;
-                } else {
+                    readingState = READING_HOLDER;
+                    break;
+                default:
                     m_sField.append(c);
-                    m_iAutomState = READING_HOLDER;
-                }
+                    readingState = READING_HOLDER;
+                    break;
+            }
                 break;
+
             case READING_NUMBER:
-                if (c == 0x0009) {
-                    m_sCardNumber = m_sField.toString();
+            switch (c) {
+                case 0x0009:
+                    cardNumber = m_sField.toString();
                     m_sField = new StringBuffer();
-                    m_iAutomState = READING_DATE;
-                } else if (c == 0x000A) {
-                    m_sHolderName = null;
-                    m_sCardNumber = null;
-                    m_sExpirationDate = null;
+                    readingState = READING_DATE;
+                    break;
+                case 0x000A:
+                    cardHolderName = null;
+                    cardNumber = null;
+                    cardExpirationDate = null;
                     m_sField = new StringBuffer();
-                    m_iAutomState = READING_HOLDER;
-                } else {
+                    readingState = READING_HOLDER;
+                    break;
+                default:
                     m_sField.append(c);
-                }
+                    break;
+            }
                 break;                
+                
             case READING_DATE:
-                if (c == 0x0009) {
-                    m_sHolderName = m_sCardNumber;
-                    m_sCardNumber = m_sExpirationDate;
-                    m_sExpirationDate = null;
+            switch (c) {
+                case 0x0009:
+                    cardHolderName = cardNumber;
+                    cardNumber = cardExpirationDate;
+                    cardExpirationDate = null;
                     m_sField = new StringBuffer();
-                } else if (c == 0x000A) {
-                    m_sExpirationDate = m_sField.toString();
+                    break;
+                case 0x000A:
+                    cardExpirationDate = m_sField.toString();
                     m_sField = new StringBuffer();
-                    m_iAutomState = READING_FINISHED;
-                } else {
+                    readingState = READING_FINISHED;
+                    break;
+                default:
                     m_sField.append(c);
-                }
+                    break;
+            }
                 break;  
+  
         }
     }
     
+    @Override
     public boolean isComplete() {
-        return m_iAutomState == READING_FINISHED;
+        return readingState == READING_FINISHED;
     }
     
+    @Override
     public String getHolderName() {
-        return m_sHolderName;
+        return cardHolderName;
     }
+    @Override
     public String getCardNumber() {
-        return m_sCardNumber;
+        return cardNumber;
     }
+    @Override
     public String getExpirationDate() {
-        return m_sExpirationDate;
+        return cardExpirationDate;
     }
+    @Override
     public String getTrack1() {
         return null;
     }
+    @Override
     public String getTrack2() {
         return null;
     }    
+    @Override
     public String getTrack3() {
         return null;
     }       

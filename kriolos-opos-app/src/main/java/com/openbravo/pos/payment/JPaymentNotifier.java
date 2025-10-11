@@ -13,8 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
 package com.openbravo.pos.payment;
 
 /**
@@ -22,14 +20,11 @@ package com.openbravo.pos.payment;
  * @author adrian
  */
 public interface JPaymentNotifier {
-    
-//    public void setOKEnabled(boolean bValue);
-//    public void setAddEnabled(boolean bValue);
 
     /**
      *
      * @param isPositive
      * @param isComplete
      */
-        public void setStatus(boolean isPositive, boolean isComplete);
+    public void setStatus(boolean isPositive, boolean isComplete);
 }

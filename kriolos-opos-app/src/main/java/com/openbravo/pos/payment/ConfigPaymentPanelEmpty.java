@@ -25,33 +25,20 @@ import javax.swing.JPanel;
  */
 public class ConfigPaymentPanelEmpty extends javax.swing.JPanel implements PaymentConfiguration {
 
-    /** Creates new form ConfigPaymentPanelGeneric */
     public ConfigPaymentPanelEmpty() {
         initComponents();
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @Override
     public JPanel getComponent() {  
         return this;
     }
-    
-    /**
-     *
-     * @param config
-     */
+
     @Override
     public void loadProperties(AppConfig config) {
         
     }
-    
-    /**
-     *
-     * @param config
-     */
+
     @Override
     public void saveProperties(AppConfig config) {
         

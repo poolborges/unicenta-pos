@@ -105,7 +105,7 @@
         <Component class="javax.swing.JLabel" name="m_jMoneyEuros">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="33" green="ff" red="cc" type="rgb"/>
+              <Color blue="f8" green="f8" red="f8" type="rgb"/>
             </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="18" style="1"/>

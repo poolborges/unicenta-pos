@@ -21,7 +21,7 @@ package com.openbravo.pos.payment;
  * @author adrianromero
  */
 public class PaymentPanelFactory {
-
+    
     private PaymentPanelFactory() {}
     
     public static PaymentPanel getPaymentPanel(String sReader, JPaymentNotifier notifier) {

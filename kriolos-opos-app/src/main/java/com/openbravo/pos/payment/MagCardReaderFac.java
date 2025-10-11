@@ -26,8 +26,7 @@ public class MagCardReaderFac {
     private MagCardReaderFac() {
     }
     
-    public static MagCardReader getMagCardReader(String sReader) {
-// JG 16 May 12 use switch        
+    public static MagCardReader getMagCardReader(String sReader) {   
         switch (sReader) {
             case "Intelligent":
                 return new MagCardReaderIntelligent();

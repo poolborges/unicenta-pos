@@ -201,7 +201,7 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
         jLabel1.setText(AppLocal.getIntString("label.voucherValue")); // NOI18N
         jLabel1.setPreferredSize(new java.awt.Dimension(100, 30));
 
-        m_jMoneyEuros.setBackground(new java.awt.Color(204, 255, 51));
+        m_jMoneyEuros.setBackground(new java.awt.Color(248, 248, 248));
         m_jMoneyEuros.setFont(m_jMoneyEuros.getFont());
         m_jMoneyEuros.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         m_jMoneyEuros.setAlignmentX(0.5F);
@@ -214,14 +214,14 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
         webLblCustomer.setFont(webLblCustomer.getFont());
         webLblCustomer.setPreferredSize(new java.awt.Dimension(100, 30));
 
+        webLblcustomerName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         webLblcustomerName.setText(AppLocal.getIntString("label.customer")); // NOI18N
         webLblcustomerName.setToolTipText("");
-        webLblcustomerName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         webLblcustomerName.setPreferredSize(new java.awt.Dimension(100, 30));
 
+        voucherID.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         voucherID.setText(AppLocal.getIntString("label.customer")); // NOI18N
         voucherID.setToolTipText("");
-        voucherID.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         voucherID.setPreferredSize(new java.awt.Dimension(100, 30));
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
