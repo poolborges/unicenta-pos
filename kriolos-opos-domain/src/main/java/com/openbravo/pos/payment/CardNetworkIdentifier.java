@@ -54,14 +54,45 @@ public class CardNetworkIdentifier {
      * prepaid cards in partnership with thousands of financial institutions
      * worldwide.
      */
-    // Compile regex patterns for better performance and readability
+    
+    
+    /**
+     * All Visa card numbers start with a 4. 
+     * New cards have 16 digits. 
+     * Old cards have 13.
+     */
     private static final Pattern VISA_PATTERN = Pattern.compile("^4[0-9]{12}(?:[0-9]{3})?$");
+    /**
+     * MasterCard numbers either start with the numbers 51 through 55 or with the numbers 2221 through 2720. 
+     * All have 16 digits.
+     */
     private static final Pattern MASTERCARD_PATTERN = Pattern.compile("^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$");
+    /**
+     * American Express card numbers start with 34 or 37. 
+     * All have 15 digits.
+     */
     private static final Pattern AMEX_PATTERN = Pattern.compile("^3[47][0-9]{13}$");
+    /**
+     * Discover card numbers start with 6011 or 65. 
+     * All have 16 digits.
+     */
     private static final Pattern DISCOVER_PATTERN = Pattern.compile("^6(?:011|5[0-9]{2})[0-9]{12}$");
+    /**
+     * JCB card numbers start with 2131 or 1800 have 15 digits. 
+     * JCB card numbers start with 35 have 16 digits.
+     */
     private static final Pattern JCB_PATTERN = Pattern.compile("^(?:2131|1800|35\\d{3})\\d{11}$");
+    /**
+     * Diners Club card numbers start with 300 through 305, 36 or 38. 
+     * All have 14 digits. 
+     * There are Diners Club cards that begin with 5 and have 16 digits. 
+     * These are a joint venture between Diners Club and MasterCard, and should be processed like a MasterCard.
+     */
     private static final Pattern DINERS_PATTERN = Pattern.compile("^3(?:0[0-5]|[68][0-9])[0-9]{11}$");
-    // New pattern for UnionPay, covering 16 to 19-digit numbers starting with 62
+    /**
+     * UnionPay cart numbers starting with 62. 
+     * Covering 16 to 19-digit 
+     */
     private static final Pattern UNIONPAY_PATTERN = Pattern.compile("^62[0-9]{14,17}$");
 
     /**
