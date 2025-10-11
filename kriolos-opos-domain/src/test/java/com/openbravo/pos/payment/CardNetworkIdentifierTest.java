@@ -76,4 +76,30 @@ public class CardNetworkIdentifierTest {
     void testInvalidAndBlankCardNumbers(String cardNumber) {
         assertEquals("INVALID", CardNetworkIdentifier.getCardNetwork(cardNumber));
     }
+    
+    /**
+     * TEST FROM 
+     * https://developer.paypal.com/braintree/docs/guides/unionpay/testing/
+     * 
+     * @param cardNumber
+     * @param expectedNetwork 
+     */
+    @ParameterizedTest(name = "Test UnionPay cardNumber {0} should return {1} . Card Description {2}")
+    @CsvSource(textBlock = """
+                           6212345678901265,UNIONPAY,Debit card
+                           6212345678901232,UNIONPAY,Credit card
+                           6212345678900028,UNIONPAY,Card that is not supported within Braintree.
+                           6212345678900036,UNIONPAY,Card that is not activated for use online.
+                           6212345678900085,UNIONPAY,Card that does not require SMS verification.
+                           6212345678900093,UNIONPAY,Card that does not support separate Transaction: Submit For Settlement calls.
+                           62123456789002,UNKNOWN,Card with a 14 digit number.
+                           621234567890003,UNKNOWN,Card with a 15 digit number.
+                           62123456789000003,UNIONPAY,Card with a 17 digit number.
+                           621234567890000002,UNIONPAY,Card with a 18 digit number.
+                           6212345678900000003,UNIONPAY,Card with a 19 digit number.
+                           """)
+    @DisplayName("Test UnionPay card numbers ")
+    void testUnionPayCardNetwork(String cardNumber, String expectedNetwork) {
+        assertEquals(expectedNetwork, CardNetworkIdentifier.getCardNetwork(cardNumber));
+    }
 }
