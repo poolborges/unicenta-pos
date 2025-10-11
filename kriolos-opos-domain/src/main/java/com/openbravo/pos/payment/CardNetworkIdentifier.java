@@ -78,10 +78,16 @@ public class CardNetworkIdentifier {
      */
     private static final Pattern DISCOVER_PATTERN = Pattern.compile("^6(?:011|5[0-9]{2})[0-9]{12}$");
     /**
-     * JCB card numbers start with 2131 or 1800 have 15 digits. 
-     * JCB card numbers start with 35 have 16 digits.
+     * JCB card numbers
+     * 
+     * Matches 15-digit cards starting with 2131 or 1800.
+     * Matches 16-digit cards starting with 3528 or 3529.
+     * Matches 16-digit cards starting with 353 through 358.
+     * 
+     * The length modifier {12,15} accommodates the various valid card lengths 
+     * for these prefixes, although JCB cards are typically 16 digits.
      */
-    private static final Pattern JCB_PATTERN = Pattern.compile("^(?:2131|1800|35\\d{3})\\d{11}$");
+    private static final Pattern JCB_PATTERN = Pattern.compile("^(?:2131|1800|35(?:2[89]|[3-8][0-9]))\\d{12,15}$");
     /**
      * Diners Club card numbers start with 300 through 305, 36 or 38. 
      * All have 14 digits. 
