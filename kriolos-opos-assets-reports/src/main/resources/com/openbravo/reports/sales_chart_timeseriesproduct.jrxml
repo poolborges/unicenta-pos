@@ -85,7 +85,7 @@
 		<element kind="rectangle" uuid="d83f73b6-53ac-42a4-a91b-3d5bd3f3bb5f" key="rectangle-1" mode="Opaque" x="0" y="50" width="782" height="2" forecolor="#33CCFF" backcolor="#33CCFF" radius="5">
 			<pen lineWidth="0.25" lineStyle="Solid"/>
 		</element>
-		<element kind="textField" uuid="4f3dde59-4ec3-45f1-8f48-b5d6205e5b09" key="textField" x="647" y="14" width="135" height="15" fontName="SansSerif" fontSize="10.0" evaluationTime="Report" pattern="dd/MM/yyyy h.mm a" blankWhenNull="false" hTextAlign="Right">
+		<element kind="textField" uuid="4f3dde59-4ec3-45f1-8f48-b5d6205e5b09" key="textField" x="647" y="14" width="135" height="15" fontName="SansSerif" fontSize="10.0" evaluationTime="Report" pattern="yyyy-MM-dd HH:mm:ss" blankWhenNull="false" hTextAlign="Right">
 			<expression><![CDATA[new java.util.Date()]]></expression>
 		</element>
 		<element kind="textField" uuid="8eb3d3f7-d7ab-4410-b1e9-7afc0c94a174" key="textField-19" mode="Opaque" x="0" y="33" width="50" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Middle">

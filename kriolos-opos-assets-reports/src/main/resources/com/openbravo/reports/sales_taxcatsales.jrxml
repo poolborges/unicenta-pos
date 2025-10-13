@@ -109,7 +109,7 @@
 				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 			</box>
 		</element>
-		<element kind="textField" uuid="76e3b7ec-f132-4b8c-988e-c96c4260d3fe" x="400" y="15" width="135" height="15" fontName="SansSerif" pattern="dd/MM/yyyy h.mm a" hTextAlign="Right">
+		<element kind="textField" uuid="76e3b7ec-f132-4b8c-988e-c96c4260d3fe" x="400" y="15" width="135" height="15" fontName="SansSerif" pattern="yyyy-MM-dd HH:mm:ss" hTextAlign="Right">
 			<expression><![CDATA[new java.util.Date()]]></expression>
 		</element>
 		<element kind="rectangle" uuid="6cfb5e61-2293-4936-a9b2-6fc5dad26549" key="rectangle-1" mode="Opaque" x="0" y="50" width="535" height="2" forecolor="#33CCFF" backcolor="#33CCFF" radius="5">

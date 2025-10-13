@@ -41,7 +41,7 @@ GROUP BY categories.NAME]]></query>
 				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 			</box>
 		</element>
-		<element kind="textField" uuid="2885fb37-3265-4e48-bfcf-1e9620f72929" key="textField" x="647" y="14" width="135" height="15" fontName="Arial" fontSize="10.0" evaluationTime="Report" pattern="dd/MM/yyyy h.mm a" blankWhenNull="false" hTextAlign="Right">
+		<element kind="textField" uuid="2885fb37-3265-4e48-bfcf-1e9620f72929" key="textField" x="647" y="14" width="135" height="15" fontName="Arial" fontSize="10.0" evaluationTime="Report" pattern="yyyy-MM-dd HH:mm:ss" blankWhenNull="false" hTextAlign="Right">
 			<expression><![CDATA[new java.util.Date()]]></expression>
 		</element>
 		<element kind="textField" uuid="ea97cc54-b5f2-447d-ba25-e6330a60b6f0" key="textField-10" mode="Opaque" x="0" y="33" width="50" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Middle">

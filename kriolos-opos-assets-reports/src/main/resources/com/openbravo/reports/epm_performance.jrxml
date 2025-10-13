@@ -68,7 +68,7 @@
 				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 			</box>
 		</element>
-		<element kind="textField" uuid="395d9440-b276-4529-a69c-9163965ef98e" key="textField" x="400" y="15" width="135" height="15" fontName="Arial" fontSize="10.0" pattern="dd/MM/yyyy h.mm a" blankWhenNull="false" hTextAlign="Right">
+		<element kind="textField" uuid="395d9440-b276-4529-a69c-9163965ef98e" key="textField" x="400" y="15" width="135" height="15" fontName="Arial" fontSize="10.0" pattern="yyyy-MM-dd HH:mm:ss" blankWhenNull="false" hTextAlign="Right">
 			<expression><![CDATA[new java.util.Date()]]></expression>
 		</element>
 		<element kind="textField" uuid="6dee7c66-1ef2-40db-bec4-f089a72d5ade" key="textField-10" mode="Opaque" x="400" y="0" width="135" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="Arial" fontSize="10.0" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">

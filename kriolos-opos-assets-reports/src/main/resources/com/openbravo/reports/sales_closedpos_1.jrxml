@@ -43,7 +43,7 @@ ORDER BY CLOSEDCASH.HOST, CLOSEDCASH.HOSTSEQUENCE]]></query>
 				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 			</box>
 		</element>
-		<element kind="textField" uuid="a6bd2d1e-6a90-445a-a7e4-c6a8acaf6bb6" key="textField-2" x="176" y="0" width="125" height="15" fontName="SansSerif" fontSize="10.0" evaluationTime="Report" pattern="dd/MM/yyyy h.mm a" blankWhenNull="false" vTextAlign="Middle">
+		<element kind="textField" uuid="a6bd2d1e-6a90-445a-a7e4-c6a8acaf6bb6" key="textField-2" x="176" y="0" width="125" height="15" fontName="SansSerif" fontSize="10.0" evaluationTime="Report" pattern="yyyy-MM-dd HH:mm:ss" blankWhenNull="false" vTextAlign="Middle">
 			<expression><![CDATA[new java.util.Date()]]></expression>
 		</element>
 	</title>

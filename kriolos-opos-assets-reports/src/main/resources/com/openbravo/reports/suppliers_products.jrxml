@@ -77,7 +77,7 @@
 			</box>
 		</element>
 		<element kind="rectangle" uuid="ccb6fd38-2820-48fe-8655-1ac44d651b29" key="rectangle-1" mode="Opaque" x="0" y="50" width="535" height="2" forecolor="#33CCFF" backcolor="#33CCFF" radius="5"/>
-		<element kind="textField" uuid="7a6cf4b5-4da5-4d8b-8e46-79d3c35ee5a8" key="textField-3" x="400" y="15" width="135" height="15" fontName="SansSerif" fontSize="10.0" evaluationTime="Report" pattern="dd/MM/yyyy h.mm a" blankWhenNull="false" hTextAlign="Right">
+		<element kind="textField" uuid="7a6cf4b5-4da5-4d8b-8e46-79d3c35ee5a8" key="textField-3" x="400" y="15" width="135" height="15" fontName="SansSerif" fontSize="10.0" evaluationTime="Report" pattern="yyyy-MM-dd HH:mm:ss" blankWhenNull="false" hTextAlign="Right">
 			<expression><![CDATA[new java.util.Date()]]></expression>
 		</element>
 	</pageHeader>

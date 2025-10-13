@@ -50,7 +50,7 @@
 				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 			</box>
 		</element>
-		<element kind="textField" uuid="46dfb1b5-1e60-480e-9567-610bafc2a6a7" key="textField" x="400" y="15" width="135" height="15" fontName="SansSerif" fontSize="10.0" evaluationTime="Report" pattern="dd/MM/yyyy h.mm a" blankWhenNull="false" hTextAlign="Right">
+		<element kind="textField" uuid="46dfb1b5-1e60-480e-9567-610bafc2a6a7" key="textField" x="400" y="15" width="135" height="15" fontName="SansSerif" fontSize="10.0" evaluationTime="Report" pattern="yyyy-MM-dd HH:mm:ss" blankWhenNull="false" hTextAlign="Right">
 			<expression><![CDATA[new java.util.Date()]]></expression>
 		</element>
 		<element kind="textField" uuid="a6131305-2a85-4bec-bd05-01ae378af777" key="textField-2" mode="Transparent" x="50" y="33" width="110" height="15" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="true" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Middle">

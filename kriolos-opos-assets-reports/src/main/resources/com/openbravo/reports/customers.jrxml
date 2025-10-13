@@ -39,7 +39,7 @@ WHERE VISIBLE = TRUE AND CARD IS NOT NULL AND CARD <> '']]></query>
 				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 			</box>
 		</element>
-		<element kind="textField" uuid="02e148bb-8c32-42c7-b832-e234ea0138cd" key="textField" x="400" y="15" width="135" height="15" fontName="SansSerif" fontSize="10.0" evaluationTime="Report" pattern="dd/MM/yyyy h.mm a" blankWhenNull="false" hTextAlign="Right">
+		<element kind="textField" uuid="02e148bb-8c32-42c7-b832-e234ea0138cd" key="textField" x="400" y="15" width="135" height="15" fontName="SansSerif" fontSize="10.0" evaluationTime="Report" pattern="yyyy-MM-dd HH:mm:ss" blankWhenNull="false" hTextAlign="Right">
 			<expression><![CDATA[new java.util.Date()]]></expression>
 		</element>
 		<element kind="textField" uuid="5c862735-1b00-40dc-84ce-bf5bd3237aa2" key="textField-19" mode="Opaque" x="400" y="0" width="135" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">

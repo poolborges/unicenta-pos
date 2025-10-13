@@ -389,7 +389,7 @@ new Double(-1.0 * ((Double)$V{PRODUCTOUT}).doubleValue()))]]></expression>
 				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 			</box>
 		</element>
-		<element kind="textField" uuid="f1e9bf1a-c955-4f10-a195-b4aff480ca70" key="textField" x="400" y="15" width="135" height="15" fontName="SansSerif" fontSize="10.0" evaluationTime="Report" pattern="dd/MM/yyyy h.mm a" blankWhenNull="false" hTextAlign="Right">
+		<element kind="textField" uuid="f1e9bf1a-c955-4f10-a195-b4aff480ca70" key="textField" x="400" y="15" width="135" height="15" fontName="SansSerif" fontSize="10.0" evaluationTime="Report" pattern="yyyy-MM-dd HH:mm:ss" blankWhenNull="false" hTextAlign="Right">
 			<expression><![CDATA[new java.util.Date()]]></expression>
 		</element>
 		<element kind="textField" uuid="7812e963-6f11-4ba9-8caa-b491e80e46cf" key="textField-19" mode="Opaque" x="0" y="33" width="50" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Middle">
