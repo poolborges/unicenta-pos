@@ -408,20 +408,23 @@ private void jButtonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         return validate.getValid();
     }
 
+    /** 
+     * Voucher Number generator
+     * 
+     * @return voucher number ("VO-{yy-MM}-{SEQ}"
+     */
     public String generateVoucherNumber() {
         String result = "";
 
         try {
-            result = "VO-";
-            String date = m_simpledate.format(new Date());
-            result = result + date;
+            result = "VO-" + m_simpledate.format(new Date());
             String lastNumber = (String) dlCustomers.getVoucherNumber().find(result);
             int newNumber = 1;
 
             if (lastNumber != null) {
                 newNumber = Integer.parseInt(lastNumber) + 1;
             }
-            result = result + "-" + getNewNumber(newNumber);
+            result = result + "-" + String.format("%05d",newNumber);
 
             return result;
 
@@ -431,12 +434,4 @@ private void jButtonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         return result;
     }
 
-    private String getNewNumber(int newNumber) {
-        String newNo = newNumber + "";
-        String zero = "";
-        for (int i = 0; i < 3 - newNo.length(); i++) {
-            zero = zero + "0";
-        }
-        return zero + newNo;
-    }
 }
