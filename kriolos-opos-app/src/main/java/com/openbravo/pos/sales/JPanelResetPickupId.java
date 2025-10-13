@@ -20,9 +20,7 @@ import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.loader.Session;
 import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppProperties;
 import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.AppViewConnection;
 import com.openbravo.pos.forms.JPanelView;
 import java.awt.HeadlessException;
 import java.util.logging.Level;
@@ -39,26 +37,16 @@ public class JPanelResetPickupId extends JPanel implements JPanelView {
 
     private static final Logger LOGGER = Logger.getLogger(JPanelResetPickupId.class.getName());
     private static final long serialVersionUID = 1L;
-    private AppProperties m_props;
+    private AppView appView;
 
     /**
      * Creates new form JPaneldbUpdate
      *
-     * @param oApp
+     * @param appView
      */
-    public JPanelResetPickupId(AppView oApp) {
-        this(oApp.getProperties());
-    }
-
-    /**
-     *
-     * @param props
-     */
-    public JPanelResetPickupId(AppProperties props) {
-
+    public JPanelResetPickupId(AppView appView) {
         initComponents();
-        m_props = props;
-
+        this.appView = appView;
     }
 
     /**
@@ -66,12 +54,12 @@ public class JPanelResetPickupId extends JPanel implements JPanelView {
      */
     public void performReset() {
         try {
-            Session session = AppViewConnection.createSession(m_props);
+            Session session = appView.getSession();
             session.DB.resetSequenceSentence(session, "pickup_number").exec();
             JOptionPane.showMessageDialog(this, "Reset complete.");
 
         } catch (BasicException | HeadlessException ex) {
-            LOGGER.log(Level.WARNING, null, ex);
+            LOGGER.log(Level.WARNING, "Exception reset pickup number", ex);
             JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_DANGER, "Unable to reset PickupID", ex));
         }
     }

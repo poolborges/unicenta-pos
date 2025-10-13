@@ -18,7 +18,6 @@
 package com.openbravo.pos.imports;
 
 import com.openbravo.pos.forms.JPanelView;
-import com.openbravo.pos.forms.AppViewConnection;
 import com.csvreader.CsvReader;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.Datas;
@@ -37,7 +36,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -54,13 +52,11 @@ public class StockQtyImport extends JPanel implements JPanelView {
     private static final Logger LOGGER = Logger.getLogger(StockQtyImport.class.getName());
   // the workspace
   private AppProperties m_props;
-  private Properties m_propsdb = null;
   private CsvReader products;
   private DocumentListener documentListener;
 
   // the db connection session
-  private Session s;
-  private Connection con;
+  private Session dbSession;
   private DataLogicSales m_dlSales;
   private DataLogicSystem m_dlSystem;
   private ProductInfoExt prodInfo;
@@ -91,48 +87,32 @@ public class StockQtyImport extends JPanel implements JPanelView {
   /**
    * Constructs a new StockQtyImport object
    *
-   * @param oApp AppView
+   * @param appView AppView
    */
-  public StockQtyImport(AppView oApp) {
-    this(oApp.getProperties());
-  }
-
-  /**
-   * Constructs a new StockQtyImport object
-   *
-   * @param props AppProperties
-   */
-  @SuppressWarnings("empty-statement")
-  public StockQtyImport(AppProperties props) {
-
+  public StockQtyImport(AppView appView) {
+   
     initComponents();
 
-// Get current db session connection        
-    AppProperties m_props = props;
+    dbSession = appView.getSession();
 
-    try {
-      s = AppViewConnection.createSession(props);
-      con = s.getConnection();
-    } catch (BasicException | SQLException ex) {
-      LOGGER.log(Level.WARNING, null, ex);
-    }
-
-// Set db tables        
+    // Set db tables        
     m_dlSales = new DataLogicSales();
-    m_dlSales.init(s);
+    m_dlSales.init(dbSession);
     m_dlSystem = new DataLogicSystem();
-    m_dlSystem.init(s);
+    m_dlSystem.init(dbSession);
 
-// Get terminal's current resource property settings
+// Get terminal'dbSession current resource property settings
     Properties m_propsdb = m_dlSystem.getResourceAsProperties(m_props.getHost() + "/properties");
 
-// Get terminal's set Location property <entry key="location">0</entry>
+// Get terminal'dbSession set Location property <entry key="location">0</entry>
     m_sInventoryLocation = m_propsdb.getProperty("location");
     try {
       Location = m_dlSystem.findLocationName(m_sInventoryLocation);
     } catch (BasicException ex) {
       LOGGER.log(Level.WARNING, null, ex);
     }
+    
+    AppProperties props = appView.getProperties();
 
     last_folder = props.getProperty("CSV.last_folder");
     config_file = props.getConfigFile();
@@ -405,7 +385,7 @@ public class StockQtyImport extends JPanel implements JPanelView {
     values[1] = ProductID;
     values[2] = (double) Units;
 
-    PreparedSentence sentence = new PreparedSentence(s,
+    PreparedSentence sentence = new PreparedSentence(dbSession,
             "INSERT INTO stockcurrent ( "
                     + "LOCATION, PRODUCT, UNITS) VALUES (?, ?, ?)"
             , new SerializerWriteBasicExt((new Datas[]{
@@ -434,7 +414,7 @@ public class StockQtyImport extends JPanel implements JPanelView {
     newValues[1] = LocationID;
     newValues[2] = ProductID;
 
-    PreparedSentence sentence = new PreparedSentence(s,
+    PreparedSentence sentence = new PreparedSentence(dbSession,
             "UPDATE stockcurrent SET "
                     + "UNITS = ? "
                     + "WHERE LOCATION = ? "
@@ -466,7 +446,7 @@ public class StockQtyImport extends JPanel implements JPanelView {
     oldValues[1] = LocationID;
     oldValues[2] = ProductID;
 
-    PreparedSentence sentence = new PreparedSentence(s,
+    PreparedSentence sentence = new PreparedSentence(dbSession,
             "UPDATE stockcurrent SET "
                     + "UNITS = ? "
                     + "WHERE LOCATION = ? "
@@ -817,7 +797,7 @@ public class StockQtyImport extends JPanel implements JPanelView {
       webPBar.setString("Source file OK");
       m_jLocation.setEnabled(true);
     } catch (IOException ex) {
-      LOGGER.log(Level.WARNING, null, ex);
+      LOGGER.log(Level.WARNING, "Exception while import Stock Qauntity", ex);
       webPBar.setString("Source file error!");
       m_jLocation.setEnabled(false);
     }

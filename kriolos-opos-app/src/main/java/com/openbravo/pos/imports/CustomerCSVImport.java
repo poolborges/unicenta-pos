@@ -16,7 +16,6 @@
 package com.openbravo.pos.imports;
 
 import com.openbravo.pos.forms.JPanelView;
-import com.openbravo.pos.forms.AppViewConnection;
 import com.csvreader.CsvReader;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.Session;
@@ -34,7 +33,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -42,15 +40,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Graphical User Interface and code for importing data from a CSV file allowing
- * adding or updating many customers quickly and easily.
+ * GUI and code for importing Customer from a CSV file 
+ * 
+ * Allow to add or update many customers quickly and easily.
  */
 public class CustomerCSVImport extends JPanel implements JPanelView {
 
     private static final Logger LOGGER = Logger.getLogger(CustomerCSVImport.class.getName());
     private ArrayList<String> Headers = new ArrayList<>();
-    private Session s;
-    private Connection con;
+    private Session dbSession;
     private String csvFileName;
 
     private String csvMessage = "";
@@ -101,30 +99,17 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
      * @param oApp AppView
      */
     public CustomerCSVImport(AppView oApp) {
-        this(oApp.getProperties());
-    }
-
-    /**
-     * Constructs a new JPanelCSVImport object
-     *
-     * @param props AppProperties
-     */
-    @SuppressWarnings("empty-statement")
-    public CustomerCSVImport(AppProperties props) {
         initComponents();
 
-        try {
-            s = AppViewConnection.createSession(props);
-            con = s.getConnection();
-        } catch (BasicException | SQLException e) {
-            ;
-        }
+        dbSession = oApp.getSession();
+        
+        AppProperties props = oApp.getProperties();
 
         m_dlSales = new DataLogicSales();
-        m_dlSales.init(s);
+        m_dlSales.init(dbSession);
 
         m_dlSystem = new DataLogicSystem();
-        m_dlSystem.init(s);
+        m_dlSystem.init(dbSession);
 
         spr = new DefaultSaveProvider(
                 m_dlSales.getCustomerUpdate(),
@@ -235,7 +220,7 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
             customers.close();
 
         } else {
-            JOptionPane.showMessageDialog(null, "Unable to locate "
+            JOptionPane.showMessageDialog(null, "Unable to locate csv file: "
                     + CSVFileName,
                     "File not found",
                     JOptionPane.WARNING_MESSAGE);

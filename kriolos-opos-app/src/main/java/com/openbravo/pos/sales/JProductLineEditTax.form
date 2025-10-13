@@ -509,7 +509,7 @@
                   <Image iconType="3" name="/com/openbravo/images/ok.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="pos_messages.properties" key="button.OK" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="pos_messages.properties" key="button.ok" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
                 </Property>
                 <Property name="focusPainted" type="boolean" value="false"/>
                 <Property name="focusable" type="boolean" value="false"/>

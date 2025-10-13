@@ -27,12 +27,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.swing.JFrame;
 import com.openbravo.basic.BasicException;
+import com.openbravo.data.gui.JMessageDialog;
+import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.ticket.TicketLineInfo;
-import com.openbravo.pos.util.AltEncrypter;
-import java.sql.DriverManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -42,13 +44,14 @@ public class JProductLineEditTax extends javax.swing.JDialog {
 
     private static final long serialVersionUID = 1L;
     
+    private static final Logger LOGGER = Logger.getLogger(JProductLineEditTax.class.getName());
+    
     private TicketLineInfo returnLine;
     private TicketLineInfo m_oLine;
     private boolean m_bunitsok;
     private boolean m_bpriceok;
     private String productID;
-    private Connection con;  
-    private PreparedStatement pstmt;  
+    private AppView appView;
             
     /** Creates new form JProductLineEdit */
     private JProductLineEditTax(java.awt.Frame parent, boolean modal) {
@@ -59,8 +62,9 @@ public class JProductLineEditTax extends javax.swing.JDialog {
         super(parent, modal);
     }
     
-    private TicketLineInfo init(AppView app, TicketLineInfo oLine) throws BasicException {
+    private TicketLineInfo init(AppView appView, TicketLineInfo oLine) throws BasicException {
 
+        this.appView = appView;
         initComponents();
 
         productID = oLine.getProductID();
@@ -78,9 +82,9 @@ public class JProductLineEditTax extends javax.swing.JDialog {
         m_bunitsok = true;
         m_bpriceok = true;
 
-        m_jName.setEnabled(app.hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));        
-        m_jPrice.setEnabled(app.hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));
-        m_jPriceTax.setEnabled(app.hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));
+        m_jName.setEnabled(this.appView.hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));        
+        m_jPrice.setEnabled(this.appView.hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));
+        m_jPriceTax.setEnabled(this.appView.hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));
         
         m_jName.setText(oLine.getProductName());        
         m_jUnits.setDoubleValue(oLine.getMultiply());
@@ -469,7 +473,7 @@ public class JProductLineEditTax extends javax.swing.JDialog {
 
         m_jButtonOK.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         m_jButtonOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
-        m_jButtonOK.setText(AppLocal.getIntString("button.OK")); // NOI18N
+        m_jButtonOK.setText(AppLocal.getIntString("button.ok")); // NOI18N
         m_jButtonOK.setFocusPainted(false);
         m_jButtonOK.setFocusable(false);
         m_jButtonOK.setMargin(new java.awt.Insets(8, 16, 8, 16));
@@ -510,38 +514,21 @@ public class JProductLineEditTax extends javax.swing.JDialog {
 
     private void m_jBtnPriceUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jBtnPriceUpdateActionPerformed
 
-        String db_password = (AppConfig.getInstance().getProperty("db.password"));
-
-        if (AppConfig.getInstance().getProperty("db.user") != null 
-                && db_password != null 
-                && db_password.startsWith("crypt:")) {
-            AltEncrypter cypher = new AltEncrypter("cypherkey" 
-                    + AppConfig.getInstance().getProperty("db.user"));
-            db_password = cypher.decrypt(db_password.substring(6));
-        }
-
-        try {
-
-//            s = AppViewConnection.createSession();
-            con = DriverManager.getConnection(
-                    AppConfig.getInstance().getProperty("db.URL")
-                    , AppConfig.getInstance().getProperty("db.user")
-                    , db_password);
-
-            pstmt = con.prepareStatement(
-                    "UPDATE PRODUCTS SET PRICESELL = ? WHERE ID = ?");
-            pstmt.setDouble(1, m_jPrice.getValue());
-            pstmt.setString(2, productID);
-            pstmt.executeUpdate();
-
-            m_jBtnPriceUpdate.setEnabled(false);
-            
-            con.close();
-            
-        } catch (SQLException e) {
-
-            return;
-        }
+            try (Connection con = this.appView.getSession().getConnection()) {
+                
+                String sqlQuery = "UPDATE PRODUCTS SET PRICESELL = ? WHERE ID = ?";
+                
+                try(PreparedStatement pstmt  = con.prepareStatement(sqlQuery)){
+                pstmt.setDouble(1, m_jPrice.getValue());
+                pstmt.setString(2, productID);
+                pstmt.executeUpdate();
+                
+                m_jBtnPriceUpdate.setEnabled(false);
+                }
+            }catch (SQLException ex) {
+                LOGGER.log(Level.WARNING, "Exception update products pricesell for ID: "+productID, ex);
+                JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_DANGER, "Unable to update product sell price. ", ex));
+            }
 
         m_oLine.setUpdated(true);
     }//GEN-LAST:event_m_jBtnPriceUpdateActionPerformed
