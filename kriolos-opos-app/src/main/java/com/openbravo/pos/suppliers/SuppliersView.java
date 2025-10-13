@@ -34,7 +34,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,7 +44,6 @@ import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import org.netbeans.validation.api.builtin.stringvalidation.StringValidators;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -507,8 +505,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
 
                 case 0:
                     Date transactionDate = supplierTransaction.getTransactionDate();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                    String formattedDate = sdf.format(transactionDate);
+                    String formattedDate = Formats.DATETIME.formatValue(transactionDate);
                     return formattedDate;
                 case 1:
                     return supplierTransaction.getProductName();

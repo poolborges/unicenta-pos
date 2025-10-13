@@ -12,8 +12,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -61,8 +59,6 @@ public class DeviceDisplayWindowDualScreen extends JFrame implements DeviceDispl
 
     private static final int PRODUCT_IMAGE_SIZE_WIDTH = 300;
     private static final int PRODUCT_IMAGE_SIZE_HEIGHT = 300;
-
-    private final DateFormat m_hourminformat = new SimpleDateFormat("h:mm a");
 
     private Timer tDateTime;
 
@@ -146,7 +142,7 @@ public class DeviceDisplayWindowDualScreen extends JFrame implements DeviceDispl
             @Override
             public void run() {
                 Calendar cal = Calendar.getInstance();
-                DeviceDisplayWindowDualScreen.this.m_jCalendar.setText(Formats.SIMPLEDATE.formatValue(cal.getTime()) + " " + DeviceDisplayWindowDualScreen.this.m_hourminformat.format(cal.getTime()));
+                DeviceDisplayWindowDualScreen.this.m_jCalendar.setText(Formats.TIMESTAMP.formatValue(cal.getTime()));
             }
         }, 250L, 60000L);
     }

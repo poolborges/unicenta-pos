@@ -21,7 +21,6 @@ import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.util.StringUtils;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -262,8 +261,7 @@ public class PaymentsModel {
 
         // added by janar153 @ 29.12.2013
         // removed lines list
-        SimpleDateFormat ndf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String startDateFormatted = ndf.format(app.getActiveCashDateStart());
+        String startDateFormatted = Formats.DATETIME.formatValue(app.getActiveCashDateStart());
         List removedLines = new StaticSentence(app.getSession(),
                  "SELECT lineremoved.NAME, lineremoved.TICKETID, lineremoved.PRODUCTNAME, SUM(lineremoved.UNITS) AS TOTAL_UNITS  "
                 + "FROM lineremoved "
@@ -419,8 +417,7 @@ public class PaymentsModel {
      * @return
      */
     public String getDateStartDerby() {
-        SimpleDateFormat ndf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return ndf.format(m_dDateStart);
+        return Formats.DATETIME.formatValue(m_dDateStart);
     }
 
     /**
@@ -428,7 +425,6 @@ public class PaymentsModel {
      * @return
      */
     public String printHost() {
-//        return m_sHost;
         return StringUtils.encodeXML(m_sHost);
     }
 

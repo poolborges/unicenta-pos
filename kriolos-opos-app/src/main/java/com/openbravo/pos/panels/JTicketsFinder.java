@@ -35,12 +35,10 @@ import com.openbravo.pos.inventory.TaxCategoryInfo;
 import com.openbravo.pos.ticket.FindTicketsInfo;
 import com.openbravo.pos.ticket.FindTicketsRenderer;
 import java.awt.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 
@@ -57,8 +55,6 @@ public class JTicketsFinder extends javax.swing.JDialog implements EditorCreator
     private DataLogicCustomers dlCustomers;
     private FindTicketsInfo selectedTicket;
 
-   static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-   
     /** Creates new form JTicketsFinder */
     private JTicketsFinder(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -202,7 +198,7 @@ public class JTicketsFinder extends javax.swing.JDialog implements EditorCreator
         now.set(Calendar.MINUTE, 0);
         now.set(Calendar.SECOND, 0);
         now.set(Calendar.HOUR_OF_DAY, 0);
-        jTxtStartDate.setText(sdf.format(now.getTime()));
+        jTxtStartDate.setText(Formats.DATETIME.formatValue(now.getTime()));
         repaint();
     }
     

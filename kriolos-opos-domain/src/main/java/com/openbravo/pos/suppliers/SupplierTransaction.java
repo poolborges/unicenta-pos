@@ -22,12 +22,8 @@ package com.openbravo.pos.suppliers;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.DataRead;
 import com.openbravo.data.loader.SerializerRead;
-import com.openbravo.pos.forms.DataLogicSales;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import com.openbravo.format.Formats;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -153,17 +149,10 @@ public class SupplierTransaction {
                 String unit = dr.getString(3);
                 Double price = dr.getDouble(4);
                 Integer reason = dr.getInt(5);
-
                 String supplierId = dr.getString(6);                
 
-
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                Date date = null;
-                try {
-                    date = formatter.parse(dateValue);
-                } catch (ParseException ex) {
-                    Logger.getLogger(DataLogicSales.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                Date date = Formats.DATETIME.parseValue(dateValue);
+               
                 return new SupplierTransaction(date, productName, unit, price, reason, supplierId);                
             }
         };

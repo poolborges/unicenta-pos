@@ -30,8 +30,6 @@ import com.openbravo.pos.payment.PaymentInfoMagcard;
 import com.openbravo.pos.payment.PaymentInfoTicket;
 import com.openbravo.pos.util.StringUtils;
 import java.io.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -51,8 +49,6 @@ public final class TicketInfo implements SerializableRead, Externalizable {
     public static final int REFUND_NOT = 0; // is a non-refunded ticket    
     public static final int REFUND_PARTIAL = 1;
     public static final int REFUND_ALL = 2;
-
-    private static final DateFormat m_dateformat = new SimpleDateFormat("hh:mm");
 
     private String m_sHost;
     private String m_sId;
@@ -250,8 +246,7 @@ public final class TicketInfo implements SerializableRead, Externalizable {
 
         if (info == null) {
             if (m_iTicketId == 0) {
-                name.add("(" + m_dateformat.format(m_dDate) + " "
-                        + Long.toString(m_dDate.getTime() % 1000) + ")");
+                name.add("(" + Formats.HOURMIN.formatValue(m_dDate)+ ")");
             } else {
                 name.add(Integer.toString(m_iTicketId));
             }

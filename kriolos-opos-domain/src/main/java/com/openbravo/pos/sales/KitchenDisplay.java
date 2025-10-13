@@ -16,11 +16,10 @@
 
 package com.openbravo.pos.sales;
 
+import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppView;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,14 +52,13 @@ public class KitchenDisplay {
      * @param attributes
      */
     public void addRecord(String ID, String table, String pickupID, String product, String multiply, String attributes) {
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         Date date = new Date();
 
         try {
             String SQL = "INSERT INTO KITCHENDISPLAY (ID, ORDERTIME, PLACE, PICKUPID, PRODUCT, MULTIPLY, ATTRIBUTES) VALUES (?, ?, ?, ?, ?, ?, ?) ";
             PreparedStatement pstmt = m_App.getSession().getConnection().prepareStatement(SQL);
             pstmt.setString(1, ID);
-            pstmt.setString(2, dateFormat.format(date));
+            pstmt.setString(2, Formats.HOURMIN.formatValue(date));
             pstmt.setString(3, table);
             pstmt.setString(4, pickupID);
             pstmt.setString(5, product);

@@ -19,11 +19,8 @@ package com.openbravo.pos.customers;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.DataRead;
 import com.openbravo.data.loader.SerializerRead;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import com.openbravo.format.Formats;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -207,14 +204,7 @@ public class CustomerTransaction {
                 String dateValue = dr.getString(6);
                 String customerId = dr.getString(7);                
 
-
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                Date date = null;
-                try {
-                    date = formatter.parse(dateValue);
-                } catch (ParseException ex) {
-                    Logger.getLogger(CustomerTransaction.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                Date date = Formats.DATETIME.parseValue(dateValue);
                 return new CustomerTransaction(ticketId, productName, unit, amount, total, date, customerId);                
             }
         };

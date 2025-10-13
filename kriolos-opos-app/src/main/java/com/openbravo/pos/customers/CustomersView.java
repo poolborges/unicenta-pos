@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -575,8 +574,7 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
                     return customerTransaction.getTicketId();
                 case 1:
                     Date transactionDate = customerTransaction.getTransactionDate();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                    String formattedDate = sdf.format(transactionDate);
+                    String formattedDate = Formats.DATETIME.formatValue(transactionDate);
                     return formattedDate;
                 case 2:
                     return customerTransaction.getProductName();

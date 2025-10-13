@@ -1997,11 +1997,8 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                         new String[]{
                             "P.NAME", "P.PRICEBUY", "P.PRICESELL", "P.CATEGORY", "P.CODE"}),
                 new SerializerWriteBasic(new Datas[]{
-            Datas.OBJECT, Datas.STRING,
-            Datas.OBJECT, Datas.DOUBLE,
-            Datas.OBJECT, Datas.DOUBLE,
-            Datas.OBJECT, Datas.STRING,
-            Datas.OBJECT, Datas.STRING}),
+                    Datas.OBJECT, Datas.STRING, Datas.OBJECT, Datas.DOUBLE, Datas.OBJECT, Datas.DOUBLE, Datas.OBJECT, Datas.STRING, Datas.OBJECT, Datas.STRING}
+                ),
                 productsRow.getSerializerRead());
     }
 
@@ -2436,7 +2433,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
     public final SentenceExec getCatalogCategoryDel() {
         return new StaticSentence(s,
-                "DELETE FROM products_cat WHERE PRODUCT = ANY (SELECT ID "
+                "DELETE FROM products_cat WHERE PRODUCT = IN (SELECT ID "
                 + "FROM products WHERE CATEGORY = ?)",
                 SerializerWriteString.INSTANCE);
     }
