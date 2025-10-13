@@ -14,10 +14,11 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package com.openbravo.pos.forms;
+package com.openbravo.pos.admin;
 
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
+import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.util.Hashcypher;
 import java.awt.Component;
 import java.awt.Dialog;
