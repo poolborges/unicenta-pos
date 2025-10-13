@@ -16,10 +16,9 @@
 
 package com.openbravo.data.loader;
 
+import static com.openbravo.data.loader.Datas.DATETIME_FORMAT;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 /**
  * Utility class to get SQL string representation of some classes.
@@ -27,12 +26,6 @@ import java.text.SimpleDateFormat;
  * @author  adrian, poolborges
  */
 public abstract class DataWriteUtils {
-    
-    /**
-     * Format
-     *  SSS => Three-digit millisecond (000-999)).
-     */
-    private final static DateFormat TSF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"); 
     
     /**
      * Get Object SQL string represention.
@@ -139,7 +132,7 @@ public abstract class DataWriteUtils {
         if (value == null) {
             return "NULL";
         } else {
-            return "'" + TSF.format(value) + "'";
+            return "'" + DATETIME_FORMAT.format(value) + "'";
         }
     }
     

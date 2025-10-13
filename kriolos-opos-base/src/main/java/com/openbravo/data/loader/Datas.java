@@ -41,7 +41,7 @@ public abstract class Datas<T> {
     public final static Datas<Object> SERIALIZABLE = new DatasSERIALIZABLE();
     public final static Datas<Object> NULL = new DatasNULL();
 
-    private final static DateFormat tsf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    public final static DateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
     private Datas() {}
 
@@ -213,7 +213,7 @@ public abstract class Datas<T> {
         
         @Override
         protected String toStringAbstract(Date value) {
-            return tsf.format(value);
+            return DATETIME_FORMAT.format(value);
         }
         
         @Override

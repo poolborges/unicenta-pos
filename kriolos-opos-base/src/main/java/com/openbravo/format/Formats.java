@@ -34,16 +34,26 @@ public abstract class Formats<T> {
 
     private final static String DEFAULT_PERCENT_FORMAT = "#,##0.##%";
     private final static String DEFAULT_HOURMIN_FORMAT = "H:mm:ss";
-    private final static String DEFAULT_SIMPLEDATE_FORMAT = "dd-MM-yyyy";
+    private final static String DEFAULT_SIMPLEDATE_FORMAT = "yyyy-MM-dd";
 
     /**
      *
-     * "yyyy-MM-dd HH:mm:ss.SSS" => "03 out. 2025 01:22:48.000".
      * "yyyy-MM-dd HH:mm:ss" => "2025-10-03 01:22:48" 
-     * "dd MMM yyyy HH:mm:ss" => "03 out. 2025 01:22:48"
      *
      */
     private final static String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    
+    /**
+     * ISO 8601 
+     * 
+     * "yyyy-MM-dd'T'HH:mm:ss'Z'" => "2023-10-27T15:30:00Z"
+     * 
+     * Z: A literal character indicating that the time is in UTC, with a zero offset from UTC
+     * 
+     * Example: 
+     *      2025-10-13T16:32:41
+     */
+    private static final String DATETIME_FORMAT_ISO8601 = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
     public final static Formats<Object> NULL = new FormatsNULL();
     public final static Formats<Integer> INT = new FormatsINT();

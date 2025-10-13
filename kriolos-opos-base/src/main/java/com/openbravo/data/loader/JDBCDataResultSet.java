@@ -87,7 +87,7 @@ public final class JDBCDataResultSet<T> implements DataResultSet<T> {
             java.sql.Timestamp ts = m_rs.getTimestamp(columnIndex);
             return ts == null ? null : new java.util.Date(ts.getTime());
         } catch (SQLException eSQL) {
-            LOGGER.log(Level.SEVERE, "Exception on JDBCDataResultSet", eSQL);
+            LOGGER.log(Level.SEVERE, "Exception on JDBCDataResultSet. ColumnIndex: "+columnIndex, eSQL);
             throw new BasicException(eSQL);
         }
     }
