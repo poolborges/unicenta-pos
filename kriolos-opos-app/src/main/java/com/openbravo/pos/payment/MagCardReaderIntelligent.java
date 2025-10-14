@@ -24,6 +24,17 @@ public final class MagCardReaderIntelligent implements MagCardReader {
     
     private StringBuffer m_sField;
     
+    
+    /**
+     * Character with code 0x0009 (corresponds to ASCII code Tabulator '\t')
+     */
+    private static final char CHAR_TAB = 0x0009;
+    
+    /**
+     * Character with code 0x000A (corresponds to ASCII code Newline '\n')
+     */
+    private static final char CHAR_NEWLINE = 0x000A;
+    
     private static final int READING_HOLDER = 0;
     private static final int READING_NUMBER = 1;
     private static final int READING_DATE = 2;
