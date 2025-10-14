@@ -22,19 +22,14 @@ package com.openbravo.pos.sales.restaurant;
 import com.openbravo.basic.BasicException;
 import com.openbravo.beans.JPasswordDialog;
 import com.openbravo.data.gui.JMessageDialog;
-import com.openbravo.data.gui.ListKeyed;
 import com.openbravo.data.gui.MessageInf;
-import com.openbravo.data.loader.SentenceList;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.forms.JRootApp;
-import com.openbravo.pos.printer.DeviceTicket;
 import com.openbravo.pos.printer.TicketParser;
 import com.openbravo.pos.printer.TicketPrinterException;
-import com.openbravo.pos.sales.DataLogicReceipts;
-import com.openbravo.pos.sales.TaxesLogic;
 import com.openbravo.pos.scripting.ScriptEngine;
 import com.openbravo.pos.scripting.ScriptException;
 import com.openbravo.pos.scripting.ScriptFactory;
@@ -52,95 +47,61 @@ import javax.swing.*;
 public class JTicketsBagRestaurant extends javax.swing.JPanel {
 
     private static final Logger LOGGER = Logger.getLogger(JTicketsBagRestaurant.class.getName());
-    private final AppView m_App;
-    private final JTicketsBagRestaurantMap m_restaurant;
-    private List<TicketLineInfo> m_aLines;
-    private TicketLineInfo line;
-    private TicketInfo ticket;
-    private final Object ticketExt;
-    private DataLogicSystem m_dlSystem = null;
-    private final DeviceTicket m_TP;
-    private final TicketParser m_TTP2;
+    private final AppView appView;
+    private final JTicketsBagRestaurantMap ticketsBagRestaurantMap;
+    private TicketInfo ticketInfo;
+    private final DataLogicSystem dataLogicSystem;
+    private final DataLogicSales dataLogicSales;
+    private final TicketParser ticketParser;
     private final RestaurantDBUtils restDB;
 
-    private final DataLogicSystem dlSystem = null;
-    private final DataLogicReceipts dlReceipts = null;
-    private DataLogicSales dlSales = null;
-
-    private TicketParser m_TTP;
-
-    private SentenceList senttax;
-    private ListKeyed taxcollection;
-    private TaxesLogic taxeslogic;
-
-    /**
-     * Creates new form JTicketsBagRestaurantMap
-     *
-     * @param app
-     * @param restaurant
-     */
     public JTicketsBagRestaurant(AppView app, JTicketsBagRestaurantMap restaurant) {
-        super();
-        m_App = app;
-        m_restaurant = restaurant;
+        appView = app;
+        ticketsBagRestaurantMap = restaurant;
 
         initComponents();
 
-        ticketExt = null;
+        restDB = new RestaurantDBUtils(appView);
 
-        restDB = new RestaurantDBUtils(m_App);
+        dataLogicSystem = (DataLogicSystem) appView.getBean("com.openbravo.pos.forms.DataLogicSystem");
+        dataLogicSales = (DataLogicSales) appView.getBean("com.openbravo.pos.forms.DataLogicSales");
 
-        m_dlSystem = (DataLogicSystem) m_App.getBean("com.openbravo.pos.forms.DataLogicSystem");
-        dlSales = (DataLogicSales) m_App.getBean("com.openbravo.pos.forms.DataLogicSales");
-
-        m_TP = new DeviceTicket();
-        m_TTP2 = new TicketParser(m_App.getDeviceTicket(), m_dlSystem);
+        ticketParser = new TicketParser(appView.getDeviceTicket(), dataLogicSystem);
         j_btnKitchen.setVisible(true);
 
-        m_TablePlan.setVisible(m_App.getAppUserView().getUser().
+        m_TablePlan.setVisible(appView.getAppUserView().getUser().
                 hasPermission("sales.TablePlan"));
 
     }
 
-    /**
-     *
-     */
     public void activate() {
 
-        m_DelTicket.setEnabled(m_App.getAppUserView().getUser()
-                .hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));
-
-        m_TablePlan.setEnabled(m_App.getAppUserView().getUser()
-                .hasPermission("com.openbravo.pos.sales.JPanelTicketEdits"));
+        boolean hasPersmission = appView.getAppUserView().getUser()
+                .hasPermission("com.openbravo.pos.sales.JPanelTicketEdits");
+        m_DelTicket.setEnabled(hasPersmission);
+        m_TablePlan.setEnabled(hasPersmission);
         m_TablePlan.setVisible(true);
     }
 
-    /**
-     *
-     * @param pTicket
-     * @return
-     */
     public String getPickupString(TicketInfo pTicket) {
         if (pTicket == null) {
-            return ("0");
+            return "0";
         }
-        String tmpPickupId = Integer.toString(pTicket.getPickupId());
-        String pickupSize = (m_App.getProperties().getProperty("till.pickupsize"));
-        if (pickupSize != null && (Integer.parseInt(pickupSize) >= tmpPickupId.length())) {
-            while (tmpPickupId.length() < (Integer.parseInt(pickupSize))) {
-                tmpPickupId = "0" + tmpPickupId;
+        String tmpPickupId = "" + pTicket.getPickupId();
+        String pickupSize = (appView.getProperties().getProperty("till.pickupsize"));
+        if (pickupSize != null) {
+            int numberSize = Integer.parseInt(pickupSize);
+            if (numberSize > 0) {
+                String formatNumber = "%0" + numberSize + "d"; //Example format "%05d"
+                tmpPickupId = String.format(formatNumber, pTicket.getPickupId());
             }
         }
-        return (tmpPickupId);
+
+        return tmpPickupId;
     }
 
-    /**
-     *
-     * @param resource
-     */
     public void printTicket(String resource) {
-        printTicket(resource, ticket, m_restaurant.getTable());
-        printNotify();
+        printTicket(resource, ticketInfo, ticketsBagRestaurantMap.getTable());
         j_btnKitchen.setEnabled(false);
     }
 
@@ -149,8 +110,9 @@ public class JTicketsBagRestaurant extends javax.swing.JPanel {
 
             if (ticket.getPickupId() == 0) {
                 try {
-                    ticket.setPickupId(dlSales.getNextPickupIndex());
-                } catch (BasicException e) {
+                    ticket.setPickupId(dataLogicSales.getNextPickupIndex());
+                }
+                catch (BasicException e) {
                     LOGGER.log(Level.SEVERE, "Exception print ticket", e);
                     ticket.setPickupId(0);
                 }
@@ -160,22 +122,19 @@ public class JTicketsBagRestaurant extends javax.swing.JPanel {
                 ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
 
                 script.put("ticket", ticket);
-                script.put("place", m_restaurant.getTableName());
+                script.put("place", table);
                 script.put("pickupid", getPickupString(ticket));
 
-                m_TTP2.printTicket(script.eval(m_dlSystem.getResourceAsXML(sresourcename)).toString());
+                ticketParser.printTicket(script.eval(dataLogicSystem.getResourceAsXML(sresourcename)).toString());
 
-            } catch (ScriptException | TicketPrinterException e) {
+            }
+            catch (ScriptException | TicketPrinterException e) {
                 LOGGER.log(Level.WARNING, "Exception on executing script: " + sresourcename, e);
                 JMessageDialog.showMessage(this,
                         new MessageInf(MessageInf.SGN_NOTICE,
                                 AppLocal.getIntString("message.cannotprint"), e));
             }
         }
-    }
-
-    public void printNotify() {
-
     }
 
     /**
@@ -262,90 +221,82 @@ public class JTicketsBagRestaurant extends javax.swing.JPanel {
     private void m_MoveTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_MoveTableActionPerformed
 
         LOGGER.log(Level.INFO, "Move table");
-        restDB.clearCustomerNameInTableById(m_restaurant.getTable());
-        restDB.clearWaiterNameInTableById(m_restaurant.getTable());
+        restDB.clearCustomerNameInTableById(ticketsBagRestaurantMap.getTable());
+        restDB.clearWaiterNameInTableById(ticketsBagRestaurantMap.getTable());
 
-        restDB.setTableMovedFlag(m_restaurant.getTable());
-        m_restaurant.moveTicket();
+        restDB.setTableMovedFlag(ticketsBagRestaurantMap.getTable());
+        ticketsBagRestaurantMap.moveTicket();
 
     }//GEN-LAST:event_m_MoveTableActionPerformed
 
     private void m_DelTicketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_DelTicketActionPerformed
 
         LOGGER.log(Level.INFO, "Delete ticket");
-//        if (ticket != null) {
-        if (m_App.getProperties().getProperty("override.check").equals("true")) {
-            String pin = m_App.getProperties().getProperty("override.pin");
+        boolean allowDeleteTicket = true;
+        if (appView.getProperties().getProperty("override.check").equals("true")) {
+            String pin = appView.getProperties().getProperty("override.pin");
             String iValue = JPasswordDialog.showEditor(this, AppLocal.getIntString("title.override.enterpin"));
 
             if (iValue != null && !iValue.isBlank() && iValue.equals(pin)) {
-      
-                int res = JOptionPane.showConfirmDialog(this,
-                        AppLocal.getIntString("message.wannadelete"),
-                        AppLocal.getIntString("title.editor"),
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE);
-
-                if (res == JOptionPane.YES_OPTION) {
-                    restDB.clearCustomerNameInTableById(m_restaurant.getTable());
-                    restDB.clearWaiterNameInTableById(m_restaurant.getTable());
-                    restDB.clearTicketIdInTableById(m_restaurant.getTable());
-                    m_restaurant.deleteTicket();
-                }
+                allowDeleteTicket = true;
             } else {
+                allowDeleteTicket = false;
                 JOptionPane.showMessageDialog(this, AppLocal.getIntString("message.override.badpin"));
             }
         }
 
-        int res = JOptionPane.showConfirmDialog(this,
-                AppLocal.getIntString("message.wannadelete"),
-                AppLocal.getIntString("title.editor"),
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE);
+        if (allowDeleteTicket) {
+            int res = JOptionPane.showConfirmDialog(this,
+                    AppLocal.getIntString("message.wannadelete"),
+                    AppLocal.getIntString("title.editor"),
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
 
-        if (res == JOptionPane.YES_OPTION) {
-            restDB.clearCustomerNameInTableById(m_restaurant.getTable());
-            restDB.clearWaiterNameInTableById(m_restaurant.getTable());
-            restDB.clearTicketIdInTableById(m_restaurant.getTable());
-            m_restaurant.deleteTicket();
+            if (res == JOptionPane.YES_OPTION) {
+                restDB.clearCustomerNameInTableById(ticketsBagRestaurantMap.getTable());
+                restDB.clearWaiterNameInTableById(ticketsBagRestaurantMap.getTable());
+                restDB.clearTicketIdInTableById(ticketsBagRestaurantMap.getTable());
+                ticketsBagRestaurantMap.deleteTicket();
+            }
         }
     }//GEN-LAST:event_m_DelTicketActionPerformed
 
     private void m_TablePlanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_TablePlanActionPerformed
 
         LOGGER.log(Level.INFO, "Open Table Plan");
-        m_restaurant.newTicket();
+        ticketsBagRestaurantMap.newTicket();
     }//GEN-LAST:event_m_TablePlanActionPerformed
 
     private void j_btnKitchenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_j_btnKitchenActionPerformed
 
         LOGGER.log(Level.INFO, "Kitchen Button");
 
-        ticket = m_restaurant.getActiveTicket();
+        ticketInfo = ticketsBagRestaurantMap.getActiveTicket();
 
         String scriptId = "script.SendOrder";
         try {
-            String rScript = (m_dlSystem.getResourceAsText(scriptId));
+            String rScript = (dataLogicSystem.getResourceAsText(scriptId));
             ScriptEngine scriptEngine = ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
-            scriptEngine.put("ticket", ticket);
-            scriptEngine.put("place", m_restaurant.getTableName());
-            scriptEngine.put("user", m_App.getAppUserView().getUser());
+            scriptEngine.put("ticket", ticketInfo);
+            scriptEngine.put("place", ticketsBagRestaurantMap.getTableName());
+            scriptEngine.put("user", appView.getAppUserView().getUser());
             scriptEngine.put("sales", this);
-            scriptEngine.put("pickupid", ticket.getPickupId());
+            scriptEngine.put("pickupid", ticketInfo.getPickupId());
             scriptEngine.eval(rScript);
 
-        } catch (ScriptException ex) {
+        }
+        catch (ScriptException ex) {
             LOGGER.log(Level.WARNING, "Exception on executing script: " + scriptId, ex);
         }
         // Autologoff after sales            
-        String autoLogoff = (m_App.getProperties().getProperty("till.autoLogoff"));
-        String autoLogoffRestaurant = (m_App.getProperties().getProperty("till.autoLogoffrestaurant"));
+        String autoLogoff = (appView.getProperties().getProperty("till.autoLogoff"));
+        String autoLogoffRestaurant = (appView.getProperties().getProperty("till.autoLogoffrestaurant"));
         if (autoLogoff != null && autoLogoff.equals("true")) {
             // check how far to logoof to ie tables or application
             if (autoLogoffRestaurant != null && autoLogoffRestaurant.equals("true")) {
-                m_restaurant.newTicket();
+                ticketsBagRestaurantMap.newTicket();
             } else {
-                ((JRootApp) m_App).closeAppView();
+                ((JRootApp) appView).closeAppView();
             }
         }
     }//GEN-LAST:event_j_btnKitchenActionPerformed

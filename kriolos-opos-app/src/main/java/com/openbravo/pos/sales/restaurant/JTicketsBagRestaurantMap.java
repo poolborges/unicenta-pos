@@ -84,6 +84,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
     private int newX;
     private int newY;
     private boolean showLayout = false;
+    private Timer autoRefreshTimer = null;
 
     /**
      * Creates new form JTicketsBagRestaurant
@@ -236,9 +237,13 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
             webLblautoRefresh.setText(java.util.ResourceBundle.getBundle("pos_messages")
                     .getString("label.autoRefreshTableMapTimerON"));
 
-            int refeshTimer = Integer.parseInt(m_App.getProperties().getProperty("till.autoRefreshTimer")) * 1000;
-            Timer autoRefreshTimer = new Timer(refeshTimer, new TableMapRefreshActionListener());
-            autoRefreshTimer.start();
+            int refeshTimer = Integer.parseInt(m_App.getProperties().getProperty("till.autoRefreshTimer"));
+            if (refeshTimer < 2){
+                refeshTimer = 2;
+            }
+             refeshTimer = refeshTimer * 1000;
+             
+            this.autoRefreshTimer = new Timer(refeshTimer, new TableMapRefreshActionListener());
         } else {
             webLblautoRefresh.setText(java.util.ResourceBundle.getBundle("pos_messages")
                     .getString("label.autoRefreshTableMapTimerOFF"));
@@ -249,7 +254,7 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
     class TableMapRefreshActionListener implements ActionListener {
         
         public TableMapRefreshActionListener(){
-            LOGGER.log(System.Logger.Level.INFO, "Table Map Refresh ActionListener create at: "+new Date());
+            LOGGER.log(System.Logger.Level.DEBUG, "Table Map Refresh ActionListener create at: "+new Date());
         }
 
         @Override
@@ -279,6 +284,9 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
         customer = null;
         loadTickets();
         printState();
+        if(this.autoRefreshTimer != null&& !this.autoRefreshTimer.isRunning()){
+            this.autoRefreshTimer.start();
+        }
 
         m_panelticket.setActiveTicket(new TicketInfo(), null);
         ticketsBagRestaurant.activate();
@@ -292,6 +300,10 @@ public class JTicketsBagRestaurantMap extends JTicketsBag {
      */
     @Override
     public boolean deactivate() {
+        
+        if(autoRefreshTimer != null && this.autoRefreshTimer.isRunning()){
+            this.autoRefreshTimer.stop();
+        }
 
         LOGGER.log(System.Logger.Level.INFO, "deactivate");
         if (viewTables()) {
