@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.openbravo.pos.voucher;
 
 import com.openbravo.basic.BasicException;
@@ -23,6 +22,12 @@ import com.openbravo.data.loader.IKeyed;
 import com.openbravo.data.loader.SerializerRead;
 
 public class VoucherInfo implements IKeyed {
+
+    public static final String VOUCHER_STATUS_AVAILABLE = "A";
+    public static final String VOUCHER_STATUS_REDEEMED = "D";
+    
+    public static final String VOUCHER_TYPE_IN = "voucherin";
+    public static final String VOUCHER_TYPE_OUT = "voucherout";
 
     private String id;
     private String voucherNumber;
@@ -154,6 +159,14 @@ public class VoucherInfo implements IKeyed {
                         dr.getDouble(5),
                         dr.getString(6));
             }
+        };
+    }
+    
+    public String printStatus() {
+        return switch (getStatus()) {
+            case VOUCHER_STATUS_AVAILABLE -> "Available";
+            case VOUCHER_STATUS_REDEEMED -> "Redeemed";
+            default -> "Unknow";
         };
     }
 }

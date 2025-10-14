@@ -42,9 +42,8 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
 
     private static final Logger LOGGER = Logger.getLogger(VoucherEditor.class.getName());
 
-    private static final DateFormat m_simpledate = new SimpleDateFormat("MM-yy");
     private static final long serialVersionUID = 1L;
-    private String id;
+    private String voucherId;
     private final DataLogicCustomers dlCustomers;
     private final DataLogicSystem dlSystem;
     private CustomerInfo customerInfo;
@@ -57,12 +56,12 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
 
         dlCustomers = (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
         dlSystem = (DataLogicSystem) app.getBean("com.openbravo.pos.forms.DataLogicSystem");
-        m_jNumber.getDocument().addDocumentListener(dirty);
-        m_jCustomer.getDocument().addDocumentListener(dirty);
-        m_jAmount.getDocument().addDocumentListener(dirty);
-        m_jStatus.getDocument().addDocumentListener(dirty);
+        voucherNumberTField.getDocument().addDocumentListener(dirty);
+        voucherCustomerTField.getDocument().addDocumentListener(dirty);
+        voucherAmountTField.getDocument().addDocumentListener(dirty);
+        voucherStatusTField.getDocument().addDocumentListener(dirty);
 
-        jButtonPrint.setVisible(true);
+        printBtn.setVisible(true);
         
         jLblStatus.setIcon(null);
 
@@ -71,51 +70,51 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
 
     @Override
     public void writeValueEOF() {
-        id = null;
-        m_jNumber.setText(null);
-        m_jNumber.setEnabled(false);
-        m_jCustomer.setText(null);
-        m_jCustomer.setEnabled(false);
-        m_jAmount.setText(null);
-        m_jAmount.setEnabled(false);
-        m_jStatus.setText(null);
-        m_jStatus.setEnabled(false);
-        btnCustomer.setEnabled(false);
-        jButtonPrint.setEnabled(false);
+        voucherId = null;
+        voucherNumberTField.setText(null);
+        voucherNumberTField.setEnabled(false);
+        voucherCustomerTField.setText(null);
+        voucherCustomerTField.setEnabled(false);
+        voucherAmountTField.setText(null);
+        voucherAmountTField.setEnabled(false);
+        voucherStatusTField.setText(null);
+        voucherStatusTField.setEnabled(false);
+        customerSelectorBtn.setEnabled(false);
+        printBtn.setEnabled(false);
     }
 
     @Override
     public void writeValueInsert() {
-        id = UUID.randomUUID().toString();
-        m_jNumber.setText(generateVoucherNumber());
-        m_jNumber.setEnabled(true);
-        m_jCustomer.setText(null);
-        m_jCustomer.setEnabled(true);
-        m_jAmount.setText(null);
-        m_jAmount.setEnabled(true);
-        m_jStatus.setText(null);
-        m_jStatus.setText("A");
-        btnCustomer.setEnabled(true);
-        jButtonPrint.setEnabled(true);
+        voucherId = UUID.randomUUID().toString();
+        voucherNumberTField.setText(generateVoucherNumber());
+        voucherNumberTField.setEnabled(true);
+        voucherCustomerTField.setText(null);
+        voucherCustomerTField.setEnabled(true);
+        voucherAmountTField.setText(null);
+        voucherAmountTField.setEnabled(true);
+        voucherStatusTField.setText(null);
+        voucherStatusTField.setText("A");
+        customerSelectorBtn.setEnabled(true);
+        printBtn.setEnabled(true);
     }
 
     @Override
     public void writeValueDelete(Object value) {
-        if ("A".equals(m_jStatus.getText())) {
+        if ("A".equals(voucherStatusTField.getText())) {
             try {
                 Object[] attr = (Object[]) value;
-                id = (String) attr[0];
-                m_jNumber.setText(Formats.STRING.formatValue((String) attr[1]));
-                m_jNumber.setEnabled(false);
+                voucherId = (String) attr[0];
+                voucherNumberTField.setText(Formats.STRING.formatValue((String) attr[1]));
+                voucherNumberTField.setEnabled(false);
                 customerInfo = dlCustomers.getCustomerInfo(attr[2].toString());
-                m_jCustomer.setText(customerInfo.getName());
-                m_jCustomer.setEnabled(false);
-                m_jAmount.setText(Formats.DOUBLE.formatValue((Double) attr[3]));
-                m_jAmount.setEnabled(false);
-                m_jStatus.setText(Formats.STRING.formatValue((String) attr[4]));
-                m_jStatus.setEnabled(false);
+                voucherCustomerTField.setText(customerInfo.getName());
+                voucherCustomerTField.setEnabled(false);
+                voucherAmountTField.setText(Formats.DOUBLE.formatValue((Double) attr[3]));
+                voucherAmountTField.setEnabled(false);
+                voucherStatusTField.setText(Formats.STRING.formatValue((String) attr[4]));
+                voucherStatusTField.setEnabled(false);
 
-                jButtonPrint.setEnabled(false);
+                printBtn.setEnabled(false);
             } catch (BasicException ex) {
                 LOGGER.log(Level.SEVERE, "Exception delete voucher object", ex);
             }
@@ -132,41 +131,45 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
 
         try {
             Object[] attr = (Object[]) value;
-            id = (String) attr[0];
-            m_jNumber.setText(Formats.STRING.formatValue((String) attr[1]));
-            m_jNumber.setEnabled(true);
+            voucherId = (String) attr[0];
+            voucherNumberTField.setText(Formats.STRING.formatValue((String) attr[1]));
+            voucherNumberTField.setEnabled(true);
             customerInfo = dlCustomers.getCustomerInfo(attr[2].toString());
-            m_jCustomer.setText(customerInfo.getName());
-            m_jCustomer.setEnabled(true);
-            m_jAmount.setText(Formats.DOUBLE.formatValue((Double) attr[3]));
-            m_jAmount.setEnabled(true);
-            m_jStatus.setText(Formats.STRING.formatValue((String) attr[4]));
+            voucherCustomerTField.setText(customerInfo.getName());
+            voucherCustomerTField.setEnabled(true);
+            voucherAmountTField.setText(Formats.DOUBLE.formatValue((Double) attr[3]));
+            voucherAmountTField.setEnabled(true);
+            voucherStatusTField.setText(Formats.STRING.formatValue((String) attr[4]));
 
-            jButtonPrint.setEnabled(true);
+            printBtn.setEnabled(true);
 
-            if (null == m_jStatus.getText()) {
+            if (null == voucherStatusTField.getText()) {
                 jLblStatus.setIcon(null);
+                statusIcon.setIcon(null);
             } else {
-                switch (m_jStatus.getText()) {
-                    case "A":
-                        jLblStatus.setIcon(new javax.swing.ImageIcon(getClass()
-                                .getResource("/com/openbravo/images/OK.png")));
-                        m_jNumber.setEnabled(true);
-                        m_jAmount.setEnabled(true);
-                        btnCustomer.setEnabled(true);
-                        m_jStatus.setText("A");
+                switch (voucherStatusTField.getText()) {
+                    case VoucherInfo.VOUCHER_STATUS_AVAILABLE:
+                        statusIcon.setIcon(new javax.swing.ImageIcon(getClass()
+                                .getResource("/com/openbravo/images/ok.png")));
+                        statusIcon.setToolTipText("Available");
+                        voucherNumberTField.setEnabled(true);
+                        voucherAmountTField.setEnabled(true);
+                        customerSelectorBtn.setEnabled(true);
+                        voucherStatusTField.setText("A");
                         break;
-                    case "D":
-                        jLblStatus.setIcon(new javax.swing.ImageIcon(getClass()
+                    case VoucherInfo.VOUCHER_STATUS_REDEEMED:
+                        statusIcon.setIcon(new javax.swing.ImageIcon(getClass()
                                 .getResource("/com/openbravo/images/refundit.png")));
-                        m_jNumber.setEnabled(false);
-                        m_jAmount.setEnabled(false);
-                        btnCustomer.setEnabled(false);
-                        m_jStatus.setText("D");
+                        statusIcon.setToolTipText("Redeemed");
+                        voucherNumberTField.setEnabled(false);
+                        voucherAmountTField.setEnabled(false);
+                        customerSelectorBtn.setEnabled(false);
+                        voucherStatusTField.setText("D");
 
                         break;
                     default:
                         jLblStatus.setIcon(null);
+                        statusIcon.setIcon(null);
                         break;
                 }
             }
@@ -181,11 +184,11 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
 
         Object[] attr = new Object[5];
 
-        attr[0] = id;
-        attr[1] = m_jNumber.getText();
+        attr[0] = voucherId;
+        attr[1] = voucherNumberTField.getText();
         attr[2] = customerInfo.getId();
-        attr[3] = Formats.DOUBLE.parseValue(m_jAmount.getText());
-        attr[4] = m_jStatus.getText();
+        attr[3] = Formats.DOUBLE.parseValue(voucherAmountTField.getText());
+        attr[4] = voucherStatusTField.getText();
 
         return attr;
     }
@@ -213,15 +216,16 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
-        m_jNumber = new javax.swing.JTextField();
+        voucherNumberTField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        m_jCustomer = new javax.swing.JTextField();
-        m_jAmount = new javax.swing.JTextField();
+        voucherCustomerTField = new javax.swing.JTextField();
+        voucherAmountTField = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jButtonPrint = new javax.swing.JButton();
+        printBtn = new javax.swing.JButton();
         jLblStatus = new javax.swing.JLabel();
-        m_jStatus = new javax.swing.JTextField();
-        btnCustomer = new javax.swing.JButton();
+        voucherStatusTField = new javax.swing.JTextField();
+        customerSelectorBtn = new javax.swing.JButton();
+        statusIcon = new javax.swing.JLabel();
 
         setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
@@ -229,36 +233,37 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
         jLabel2.setText(AppLocal.getIntString("label.Number")); // NOI18N
         jLabel2.setPreferredSize(new java.awt.Dimension(100, 30));
 
-        m_jNumber.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jNumber.setPreferredSize(new java.awt.Dimension(240, 30));
+        voucherNumberTField.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        voucherNumberTField.setPreferredSize(new java.awt.Dimension(240, 30));
 
         jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel3.setText(AppLocal.getIntString("label.customer")); // NOI18N
         jLabel3.setPreferredSize(new java.awt.Dimension(100, 30));
 
-        m_jCustomer.setEditable(false);
-        m_jCustomer.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jCustomer.setPreferredSize(new java.awt.Dimension(240, 30));
+        voucherCustomerTField.setEditable(false);
+        voucherCustomerTField.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        voucherCustomerTField.setPreferredSize(new java.awt.Dimension(240, 30));
 
-        m_jAmount.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jAmount.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
-        m_jAmount.setPreferredSize(new java.awt.Dimension(240, 30));
+        voucherAmountTField.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        voucherAmountTField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        voucherAmountTField.setPreferredSize(new java.awt.Dimension(240, 30));
 
         jLabel5.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel5.setText(AppLocal.getIntString("label.paymenttotal")); // NOI18N
         jLabel5.setPreferredSize(new java.awt.Dimension(100, 30));
 
-        jButtonPrint.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jButtonPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/printer24.png"))); // NOI18N
-        jButtonPrint.setToolTipText(AppLocal.getIntString("button.print")); // NOI18N
-        jButtonPrint.setFocusPainted(false);
-        jButtonPrint.setFocusable(false);
-        jButtonPrint.setMargin(new java.awt.Insets(8, 14, 8, 14));
-        jButtonPrint.setPreferredSize(new java.awt.Dimension(80, 45));
-        jButtonPrint.setRequestFocusEnabled(false);
-        jButtonPrint.addActionListener(new java.awt.event.ActionListener() {
+        printBtn.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        printBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/printer24.png"))); // NOI18N
+        printBtn.setText(AppLocal.getIntString("button.print")); // NOI18N
+        printBtn.setToolTipText(AppLocal.getIntString("button.print")); // NOI18N
+        printBtn.setFocusPainted(false);
+        printBtn.setFocusable(false);
+        printBtn.setMargin(new java.awt.Insets(8, 14, 8, 14));
+        printBtn.setPreferredSize(new java.awt.Dimension(80, 45));
+        printBtn.setRequestFocusEnabled(false);
+        printBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonPrintActionPerformed(evt);
+                printBtnActionPerformed(evt);
             }
         });
 
@@ -268,21 +273,23 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
         jLblStatus.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         jLblStatus.setPreferredSize(new java.awt.Dimension(100, 30));
 
-        m_jStatus.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jStatus.setPreferredSize(new java.awt.Dimension(240, 30));
+        voucherStatusTField.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        voucherStatusTField.setPreferredSize(new java.awt.Dimension(240, 30));
 
-        btnCustomer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/customer_sml.png"))); // NOI18N
-        btnCustomer.setToolTipText("Open Customers");
-        btnCustomer.setFocusPainted(false);
-        btnCustomer.setFocusable(false);
-        btnCustomer.setMargin(new java.awt.Insets(8, 14, 8, 14));
-        btnCustomer.setPreferredSize(new java.awt.Dimension(100, 30));
-        btnCustomer.setRequestFocusEnabled(false);
-        btnCustomer.addActionListener(new java.awt.event.ActionListener() {
+        customerSelectorBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/customer_sml.png"))); // NOI18N
+        customerSelectorBtn.setToolTipText("Open Customers");
+        customerSelectorBtn.setFocusPainted(false);
+        customerSelectorBtn.setFocusable(false);
+        customerSelectorBtn.setMargin(new java.awt.Insets(8, 14, 8, 14));
+        customerSelectorBtn.setPreferredSize(new java.awt.Dimension(100, 30));
+        customerSelectorBtn.setRequestFocusEnabled(false);
+        customerSelectorBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCustomerActionPerformed(evt);
+                customerSelectorBtnActionPerformed(evt);
             }
         });
+
+        statusIcon.setToolTipText("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -297,21 +304,23 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(voucherNumberTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(m_jCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(voucherCustomerTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(26, 26, 26)
-                                .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(m_jNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(statusIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(customerSelectorBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(m_jAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(voucherAmountTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(m_jStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(voucherStatusTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(printBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(72, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -320,32 +329,34 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(m_jNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(voucherNumberTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(m_jCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(voucherCustomerTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(m_jAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(voucherAmountTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(m_jStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(7, 7, 7)
-                .addComponent(jButtonPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(voucherStatusTField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(statusIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(customerSelectorBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addComponent(printBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-private void jButtonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPrintActionPerformed
+private void printBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printBtnActionPerformed
 
     try {
-        VoucherInfo voucherInfo = dlCustomers.getVoucherInfoAll(id);
+        VoucherInfo voucherInfo = dlCustomers.getVoucherInfoAll(voucherId);
         BufferedImage image = dlSystem.getResourceAsImage("Window.Logo");
         if (voucherInfo != null) {
             JDialogReportPanel dialog = JDialogReportPanel
@@ -356,9 +367,9 @@ private void jButtonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     } catch (BasicException ex) {
         LOGGER.log(Level.WARNING, "Exception Create voucher printer dialog", ex);
     }
-}//GEN-LAST:event_jButtonPrintActionPerformed
+}//GEN-LAST:event_printBtnActionPerformed
 
-    private void btnCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCustomerActionPerformed
+    private void customerSelectorBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerSelectorBtnActionPerformed
 
         JCustomerFinder finder = JCustomerFinder.getCustomerFinder(this, dlCustomers);
         finder.search(null);
@@ -366,7 +377,7 @@ private void jButtonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
         if (finder.getSelectedCustomer() != null) {
             customerInfo = finder.getSelectedCustomer();
-            m_jCustomer.setText(customerInfo.getName());
+            voucherCustomerTField.setText(customerInfo.getName());
         }
 
         if (false) {
@@ -375,35 +386,36 @@ private void jButtonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
             customerInfo = dialog.getSelectedCustomer();
             if (dialog.getSelectedCustomer() != null) {
-                m_jCustomer.setText(customerInfo.getName());
+                voucherCustomerTField.setText(customerInfo.getName());
             }
         }
 
-    }//GEN-LAST:event_btnCustomerActionPerformed
+    }//GEN-LAST:event_customerSelectorBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCustomer;
-    private javax.swing.JButton jButtonPrint;
+    private javax.swing.JButton customerSelectorBtn;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLblStatus;
-    private javax.swing.JTextField m_jAmount;
-    private javax.swing.JTextField m_jCustomer;
-    private javax.swing.JTextField m_jNumber;
-    private javax.swing.JTextField m_jStatus;
+    private javax.swing.JButton printBtn;
+    private javax.swing.JLabel statusIcon;
+    private javax.swing.JTextField voucherAmountTField;
+    private javax.swing.JTextField voucherCustomerTField;
+    private javax.swing.JTextField voucherNumberTField;
+    private javax.swing.JTextField voucherStatusTField;
     // End of variables declaration//GEN-END:variables
 
     public boolean isDataValid() {
         ValidateBuilder validate = new ValidateBuilder(this);
-        validate.setValidate(m_jNumber.getText(), ValidateBuilder.IS_NOT_EMPTY,
+        validate.setValidate(voucherNumberTField.getText(), ValidateBuilder.IS_NOT_EMPTY,
                 AppLocal.getIntString("message.message.emptynumber"));
-        validate.setValidate(m_jCustomer.getText(), ValidateBuilder.IS_NOT_EMPTY,
+        validate.setValidate(voucherCustomerTField.getText(), ValidateBuilder.IS_NOT_EMPTY,
                 AppLocal.getIntString("message.emptycustomer"));
-        validate.setValidate(m_jAmount.getText(), ValidateBuilder.IS_DOUBLE,
+        validate.setValidate(voucherAmountTField.getText(), ValidateBuilder.IS_DOUBLE,
                 AppLocal.getIntString("message.numericamount"));
-        validate.setValidate(m_jStatus.getText(), ValidateBuilder.IS_NOT_EMPTY,
+        validate.setValidate(voucherStatusTField.getText(), ValidateBuilder.IS_NOT_EMPTY,
                 AppLocal.getIntString("message.emptystatus"));
         return validate.getValid();
     }
@@ -411,11 +423,12 @@ private void jButtonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     /** 
      * Voucher Number generator
      * 
-     * @return voucher number ("VO-{yy-MM}-{SEQ}"
+     * @return voucher number ("VO-{yy-MM}-{SEQ} {"VO-25-10-00001"}"
      */
     public String generateVoucherNumber() {
         String result = "";
 
+        final DateFormat m_simpledate = new SimpleDateFormat("MM-yy");
         try {
             result = "VO-" + m_simpledate.format(new Date());
             String lastNumber = (String) dlCustomers.getVoucherNumber().find(result);

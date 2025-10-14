@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInterface {
 
-    private final JPaymentNotifier m_notifier;
+    private final JPaymentNotifier paymentNotifier;
 
     private DataLogicSales dlSales;
     private DataLogicCustomers dlCustomers;
@@ -45,28 +45,28 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
     private SentenceList<VoucherInfo> m_sentvouch;
 
     private double voucherAmount;
-    private double m_dTotalToPay;
+    private double totalToPay;
 
-    private final String m_sVoucherType; // "voucherin", "voucherout"
-    private String m_sVoucherNumber;
+    private final String voucherType; // "voucherin", "voucherout"
+    private String voucherNumber;
 
     /**
      * Creates new form JPaymentTicket
      *
      * @param app
      * @param notifier
-     * @param sVoucher should be "voucherin", "voucherout"
+     * @param voucherType should be "voucherin", "voucherout"
      */
-    public JPaymentVoucher(AppView app, JPaymentNotifier notifier, String sVoucher) {
+    public JPaymentVoucher(AppView app, JPaymentNotifier notifier, String voucherType) {
 
-        m_notifier = notifier;
-        m_sVoucherType = sVoucher;
-        voucherAmount = 0.0;
-        m_dTotalToPay = 0.0;
+        this.paymentNotifier = notifier;
+        this.voucherType = voucherType;
+        this.voucherAmount = 0.0;
+        this.totalToPay = 0.0;
 
         init(app);
 
-        m_jTendered.addPropertyChangeListener("Edition", new RecalculateState());
+        this.moneyEditor.addPropertyChangeListener("Edition", new RecalculateState());
     }
 
     private void init(AppView app) {
@@ -78,13 +78,12 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
 
             initComponents();
 
-            m_VoucherModel = new ComboBoxValModel();
             List<VoucherInfo> a = m_sentvouch.list();
 
             m_VoucherModel = new ComboBoxValModel(a);
-            m_jVoucher.setModel(m_VoucherModel);
+            vouchersComboBox.setModel(m_VoucherModel);
 
-            webLblcustomerName.setText(null);
+            customerName.setText(null);
 
         } catch (BasicException ex) {
         }
@@ -99,10 +98,10 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
     @Override
     public void activate(CustomerInfoExt customerext, double dTotal, String transID) {
 
-        m_dTotalToPay = dTotal;
-        m_jTendered.reset();
-        m_jKeys.setEnabled(false);
-        m_jTendered.setEnabled(false);
+        totalToPay = dTotal;
+        moneyEditor.reset();
+        keypadPanel.setEnabled(false);
+        moneyEditor.setEnabled(false);
 
         setStates(null);
     }
@@ -122,7 +121,7 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
      */
     @Override
     public PaymentInfo executePayment() {
-        return new PaymentInfoTicket(voucherAmount, m_sVoucherType, m_sVoucherNumber);
+        return new PaymentInfoTicket(voucherAmount, voucherType, voucherNumber);
 
     }
 
@@ -130,35 +129,35 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            int iCompare = RoundUtils.compare(voucherAmount, m_dTotalToPay);
-            m_notifier.setStatus(voucherAmount > 0.0, iCompare >= 0);
+            int iCompare = RoundUtils.compare(voucherAmount, totalToPay);
+            paymentNotifier.setStatus(voucherAmount > 0.0, iCompare >= 0);
         }
     }
 
-    private void setStates(VoucherInfo m_voucherInfo) {
+    private void setStates(VoucherInfo voucherInfo) {
 
         cleanStates();
-        if (m_voucherInfo != null) {
-            if ("A".equals(m_voucherInfo.getStatus())) {
+        if (voucherInfo != null) {
+            if (VoucherInfo.VOUCHER_STATUS_AVAILABLE.equals(voucherInfo.getStatus())) {
 
-                voucherAmount = m_voucherInfo.getAmount();
-                m_jTendered.setDoubleValue(voucherAmount);
-                m_jMoneyEuros.setText(Formats.CURRENCY.formatValue(voucherAmount));
-                webLblcustomerName.setText(m_voucherInfo.getCustomerName());
-                m_sVoucherNumber = m_voucherInfo.getVoucherNumber();
-                voucherStatus.setText("Available");
-            } else if ("D".equals(m_voucherInfo.getStatus())) {
-                voucherStatus.setText("Redeemed");
+                voucherAmount = voucherInfo.getAmount();
+                moneyEditor.setDoubleValue(voucherAmount);
+                voucherValue.setText(Formats.CURRENCY.formatValue(voucherAmount));
+                customerName.setText(voucherInfo.getCustomerName());
+                voucherNumber = voucherInfo.getVoucherNumber();
+                voucherStatus.setText(voucherInfo.printStatus());
+            } else if (VoucherInfo.VOUCHER_STATUS_REDEEMED.equals(voucherInfo.getStatus())) {
+                voucherStatus.setText(voucherInfo.printStatus());
             }
         }
     }
 
     private void cleanStates() {
-        m_sVoucherNumber = null;
+        voucherNumber = null;
         voucherAmount = 0.0;
-        m_jMoneyEuros.setText(null);
-        m_jTendered.setDoubleValue(null);
-        webLblcustomerName.setText(null);
+        voucherValue.setText(null);
+        moneyEditor.setDoubleValue(null);
+        customerName.setText(null);
         voucherStatus.setText(null);
     }
 
@@ -172,62 +171,64 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
 
         jPanel4 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        m_jVoucher = new javax.swing.JComboBox();
+        vouchersComboBox = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
-        m_jMoneyEuros = new javax.swing.JLabel();
+        voucherValue = new javax.swing.JLabel();
         webLblCustomer = new javax.swing.JLabel();
-        webLblcustomerName = new javax.swing.JLabel();
+        customerName = new javax.swing.JLabel();
         voucherStatus = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jPanel11 = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
-        m_jKeys = new com.openbravo.editor.JEditorKeys();
+        keypadPanel = new com.openbravo.editor.JEditorKeys();
         jPanel1 = new javax.swing.JPanel();
-        m_jTendered = new com.openbravo.editor.JEditorCurrencyPositive();
+        moneyEditor = new com.openbravo.editor.JEditorCurrencyPositive();
 
         setLayout(new java.awt.BorderLayout());
 
         jLabel5.setFont(jLabel5.getFont());
-        jLabel5.setLabelFor(m_jVoucher);
+        jLabel5.setLabelFor(vouchersComboBox);
         jLabel5.setText(AppLocal.getIntString("label.voucher")); // NOI18N
         jLabel5.setPreferredSize(new java.awt.Dimension(100, 30));
 
-        m_jVoucher.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        m_jVoucher.setPreferredSize(new java.awt.Dimension(180, 30));
-        m_jVoucher.addActionListener(new java.awt.event.ActionListener() {
+        vouchersComboBox.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        vouchersComboBox.setPreferredSize(new java.awt.Dimension(180, 30));
+        vouchersComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                m_jVoucherActionPerformed(evt);
+                vouchersComboBoxActionPerformed(evt);
             }
         });
 
         jLabel1.setFont(jLabel1.getFont());
+        jLabel1.setLabelFor(voucherStatus);
         jLabel1.setText(AppLocal.getIntString("label.voucherValue")); // NOI18N
         jLabel1.setPreferredSize(new java.awt.Dimension(100, 30));
 
-        m_jMoneyEuros.setBackground(new java.awt.Color(248, 248, 248));
-        m_jMoneyEuros.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        m_jMoneyEuros.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        m_jMoneyEuros.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(javax.swing.UIManager.getDefaults().getColor("Button.darkShadow")), javax.swing.BorderFactory.createEmptyBorder(1, 4, 1, 4)));
-        m_jMoneyEuros.setOpaque(true);
-        m_jMoneyEuros.setPreferredSize(new java.awt.Dimension(180, 30));
+        voucherValue.setBackground(new java.awt.Color(248, 248, 248));
+        voucherValue.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        voucherValue.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        voucherValue.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(javax.swing.UIManager.getDefaults().getColor("Button.darkShadow")), javax.swing.BorderFactory.createEmptyBorder(1, 4, 1, 4)));
+        voucherValue.setOpaque(true);
+        voucherValue.setPreferredSize(new java.awt.Dimension(180, 30));
 
+        webLblCustomer.setFont(webLblCustomer.getFont());
+        webLblCustomer.setLabelFor(customerName);
         webLblCustomer.setText(AppLocal.getIntString("label.customer")); // NOI18N
         webLblCustomer.setToolTipText(AppLocal.getIntString("label.customer")); // NOI18N
-        webLblCustomer.setFont(webLblCustomer.getFont());
         webLblCustomer.setPreferredSize(new java.awt.Dimension(100, 30));
 
-        webLblcustomerName.setText(AppLocal.getIntString("label.customer")); // NOI18N
-        webLblcustomerName.setToolTipText("");
-        webLblcustomerName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        webLblcustomerName.setPreferredSize(new java.awt.Dimension(100, 30));
+        customerName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        customerName.setText(AppLocal.getIntString("label.customer")); // NOI18N
+        customerName.setToolTipText("");
+        customerName.setPreferredSize(new java.awt.Dimension(100, 30));
 
+        voucherStatus.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         voucherStatus.setText(AppLocal.getIntString("label.voucherStatus")); // NOI18N
         voucherStatus.setToolTipText("");
-        voucherStatus.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         voucherStatus.setPreferredSize(new java.awt.Dimension(100, 30));
 
         jLabel6.setFont(jLabel6.getFont());
-        jLabel6.setLabelFor(m_jVoucher);
+        jLabel6.setLabelFor(voucherStatus);
         jLabel6.setText(AppLocal.getIntString("label.voucherStatus")); // NOI18N
         jLabel6.setPreferredSize(new java.awt.Dimension(100, 30));
 
@@ -239,18 +240,18 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
                 .addContainerGap()
                 .addComponent(webLblCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(webLblcustomerName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(customerName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(m_jMoneyEuros, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(voucherValue, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(m_jVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(vouchersComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 2, Short.MAX_VALUE))
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
@@ -264,7 +265,7 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(m_jVoucher, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(vouchersComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -272,11 +273,11 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(m_jMoneyEuros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(voucherValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(webLblCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(webLblcustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(customerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(245, 245, 245))
         );
 
@@ -285,14 +286,14 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
         jPanel11.setLayout(new java.awt.BorderLayout());
 
         jPanel12.setLayout(new javax.swing.BoxLayout(jPanel12, javax.swing.BoxLayout.Y_AXIS));
-        jPanel12.add(m_jKeys);
+        jPanel12.add(keypadPanel);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        m_jTendered.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        m_jTendered.setPreferredSize(new java.awt.Dimension(130, 30));
-        jPanel1.add(m_jTendered, java.awt.BorderLayout.CENTER);
+        moneyEditor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        moneyEditor.setPreferredSize(new java.awt.Dimension(130, 30));
+        jPanel1.add(moneyEditor, java.awt.BorderLayout.CENTER);
 
         jPanel12.add(jPanel1);
 
@@ -301,7 +302,7 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
         add(jPanel11, java.awt.BorderLayout.EAST);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void m_jVoucherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jVoucherActionPerformed
+    private void vouchersComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vouchersComboBoxActionPerformed
 
         VoucherInfo m_voucherInfo = null;
         if (m_VoucherModel.getSelectedKey() != null) {
@@ -314,10 +315,11 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
         }
 
         setStates(m_voucherInfo);
-    }//GEN-LAST:event_m_jVoucherActionPerformed
+    }//GEN-LAST:event_vouchersComboBoxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel customerName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -325,13 +327,12 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel4;
-    private com.openbravo.editor.JEditorKeys m_jKeys;
-    private javax.swing.JLabel m_jMoneyEuros;
-    private com.openbravo.editor.JEditorCurrencyPositive m_jTendered;
-    private javax.swing.JComboBox m_jVoucher;
+    private com.openbravo.editor.JEditorKeys keypadPanel;
+    private com.openbravo.editor.JEditorCurrencyPositive moneyEditor;
     private javax.swing.JLabel voucherStatus;
+    private javax.swing.JLabel voucherValue;
+    private javax.swing.JComboBox vouchersComboBox;
     private javax.swing.JLabel webLblCustomer;
-    private javax.swing.JLabel webLblcustomerName;
     // End of variables declaration//GEN-END:variables
 
 }

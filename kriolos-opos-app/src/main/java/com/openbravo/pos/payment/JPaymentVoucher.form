@@ -30,20 +30,20 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="webLblCustomer" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="webLblcustomerName" max="32767" attributes="0"/>
+                  <Component id="customerName" max="32767" attributes="0"/>
               </Group>
               <Group type="102" attributes="0">
                   <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="m_jMoneyEuros" pref="0" max="32767" attributes="0"/>
+                  <Component id="voucherValue" pref="0" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="m_jVoucher" min="-2" max="-2" attributes="0"/>
+                  <Component id="vouchersComboBox" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="2" max="32767" attributes="0"/>
               </Group>
               <Group type="102" attributes="0">
@@ -60,7 +60,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="m_jVoucher" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="vouchersComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
@@ -70,12 +70,12 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                      <Component id="m_jMoneyEuros" min="-2" max="-2" attributes="0"/>
+                      <Component id="voucherValue" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="webLblCustomer" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="webLblcustomerName" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="customerName" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="245" max="-2" attributes="0"/>
               </Group>
@@ -91,7 +91,7 @@
               </FontInfo>
             </Property>
             <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="m_jVoucher"/>
+              <ComponentRef name="vouchersComboBox"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="pos_messages.properties" key="label.voucher" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
@@ -101,7 +101,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="m_jVoucher">
+        <Component class="javax.swing.JComboBox" name="vouchersComboBox">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="14" style="0"/>
@@ -111,7 +111,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="m_jVoucherActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="vouchersComboBoxActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
@@ -121,6 +121,9 @@
                 <Font component="jLabel1" property="font" relativeSize="true" size="0"/>
               </FontInfo>
             </Property>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="voucherStatus"/>
+            </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="pos_messages.properties" key="label.voucherValue" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
             </Property>
@@ -129,7 +132,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="m_jMoneyEuros">
+        <Component class="javax.swing.JLabel" name="voucherValue">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="f8" green="f8" red="f8" type="rgb"/>
@@ -165,6 +168,9 @@
                 <Font component="webLblCustomer" property="font" relativeSize="true" size="0"/>
               </FontInfo>
             </Property>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="customerName"/>
+            </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="pos_messages.properties" key="label.customer" replaceFormat="AppLocal.getIntString(&quot;label.customer&quot;)"/>
             </Property>
@@ -176,7 +182,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="webLblcustomerName">
+        <Component class="javax.swing.JLabel" name="customerName">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="14" style="0"/>
@@ -212,7 +218,7 @@
               </FontInfo>
             </Property>
             <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="m_jVoucher"/>
+              <ComponentRef name="voucherStatus"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="pos_messages.properties" key="label.voucherStatus" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
@@ -244,7 +250,7 @@
             <Property name="axis" type="int" value="1"/>
           </Layout>
           <SubComponents>
-            <Component class="com.openbravo.editor.JEditorKeys" name="m_jKeys">
+            <Component class="com.openbravo.editor.JEditorKeys" name="keypadPanel">
             </Component>
             <Container class="javax.swing.JPanel" name="jPanel1">
               <Properties>
@@ -257,7 +263,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
               <SubComponents>
-                <Component class="com.openbravo.editor.JEditorCurrencyPositive" name="m_jTendered">
+                <Component class="com.openbravo.editor.JEditorCurrencyPositive" name="moneyEditor">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="12" style="0"/>
