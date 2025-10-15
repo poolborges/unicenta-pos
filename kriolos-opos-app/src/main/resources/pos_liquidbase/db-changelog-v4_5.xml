@@ -918,13 +918,6 @@
     <changeSet author="pauloborges (generated)" id="1603928315936-53" dbms="!sqlite">
         <addUniqueConstraint columnNames="location, product, attributesetinstance_id" constraintName="stockcurrent_inx" tableName="stockcurrent"/>
     </changeSet>
-    <changeSet author="pauloborges (manual)" id="1603928315936-53-sqlite" dbms="!sqlite">
-        <createIndex tableName="stockcurrent" unique="true" indexName="stockcurrent_inx">
-            <column name="location"/>
-            <column name="product"/>
-            <column name="attributesetinstance_id"/>
-        </createIndex>
-    </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-54">
         <createIndex indexName="attinst_att" tableName="attributeinstance">
             <column name="attribute_id"/>
