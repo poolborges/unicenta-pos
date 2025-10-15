@@ -271,6 +271,8 @@ public final class PaymentsEditor extends javax.swing.JPanel implements EditorRe
 
         setLayout(new java.awt.BorderLayout());
 
+        jPanel3.setMaximumSize(new java.awt.Dimension(362, 208));
+
         jLabel5.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel5.setText(AppLocal.getIntString("label.paymentreason")); // NOI18N
         jLabel5.setPreferredSize(new java.awt.Dimension(110, 30));

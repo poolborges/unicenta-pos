@@ -13,7 +13,6 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.customers;
 
 import com.openbravo.pos.forms.JPanelView;
@@ -38,6 +37,7 @@ import com.openbravo.pos.scripting.ScriptException;
 import com.openbravo.pos.scripting.ScriptFactory;
 import com.openbravo.pos.ticket.TicketInfo;
 import com.openbravo.pos.util.RoundUtils;
+import java.awt.Dimension;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JComponent;
@@ -46,7 +46,7 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  *
- * @author  adrianromero
+ * @author adrianromero
  */
 public class CustomersPayment extends javax.swing.JPanel implements JPanelView, BeanFactoryApp {
 
@@ -56,16 +56,16 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
     private DataLogicCustomers dlcustomers;
     private DataLogicSales dlsales;
     private DataLogicSystem dlsystem;
-    private TicketParser ttp;    
+    private TicketParser ttp;
     private JPaymentSelect paymentdialog;
-    
+
     private CustomerInfoExt customerext;
     private final DirtyManager dirty;
 
     public CustomersPayment() {
 
         initComponents();
-        
+
         editorcard.addEditorKeys(m_jKeys);
         txtNotes.addEditorKeys(m_jKeys);
         txtPrePay.addEditorKeys(m_jKeys);
@@ -98,7 +98,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
     @Override
     public void activate() throws BasicException {
 
-        paymentdialog = JPaymentSelectCustomer.getDialog(this);        
+        paymentdialog = JPaymentSelectCustomer.getDialog(this);
         paymentdialog.init(app);
 
         resetCustomer();
@@ -110,11 +110,11 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
     @Override
     public boolean deactivate() {
         if (dirty.isDirty()) {
-            int res = JOptionPane.showConfirmDialog(this, AppLocal.getIntString("message.wannasave"), 
-                AppLocal.getIntString("title.editor"), 
-                JOptionPane.YES_NO_CANCEL_OPTION, 
-                JOptionPane.QUESTION_MESSAGE);
-            
+            int res = JOptionPane.showConfirmDialog(this, AppLocal.getIntString("message.wannasave"),
+                    AppLocal.getIntString("title.editor"),
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+
             if (res == JOptionPane.YES_OPTION) {
                 save();
                 return true;
@@ -135,6 +135,11 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         return this;
     }
 
+    @Override
+    public Dimension getMaximumSize() {
+        return getPreferredSize();
+    }
+
     private void editCustomer(CustomerInfoExt customer) {
 
         customerext = customer;
@@ -148,25 +153,26 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         txtCurdebt.setText(Formats.CURRENCY.formatValue(customer.getAccdebt()));
         txtCurdate.setText(Formats.DATE.formatValue(customer.getCurdate()));
         txtPrePay.setValue(null);
-        
+
         txtNotes.setEnabled(true);
         txtPrePay.setEnabled(true);
 
         dirty.setDirty(false);
 
-        btnSave.setEnabled(true);    
+        btnSave.setEnabled(true);
         btnPay.setEnabled(true);
         btnPay.setEnabled(enablePay());
-        
+
         btnPrePay.setEnabled(true);
-        
+
     }
-    
+
     /**
      * Enable Pay only if Debt is more than 0.0
+     *
      * @return true is pay is enabled, otherwich false
      */
-    private boolean enablePay(){
+    private boolean enablePay() {
         return customerext != null && customerext.getCurDebt() != null && customerext.getCurDebt() > 0.0;
     }
 
@@ -184,13 +190,13 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         txtPrePay.setValue(null);
 
         txtNotes.setEnabled(false);
-        txtPrePay.setEnabled(false);        
+        txtPrePay.setEnabled(false);
 
         dirty.setDirty(false);
 
         btnSave.setEnabled(false);
         btnPay.setEnabled(false);
-        btnPrePay.setEnabled(false);        
+        btnPrePay.setEnabled(false);
 
     }
 
@@ -205,7 +211,8 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                 editCustomer(customer);
             }
 
-        } catch (BasicException ex) {
+        }
+        catch (BasicException ex) {
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotfindcustomer"), ex);
             msg.show(this);
         }
@@ -218,11 +225,12 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
 
         customerext.setNotes(txtNotes.getText());
         customerext.setPrePay(txtPrePay.getText());
-                
+
         try {
             dlcustomers.updateCustomerExt(customerext);
             editCustomer(customerext);
-        } catch (BasicException e) {
+        }
+        catch (BasicException e) {
             MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE, AppLocal.getIntString("message.nosave"), e);
             msg.show(this);
         }
@@ -241,17 +249,18 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                 script.put("ticket", ticket);
                 script.put("customer", customer);
                 ttp.printTicket(script.eval(resource).toString());
-            } catch (    ScriptException | TicketPrinterException e) {
+            }
+            catch (ScriptException | TicketPrinterException e) {
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotprintticket"), e);
                 msg.show(this);
             }
         }
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -263,12 +272,6 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         jSeparator1 = new javax.swing.JSeparator();
         btnPay = new javax.swing.JButton();
         btnPrePay = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        m_jKeys = new com.openbravo.editor.JEditorKeys();
-        jPanel5 = new javax.swing.JPanel();
-        editorcard = new com.openbravo.editor.JEditorString();
-        jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
@@ -286,10 +289,24 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         jLabel7 = new javax.swing.JLabel();
         lblPrePay = new javax.swing.JLabel();
         txtNotes = new com.openbravo.editor.JEditorString();
+        jPanel4 = new javax.swing.JPanel();
+        m_jKeys = new com.openbravo.editor.JEditorKeys();
+        editorcard = new com.openbravo.editor.JEditorString();
+        jButton1 = new javax.swing.JButton();
 
+        setMaximumSize(new java.awt.Dimension(750, 450));
+        setMinimumSize(new java.awt.Dimension(650, 400));
+        setPreferredSize(new java.awt.Dimension(750, 450));
         setLayout(new java.awt.BorderLayout());
 
+        jPanel2.setMaximumSize(new java.awt.Dimension(500, 55));
+        jPanel2.setMinimumSize(new java.awt.Dimension(500, 55));
+        jPanel2.setPreferredSize(new java.awt.Dimension(500, 55));
         jPanel2.setLayout(new java.awt.BorderLayout());
+
+        jPanel6.setMaximumSize(new java.awt.Dimension(500, 55));
+        jPanel6.setMinimumSize(new java.awt.Dimension(500, 55));
+        jPanel6.setPreferredSize(new java.awt.Dimension(500, 55));
 
         btnCustomer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/customer_sml.png"))); // NOI18N
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages"); // NOI18N
@@ -359,54 +376,12 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
 
         jPanel2.add(jPanel6, java.awt.BorderLayout.LINE_START);
 
-        add(jPanel2, java.awt.BorderLayout.PAGE_START);
+        add(jPanel2, java.awt.BorderLayout.NORTH);
 
-        jPanel3.setLayout(new java.awt.BorderLayout());
-
-        jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.Y_AXIS));
-
-        m_jKeys.setMaximumSize(new java.awt.Dimension(250, 250));
-        m_jKeys.setMinimumSize(new java.awt.Dimension(250, 250));
-        m_jKeys.setPreferredSize(new java.awt.Dimension(250, 250));
-        m_jKeys.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                m_jKeysActionPerformed(evt);
-            }
-        });
-        jPanel4.add(m_jKeys);
-
-        jPanel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        jPanel5.setMinimumSize(new java.awt.Dimension(164, 100));
-        jPanel5.setPreferredSize(new java.awt.Dimension(170, 100));
-        jPanel5.setLayout(new javax.swing.BoxLayout(jPanel5, javax.swing.BoxLayout.Y_AXIS));
-
-        editorcard.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        editorcard.setMaximumSize(new java.awt.Dimension(2147483647, 30));
-        editorcard.setMinimumSize(new java.awt.Dimension(100, 30));
-        editorcard.setPreferredSize(new java.awt.Dimension(100, 30));
-        jPanel5.add(editorcard);
-
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
-        jButton1.setFocusPainted(false);
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setMargin(new java.awt.Insets(14, 14, 8, 14));
-        jButton1.setMaximumSize(new java.awt.Dimension(104, 44));
-        jButton1.setMinimumSize(new java.awt.Dimension(104, 44));
-        jButton1.setPreferredSize(new java.awt.Dimension(110, 45));
-        jButton1.setRequestFocusEnabled(false);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jPanel5.add(jButton1);
-
-        jPanel4.add(jPanel5);
-
-        jPanel3.add(jPanel4, java.awt.BorderLayout.NORTH);
-
-        add(jPanel3, java.awt.BorderLayout.LINE_END);
+        jPanel1.setMaximumSize(new java.awt.Dimension(400, 350));
+        jPanel1.setMinimumSize(new java.awt.Dimension(400, 350));
+        jPanel1.setName(""); // NOI18N
+        jPanel1.setPreferredSize(new java.awt.Dimension(400, 350));
 
         jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel3.setText(AppLocal.getIntString("label.name")); // NOI18N
@@ -572,21 +547,59 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                     .addComponent(txtCurdebt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtMaxdebt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtCurdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         add(jPanel1, java.awt.BorderLayout.CENTER);
+
+        jPanel4.setMaximumSize(new java.awt.Dimension(300, 400));
+        jPanel4.setMinimumSize(new java.awt.Dimension(300, 400));
+        jPanel4.setPreferredSize(new java.awt.Dimension(300, 400));
+        jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.Y_AXIS));
+
+        m_jKeys.setMaximumSize(new java.awt.Dimension(300, 300));
+        m_jKeys.setMinimumSize(new java.awt.Dimension(300, 300));
+        m_jKeys.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_jKeysActionPerformed(evt);
+            }
+        });
+        jPanel4.add(m_jKeys);
+
+        editorcard.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        editorcard.setMaximumSize(new java.awt.Dimension(2147483647, 30));
+        editorcard.setMinimumSize(new java.awt.Dimension(100, 30));
+        editorcard.setPreferredSize(new java.awt.Dimension(100, 30));
+        jPanel4.add(editorcard);
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
+        jButton1.setFocusPainted(false);
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        jButton1.setMargin(new java.awt.Insets(14, 14, 8, 14));
+        jButton1.setMaximumSize(new java.awt.Dimension(104, 44));
+        jButton1.setMinimumSize(new java.awt.Dimension(104, 44));
+        jButton1.setPreferredSize(new java.awt.Dimension(110, 45));
+        jButton1.setRequestFocusEnabled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton1);
+
+        add(jPanel4, java.awt.BorderLayout.EAST);
     }// </editor-fold>//GEN-END:initComponents
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
         readCustomer();
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void m_jKeysActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jKeysActionPerformed
 
         readCustomer();
-        
+
     }//GEN-LAST:event_m_jKeysActionPerformed
 
     private void btnCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCustomerActionPerformed
@@ -604,20 +617,21 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                 } else {
                     editCustomer(c);
                 }
-            } catch (BasicException ex) {
+            }
+            catch (BasicException ex) {
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotfindcustomer"), ex);
                 msg.show(this);
             }
-        }  
+        }
         editorcard.reset();
         editorcard.activate();
-                
+
 }//GEN-LAST:event_btnCustomerActionPerformed
 
     private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
 
         paymentdialog.setPrintSelected(true);
-        
+
         //Check if Pay is enabled
         if (enablePay() && paymentdialog.showDialog(customerext.getAccdebt(), null)) {
 
@@ -643,11 +657,11 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
 
             try {
                 dlsales.saveTicket(ticket, app.getInventoryLocation());
-            } catch (BasicException eData) {
+            }
+            catch (BasicException eData) {
                 MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE, AppLocal.getIntString("message.nosaveticket"), eData);
                 msg.show(this);
             }
-
 
             // reload customer
             CustomerInfoExt c;
@@ -659,7 +673,8 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                 } else {
                     editCustomer(c);
                 }
-            } catch (BasicException ex) {
+            }
+            catch (BasicException ex) {
                 c = null;
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotfindcustomer"), ex);
                 msg.show(this);
@@ -668,10 +683,10 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
             String ptinerSelected = paymentdialog.isPrintSelected() ? "Printer.CustomerPaid" : "Printer.CustomerPaid2";
             printTicket(ptinerSelected, ticket, c);
         }
-        
+
         editorcard.reset();
         editorcard.activate();
-        
+
 }//GEN-LAST:event_btnPayActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
@@ -682,7 +697,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
             editorcard.reset();
             editorcard.activate();
         }
-        
+
 }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnPrePayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrePayActionPerformed
@@ -691,12 +706,12 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         txtPrePay.requestFocusInWindow();
 
         if (!StringUtils.isNumeric(txtPrePay.getText())) {
-            double prepay = Double.parseDouble(txtPrePay.getText());        
+            double prepay = Double.parseDouble(txtPrePay.getText());
             Formats.CURRENCY.formatValue(RoundUtils.getValue(prepay));
             paymentdialog.setPrintSelected(true);
-        
-            if (paymentdialog.showDialog(prepay, null)) {            
-           
+
+            if (paymentdialog.showDialog(prepay, null)) {
+
                 TicketInfo ticket = new TicketInfo();
                 ticket.setTicketType(TicketInfo.RECEIPT_PAYMENT);
                 List<PaymentInfo> payments = paymentdialog.getSelectedPayments();
@@ -705,7 +720,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                 for (PaymentInfo p : payments) {
                     total += p.getTotal();
                 }
-             
+
                 total = Double.parseDouble(txtPrePay.getText());
 
                 payments.add(new PaymentInfoTicket(-total, "debtpaid"));
@@ -719,7 +734,8 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
 
                 try {
                     dlsales.saveTicket(ticket, app.getInventoryLocation());
-                } catch (BasicException eData) {
+                }
+                catch (BasicException eData) {
                     MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE, AppLocal.getIntString("message.nosaveticket"), eData);
                     msg.show(this);
                 }
@@ -733,20 +749,21 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                     } else {
                         editCustomer(c);
                     }
-                } catch (BasicException ex) {
+                }
+                catch (BasicException ex) {
                     MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotfindcustomer"), ex);
                     msg.show(this);
                 }
 
                 printTicket(paymentdialog.isPrintSelected()
-                    ? "Printer.CustomerPaid"
-                    : "Printer.CustomerPaid2",
-                    ticket, c);
+                        ? "Printer.CustomerPaid"
+                        : "Printer.CustomerPaid2",
+                        ticket, c);
             }
-        
+
             editorcard.reset();
             editorcard.activate();
-        }else{
+        } else {
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("customerspayment.prepay.empty"));
         }
     }//GEN-LAST:event_btnPrePayActionPerformed
@@ -767,9 +784,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblPrePay;

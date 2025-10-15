@@ -82,14 +82,4 @@ public class JPanelPayments extends JPanelTable {
     public String getTitle() {
         return AppLocal.getIntString("Menu.Payments");
     }    
-    
-    @Override
-    public void activate() throws BasicException {         
-        super.activate();
-    }
-    
-    @Override
-    public boolean deactivate() {
-        return super.deactivate();
-    }
 }
