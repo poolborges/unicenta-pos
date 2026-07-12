@@ -490,11 +490,12 @@ public class TicketParser extends DefaultHandler {
 
     private int getFontStyle(Attributes attributes) {
         int fontStyle = DevicePrinter.STYLE_PLAIN;
+        //Use operator bitwise OR to combine both style
         if("true".equals(attributes.getValue("bold"))){
-            fontStyle = DevicePrinter.STYLE_BOLD;
+            fontStyle |= DevicePrinter.STYLE_BOLD;
         }
         if("true".equals(attributes.getValue("underline"))){
-            fontStyle = DevicePrinter.STYLE_UNDERLINE;
+            fontStyle |= DevicePrinter.STYLE_UNDERLINE;
         }
         return fontStyle;
     }
