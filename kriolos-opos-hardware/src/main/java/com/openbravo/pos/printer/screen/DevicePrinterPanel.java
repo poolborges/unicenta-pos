@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://gnu.org>.
  */
 package com.openbravo.pos.printer.screen;
 
@@ -26,28 +26,38 @@ import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
 /**
- *
+ * Visual panel to preview printed tickets on screen.
+ * 
  * @author JG uniCenta
+ * @author KriolOS
  */
 public class DevicePrinterPanel extends javax.swing.JPanel implements DevicePrinter {
     
     private final String printerName;
-   
     private final JTicketContainer ticketContainer;    
     private BasicTicket currentTicket;
     
-
+    /** 
+     * Creates new form DevicePrinterPanel 
+     */
     public DevicePrinterPanel() {
         initComponents();
         
         printerName = AppLocal.getIntString("printer.screen");
-        
         currentTicket = null;
        
         ticketContainer = new JTicketContainer();
         m_jScrollView.setViewportView(ticketContainer); 
         m_jScrollView.getVerticalScrollBar().setValue(0);
         m_jScrollView.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+    }
+    
+    /**
+     * Public option to manually purge all active tickets from the container panel.
+     * Can be invoked directly from external control buttons or view managers.
+     */
+    public void clearAllTickets() {
+        reset();
     }
     
     /**
@@ -58,17 +68,13 @@ public class DevicePrinterPanel extends javax.swing.JPanel implements DevicePrin
         return printerName;
     }
     
-    /**
-     *
-     */
     @Override
-    public void printLogo(){   
+    public void printLogo() {   
         // No logo implementation needed for screen preview
     }
 
     /**
-     *
-     * @return
+     * @return Description of the printer, or null if none provided
      */
     @Override
     public String getPrinterDescription() {
@@ -76,17 +82,13 @@ public class DevicePrinterPanel extends javax.swing.JPanel implements DevicePrin
     }       
 
     /**
-     *
-     * @return
+     * @return This JPanel component instance for rendering in Swing
      */
     @Override
     public JComponent getPrinterComponent() {
         return this;
     }
 
-    /**
-     *
-     */
     @Override
     public void reset() {
         currentTicket = null;
@@ -97,13 +99,8 @@ public class DevicePrinterPanel extends javax.swing.JPanel implements DevicePrin
     @Override
     public void beginReceipt() {
         currentTicket = new BasicTicketForScreen();
-
     }
 
-    /**
-     *
-     * @param image
-     */
     @Override
     public void printImage(BufferedImage image) {
         if (currentTicket != null) {
@@ -111,12 +108,6 @@ public class DevicePrinterPanel extends javax.swing.JPanel implements DevicePrin
         }
     }
 
-    /**
-     *
-     * @param type
-     * @param position
-     * @param code
-     */
     @Override
     public void printBarCode(String type, String position, String code) {
         if (currentTicket != null) {
@@ -131,10 +122,6 @@ public class DevicePrinterPanel extends javax.swing.JPanel implements DevicePrin
         }
     }
 
-    /**
-     *
-     * @param textSize
-     */
     @Override
     public void beginLine(int textSize) {
         if (currentTicket != null) {
@@ -142,21 +129,13 @@ public class DevicePrinterPanel extends javax.swing.JPanel implements DevicePrin
         }
     }
 
-    /**
-     *
-     * @param style
-     * @param text
-     */
     @Override
     public void printText(int style, String text) {
         if (currentTicket != null) {
             currentTicket.printText(style, text);
-        };
+        }
     }
 
-    /**
-     *
-     */
     @Override
     public void endLine() {
         if (currentTicket != null) {
@@ -164,9 +143,6 @@ public class DevicePrinterPanel extends javax.swing.JPanel implements DevicePrin
         }
     } 
 
-    /**
-     *
-     */
     @Override
     public void endReceipt() {
         if (currentTicket != null) {
@@ -175,13 +151,10 @@ public class DevicePrinterPanel extends javax.swing.JPanel implements DevicePrin
         }
     }
     
-    /**
-     *
-     */
     @Override
     public void openDrawer() {
         Toolkit.getDefaultToolkit().beep();
-    }   
+    }     
        
     /** This method is called from within the constructor to
      * initialize the form.

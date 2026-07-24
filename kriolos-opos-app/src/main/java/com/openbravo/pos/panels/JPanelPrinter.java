@@ -23,7 +23,12 @@ import com.openbravo.pos.forms.JPanelView;
 import com.openbravo.pos.printer.DeviceFiscalPrinter;
 import com.openbravo.pos.printer.DevicePrinter;
 import com.openbravo.pos.printer.screen.DeviceDisplayPanel;
+import com.openbravo.pos.printer.screen.DevicePrinterPanel;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.FlowLayout;
 import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -33,28 +38,63 @@ import javax.swing.JPanel;
  */
 public class JPanelPrinter extends JPanel implements JPanelView {
 
-    /** Creates new form JPrinter
-     * @param oApp */
-    public JPanelPrinter(AppView oApp) {
+    private final AppView appView;
+    
+    public JPanelPrinter(AppView appView) {
        
+        this.appView = appView;
         initComponents();
-
-        
-        if (oApp.getDeviceTicket().getDeviceDisplay() instanceof DeviceDisplayPanel deviceDisplay) {
+        initComponentExtras();
+    }
+    
+    /**
+     * Executes post-constructor UI assemblies, components bindings, 
+     * and custom layout actions.
+     */
+    private void initComponentExtras() {
+        if (appView.getDeviceTicket().getDeviceDisplay() instanceof DeviceDisplayPanel deviceDisplay) {
             displayJPanel.add(deviceDisplay);
         }     
         
-        List<DevicePrinter> aprinters = oApp.getDeviceTicket().getDevicePrinterAll();
-        for (int i = 0; i < aprinters.size(); i++) {   
-            DevicePrinter printer = aprinters.get(i);
+        List<DevicePrinter> printers = appView.getDeviceTicket().getDevicePrinterAll();
+        for (int i = 0; i < printers.size(); i++) {   
+            DevicePrinter printer = printers.get(i);
             if (printer.getPrinterComponent() != null) {
                 printersJTabbedPane.add(printer.getPrinterName(), printer.getPrinterComponent());
             }
         }
         
-        DeviceFiscalPrinter fp = oApp.getDeviceTicket().getFiscalPrinter();
-        if (fp.getFiscalComponent() != null) {
-            printersJTabbedPane.add(fp.getFiscalName(), fp.getFiscalComponent());
+        DeviceFiscalPrinter fiscalPrinter = appView.getDeviceTicket().getFiscalPrinter();
+        if (fiscalPrinter.getFiscalComponent() != null) {
+            printersJTabbedPane.add(fiscalPrinter.getFiscalName(), fiscalPrinter.getFiscalComponent());
+        }
+
+        // Creates a dedicated horizontal banner panel at the top container area
+        JPanel actionContainerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+        
+        // Build the control button option to clear ticket views histories
+        JButton clearScreensButton = new JButton(AppLocal.getIntString("button.clearscreens") != null ? 
+                AppLocal.getIntString("button.clearscreens") : "Clear Screens");
+        clearScreensButton.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 12));
+        
+        // Wire the click event action to loop and reset screens
+        clearScreensButton.addActionListener(e -> handleClearScreensAction());
+        
+        actionContainerPanel.add(clearScreensButton);
+        add(actionContainerPanel, BorderLayout.SOUTH);
+    }
+    
+     /**
+     * Scans the structural active component tab tree searching for active 
+     * DevicePrinterPanel wrappers to clear rendered screen queues.
+     */
+    private void handleClearScreensAction() {
+        int tabCount = printersJTabbedPane.getTabCount();
+        for (int i = 0; i < tabCount; i++) {
+            Component tabComponent = printersJTabbedPane.getComponentAt(i);
+            if (tabComponent instanceof DevicePrinterPanel devicePrinterPanel) {
+                devicePrinterPanel.reset();
+            }
         }
     }
 

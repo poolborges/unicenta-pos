@@ -27,6 +27,7 @@ import javax.swing.SwingUtilities;
 /**
  * Container panel that stores and dynamically positions JTicket view components.
  * Uses a dynamic FlowLayout mechanism to wrap components safely without clipping.
+ * Includes a public option API to clear and purge ticket history views.
  * 
  * @author Adrian
  * @author KriolOS
@@ -121,6 +122,15 @@ public class JTicketContainer extends JPanel {
         });
     }
     
+    /**
+     * Public API option to invoke structural purge operations. 
+     * Completely removes all active ticket instances from the graphic hierarchy tree, 
+     * requests an immediate interface layout update, and resets scroll bar track bounds.
+     */
+    public void clearAllTickets() {
+        removeAllTickets();
+    }
+
     /**
      * Purges all active ticket instances and resets the scroll position to the top.
      */
