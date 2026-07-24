@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://gnu.org>.
  */
 package com.openbravo.pos.printer.screen;
 
@@ -26,49 +26,55 @@ import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
 /**
- *
+ * Visual panel to preview printed tickets on screen.
+ * 
  * @author JG uniCenta
+ * @author KriolOS
  */
 public class DevicePrinterPanel extends javax.swing.JPanel implements DevicePrinter {
     
-    private final String m_sName;
-   
-    private final JTicketContainer m_jTicketContainer;    
-    private BasicTicket m_ticketcurrent;
+    private final String printerName;
+    private final JTicketContainer ticketContainer;    
+    private BasicTicket currentTicket;
     
-    /** Creates new form JPrinterScreen2 */
+    /** 
+     * Creates new form DevicePrinterPanel 
+     */
     public DevicePrinterPanel() {
         initComponents();
         
-        m_sName = AppLocal.getIntString("printer.screen");
-        
-        m_ticketcurrent = null;
+        printerName = AppLocal.getIntString("printer.screen");
+        currentTicket = null;
        
-        m_jTicketContainer = new JTicketContainer();
-        m_jScrollView.setViewportView(m_jTicketContainer); 
+        ticketContainer = new JTicketContainer();
+        m_jScrollView.setViewportView(ticketContainer); 
         m_jScrollView.getVerticalScrollBar().setValue(0);
         m_jScrollView.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
     }
     
     /**
-     *
-     * @return
+     * Public option to manually purge all active tickets from the container panel.
+     * Can be invoked directly from external control buttons or view managers.
      */
-    @Override
-    public String getPrinterName() {
-        return m_sName;
+    public void clearAllTickets() {
+        reset();
     }
     
     /**
-     *
+     * @return The localized name of the screen printer
      */
     @Override
-    public void printLogo(){   
+    public String getPrinterName() {
+        return printerName;
+    }
+    
+    @Override
+    public void printLogo() {   
+        // No logo implementation needed for screen preview
     }
 
     /**
-     *
-     * @return
+     * @return Description of the printer, or null if none provided
      */
     @Override
     public String getPrinterDescription() {
@@ -76,98 +82,79 @@ public class DevicePrinterPanel extends javax.swing.JPanel implements DevicePrin
     }       
 
     /**
-     *
-     * @return
+     * @return This JPanel component instance for rendering in Swing
      */
     @Override
     public JComponent getPrinterComponent() {
         return this;
     }
 
-    /**
-     *
-     */
     @Override
     public void reset() {
-        m_ticketcurrent = null;
-        m_jTicketContainer.removeAllTickets();
-        m_jTicketContainer.repaint();
+        currentTicket = null;
+        ticketContainer.removeAllTickets();
+        ticketContainer.repaint();
     }
     
     @Override
     public void beginReceipt() {
-        m_ticketcurrent = new BasicTicketForScreen();
-
+        currentTicket = new BasicTicketForScreen();
     }
 
-    /**
-     *
-     * @param image
-     */
     @Override
     public void printImage(BufferedImage image) {
-        m_ticketcurrent.printImage(image);
+        if (currentTicket != null) {
+            currentTicket.printImage(image);
+        }
     }
 
-    /**
-     *
-     * @param type
-     * @param position
-     * @param code
-     */
     @Override
     public void printBarCode(String type, String position, String code) {
-        m_ticketcurrent.printBarCode(type, position, code);
+        if (currentTicket != null) {
+            currentTicket.printBarCode(type, position, code);
+        }
     }
 
     @Override
     public void printQRCode(String code, int size, char errorCorrection) {
-        m_ticketcurrent.printQRCode(code, size, errorCorrection);
+        if (currentTicket != null) {
+            currentTicket.printQRCode(code, size, errorCorrection);
+        }
     }
 
-    /**
-     *
-     * @param iTextSize
-     */
     @Override
-    public void beginLine(int iTextSize) {
-        m_ticketcurrent.beginLine(iTextSize);
+    public void beginLine(int textSize) {
+        if (currentTicket != null) {
+            currentTicket.beginLine(textSize);
+        }
     }
 
-    /**
-     *
-     * @param iStyle
-     * @param sText
-     */
     @Override
-    public void printText(int iStyle, String sText) {
-        m_ticketcurrent.printText(iStyle, sText);
+    public void printText(int style, String text) {
+        if (currentTicket != null) {
+            currentTicket.printText(style, text);
+        }
     }
 
-    /**
-     *
-     */
     @Override
     public void endLine() {
-        m_ticketcurrent.endLine();
+        if (currentTicket != null) {
+            currentTicket.endLine();
+        }
     } 
 
-    /**
-     *
-     */
     @Override
     public void endReceipt() {
-        m_jTicketContainer.addTicket(new JTicket(m_ticketcurrent));
-        m_ticketcurrent = null;
+        if (currentTicket != null) {
+            ticketContainer.addTicket(new JTicket(currentTicket));
+            currentTicket = null;
+        }
     }
     
-    /**
-     *
-     */
     @Override
     public void openDrawer() {
         Toolkit.getDefaultToolkit().beep();
-    }   
+    }     
        
     /** This method is called from within the constructor to
      * initialize the form.

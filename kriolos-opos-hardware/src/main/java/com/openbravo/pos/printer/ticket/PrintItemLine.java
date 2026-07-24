@@ -29,33 +29,32 @@ import java.util.List;
 public class PrintItemLine implements PrintItem {
 
     protected Font font;
-    protected int fontheight;
-    protected int textsize;
-    protected List<StyledText> m_atext;
+    protected int fontHeight;
+    protected int textSize;
+    protected List<StyledText> textList;
 
 
-    public PrintItemLine(int textsize, Font font, int fontheight) {
-        this.textsize = textsize;
+    public PrintItemLine(int textSize, Font font, int fontHeight) {
+        this.textSize = textSize;
         this.font = font;
-        this.fontheight = fontheight;
-        m_atext = new ArrayList<>();
+        this.fontHeight = fontHeight;
+        textList = new ArrayList<>();
     }
 
 
     public void addText(int style, String text) {
-        m_atext.add(new StyledText(style, text));
+        textList.add(new StyledText(style, text));
     }
 
 
     @Override
     public void draw(Graphics2D g, int x, int y, int width) {
 
-        PrinterFontState ps = new PrinterFontState(textsize);
+        PrinterFontState ps = new PrinterFontState(textSize);
         double left = x;
-        for (int i = 0; i < m_atext.size(); i++) {
-            StyledText text = m_atext.get(i);
+        for (StyledText text : textList) {
             g.setFont(ps.getFont(font, text.style));
-            g.drawString(text.text, (float)left, y);
+            g.drawString(text.text, (float) left, (float) y);
             left += g.getFontMetrics().getStringBounds(text.text, g).getWidth();
         }
     }
@@ -66,7 +65,7 @@ public class PrintItemLine implements PrintItem {
      */
     @Override
     public int getHeight() {
-        return fontheight * DevicePrinter.FontSize.getLineMultiplier(textsize);
+        return fontHeight * DevicePrinter.FontSize.getLineMultiplier(textSize);
     }
 
     protected static class StyledText {
@@ -76,7 +75,7 @@ public class PrintItemLine implements PrintItem {
             this.text = text;
         }
 
-        private int style;
-        private String text;
+        private final int style;
+        private final String text;
     }
 }
