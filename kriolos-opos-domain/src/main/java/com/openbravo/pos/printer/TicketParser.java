@@ -44,7 +44,7 @@ public class TicketParser extends DefaultHandler {
 
     private static final Logger LOGGER = Logger.getLogger(TicketParser.class.getName());
 
-    private final DeviceTicket printer;
+    private final DeviceTicket deviceTicket;
     private final DataLogicSystem dataLogicSystem;
 
     private StringBuilder currentText;
@@ -78,9 +78,9 @@ public class TicketParser extends DefaultHandler {
     int qrcodeSize = DevicePrinter.QRCODE_DEFAULT_SIZE;
     char qrcodeErrorCode =  DevicePrinter.QRCODE_DEFAULT_ERROR_CODE;
 
-    public TicketParser(DeviceTicket printer, DataLogicSystem system) {
-        this.printer = printer;
-        this.dataLogicSystem = system;
+    public TicketParser(DeviceTicket deviceTicket, DataLogicSystem dataLogicSystem) {
+        this.deviceTicket = deviceTicket;
+        this.dataLogicSystem = dataLogicSystem;
     }
 
     public void printTicket(String xmlInput, TicketInfo ticket) throws TicketPrinterException {
@@ -138,6 +138,7 @@ public class TicketParser extends DefaultHandler {
 
     @Override
     public void endDocument() throws SAXException {
+        // Document parsing completed successfully
     }
 
     @Override
@@ -189,11 +190,10 @@ public class TicketParser extends DefaultHandler {
     private void handleNoOutputStart(String qName, Attributes attributes) throws SAXException {
         switch (qName) {
             case "opendrawer":
-                printer.getDevicePrinter(readString(attributes.getValue("printer"), "1")).openDrawer();
+                deviceTicket.getDevicePrinter(readString(attributes.getValue("printer"), "1")).openDrawer();
                 // Cashdrawer has been activated record the data in the table
                 try {
-                    dataLogicSystem.execDrawerOpened(
-                            new Object[]{currentUser, ticketId});
+                    dataLogicSystem.execDrawerOpened(new Object[]{currentUser, ticketId});
                 } catch (BasicException ex) {
                     LOGGER.log(Level.SEVERE, "Failed to log drawer opened event.", ex);
                 }
@@ -203,27 +203,25 @@ public class TicketParser extends DefaultHandler {
                 break;
             case "ticket":
                 outputType = OUTPUT_TICKET;
-                outputPrinter = printer.getDevicePrinter(readString(attributes.getValue("printer"), "1"));
+                outputPrinter = deviceTicket.getDevicePrinter(readString(attributes.getValue("printer"), "1"));
                 outputPrinter.beginReceipt();
                 break;
             case "display":
                 outputType = OUTPUT_DISPLAY;
-                String animation = attributes.getValue("animation");
-
-                visorAnimation = parseAnimation(animation);
+                visorAnimation = parseAnimation(attributes.getValue("animation"));
                 visorLine1 = null;
                 visorLine2 = null;
                 outputPrinter = null;
                 break;
             case "fiscalreceipt":
                 outputType = OUTPUT_FISCAL;
-                printer.getFiscalPrinter().beginReceipt();
+                deviceTicket.getFiscalPrinter().beginReceipt();
                 break;
             case "fiscalzreport":
-                printer.getFiscalPrinter().printZReport();
+                deviceTicket.getFiscalPrinter().printZReport();
                 break;
             case "fiscalxreport":
-                printer.getFiscalPrinter().printXReport();
+                deviceTicket.getFiscalPrinter().printXReport();
                 break;
         }
     }
@@ -263,8 +261,7 @@ public class TicketParser extends DefaultHandler {
             case "text":
                 currentText = new StringBuilder();
                 textStyle = getFontStyle(attributes);
-                String sAlign = attributes.getValue("align");
-                textAlignment = parseTextAlignment(sAlign);
+                textAlignment = parseTextAlignment(attributes.getValue("align"));
                 textLength = parseInt(attributes.getValue("length"), 0);
                 break;
             default:
@@ -336,10 +333,9 @@ public class TicketParser extends DefaultHandler {
                 visorLineBuilder = new StringBuilder();
                 break;
             case "text":
-                textStyle = parseInt(attributes.getValue("ligth"));
+                textStyle = parseInt(attributes.getValue("light"));
                 currentText = new StringBuilder();
-                String sAlign = attributes.getValue("align");
-                textAlignment = parseTextAlignment(sAlign);
+                textAlignment = parseTextAlignment(attributes.getValue("align"));
                 textLength = parseInt(attributes.getValue("length"));
                 break;
             default:
@@ -359,45 +355,33 @@ public class TicketParser extends DefaultHandler {
                 visorLineBuilder = null;
                 break;
             case "line1":
-                // linea 1 del visor
                 visorLine1 = visorLineBuilder.toString();
                 visorLineBuilder = null;
                 break;
             case "line2":
-                // linea 2 del visor
                 visorLine2 = visorLineBuilder.toString();
                 visorLineBuilder = null;
                 break;
             case "text":
                 if (textLength > 0) {
-                    switch (textAlignment) {
-                        case DevicePrinter.ALIGN_RIGHT:
-                            visorLineBuilder.append(DeviceTicket.alignRight(currentText.toString(), textLength));
-                            break;
-                        case DevicePrinter.ALIGN_CENTER:
-                            visorLineBuilder.append(DeviceTicket.alignCenter(currentText.toString(), textLength));
-                            break;
-                        default: // DevicePrinter.ALIGN_LEFT
-                            visorLineBuilder.append(DeviceTicket.alignLeft(currentText.toString(), textLength));
-                            break;
-                    }
+                    visorLineBuilder.append(DeviceTicket.alignText(textAlignment, currentText.toString(), textLength));
                 } else {
                     visorLineBuilder.append(currentText);
                 }
                 
-                //Apply Display 'Light style' 
-                if(this.printer.getDeviceDisplay() instanceof DeviceDisplayLED8 deviceDisplay){
+                //Apply Display 'Light style' has 5 style (1...5)
+                if(this.deviceTicket.getDeviceDisplay() instanceof DeviceDisplayLED8 deviceDisplay){
                     deviceDisplay.displayLight(this.textStyle);
                 }
 
-                //Apply Display 'Status line'
-                if(this.printer.getDeviceDisplay() instanceof DeviceDisplayPDLED8 deviceDisplay){
+                //Apply Display 'Status line' has 5 status (0...4)
+                if(this.deviceTicket.getDeviceDisplay() instanceof DeviceDisplayPDLED8 deviceDisplay){
                     deviceDisplay.changeStatus(this.textStyle);
                 }
                 currentText = null;
                 break;
             case "display":
-                printer.getDeviceDisplay().writeVisor(visorAnimation, visorLine1, visorLine2);
+                deviceTicket.getDeviceDisplay().writeVisor(visorAnimation, visorLine1, visorLine2);
                 visorAnimation = DeviceDisplayEngine.ANIMATION_NULL;
                 visorLine1 = null;
                 visorLine2 = null;
@@ -433,19 +417,19 @@ public class TicketParser extends DefaultHandler {
     private void handleFiscalOutputEnd(String qName) {
         switch (qName) {
             case "fiscalreceipt":
-                printer.getFiscalPrinter().endReceipt();
+                deviceTicket.getFiscalPrinter().endReceipt();
                 outputType = OUTPUT_NONE;
                 break;
             case "line":
-                printer.getFiscalPrinter().printLine(currentText.toString(), fiscalTicketLinePrice, fiscalTicketLineQty, fiscalTicketLineTaxInfo);
+                deviceTicket.getFiscalPrinter().printLine(currentText.toString(), fiscalTicketLinePrice, fiscalTicketLineQty, fiscalTicketLineTaxInfo);
                 currentText = null;
                 break;
             case "message":
-                printer.getFiscalPrinter().printMessage(currentText.toString());
+                deviceTicket.getFiscalPrinter().printMessage(currentText.toString());
                 currentText = null;
                 break;
             case "total":
-                printer.getFiscalPrinter().printTotal(currentText.toString(), fiscalTicketTotalPaid);
+                deviceTicket.getFiscalPrinter().printTotal(currentText.toString(), fiscalTicketTotalPaid);
                 currentText = null;
                 break;
             default:
