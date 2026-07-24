@@ -12,22 +12,21 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://gnu.org>.
  */
 package com.openbravo.pos.printer.screen;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
+import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 /**
  * Container panel that stores and dynamically positions JTicket view components.
- * Fixed arithmetic calculations and structured for safe Swing rendering.
+ * Uses a dynamic FlowLayout mechanism to wrap components safely without clipping.
  * 
  * @author Adrian
  * @author KriolOS
@@ -39,37 +38,56 @@ public class JTicketContainer extends JPanel {
     private static final int HORIZONTAL_GAP = 8;
     private static final int VERTICAL_GAP = 8;
     
-    private int lastVerticalPosition = 0;
-    private final int screenWidth;
-    
+    /**
+     * Creates new form JTicketContainer
+     */
     public JTicketContainer() {
         initComponents();
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        this.screenWidth = (ge.getScreenDevices().length == 1) 
-                ? Toolkit.getDefaultToolkit().getScreenSize().width 
-                : ge.getDefaultScreenDevice().getDisplayMode().getWidth();
+        // Align tickets to the left and apply proper gap spacing between them
+        setLayout(new FlowLayout(FlowLayout.LEFT, HORIZONTAL_GAP, VERTICAL_GAP));
     }
 
+    /**
+     * Dynamically calculates the preferred height based on the current width 
+     * of the container to ensure scrollbars trigger correctly when text sizes expand.
+     * 
+     * @return The dynamic Dimension required to fit all rows safely
+     */
     @Override
     public Dimension getPreferredSize() { 
-        Insets ins = getInsets();
-        int maxComponentWidth = 0;
-        int accumulatedHeight = ins.top + VERTICAL_GAP;
-        int componentCount = getComponentCount();
-        
-        for (int i = 0; i < componentCount; i++) {
-            Component comp = getComponent(i);
-            Dimension dc = comp.getPreferredSize();
-            if (dc.width > maxComponentWidth) {
-                maxComponentWidth = dc.width;
+        synchronized (getTreeLock()) {
+            int width = getWidth();
+            if (width == 0) {
+                width = 700; // Fallback initial default width if not yet rendered
             }
-            accumulatedHeight += VERTICAL_GAP + dc.height;
+            
+            Insets ins = getInsets();
+            int maxWidth = width - ins.left - ins.right;
+            int currentX = HORIZONTAL_GAP;
+            int currentY = ins.top + VERTICAL_GAP;
+            int maxRowHeight = 0;
+            
+            int componentCount = getComponentCount();
+            for (int i = 0; i < componentCount; i++) {
+                Component comp = getComponent(i);
+                if (comp.isVisible()) {
+                    Dimension dc = comp.getPreferredSize();
+                    
+                    // Wrap to the next line if the component exceeds the maximum width boundary
+                    if (currentX + dc.width > maxWidth && currentX > HORIZONTAL_GAP) {
+                        currentX = HORIZONTAL_GAP;
+                        currentY += VERTICAL_GAP + maxRowHeight;
+                        maxRowHeight = 0;
+                    }
+                    
+                    currentX += dc.width + HORIZONTAL_GAP;
+                    maxRowHeight = Math.max(maxRowHeight, dc.height);
+                }
+            }
+            
+            int totalHeight = currentY + maxRowHeight + VERTICAL_GAP + ins.bottom;
+            return new Dimension(width, Math.max(totalHeight, 600));
         }
-        
-        int totalWidth = maxComponentWidth + (2 * HORIZONTAL_GAP) + ins.left + ins.right;
-        int totalHeight = accumulatedHeight + ins.bottom;
-        
-        return new Dimension(Math.max(totalWidth, 700), Math.max(totalHeight, 600));
     }
 
     @Override
@@ -79,56 +97,33 @@ public class JTicketContainer extends JPanel {
 
     @Override
     public Dimension getMinimumSize() {
-        return getPreferredSize();
-    }
-
-    @Override
-    public void doLayout() {
-        Insets ins = getInsets();
-        int x = ins.left + HORIZONTAL_GAP;
-        int y = ins.top + VERTICAL_GAP;
-        
-        int preferredWidth = getPreferredSize().width;
-        // Prevent division by zero or negative sizing columns
-        int columns = (preferredWidth > 0) ? (this.screenWidth / preferredWidth) : 1;
-        if (columns <= 0) {
-            columns = 1;
-        }
-        
-        int maxRowHeight = 0;
-        int numComponents = getComponentCount();
-        
-        for (int pos = 0; pos < numComponents; pos++) {
-            Component comp = getComponent(pos);
-            Dimension dc = comp.getPreferredSize();
-            comp.setBounds(x, y, dc.width, dc.height);
-            
-            x += HORIZONTAL_GAP + dc.width;
-            if (dc.height > maxRowHeight) {
-                maxRowHeight = dc.height;
-            }
-            
-            if ((pos + 1) % columns == 0) {
-                x = ins.left + HORIZONTAL_GAP;
-                y += VERTICAL_GAP + maxRowHeight;
-                maxRowHeight = 0;
-            }
-            
-            lastVerticalPosition = y + dc.height;
-        }
+        return new Dimension(700, 600);
     }
     
+    /**
+     * Appends a new ticket component to the layout and safely scrolls the view down.
+     * 
+     * @param ticket The visual receipt view component to display
+     */
     public void addTicket(JTicket ticket) {
         add(ticket);
         revalidate();
         repaint();
         
-        // Safely scroll down after layout execution on EDT
-        SwingUtilities.invokeLater(() -> 
-            scrollRectToVisible(new Rectangle(0, lastVerticalPosition, 1, 1))
-        );
+        // Ensure scrolling occurs asynchronously after the component layout completes on the EDT
+        SwingUtilities.invokeLater(() -> {
+            int componentCount = getComponentCount();
+            if (componentCount > 0) {
+                Component lastComp = getComponent(componentCount - 1);
+                Rectangle bounds = lastComp.getBounds();
+                scrollRectToVisible(bounds);
+            }
+        });
     }
     
+    /**
+     * Purges all active ticket instances and resets the scroll position to the top.
+     */
     public void removeAllTickets() {
         removeAll();
         revalidate();
