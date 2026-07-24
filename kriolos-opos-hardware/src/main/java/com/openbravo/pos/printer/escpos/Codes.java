@@ -141,7 +141,7 @@ public abstract class Codes {
             }
             out.write(ESCPOS.BAR_HRIFONT1);
             out.write(ESCPOS.BAR_CODE02);
-            out.write(DeviceTicket.transNumber(DeviceTicket.alignBarCode(code,13).substring(0,12)));
+            out.write(DeviceTicket.transNumber(DeviceTicket.alignBarcode(code,13).substring(0,12)));
             out.write(new byte[] { 0x00 });
 
             out.write(getNewLine());

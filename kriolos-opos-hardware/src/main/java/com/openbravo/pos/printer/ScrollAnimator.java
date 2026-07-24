@@ -43,8 +43,8 @@ public class ScrollAnimator extends BaseAnimator {
     public void setTiming(int i) {
         int j = (i / 2) % (msglength + 20);
         if (j < 20) {
-            currentLine1 = DeviceTicket.alignLeft(DeviceTicket.getWhiteString(20 - j) + baseLine1, 20);
-            currentLine2 = DeviceTicket.alignLeft(DeviceTicket.getWhiteString(20 - j) + baseLine2, 20);
+            currentLine1 = DeviceTicket.alignLeft(DeviceTicket.getPaddingString(20 - j) + baseLine1, 20);
+            currentLine2 = DeviceTicket.alignLeft(DeviceTicket.getPaddingString(20 - j) + baseLine2, 20);
         } else {
             currentLine1 = DeviceTicket.alignLeft(baseLine1.substring(j - 20), 20);
             currentLine2 = DeviceTicket.alignLeft(baseLine2.substring(j - 20), 20);

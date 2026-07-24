@@ -22,92 +22,117 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
- *
- * @author  Adrian
+ * Container panel that stores and dynamically positions JTicket view components.
+ * Fixed arithmetic calculations and structured for safe Swing rendering.
+ * 
+ * @author Adrian
+ * @author KriolOS
  */
-public class JTicketContainer extends javax.swing.JPanel {
+public class JTicketContainer extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
-    private int H_GAP = 8;
-    private int V_GAP = 8;
+    private static final int HORIZONTAL_GAP = 8;
+    private static final int VERTICAL_GAP = 8;
+    
     private int lastVerticalPosition = 0;
     private final int screenWidth;
     
     public JTicketContainer() {
         initComponents();
-         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        this.screenWidth = ((ge.getScreenDevices()).length == 1) ? (Toolkit.getDefaultToolkit().getScreenSize()).width : ge.getDefaultScreenDevice().getDisplayMode().getWidth();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        this.screenWidth = (ge.getScreenDevices().length == 1) 
+                ? Toolkit.getDefaultToolkit().getScreenSize().width 
+                : ge.getDefaultScreenDevice().getDisplayMode().getWidth();
     }
 
     @Override
     public Dimension getPreferredSize() { 
+        Insets ins = getInsets();
+        int maxComponentWidth = 0;
+        int accumulatedHeight = ins.top + VERTICAL_GAP;
+        int componentCount = getComponentCount();
         
-       Insets ins = getInsets();
-        int iMaxx = 0;
-        int iMaxy = ins.top + this.V_GAP;
-        int n = getComponentCount();
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < componentCount; i++) {
             Component comp = getComponent(i);
             Dimension dc = comp.getPreferredSize();
-            if (dc.width > iMaxx) {
-                iMaxx = dc.width;
+            if (dc.width > maxComponentWidth) {
+                maxComponentWidth = dc.width;
             }
-            iMaxy += this.V_GAP + dc.height;
+            accumulatedHeight += VERTICAL_GAP + dc.height;
         }
-        return new Dimension(iMaxx + 2 * this.H_GAP + ins.left + ins.right, iMaxy + ins.bottom);
+        
+        int totalWidth = maxComponentWidth + (2 * HORIZONTAL_GAP) + ins.left + ins.right;
+        int totalHeight = accumulatedHeight + ins.bottom;
+        
+        return new Dimension(Math.max(totalWidth, 700), Math.max(totalHeight, 600));
     }
 
     @Override
     public Dimension getMaximumSize() {
-      return getPreferredSize();
+        return getPreferredSize();
     }
 
     @Override
     public Dimension getMinimumSize() {
-      return getPreferredSize();
+        return getPreferredSize();
     }
 
     @Override
     public void doLayout() {
         Insets ins = getInsets();
-        int x = ins.left + this.H_GAP;
-        int y = ins.top + this.V_GAP;
-        int columns = this.screenWidth / (getPreferredSize()).width;
-        int iMaxy = 0;
-        int iMaxx = 0;
+        int x = ins.left + HORIZONTAL_GAP;
+        int y = ins.top + VERTICAL_GAP;
+        
+        int preferredWidth = getPreferredSize().width;
+        // Prevent division by zero or negative sizing columns
+        int columns = (preferredWidth > 0) ? (this.screenWidth / preferredWidth) : 1;
+        if (columns <= 0) {
+            columns = 1;
+        }
+        
+        int maxRowHeight = 0;
         int numComponents = getComponentCount();
+        
         for (int pos = 0; pos < numComponents; pos++) {
             Component comp = getComponent(pos);
             Dimension dc = comp.getPreferredSize();
             comp.setBounds(x, y, dc.width, dc.height);
-            x += this.H_GAP + dc.width;
-            if (dc.height > iMaxy) {
-                iMaxy = dc.height;
-            }
-            if ((pos + 1) % columns == 0) {
-                x = ins.left + this.H_GAP;
-                y += this.V_GAP + iMaxy;
-                iMaxy = 0;
+            
+            x += HORIZONTAL_GAP + dc.width;
+            if (dc.height > maxRowHeight) {
+                maxRowHeight = dc.height;
             }
             
-            lastVerticalPosition = y;
+            if ((pos + 1) % columns == 0) {
+                x = ins.left + HORIZONTAL_GAP;
+                y += VERTICAL_GAP + maxRowHeight;
+                maxRowHeight = 0;
+            }
+            
+            lastVerticalPosition = y + dc.height;
         }
     }
     
     public void addTicket(JTicket ticket) {
         add(ticket);
-        doLayout();
         revalidate();
-        scrollRectToVisible(new Rectangle(0, lastVerticalPosition, 1, 1));
+        repaint();
+        
+        // Safely scroll down after layout execution on EDT
+        SwingUtilities.invokeLater(() -> 
+            scrollRectToVisible(new Rectangle(0, lastVerticalPosition, 1, 1))
+        );
     }
     
     public void removeAllTickets() {
         removeAll();
-        doLayout();
         revalidate();
+        repaint();
         scrollRectToVisible(new Rectangle(0, 0, 1, 1));   
     }
     

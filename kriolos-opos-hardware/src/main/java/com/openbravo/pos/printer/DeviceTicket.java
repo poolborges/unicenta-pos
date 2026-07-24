@@ -115,8 +115,8 @@ public class DeviceTicket {
         int iPrinterIndex = 1;
         String sPrinterIndex = Integer.toString(iPrinterIndex);
         String sprinter = props.getProperty("machine.printer");
-        
-        List<String> serialNamesAlternative = Arrays.asList( "serial", "rxtx", "file");
+
+        List<String> serialNamesAlternative = Arrays.asList("serial", "rxtx", "file");
 
         while (sprinter != null && !"".equals(sprinter)) {
 
@@ -124,9 +124,8 @@ public class DeviceTicket {
             String sPrinterType = sp.nextToken(':');
             String sPrinterParam1 = sp.nextToken(',');
             String sPrinterParam2 = sp.nextToken(',');
-            
-            
-            logger.log(Level.WARNING, "Printer device: "+sprinter);
+
+            logger.log(Level.WARNING, "Printer device: " + sprinter);
 
             //Special Case for Epson ( [serial|rxtx|file]:param1,param2
             if (serialNamesAlternative.contains(sPrinterType)) {
@@ -263,13 +262,13 @@ public class DeviceTicket {
             m_devicedisplay = new DeviceDisplayNull(e.getMessage());
         }
     }
-    
-    public static String[] getDisplayDeviceTypes(){
+
+    public static String[] getDisplayDeviceTypes() {
         String[] devices = {"screen", "window", "dual", "epson", "surepos", "ld200", "javapos", "led8"};
         return devices;
     }
-    
-    public static String[] getPrinterDeviceTypes(){
+
+    public static String[] getPrinterDeviceTypes() {
         String[] devices = {"screen", "window", "dual", "epson", "surepos", "ld200", "javapos", "led8"};
         return devices;
     }
@@ -288,14 +287,14 @@ public class DeviceTicket {
     private static class PrinterWritterPool {
 
         private final Map<String, PrinterWritter> m_apool = new HashMap<>();
-        
-        private String genUniqueKey(String connector, String port){
+
+        private String genUniqueKey(String connector, String port) {
             return connector + "-->" + port;
         }
-        
+
         public PrinterWritter getDisplayPrinterWritter(String con, String port, int baud) throws TicketPrinterException {
 
-            String skey = genUniqueKey(con,port);
+            String skey = genUniqueKey(con, port);
             PrinterWritter pw = m_apool.get(skey);
             if (pw == null) {
 
@@ -304,7 +303,7 @@ public class DeviceTicket {
                     case "rxtx":
                         pw = new PrinterWritterRXTX(port, baud);
                         m_apool.put(skey, pw);
-                        break;                
+                        break;
                 }
             }
             return pw;
@@ -312,7 +311,7 @@ public class DeviceTicket {
 
         public PrinterWritter getPrinterWritter(String con, String port) throws TicketPrinterException {
 
-            String skey = genUniqueKey(con,port);
+            String skey = genUniqueKey(con, port);
             PrinterWritter pw = m_apool.get(skey);
             if (pw == null) {
 
@@ -384,109 +383,143 @@ public class DeviceTicket {
     }
 
     /**
+     * Generates a string consisting of a specific character repeated a given
+     * number of times.
      *
-     * @param iSize
-     * @param cWhiteChar
-     * @return Spacing string length
+     * @param size The desired length of the string
+     * @param paddingChar The character used to fill the string
+     * @return A string composed of the repeated character
      */
-    public static String getWhiteString(int iSize, char cWhiteChar) {
-
-        char[] cFill = new char[iSize];
-        for (int i = 0; i < iSize; i++) {
-            cFill[i] = cWhiteChar;
+    public static String getPaddingString(int size, char paddingChar) {
+        if (size <= 0) {
+            return "";
         }
-        return new String(cFill);
+        return String.valueOf(paddingChar).repeat(size);
     }
 
     /**
+     * Generates a string consisting of spaces repeated a given number of times.
      *
-     * @param iSize
-     * @return Space sizing
+     * @param size The desired length of the string
+     * @return A string composed of spaces
      */
-    public static String getWhiteString(int iSize) {
-
-        return getWhiteString(iSize, ' ');
+    public static String getPaddingString(int size) {
+        return getPaddingString(size, ' ');
     }
 
     /**
+     * Aligns a barcode value by padding it with leading zeros to meet the
+     * target length. If the barcode length exceeds the target size, it
+     * truncates from the left to keep the end.
      *
-     * @param sLine
-     * @param iSize
-     * @return Barcode bar inter-spacing
+     * @param barcode The barcode string to align
+     * @param targetSize The exact final size needed for the barcode
+     * @return Zero-padded barcode string
      */
-    public static String alignBarCode(String sLine, int iSize) {
-
-        if (sLine.length() > iSize) {
-            return sLine.substring(sLine.length() - iSize);
-        } else {
-            return getWhiteString(iSize - sLine.length(), '0') + sLine;
+    public static String alignBarcode(String barcode, int targetSize) {
+        if (barcode == null) {
+            barcode = "";
         }
+
+        if (barcode.length() > targetSize) {
+            return barcode.substring(barcode.length() - targetSize);
+        }
+
+        return getPaddingString(targetSize - barcode.length(), '0') + barcode;
     }
 
+    /**
+     * Default line character length for standard receipt printer hardware.
+     */
+    public static final int DEFAULT_LINE_LENGTH = 42;
+
+    /**
+     * Routes string tokens to appropriate alignment methods based on target identifier flags.
+     * Called directly inside the SAX TicketParser process.
+     * 
+     * @param textAlignment The target alignment code identifier constant
+     * @param text          The input text string sequence to process
+     * @param textLength    Maximum text column allocation limit width
+     * @return Standard padded aligned output string
+     */
     public static String alignText(int textAlignment, String text, int textLength) {
-          return switch (textAlignment) {
+        return switch (textAlignment) {
             case DevicePrinter.ALIGN_RIGHT ->
                 alignRight(text, textLength);
             case DevicePrinter.ALIGN_CENTER ->
                 alignCenter(text, textLength);
             default ->
-                //DevicePrinter.ALIGN_LEFT
-                alignLeft(text, textLength);
+                alignLeft(text, textLength); // DevicePrinter.ALIGN_LEFT
         };
     }
-    /**
-     *
-     * @param sLine
-     * @param iSize Line maximun size
-     * 
-     * @return Reduce spacing
-     */
-    public static String alignLeft(String sLine, int iSize) {
 
-        if (sLine.length() > iSize) {
-            return sLine.substring(0, iSize);
-        } else {
-            return sLine + getWhiteString(iSize - sLine.length());
+    /**
+     * Aligns text to the left. If the text exceeds the maximum line size, it is
+     * truncated. If it is shorter, spaces are appended to the right.
+     *
+     * @param line The text string to align
+     * @param lineSize Maximum length of the output string
+     * @return Left-aligned string padded with spaces
+     */
+    public static String alignLeft(String line, int lineSize) {
+        if (line == null) {
+            line = "";
         }
+        if (line.length() > lineSize) {
+            return line.substring(0, lineSize);
+        }
+        return line + " ".repeat(lineSize - line.length());
     }
 
     /**
+     * Aligns text to the right. If the text exceeds the maximum line size, it
+     * is truncated. If it is shorter, spaces are prepended to the left.
      *
-     * @param sLine
-     * @param iSize
-     * @return Add spacing
+     * @param line The text string to align
+     * @param lineSize Maximum length of the output string
+     * @return Right-aligned string padded with spaces
      */
-    public static String alignRight(String sLine, int iSize) {
-
-        if (sLine.length() > iSize) {
-            return sLine.substring(sLine.length() - iSize);
-        } else {
-            return getWhiteString(iSize - sLine.length()) + sLine;
+    public static String alignRight(String line, int lineSize) {
+        if (line == null) {
+            line = "";
         }
+        if (line.length() > lineSize) {
+            return line.substring(0, lineSize);
+        }
+        return " ".repeat(lineSize - line.length()) + line;
     }
 
     /**
+     * Centers the text within the specified line size. Correctly distributes
+     * odd spaces to guarantee the exact total length.
      *
-     * @param sLine
-     * @param iSize
-     * @return Adjusts Left/Right spacing
+     * @param line The text string to align
+     * @param lineSize Maximum length of the output string
+     * @return Center-aligned string padded evenly with spaces
      */
-    public static String alignCenter(String sLine, int iSize) {
-
-        if (sLine.length() > iSize) {
-            return alignRight(sLine.substring(0, (sLine.length() + iSize) / 2), iSize);
-        } else {
-            return alignRight(sLine + getWhiteString((iSize - sLine.length()) / 2), iSize);
+    public static String alignCenter(String line, int lineSize) {
+        if (line == null) {
+            line = "";
         }
+        if (line.length() > lineSize) {
+            return line.substring(0, lineSize);
+        }
+
+        int totalSpaces = lineSize - line.length();
+        int leftSpaces = totalSpaces / 2;
+        int rightSpaces = totalSpaces - leftSpaces; // Safely handles odd numbers
+
+        return " ".repeat(leftSpaces) + line + " ".repeat(rightSpaces);
     }
 
     /**
-     * Text Aligment 'Center' with default text length of 42
-     * @param sLine
-     * @return Equalise Left/Right spacing
+     * Centers the text using the default line length.
+     *
+     * @param line The text string to align
+     * @return Center-aligned string with the default line length
      */
-    public static String alignCenter(String sLine) {
-        return alignCenter(sLine, 42);
+    public static String alignCenter(String line) {
+        return alignCenter(line, DEFAULT_LINE_LENGTH);
     }
 
 // JG 16 May 12     public static final byte[] transNumber(String sCad) {
