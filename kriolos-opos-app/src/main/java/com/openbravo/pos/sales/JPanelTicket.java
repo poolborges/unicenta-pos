@@ -1747,8 +1747,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                             Boolean warrantyPrint = warrantyCheck(ticket);
 
                             String scriptName = paymentdialog.isPrintSelected() || warrantyPrint
-                                    ? "Printer.Ticket"
-                                    : "Printer.Ticket2";
+                                    ? "Printer.Ticket"      //Display and Printer
+                                    : "Printer.Ticket2";    //Display Only
                             try {
 
                                 printTicket(scriptName, ticket, ticketext);
@@ -1785,16 +1785,16 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
     private boolean warrantyCheck(TicketInfo ticket) {
 
-        Boolean warrantyPrint = false;
+        Boolean productWarrantyFound = false;
         int lines = 0;
         while (lines < ticket.getLinesCount()) {
-            if (!warrantyPrint) {
-                warrantyPrint = ticket.getLine(lines).isProductWarranty();
-                return true;
+            productWarrantyFound = ticket.getLine(lines).isProductWarranty();
+            if (productWarrantyFound) {
+                break;
             }
             lines++;
         }
-        return false;
+        return productWarrantyFound;
     }
 
     /**
