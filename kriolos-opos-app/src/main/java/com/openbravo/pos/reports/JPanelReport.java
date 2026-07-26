@@ -29,9 +29,6 @@ import com.openbravo.data.loader.Session;
 import com.openbravo.data.user.EditorCreator;
 import com.openbravo.pos.sales.TaxesLogic;
 import java.awt.BorderLayout;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +38,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import net.sf.jasperreports.engine.*;
 
 /**
  *
@@ -87,43 +83,6 @@ public abstract class JPanelReport extends JPanel implements JPanelView, BeanFac
         reportviewer = new JRViewer400(null);
 
         add(reportviewer, BorderLayout.CENTER);
-    }
-
-    public static JasperReport createJasperReport(String reportFilename) throws JRException {
-
-        JasperReport jasperReport = null;
-
-        if (reportFilename != null) {
-            String fullName = reportFilename + ".ser";
-
-            try (InputStream in = JPanelReport.class.getResourceAsStream(fullName)) {
-                if (in != null) {
-                    try (ObjectInputStream oin = new ObjectInputStream(in)) {
-                        jasperReport = (JasperReport) oin.readObject();
-                    }
-                }
-            } catch (IOException | ClassNotFoundException ex) {
-                LOGGER.log(Level.WARNING, "Exception load report file(.ser): " + fullName, ex);
-            }
-        }
-
-        if (jasperReport == null && reportFilename != null) {
-            String fullName = reportFilename + ".jrxml";
-            try (InputStream in = JPanelReport.class.getResourceAsStream(fullName)) {
-                if (in != null) {
-                    //JasperDesign jd = JRXmlLoader.load(in);
-                    jasperReport = JasperCompileManager.compileReport(in);
-                }
-            } catch (IOException ex) {
-                LOGGER.log(Level.WARNING, "Exception load report file(.jrxml): " + fullName, ex);
-            }
-        }
-
-        if (jasperReport == null) {
-            LOGGER.log(Level.WARNING, "Cannot create JasperReport, because reportFilename is null");
-        }
-
-        return jasperReport;
     }
 
     /**
@@ -223,15 +182,16 @@ public abstract class JPanelReport extends JPanel implements JPanelView, BeanFac
         LOGGER.log(Level.INFO, "Launch report file: "+reportFilename);
         try {
 
-            JasperReport jasperReport = JPanelReport.createJasperReport(reportFilename);
-            if (jasperReport != null) {
-
+  
                 //RESOURCE FILE
                 String res = getResourceBundle();
 
                 //GET PARAMETER AND DATA
                 Object params = (editor == null) ? null : editor.createValue();
-                JRDataSource data = new JRDataSourceBasic(getSentence(), getReportFields(), params);
+                
+                BaseSentence statement = getSentence();
+                
+                ReportFields fields = getReportFields();
 
                 //PARAMETERS
                 Map<String, Object> reportparams = new HashMap<>();
@@ -241,14 +201,12 @@ public abstract class JPanelReport extends JPanel implements JPanelView, BeanFac
                 }
                 reportparams.put("TAXESLOGIC", taxeslogic);
 
-                JasperPrint jp = JasperFillManager.fillReport(jasperReport, reportparams, data);
-
-                reportviewer.loadJasperPrint(jp);
+                PrintReportUtils.loadReport(reportviewer, reportFilename, statement, fields, params, reportparams);
 
                 setVisibleFilter(false);
-            }
+            
 
-        } catch (MissingResourceException | JRException |BasicException ex) {
+        } catch (MissingResourceException |BasicException ex) {
             LOGGER.log(Level.SEVERE, "Exception lauch report file: "+reportFilename, ex);
             MessageInf.showDialogWarn(this, "<html>"+AppLocal.getIntString("message.cannotloadreportdata") + "<br>"+reportFilename, ex);
         } finally {

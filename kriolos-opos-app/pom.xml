@@ -40,7 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         
         <mysql.version>9.2.0</mysql.version>
-        <jasperreports.version>7.0.7</jasperreports.version>
         <flatlaf.version>2.6</flatlaf.version>
     </properties>
 
@@ -69,6 +68,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>kriolos-opos-assets-reports</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>kriolos-opos-lib-report</artifactId>
         </dependency>
 
         <dependency> 
@@ -128,44 +131,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <version>3.51.0.0</version>
             <scope>runtime</scope>
         </dependency>
-        
-        <!-- JASPER REPOR -->
-        <dependency> 
-            <groupId>net.sf.jasperreports</groupId>  
-            <artifactId>jasperreports</artifactId>  
-            <version>${jasperreports.version}</version> 
-        </dependency>  
-        <dependency> 
-            <groupId>net.sf.jasperreports</groupId>  
-            <artifactId>jasperreports-fonts</artifactId>  
-            <version>${jasperreports.version}</version> 
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.jasperreports</groupId>
-            <artifactId>jasperreports-charts</artifactId>
-            <version>${jasperreports.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.jasperreports</groupId>
-            <artifactId>jasperreports-jdt</artifactId>
-            <version>${jasperreports.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.jasperreports</groupId>
-            <artifactId>jasperreports-pdf</artifactId>
-            <version>${jasperreports.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency> <!-- Used by JasperReport to generate xsl files -->
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>5.2.3</version>
-            <scope>runtime</scope>
-        </dependency>
-        
+
         <!-- rsyntaxtextarea -->
         <dependency>
             <groupId>com.fifesoft</groupId>
@@ -255,11 +221,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <configuration>
                     <mainClass>com.openbravo.pos.forms.StartPOS</mainClass>
                     <!--
-                    ### awt.useSystemAAFontSettings
-                        on: active antialiasing default.
-                        lcd: Optimized (Best choice) for LCD (subpixel rendering).
-                    ### java.desktop.appName
-                     -->
+                   ### awt.useSystemAAFontSettings
+                       on: active antialiasing default.
+                       lcd: Optimized (Best choice) for LCD (subpixel rendering).
+                   ### java.desktop.appName
+                    -->
                     <systemProperties>
                         <systemProperty>
                             <key>awt.useSystemAAFontSettings</key>
@@ -403,11 +369,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <configuration>
                             <mainClass>com.openbravo.pos.forms.StartPOS</mainClass>
                             <!--
-                            ### awt.useSystemAAFontSettings
-                                on: active antialiasing default.
-                                lcd: Optimized (Best choice) for LCD (subpixel rendering).
-                            ### java.desktop.appName
-                             -->
+                           ### awt.useSystemAAFontSettings
+                               on: active antialiasing default.
+                               lcd: Optimized (Best choice) for LCD (subpixel rendering).
+                           ### java.desktop.appName
+                            -->
                             <systemProperties>
                                 <systemProperty>
                                     <key>awt.useSystemAAFontSettings</key>
