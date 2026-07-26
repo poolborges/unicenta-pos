@@ -144,6 +144,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>kriolos-opos-domain</module>
         <module>kriolos-opos-i18n</module>
         <module>kriolos-opos-i18n_pt</module>
+        <module>kriolos-opos-lib-report</module>
         <module>kriolos-opos-app</module>
         <module>kriolos-opos-jpackage</module>
         <module>docs</module>
@@ -189,6 +190,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>kriolos-opos-assets-reports</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-lib-report</artifactId>
                 <version>${project.version}</version>
             </dependency>
             

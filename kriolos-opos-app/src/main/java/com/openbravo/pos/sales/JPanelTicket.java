@@ -43,7 +43,6 @@ import com.openbravo.pos.payment.JPaymentSelectRefund;
 import com.openbravo.pos.printer.TicketParser;
 import com.openbravo.pos.printer.TicketPrinterException;
 import com.openbravo.pos.printer.screen.DeviceDisplayAdvance;
-import com.openbravo.pos.reports.JPanelReport;
 import com.openbravo.pos.sales.restaurant.RestaurantDBUtils;
 import com.openbravo.pos.scale.ScaleException;
 import com.openbravo.pos.scripting.ScriptEngine;
@@ -54,15 +53,12 @@ import com.openbravo.pos.ticket.TaxInfo;
 import com.openbravo.pos.ticket.TicketInfo;
 import com.openbravo.pos.ticket.TicketLineInfo;
 import com.openbravo.pos.util.InactivityListener;
-import com.openbravo.pos.reports.JRPrinterAWT300;
-import com.openbravo.pos.util.ReportUtils;
 
-import com.openbravo.pos.sales.SalesService;
-import com.openbravo.pos.sales.SalesServiceImpl;
 import com.openbravo.pos.payment.PaymentService;
 import com.openbravo.pos.payment.PaymentServiceImpl;
 import com.openbravo.pos.inventory.InventoryService;
 import com.openbravo.pos.inventory.InventoryServiceImpl;
+import com.openbravo.pos.reports.PrintReportUtils;
 import java.awt.*;
 
 import static java.awt.Window.getWindows;
@@ -70,7 +66,6 @@ import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
-import javax.print.PrintService;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -79,10 +74,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.data.JRMapArrayDataSource;
 
 /**
  *
@@ -1902,30 +1893,28 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
         try {
 
-            JasperReport jr = JPanelReport.createJasperReport(resourcefile);
-
-            Map reportparams = new HashMap();
+            
+            Map<String, Object> reportParams = new HashMap<>();
 
             String reportBundleName = resourcefile + ".properties";
             try {
-                reportparams.put("REPORT_RESOURCE_BUNDLE", ResourceBundle.getBundle(reportBundleName));
+                reportParams.put("REPORT_RESOURCE_BUNDLE", ResourceBundle.getBundle(reportBundleName));
             } catch (MissingResourceException ex) {
                 LOGGER.log(System.Logger.Level.WARNING, "Exception on set report bundle file: " + reportBundleName, ex);
             }
-            reportparams.put("TAXESLOGIC", taxeslogic);
+            reportParams.put("TAXESLOGIC", taxeslogic);
 
-            Map reportfields = new HashMap();
-            reportfields.put("TICKET", ticket);
-            reportfields.put("PLACE", ticketext);
+            Map<String, Object> reportFields = new HashMap<>();
+            reportFields.put("TICKET", ticket);
+            reportFields.put("PLACE", ticketext);
+            
+            
+            String printerName = getAppProperty("machine.printername");
+            
+            PrintReportUtils.printReport(printerName, resourcefile, reportParams, reportFields);
 
-            JasperPrint jp = JasperFillManager.fillReport(jr, reportparams,
-                    new JRMapArrayDataSource(new Object[] { reportfields }));
 
-            PrintService service = ReportUtils.getPrintService(getAppProperty("machine.printername"));
-
-            JRPrinterAWT300.printPages(jp, 0, jp.getPages().size() - 1, service);
-
-        } catch (JRException ex) {
+        } catch (Exception ex) {
             LOGGER.log(System.Logger.Level.WARNING, "Exception on print report with resource file: " + resourcefile,
                     ex);
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
