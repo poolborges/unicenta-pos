@@ -23,7 +23,7 @@ package com.openbravo.pos.forms;
 public class JCopyRightPanel extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 1L;
-    private static final String OFICIAL_S = "https://github.com/poolborges/unicenta-pos";
+    private static final String OFICIAL_S = "https://github.com/kriolos-obiz/kriolos-pos";
     /**
      * Creates new form JCopyRightPanel
      */
@@ -31,7 +31,8 @@ public class JCopyRightPanel extends javax.swing.JPanel {
         initComponents();
         
         copyRightLabel.setText("<html><center>"
-                + "<h1>KriolOS POS - Open Source Point Of Sale</h1>"
+                + "<h1>KriolOS POS</h1>"
+                + "<b>Open Source Point Of Sale</b></br></br>"
                 + "<p>More info on <href a=\""+OFICIAL_S+"\">official site</a></p>"
                 + "<p>"+OFICIAL_S+"</p>"
                 + "</center>"
