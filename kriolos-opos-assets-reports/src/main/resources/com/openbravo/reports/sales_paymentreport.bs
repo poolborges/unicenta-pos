@@ -23,14 +23,15 @@ report.setReport("/com/openbravo/reports/sales_paymentreport");
 report.setResourceBundle("com/openbravo/reports/sales_paymentreport_messages");
 
 report.setSentence("SELECT " +
-    "LEFT(DATE(receipts.DATENEW),10) AS GROUPDATE, " +
-    "receipts.DATENEW, " +
-    "payments.PAYMENT, " +
-    "payments.NOTES, " +
-    "payments.TOTAL " +
-"FROM payments,receipts " +
-"WHERE payments.RECEIPT = receipts.ID AND ?(QBF_FILTER) " +
-"ORDER BY receipts.DATENEW");
+                    "TO_CHAR(receipts.DATENEW, 'YYYY-MM-DD') AS GROUPDATE, " +
+                    "receipts.DATENEW, " +
+                    "payments.PAYMENT, " +
+                    "payments.NOTES, " +
+                    "payments.TOTAL " +
+                    "FROM payments payments " +
+                    "INNER JOIN receipts receipts ON payments.RECEIPT = receipts.ID " +
+                    "WHERE ?(QBF_FILTER) " +
+                    "ORDER BY receipts.DATENEW");
 
 report.addParameter("receipts.DATENEW");
 report.addParameter("receipts.DATENEW");

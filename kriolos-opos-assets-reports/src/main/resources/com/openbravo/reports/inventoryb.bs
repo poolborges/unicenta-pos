@@ -34,18 +34,19 @@ report.setSentence("SELECT " +
         "COALESCE(stocklevel.STOCKSECURITY, 0) AS STOCKSECURITY, " +
         "COALESCE(stocklevel.STOCKMAXIMUM, 0) AS STOCKMAXIMUM, " +
         "suppliers.NAME AS SUPPLIERNAME, uom.NAME AS UOM " +
-    "FROM (((((stockcurrent stockcurrent CROSS JOIN locations locations " +
-            "ON (stockcurrent.LOCATION = locations.id)) " +
-            "CROSS JOIN products products ON (stockcurrent.PRODUCT = products.ID)) " +
-            "CROSS JOIN categories categories ON (products.CATEGORY = categories.ID)) " +
-        "RIGHT OUTER JOIN suppliers suppliers ON (suppliers.id = products.SUPPLIER)) " +
-            "INNER JOIN uom uom ON (uom.id = products.UOM)) " +
-        "LEFT OUTER JOIN stocklevel stocklevel ON (stockcurrent.LOCATION = stocklevel.LOCATION) " +
-            "AND (stockcurrent.PRODUCT = stocklevel.PRODUCT) " +
-    "WHERE ?(QBF_FILTER)" +      
+    "FROM stockcurrent stockcurrent " +
+    "INNER JOIN locations locations ON stockcurrent.LOCATION = locations.id " +
+    "INNER JOIN products products ON stockcurrent.PRODUCT = products.ID " +
+    "INNER JOIN categories categories ON products.CATEGORY = categories.ID " +
+    "RIGHT OUTER JOIN suppliers suppliers ON suppliers.id = products.SUPPLIER " +
+    "INNER JOIN uom uom ON uom.id = products.UOM " +
+    "LEFT OUTER JOIN stocklevel stocklevel ON stockcurrent.LOCATION = stocklevel.LOCATION " +
+        "AND stockcurrent.PRODUCT = stocklevel.PRODUCT " +
+    "WHERE ?(QBF_FILTER) " +      
     "GROUP BY stockcurrent.LOCATION, locations.NAME, products.REFERENCE, products.NAME, " +
-        "products.CATEGORY, categories.NAME, products.PRICEBUY, products.PRICESELL, " +
-        "products.STOCKVOLUME, products.STOCKCOST, stocklevel.STOCKSECURITY, stocklevel.STOCKMAXIMUM " +
+        "products.CATEGORY, categories.NAME, products.SUPPLIER, products.PRICEBUY, products.PRICESELL, " +
+        "products.STOCKVOLUME, products.STOCKCOST, stocklevel.STOCKSECURITY, stocklevel.STOCKMAXIMUM, " +
+        "suppliers.NAME, uom.NAME " +
     "ORDER BY LOCATIONID ASC, CATEGORYNAME ASC, PRODUCTNAME ASC");
 
 report.addParameter("products.NAME");

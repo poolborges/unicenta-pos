@@ -29,14 +29,21 @@ report.setTitleKey("Menu.SaleTaxes");
 report.setReport("/com/openbravo/reports/sales_saletaxes");
 report.setResourceBundle("com/openbravo/reports/sales_saletaxes_messages");
 
-report.setSentence(
-                "SELECT tickets.TICKETID,receipts.DATENEW, payments.PAYMENT, " +
-                    "taxcategories.NAME, taxlines.AMOUNT, taxlines.BASE "+
-                "FROM receipts, taxlines, taxes, taxcategories,tickets, payments " +
-                "WHERE payments.RECEIPT = receipts.ID AND " +
-                    "receipts.ID = taxlines.RECEIPT AND receipts.ID=tickets.ID AND " +
-                    "taxlines.TAXID = taxes.ID AND taxes.CATEGORY = taxcategories.ID AND ?(QBF_FILTER) "+
-                "ORDER BY receipts.DATENEW");
+report.setSentence("SELECT " +
+    "tickets.TICKETID, " +
+    "receipts.DATENEW, " +
+    "payments.PAYMENT, " +
+    "taxcategories.NAME, " +
+    "taxlines.AMOUNT, " +
+    "taxlines.BASE " +
+"FROM receipts receipts " +
+    "INNER JOIN tickets tickets ON receipts.ID = tickets.ID " +
+    "INNER JOIN payments payments ON receipts.ID = payments.RECEIPT " +
+    "INNER JOIN taxlines taxlines ON receipts.ID = taxlines.RECEIPT " +
+    "INNER JOIN taxes taxes ON taxlines.TAXID = taxes.ID " +
+    "INNER JOIN taxcategories taxcategories ON taxes.CATEGORY = taxcategories.ID " +
+"WHERE ?(QBF_FILTER) " +
+"ORDER BY receipts.DATENEW");
 
 report.addParameter("receipts.DATENEW");
 report.addParameter("receipts.DATENEW");

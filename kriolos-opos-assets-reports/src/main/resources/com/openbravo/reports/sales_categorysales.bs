@@ -23,17 +23,25 @@ report.setReport("/com/openbravo/reports/sales_categorysales");
 report.setResourceBundle("com/openbravo/reports/sales_categorysales_messages");
 
 // JG - 8 Jan 14 Convert lowercasednname to UPPERCASE for compatability
-
-report.setSentence("SELECT categories.ID, categories.NAME, " +
-    "SUM(ticketlines.UNITS) AS QTY, " +
-    "SUM(ticketlines.PRICE * ticketlines.UNITS) AS CATPRICE, " +
-    "SUM((products.PRICESELL * ticketlines.UNITS)-((products.ISVPRICE ) * (ticketlines.PRICE * ticketlines.UNITS))) AS DISC, " +
-    "SUM((ticketlines.PRICE * taxes.RATE)* ticketlines.UNITS) AS CATTAX, " +
-    "SUM((ticketlines.PRICE * ticketlines.UNITS) + ((ticketlines.PRICE * taxes.RATE)* ticketlines.UNITS)) AS CATTOTAL " +
-"FROM (tickets INNER JOIN receipts ON tickets.ID = receipts.ID) INNER JOIN ((categories INNER JOIN products ON categories.ID = products.CATEGORY) INNER JOIN (taxes INNER JOIN ticketlines ON taxes.ID = ticketlines.TAXID) ON products.ID = ticketlines.PRODUCT) ON tickets.ID = ticketlines.TICKET " +
-"WHERE ?(QBF_FILTER) " +
-"GROUP BY categories.ID, categories.NAME " +
-"ORDER BY categories.NAME");
+// Fixed: Handled products.ISVPRICE boolean data type mismatch with CASE WHEN and flattened JOIN hierarchy
+report.setSentence("SELECT " +
+                    "categories.ID, " +
+                    "categories.NAME, " +
+                    "SUM(ticketlines.UNITS) AS QTY, " +
+                    "SUM(ticketlines.PRICE * ticketlines.UNITS) AS CATPRICE, " +
+                    "SUM((products.PRICESELL * ticketlines.UNITS) - " +
+                        "(CASE WHEN products.ISVPRICE = TRUE THEN (ticketlines.PRICE * ticketlines.UNITS) ELSE 0.0 END)) AS DISC, " +
+                    "SUM((ticketlines.PRICE * taxes.RATE) * ticketlines.UNITS) AS CATTAX, " +
+                    "SUM((ticketlines.PRICE * ticketlines.UNITS) + ((ticketlines.PRICE * taxes.RATE) * ticketlines.UNITS)) AS CATTOTAL " +
+                    "FROM ticketlines ticketlines " +
+                    "INNER JOIN products products ON products.ID = ticketlines.PRODUCT " +
+                    "INNER JOIN categories categories ON categories.ID = products.CATEGORY " +
+                    "INNER JOIN taxes taxes ON taxes.ID = ticketlines.TAXID " +
+                    "INNER JOIN tickets tickets ON tickets.ID = ticketlines.TICKET " +
+                    "INNER JOIN receipts receipts ON tickets.ID = receipts.ID " +
+                    "WHERE ?(QBF_FILTER) " +
+                    "GROUP BY categories.ID, categories.NAME " +
+                    "ORDER BY categories.NAME");
 
 report.addParameter("receipts.DATENEW");
 report.addParameter("receipts.DATENEW");
