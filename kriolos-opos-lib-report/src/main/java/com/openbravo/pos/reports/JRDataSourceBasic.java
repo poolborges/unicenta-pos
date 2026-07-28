@@ -33,11 +33,11 @@ public class JRDataSourceBasic implements JRDataSource {
 
     private static final Logger LOGGER = Logger.getLogger(JRDataSourceBasic.class.getName());
 
-    private BaseSentence sent;
-    private DataResultSet SRS = null;
+    private BaseSentence sentence;
+    private DataResultSet dataResultSet = null;
     private Object current = null;
 
-    private ReportFields m_fields = null;
+    private ReportFields reportFields = null;
 
     /**
      * Creates a new instance of JRDataSourceBasic
@@ -49,9 +49,9 @@ public class JRDataSourceBasic implements JRDataSource {
      */
     public JRDataSourceBasic(BaseSentence sent, ReportFields fields, Object params) throws BasicException {
 
-        this.sent = sent;
-        SRS = sent.openExec((Object[])params);
-        m_fields = fields;
+        this.sentence = sent;
+        this.dataResultSet = sent.openExec((Object[])params);
+        this.reportFields = fields;
     }
 
     /**
@@ -64,7 +64,7 @@ public class JRDataSourceBasic implements JRDataSource {
     public Object getFieldValue(JRField jrField) throws JRException {
 
         try {
-            return m_fields.getField(current, jrField.getName());
+            return reportFields.getField(current, jrField.getName());
         } catch (ReportException ex) {
             LOGGER.log(Level.SEVERE, "Exception on JRDataSourceBasic", ex);
             throw new JRException(ex);
@@ -78,20 +78,20 @@ public class JRDataSourceBasic implements JRDataSource {
     @Override
     public boolean next() throws JRException {
 
-        if (SRS == null) {
-            LOGGER.log(Level.SEVERE, "SRS is null");
+        if (dataResultSet == null) {
+            LOGGER.log(Level.SEVERE, "dataResultSet is null");
             throw new JRException(AppLocal.getIntString("exception.unavailabledataset"));
         }
 
         try {
-            if (SRS.next()) {
-                current = SRS.getCurrent();
+            if (dataResultSet.next()) {
+                current = dataResultSet.getCurrent();
                 return true;
             } else {
                 current = null;
-                SRS = null;
-                sent.closeExec();
-                sent = null;
+                dataResultSet = null;
+                sentence.closeExec();
+                sentence = null;
                 return false;
             }
         } catch (BasicException e) {
