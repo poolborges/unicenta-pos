@@ -26,19 +26,21 @@ public class FinancialReportServiceImpl implements FinancialReportService {
 
         // 1. Payments (Count, SUM)
         Object[] valtickets = (Object[]) new StaticSentence(session,
-                "SELECT COUNT(*), SUM(payments.TOTAL) "
+                "SELECT COUNT(*) AS total_count, COALESCE(SUM(payments.TOTAL), 0) AS total_sum "
                         + "FROM payments, receipts "
                         + "WHERE payments.RECEIPT = receipts.ID AND receipts.MONEY = ?",
                 SerializerWriteString.INSTANCE,
                 new SerializerReadBasic(new Datas[] { Datas.INT, Datas.DOUBLE }))
                 .find(money);
 
-        if (valtickets == null) {
-            report.setPaymentCount(0);
-            report.setPaymentTotal(0.0);
-        } else {
+        //check columns
+        if (valtickets != null && valtickets.length == 2) {
             report.setPaymentCount((Integer) valtickets[0]);
             report.setPaymentTotal((Double) valtickets[1]);
+        } else {
+            
+            report.setPaymentCount(0);
+            report.setPaymentTotal(0.0);
         }
 
         // 2. Payment Lines
@@ -68,19 +70,20 @@ public class FinancialReportServiceImpl implements FinancialReportService {
                 new SerializerReadBasic(new Datas[] { Datas.INT, Datas.DOUBLE, Datas.DOUBLE }))
                 .find(money);
 
-        if (valcategorysales == null) {
-            report.setCategorySalesRows(0);
-            report.setCategorySalesTotalUnits(0.0);
-            report.setCategorySalesTotal(0.0);
-        } else {
+        //check columns
+        if (valcategorysales != null && valcategorysales.length == 3) {
             report.setCategorySalesRows((Integer) valcategorysales[0]);
             report.setCategorySalesTotalUnits((Double) valcategorysales[1]);
             report.setCategorySalesTotal((Double) valcategorysales[2]);
+        } else {
+            report.setCategorySalesRows(0);
+            report.setCategorySalesTotalUnits(0.0);
+            report.setCategorySalesTotal(0.0);
         }
 
         // 4. Category Sales Lines
         List<CategorySalesLine> categorys = new StaticSentence(session,
-                "SELECT a.NAME, sum(c.UNITS), sum(c.UNITS * (c.PRICE + (c.PRICE * d.RATE))) "
+                "SELECT a.NAME, SUM(c.UNITS), SUM(c.UNITS * (c.PRICE + (c.PRICE * d.RATE))) "
                         + "FROM categories as a "
                         + "LEFT JOIN products as b on a.id = b.CATEGORY "
                         + "LEFT JOIN ticketlines as c on b.id = c.PRODUCT "
@@ -96,39 +99,41 @@ public class FinancialReportServiceImpl implements FinancialReportService {
 
         // 5. Sales Summary
         Object[] recsales = (Object[]) new StaticSentence(session,
-                "SELECT COUNT(DISTINCT receipts.ID), SUM(ticketlines.UNITS * ticketlines.PRICE) "
+                "SELECT COUNT(DISTINCT receipts.ID), COALESCE(SUM(ticketlines.UNITS * ticketlines.PRICE), 0) "
                         + "FROM receipts, ticketlines "
                         + "WHERE receipts.ID = ticketlines.TICKET AND receipts.MONEY = ?",
                 SerializerWriteString.INSTANCE,
                 new SerializerReadBasic(new Datas[] { Datas.INT, Datas.DOUBLE }))
                 .find(money);
 
-        if (recsales == null) {
-            report.setSalesCount(0);
-            report.setSalesBase(0.0);
-        } else {
+        //check columns
+        if (recsales != null && recsales.length == 2) {
             report.setSalesCount((Integer) recsales[0]);
             report.setSalesBase((Double) recsales[1]);
+        } else {
+            report.setSalesCount(0);
+            report.setSalesBase(0.0);
         }
 
         // 6. Taxes Summary
         Object[] rectaxes = (Object[]) new StaticSentence(session,
-                "SELECT SUM(taxlines.AMOUNT), SUM(taxlines.BASE) "
+                "SELECT COALESCE(SUM(taxlines.AMOUNT), 0), COALESCE(SUM(taxlines.BASE), 0) "
                         + "FROM receipts, taxlines "
                         + "WHERE receipts.ID = taxlines.RECEIPT AND receipts.MONEY = ?",
                 SerializerWriteString.INSTANCE,
                 new SerializerReadBasic(new Datas[] { Datas.DOUBLE, Datas.DOUBLE }))
                 .find(money);
 
-        if (rectaxes == null) {
-            report.setSalesTaxes(0.0);
-        } else {
+        //check columns
+        if (rectaxes != null && rectaxes.length == 2) {
             report.setSalesTaxes((Double) rectaxes[0]);
+        } else {
+            report.setSalesTaxes(0.0);
         }
 
         // 7. Sales Lines (Taxes breakdown)
         List<SalesLine> asales = new StaticSentence(session,
-                "SELECT taxcategories.NAME, SUM(taxlines.AMOUNT), SUM(taxlines.BASE), SUM(taxlines.BASE + taxlines.AMOUNT) "
+                "SELECT taxcategories.NAME, COALESCE(SUM(taxlines.AMOUNT),0), COALESCE(SUM(taxlines.BASE),0), COALESCE(SUM(taxlines.BASE + taxlines.AMOUNT),0) "
                         + "FROM receipts, taxlines, taxes, taxcategories "
                         + "WHERE receipts.ID = taxlines.RECEIPT AND taxlines.TAXID = taxes.ID AND taxes.CATEGORY = taxcategories.ID "
                         + "AND receipts.MONEY = ?"
@@ -142,7 +147,7 @@ public class FinancialReportServiceImpl implements FinancialReportService {
         // 8. Removed Lines
         String startDateFormatted = Formats.DATETIME.formatValue(dateStart);
         List<RemovedProductLines> removedLines = new StaticSentence(session,
-                "SELECT lineremoved.NAME, lineremoved.TICKETID, lineremoved.PRODUCTNAME, SUM(lineremoved.UNITS) AS TOTAL_UNITS  "
+                "SELECT lineremoved.NAME, lineremoved.TICKETID, lineremoved.PRODUCTNAME, COALESCE(SUM(lineremoved.UNITS),0) AS TOTAL_UNITS  "
                         + "FROM lineremoved "
                         + "WHERE lineremoved.REMOVEDDATE > ? "
                         + "GROUP BY lineremoved.NAME, lineremoved.TICKETID, lineremoved.PRODUCTNAME",
@@ -179,14 +184,15 @@ public class FinancialReportServiceImpl implements FinancialReportService {
                 new SerializerReadBasic(new Datas[] { Datas.INT, Datas.DOUBLE, Datas.DOUBLE }))
                 .find(money);
 
-        if (valproductsales == null) {
-            report.setProductSalesRows(0);
-            report.setProductSalesTotalUnits(0.0);
-            report.setProductSalesTotal(0.0);
-        } else {
+        //check columns
+        if (valproductsales != null && valproductsales.length == 3) {
             report.setProductSalesRows((Integer) valproductsales[0]);
             report.setProductSalesTotalUnits((Double) valproductsales[1]);
             report.setProductSalesTotal((Double) valproductsales[2]);
+        } else {
+            report.setProductSalesRows(0);
+            report.setProductSalesTotalUnits(0.0);
+            report.setProductSalesTotal(0.0);
         }
 
         // 11. Product Sales Lines
