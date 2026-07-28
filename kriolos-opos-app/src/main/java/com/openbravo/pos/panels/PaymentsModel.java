@@ -130,7 +130,7 @@ public class PaymentsModel {
      */
     public static PaymentsModel loadInstance(AppView app) throws BasicException {
 
-        PaymentsModel p = new PaymentsModel();
+        PaymentsModel p = PaymentsModel.emptyInstance();
 
         // Global Properties
         p.m_sHost = app.getProperties().getHost();
