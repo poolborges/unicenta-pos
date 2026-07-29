@@ -32,19 +32,22 @@ report.setSentence("SELECT " +
                 "products.CATEGORY, " +
                 "categories.NAME AS CATEGORYNAME, " +
                 "products.SUPPLIER, " +
-                "stockcurrent.UNITS, " +
+                "SUM(stockcurrent.UNITS) AS UNITS, " + // Correção: Adicionado o SUM
                 "COALESCE(stocklevel.STOCKSECURITY, 0) AS STOCKSECURITY, " +
                 "COALESCE(stocklevel.STOCKMAXIMUM, 0) AS STOCKMAXIMUM, " +
-                "suppliers.NAME " +
-            "FROM stockcurrent " +
-                "JOIN locations ON stockcurrent.LOCATION = locations.ID " +
-                "JOIN products ON stockcurrent.PRODUCT = products.ID " +
-                "JOIN categories ON products.CATEGORY = categories.ID  " +
-                    "LEFT OUTER JOIN stocklevel ON stockcurrent.LOCATION = stocklevel.LOCATION AND stockcurrent.PRODUCT = stocklevel.PRODUCT " +
-            	    "LEFT OUTER JOIN attributesetinstance ON stockcurrent.ATTRIBUTESETINSTANCE_ID = attributesetinstance.ID " +
-                    "LEFT OUTER JOIN suppliers suppliers ON (suppliers.ID = products.SUPPLIER) " +
+                "suppliers.NAME AS SUPPLIERNAME " +
+            "FROM stockcurrent stockcurrent " +
+                "INNER JOIN locations locations ON stockcurrent.LOCATION = locations.ID " +
+                "INNER JOIN products products ON stockcurrent.PRODUCT = products.ID " +
+                "INNER JOIN categories categories ON products.CATEGORY = categories.ID  " +
+                "LEFT OUTER JOIN stocklevel stocklevel ON stockcurrent.LOCATION = stocklevel.LOCATION AND stockcurrent.PRODUCT = stocklevel.PRODUCT " +
+                "LEFT OUTER JOIN attributesetinstance attributesetinstance ON stockcurrent.ATTRIBUTESETINSTANCE_ID = attributesetinstance.ID " +
+                "LEFT OUTER JOIN suppliers suppliers ON products.SUPPLIER = suppliers.ID " +
             "WHERE ?(QBF_FILTER) " +
-            "GROUP BY locations.ID, products.CATEGORY, products.REFERENCE, DESCRIPTION " +
+            "GROUP BY stockcurrent.LOCATION, locations.NAME, products.REFERENCE, products.NAME, " +
+                     "stockcurrent.ATTRIBUTESETINSTANCE_ID, attributesetinstance.DESCRIPTION, " +
+                     "products.CATEGORY, categories.NAME, products.SUPPLIER, " +
+                     "stocklevel.STOCKSECURITY, stocklevel.STOCKMAXIMUM, suppliers.NAME " + // Correção: Agrupamento completo
             "ORDER BY categories.NAME, products.NAME, stockcurrent.LOCATION");
 
 report.addParameter("products.NAME");

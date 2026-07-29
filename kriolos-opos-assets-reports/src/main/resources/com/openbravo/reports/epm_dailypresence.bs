@@ -23,12 +23,17 @@ report.setReport("/com/openbravo/reports/epm_dailypresence");
 report.setResourceBundle("com/openbravo/reports/epm_dailypresence_messages");
 
 report.setSentence("SELECT " +
-                "people.NAME, " +
+                "people.NAME AS PEOPLENAME, " +
                 "shifts.STARTSHIFT, " +
                 "shifts.ENDSHIFT, " +
-                "CONCAT('',TIMEDIFF(shifts.ENDSHIFT, shifts.STARTSHIFT)) AS TOTAL " +
-                "FROM people LEFT JOIN shifts ON shifts.PPLID = people.ID " +
-                "WHERE ?(QBF_FILTER) ");
+                "CASE WHEN shifts.ENDSHIFT IS NOT NULL " +
+                "     THEN CAST(DATEDIFF('minute', shifts.STARTSHIFT, shifts.ENDSHIFT) AS VARCHAR(10)) " +
+                "     ELSE '0' END AS TOTAL " +
+                "FROM people people " +
+                "LEFT OUTER JOIN shifts shifts ON shifts.PPLID = people.ID " +
+                "WHERE ?(QBF_FILTER) " +
+                "ORDER BY people.NAME ASC, shifts.STARTSHIFT DESC");
+
 
 report.addParameter("shifts.STARTSHIFT");
 report.addParameter("shifts.ENDSHIFT");

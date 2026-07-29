@@ -23,15 +23,22 @@ report.setReport("/com/openbravo/reports/products");
 report.setResourceBundle("com/openbravo/reports/productscatalog_messages");
 
 report.setSentence("SELECT " +
-            "products.ID, products.REFERENCE, products.CODE, products.NAME, " +
-            "products.PRICEBUY, products.PRICESELL, " +
-            "TC.ID AS TAXCAT, TC.NAME AS TAXCATNAME, " +
-            "categories.ID AS CATEGORY, categories.NAME AS CATEGORYNAME, " +
+            "products.ID, " +
+            "products.REFERENCE, " +
+            "products.CODE, " +
+            "products.NAME, " +
+            "products.PRICEBUY, " +
+            "products.PRICESELL, " +
+            "TC.ID AS TAXCAT, " +
+            "TC.NAME AS TAXCATNAME, " +
+            "categories.ID AS CATEGORY, " +
+            "categories.NAME AS CATEGORYNAME, " +
             "products.UNITS " +
-        "FROM products LEFT OUTER JOIN categories ON products.CATEGORY = categories.ID " +
-            "LEFT OUTER JOIN TAXcategories TC ON products.TAXCAT = TC.ID " +
+        "FROM products products " +
+            "LEFT OUTER JOIN categories categories ON products.CATEGORY = categories.ID " +
+            "LEFT OUTER JOIN taxcategories TC ON products.TAXCAT = TC.ID " +
             "WHERE ?(QBF_FILTER) " +
-            "ORDER BY categories.NAME, products.NAME");
+            "ORDER BY categories.NAME ASC, products.NAME ASC");
 
 report.addParameter("categories.ID");
 report.addQBFFilter(new com.openbravo.pos.ticket.CategoryFilter());
