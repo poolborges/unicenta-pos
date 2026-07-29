@@ -23,20 +23,22 @@ report.setReport("/com/openbravo/reports/suppliers_diary");
 report.setResourceBundle("com/openbravo/reports/suppliers_messages");
 
 report.setSentence("SELECT "
-                    + "suppliers.NAME, "
-                    + "stockdiary.datenew, "
-                    + "products.NAME, products.REFERENCE, "
-                    + "stockdiary.units, stockdiary.price, "
-                    + "stockdiary.supplierdoc, stockdiary.reason, "
-                    + "sum(stockdiary.units * stockdiary.price) AS totalP " 
-                + "FROM (stockdiary stockdiary "
-                        + "INNER JOIN suppliers suppliers "
-                        + "ON (stockdiary.supplier = suppliers.id)) "
-                        + "INNER JOIN products products "
-                        + "ON (stockdiary.product = products.ID) "
-                + "WHERE VISIBLE = " + app.getSession().DB.TRUE() + " AND ?(QBF_FILTER)" 
-                    + "GROUP BY suppliers.id, stockdiary.id, products.id " 
-                + "ORDER BY suppliers.NAME, stockdiary.datenew DESC");
+                    + "suppliers.NAME AS SUPPLIERNAME, "
+                    + "stockdiary.DATENEW, "
+                    + "products.NAME AS PRODUCTNAME, "
+                    + "products.REFERENCE, "
+                    + "stockdiary.UNITS, "
+                    + "stockdiary.PRICE, "
+                    + "stockdiary.SUPPLIERDOC, "
+                    + "stockdiary.REASON, "
+                    + "SUM(stockdiary.UNITS * stockdiary.PRICE) AS TOTALP " 
+                + "FROM stockdiary stockdiary "
+                    + "INNER JOIN suppliers suppliers ON stockdiary.SUPPLIER = suppliers.ID "
+                    + "INNER JOIN products products ON stockdiary.PRODUCT = products.ID "
+                + "WHERE ?(QBF_FILTER) " 
+                + "GROUP BY suppliers.NAME, stockdiary.DATENEW, products.NAME, products.REFERENCE, "
+                    + "stockdiary.UNITS, stockdiary.PRICE, stockdiary.SUPPLIERDOC, stockdiary.REASON " 
+                + "ORDER BY suppliers.NAME ASC, stockdiary.DATENEW DESC");
 
 report.addParameter("stockdiary.DATENEW");
 report.addParameter("stockdiary.DATENEW");

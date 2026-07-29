@@ -29,25 +29,18 @@ report.setSentence("SELECT " +
        "SUM(ticketlines.UNITS) AS QTY, " +
        "SUM(ticketlines.PRICE * ticketlines.UNITS) AS CATPRICE, " +
        "SUM((ticketlines.PRICE * taxes.RATE) * ticketlines.UNITS) AS CATTAX, " +
-       "SUM((ticketlines.PRICE + ticketlines.PRICE * taxes.RATE) " +
-          "* ticketlines.UNITS) AS CATTOTAL " +
-    "FROM taxes taxes " +
-       "CROSS JOIN closedcash closedcash " +
-       "CROSS JOIN ((((ticketlines ticketlines " +
-           "LEFT OUTER JOIN products products " +
-              "ON (ticketlines.PRODUCT = products.ID)) " +
-          "RIGHT OUTER JOIN products_cat products_cat " +
-             "ON (products_cat.PRODUCT = products.ID)) " +
-         "LEFT OUTER JOIN categories categories " +
-            "ON (products.CATEGORY = categories.ID)) " +
-        "RIGHT OUTER JOIN tickets tickets " +
-           "ON (tickets.ID = ticketlines.TICKET)) " +
-       "RIGHT OUTER JOIN receipts receipts " +
-          "ON (receipts.ID = tickets.ID) " +
-    "WHERE closedcash.MONEY = receipts.MONEY " +
-        "AND ticketlines.TAXID = taxes.ID AND ?(QBF_FILTER) " +
-    "GROUP BY taxes.NAME, categories.NAME " +
-        "ORDER BY TAXNAME ASC, categories.NAME ASC");
+       "SUM((ticketlines.PRICE + (ticketlines.PRICE * taxes.RATE)) * ticketlines.UNITS) AS CATTOTAL " +
+    "FROM receipts receipts " +
+       "INNER JOIN closedcash closedcash ON closedcash.MONEY = receipts.MONEY " +
+       "INNER JOIN tickets tickets ON receipts.ID = tickets.ID " +
+       "INNER JOIN ticketlines ticketlines ON tickets.ID = ticketlines.TICKET " +
+       "INNER JOIN taxes taxes ON ticketlines.TAXID = taxes.ID " +
+       "LEFT OUTER JOIN products products ON ticketlines.PRODUCT = products.ID " +
+       "LEFT OUTER JOIN categories categories ON products.CATEGORY = categories.ID " +
+       "LEFT OUTER JOIN products_cat products_cat ON products_cat.PRODUCT = products.ID " +
+    "WHERE ?(QBF_FILTER) " +
+    "GROUP BY closedcash.DATEEND, taxes.NAME, categories.NAME " +
+    "ORDER BY TAXNAME ASC, categories.NAME ASC");
 
 report.addParameter("receipts.DATENEW");
 report.addParameter("receipts.DATENEW");

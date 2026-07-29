@@ -115,7 +115,8 @@
     <class name="com.openbravo.pos.inventory.TaxPanel"/>
     <class name="com.openbravo.pos.inventory.UomPanel"/>     
 
-    <class name="/com/openbravo/reports/barcode_sheet.bs"/>           
+    <class name="/com/openbravo/reports/barcode_sheet.bs"/>      
+    <class name="/com/openbravo/reports/barcode_sheet_jm.bs"/>       
     <class name="/com/openbravo/reports/barcode_shelfedgelabels.bs"/>
     <class name="/com/openbravo/reports/inventory.bs"/>
     <class name="/com/openbravo/reports/inventoryb.bs"/>

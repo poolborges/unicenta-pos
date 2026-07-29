@@ -22,7 +22,8 @@ report.setTitleKey("Menu.Products");
 report.setReport("/com/openbravo/reports/products");
 report.setResourceBundle("com/openbravo/reports/products_messages");
 
-report.setSentence("SELECT products.ID, "
+report.setSentence("SELECT "
+        + "products.ID, "
         + "products.REFERENCE, "
         + "products.CODE, "
         + "products.NAME, "
@@ -32,16 +33,15 @@ report.setSentence("SELECT products.ID, "
         + "T.RATE + 1 AS TAXRATE, "
         + "categories.ID AS CATEGORY, "
         + "categories.NAME AS CATEGORYNAME, "
-        + "stockcurrent.UNITS "
-    + "FROM ((products products "
-        + "INNER JOIN stockcurrent stockcurrent "
-            + "ON (products.ID = stockcurrent.PRODUCT)) "
-        + "LEFT OUTER JOIN categories categories "
-           + "ON (products.CATEGORY = categories.ID)) "
-        + "LEFT OUTER JOIN taxes T "
-           + "ON (products.TAXCAT = T.ID) "
+        + "SUM(stockcurrent.UNITS * 1.0) AS UNITS "
+    + "FROM products products "
+        + "INNER JOIN stockcurrent stockcurrent ON products.ID = stockcurrent.PRODUCT "
+        + "LEFT OUTER JOIN categories categories ON products.CATEGORY = categories.ID "
+        + "LEFT OUTER JOIN taxes T ON products.TAXCAT = T.CATEGORY "
     + "WHERE ?(QBF_FILTER) "
-    + "GROUP BY products.ID "
+    + "GROUP BY products.ID, products.REFERENCE, products.CODE, products.NAME, "
+             + "products.PRICEBUY, products.PRICESELL, T.ID, T.RATE, "
+             + "categories.ID, categories.NAME "
     + "ORDER BY CATEGORYNAME ASC, products.NAME ASC");
 
 report.addParameter("products.NAME");

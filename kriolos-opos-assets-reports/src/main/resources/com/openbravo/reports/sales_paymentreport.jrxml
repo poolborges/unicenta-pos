@@ -163,7 +163,7 @@
 	<detail>
 		<band height="13" splitType="Stretch">
 			<element kind="textField" uuid="62c1ae27-bba9-4ea8-8c56-2c098ffda78a" key="textField-26" x="115" y="0" width="92" height="13" fontName="SansSerif" fontSize="10.0" blankWhenNull="false">
-				<expression><![CDATA[str("transpayment." + $F{PAYMENT})]]></expression>
+				<expression><![CDATA[$F{PAYMENT} == null ? "" : str("transpayment." + $F{PAYMENT})]]></expression>
 			</element>
 			<element kind="textField" uuid="e68f5dda-5e29-469c-be81-fedcf4189eea" key="textField-28" x="435" y="0" width="100" height="13" fontName="SansSerif" fontSize="10.0" pattern="##0.00" blankWhenNull="false" hTextAlign="Right">
 				<expression><![CDATA[com.openbravo.format.Formats.CURRENCY.formatValue($F{TOTAL})]]></expression>

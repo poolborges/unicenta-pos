@@ -177,15 +177,15 @@
 				</box>
 			</element>
 			<element kind="textField" uuid="d0aaa74e-7e6b-4641-8e9a-d98c8f25e4c5" key="textField-2" mode="Transparent" x="282" y="0" width="40" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="true" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">
-				<paragraph lineSpacing="Single"/>
-				<expression><![CDATA[com.openbravo.format.Formats.DOUBLE.formatValue($F{UNITS})]]></expression>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
-				</box>
-			</element>
+                                <paragraph lineSpacing="Single"/>
+                                <expression><![CDATA[$F{UNITS} == null ? "0.00" : com.openbravo.format.Formats.DOUBLE.formatValue($F{UNITS})]]></expression>
+                                <box>
+                                        <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                                        <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                                        <bottomPen lineWidth="0.0" lineColor="#000000"/>
+                                        <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+                                </box>
+                        </element>
 			<element kind="textField" uuid="210bccc7-a8d0-4458-8bd3-d84060d71d11" key="textField-5" mode="Transparent" x="322" y="0" width="70" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="true" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">
 				<paragraph lineSpacing="Single"/>
 				<expression><![CDATA[com.openbravo.format.Formats.CURRENCY.formatValue($F{PRICEBUY})]]></expression>

@@ -30,8 +30,8 @@ ORDER BY CLOSEDCASH.HOST, CLOSEDCASH.HOSTSEQUENCE]]></query>
 	<field name="HOSTSEQUENCE" class="java.lang.Integer"/>
 	<background/>
 	<title height="16">
-		<element kind="staticText" uuid="88213632-6a49-4bfe-b37a-eba56a2c49bb" key="staticText-1" x="0" y="0" width="61" height="15" fontName="SansSerif" fontSize="8.0" vTextAlign="Middle">
-			<text><![CDATA[rpt:closedpos_2]]></text>
+		<element kind="textField" uuid="88213632-6a49-4bfe-b37a-eba56a2c49bb" key="textField-1" x="0" y="0" width="61" height="15" fontName="SansSerif" fontSize="8.0" vTextAlign="Middle">
+			<expression><![CDATA[$R{label.title}]]></expression>
 		</element>
 		<element kind="textField" uuid="1fcef734-5450-4c65-9615-619c79c43a2e" key="textField-11" mode="Opaque" x="75" y="0" width="96" height="15" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="true" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" vTextAlign="Middle">
 			<paragraph lineSpacing="Single"/>
@@ -102,12 +102,15 @@ ORDER BY CLOSEDCASH.HOST, CLOSEDCASH.HOSTSEQUENCE]]></query>
 	</columnHeader>
 	<detail>
 		<band height="14">
-			<element kind="textField" uuid="a463fede-5f43-4607-bad9-4a6abb9b7ae7" key="textField-9" x="115" y="0" width="60" height="13" fontName="SansSerif" hTextAlign="Right">
+			<!-- HOSTSEQUENCE FIELD -->
+			<element kind="textField" uuid="a463fede-5f43-4607-bad9-4a6abb9b7ae7" key="textField-9" x="115" y="0" width="60" height="13" fontName="SansSerif" hTextAlign="Right" vTextAlign="Middle">
 				<expression><![CDATA[$F{HOSTSEQUENCE}]]></expression>
 			</element>
-			<element kind="textField" uuid="ed2eb604-a7a0-4cbe-9d02-f648bfd102bc" key="textField-10" mode="Opaque" x="191" y="0" width="110" height="13" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" vTextAlign="Middle">
+			
+			<!-- DATEEND FIELD (With Null Protection) -->
+			<element kind="textField" uuid="ed2eb604-a7a0-4cbe-9d02-f648bfd102bc" key="textField-10" mode="Opaque" x="191" y="0" width="110" height="13" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="true" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" vTextAlign="Middle">
 				<paragraph lineSpacing="Single"/>
-				<expression><![CDATA[com.openbravo.format.Formats.TIMESTAMP.formatValue($F{DATEEND})]]></expression>
+				<expression><![CDATA[$F{DATEEND} == null ? "" : com.openbravo.format.Formats.TIMESTAMP.formatValue($F{DATEEND})]]></expression>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -115,9 +118,11 @@ ORDER BY CLOSEDCASH.HOST, CLOSEDCASH.HOSTSEQUENCE]]></query>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="f7bc4aac-b5da-4e7e-93d3-3f5fbc832332" key="textField-11" mode="Opaque" x="361" y="0" width="90" height="13" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Top">
+			
+			<!-- PAYMENT METHOD FIELD (Translated via resource bundle) -->
+			<element kind="textField" uuid="f7bc4aac-b5da-4e7e-93d3-3f5fbc832332" key="textField-11" mode="Opaque" x="361" y="0" width="90" height="13" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="true" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Middle">
 				<paragraph lineSpacing="Single"/>
-				<expression><![CDATA[str("transpayment." + $F{PAYMENT})]]></expression>
+				<expression><![CDATA[$F{PAYMENT} == null ? "" : str("transpayment." + $F{PAYMENT})]]></expression>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -125,7 +130,9 @@ ORDER BY CLOSEDCASH.HOST, CLOSEDCASH.HOSTSEQUENCE]]></query>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="0b33aa80-e906-4ba4-8de5-a6eafb784b05" key="textField-12" mode="Opaque" x="435" y="0" width="100" height="13" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Top">
+			
+			<!-- TOTAL TOTAL FIELD (Formatted as currency) -->
+			<element kind="textField" uuid="0b33aa80-e906-4ba4-8de5-a6eafb784b05" key="textField-12" mode="Opaque" x="435" y="0" width="100" height="13" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Right" vTextAlign="Middle">
 				<paragraph lineSpacing="Single"/>
 				<expression><![CDATA[com.openbravo.format.Formats.CURRENCY.formatValue($F{TOTAL})]]></expression>
 				<box>
@@ -135,6 +142,8 @@ ORDER BY CLOSEDCASH.HOST, CLOSEDCASH.HOSTSEQUENCE]]></query>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 				</box>
 			</element>
+			
+			<!-- HOST NAME FIELD -->
 			<element kind="textField" uuid="9b9acd23-fe0a-4a21-9355-58a02ae90ae3" key="textField-8" mode="Opaque" x="0" y="0" width="110" height="13" forecolor="#000000" backcolor="#FFFFFF" rotation="None" fontName="SansSerif" fontSize="10.0" pdfFontName="Helvetica" pdfEncoding="Cp1252" pattern="" blankWhenNull="false" bold="false" underline="false" pdfEmbedded="false" strikeThrough="false" italic="false" hTextAlign="Left" vTextAlign="Middle">
 				<paragraph lineSpacing="Single"/>
 				<expression><![CDATA[$F{HOST}]]></expression>

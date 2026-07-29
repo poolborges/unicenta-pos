@@ -57,7 +57,7 @@ public class PrintReportUtils {
      * @param reportFields
      */
     public static void printReport(String printerName, String resourcefile,
-            Map<String, Object> reportParams, Map<String, Object> reportFields) {
+            Map<String, Object> reportParams, Map<String, Object> reportFields) throws BasicException  {
 
         try {
 
@@ -71,13 +71,13 @@ public class PrintReportUtils {
             JRPrinterAWT300.printPages(jp, 0, jp.getPages().size() - 1, service);
 
         } catch (Exception ex) {
-            LOGGER.log(System.Logger.Level.WARNING, "Exception on print report with resource file: " + resourcefile, ex);
-            //throws new Exception(ex);
+            LOGGER.log(System.Logger.Level.WARNING, "Exception on print report fromfile: " + resourcefile, ex);
+            throw new BasicException("Exception on print report fromfile: " + resourcefile, ex);
         }
 
     }
 
-    public static JasperReport createJasperReport(String reportFilename) throws JRException {
+    public static JasperReport createJasperReport(String reportFilename) throws BasicException {
 
         JasperReport jasperReport = null;
 
@@ -92,7 +92,8 @@ public class PrintReportUtils {
                     }
                 }
             } catch (IOException | ClassNotFoundException ex) {
-                LOGGER.log(System.Logger.Level.WARNING, "Exception load report file(.ser): " + fullName, ex);
+                LOGGER.log(System.Logger.Level.WARNING, "Exception load compiled report file: " + fullName, ex);
+                throw new BasicException("Exception load compiled report file: " + fullName, ex);
             }
         }
 
@@ -104,13 +105,15 @@ public class PrintReportUtils {
                     //JasperDesign jd = JRXmlLoader.load(in);
                     jasperReport = JasperCompileManager.compileReport(in);
                 }
-            } catch (IOException ex) {
-                LOGGER.log(System.Logger.Level.WARNING, "Exception load report file(.jrxml): " + fullName, ex);
+            } catch (IOException | JRException ex) {
+                LOGGER.log(System.Logger.Level.WARNING, "Exception load/compile report file: : " + fullName, ex);
+                throw new BasicException("Exception load/compile report file: " + fullName, ex);
             }
         }
 
         if (jasperReport == null) {
-            LOGGER.log(System.Logger.Level.WARNING, "Cannot create JasperReport, because reportFilename is null");
+            LOGGER.log(System.Logger.Level.WARNING, "Exception create JasperReport for file:" + reportFilename);
+            throw new BasicException("Exception create JasperReport for file: " + reportFilename);
         }
 
         return jasperReport;
@@ -118,7 +121,7 @@ public class PrintReportUtils {
 
     public static void loadReport(JRViewer400 reportviewer, String reportFilename,
             BaseSentence statement, ReportFields fields, Object params,
-            Map<String, Object> reportParams) {
+            Map<String, Object> reportParams)  throws BasicException {
 
         try {
             JasperReport jasperReport = PrintReportUtils.createJasperReport(reportFilename);
@@ -132,14 +135,13 @@ public class PrintReportUtils {
 
             }
         } catch (JRException ex) {
-            LOGGER.log(System.Logger.Level.ERROR, "cannot fill report: " + reportFilename, ex);
-        } catch (BasicException ex) {
-            LOGGER.log(System.Logger.Level.ERROR, "cannot create datasoruce: " + reportFilename, ex);
+            LOGGER.log(System.Logger.Level.ERROR, "Exception fill report: " + reportFilename, ex);
+            throw new BasicException("Exception fill report: " + reportFilename, ex);
         }
 
     }
 
-    public static void loadReport(JRViewer400 reportviewer, String reportFilename, Map<String, Object> reportParams) {
+    public static void loadReport(JRViewer400 reportviewer, String reportFilename, Map<String, Object> reportParams) throws BasicException  {
 
         try {
             JasperReport jasperReport = JasperCompileManager.compileReport(reportFilename);
@@ -153,11 +155,12 @@ public class PrintReportUtils {
                 //JasperExportManager.exportReportToPdfFile(jp, "voucher_" + voucherInfo.getVoucherNumber() + ".pdf");
             }
         } catch (JRException ex) {
-            LOGGER.log(System.Logger.Level.ERROR, "cannot fill report: " + reportFilename, ex);
+            LOGGER.log(System.Logger.Level.ERROR, "Exception fill report: " + reportFilename, ex);
+            throw new BasicException("Exception fill report: " + reportFilename, ex);
         }
     }
 
-    public static void exportToPdf(JPanel panel, String filePath) {
+    public static void exportToPdf(JPanel panel, String filePath) throws BasicException  {
         // Ensure the layout is calculated before printing
         if (panel.getWidth() == 0 || panel.getHeight() == 0) {
             panel.setSize(panel.getPreferredSize());
@@ -185,8 +188,8 @@ public class PrintReportUtils {
             // Render the compiled template layer into the output file coordinates
             cb.addTemplate(template, 0, 0);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            throw new BasicException("Exception convert JPanel to PDF : " + panel.getName(), ex);
         } finally {
             document.close();
         }

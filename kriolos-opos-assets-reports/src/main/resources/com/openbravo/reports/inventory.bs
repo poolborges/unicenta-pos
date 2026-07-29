@@ -28,25 +28,25 @@ report.setSentence("SELECT " +
                 "products.NAME AS PRODUCTNAME, " +
                 "products.CATEGORY, " +
                 "categories.NAME AS CATEGORYNAME, " +
-                "SUM(stockcurrent.UNITS) AS UNITS, " +
+                "SUM(stockcurrent.UNITS * 1.0) AS UNITS, " +
                 "products.PRICEBUY, " +
                 "products.PRICESELL, " +
                 "COALESCE(products.STOCKVOLUME, 0) AS STOCKVOLUME, " +
                 "COALESCE(products.STOCKCOST, 0) AS STOCKCOST, " +
                 "COALESCE(stocklevel.STOCKSECURITY, 0) AS STOCKSECURITY, " +
                 "COALESCE(stocklevel.STOCKMAXIMUM, 0) AS STOCKMAXIMUM " +
-                "FROM stockcurrent " +
-                "JOIN locations ON stockcurrent.LOCATION = locations.ID " +
-                "JOIN products ON stockcurrent.PRODUCT = products.ID " +
-                "JOIN categories ON products.CATEGORY = categories.ID " +
-                "LEFT OUTER JOIN stocklevel ON stockcurrent.LOCATION = " +
-                    "stocklevel.LOCATION AND stockcurrent.PRODUCT = stocklevel.PRODUCT " +
+                "FROM stockcurrent stockcurrent " +
+                "INNER JOIN locations locations ON stockcurrent.LOCATION = locations.ID " +
+                "INNER JOIN products products ON stockcurrent.PRODUCT = products.ID " +
+                "INNER JOIN categories categories ON products.CATEGORY = categories.ID " +
+                "LEFT OUTER JOIN stocklevel stocklevel ON stockcurrent.LOCATION = stocklevel.LOCATION " +
+                    "AND stockcurrent.PRODUCT = stocklevel.PRODUCT " +
                 "WHERE ?(QBF_FILTER) " +
                 "GROUP BY stockcurrent.LOCATION, locations.NAME, products.REFERENCE, " +
                     "products.NAME, products.CATEGORY, categories.NAME, products.PRICEBUY, " +
                     "products.PRICESELL, products.STOCKVOLUME, products.STOCKCOST, " +
                     "stocklevel.STOCKSECURITY, stocklevel.STOCKMAXIMUM " +
-                "ORDER BY STOCKCURRENT.LOCATION, categories.NAME, PRODUCTS.NAME");
+                "ORDER BY LOCATIONID ASC, CATEGORYNAME ASC, PRODUCTNAME ASC");
 
 report.addParameter("products.NAME");
 report.addParameter("products.PRICEBUY");

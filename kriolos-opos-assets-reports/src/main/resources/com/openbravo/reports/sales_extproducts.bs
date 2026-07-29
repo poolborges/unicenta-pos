@@ -25,25 +25,24 @@ report.setReport("/com/openbravo/reports/sales_extproducts");
 report.setResourceBundle("com/openbravo/reports/sales_extproducts_messages");
 
 report.setSentence("SELECT " +
-//        "customers.ID, customers.name AS CUSTname, " +
-        "customers.name AS CUSTname, " +
+        "customers.NAME AS CUSTname, " +
         "categories.NAME AS CATname, " +
-        "products.REFERENCE AS PRODref, products.NAME AS PRODname, " +
-//        "receipts.datenew, " +
-        "SUM(ticketlines.units) AS TOTALunits, " +
+        "products.REFERENCE AS PRODref, " +
+        "products.NAME AS PRODname, " +
+        "SUM(ticketlines.UNITS) AS TOTALunits, " +
         "SUM(ticketlines.UNITS * ticketlines.PRICE) AS TOTALnet, " +
         "SUM((ticketlines.PRICE * taxes.RATE) * ticketlines.UNITS) AS TOTALtax, " +
         "SUM((ticketlines.PRICE * ticketlines.UNITS) + ((ticketlines.PRICE * taxes.RATE) * ticketlines.UNITS)) AS TOTALgross " +
-    "FROM (((((products products INNER JOIN categories categories " +
-            "ON (products.CATEGORY = categories.ID)) " +
-            "INNER JOIN ticketlines ticketlines ON (ticketlines.product = products.ID)) " +
-            "INNER JOIN tickets tickets ON (ticketlines.ticket = tickets.id)) " +
-            "INNER JOIN customers customers ON (tickets.customer = customers.id)) " +
-            "INNER JOIN receipts receipts ON (tickets.id = receipts.id)) " +
-            "INNER JOIN taxes taxes ON (ticketlines.taxid = taxes.id) " +
+    "FROM ticketlines ticketlines " +
+        "INNER JOIN products products ON ticketlines.PRODUCT = products.ID " +
+        "INNER JOIN categories categories ON products.CATEGORY = categories.ID " +
+        "INNER JOIN tickets tickets ON ticketlines.TICKET = tickets.ID " +
+        "INNER JOIN customers customers ON tickets.CUSTOMER = customers.ID " +
+        "INNER JOIN receipts receipts ON tickets.ID = receipts.ID " +
+        "INNER JOIN taxes taxes ON ticketlines.TAXID = taxes.ID " +
     "WHERE ?(QBF_FILTER) " +
-    "GROUP BY customers.name, categories.NAME, products.REFERENCE " +
-    "ORDER BY CUSTname ASC, CATname ASC, PRODname ASC"); 
+    "GROUP BY customers.NAME, categories.NAME, products.REFERENCE, products.NAME " +
+    "ORDER BY CUSTname ASC, CATname ASC, PRODname ASC");
 
 report.addParameter("customers.ID");
  report.addParameter("customers.NAME");

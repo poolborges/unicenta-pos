@@ -1359,26 +1359,17 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
                 // TODO: TICKETLINE MUST STORE: _tax_value, _line_amount(Qty x price)
                 // _line_total (Price x Qty x Tax), line_prod_name
+                // TODO: CALCULATION MUST BE DONE Java using BigDecimal
                 return new PreparedSentence<>(sessionDB,
                                 "SELECT tickets.TICKETID, "
                                                 + "products.NAME AS PNAME, "
                                                 + "SUM(ticketlines.UNITS) AS UNITS, "
                                                 + "SUM(ticketlines.UNITS * ticketlines.PRICE) AS AMOUNT, "
-                                                + "SUM(ticketlines.UNITS * ticketlines.PRICE * (1.0 + taxes.RATE)) AS TOTAL, " // TODO:
-                                                                                                                               // CALCULATION
-                                                                                                                               // MUST
-                                                                                                                               // NOT
-                                                                                                                               // BE
-                                                                                                                               // DONE
-                                                                                                                               // ON
-                                                                                                                               // DB
-                                                                                                                               // (Use
-                                                                                                                               // Java
-                                                                                                                               // BigDecimal)
+                                                + "SUM(ticketlines.UNITS * ticketlines.PRICE * (1.0 + taxes.RATE)) AS TOTAL, " 
                                                 + "receipts.DATENEW, "
                                                 + "customers.ID AS CID "
                                                 + "FROM ((((ticketlines ticketlines "
-                                                + "CROSS JOIN taxes taxes ON (ticketlines.TAXID = taxes.ID)) "
+                                                + "INNER JOIN taxes taxes ON (ticketlines.TAXID = taxes.ID)) "
                                                 + "INNER JOIN tickets tickets ON (tickets.ID = ticketlines.TICKET)) "
                                                 + "INNER JOIN customers customers ON (customers.ID = tickets.CUSTOMER)) "
                                                 + "INNER JOIN receipts receipts ON (tickets.ID = receipts.ID)) "

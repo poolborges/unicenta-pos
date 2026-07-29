@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
 <jasperReport name="barcodesheet_jm" language="java" columnCount="2" printOrder="Horizontal" pageWidth="240" pageHeight="77" columnWidth="113" columnSpacing="10" leftMargin="2" rightMargin="2" topMargin="4" bottomMargin="4" uuid="f6bed442-aab6-4ba8-893d-fbcaa7c91a0c" ignorePagination="true">
 	<property name="ireport.scriptlethandling" value="0"/>
@@ -22,24 +23,21 @@
 			<element kind="staticText" uuid="446dede3-2bdd-4b38-9c44-912e07e941c4" x="0" y="1" width="113" height="11" fontName="Arial" fontSize="9.0" hTextAlign="Center">
 				<text><![CDATA[Jardin Majorelle]]></text>
 			</element>
-			<element kind="textField" uuid="1e7f3ccf-4a73-4195-a17d-1bf00e9cca8f" x="0" y="13" width="113" height="10" fontName="Arial" fontSize="7.0" hTextAlign="Center">
+			<element kind="textField" uuid="1e7f3ccf-4a73-4195-a17d-1bf00e9cca8f" x="0" y="13" width="113" height="10" fontName="Arial" fontSize="7.0" hTextAlign="Center" blankWhenNull="true">
 				<expression><![CDATA[$F{NAME}]]></expression>
 			</element>
 			<element kind="textField" uuid="084f7c1c-bd10-41d0-af98-f3778cc9f8b2" x="0" y="24" width="113" height="11" fontName="Arial" fontSize="8.0" pattern="###0.00" blankWhenNull="true" hTextAlign="Center">
-				<expression><![CDATA[com.openbravo.format.Formats.DOUBLE.formatValue($F{TOTALPRICE}) + " " + "DHs"]]></expression>
+				<expression><![CDATA[$F{TOTALPRICE} == null ? "0.00" : com.openbravo.format.Formats.CURRENCY.formatValue($F{TOTALPRICE}) + ""]]></expression>
 			</element>
 			<element kind="image" uuid="c1481322-43a3-410a-8db9-b90433749a30" key="image-1" x="0" y="37" width="113" height="24" scaleImage="RetainShape" hImageAlign="Center" vImageAlign="Bottom">
-				<expression><![CDATA[($F{CODETYPE}.equals("EAN-13") ? com.openbravo.pos.util.BarcodeImage.getBarcodeEAN13($F{CODE}) :
-    ($F{CODETYPE}.equals("EAN-8") ? com.openbravo.pos.util.BarcodeImage.getBarcodeEAN8($F{CODE}) :
-        ($F{CODETYPE}.equals("UPC-A") ? com.openbravo.pos.util.BarcodeImage.getBarcodeUPCA($F{CODE}) :
-            ($F{CODETYPE}.equals("UPC-A") ? com.openbravo.pos.util.BarcodeImage.getBarcodeUPCE($F{CODE}) :
-                ($F{CODETYPE}.equals("CODE128") ? com.openbravo.pos.util.BarcodeImage.getBarcode128($F{CODE}) :
-                    com.openbravo.pos.util.BarcodeImage.getBarcodeUPCE($F{CODE})
-                )
-            )
-        )
-    )
-)]]></expression>
+				<expression><![CDATA[$F{CODETYPE} == null ? com.openbravo.pos.util.BarcodeImage.getBarcode128($F{CODE}) : (
+                                    $F{CODETYPE}.equals("EAN-13") ? com.openbravo.pos.util.BarcodeImage.getBarcodeEAN13($F{CODE}) :
+                                    $F{CODETYPE}.equals("EAN-8")  ? com.openbravo.pos.util.BarcodeImage.getBarcodeEAN8($F{CODE}) :
+                                    $F{CODETYPE}.equals("UPC-A")  ? com.openbravo.pos.util.BarcodeImage.getBarcodeUPCA($F{CODE}) :
+                                    $F{CODETYPE}.equals("UPC-E")  ? com.openbravo.pos.util.BarcodeImage.getBarcodeUPCE($F{CODE}) :
+                                    $F{CODETYPE}.equals("CODE128")? com.openbravo.pos.util.BarcodeImage.getBarcode128($F{CODE}) :
+                                    com.openbravo.pos.util.BarcodeImage.getBarcode128($F{CODE})
+                                )]]></expression>
 			</element>
 		</band>
 	</detail>

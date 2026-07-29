@@ -83,7 +83,7 @@ public class StaticSentence<W extends Object, T> extends JDBCBaseSentence<T> {
 
             sentence = m_SqlBuilder.getSQL(m_SerWrite, params);
 
-            LOGGER.log(Level.FINE, "Executing SQL sentence : {0}", sentence);
+            LOGGER.log(Level.INFO, "Executing SQL sentence : {0}", sentence);
 
             m_Stmt = session.getConnection().createStatement();
 
