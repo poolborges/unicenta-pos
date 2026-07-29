@@ -22,23 +22,27 @@ report.setTitleKey("Menu.Catalog");
 report.setReport("/com/openbravo/reports/products");
 report.setResourceBundle("com/openbravo/reports/productscatalog_messages");
 
-report.setSentence("SELECT " +
-            "products.ID, " +
-            "products.REFERENCE, " +
-            "products.CODE, " +
-            "products.NAME, " +
-            "products.PRICEBUY, " +
-            "products.PRICESELL, " +
-            "TC.ID AS TAXCAT, " +
-            "TC.NAME AS TAXCATNAME, " +
-            "categories.ID AS CATEGORY, " +
-            "categories.NAME AS CATEGORYNAME, " +
-            "products.UNITS " +
-        "FROM products products " +
-            "LEFT OUTER JOIN categories categories ON products.CATEGORY = categories.ID " +
-            "LEFT OUTER JOIN taxcategories TC ON products.TAXCAT = TC.ID " +
-            "WHERE ?(QBF_FILTER) " +
-            "ORDER BY categories.NAME ASC, products.NAME ASC");
+report.setSentence("SELECT "
+        + "products.ID, "
+        + "products.REFERENCE, "
+        + "products.CODE, "
+        + "products.NAME, "
+        + "products.PRICEBUY, "
+        + "products.PRICESELL, "
+        + "T.ID AS TAX, "
+        + "T.RATE + 1 AS TAXRATE, "
+        + "categories.ID AS CATEGORY, "
+        + "categories.NAME AS CATEGORYNAME, "
+        + "SUM(stockcurrent.UNITS * 1.0) AS UNITS "
+    + "FROM products products "
+        + "INNER JOIN stockcurrent stockcurrent ON products.ID = stockcurrent.PRODUCT "
+        + "LEFT OUTER JOIN categories categories ON products.CATEGORY = categories.ID "
+        + "LEFT OUTER JOIN taxes T ON products.TAXCAT = T.CATEGORY "
+    + "WHERE ?(QBF_FILTER) "
+    + "GROUP BY products.ID, products.REFERENCE, products.CODE, products.NAME, "
+             + "products.PRICEBUY, products.PRICESELL, T.ID, T.RATE, "
+             + "categories.ID, categories.NAME "
+    + "ORDER BY CATEGORYNAME ASC, products.NAME ASC");
 
 report.addParameter("categories.ID");
 report.addQBFFilter(new com.openbravo.pos.ticket.CategoryFilter());
@@ -49,9 +53,10 @@ report.addField("CODE", com.openbravo.data.loader.Datas.STRING);
 report.addField("NAME", com.openbravo.data.loader.Datas.STRING);
 report.addField("PRICEBUY", com.openbravo.data.loader.Datas.DOUBLE);
 report.addField("PRICESELL", com.openbravo.data.loader.Datas.DOUBLE);
-report.addField("TAXCAT", com.openbravo.data.loader.Datas.STRING);
-report.addField("TAXCATNAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("TAX", com.openbravo.data.loader.Datas.STRING);
+report.addField("TAXRATE", com.openbravo.data.loader.Datas.DOUBLE);
 report.addField("CATEGORY", com.openbravo.data.loader.Datas.STRING);
 report.addField("CATEGORYNAME", com.openbravo.data.loader.Datas.STRING);
+report.addField("UNITS", com.openbravo.data.loader.Datas.DOUBLE);
 
 report;
