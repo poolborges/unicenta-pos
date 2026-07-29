@@ -16,6 +16,7 @@
  */
 package com.openbravo.pos.voucher;
 
+import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.loader.BaseSentence;
 import com.openbravo.data.loader.Datas;
@@ -117,8 +118,8 @@ public abstract class JDialogReportPanel extends javax.swing.JDialog {
             PrintReportUtils.loadReport(reportviewer, templateFile, reportparams);
 
         }
-        catch (MissingResourceException e) {
-            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadresourcedata"), e);
+        catch (MissingResourceException | BasicException ex) {
+            MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadreport"), ex);
             msg.show(this);
         }
 
