@@ -68,7 +68,7 @@ public class PaymentInfoCash extends PaymentInfo {
 
     @Override
     public String getTransactionID() {
-        return "no ID";
+        return TRANSACTION_ID_UNDEFINED;
     }
     
     @Override

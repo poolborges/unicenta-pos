@@ -17,6 +17,7 @@
 package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
+import java.util.Objects;
 
 /**
  *
@@ -27,22 +28,57 @@ public class SerializerWriteBasicExt implements SerializerWrite<Object[]> {
     private final Datas[] paramsTypeOfData;
     private final int[] paramsIndexOfValue;
 
-    public SerializerWriteBasicExt(Datas[] classes, int[] index) {
-        paramsTypeOfData = classes;
-        paramsIndexOfValue = index;
+    
+    /**
+     * 
+     * @param paramsDataTypes  The underlying data types schema configuration
+     * @param paramsValueIndexes  The mapping indices pointing to data types and values
+     */
+    public SerializerWriteBasicExt(Datas[] paramsDataTypes, int[] paramsValueIndexes) {
+        // Enforce non-null structures immediately
+        this.paramsTypeOfData = Objects.requireNonNull(paramsDataTypes, "paramsDataTypes cannot be null");
+        this.paramsIndexOfValue = Objects.requireNonNull(paramsValueIndexes, "paramsValueIndexes cannot be null");
+        
+        // OPTIMIZATION: Fail-fast schema validation at construction time
+        for (int targetIndex : this.paramsIndexOfValue) {
+            if (targetIndex < 0 || targetIndex >= this.paramsTypeOfData.length) {
+                throw new IllegalArgumentException(
+                    "Initialization error: Paramter value Index mapping " + targetIndex + 
+                    " is out of bounds for paramsDataTypes (Length: " + this.paramsTypeOfData.length + ")"
+                );
+            }
+        }
     }
 
     /**
      * 
-     * @param dp Datawrite
-     * @param obj Params value
-     * @throws BasicException 
+     * @param dataWrite  Data write stream target
+     * @param paramValues Parameters values
+     * @throws BasicException If index mismatches occur or data writing fails 
      */
     @Override
-    public void writeValues(DataWrite dp, Object[] obj) throws BasicException {
+    public void writeValues(DataWrite dataWrite, Object[] paramValues) throws BasicException {
+        
+        if (paramsIndexOfValue.length > 0) {
+            Objects.requireNonNull(paramValues, "Data payload cannot be null when mapping configurations exist");
+        }
 
         for (int i = 0; i < paramsIndexOfValue.length; i++) {
-            paramsTypeOfData[paramsIndexOfValue[i]].setValue(dp, i + 1, obj[paramsIndexOfValue[i]]);
+            
+            int targetTypeIndex = paramsIndexOfValue[i];
+            
+            // Runtime Guard: Protects against a dynamic runtime database payload mismatch
+            if (targetTypeIndex < 0 || targetTypeIndex >= paramValues.length) {
+                throw new BasicException("paramsIndexOfValue (index: " + targetTypeIndex + 
+                    ") is out of bounds for the provided paramValues array (Length: " + paramValues.length + ")");
+            }
+            
+            
+            // Extract the metadata serializer definition
+            Datas dataType = paramsTypeOfData[targetTypeIndex];
+            
+            // Safely write the sequence value from the dynamic index
+            dataType.setValue(dataWrite, i + 1, paramValues[targetTypeIndex]);
         }
     }
     

@@ -21,6 +21,7 @@ import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.loader.Session;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.forms.JPanelView;
 import java.awt.HeadlessException;
 import java.util.logging.Level;
@@ -52,10 +53,10 @@ public class JPanelResetPickupId extends JPanel implements JPanelView {
     /**
      *
      */
-    public void performReset() {
+    private void performReset() {
         try {
-            Session session = appView.getSession();
-            session.DB.resetSequenceSentence(session, "pickup_number").exec();
+            var dlSales = (DataLogicSales) this.appView.getBean("com.openbravo.pos.forms.DataLogicSales");
+            dlSales.resetPickup();
             JOptionPane.showMessageDialog(this, "Reset complete.");
 
         } catch (BasicException | HeadlessException ex) {

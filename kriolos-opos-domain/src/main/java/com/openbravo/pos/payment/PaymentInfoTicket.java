@@ -32,10 +32,13 @@ public class PaymentInfoTicket extends PaymentInfo implements SerializableRead {
     private String voucherNumber;           //Voucher Number
 
     /**
-     * Used For: Cheque, Bank , Slip, Voucher
+     * Constructs a new payment ticket representation with a specific amount and payment method.
+     * <p>
+     * <b>SHOULD be used for:</b> {@code cheque}, {@code bank}, {@code slip}, {@code voucher}.
+     * </p>
      *
-     * @param ticketAmount Amount
-     * @param paymentMethod Payment Method (e.g: cheque,  bank, slip, voucherin, debt, debtpaid, cashrefund)
+
+     * @throws IllegalArgumentException if the payment method is null or empty
      */
     public PaymentInfoTicket(double ticketAmount, String paymentMethod) {
         this(ticketAmount, paymentMethod, null, null);
@@ -45,7 +48,7 @@ public class PaymentInfoTicket extends PaymentInfo implements SerializableRead {
      * Used For: Voucher
      *
      * @param ticketAmount Amount
-     * @param paymentMethod Payment Method (e.g: cheque,  bank, slip, voucherin, debt, debtpaid, cashrefund)
+     * @param paymentMethod Payment Method 
      * @param transactionID Transaction ID (Give the Context: what is begin payed)
      * @param voucherNumber Voucher Number
      */
@@ -56,6 +59,29 @@ public class PaymentInfoTicket extends PaymentInfo implements SerializableRead {
         this.voucherNumber = voucherNumber;
         this.cardName = null;
         this.amountTendered = 0.00;
+    }
+    
+    /**
+     * 
+     * @param ticketAmount the total monetary value assigned to this payment ticket
+     * @param paymentMethod the literal identifier of the payment strategy used;<br>
+     *                      accepted values include: {@code "cheque"}, {@code "bank"}, 
+     *                      {@code "slip"}, {@code "voucherin"}, {@code "debt"}, 
+     *                      {@code "debtpaid"}, or {@code "cashrefund"}
+     * @param transactionID
+     * @param voucherNumber
+     * @param cartName
+     * @param amountTendered 
+     * 
+     * @throws IllegalArgumentException if the payment method is null or empty
+     */
+    public PaymentInfoTicket(double ticketAmount, String paymentMethod, String transactionID, String voucherNumber, String cartName, double amountTendered) {
+        this.paymentMethod = paymentMethod;
+        this.amountToPay = ticketAmount;
+        this.transactionID = transactionID;
+        this.voucherNumber = voucherNumber;
+        this.cardName = cartName;
+        this.amountTendered = amountTendered;
     }
 
     /**

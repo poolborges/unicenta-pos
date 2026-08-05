@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import java.sql.SQLException;
 import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.ticket.TicketInfo;
 import com.openbravo.pos.util.AltEncrypter;
 import javax.swing.JOptionPane;
@@ -341,13 +342,16 @@ public class JPanelTicketSetup extends javax.swing.JPanel implements PanelConfig
                 }
 
                 Session session = new Session(db_url, db_user, db_password);
+                
+                DataLogicSales dls = new DataLogicSales();
+                dls.init(session);
+                
                 session.begin();
-                session.DB.getSequenceSentence(session, "pickup_number").find();
-                session.DB.resetSequenceSentence(session, "pickup_number");
+                dls.resetPickup();
                 session.commit();
 
             } catch (BasicException | SQLException ex) {
-                LOGGER.log(Level.WARNING, null, ex);
+                LOGGER.log(Level.WARNING, "Exception reset pickup sequence", ex);
             }
 
         }
