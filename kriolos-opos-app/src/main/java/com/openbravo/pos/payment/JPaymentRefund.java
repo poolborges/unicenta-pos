@@ -26,18 +26,22 @@ import java.awt.Component;
  */
 public class JPaymentRefund extends javax.swing.JPanel implements JPaymentInterface {
     
-    private JPaymentNotifier m_notifier;
+    private JPaymentNotifier paymentNotifier;
     private double m_dTotal;
     
-    private String m_sName;
+    private String paymentMethod;
     
-    /** Creates new form JPaymentChequeRefund
+    /** 
+     * Creates new form Payment Refund
+     * 
      * @param notifier
-     * @param sName */
-    public JPaymentRefund(JPaymentNotifier notifier, String sName) {
+     * @param paymentMethod the literal identifier of the payment strategy used;<br>
+     *                      accepted values include: {@code "voucherout"},  {@code "cashrefund"}, or {@code "cashrefund"}
+     */
+    public JPaymentRefund(JPaymentNotifier notifier, String paymentMethod) {
         
-        m_notifier = notifier;
-        m_sName = sName;
+        this.paymentNotifier = notifier;
+        this.paymentMethod = paymentMethod;
         
         initComponents();
     }
@@ -52,7 +56,7 @@ public class JPaymentRefund extends javax.swing.JPanel implements JPaymentInterf
     public void activate(CustomerInfoExt customerext, double dTotal, String transID) {
         m_dTotal = dTotal;
         
-        m_notifier.setStatus(true, true);
+        paymentNotifier.setStatus(true, true);
     }
     
     /**
@@ -61,7 +65,7 @@ public class JPaymentRefund extends javax.swing.JPanel implements JPaymentInterf
      */
     @Override
     public PaymentInfo executePayment() {
-        return new PaymentInfoTicket(m_dTotal, m_sName);
+        return new PaymentInfoTicket(m_dTotal, paymentMethod);
     }
 
     /**

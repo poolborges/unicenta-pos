@@ -26,7 +26,6 @@ import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.util.RoundUtils;
 import com.openbravo.pos.voucher.VoucherInfo;
-//import com.openbravo.pos.voucher.VoucherInfo;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -38,54 +37,53 @@ import java.util.List;
  */
 public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterface {
 
-    private final JPaymentNotifier m_notifier;
+    private final JPaymentNotifier paymentNotifier;
 
-    private DataLogicSales dlSales;
-    private DataLogicCustomers dlCustomers;
-    private ComboBoxValModel m_VoucherModel;
-    private SentenceList m_sentvouch;
+    private DataLogicSales datalogicSales;
+    private DataLogicCustomers datalogicCustomers;
+    private ComboBoxValModel voucherComboBoxValModel;
+    private SentenceList<VoucherInfo> voucherSentenceList;
 
-    private double m_dTicket;
-    private double m_dTotal;
-
-    private final String m_sPaper; // "paperin", "paperout"
-    private String m_sVoucher;
+    private double totalPayed;
+    private double totalToPay;
+    private final String paymentMethod; 
+    private String voucherNumber;
 
     /**
      * Creates new form JPaymentTicket
      *
      * @param app
      * @param notifier
-     * @param sPaper
+     * @param paymentMethod
      */
-    public JPaymentPaper(AppView app, JPaymentNotifier notifier, String sPaper) {
+    public JPaymentPaper(AppView app, JPaymentNotifier notifier, String paymentMethod) {
 
-        m_notifier = notifier;
-        m_sPaper = sPaper;
-        m_dTotal = 0.0;
+        this.paymentNotifier = notifier;
+        this.paymentMethod = paymentMethod;
+        this.totalToPay = 0.0;
 
         init(app);
 
-        m_jTendered.addPropertyChangeListener("Edition", new RecalculateState());
-        m_jTendered.addEditorKeys(m_jKeys);
+        this.m_jTendered.addPropertyChangeListener("Edition", new RecalculateState());
+        this.m_jTendered.addEditorKeys(m_jKeys);
 
     }
 
     private void init(AppView app) {
 
         try {
-            dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
-            dlCustomers = (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
-            m_sentvouch = dlSales.getVoucherList();
+            datalogicSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
+            datalogicCustomers = (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
+            voucherSentenceList = datalogicSales.getVoucherList();
 
             initComponents();
 
-            m_VoucherModel = new ComboBoxValModel();
-            List a = m_sentvouch.list();
-            a.add(0, null);
+            voucherComboBoxValModel = new ComboBoxValModel();
+            List<VoucherInfo> voucherList = voucherSentenceList.list();
+            voucherList.add(0, null);
 
-            m_VoucherModel = new ComboBoxValModel(a);
-            m_jVoucher.setModel(m_VoucherModel);
+            voucherComboBoxValModel = new ComboBoxValModel(voucherList);
+            m_jVoucher.setModel(voucherComboBoxValModel);
 
             webLblcustomerName.setText(null);
 
@@ -102,7 +100,7 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
     @Override
     public void activate(CustomerInfoExt customerext, double dTotal, String transID) {
 
-        m_dTotal = dTotal;
+        totalToPay = dTotal;
         m_jTendered.reset();
         m_jKeys.setEnabled(false);
         m_jTendered.setEnabled(false);
@@ -126,30 +124,30 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
     @Override
     public PaymentInfo executePayment() {
         try {
-            String id = m_VoucherModel.getSelectedKey().toString();
-            VoucherInfo m_voucherInfo1 = dlCustomers.getVoucherInfo(id);
-            m_sVoucher = m_voucherInfo1.getVoucherNumber();
+            String id = voucherComboBoxValModel.getSelectedKey().toString();
+            VoucherInfo m_voucherInfo1 = datalogicCustomers.getVoucherInfo(id);
+            voucherNumber = m_voucherInfo1.getVoucherNumber();
         } catch (BasicException ex) {
         }
-        return new PaymentInfoTicket(m_dTicket, m_sPaper, m_sVoucher);
+        return new PaymentInfoTicket(totalPayed, paymentMethod, voucherNumber);
 
     }
 
     private void printState() {
 
-        Double value = m_jTendered.getValue();
-        if (value == null) {
-            m_dTicket = 0.0;
+        Double tenderedValue = m_jTendered.getValue();
+        if (tenderedValue == null) {
+            totalPayed = totalToPay;
         } else {
-            m_dTicket = value;
+            totalPayed = tenderedValue;
         }
 
-        m_jMoneyEuros.setText(Formats.CURRENCY.formatValue(m_dTicket));
+        m_jMoneyEuros.setText(Formats.CURRENCY.formatValue(totalPayed));
 
-        int iCompare = RoundUtils.compare(m_dTicket, m_dTotal);
+        int iCompare = RoundUtils.compare(totalPayed, totalToPay);
 
         // it is allowed to pay more
-        m_notifier.setStatus(m_dTicket > 0.0, iCompare >= 0);
+        paymentNotifier.setStatus(totalPayed > 0.0, iCompare >= 0);
     }
 
     private class RecalculateState implements PropertyChangeListener {
@@ -288,11 +286,11 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
 
     private void m_jVoucherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jVoucherActionPerformed
 
-        if (m_VoucherModel.getSelectedKey() != null) {
+        if (voucherComboBoxValModel.getSelectedKey() != null) {
             try {
 
-                String id = m_VoucherModel.getSelectedKey().toString();
-                VoucherInfo m_voucherInfo = dlCustomers.getVoucherInfo(id);
+                String id = voucherComboBoxValModel.getSelectedKey().toString();
+                VoucherInfo m_voucherInfo = datalogicCustomers.getVoucherInfo(id);
 
                 if (m_voucherInfo != null) {
                     m_jTendered.setDoubleValue(m_voucherInfo.getAmount());

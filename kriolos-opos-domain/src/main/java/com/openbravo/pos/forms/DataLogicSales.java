@@ -37,11 +37,8 @@ import com.openbravo.format.Formats;
 import com.openbravo.pos.catalog.CategoryStock;
 import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.pos.customers.CustomerTransaction;
-import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.BeanFactoryDataSingle;
-import com.openbravo.pos.forms.Payments;
 import com.openbravo.pos.inventory.*;
 import com.openbravo.pos.sales.restaurant.FloorsInfo;
 import com.openbravo.pos.payment.PaymentInfo;
@@ -78,12 +75,6 @@ public class DataLogicSales extends BeanFactoryDataSingle {
         protected Row productsRow;
         protected Row customersRow;
 
-        private String pName;
-        private Double getTotal;
-        private Double getTendered;
-        private String getRetMsg;
-        private String getVoucher;
-
         private static final String PAYMENT_METHOD_DEBT = "debt";
         private static final String PAYMENT_METHOD_DEBTPAID = "debtpaid";
         private static final String PREPAY = "prepay";
@@ -111,7 +102,6 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
         public static final String SQL_STOCKLEVEL_UPDATE = "UPDATE stocklevel SET STOCKSECURITY = ?, STOCKMAXIMUM = ? WHERE ID = ?";
 
-        private String getCardName;
 
         public DataLogicSales() {
                 stockdiaryDatas = new Datas[] {
@@ -1834,70 +1824,61 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                                         }
                                 }
 
-                                // Payments
-                                final Payments payments = new Payments();
+                                // Native-style workflow approximation for Openbravo POS database persistence
                                 SentenceExec paymentinsert = new PreparedSentence(sessionDB,
-                                                "INSERT INTO payments (ID, RECEIPT, PAYMENT, TOTAL, TRANSID, RETURNMSG, "
-                                                                + "TENDERED, CARDNAME, VOUCHER) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                                SerializerWriteParams.INSTANCE);
+                                    "INSERT INTO payments (ID, RECEIPT, PAYMENT, TOTAL, TRANSID, RETURNMSG, TENDERED, CARDNAME, VOUCHER) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                    SerializerWriteParams.INSTANCE);
 
-                                ticket.getPayments().forEach((p) -> {
-                                        payments.addPayment(p.getName(), p.getTotal(), p.getPaid(),
-                                                        ticket.getReturnMessage(),
-                                                        p.getVoucher());
-                                });
-                                while (payments.getSize() >= 1) {
+                                // Direct iteration over the ticket's native payment list
+                                for (PaymentInfo p : ticket.getPayments()) {
 
-                                        pName = payments.getFirstElement();
-                                        getTotal = payments.getPaidAmount(pName);
-                                        getTendered = payments.getTendered(pName);
-                                        getRetMsg = payments.getRtnMessage(pName);
-                                        getVoucher = payments.getVoucher(pName);
-                                        payments.removeFirst(pName);
+                                    final String paymentMethod = p.getName();
+                                    final double paymentTotal = p.getTotal();
+                                    final double paymentTendered = p.getPaid(); // Or getTendered() depending on version fork
+                                    final String paymentCardName = p.getCardName();
+                                    final String paymentVoucherNumber = p.getVoucher();
+                                    final String paymentReturnMsg = ticket.getReturnMessage(); 
 
-                                        paymentinsert.exec(new DataParams() {
+                                    // Directly execute SQL Insert for each individual payment line item
+                                    paymentinsert.exec(new DataParams() {
+                                        @Override
+                                        public void writeValues() throws BasicException {
+                                            setString(1, UUID.randomUUID().toString());
+                                            setString(2, ticket.getId());
+                                            setString(3, paymentMethod);         // Stores "ccard", "ccard", "voucherin" on separate lines
+                                            setDouble(4, paymentTotal);          // Individual value for each respective card/voucher
+                                            setString(5, ticket.getTransactionID());
+                                            setBytes(6, Formats.BYTEA.parseValue(paymentReturnMsg));
+                                            setDouble(7, paymentTendered);
+                                            setString(8, paymentCardName);       // "Visa" on line 1, "Mastercard" on line 2
+                                            setString(9, paymentVoucherNumber);  // Voucher A on line 1, Voucher B on line 2
+                                        }
+                                    });
 
-                                                @Override
-                                                public void writeValues() throws BasicException {
+                                    // Voucher Deactivation Logic (Executed on an isolated per-line basis)
+                                    if (paymentVoucherNumber != null) {
+                                        getVoucherNonActive().exec(paymentVoucherNumber);
+                                    }
 
-                                                        setString(1, UUID.randomUUID().toString());
-                                                        setString(2, ticket.getId());
-                                                        setString(3, pName);
-                                                        setDouble(4, getTotal);
-                                                        setString(5, ticket.getTransactionID());
-                                                        setBytes(6, Formats.BYTEA.parseValue(getRetMsg));
-                                                        setDouble(7, getTendered);
-                                                        setString(8, getCardName);
-                                                        setString(9, getVoucher);
-                                                        payments.removeFirst(pName);
-                                                }
+                                    // Customer Debt / Account Receivable Ledger Logic
+                                    if (isPaymentMethodCustomerDebt(paymentMethod)) {
+                                        ticket.getCustomer().updateCurDebt(paymentTotal, ticket.getDate());
+
+                                        getDebtUpdate().exec(new DataParams() {
+                                            @Override
+                                            public void writeValues() throws BasicException {
+                                                setDouble(1, ticket.getCustomer().getAccdebt());
+                                                setTimestamp(2, ticket.getCustomer().getCurdate());
+                                                setString(3, ticket.getCustomer().getId());
+                                            }
                                         });
-
-                                        // Payment method: Disable that Voucher
-                                        if (payments.getVoucher(pName) != null) {
-                                                getVoucherNonActive().exec(payments.getVoucher(pName));
-                                        }
-
-                                        // Payment method: Add debt to Customer Account
-                                        if (PAYMENT_METHOD_DEBT.equals(pName)
-                                                        || PAYMENT_METHOD_DEBTPAID.equals(pName)) {
-                                                ticket.getCustomer().updateCurDebt(getTotal, ticket.getDate());
-                                                getDebtUpdate().exec(new DataParams() {
-
-                                                        @Override
-                                                        public void writeValues() throws BasicException {
-                                                                setDouble(1, ticket.getCustomer().getAccdebt());
-                                                                setTimestamp(2, ticket.getCustomer().getCurdate());
-                                                                setString(3, ticket.getCustomer().getId());
-                                                        }
-                                                });
-                                        }
+                                    }
                                 }
+
 
                                 // TAX Lines
                                 SentenceExec taxlinesinsert = new PreparedSentence(sessionDB,
-                                                "INSERT INTO taxlines (ID, RECEIPT, TAXID, BASE, AMOUNT)  "
-                                                                + "VALUES (?, ?, ?, ?, ?)",
+                                                "INSERT INTO taxlines (ID, RECEIPT, TAXID, BASE, AMOUNT) VALUES (?, ?, ?, ?, ?)",
                                                 SerializerWriteParams.INSTANCE);
 
                                 if (ticket.getTaxes() != null) {
@@ -1919,6 +1900,10 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 };
 
                 t.execute();
+        }
+        
+        private boolean isPaymentMethodCustomerDebt(String paymentMethod){
+            return PAYMENT_METHOD_DEBT.equals(paymentMethod) || PAYMENT_METHOD_DEBTPAID.equals(paymentMethod);
         }
 
         /**
@@ -1985,8 +1970,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
                                 // update customer debts
                                 for (PaymentInfo p : ticket.getPayments()) {
-                                        if (PAYMENT_METHOD_DEBT.equals(p.getName())
-                                                        || PAYMENT_METHOD_DEBTPAID.equals(p.getName())) {
+                                        if (isPaymentMethodCustomerDebt(p.getName())) {
 
                                                 // udate customer fields...
                                                 ticket.getCustomer().updateCurDebt(-p.getTotal(), ticket.getDate());
@@ -2025,6 +2009,15 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 t.execute();
         }
 
+        /**
+         * 
+         * @throws BasicException 
+         */
+        public final void resetPickup() throws BasicException {
+            
+            sessionDB.DB.resetSequenceSentence(sessionDB, "pickup_number").exec(0);    
+        }
+        
         /**
          *
          * @return @throws BasicException
@@ -2800,14 +2793,6 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                                 "UPDATE vouchers SET STATUS = 'D' "
                                                 + "WHERE VOUCHER_NUMBER = ?",
                                 SerializerWriteString.INSTANCE);
-        }
-
-        public final SentenceExec resetPickupId() {
-
-                return new PreparedSentence(sessionDB,
-                                "UPDATE pickup_number SET ID=1 ",
-                                SerializerWriteString.INSTANCE);
-
         }
 
         /**

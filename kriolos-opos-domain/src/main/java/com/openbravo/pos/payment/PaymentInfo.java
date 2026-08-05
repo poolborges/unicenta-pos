@@ -20,6 +20,8 @@ import com.openbravo.format.Formats;
 
 public abstract class PaymentInfo {
     
+    protected final static String TRANSACTION_ID_UNDEFINED = "ID_UNDEFINED";
+    
     public abstract String getName();
     public abstract double getTotal();
     public abstract PaymentInfo copyPayment();

@@ -31,16 +31,15 @@ public class JPaymentSlip extends javax.swing.JPanel implements JPaymentInterfac
 
     private static final long serialVersionUID = 1L;
     
-    private final JPaymentNotifier m_notifier;
+    private final JPaymentNotifier paymentNotifier;
 
-    private double m_dPaid;
-    private double m_dTotal;
+    private double totalPayed;
+    private double totalToPay;
     
-    /** Creates new form JPaymentCash
-     * @param notifier */
+
     public JPaymentSlip(JPaymentNotifier notifier) {
         
-        m_notifier = notifier;
+        paymentNotifier = notifier;
         
         initComponents();  
         
@@ -56,9 +55,9 @@ public class JPaymentSlip extends javax.swing.JPanel implements JPaymentInterfac
      * @param transID
      */
     @Override
-    public void activate(CustomerInfoExt customerext, double dTotal, String transID) {
+    public void activate(CustomerInfoExt customerext, double totalToPay, String transID) {
         
-        m_dTotal = dTotal;     
+        this.totalToPay = totalToPay;     
         m_jTendered.reset();
         m_jTendered.activate();
         
@@ -72,7 +71,7 @@ public class JPaymentSlip extends javax.swing.JPanel implements JPaymentInterfac
      */
     @Override
     public PaymentInfo executePayment() {
-        return new PaymentInfoTicket(m_dPaid, "slip");      
+        return new PaymentInfoTicket(totalPayed, "slip");      
     }
 
     /**
@@ -86,18 +85,18 @@ public class JPaymentSlip extends javax.swing.JPanel implements JPaymentInterfac
 
     private void printState() {
         
-        Double value = m_jTendered.getValue();
-        if (value == null) {
-            m_dPaid = m_dTotal;
+        Double tenderedValue = m_jTendered.getValue();
+        if (tenderedValue == null) {
+            totalPayed = totalToPay;
         } else {
-            m_dPaid = value;
+            totalPayed = tenderedValue;
         } 
 
-        m_jMoneyEuros.setText(Formats.CURRENCY.formatValue(m_dPaid));
+        m_jMoneyEuros.setText(Formats.CURRENCY.formatValue(totalPayed));
         
-        int iCompare = RoundUtils.compare(m_dPaid, m_dTotal);
+        int iCompare = RoundUtils.compare(totalPayed, totalToPay);
         
-        m_notifier.setStatus(m_dPaid > 0.0 && iCompare <= 0, iCompare == 0);
+        paymentNotifier.setStatus(totalPayed > 0.0 && iCompare <= 0, iCompare == 0);
     }
     
     private class RecalculateState implements PropertyChangeListener {

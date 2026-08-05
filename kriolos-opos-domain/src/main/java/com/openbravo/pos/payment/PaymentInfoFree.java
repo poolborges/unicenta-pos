@@ -13,71 +13,59 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.payment;
 
 public class PaymentInfoFree extends PaymentInfo {
-    
-    private double m_dTotal;
-    private double m_dTendered;
-    private String m_dCardName =null;
-//    private double m_dTip;    
-   
-    /** Creates a new instance of PaymentInfoFree
-     * @param dTotal */
-    public PaymentInfoFree(double dTotal) {
-        m_dTotal = dTotal;
+
+    private final double total;
+
+    public PaymentInfoFree(double total) {
+        this.total = total;
     }
 
-    public PaymentInfo copyPayment(){
-        return new PaymentInfoFree(m_dTotal);
-    }    
-    public String getTransactionID(){
-        return "no ID";
+    @Override
+    public PaymentInfo copyPayment() {
+        return new PaymentInfoFree(total);
     }
+
+    @Override
+    public String getTransactionID() {
+        return TRANSACTION_ID_UNDEFINED;
+    }
+
+    @Override
     public String getName() {
         return "free";
-    }   
+    }
+
+    @Override
     public double getTotal() {
-        return m_dTotal;
+        return total;
     }
+
+    @Override
     public double getPaid() {
-        return (0.0); 
+        return (0.0);
     }
 
-/**
- * 
-    public double getTip() {
-        return m_dTip;
+    @Override
+    public double getChange() {
+        return (0.00);
     }
-*/
-    
-    public double getChange(){
-       return (0.00);
-   }
+
+    @Override
     public double getTendered() {
-       return m_dTendered;
-   }
+        return (0.00);
+    }
+
+    @Override
     public String getCardName() {
-       return m_dCardName;
-   } 
-
-/**    
-    public boolean getIsProcessed() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return null;
     }
 
-    public void setIsProcessed(boolean value) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public String getReturnMessage() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-*/
-    
+    @Override
     public String getVoucher() {
         return null;
-    }    
+    }
 
 }

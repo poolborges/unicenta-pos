@@ -66,6 +66,10 @@ public class SequenceForGeneric extends BaseSentence {
         
         dt +=1;
         
+        if(params != null && params instanceof Integer seqNumber){
+            dt = seqNumber;
+        }
+        
         LOGGER.log(Level.INFO, "SEQUENCE NEXT: "+this.tableName +"; seq: "+ dt);
 
         updateSentence.exec(new Object[]{dt, this.tableName});
@@ -90,8 +94,8 @@ public class SequenceForGeneric extends BaseSentence {
     public SentenceExec reset() {
 
         try {
-            openExec(null);
-            return selectSetence;
+            openExec(0);
+            return this;
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Exception execute reset", ex);
         }

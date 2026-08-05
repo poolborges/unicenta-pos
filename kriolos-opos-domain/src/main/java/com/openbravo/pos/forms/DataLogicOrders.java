@@ -26,9 +26,8 @@ import com.openbravo.pos.forms.BeanFactoryDataSingle;
  */
 public class DataLogicOrders extends BeanFactoryDataSingle {
     private SentenceExec m_addOrder;
-    private SentenceExec m_resetPickup;
+
     
-    /** Creates a new instance of DataLogicOrders */
     public DataLogicOrders() {            
     }
     
@@ -57,8 +56,6 @@ public class DataLogicOrders extends BeanFactoryDataSingle {
                     Datas.INT,     // Auxiliary
                     Datas.TIMESTAMP    // CompleteTime
                 }));
-
-        m_resetPickup =  s.DB.resetSequenceSentence(s, "pickup_number");
     }
 
 
@@ -69,9 +66,5 @@ public class DataLogicOrders extends BeanFactoryDataSingle {
 
         m_addOrder.exec(new Object[]{orderId, qty, details, attributes, notes, ticketId, 
                 ordertime, displayId, auxiliary, completetime});    
-    } 
-    
-    public final void resetPickup() throws BasicException {
-        m_resetPickup.exec();    
     }      
 }
