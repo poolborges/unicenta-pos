@@ -217,6 +217,12 @@ jdbc:h2:file:/home/dev/.local/share/kriolos/dbh2/kriolopos;MODE=MySQL
 ----
 
 
+.Connection SQLite
+----
+jdbc:sqlite:/home/dev/.local/share/kriolos/kriolopos.db
+----
+
+
 === References
 
 * https://mariadb.com/kb/en/silent-column-changes/
