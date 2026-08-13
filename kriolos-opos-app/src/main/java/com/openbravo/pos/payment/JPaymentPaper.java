@@ -17,7 +17,6 @@ package com.openbravo.pos.payment;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.ComboBoxValModel;
-import com.openbravo.data.loader.SentenceList;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.pos.customers.DataLogicCustomers;
@@ -48,7 +47,6 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
     private DataLogicCustomers datalogicCustomers;
     private DataLogicVouchers dataLogicVouchers;
     private ComboBoxValModel voucherComboBoxValModel;
-    private SentenceList<VoucherInfo> voucherSentenceList;
 
     private double totalPayed;
     private double totalToPay;
@@ -81,12 +79,12 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
             datalogicSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
             datalogicCustomers = (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
             dataLogicVouchers = (DataLogicVouchers) app.getBean("com.openbravo.pos.voucher.DataLogicVouchers");
-            voucherSentenceList = datalogicSales.getVoucherList();
+         
 
             initComponents();
 
             voucherComboBoxValModel = new ComboBoxValModel();
-            List<VoucherInfo> voucherList = voucherSentenceList.list();
+            List<VoucherInfo> voucherList = dataLogicVouchers.getVoucherList();
             voucherList.add(0, null);
 
             voucherComboBoxValModel = new ComboBoxValModel(voucherList);

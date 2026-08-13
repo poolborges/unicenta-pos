@@ -21,32 +21,33 @@ import com.openbravo.data.loader.PreparedSentence;
 import com.openbravo.data.loader.SerializerRead;
 import com.openbravo.data.loader.SerializerWriteString;
 import com.openbravo.data.loader.Session;
+import com.openbravo.data.loader.StaticSentence;
 import com.openbravo.pos.forms.BeanFactoryDataSingle;
+import java.util.List;
 
 /**
  *
  * @author poolborges
  */
-public class DataLogicVouchers  extends BeanFactoryDataSingle {
+public class DataLogicVouchers extends BeanFactoryDataSingle {
 
-    private Session dbSession;
-    
+    private Session sessionDB;
+
     @Override
-    public void init(Session dbSession) {
-        this.dbSession = dbSession;
+    public void init(Session sessionDB) {
+        this.sessionDB = sessionDB;
     }
-    
-    
-    // <editor-fold defaultstate="collapsed" desc="Voucher">
+
+    // <editor-fold defaultstate="collapsed" desc="Voucher MANAGEMENT">
     public final PreparedSentence getVoucherNumber() {
-        return new PreparedSentence(this.dbSession,
+        return new PreparedSentence(this.sessionDB,
                 "SELECT SUBSTRING(MAX(VOUCHER_NUMBER),10,3) AS LAST_NUMBER FROM vouchers "
                 + "WHERE SUBSTRING(VOUCHER_NUMBER,1,8) = ?",
                 SerializerWriteString.INSTANCE, (SerializerRead<String>) (DataRead dr) -> dr.getString(1));
     }
 
     public final VoucherInfo getVoucherInfo(String id) throws BasicException {
-        return (VoucherInfo) new PreparedSentence(this.dbSession,
+        return (VoucherInfo) new PreparedSentence(this.sessionDB,
                 "SELECT vouchers.ID, VOUCHER_NUMBER, CUSTOMER, "
                 + "customers.NAME, AMOUNT, STATUS "
                 + "FROM vouchers "
@@ -58,7 +59,7 @@ public class DataLogicVouchers  extends BeanFactoryDataSingle {
     }
 
     public final VoucherInfo getVoucherInfoAll(String id) throws BasicException {
-        return (VoucherInfo) new PreparedSentence(this.dbSession,
+        return (VoucherInfo) new PreparedSentence(this.sessionDB,
                 "SELECT vouchers.ID, VOUCHER_NUMBER, CUSTOMER, "
                 + "customers.NAME, AMOUNT, STATUS "
                 + "FROM vouchers "
@@ -66,6 +67,24 @@ public class DataLogicVouchers  extends BeanFactoryDataSingle {
                 + "WHERE vouchers.ID=?",
                 SerializerWriteString.INSTANCE,
                 VoucherInfo.getSerializerRead()).<VoucherInfo>find(id);
+    }
+
+    public final List<VoucherInfo> getVoucherList() throws BasicException {
+        return new StaticSentence(sessionDB,
+                "SELECT vouchers.ID,vouchers.VOUCHER_NUMBER,vouchers.CUSTOMER, "
+                + "customers.NAME,AMOUNT, STATUS "
+                + "FROM vouchers   "
+                + "JOIN customers ON customers.id = vouchers.CUSTOMER  "
+                + "WHERE STATUS='A' "
+                + "ORDER BY vouchers.VOUCHER_NUMBER ASC",
+                null, VoucherInfo.getSerializerRead()).list();
+    }
+
+    public final static int updateVoucherNonActive(String voucherNumber, Session sessionDB) throws BasicException  {
+        return new PreparedSentence(sessionDB,
+                "UPDATE vouchers SET STATUS = 'D' "
+                + "WHERE VOUCHER_NUMBER = ?",
+                SerializerWriteString.INSTANCE).exec(voucherNumber);
     }
     // </editor-fold>
 }

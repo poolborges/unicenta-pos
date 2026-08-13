@@ -48,7 +48,6 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
     private DataLogicCustomers dlCustomers;
     private DataLogicVouchers dataLogicVouchers;
     private ComboBoxValModel m_VoucherModel;
-    private SentenceList<VoucherInfo> m_sentvouch;
 
     private double voucherAmount;
     private double totalToPay;
@@ -81,13 +80,13 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
             dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
             dlCustomers = (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
             dataLogicVouchers = (DataLogicVouchers) app.getBean("com.openbravo.pos.voucher.DataLogicVouchers");
-            m_sentvouch = dlSales.getVoucherList();
+   
 
             initComponents();
 
-            List<VoucherInfo> a = m_sentvouch.list();
+            List<VoucherInfo> voucherList = dataLogicVouchers.getVoucherList();
 
-            m_VoucherModel = new ComboBoxValModel(a);
+            m_VoucherModel = new ComboBoxValModel(voucherList);
             vouchersComboBox.setModel(m_VoucherModel);
 
             customerName.setText(null);
