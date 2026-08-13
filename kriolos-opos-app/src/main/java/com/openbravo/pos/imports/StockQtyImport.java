@@ -56,6 +56,7 @@ public class StockQtyImport extends JPanel implements JPanelView {
   private Session dbSession;
   private DataLogicSales m_dlSales;
   private DataLogicSystem m_dlSystem;
+  private DataLogicImport m_dlImport;
   private InventoryService invService;
   private ProductInfoExt prodInfo;
   private ProductStock prodStock;
@@ -98,6 +99,9 @@ public class StockQtyImport extends JPanel implements JPanelView {
     m_dlSales.init(dbSession);
     m_dlSystem = new DataLogicSystem();
     m_dlSystem.init(dbSession);
+
+    m_dlImport = new DataLogicImport();
+    m_dlImport.init(dbSession);
 
     invService = new InventoryServiceImpl(m_dlSales, dbSession);
 
@@ -425,7 +429,7 @@ public class StockQtyImport extends JPanel implements JPanelView {
     myprod[5] = newQty; // Product Quantity
 
     try {
-      m_dlSystem.execCSVStockUpdate(myprod);
+      m_dlImport.execCSVStockUpdate(myprod);
     } catch (BasicException ex) {
       LOGGER.log(Level.WARNING, null, ex);
     }

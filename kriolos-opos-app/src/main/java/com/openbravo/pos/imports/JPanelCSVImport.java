@@ -23,6 +23,7 @@ import com.openbravo.data.loader.*;
 import com.openbravo.data.user.DefaultSaveProvider;
 import com.openbravo.data.user.SaveProvider;
 import com.openbravo.pos.forms.*;
+import com.openbravo.pos.inventory.DataLogicInventory;
 import com.openbravo.pos.sales.TaxesLogic;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import org.apache.commons.lang3.StringUtils;
@@ -74,6 +75,8 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
 
     private DataLogicSales m_dlSales;
     private DataLogicSystem m_dlSystem;
+    private DataLogicInventory m_dlInventory;
+    private DataLogicImport m_dlImport;
 
     protected SaveProvider spr;
 
@@ -140,6 +143,12 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
 
         m_dlSystem = new DataLogicSystem();
         m_dlSystem.init(dbSession);
+
+        m_dlInventory = new DataLogicInventory();
+        m_dlInventory.init(dbSession);
+
+        m_dlImport = new DataLogicImport();
+        m_dlImport.init(dbSession);
 
         spr = new DefaultSaveProvider(
                 m_dlSales.getProductCatUpdate(),
@@ -921,14 +930,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         values[1] = ProductID;
         values[2] = (double) Units;
 
-        PreparedSentence sentence = new PreparedSentence(dbSession,
-                "INSERT INTO stockcurrent ( "
-                + "LOCATION, PRODUCT, UNITS) VALUES (?, ?, ?)",
-                 new SerializerWriteBasicExt((new Datas[]{
-            Datas.STRING, Datas.STRING, Datas.DOUBLE}),
-                        new int[]{0, 1, 2}));
-
-        sentence.exec(values);
+        m_dlInventory.getStockCurrentInsert().exec(values);
     }
 
     /**
@@ -954,7 +956,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         myprod[11] = productTax;                                                // Tax
         myprod[12] = Supplier;                                                  // Supplier
         try {
-            m_dlSystem.execAddCSVEntry(myprod);
+            m_dlImport.execAddCSVEntry(myprod);
         } catch (BasicException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
@@ -971,7 +973,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         myprod[1] = productBarcode;
         myprod[2] = productName;
         try {
-            return (m_dlSystem.getProductRecordType(myprod));
+            return (m_dlImport.getProductRecordType(myprod));
         } catch (BasicException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }

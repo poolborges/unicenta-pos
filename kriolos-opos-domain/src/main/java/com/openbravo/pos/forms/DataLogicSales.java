@@ -80,27 +80,14 @@ public class DataLogicSales extends BeanFactoryDataSingle {
         private static final String PREPAY = "prepay";
         private static final Logger LOGGER = Logger.getLogger("com.openbravo.pos.forms.DataLogicSales");
 
-        // SQL constants for inventory panel queries
-        public static final String SQL_BUNDLE_LIST = "SELECT B.ID, B.PRODUCT, B.PRODUCT_BUNDLE, B.QUANTITY, P.REFERENCE, P.CODE, P.NAME "
-                        + "FROM products_bundle B, products P "
-                        + "WHERE B.PRODUCT_BUNDLE = P.ID AND B.PRODUCT = ?";
+    // SQL constants for inventory panel queries
+    public static final String SQL_BUNDLE_LIST = "SELECT B.ID, B.PRODUCT, B.PRODUCT_BUNDLE, B.QUANTITY, P.REFERENCE, P.CODE, P.NAME "
+            + "FROM products_bundle B, products P "
+            + "WHERE B.PRODUCT_BUNDLE = P.ID AND B.PRODUCT = ?";
 
-        public static final String SQL_AUXILIAR_LIST = "SELECT COM.ID, COM.PRODUCT, COM.PRODUCT2, P.REFERENCE, P.CODE, P.NAME "
-                        + "FROM products_com COM, products P "
-                        + "WHERE COM.PRODUCT2 = P.ID AND COM.PRODUCT = ?";
-
-        public static final String SQL_WAREHOUSE_STOCK_LIST = "SELECT L.ID, P.ID, P.REFERENCE, P.NAME,"
-                        + "L.STOCKSECURITY, L.STOCKMAXIMUM, COALESCE(S.SUMUNITS, 0) "
-                        + "FROM products P "
-                        + "LEFT OUTER JOIN (SELECT ID, PRODUCT, LOCATION, STOCKSECURITY, STOCKMAXIMUM "
-                        + "FROM stocklevel WHERE LOCATION = ?) L ON P.ID = L.PRODUCT "
-                        + "LEFT OUTER JOIN (SELECT PRODUCT, SUM(UNITS) AS SUMUNITS "
-                        + "FROM stockcurrent WHERE LOCATION = ? GROUP BY PRODUCT) S ON P.ID = S.PRODUCT "
-                        + "ORDER BY P.NAME";
-
-        public static final String SQL_STOCKLEVEL_INSERT = "INSERT INTO stocklevel (ID, LOCATION, PRODUCT, STOCKSECURITY, STOCKMAXIMUM) VALUES (?, ?, ?, ?, ?)";
-
-        public static final String SQL_STOCKLEVEL_UPDATE = "UPDATE stocklevel SET STOCKSECURITY = ?, STOCKMAXIMUM = ? WHERE ID = ?";
+    public static final String SQL_AUXILIAR_LIST = "SELECT COM.ID, COM.PRODUCT, COM.PRODUCT2, P.REFERENCE, P.CODE, P.NAME "
+            + "FROM products_com COM, products P "
+            + "WHERE COM.PRODUCT2 = P.ID AND COM.PRODUCT = ?";
 
 
         public DataLogicSales() {

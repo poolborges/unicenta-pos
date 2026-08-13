@@ -60,6 +60,7 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
 
     private DataLogicSales m_dlSales;
     private DataLogicSystem m_dlSystem;
+    private DataLogicImport m_dlImport;
     private DataLogicCustomers m_dlCustomer;
 
     protected SaveProvider spr;
@@ -110,6 +111,9 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
 
         m_dlSystem = new DataLogicSystem();
         m_dlSystem.init(dbSession);
+
+        m_dlImport = new DataLogicImport();
+        m_dlImport.init(dbSession);
 
         spr = new DefaultSaveProvider(
                 m_dlSales.getCustomerUpdate(),
@@ -625,7 +629,7 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
         mycust[4] = customerName;                                               // Name string
 
         try {
-            m_dlSystem.execCustomerAddCSVEntry(mycust);
+            m_dlImport.execCustomerAddCSVEntry(mycust);
         } catch (BasicException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
@@ -641,7 +645,7 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
         mycust[1] = customerName;
 
         try {
-            return (m_dlSystem.getCustomerRecordType(mycust));
+            return (m_dlImport.getCustomerRecordType(mycust));
         } catch (BasicException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }

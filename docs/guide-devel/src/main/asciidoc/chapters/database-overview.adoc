@@ -211,6 +211,12 @@ jdbc:derby:~/kriolospos/kriolopos-db;shutdown=true
 ----
 
 
+.Connection H2
+----
+jdbc:h2:file:/home/dev/.local/share/kriolos/dbh2/kriolopos;MODE=MySQL
+----
+
+
 === References
 
 * https://mariadb.com/kb/en/silent-column-changes/
