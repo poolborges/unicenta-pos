@@ -25,22 +25,28 @@ import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.util.RoundUtils;
+import com.openbravo.pos.voucher.DataLogicVouchers;
 import com.openbravo.pos.voucher.VoucherInfo;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author JG uniCenta
  */
 public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInterface {
+    
+    private static final Logger LOGGER = Logger.getLogger(JPaymentVoucher.class.getName());
 
     private final JPaymentNotifier paymentNotifier;
 
     private DataLogicSales dlSales;
     private DataLogicCustomers dlCustomers;
+    private DataLogicVouchers dataLogicVouchers;
     private ComboBoxValModel m_VoucherModel;
     private SentenceList<VoucherInfo> m_sentvouch;
 
@@ -74,6 +80,7 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
         try {
             dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
             dlCustomers = (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
+            dataLogicVouchers = (DataLogicVouchers) app.getBean("com.openbravo.pos.voucher.DataLogicVouchers");
             m_sentvouch = dlSales.getVoucherList();
 
             initComponents();
@@ -86,6 +93,7 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
             customerName.setText(null);
 
         } catch (BasicException ex) {
+            LOGGER.log(Level.WARNING, "Exeception on init: ", ex);
         }
     }
 
@@ -308,9 +316,9 @@ public class JPaymentVoucher extends javax.swing.JPanel implements JPaymentInter
         if (m_VoucherModel.getSelectedKey() != null) {
             try {
                 String id = m_VoucherModel.getSelectedKey().toString();
-                m_voucherInfo = dlCustomers.getVoucherInfo(id);
+                m_voucherInfo = dataLogicVouchers.getVoucherInfo(id);
             } catch (BasicException ex) {
-
+                LOGGER.log(Level.WARNING, "Exeception on select voucher: ", ex);
             }
         }
 

@@ -46,6 +46,7 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
     private String voucherId;
     private final DataLogicCustomers dlCustomers;
     private final DataLogicSystem dlSystem;
+    private final DataLogicVouchers dlVouchers;
     private CustomerInfo customerInfo;
     private final AppView m_app;
 
@@ -56,6 +57,7 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
 
         dlCustomers = (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
         dlSystem = (DataLogicSystem) app.getBean("com.openbravo.pos.forms.DataLogicSystem");
+        dlVouchers = (DataLogicVouchers) app.getBean("com.openbravo.pos.voucher.DataLogicVouchers");
         voucherNumberTField.getDocument().addDocumentListener(dirty);
         voucherCustomerTField.getDocument().addDocumentListener(dirty);
         voucherAmountTField.getDocument().addDocumentListener(dirty);
@@ -356,7 +358,7 @@ public final class VoucherEditor extends javax.swing.JPanel implements EditorRec
 private void printBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printBtnActionPerformed
 
     try {
-        VoucherInfo voucherInfo = dlCustomers.getVoucherInfoAll(voucherId);
+        VoucherInfo voucherInfo = dlVouchers.getVoucherInfoAll(voucherId);
         BufferedImage image = dlSystem.getResourceAsImage("Window.Logo");
         if (voucherInfo != null) {
             JDialogReportPanel dialog = JDialogReportPanel
@@ -431,7 +433,7 @@ private void printBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         final DateFormat m_simpledate = new SimpleDateFormat("MM-yy");
         try {
             result = "VO-" + m_simpledate.format(new Date());
-            String lastNumber = (String) dlCustomers.getVoucherNumber().find(result);
+            String lastNumber = (String) dlVouchers.getVoucherNumber().find(result);
             int newNumber = 1;
 
             if (lastNumber != null) {

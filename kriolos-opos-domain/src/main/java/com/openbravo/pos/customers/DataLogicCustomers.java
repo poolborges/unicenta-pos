@@ -291,37 +291,7 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
         return tcustomers;
     }
 
-    // <editor-fold defaultstate="collapsed" desc="Voucher">
-    public final PreparedSentence getVoucherNumber() {
-        return new PreparedSentence(s,
-                "SELECT SUBSTRING(MAX(VOUCHER_NUMBER),10,3) AS LAST_NUMBER FROM vouchers "
-                + "WHERE SUBSTRING(VOUCHER_NUMBER,1,8) = ?",
-                SerializerWriteString.INSTANCE, (SerializerRead<String>) (DataRead dr) -> dr.getString(1));
-    }
-
-    public final VoucherInfo getVoucherInfo(String id) throws BasicException {
-        return (VoucherInfo) new PreparedSentence(s,
-                "SELECT vouchers.ID, VOUCHER_NUMBER, CUSTOMER, "
-                + "customers.NAME, AMOUNT, STATUS "
-                + "FROM vouchers "
-                + "JOIN customers ON customers.id = vouchers.CUSTOMER "
-                + "WHERE STATUS='A' AND vouchers.ID=?" //"WHERE STATUS='A' "                         
-                ,
-                 SerializerWriteString.INSTANCE,
-                VoucherInfo.getSerializerRead()).<VoucherInfo>find(id);
-    }
-
-    public final VoucherInfo getVoucherInfoAll(String id) throws BasicException {
-        return (VoucherInfo) new PreparedSentence(s,
-                "SELECT vouchers.ID, VOUCHER_NUMBER, CUSTOMER, "
-                + "customers.NAME, AMOUNT, STATUS "
-                + "FROM vouchers "
-                + "JOIN customers ON customers.id = vouchers.CUSTOMER  "
-                + "WHERE vouchers.ID=?",
-                SerializerWriteString.INSTANCE,
-                VoucherInfo.getSerializerRead()).<VoucherInfo>find(id);
-    }
-    // </editor-fold>
+    
 
     protected static class CustomerInfoRead implements SerializerRead<CustomerInfo> {
 
