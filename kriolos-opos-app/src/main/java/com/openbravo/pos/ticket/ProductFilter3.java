@@ -31,6 +31,7 @@ import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.reports.ReportEditorCreator;
 import com.openbravo.pos.suppliers.DataLogicSuppliers;
 import java.awt.Component;
@@ -61,10 +62,10 @@ public class ProductFilter3 extends javax.swing.JPanel implements ReportEditorCr
     @Override
     public void init(AppView app) {
          
-        DataLogicSales dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
+        DataLogicPIM dataLogicPIM = (DataLogicPIM) app.getBean("com.openbravo.pos.pim.DataLogicPIM");
         DataLogicSuppliers dlSuppliers = (DataLogicSuppliers) app.getBean("com.openbravo.pos.suppliers.DataLogicSuppliers");        
 
-        m_sentcat = dlSales.getCategoriesList();
+        m_sentcat = dataLogicPIM.getCategoriesList();
         m_CategoryModel = new ComboBoxValModel();
 
         m_sentsup = dlSuppliers.getSupplierList();

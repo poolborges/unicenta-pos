@@ -43,11 +43,14 @@ public class BundleEditor extends javax.swing.JPanel implements EditorRecord {
     private String productBundle;
     private String name;
     private Double quantity;
-    
     private String insertproduct;
+    //
+    private AppView appView;
 
     /** Creates new form BundleEditor */
     public BundleEditor(AppView app, DirtyManager dirty) {
+           
+        this.appView = app;
 
         m_dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
 
@@ -366,7 +369,7 @@ public class BundleEditor extends javax.swing.JPanel implements EditorRecord {
 
     private void m_jSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jSearchActionPerformed
         
-        assignProduct(JProductFinder.showMessage(this, m_dlSales, JProductFinder.PRODUCT_BUNDLE));
+        assignProduct(JProductFinder.showMessage(this, appView, JProductFinder.PRODUCT_BUNDLE));
         
 }//GEN-LAST:event_m_jSearchActionPerformed
 

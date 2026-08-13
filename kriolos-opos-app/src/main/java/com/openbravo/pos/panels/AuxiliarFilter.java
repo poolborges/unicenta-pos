@@ -41,6 +41,7 @@ public class AuxiliarFilter extends javax.swing.JPanel implements ReportEditorCr
 
     private ProductInfoExt product;
     private DataLogicSales m_dlSales;
+    private AppView appView;
     
     /**
      *
@@ -58,7 +59,8 @@ public class AuxiliarFilter extends javax.swing.JPanel implements ReportEditorCr
      */
     @Override
     public void init(AppView app) {   
-         m_dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
+        this.appView = app;
+        this.m_dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
     }
 
     /**
@@ -325,7 +327,7 @@ public class AuxiliarFilter extends javax.swing.JPanel implements ReportEditorCr
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
         
-        assignProduct(JProductFinder.showMessage(this, m_dlSales, JProductFinder.PRODUCT_NORMAL));       
+        assignProduct(JProductFinder.showMessage(this, this.appView, JProductFinder.PRODUCT_NORMAL));       
         
 }//GEN-LAST:event_searchActionPerformed
 

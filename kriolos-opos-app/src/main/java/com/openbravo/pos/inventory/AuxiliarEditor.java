@@ -42,13 +42,17 @@ public class AuxiliarEditor extends javax.swing.JPanel implements EditorRecord {
     private String product;
     private String product2;
     private String name;
-    
     private String productID;
+    
+    //
+    private AppView appView;
 
     /** Creates new form AuxiliarEditor
      * @param app
      * @param dirty */
     public AuxiliarEditor(AppView app, DirtyManager dirty) {
+           
+        this.appView = app;
 
         m_dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
 
@@ -381,7 +385,7 @@ public class AuxiliarEditor extends javax.swing.JPanel implements EditorRecord {
 
     private void m_jSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jSearchActionPerformed
         
-        assignProduct(JProductFinder.showMessage(this, m_dlSales, JProductFinder.PRODUCT_AUXILIAR));
+        assignProduct(JProductFinder.showMessage(this, appView, JProductFinder.PRODUCT_AUXILIAR));
         
 }//GEN-LAST:event_m_jSearchActionPerformed
 

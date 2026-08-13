@@ -52,7 +52,7 @@ public class JPanelTicketSales extends JPanelTicket {
     @Override
     protected Component getSouthComponent() {
         LOGGER.log(System.Logger.Level.DEBUG,"JPanelTicketSales :: getSouthComponent");
-        m_cat = new JCatalog(getDataLogicSales());
+        m_cat = new JCatalog(getAppView());
         m_cat.addActionListener(new CatalogListener());
         return m_cat.getComponent();
     }

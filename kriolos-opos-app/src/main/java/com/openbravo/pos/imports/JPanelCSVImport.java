@@ -24,6 +24,7 @@ import com.openbravo.data.user.DefaultSaveProvider;
 import com.openbravo.data.user.SaveProvider;
 import com.openbravo.pos.forms.*;
 import com.openbravo.pos.inventory.DataLogicInventory;
+import com.openbravo.pos.inventory.TaxCategoryInfo;
 import com.openbravo.pos.sales.TaxesLogic;
 import com.openbravo.pos.suppliers.DataLogicSuppliers;
 import com.openbravo.pos.ticket.ProductInfoExt;
@@ -86,7 +87,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     private String categoryName;
     private String categoryParentid;
     private Integer categoryCatorder;
-    private SentenceList m_sentcat;
+    private List<TaxCategoryInfo> taxCategoryInfos;
     private ComboBoxValModel m_CategoryModel;
     private HashMap cat_list = new HashMap();
     private ArrayList badCategories = new ArrayList();
@@ -529,7 +530,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
                 m_dlSales.createCategory(newcat);
 
                 cat_list = new HashMap<>();
-                for (Object category : m_sentcat.list()) {
+                for (Object category : taxCategoryInfos) {
                     m_CategoryModel.setSelectedItem(category);
                     cat_list.put(category.toString(), m_CategoryModel.getSelectedKey().toString());
                 }
@@ -688,14 +689,14 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         taxcatmodel = new ComboBoxValModel(taxcatsent.list());
 
         // Get categories list
-        m_sentcat = m_dlSales.getCategoriesList();
-        m_CategoryModel = new ComboBoxValModel(m_sentcat.list());
+        taxCategoryInfos = m_dlSales.getTaxCategoriesListAll();
+        m_CategoryModel = new ComboBoxValModel(taxCategoryInfos);
         m_CategoryModel.add(reject_bad_category);
         jComboDefaultCategory.setModel(m_CategoryModel);
 
         // Build the cat_list for later use
         cat_list = new HashMap<>();
-        for (Object category : m_sentcat.list()) {
+        for (Object category : taxCategoryInfos) {
             m_CategoryModel.setSelectedItem(category);
             cat_list.put(category.toString(), m_CategoryModel.getSelectedKey().toString());
         }
@@ -1807,17 +1808,13 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
 
     private void jComboCategoryItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboCategoryItemStateChanged
 
-        try {
-            if (jComboCategory.getSelectedItem() == "[ USE DEFAULT CATEGORY ]") {
-                m_CategoryModel = new ComboBoxValModel(m_sentcat.list());
-                jComboDefaultCategory.setModel(m_CategoryModel);
-            } else {
-                m_CategoryModel = new ComboBoxValModel(m_sentcat.list());
-                m_CategoryModel.add(reject_bad_category);
-                jComboDefaultCategory.setModel(m_CategoryModel);
-            }
-        } catch (BasicException ex) {
-            LOGGER.log(Level.WARNING, null, ex);
+        if (jComboCategory.getSelectedItem() == "[ USE DEFAULT CATEGORY ]") {
+            m_CategoryModel = new ComboBoxValModel(taxCategoryInfos);
+            jComboDefaultCategory.setModel(m_CategoryModel);
+        } else {
+            m_CategoryModel = new ComboBoxValModel(taxCategoryInfos);
+            m_CategoryModel.add(reject_bad_category);
+            jComboDefaultCategory.setModel(m_CategoryModel);
         }
         checkFieldMapping();
     }//GEN-LAST:event_jComboCategoryItemStateChanged

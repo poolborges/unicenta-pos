@@ -111,7 +111,7 @@ public final class StockDiaryEditor extends javax.swing.JPanel implements Editor
 
         m_jreason.setModel(m_ReasonModel);
 
-        m_cat = new JCatalog(m_dlSales);
+        m_cat = new JCatalog(app);
         m_cat.addActionListener(new CatalogListener());
 
         catcontainer.add(m_cat.getComponent(), BorderLayout.CENTER);        
@@ -921,7 +921,7 @@ public final class StockDiaryEditor extends javax.swing.JPanel implements Editor
 
     private void jEditProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jEditProductActionPerformed
         
-        assignProduct(JProductFinder.showMessage(this, m_dlSales));
+        assignProduct(JProductFinder.showMessage(this, m_App));
 
 }//GEN-LAST:event_jEditProductActionPerformed
 

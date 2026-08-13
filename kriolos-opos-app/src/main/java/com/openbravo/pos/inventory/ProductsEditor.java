@@ -46,6 +46,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.AbstractTableModel;
 import com.openbravo.pos.forms.DataLogicSystem;
+import com.openbravo.pos.pim.DataLogicPIM;
 import java.awt.Color;
 import java.io.File;
 import javax.imageio.ImageIO;
@@ -83,6 +84,7 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
     private DirtyManager m_Dirty;
     private DataLogicSales dlSales;
     private DataLogicSuppliers dlSuppliers;
+    private DataLogicPIM dataLogicPIM;
     private DataLogicSystem dlSystem; 
 
 
@@ -98,6 +100,7 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
         dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
         dlSystem = (DataLogicSystem) app.getBean("com.openbravo.pos.forms.DataLogicSystem");
         dlSuppliers = (DataLogicSuppliers) app.getBean("com.openbravo.pos.suppliers.DataLogicSuppliers");
+        dataLogicPIM = (DataLogicPIM) app.getBean("com.openbravo.pos.pim.DataLogicPIM");
 
         initComponents();
         
@@ -185,7 +188,7 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
 
         taxeslogic = new TaxesLogic(dlSales.getTaxListAll());
 
-        m_CategoryModel = new ComboBoxValModel(dlSales.getCategoriesListAll());
+        m_CategoryModel = new ComboBoxValModel(dataLogicPIM.getCategoriesListAll());
         m_jCategory.setModel(m_CategoryModel);
   
         taxcatmodel = new ComboBoxValModel(dlSales.getTaxCategoriesListAll());

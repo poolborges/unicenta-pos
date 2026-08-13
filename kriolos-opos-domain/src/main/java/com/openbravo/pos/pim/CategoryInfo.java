@@ -17,7 +17,7 @@
 //    You should have received a copy of the GNU General Public License
 //    along with KrOS POS.  If not, see <http://www.gnu.org/licenses/>.
 
-package com.openbravo.pos.ticket;
+package com.openbravo.pos.pim;
 
 import com.openbravo.data.loader.DataRead;
 import com.openbravo.data.loader.IKeyed;

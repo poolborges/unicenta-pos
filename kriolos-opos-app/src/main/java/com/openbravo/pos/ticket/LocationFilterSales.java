@@ -29,7 +29,10 @@ import com.openbravo.data.user.EditorCreator;
 import com.openbravo.editor.JEditorKeys;
 import com.openbravo.editor.JEditorString;
 import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.pos.pim.CategoryInfo;
+import com.openbravo.pos.pim.DataLogicPIM;
 
 /**
  *
@@ -37,7 +40,7 @@ import com.openbravo.pos.forms.DataLogicSales;
  */
 public class LocationFilterSales extends javax.swing.JPanel implements EditorCreator {
     
-    private SentenceList m_sentcat;
+    private DataLogicPIM dataLogicPIM;
     private ComboBoxValModel m_CategoryModel;
     
     /** 
@@ -46,11 +49,10 @@ public class LocationFilterSales extends javax.swing.JPanel implements EditorCre
      * @param dlSales
      * @param jKeys 
      */
-    public LocationFilterSales(DataLogicSales dlSales, JEditorKeys jKeys) {
+    public LocationFilterSales(AppView app, JEditorKeys jKeys) {
         initComponents();
         
-        // El modelo de categorias
-        m_sentcat = dlSales.getCategoriesList();
+        dataLogicPIM = (DataLogicPIM) app.getBean("com.openbravo.pos.pim.DataLogicPIM");
         m_CategoryModel = new ComboBoxValModel();           
         
 //        m_jCboPriceBuy.setModel(new ListQBFModelNumber());
@@ -78,14 +80,10 @@ public class LocationFilterSales extends javax.swing.JPanel implements EditorCre
         m_jPriceSell.reset();
         m_jtxtName.activate();
         
-        try {
-            List catlist = m_sentcat.list();
-            catlist.add(0, null);
-            m_CategoryModel = new ComboBoxValModel(catlist);
-            m_jCategory.setModel(m_CategoryModel);
-        } catch (BasicException eD) {
-            // no hay validacion
-        }
+        List<CategoryInfo> catlist = dataLogicPIM.getCategoriesListAll();
+        catlist.add(0, null);
+        m_CategoryModel = new ComboBoxValModel(catlist);
+        m_jCategory.setModel(m_CategoryModel);
     }
     
     /**

@@ -40,6 +40,7 @@ public class BundleFilter extends javax.swing.JPanel implements ReportEditorCrea
 
     private ProductInfoExt product;
     private DataLogicSales m_dlSales;
+    private AppView appView;
     
     protected EventListenerList listeners = new EventListenerList();
 
@@ -50,7 +51,9 @@ public class BundleFilter extends javax.swing.JPanel implements ReportEditorCrea
 
     @Override
     public void init(AppView app) {   
-         m_dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
+           
+        this.appView = app;
+        m_dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
     }
 
     @Override
@@ -277,7 +280,7 @@ public class BundleFilter extends javax.swing.JPanel implements ReportEditorCrea
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
         
-        assignProduct(JProductFinder.showMessage(this, m_dlSales, JProductFinder.PRODUCT_NORMAL));       
+        assignProduct(JProductFinder.showMessage(this, this.appView, JProductFinder.PRODUCT_NORMAL));       
         
 }//GEN-LAST:event_searchActionPerformed
 

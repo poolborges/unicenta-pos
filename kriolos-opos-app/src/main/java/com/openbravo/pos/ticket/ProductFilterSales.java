@@ -24,12 +24,13 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.ComboBoxValModel;
 import com.openbravo.data.gui.ListQBFModelNumber;
 import com.openbravo.data.loader.QBFCompareEnum;
-import com.openbravo.data.loader.SentenceList;
 import com.openbravo.data.user.EditorCreator;
 import com.openbravo.editor.JEditorKeys;
 import com.openbravo.editor.JEditorString;
 import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.pim.CategoryInfo;
+import com.openbravo.pos.pim.DataLogicPIM;
 
 /**
  *
@@ -37,17 +38,16 @@ import com.openbravo.pos.forms.DataLogicSales;
  */
 public class ProductFilterSales extends javax.swing.JPanel implements EditorCreator {
     
-    private SentenceList m_sentcat;
     private ComboBoxValModel m_CategoryModel;
+    private DataLogicPIM dataLogicPIM;
     
     /** Creates new form ProductFilterSales
      * @param dlSales
      * @param jKeys */
-    public ProductFilterSales(DataLogicSales dlSales, JEditorKeys jKeys) {
+    public ProductFilterSales(AppView app, JEditorKeys jKeys) {
         initComponents();
-        
-        // El modelo de categorias
-        m_sentcat = dlSales.getCategoriesList();
+
+        dataLogicPIM = (DataLogicPIM) app.getBean("com.openbravo.pos.pim.DataLogicPIM");
         m_CategoryModel = new ComboBoxValModel();           
         
 //        m_jCboPriceBuy.setModel(new ListQBFModelNumber());
@@ -75,14 +75,10 @@ public class ProductFilterSales extends javax.swing.JPanel implements EditorCrea
         m_jPriceSell.reset();
         m_jtxtName.activate();
         
-        try {
-            List catlist = m_sentcat.list();
-            catlist.add(0, null);
-            m_CategoryModel = new ComboBoxValModel(catlist);
-            m_jCategory.setModel(m_CategoryModel);
-        } catch (BasicException eD) {
-            // no hay validacion
-        }
+        List<CategoryInfo> catlist = dataLogicPIM.getCategoriesListAll();
+        catlist.add(0, null);
+        m_CategoryModel = new ComboBoxValModel(catlist);
+        m_jCategory.setModel(m_CategoryModel);
     }
     
     /**

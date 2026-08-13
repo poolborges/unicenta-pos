@@ -19,7 +19,6 @@ import com.openbravo.pos.ticket.TicketTaxInfo;
 import com.openbravo.pos.ticket.TicketInfo;
 import com.openbravo.pos.ticket.TicketLineInfo;
 import com.openbravo.pos.ticket.TaxInfo;
-import com.openbravo.pos.ticket.CategoryInfo;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import com.openbravo.pos.ticket.FindTicketsInfo;
 import com.openbravo.pos.ticket.ProductInfo;
@@ -460,53 +459,6 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
         /**
          *
-         * @return @throws BasicException
-         */
-        public final List<CategoryInfo> getRootCategories() throws BasicException {
-                return new PreparedSentence<Void, CategoryInfo>(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "NAME, "
-                                                + "IMAGE, "
-                                                + "TEXTTIP, "
-                                                + "CATSHOWNAME, "
-                                                + "CATORDER, "
-                                                + "CATALOGCOLOR, "
-                                                + "CATALOGENABLED "
-                                                + "FROM categories "
-                                                + "WHERE PARENTID IS NULL AND CATSHOWNAME = " + sessionDB.DB.TRUE()
-                                                + " "
-                                                + "ORDER BY CATORDER, NAME",
-                                null,
-                                CategoryInfo.getSerializerRead()).list();
-        }
-
-        /**
-         *
-         * @param category ID
-         * @return
-         * @throws BasicException
-         */
-        public final List<CategoryInfo> getSubcategories(String category) throws BasicException {
-                return new PreparedSentence<String, CategoryInfo>(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "NAME, "
-                                                + "IMAGE, "
-                                                + "TEXTTIP, "
-                                                + "CATSHOWNAME, "
-                                                + "CATORDER, "
-                                                + "CATALOGCOLOR, "
-                                                + "CATALOGENABLED "
-                                                + "FROM categories "
-                                                + "WHERE PARENTID = ? "
-                                                + "ORDER BY CATORDER, NAME",
-                                SerializerWriteString.INSTANCE,
-                                CategoryInfo.getSerializerRead()).list(category);
-        }
-
-        /**
-         *
          * @param category ID
          * @return
          * @throws BasicException
@@ -642,30 +594,6 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                                 null,
                                 ProductInfoExt.getSerializerRead()).list();
 
-        }
-
-        /**
-         *
-         * @param id
-         * @return
-         * @throws BasicException
-         */
-        public final CategoryInfo getCategoryInfo(String id) throws BasicException {
-                return new PreparedSentence<String, CategoryInfo>(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "NAME, "
-                                                + "IMAGE, "
-                                                + "TEXTTIP, "
-                                                + "CATSHOWNAME, "
-                                                + "CATORDER, "
-                                                + "CATALOGCOLOR, "
-                                                + "CATALOGENABLED "
-                                                + "FROM categories "
-                                                + "WHERE ID = ? "
-                                                + "ORDER BY CATORDER, NAME",
-                                SerializerWriteString.INSTANCE,
-                                CategoryInfo.getSerializerRead()).find(id);
         }
 
         /**
@@ -1129,17 +1057,8 @@ public class DataLogicSales extends BeanFactoryDataSingle {
          *
          * @return
          */
-        public final SentenceList<TaxCategoryInfo> getUserList() {
-                return new StaticSentence(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "NAME "
-                                                + "FROM people "
-                                                + "ORDER BY NAME",
-                                null,
-                                (DataRead dr) -> new TaxCategoryInfo(
-                                                dr.getString(1),
-                                                dr.getString(2)));
+        public final SentenceList<TaxCategoryInfo> getTaxCategoryInfoList() {
+             return getTaxCategoriesList();
         }
 
         /**
@@ -1180,61 +1099,6 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 }
                 return list;
         }
-
-        /**
-         * @deprecated since Nov/2025
-         * @return
-         */
-        public final SentenceList<CategoryInfo> getCategoriesList() {
-                return new StaticSentence(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "NAME, "
-                                                + "IMAGE, "
-                                                + "TEXTTIP, "
-                                                + "CATSHOWNAME, "
-                                                + "CATORDER, "
-                                                + "CATALOGCOLOR, "
-                                                + "CATALOGENABLED "
-                                                + "FROM categories "
-                                                + "ORDER BY NAME",
-                                null,
-                                CategoryInfo.getSerializerRead());
-        }
-
-        public final List<CategoryInfo> getCategoriesListAll() {
-                List<CategoryInfo> list = null;
-                try {
-                        list = this.getCategoriesList().list();
-                } catch (BasicException ex) {
-                        LOGGER.log(Level.WARNING, "Cannot get categories list", ex);
-                }
-                return list;
-        }
-
-        /**
-         * JG Feb 2017 Returns all PARENT categories
-         *
-         * @return
-         */
-        public final SentenceList<CategoryInfo> getCategoriesList_1() {
-                return new StaticSentence(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "NAME, "
-                                                + "IMAGE, "
-                                                + "TEXTTIP, "
-                                                + "CATSHOWNAME, "
-                                                + "CATORDER, "
-                                                + "CATALOGCOLOR, "
-                                                + "CATALOGENABLED "
-                                                + "FROM categories "
-                                                + "WHERE PARENTID IS NULL "
-                                                + "ORDER BY NAME",
-                                null,
-                                CategoryInfo.getSerializerRead());
-        }
-
 
         /**
          *

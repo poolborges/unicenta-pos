@@ -19,7 +19,8 @@ package com.openbravo.pos.catalog;
 import com.openbravo.basic.BasicException;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.sales.TaxesLogic;
-import com.openbravo.pos.ticket.CategoryInfo;
+import com.openbravo.pos.pim.CategoryInfo;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import com.openbravo.pos.ticket.TaxInfo;
 import com.openbravo.pos.util.ThumbNailBuilder;
@@ -45,11 +46,13 @@ public class CatalogController {
     private final ThumbNailBuilder tnbbutton;
     private final ThumbNailBuilder tnbsubcat;
 
+    private DataLogicPIM dataLogicPIM;
     private DataLogicSales dlLogicSales;
     private TaxesLogic taxeslogic;
     
-    public CatalogController(DataLogicSales dlSales){
+    public CatalogController(DataLogicSales dlSales, DataLogicPIM dataLogicPIM){
     
+        this.dataLogicPIM = dataLogicPIM;
         this.dlLogicSales = dlSales;
         try {
             this.taxeslogic = new TaxesLogic(dlLogicSales.getTaxList().list());
@@ -72,7 +75,7 @@ public class CatalogController {
         
         List<CategoryInfo> list = new ArrayList<>();
         try {
-            list = filterCategories(dlLogicSales.getRootCategories());
+            list = filterCategories(dataLogicPIM.getRootCategories());
         }
         catch (BasicException ex) {
             Exceptions.printStackTrace(ex);
@@ -100,7 +103,7 @@ public class CatalogController {
        
        List<CategoryInfo> list = new ArrayList<>();
         try {
-            list = filterCategories(dlLogicSales.getSubcategories(categoryId));
+            list = filterCategories(dataLogicPIM.getSubcategories(categoryId));
         }
         catch (BasicException ex) {
             Exceptions.printStackTrace(ex);

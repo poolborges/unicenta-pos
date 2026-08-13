@@ -156,7 +156,7 @@ public class StockManagement extends JPanel implements JPanelView {
 
         m_SuppliersModel = new ComboBoxValModel();
 
-        m_cat = new JCatalog(m_dlSales);
+        m_cat = new JCatalog(app);
         m_cat.addActionListener(new CatalogListener());
         catcontainer.add(m_cat.getComponent(), BorderLayout.CENTER);
 
@@ -1288,7 +1288,7 @@ public class StockManagement extends JPanel implements JPanelView {
 
     private void m_jListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jListActionPerformed
 
-        ProductInfoExt prod = JProductFinder.showMessage(StockManagement.this, m_dlSales);
+        ProductInfoExt prod = JProductFinder.showMessage(StockManagement.this, m_App);
         if (prod != null) {
             buttonTransition(prod);
         }
