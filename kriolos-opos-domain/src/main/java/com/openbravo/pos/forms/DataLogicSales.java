@@ -35,8 +35,8 @@ import com.openbravo.data.model.Field;
 import com.openbravo.data.model.Row;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.catalog.CategoryStock;
-import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.pos.customers.CustomerTransaction;
+import com.openbravo.pos.customers.DataLogicCustomers;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.BeanFactoryDataSingle;
 import com.openbravo.pos.inventory.*;
@@ -1254,47 +1254,6 @@ public class DataLogicSales extends BeanFactoryDataSingle {
         }
 
         /**
-         *
-         * @param id
-         * @return
-         * @throws BasicException
-         */
-        public final CustomerInfoExt getCustomerInfo(String id) throws BasicException {
-                return new PreparedSentence<String, CustomerInfoExt>(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "SEARCHKEY, "
-                                                + "TAXID, "
-                                                + "NAME, "
-                                                + "TAXCATEGORY, "
-                                                + "CARD, "
-                                                + "MAXDEBT, "
-                                                + "ADDRESS, "
-                                                + "ADDRESS2, "
-                                                + "POSTAL, "
-                                                + "CITY, "
-                                                + "REGION, "
-                                                + "COUNTRY, "
-                                                + "FIRSTNAME, "
-                                                + "LASTNAME, "
-                                                + "EMAIL, "
-                                                + "PHONE, "
-                                                + "PHONE2, "
-                                                + "FAX, "
-                                                + "NOTES, "
-                                                + "VISIBLE, "
-                                                + "CURDATE, "
-                                                + "CURDEBT, "
-                                                + "IMAGE, "
-                                                + "ISVIP, "
-                                                + "DISCOUNT, "
-                                                + "MEMODATE "
-                                                + "FROM customers WHERE ID = ?",
-                                SerializerWriteString.INSTANCE,
-                                new CustomerExtRead()).find(id);
-        }
-
-        /**
          * JG Apr 2017 - Revised to return Customer Id - cId param
          *
          * @param cId
@@ -1432,175 +1391,6 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
         /**
          *
-         * @param card
-         * @return
-         * @throws BasicException
-         */
-        public CustomerInfoExt findCustomerExt(String card) throws BasicException {
-                return (CustomerInfoExt) new PreparedSentence(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "TAXID, "
-                                                + "SEARCHKEY, "
-                                                + "NAME, "
-                                                + "TAXCATEGORY, "
-                                                + "CARD, "
-                                                + "MAXDEBT, "
-                                                + "ADDRESS, "
-                                                + "ADDRESS2, "
-                                                + "POSTAL, "
-                                                + "CITY, "
-                                                + "REGION, "
-                                                + "COUNTRY, "
-                                                + "FIRSTNAME, "
-                                                + "LASTNAME, "
-                                                + "EMAIL, "
-                                                + "PHONE, "
-                                                + "PHONE2, "
-                                                + "FAX, "
-                                                + "NOTES, "
-                                                + "VISIBLE, "
-                                                + "CURDATE, "
-                                                + "CURDEBT, "
-                                                + "IMAGE, "
-                                                + "ISVIP, "
-                                                + "DISCOUNT, "
-                                                + "MEMODATE "
-                                                + "FROM customers "
-                                                + "WHERE CARD = ? AND VISIBLE = " + sessionDB.DB.TRUE() + " "
-                                                + "ORDER BY NAME",
-                                SerializerWriteString.INSTANCE,
-                                new CustomerExtRead()).find(card);
-        }
-
-        /**
-         *
-         * @param name
-         * @return
-         * @throws BasicException
-         */
-        public CustomerInfoExt findCustomerName(String name) throws BasicException {
-                return (CustomerInfoExt) new PreparedSentence(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "SEARCHKEY, "
-                                                + "TAXID, "
-                                                + "NAME, "
-                                                + "TAXCATEGORY, "
-                                                + "CARD, "
-                                                + "MAXDEBT, "
-                                                + "ADDRESS, "
-                                                + "ADDRESS2, "
-                                                + "POSTAL, "
-                                                + "CITY, "
-                                                + "REGION, "
-                                                + "COUNTRY, "
-                                                + "FIRSTNAME, "
-                                                + "LASTNAME, "
-                                                + "EMAIL, "
-                                                + "PHONE, "
-                                                + "PHONE2, "
-                                                + "FAX, "
-                                                + "NOTES, "
-                                                + "VISIBLE, "
-                                                + "CURDATE, "
-                                                + "CURDEBT, "
-                                                + "IMAGE, "
-                                                + "ISVIP, "
-                                                + "DISCOUNT, "
-                                                + "MEMODATE "
-                                                + "FROM customers "
-                                                + "WHERE NAME = ? AND VISIBLE = " + sessionDB.DB.TRUE() + " "
-                                                + "ORDER BY NAME",
-                                SerializerWriteString.INSTANCE,
-                                new CustomerExtRead()).find(name);
-        }
-
-        /**
-         *
-         * @param id
-         * @return
-         * @throws BasicException
-         */
-        public CustomerInfoExt loadCustomerExt(String id) throws BasicException {
-                return (CustomerInfoExt) new PreparedSentence(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "SEARCHKEY, "
-                                                + "TAXID, "
-                                                + "NAME, "
-                                                + "TAXCATEGORY, "
-                                                + "CARD, "
-                                                + "MAXDEBT, "
-                                                + "ADDRESS, "
-                                                + "ADDRESS2, "
-                                                + "POSTAL, "
-                                                + "CITY, "
-                                                + "REGION, "
-                                                + "COUNTRY, "
-                                                + "FIRSTNAME, "
-                                                + "LASTNAME, "
-                                                + "EMAIL, "
-                                                + "PHONE, "
-                                                + "PHONE2, "
-                                                + "FAX, "
-                                                + "NOTES, "
-                                                + "VISIBLE, "
-                                                + "CURDATE, "
-                                                + "CURDEBT, "
-                                                + "IMAGE, "
-                                                + "ISVIP, "
-                                                + "DISCOUNT, "
-                                                + "MEMODATE "
-                                                + "FROM customers WHERE ID = ?",
-                                SerializerWriteString.INSTANCE,
-                                new CustomerExtRead()).find(id);
-        }
-
-        /**
-         * Quick Customer create
-         *
-         * @param id
-         * @return
-         * @throws BasicException
-         */
-        public CustomerInfoExt qCustomerExt(String id) throws BasicException {
-                return (CustomerInfoExt) new PreparedSentence(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "SEARCHKEY, "
-                                                + "TAXID, "
-                                                + "NAME, "
-                                                + "TAXCATEGORY, "
-                                                + "CARD, "
-                                                + "MAXDEBT, "
-                                                + "ADDRESS, "
-                                                + "ADDRESS2, "
-                                                + "POSTAL, "
-                                                + "CITY, "
-                                                + "REGION, "
-                                                + "COUNTRY, "
-                                                + "FIRSTNAME, "
-                                                + "LASTNAME, "
-                                                + "EMAIL, "
-                                                + "PHONE, "
-                                                + "PHONE2, "
-                                                + "FAX, "
-                                                + "NOTES, "
-                                                + "VISIBLE, "
-                                                + "CURDATE, "
-                                                + "CURDEBT, "
-                                                + "IMAGE, "
-                                                + "ISVIP, "
-                                                + "DISCOUNT, "
-                                                + "MEMODATE "
-                                                + "FROM customers WHERE ID = ?",
-                                SerializerWriteString.INSTANCE,
-                                new CustomerExtRead()).find(id);
-        }
-
-        /**
-         *
          * @param tickettype
          * @param ticketid
          * @return
@@ -1636,9 +1426,15 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 if (ticket != null) {
 
                         String customerid = ticket.getCustomerId();
-                        ticket.setCustomer(customerid == null
-                                        ? null
-                                        : loadCustomerExt(customerid));
+                        
+                        //TODO MUST move this datalogic
+                        if(customerid != null){
+                            DataLogicCustomers customerDataLogic = new DataLogicCustomers();
+                            customerDataLogic.init(sessionDB);
+                            ticket.setCustomer(customerDataLogic.findCustomerInfoExtById(customerid));
+                        }
+                        
+                        
 
                         ticket.setLines(new PreparedSentence(sessionDB,
                                         "SELECT L.TICKET, L.LINE, L.PRODUCT, L.ATTRIBUTESETINSTANCE_ID, "
@@ -2657,43 +2453,6 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                                 new Datas[] { Datas.STRING, Datas.STRING, Datas.STRING },
                                 new Formats[] { Formats.STRING, Formats.STRING, Formats.STRING },
                                 new int[] { 0 });
-        }
-
-        protected static class CustomerExtRead implements SerializerRead<CustomerInfoExt> {
-
-                @Override
-                public CustomerInfoExt readValues(DataRead dr) throws BasicException {
-                        CustomerInfoExt c = new CustomerInfoExt(dr.getString(1));
-                        c.setSearchkey(dr.getString(2));
-                        c.setTaxid(dr.getString(3));
-                        c.setTaxCustomerID(dr.getString(3));
-                        c.setName(dr.getString(4));
-                        c.setTaxCustCategoryID(dr.getString(5));
-                        c.setCard(dr.getString(6));
-                        c.setMaxdebt(dr.getDouble(7));
-                        c.setAddress(dr.getString(8));
-                        c.setAddress2(dr.getString(9));
-                        c.setPostal(dr.getString(10));
-                        c.setCity(dr.getString(11));
-                        c.setRegion(dr.getString(12));
-                        c.setCountry(dr.getString(13));
-                        c.setFirstname(dr.getString(14));
-                        c.setLastname(dr.getString(15));
-                        c.setEmail(dr.getString(16));
-                        c.setPhone1(dr.getString(17));
-                        c.setPhone2(dr.getString(18));
-                        c.setFax(dr.getString(19));
-                        c.setNotes(dr.getString(20));
-                        c.setVisible(dr.getBoolean(21));
-                        c.setCurdate(dr.getTimestamp(22));
-                        c.setAccdebt(dr.getDouble(23));
-                        c.setImage(ImageUtils.readImage(dr.getBytes(24)));
-                        c.setisVIP(dr.getBoolean(25));
-                        c.setDiscount(dr.getDouble(26));
-                        c.setMemoDate(dr.getString(27));
-
-                        return c;
-                }
         }
 
         public final UomInfo getUomInfoById(String id) throws BasicException {

@@ -207,7 +207,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
     private void readCustomer() {
 
         try {
-            CustomerInfoExt customer = dlsales.findCustomerExt(editorcard.getText());
+            CustomerInfoExt customer = dlcustomers.findCustomerInfoExtByCard(editorcard.getText());
             if (customer == null) {
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
                         AppLocal.getIntString("message.cannotfindcustomer"));
@@ -683,7 +683,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         CustomerInfo customer = finder.getSelectedCustomer();
         if (customer != null) {
             try {
-                CustomerInfoExt c = dlsales.loadCustomerExt(customer.getId());
+                CustomerInfoExt c = dlcustomers.findCustomerInfoExtById(customer.getId());
                 if (c == null) {
                     MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
                             AppLocal.getIntString("message.cannotfindcustomer"));
@@ -740,7 +740,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
             // reload customer
             CustomerInfoExt c;
             try {
-                c = dlsales.loadCustomerExt(customerext.getId());
+                c = dlcustomers.findCustomerInfoExtById(customerext.getId());
                 if (c == null) {
                     MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
                             AppLocal.getIntString("message.cannotfindcustomer"));
@@ -818,7 +818,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
                 CustomerInfoExt c = null;
                 ;
                 try {
-                    c = dlsales.loadCustomerExt(customerext.getId());
+                    c = dlcustomers.findCustomerInfoExtById(customerext.getId());
                     if (c == null) {
                         MessageInf msg = new MessageInf(MessageInf.SGN_WARNING,
                                 AppLocal.getIntString("message.cannotfindcustomer"));

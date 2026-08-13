@@ -737,7 +737,7 @@ public class JTicketsFinder extends javax.swing.JDialog implements EditorCreator
         try {
             jtxtCustomer.setText(finder.getSelectedCustomer() == null
                     ? null
-                    : dlSales.loadCustomerExt(finder.getSelectedCustomer().getId()).toString());
+                    : dlCustomers.findCustomerInfoExtById(finder.getSelectedCustomer().getId()).toString());
         } catch (BasicException e) {
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotfindcustomer"), e);
             msg.show(this);            

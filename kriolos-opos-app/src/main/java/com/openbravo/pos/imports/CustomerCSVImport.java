@@ -105,6 +105,9 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
         dbSession = oApp.getSession();
         
         AppProperties props = oApp.getProperties();
+        
+        m_dlCustomer = new DataLogicCustomers();
+        m_dlCustomer.init(dbSession);
 
         m_dlSales = new DataLogicSales();
         m_dlSales.init(dbSession);
@@ -426,7 +429,7 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
      */
     private void updateRecord(String cID) throws BasicException {
 //        custInfo = new CustomerInfoExt();
-        custInfo = m_dlSales.getCustomerInfo(cID);
+        custInfo = m_dlCustomer.findCustomerInfoExtById(cID);
         createCustomer("update");
         noChange++;
     }

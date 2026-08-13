@@ -915,7 +915,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 if (sCode.startsWith("C") || sCode.startsWith("c")) {
                     try {
                         String card = sCode;
-                        CustomerInfoExt newcustomer = dlSales.findCustomerExt(card);
+                        CustomerInfoExt newcustomer = dlCustomers.findCustomerInfoExtByCard(card);
 
                         if (newcustomer == null) {
                             Toolkit.getDefaultToolkit().beep();
@@ -2893,7 +2893,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                 if (customerInfo != null) {
 
                     try {
-                        CustomerInfoExt customerExt = dlSales.loadCustomerExt(customerInfo.getId());
+                        CustomerInfoExt customerExt = dlCustomers.findCustomerInfoExtById(customerInfo.getId());
                         m_oTicket.setCustomer(customerExt);
                         if (isRestaurantMode()) {
                             restDB.setCustomerNameInTableByTicketId(customerExt.getName(), m_oTicket.getId());
@@ -2930,10 +2930,10 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
                     if (finder.getSelectedCustomer() != null) {
                         try {
-                            m_oTicket.setCustomer(dlSales.loadCustomerExt(finder.getSelectedCustomer().getId()));
+                            m_oTicket.setCustomer(dlCustomers.findCustomerInfoExtById(finder.getSelectedCustomer().getId()));
                             if (isRestaurantMode()) {
                                 restDB.setCustomerNameInTableByTicketId(
-                                        dlSales.loadCustomerExt(finder.getSelectedCustomer().getId()).toString(),
+                                        dlCustomers.findCustomerInfoExtById(finder.getSelectedCustomer().getId()).toString(),
                                         m_oTicket.getId());
                             }
 

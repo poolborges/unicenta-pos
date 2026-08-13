@@ -412,7 +412,7 @@ public class SimpleReceipt extends javax.swing.JPanel {
         try {
             ticket.setCustomer(finder.getSelectedCustomer() == null
                     ? null
-                    : dlSales.loadCustomerExt(finder.getSelectedCustomer().getId()));
+                    : dlCustomers.findCustomerInfoExtById(finder.getSelectedCustomer().getId()));
         } catch (BasicException e) {
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotfindcustomer"), e);
             msg.show(this);            
