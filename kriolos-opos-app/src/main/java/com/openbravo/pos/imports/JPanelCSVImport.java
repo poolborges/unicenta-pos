@@ -25,6 +25,7 @@ import com.openbravo.data.user.SaveProvider;
 import com.openbravo.pos.forms.*;
 import com.openbravo.pos.inventory.DataLogicInventory;
 import com.openbravo.pos.sales.TaxesLogic;
+import com.openbravo.pos.suppliers.DataLogicSuppliers;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import org.apache.commons.lang3.StringUtils;
 
@@ -77,6 +78,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     private DataLogicSystem m_dlSystem;
     private DataLogicInventory m_dlInventory;
     private DataLogicImport m_dlImport;
+    private DataLogicSuppliers supplierDataLogic;
 
     protected SaveProvider spr;
 
@@ -137,6 +139,10 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         dbSession = oApp.getSession();
         
         AppProperties props = oApp.getProperties();
+        
+        
+        this.supplierDataLogic = new DataLogicSuppliers();
+        this.supplierDataLogic.init(dbSession);
 
         m_dlSales = new DataLogicSales();
         m_dlSales.init(dbSession);
@@ -565,7 +571,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
             newsupp[3] = true;
 
             try {
-                m_dlSales.createSupplier(newsupp);
+                supplierDataLogic.createSupplier(newsupp);
 
                 supp_list = new HashMap<>();
                 for (Object supplier : m_sentsupp.list()) {
@@ -695,7 +701,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         }
 
         // Get suppliers list
-        m_sentsupp = m_dlSales.getSuppList();
+        m_sentsupp = supplierDataLogic.getSuppList();
         m_SupplierModel = new ComboBoxValModel(m_sentsupp.list());
         m_SupplierModel.add(reject_bad_supplier);
         jComboDefaultSupplier.setModel(m_SupplierModel);

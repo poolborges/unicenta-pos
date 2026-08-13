@@ -199,6 +199,25 @@ public class DataLogicSuppliers extends BeanFactoryDataSingle {
         });
     }        
         
+        /**
+         *
+         * @return
+         */
+        public final SentenceList<SupplierInfo> getSuppListExt() {
+                return new StaticSentence(s,
+                                "SELECT "
+                                                + "ID, "
+                                                + "SEARCHKEY, "
+                                                + "NAME "
+                                                + "FROM suppliers "
+                                                + "ORDER BY NAME",
+                                null,
+                                (DataRead dr) -> new SupplierInfo(
+                                                dr.getString(1),
+                                                dr.getString(2),
+                                                dr.getString(3)));
+        }
+        
     /**
      *
      * @param supplier
@@ -251,5 +270,94 @@ public class DataLogicSuppliers extends BeanFactoryDataSingle {
                 + "ORDER BY stockdiary.datenew DESC",
                     SerializerWriteString.INSTANCE,                
                     SupplierTransaction.getSerializerRead()).list(sId);
-    }    
+    }
+    
+    public final void createSupplier(Object[] supplier) throws BasicException {
+            SentenceExec m_createSupp = new StaticSentence(this.s,
+                            "INSERT INTO suppliers ( ID, NAME, SEARCHKEY, VISIBLE ) "
+                                            + "VALUES (?, ?, ?, ?)",
+                            new SerializerWriteBasic(new Datas[] {
+                                            Datas.STRING,
+                                            Datas.STRING,
+                                            Datas.STRING,
+                                            Datas.BOOLEAN }));
+            m_createSupp.exec(supplier);
+    }
+
+     /**
+         *
+         * @param id
+         * @return
+         * @throws BasicException
+         */
+        public SupplierInfoExt loadSupplierExt(String id) throws BasicException {
+                return (SupplierInfoExt) new PreparedSentence(s,
+                                "SELECT "
+                                                + "ID, "
+                                                + "SEARCHKEY, "
+                                                + "TAXID, "
+                                                + "NAME, "
+                                                + "MAXDEBT, "
+                                                + "ADDRESS, "
+                                                + "ADDRESS2, "
+                                                + "POSTAL, "
+                                                + "CITY, "
+                                                + "REGION, "
+                                                + "COUNTRY, "
+                                                + "FIRSTNAME, "
+                                                + "LASTNAME, "
+                                                + "EMAIL, "
+                                                + "PHONE, "
+                                                + "PHONE2, "
+                                                + "FAX, "
+                                                + "NOTES, "
+                                                + "VISIBLE, "
+                                                + "CURDATE, "
+                                                + "CURDEBT, "
+                                                + "VATID "
+                                                + "FROM suppliers WHERE ID = ?",
+                                SerializerWriteString.INSTANCE,
+                                new SupplierExtRead()).find(id);
+        }
+
+        /**
+         *
+         */
+        protected static class SupplierExtRead implements SerializerRead {
+
+                /**
+                 *
+                 * @param dr
+                 * @return
+                 * @throws BasicException
+                 */
+                @Override
+                public Object readValues(DataRead dr) throws BasicException {
+                        SupplierInfoExt s = new SupplierInfoExt(dr.getString(1));
+                        s.setSearchkey(dr.getString(2));
+                        s.setTaxid(dr.getString(3));
+                        s.setName(dr.getString(4));
+                        s.setMaxdebt(dr.getDouble(5));
+                        s.setAddress(dr.getString(6));
+                        s.setAddress2(dr.getString(7));
+                        s.setPostal(dr.getString(8));
+                        s.setCity(dr.getString(9));
+                        s.setRegion(dr.getString(10));
+                        s.setCountry(dr.getString(11));
+                        s.setFirstname(dr.getString(12));
+                        s.setLastname(dr.getString(13));
+                        s.setEmail(dr.getString(14));
+                        s.setPhone(dr.getString(15));
+                        s.setPhone2(dr.getString(16));
+                        s.setFax(dr.getString(17));
+                        s.setNotes(dr.getString(18));
+                        s.setVisible(dr.getBoolean(19));
+                        s.setCurdate(dr.getTimestamp(20));
+                        s.setCurdebt(dr.getDouble(21));
+                        s.setSupplierVATID(dr.getString(22));
+
+                        return s;
+                }
+        }
+
 }

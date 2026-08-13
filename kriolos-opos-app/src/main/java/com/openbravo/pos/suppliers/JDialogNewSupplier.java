@@ -37,7 +37,6 @@ public class JDialogNewSupplier extends javax.swing.JDialog {
     private static final long serialVersionUID = 1L;
     
     private DataLogicSuppliers dlSupplier;
-    private DataLogicSales dlSales;
     private TableDefinition tsuppliers;
     private SupplierInfoExt selectedSupplier;
     private SuppliersView suppliersView;
@@ -56,7 +55,6 @@ public class JDialogNewSupplier extends javax.swing.JDialog {
     
     private void init(AppView app) {
 
-        dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
         dlSupplier = (DataLogicSuppliers) app.getBean("com.openbravo.pos.suppliers.DataLogicSuppliers");
         tsuppliers = dlSupplier.getTableSuppliers();
 
@@ -180,7 +178,7 @@ public class JDialogNewSupplier extends javax.swing.JDialog {
             int status = tsuppliers.getInsertSentence().exec(supplier);
             
             if (status > 0){
-                selectedSupplier =  dlSales.loadSupplierExt(m_oId);
+                selectedSupplier =  dlSupplier.loadSupplierExt(m_oId);
                 dispose();
             }else{
                 MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE, 
