@@ -267,7 +267,7 @@ public final class CategoriesEditor extends JPanel implements EditorRecord {
     private List<CategoryStock> getProductsByCategoryId(String categoryId) {
 
         try {
-            categoryStockList = dlSales.getCategorysProductList(categoryId);
+            categoryStockList = dataLogicPIM.getCategorysProductList(categoryId);
         }
         catch (BasicException ex) {
             LOGGER.log(Level.SEVERE, "Exception get products by category id: " + categoryId, ex);

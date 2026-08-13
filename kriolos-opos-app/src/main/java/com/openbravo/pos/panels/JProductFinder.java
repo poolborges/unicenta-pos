@@ -22,6 +22,7 @@ import com.openbravo.data.user.ListProviderCreator;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.ticket.ProductFilterSales;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import com.openbravo.pos.ticket.ProductRenderer;
@@ -40,7 +41,7 @@ public class JProductFinder extends javax.swing.JDialog {
     public final static int PRODUCT_NORMAL = 1;
     public final static int PRODUCT_AUXILIAR = 2;
     public final static int PRODUCT_BUNDLE = 3;    
-    private DataLogicSales dlSales;
+    private DataLogicPIM dataLogicPIM;
     
     private JProductFinder(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -54,6 +55,9 @@ public class JProductFinder extends javax.swing.JDialog {
 
         initComponents();      
         
+        
+        dataLogicPIM = (DataLogicPIM) app.getBean("com.openbravo.pos.pim.DataLogicPIM");
+        
         jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(35, 35));
         jScrollPane1.getHorizontalScrollBar().setPreferredSize(new Dimension(35, 35));        
 
@@ -62,13 +66,13 @@ public class JProductFinder extends javax.swing.JDialog {
         m_jProductSelect.add(jproductfilter, BorderLayout.CENTER);
         switch (productsType) {
             case PRODUCT_NORMAL:
-                lpr = new ListProviderCreator(dlSales.getProductListNormal(), jproductfilter);
+                lpr = new ListProviderCreator(dataLogicPIM.getProductListNormal(), jproductfilter);
                 break;
             case PRODUCT_AUXILIAR:               
-                lpr = new ListProviderCreator(dlSales.getProductListAuxiliar(), jproductfilter);
+                lpr = new ListProviderCreator(dataLogicPIM.getProductListAuxiliar(), jproductfilter);
                 break;
             default: // PRODUCT_ALL
-                lpr = new ListProviderCreator(dlSales.getProductList(), jproductfilter);                
+                lpr = new ListProviderCreator(dataLogicPIM.getProductList(), jproductfilter);                
                 break;
                 
         }
@@ -286,7 +290,7 @@ public class JProductFinder extends javax.swing.JDialog {
         getContentPane().add(jPanel4, java.awt.BorderLayout.EAST);
 
         setSize(new java.awt.Dimension(758, 634));
-        //REMOVED SET LOCATION RELATIVE TO
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jListProductsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListProductsMouseClicked

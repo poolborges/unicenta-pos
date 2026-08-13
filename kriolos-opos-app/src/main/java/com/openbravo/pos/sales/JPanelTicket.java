@@ -58,6 +58,7 @@ import com.openbravo.pos.payment.PaymentService;
 import com.openbravo.pos.payment.PaymentServiceImpl;
 import com.openbravo.pos.inventory.InventoryService;
 import com.openbravo.pos.inventory.InventoryServiceImpl;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.reports.PrintReportUtils;
 import java.awt.*;
 
@@ -102,6 +103,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private DataLogicSystem dlSystem;
     private DataLogicSales dlSales;
     private DataLogicCustomers dlCustomers;
+    private DataLogicPIM dataLogicPIM;
     private TicketsEditor m_panelticket;
     private TicketInfo m_oTicket;
     private String m_oTicketExt;
@@ -150,6 +152,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         dlSales = (DataLogicSales) m_App.getBean("com.openbravo.pos.forms.DataLogicSales");
         dlCustomers = (DataLogicCustomers) m_App.getBean("com.openbravo.pos.customers.DataLogicCustomers");
         dlReceipts = (DataLogicReceipts) app.getBean("com.openbravo.pos.sales.DataLogicReceipts");
+        dataLogicPIM = (DataLogicPIM) app.getBean("com.openbravo.pos.pim.DataLogicPIM");
 
         // Configuration>Peripheral options
         m_jbtnScale.setVisible(m_App.getDeviceScale().existsScale());
@@ -801,7 +804,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private void incProductByCode(String sCode) {
 
         try {
-            ProductInfoExt oProduct = dlSales.getProductInfoByCode(sCode);
+            ProductInfoExt oProduct = dataLogicPIM.getProductInfoByCode(sCode);
 
             if (oProduct == null) {
                 Toolkit.getDefaultToolkit().beep();
@@ -822,7 +825,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private void incProductByCodePrice(String sCode, double dPriceSell) {
 
         try {
-            ProductInfoExt oProduct = dlSales.getProductInfoByCode(sCode);
+            ProductInfoExt oProduct = dataLogicPIM.getProductInfoByCode(sCode);
             if (oProduct == null) {
                 Toolkit.getDefaultToolkit().beep();
                 new MessageInf(MessageInf.SGN_WARNING, AppLocal
@@ -967,7 +970,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
                     try {
                         ProductInfoExt oProduct // get product(s) with PMMMMM
-                                = dlSales.getProductInfoByShortCode(sCode);
+                                = dataLogicPIM.getProductInfoByShortCode(sCode);
 
                         if (oProduct == null) { // nothing returned so display message to user
                             Toolkit.getDefaultToolkit().beep();
@@ -1157,7 +1160,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                         && (sCode.length() == 12)) {
 
                     try {
-                        ProductInfoExt oProduct = dlSales.getProductInfoByUShortCode(sCode); // Return only UPC product
+                        ProductInfoExt oProduct = dataLogicPIM.getProductInfoByUShortCode(sCode); // Return only UPC product
 
                         if (oProduct == null) {
                             Toolkit.getDefaultToolkit().beep();
@@ -1944,9 +1947,9 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                             try {
                                 String sProductId = JPanelTicket.this.m_oTicket.getLine(ticketLineIndex).getProductID();
                                 if (sProductId != null) {
-                                    ProductInfoExt prod = JPanelTicket.this.dlSales.getProductInfo(sProductId);
+                                    ProductInfoExt prod = JPanelTicket.this.dataLogicPIM.getProductInfo(sProductId);
                                     if (prod == null) {
-                                        prod = dlSales.getProductInfoByCode(sProductId);
+                                        prod = dataLogicPIM.getProductInfoByCode(sProductId);
                                     }
                                     if (prod != null) {
                                         advDisplay1.setProductImage(prod.getImage());

@@ -531,7 +531,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
             newcat[2] = true;
 
             try {
-                m_dlSales.createCategory(newcat);
+                dataLogicPIM.createCategory(newcat);
 
                 cat_list = new HashMap<>();
                 for (Object category : taxCategoryInfos) {
@@ -630,7 +630,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     private void updateRecord(String pID) {
         prodInfo = new ProductInfoExt();
         try {
-            prodInfo = m_dlSales.getProductInfo(pID);
+            prodInfo = dataLogicPIM.getProductInfo(pID);
             dOriginalRate = taxeslogic.getTaxRate(prodInfo.getTaxCategoryID());
             dCategory = ((String) cat_list.get(prodInfo.getCategoryID())
                     == null) ? prodInfo.getCategoryID()

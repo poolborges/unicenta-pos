@@ -91,7 +91,7 @@ public class CatalogController {
     List<ProductInfoExt> getProductConstant() {
         List<ProductInfoExt> list = new ArrayList<>();
         try {
-            list = dlLogicSales.getProductConstant();
+            list = dataLogicPIM.getProductConstant();
         }
         catch (BasicException ex) {
             Exceptions.printStackTrace(ex);
@@ -115,7 +115,7 @@ public class CatalogController {
     List<ProductInfoExt> findProductByCategory(String categoryId) {
         List<ProductInfoExt> list = new ArrayList<>();
         try {
-            list = dlLogicSales.getProductCatalog(categoryId);
+            list = dataLogicPIM.getProductCatalog(categoryId);
         }
         catch (BasicException ex) {
             Exceptions.printStackTrace(ex);
@@ -130,7 +130,7 @@ public class CatalogController {
     List<ProductInfoExt> getProductCompanion(String productId) {
         List<ProductInfoExt> list = new ArrayList<>();
         try {
-            list = dlLogicSales.getProductComposite(productId);
+            list = dataLogicPIM.getProductComposite(productId);
         }
         catch (BasicException ex) {
             Exceptions.printStackTrace(ex);
@@ -141,7 +141,7 @@ public class CatalogController {
     ProductInfoExt getProductInfo(String productId) {
         ProductInfoExt data = null;
         try {
-            data = dlLogicSales.getProductInfo(productId);
+            data = dataLogicPIM.getProductInfo(productId);
         }
         catch (BasicException ex) {
             Exceptions.printStackTrace(ex);

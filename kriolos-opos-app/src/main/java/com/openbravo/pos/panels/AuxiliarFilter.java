@@ -23,6 +23,7 @@ import com.openbravo.data.loader.SerializerWriteString;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.reports.ReportEditorCreator;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import java.awt.Component;
@@ -40,7 +41,7 @@ import javax.swing.event.EventListenerList;
 public class AuxiliarFilter extends javax.swing.JPanel implements ReportEditorCreator {
 
     private ProductInfoExt product;
-    private DataLogicSales m_dlSales;
+    private DataLogicPIM dataLogicPIM;
     private AppView appView;
     
     /**
@@ -60,7 +61,7 @@ public class AuxiliarFilter extends javax.swing.JPanel implements ReportEditorCr
     @Override
     public void init(AppView app) {   
         this.appView = app;
-        this.m_dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
+        this.dataLogicPIM = (DataLogicPIM) app.getBean("com.openbravo.pos.pim.DataLogicPIM");
     }
 
     /**
@@ -159,7 +160,7 @@ public class AuxiliarFilter extends javax.swing.JPanel implements ReportEditorCr
 
     private void assignProductByCode() {
         try {
-            ProductInfoExt prod = m_dlSales.getProductInfoByCode(m_jBarcode1.getText());
+            ProductInfoExt prod = dataLogicPIM.getProductInfoByCode(m_jBarcode1.getText());
             if (prod == null) {
                 Toolkit.getDefaultToolkit().beep();
             }
@@ -173,7 +174,7 @@ public class AuxiliarFilter extends javax.swing.JPanel implements ReportEditorCr
 
     private void assignProductByReference() {
         try {
-            ProductInfoExt prod = m_dlSales.getProductInfoByReference(m_jReference1.getText());
+            ProductInfoExt prod = dataLogicPIM.getProductInfoByReference(m_jReference1.getText());
             if (prod == null) {
                 Toolkit.getDefaultToolkit().beep();
             }

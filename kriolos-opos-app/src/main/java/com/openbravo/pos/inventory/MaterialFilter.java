@@ -28,7 +28,9 @@ import com.openbravo.data.loader.SentenceList;
 import com.openbravo.data.user.EditorCreator;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.pos.pim.DataLogicPIM;
 
 /**
  *
@@ -42,11 +44,11 @@ public class MaterialFilter extends javax.swing.JPanel implements EditorCreator 
 
     /** Creates new form JQBFProduct
      * @param dlSales */
-    public MaterialFilter(DataLogicSales dlSales) {
+    public MaterialFilter(AppView app) {
         initComponents();
         
-        //El modelo de productos
-        m_sentprods = dlSales.getProductList();
+        DataLogicPIM dataLogicPIM = (DataLogicPIM) app.getBean("com.openbravo.pos.pim.DataLogicPIM");
+        m_sentprods = dataLogicPIM.getProductList();
         m_ProdsModel = new ComboBoxValModel();
          
         m_jCboName.setModel(new ListQBFModelNumber());

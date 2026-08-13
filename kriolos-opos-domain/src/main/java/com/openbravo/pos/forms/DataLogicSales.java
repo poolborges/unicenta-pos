@@ -21,7 +21,6 @@ import com.openbravo.pos.ticket.TicketLineInfo;
 import com.openbravo.pos.ticket.TaxInfo;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import com.openbravo.pos.ticket.FindTicketsInfo;
-import com.openbravo.pos.ticket.ProductInfo;
 import com.openbravo.pos.inventory.UomInfo;
 import com.openbravo.pos.inventory.LocationInfo;
 import com.openbravo.pos.inventory.ProductsBundleInfo;
@@ -33,7 +32,6 @@ import com.openbravo.data.loader.*;
 import com.openbravo.data.model.Field;
 import com.openbravo.data.model.Row;
 import com.openbravo.format.Formats;
-import com.openbravo.pos.catalog.CategoryStock;
 import com.openbravo.pos.customers.CustomerTransaction;
 import com.openbravo.pos.customers.DataLogicCustomers;
 import com.openbravo.pos.forms.AppLocal;
@@ -42,8 +40,8 @@ import com.openbravo.pos.inventory.*;
 import com.openbravo.pos.sales.restaurant.FloorsInfo;
 import com.openbravo.pos.payment.PaymentInfo;
 import com.openbravo.pos.payment.PaymentInfoTicket;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.sales.ReprintTicketInfo;
-import com.openbravo.pos.ticket.ProductInfoExtA;
 import com.openbravo.pos.voucher.VoucherInfo;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -154,15 +152,6 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 this.sessionDB = s;
         }
 
-        // Import Creates
-        public final void createCategory(Object[] category) throws BasicException {
-                SentenceExec m_createCat = new StaticSentence(this.sessionDB,
-                                "INSERT INTO categories ( ID, NAME, CATSHOWNAME ) "
-                                                + "VALUES (?, ?, ?)",
-                                new SerializerWriteBasic(new Datas[] { Datas.STRING, Datas.STRING, Datas.BOOLEAN }));
-                m_createCat.exec(category);
-        }
-
         
         // End Import Creates
 
@@ -171,648 +160,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 return customersRow;
         }
 
-        /**
-         *
-         * @param id
-         * @return
-         * @throws BasicException
-         */
-        public final ProductInfoExt getProductInfo(String id) throws BasicException {
-                return new PreparedSentence<String, ProductInfoExt>(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "REFERENCE, "
-                                                + "CODE, "
-                                                + "CODETYPE, "
-                                                + "NAME, "
-                                                + "PRICEBUY, "
-                                                + "PRICESELL, "
-                                                + "CATEGORY, "
-                                                + "TAXCAT, "
-                                                + "ATTRIBUTESET_ID, "
-                                                + "STOCKCOST, "
-                                                + "STOCKVOLUME, "
-                                                + "IMAGE, "
-                                                + "ISCOM, "
-                                                + "ISSCALE, "
-                                                + "ISCONSTANT, "
-                                                + "PRINTKB, "
-                                                + "SENDSTATUS, "
-                                                + "ISSERVICE, "
-                                                + "ATTRIBUTES, "
-                                                + "DISPLAY, "
-                                                + "ISVPRICE, "
-                                                + "ISVERPATRIB, "
-                                                + "TEXTTIP, "
-                                                + "WARRANTY, "
-                                                + "STOCKUNITS, "
-                                                + "PRINTTO, "
-                                                + "SUPPLIER, "
-                                                + "UOM, "
-                                                + "MEMODATE "
-                                                + "FROM products WHERE ID = ?",
-                                SerializerWriteString.INSTANCE,
-                                ProductInfoExt.getSerializerRead()).find(id);
-        }
-
-        /**
-         *
-         * @param sCode (Example BarCode)
-         * @return
-         * @throws BasicException
-         */
-        public final ProductInfoExt getProductInfoByCode(String sCode) throws BasicException {
-                return new PreparedSentence<String, ProductInfoExt>(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "REFERENCE, "
-                                                + "CODE, "
-                                                + "CODETYPE, "
-                                                + "NAME, "
-                                                + "PRICEBUY, "
-                                                + "PRICESELL, "
-                                                + "CATEGORY, "
-                                                + "TAXCAT, "
-                                                + "ATTRIBUTESET_ID, "
-                                                + "STOCKCOST, "
-                                                + "STOCKVOLUME, "
-                                                + "IMAGE, "
-                                                + "ISCOM, "
-                                                + "ISSCALE, "
-                                                + "ISCONSTANT, "
-                                                + "PRINTKB, "
-                                                + "SENDSTATUS, "
-                                                + "ISSERVICE, "
-                                                + "ATTRIBUTES, "
-                                                + "DISPLAY, "
-                                                + "ISVPRICE, "
-                                                + "ISVERPATRIB, "
-                                                + "TEXTTIP, "
-                                                + "WARRANTY, "
-                                                + "STOCKUNITS, "
-                                                + "PRINTTO, "
-                                                + "SUPPLIER, "
-                                                + "UOM, "
-                                                + "MEMODATE "
-                                                + "FROM products WHERE CODE = ?",
-                                SerializerWriteString.INSTANCE,
-                                ProductInfoExt.getSerializerRead()).find(sCode);
-        }
-
-        /**
-         *
-         * @param sCode (short code, Example: Barcode)
-         * @return
-         * @throws BasicException
-         */
-        public final ProductInfoExt getProductInfoByShortCode(String sCode) throws BasicException {
-
-                return new PreparedSentence<String, ProductInfoExt>(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "REFERENCE, "
-                                                + "CODE, "
-                                                + "CODETYPE, "
-                                                + "NAME, "
-                                                + "PRICEBUY, "
-                                                + "PRICESELL, "
-                                                + "CATEGORY, "
-                                                + "TAXCAT, "
-                                                + "ATTRIBUTESET_ID, "
-                                                + "STOCKCOST, "
-                                                + "STOCKVOLUME, "
-                                                + "IMAGE, "
-                                                + "ISCOM, "
-                                                + "ISSCALE, "
-                                                + "ISCONSTANT, "
-                                                + "PRINTKB, "
-                                                + "SENDSTATUS, "
-                                                + "ISSERVICE, "
-                                                + "ATTRIBUTES, "
-                                                + "DISPLAY, "
-                                                + "ISVPRICE, "
-                                                + "ISVERPATRIB, "
-                                                + "TEXTTIP, "
-                                                + "WARRANTY, "
-                                                + "STOCKUNITS, "
-                                                + "PRINTTO, "
-                                                + "SUPPLIER, "
-                                                + "UOM, "
-                                                + "MEMODATE "
-                                                + "FROM products "
-                                                + "WHERE SUBSTRING( CODE, 3, 6 ) = ?",
-                                SerializerWriteString.INSTANCE,
-                                ProductInfoExt.getSerializerRead()).find(sCode.substring(2, 8));
-        }
-
-        /**
-         * Important Note: Deliberately extracted from other code to force strict
-         * UPC-A (full 12 digits) Why? Because other manf' or in-store codes may
-         * exist and we just need a single record returned. Also, handling things
-         * this way will allow use (future) of a COUPON code (5 or 9 normally used)
-         * in-store
-         *
-         */
-        public final ProductInfoExt getProductInfoByUShortCode(String sCode) throws BasicException {
-
-                /*
-                 * selection of 7 digits ie: 2123456
-                 * specific to allow for other 12 digit codes that may be in use at positions
-                 * 234567
-                 * last digit (position 7) can be used to identify COUPON (5 or 9) - FUTURE
-                 */
-                return new PreparedSentence<String, ProductInfoExt>(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "REFERENCE, "
-                                                + "CODE, "
-                                                + "CODETYPE, "
-                                                + "NAME, "
-                                                + "PRICEBUY, "
-                                                + "PRICESELL, "
-                                                + "CATEGORY, "
-                                                + "TAXCAT, "
-                                                + "ATTRIBUTESET_ID, "
-                                                + "STOCKCOST, "
-                                                + "STOCKVOLUME, "
-                                                + "IMAGE, "
-                                                + "ISCOM, "
-                                                + "ISSCALE, "
-                                                + "ISCONSTANT, "
-                                                + "PRINTKB, "
-                                                + "SENDSTATUS, "
-                                                + "ISSERVICE, "
-                                                + "ATTRIBUTES, "
-                                                + "DISPLAY, "
-                                                + "ISVPRICE, "
-                                                + "ISVERPATRIB, "
-                                                + "TEXTTIP, "
-                                                + "WARRANTY, "
-                                                + "STOCKUNITS, "
-                                                + "PRINTTO, "
-                                                + "SUPPLIER, "
-                                                + "UOM, "
-                                                + "MEMODATE "
-                                                + "FROM products "
-                                                + "WHERE LEFT( CODE, 7 ) = ? AND CODETYPE = 'UPC-A' ",
-                                SerializerWriteString.INSTANCE,
-                                ProductInfoExt.getSerializerRead()).find(sCode.substring(0, 7));
-        }
-
-        /**
-         *
-         * @param sReference
-         * @return
-         * @throws BasicException
-         */
-        public final ProductInfoExt getProductInfoByReference(String sReference) throws BasicException {
-                return new PreparedSentence<String, ProductInfoExt>(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "REFERENCE, "
-                                                + "CODE, "
-                                                + "CODETYPE, "
-                                                + "NAME, "
-                                                + "PRICEBUY, "
-                                                + "PRICESELL, "
-                                                + "CATEGORY, "
-                                                + "TAXCAT, "
-                                                + "ATTRIBUTESET_ID, "
-                                                + "STOCKCOST, "
-                                                + "STOCKVOLUME, "
-                                                + "IMAGE, "
-                                                + "ISCOM, "
-                                                + "ISSCALE, "
-                                                + "ISCONSTANT, "
-                                                + "PRINTKB, "
-                                                + "SENDSTATUS, "
-                                                + "ISSERVICE, "
-                                                + "ATTRIBUTES, "
-                                                + "DISPLAY, "
-                                                + "ISVPRICE, "
-                                                + "ISVERPATRIB, "
-                                                + "TEXTTIP, "
-                                                + "WARRANTY, "
-                                                + "STOCKUNITS, "
-                                                + "PRINTTO, "
-                                                + "SUPPLIER, "
-                                                + "UOM, "
-                                                + "MEMODATE "
-                                                + "FROM products WHERE REFERENCE = ?",
-                                SerializerWriteString.INSTANCE,
-                                ProductInfoExt.getSerializerRead()).find(sReference);
-        }
-
-        /**
-         *
-         * @param category ID
-         * @return
-         * @throws BasicException
-         */
-        public List<ProductInfoExt> getProductCatalog(String category) throws BasicException {
-                return new PreparedSentence<String, ProductInfoExt>(sessionDB,
-                                "SELECT "
-                                                + "P.ID, "
-                                                + "P.REFERENCE, "
-                                                + "P.CODE, "
-                                                + "P.CODETYPE, "
-                                                + "P.NAME, "
-                                                + "P.PRICEBUY, "
-                                                + "P.PRICESELL, "
-                                                + "P.CATEGORY, "
-                                                + "P.TAXCAT, "
-                                                + "P.ATTRIBUTESET_ID, "
-                                                + "P.STOCKCOST, "
-                                                + "P.STOCKVOLUME, "
-                                                + "P.IMAGE, "
-                                                + "P.ISCOM, "
-                                                + "P.ISSCALE, "
-                                                + "P.ISCONSTANT, "
-                                                + "P.PRINTKB, "
-                                                + "P.SENDSTATUS, "
-                                                + "P.ISSERVICE, "
-                                                + "P.ATTRIBUTES, "
-                                                + "P.DISPLAY, "
-                                                + "P.ISVPRICE, "
-                                                + "P.ISVERPATRIB, "
-                                                + "P.TEXTTIP, "
-                                                + "P.WARRANTY, "
-                                                + "P.STOCKUNITS, "
-                                                + "P.PRINTTO, "
-                                                + "P.SUPPLIER, "
-                                                + "P.UOM, "
-                                                + "P.MEMODATE "
-                                                + "FROM products P, products_cat O "
-                                                + "WHERE P.ID = O.PRODUCT AND P.CATEGORY = ? "
-                                                + "ORDER BY O.CATORDER, P.NAME ",
-                                SerializerWriteString.INSTANCE,
-                                ProductInfoExt.getSerializerRead()).list(category);
-        }
-
-        /**
-         *
-         * @param id Product ID
-         * @return List of ProductInfoExt
-         * @throws BasicException
-         */
-        public List<ProductInfoExt> getProductComposite(String id) throws BasicException {
-                return new PreparedSentence<String, ProductInfoExt>(sessionDB,
-                                "SELECT "
-                                                + "P.ID, "
-                                                + "P.REFERENCE, "
-                                                + "P.CODE, "
-                                                + "P.CODETYPE, "
-                                                + "P.NAME, "
-                                                + "P.PRICEBUY, "
-                                                + "P.PRICESELL, "
-                                                + "P.CATEGORY, "
-                                                + "P.TAXCAT, "
-                                                + "P.ATTRIBUTESET_ID, "
-                                                + "P.STOCKCOST, "
-                                                + "P.STOCKVOLUME, "
-                                                + "P.IMAGE, "
-                                                + "P.ISCOM, "
-                                                + "P.ISSCALE, "
-                                                + "P.ISCONSTANT, "
-                                                + "P.PRINTKB, "
-                                                + "P.SENDSTATUS, "
-                                                + "P.ISSERVICE, "
-                                                + "P.ATTRIBUTES, "
-                                                + "P.DISPLAY, "
-                                                + "P.ISVPRICE, "
-                                                + "P.ISVERPATRIB, "
-                                                + "P.TEXTTIP, "
-                                                + "P.WARRANTY, "
-                                                + "P.STOCKUNITS, "
-                                                + "P.PRINTTO, "
-                                                + "P.SUPPLIER, "
-                                                + "P.UOM, "
-                                                + "P.MEMODATE "
-                                                + "FROM products P, "
-                                                + "products_cat O, products_com M "
-                                                + "WHERE P.ID = O.PRODUCT AND P.ID = M.PRODUCT2 AND M.PRODUCT = ? "
-                                                + "AND P.ISCOM = " + sessionDB.DB.TRUE() + " "
-                                                + "ORDER BY O.CATORDER, P.NAME",
-                                SerializerWriteString.INSTANCE,
-                                ProductInfoExt.getSerializerRead()).list(id);
-        }
-
-        /**
-         *
-         * @return @throws BasicException
-         */
-        public List<ProductInfoExt> getProductConstant() throws BasicException {
-                return new PreparedSentence<Void, ProductInfoExt>(sessionDB,
-                                "SELECT "
-                                                + "products.ID, "
-                                                + "products.REFERENCE, "
-                                                + "products.CODE, "
-                                                + "products.CODETYPE, "
-                                                + "products.NAME, "
-                                                + "products.PRICEBUY, "
-                                                + "products.PRICESELL, "
-                                                + "products.CATEGORY, "
-                                                + "products.TAXCAT, "
-                                                + "products.ATTRIBUTESET_ID, "
-                                                + "products.STOCKCOST, "
-                                                + "products.STOCKVOLUME, "
-                                                + "products.IMAGE, "
-                                                + "products.ISCOM, "
-                                                + "products.ISSCALE, "
-                                                + "products.ISCONSTANT, "
-                                                + "products.PRINTKB, "
-                                                + "products.SENDSTATUS, "
-                                                + "products.ISSERVICE, "
-                                                + "products.ATTRIBUTES, "
-                                                + "products.DISPLAY, "
-                                                + "products.ISVPRICE, "
-                                                + "products.ISVERPATRIB, "
-                                                + "products.TEXTTIP, "
-                                                + "products.WARRANTY, "
-                                                + "products.STOCKUNITS, "
-                                                + "products.PRINTTO, "
-                                                + "products.SUPPLIER, "
-                                                + "products.UOM, "
-                                                + "products.MEMODATE "
-                                                + "FROM categories INNER JOIN products ON (products.CATEGORY = categories.ID) "
-                                                + "WHERE products.ISCONSTANT = " + sessionDB.DB.TRUE() + " "
-                                                + "ORDER BY categories.NAME, products.NAME",
-                                null,
-                                ProductInfoExt.getSerializerRead()).list();
-
-        }
-
-        /**
-         * JG Dec 2017
-         *
-         * @param pId
-         * @return
-         * @throws BasicException
-         */
-        public final List<CategoryStock> getCategorysProductList(String pId) throws BasicException {
-                return new PreparedSentence<String, CategoryStock>(sessionDB,
-                                "SELECT products.ID, "
-                                                + "products.NAME AS Name, "
-                                                + "products.CODE AS Barcode, "
-                                                + "categories.ID AS Category "
-                                                + "FROM products products "
-                                                + "INNER JOIN categories categories ON (products.CATEGORY = categories.ID) "
-                                                + "WHERE products.category = ? "
-                                                + "ORDER BY products.NAME ASC",
-                                SerializerWriteString.INSTANCE,
-                                CategoryStock.getSerializerRead()).list(pId);
-        }
-
-        /**
-         *
-         * @return
-         */
-        public final SentenceList<ProductInfoExt> getProductList() {
-                return new StaticSentence(sessionDB,
-                                new QBFBuilder(
-                                                "SELECT "
-                                                                + "ID, "
-                                                                + "REFERENCE, "
-                                                                + "CODE, "
-                                                                + "CODETYPE, "
-                                                                + "NAME, "
-                                                                + "PRICEBUY, "
-                                                                + "PRICESELL, "
-                                                                + "CATEGORY, "
-                                                                + "TAXCAT, "
-                                                                + "ATTRIBUTESET_ID, "
-                                                                + "STOCKCOST, "
-                                                                + "STOCKVOLUME, "
-                                                                + "IMAGE, "
-                                                                + "ISCOM, "
-                                                                + "ISSCALE, "
-                                                                + "ISCONSTANT, "
-                                                                + "PRINTKB, "
-                                                                + "SENDSTATUS, "
-                                                                + "ISSERVICE, "
-                                                                + "ATTRIBUTES, "
-                                                                + "DISPLAY, "
-                                                                + "ISVPRICE, "
-                                                                + "ISVERPATRIB, "
-                                                                + "TEXTTIP, "
-                                                                + "WARRANTY, "
-                                                                + "STOCKUNITS, "
-                                                                + "PRINTTO, "
-                                                                + "SUPPLIER, "
-                                                                + "UOM, "
-                                                                + "MEMODATE "
-                                                                + "FROM products "
-                                                                + "WHERE ?(QBF_FILTER) "
-                                                                + "ORDER BY REFERENCE",
-                                                new String[] { "NAME", "PRICEBUY", "PRICESELL", "CATEGORY", "CODE" }),
-                                new SerializerWriteBasic(new Datas[] {
-                                                Datas.OBJECT, Datas.STRING,
-                                                Datas.OBJECT, Datas.DOUBLE,
-                                                Datas.OBJECT, Datas.DOUBLE,
-                                                Datas.OBJECT, Datas.STRING,
-                                                Datas.OBJECT, Datas.STRING }),
-                                ProductInfoExt.getSerializerRead());
-        }
-
-        /**
-         *
-         * @return
-         */
-        public SentenceList<ProductInfoExt> getProductListNormal() {
-                return new StaticSentence(sessionDB,
-                                new QBFBuilder(
-                                                "SELECT "
-                                                                + "ID, "
-                                                                + "REFERENCE, "
-                                                                + "CODE, "
-                                                                + "CODETYPE, "
-                                                                + "NAME, "
-                                                                + "PRICEBUY, "
-                                                                + "PRICESELL, "
-                                                                + "CATEGORY, "
-                                                                + "TAXCAT, "
-                                                                + "ATTRIBUTESET_ID, "
-                                                                + "STOCKCOST, "
-                                                                + "STOCKVOLUME, "
-                                                                + "IMAGE, "
-                                                                + "ISCOM, "
-                                                                + "ISSCALE, "
-                                                                + "ISCONSTANT, "
-                                                                + "PRINTKB, "
-                                                                + "SENDSTATUS, "
-                                                                + "ISSERVICE, "
-                                                                + "ATTRIBUTES, "
-                                                                + "DISPLAY, "
-                                                                + "ISVPRICE, "
-                                                                + "ISVERPATRIB, "
-                                                                + "TEXTTIP, "
-                                                                + "WARRANTY, "
-                                                                + "STOCKUNITS, "
-                                                                + "PRINTTO, "
-                                                                + "SUPPLIER, "
-                                                                + "UOM, "
-                                                                + "MEMODATE "
-                                                                + "FROM products "
-                                                                + "WHERE ISCOM = " + sessionDB.DB.FALSE()
-                                                                + " AND ?(QBF_FILTER) ORDER BY REFERENCE",
-                                                new String[] { "NAME", "PRICEBUY", "PRICESELL", "CATEGORY", "CODE" }),
-                                new SerializerWriteBasic(new Datas[] {
-                                                Datas.OBJECT, Datas.STRING,
-                                                Datas.OBJECT, Datas.DOUBLE,
-                                                Datas.OBJECT, Datas.DOUBLE,
-                                                Datas.OBJECT, Datas.STRING,
-                                                Datas.OBJECT, Datas.STRING }),
-                                ProductInfoExt.getSerializerRead());
-        }
-
-        /**
-         *
-         * @return
-         */
-        public SentenceList<ProductInfo> getProductsList() {
-                return new StaticSentence(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "REFERENCE, "
-                                                + "CODE, "
-                                                + "CODETYPE, "
-                                                + "NAME, "
-                                                + "PRICEBUY, "
-                                                + "PRICESELL, "
-                                                + "CATEGORY, "
-                                                + "TAXCAT, "
-                                                + "ATTRIBUTESET_ID, "
-                                                + "STOCKCOST, "
-                                                + "STOCKVOLUME, "
-                                                + "IMAGE, "
-                                                + "ISCOM, "
-                                                + "ISSCALE, "
-                                                + "ISCONSTANT, "
-                                                + "PRINTKB, "
-                                                + "SENDSTATUS, "
-                                                + "ISSERVICE, "
-                                                + "ATTRIBUTES, "
-                                                + "DISPLAY, "
-                                                + "ISVPRICE, "
-                                                + "ISVERPATRIB, "
-                                                + "TEXTTIP, "
-                                                + "WARRANTY, "
-                                                + "STOCKUNITS, "
-                                                + "PRINTTO, "
-                                                + "SUPPLIER, "
-                                                + "UOM, "
-                                                + "MEMODATE "
-                                                + "FROM products "
-                                                + "ORDER BY NAME",
-                                ProductInfo.getSerializerRead());
-        }
-
-        public SentenceList<ProductInfoExtA> getProductList2() {
-                return new StaticSentence(sessionDB,
-                                new QBFBuilder(
-                                                "SELECT "
-                                                                + "products.id, "
-                                                                + "products.name, "
-                                                                + "stockcurrent.units, "
-                                                                + "locations.name, "
-                                                                + "products.pricesell, "
-                                                                + "taxes.rate, "
-                                                                + "products.pricesell + (products.pricesell * taxes.rate) AS SellIncTax "
-                                                                + "products.category"
-                                                                + "products.ISCOM"
-                                                                + "products.ISSCALE"
-                                                                + "products.ISCONSTANT"
-                                                                + "products.ISSERVICE"
-                                                                + " FROM (((stockcurrent stockcurrent "
-                                                                + "INNER JOIN locations locations "
-                                                                + "ON (stockcurrent.location = locations.id)) "
-                                                                + "INNER JOIN products products "
-                                                                + "ON (stockcurrent.product = products.id)) "
-                                                                + "INNER JOIN taxcategories taxcategories "
-                                                                + "ON (products.taxcat = taxcategories.id)) "
-                                                                + "INNER JOIN taxes taxes "
-                                                                + "ON (taxes.category = taxcategories.id) "
-                                                                + "WHERE ?(QBF_FILTER) "
-                                                                + "GROUP BY products.name ",
-                                                new String[] { "NAME", "UNITS", "SellIncTax", "LOCATION", }),
-                                new SerializerWriteBasic(new Datas[] {
-                                                Datas.OBJECT, Datas.STRING,
-                                                Datas.OBJECT, Datas.DOUBLE,
-                                                Datas.OBJECT, Datas.DOUBLE,
-                                                Datas.OBJECT, Datas.STRING }),
-                                ProductInfoExtA.getSerializerRead());
-        }
-
-        /**
-         *
-         * @return
-         */
-        public SentenceList<ProductInfoExt> getProductListAuxiliar() {
-                return new StaticSentence(sessionDB,
-                                new QBFBuilder(
-                                                "SELECT "
-                                                                + "ID, "
-                                                                + "REFERENCE, "
-                                                                + "CODE, "
-                                                                + "CODETYPE, "
-                                                                + "NAME, "
-                                                                + "PRICEBUY, "
-                                                                + "PRICESELL, "
-                                                                + "CATEGORY, "
-                                                                + "TAXCAT, "
-                                                                + "ATTRIBUTESET_ID, "
-                                                                + "STOCKCOST, "
-                                                                + "STOCKVOLUME, "
-                                                                + "IMAGE, "
-                                                                + "ISCOM, "
-                                                                + "ISSCALE, "
-                                                                + "ISCONSTANT, "
-                                                                + "PRINTKB, "
-                                                                + "SENDSTATUS, "
-                                                                + "ISSERVICE, "
-                                                                + "ATTRIBUTES, "
-                                                                + "DISPLAY, "
-                                                                + "ISVPRICE, "
-                                                                + "ISVERPATRIB, "
-                                                                + "TEXTTIP, "
-                                                                + "WARRANTY, "
-                                                                + "STOCKUNITS, "
-                                                                + "PRINTTO, "
-                                                                + "SUPPLIER, "
-                                                                + "UOM, "
-                                                                + "MEMODATE "
-                                                                + "FROM products "
-                                                                + "WHERE ISCOM = " + sessionDB.DB.TRUE()
-                                                                + " AND ?(QBF_FILTER) "
-                                                                + "ORDER BY REFERENCE",
-                                                new String[] { "NAME", "PRICEBUY", "PRICESELL", "CATEGORY", "CODE" }),
-                                new SerializerWriteBasic(new Datas[] {
-                                                Datas.OBJECT, Datas.STRING,
-                                                Datas.OBJECT, Datas.DOUBLE,
-                                                Datas.OBJECT, Datas.DOUBLE,
-                                                Datas.OBJECT, Datas.STRING,
-                                                Datas.OBJECT, Datas.STRING }),
-                                ProductInfoExt.getSerializerRead());
-        }
-
-        /**
-         *
-         * @param productId The product id to look for bundle
-         * @return List of products part of the searched product
-         * @throws BasicException
-         */
-        public final List<ProductsBundleInfo> getProductsBundle(String productId) throws BasicException {
-                return new PreparedSentence(sessionDB,
-                                "SELECT "
-                                                + "ID, "
-                                                + "PRODUCT, "
-                                                + "PRODUCT_BUNDLE, "
-                                                + "QUANTITY "
-                                                + "FROM products_bundle WHERE PRODUCT = ?",
-                                SerializerWriteString.INSTANCE,
-                                ProductsBundleInfo.getSerializerRead()).list(productId);
-        }
-
+        
         /**
          * JG Oct 2016 Called from JPanelTicket
          *
@@ -1483,37 +831,36 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                         public Object transact() throws BasicException {
 
                                 // update the inventory
-                                Date d = new Date();
-                                for (int i = 0; i < ticket.getLinesCount(); i++) {
-                                        if (ticket.getLine(i).getProductID() != null) {
-                                                // Hay que actualizar el stock si el hay producto
+                                Date nowDate = new Date();
+                                for (int ticketLineNumber = 0; ticketLineNumber < ticket.getLinesCount(); ticketLineNumber++) {
+                                    
+                                        if (ticket.getLine(ticketLineNumber).getProductID() != null) {
                                                 getStockDiaryInsert().exec(new Object[] {
                                                                 UUID.randomUUID().toString(),
-                                                                d,
-                                                                ticket.getLine(i).getMultiply() >= 0.0
+                                                                nowDate,
+                                                                ticket.getLine(ticketLineNumber).getMultiply() >= 0.0
                                                                                 ? MovementReason.IN_REFUND.getKey()
                                                                                 : MovementReason.OUT_SALE.getKey(),
                                                                 location,
-                                                                ticket.getLine(i).getProductID(),
-                                                                ticket.getLine(i).getProductAttSetInstId(),
-                                                                ticket.getLine(i).getMultiply(),
-                                                                ticket.getLine(i).getPrice(),
+                                                                ticket.getLine(ticketLineNumber).getProductID(),
+                                                                ticket.getLine(ticketLineNumber).getProductAttSetInstId(),
+                                                                ticket.getLine(ticketLineNumber).getMultiply(),
+                                                                ticket.getLine(ticketLineNumber).getPrice(),
                                                                 ticket.getUser().getName()
                                                 });
                                         }
                                         // For productBundle
-                                        List<ProductsBundleInfo> bundle = getProductsBundle(
-                                                        (String) ticket.getLine(i).getProductID());
+                                        List<ProductsBundleInfo> bundle = getProductsBundle((String) ticket.getLine(ticketLineNumber).getProductID());
 
                                         if (bundle.size() > 0) {
                                                 for (ProductsBundleInfo bundleComponent : bundle) {
-                                                        ProductInfoExt bundleProduct = getProductInfo(
+                                                        ProductInfoExt bundleProduct = getProductInfoExtById(
                                                                         bundleComponent.getProductBundleId());
 
                                                         getStockDiaryInsert().exec(new Object[] {
                                                                         UUID.randomUUID().toString(),
-                                                                        d,
-                                                                        ticket.getLine(i).getMultiply()
+                                                                        nowDate,
+                                                                        ticket.getLine(ticketLineNumber).getMultiply()
                                                                                         * bundleComponent
                                                                                                         .getQuantity() >= 0.0
                                                                                                                         ? MovementReason.IN_REFUND
@@ -1523,7 +870,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                                                                         location,
                                                                         bundleComponent.getProductBundleId(),
                                                                         null,
-                                                                        ticket.getLine(i).getMultiply()
+                                                                        ticket.getLine(ticketLineNumber).getMultiply()
                                                                                         * bundleComponent.getQuantity(),
                                                                         bundleProduct.getPriceSell(),
                                                                         ticket.getUser().getName() });
@@ -1787,9 +1134,9 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 };
         }
 
-        private void adjustStock(Object params) throws BasicException {
+        private void adjustStock(Object[] params) throws BasicException {
 
-                List<ProductsBundleInfo> bundle = getProductsBundle((String) ((Object[]) params)[0]);
+                List<ProductsBundleInfo> bundle = getProductsBundle((String) params[0]);
 
                 if (bundle.size() > 0) {
 
@@ -1830,6 +1177,17 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                                                 .exec(params);
                         }
                 }
+        }
+        
+        /**
+         * 
+         */
+        private List<ProductsBundleInfo> getProductsBundle(String productId) throws BasicException {
+            return DataLogicPIM.getProductsBundle(productId, sessionDB);
+        }
+        
+        private ProductInfoExt getProductInfoExtById(String productId) throws BasicException {
+            return DataLogicPIM.getProductInfoExtById(productId, sessionDB);
         }
 
         /**
@@ -1927,24 +1285,6 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                                 SerializerWriteString.INSTANCE);
 
                 return sentence.exec(categoryId);
-        }
-
-        public final TableDefinition getTableCategories() {
-                return new TableDefinition(sessionDB,
-                                "categories",
-                                new String[] { "ID", "NAME", "PARENTID", "IMAGE", "TEXTTIP", "CATSHOWNAME", "CATORDER",
-                                                "CATALOGCOLOR",
-                                                "CATALOGENABLED" },
-                                new String[] { "ID", AppLocal.getIntString("label.name"), "",
-                                                AppLocal.getIntString("label.image"), "",
-                                                "", "", "", "" },
-                                new Datas[] { Datas.STRING, Datas.STRING, Datas.STRING, Datas.IMAGE, Datas.STRING,
-                                                Datas.BOOLEAN,
-                                                Datas.STRING, Datas.STRING, Datas.BOOLEAN },
-                                new Formats[] { Formats.STRING, Formats.STRING, Formats.STRING, Formats.NULL,
-                                                Formats.STRING,
-                                                Formats.BOOLEAN, Formats.STRING, Formats.STRING, Formats.BOOLEAN },
-                                new int[] { 0 });
         }
 
         public final TableDefinition getTableTaxes() {
@@ -2185,20 +1525,6 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                                                 .exec(params);
                         }
                 };
-        }
-
-        /**
-         * Updates the sell price of a product.
-         *
-         * @param productId the product ID
-         * @param newPrice  the new sell price
-         * @throws BasicException if the update fails
-         */
-        public void updateProductPrice(String productId, double newPrice) throws BasicException {
-                new PreparedSentence(sessionDB,
-                                "UPDATE PRODUCTS SET PRICESELL = ? WHERE ID = ?",
-                                new SerializerWriteBasic(new Datas[] { Datas.DOUBLE, Datas.STRING }))
-                                .exec(new Object[] { newPrice, productId });
         }
 
 }

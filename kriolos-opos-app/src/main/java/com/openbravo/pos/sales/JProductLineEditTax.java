@@ -30,6 +30,7 @@ import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.ticket.TicketLineInfo;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -605,8 +606,8 @@ public class JProductLineEditTax extends javax.swing.JDialog {
     private void m_jBtnPriceUpdateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_m_jBtnPriceUpdateActionPerformed
 
         try {
-            DataLogicSales dlSales = (DataLogicSales) this.appView.getBean("com.openbravo.pos.forms.DataLogicSales");
-            dlSales.updateProductPrice(productID, m_jPrice.getValue());
+            DataLogicPIM dataLogicPIM = (DataLogicPIM) appView.getBean("com.openbravo.pos.pim.DataLogicPIM"); 
+            dataLogicPIM.updateProductPrice(productID, m_jPrice.getValue());
             m_jBtnPriceUpdate.setEnabled(false);
         } catch (BasicException ex) {
             LOGGER.log(Level.WARNING, "Exception update products pricesell for ID: " + productID, ex);
