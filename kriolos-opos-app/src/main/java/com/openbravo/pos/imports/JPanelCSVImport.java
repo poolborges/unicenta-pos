@@ -25,6 +25,7 @@ import com.openbravo.data.user.SaveProvider;
 import com.openbravo.pos.forms.*;
 import com.openbravo.pos.inventory.DataLogicInventory;
 import com.openbravo.pos.inventory.TaxCategoryInfo;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.sales.TaxesLogic;
 import com.openbravo.pos.suppliers.DataLogicSuppliers;
 import com.openbravo.pos.ticket.ProductInfoExt;
@@ -80,6 +81,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     private DataLogicInventory m_dlInventory;
     private DataLogicImport m_dlImport;
     private DataLogicSuppliers supplierDataLogic;
+    private DataLogicPIM dataLogicPIM;
 
     protected SaveProvider spr;
 
@@ -141,6 +143,8 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         
         AppProperties props = oApp.getProperties();
         
+        this.dataLogicPIM = new DataLogicPIM();
+        this.dataLogicPIM.init(dbSession);
         
         this.supplierDataLogic = new DataLogicSuppliers();
         this.supplierDataLogic.init(dbSession);
@@ -158,9 +162,9 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         m_dlImport.init(dbSession);
 
         spr = new DefaultSaveProvider(
-                m_dlSales.getProductCatUpdate(),
-                m_dlSales.getProductCatInsert(),
-                m_dlSales.getProductCatDelete());
+                dataLogicPIM.productUpdate(),
+                dataLogicPIM.productInsert(),
+                dataLogicPIM.getProductCatDelete());
 
         last_folder = props.getProperty("CSV.last_folder");
         config_file = props.getConfigFile();
