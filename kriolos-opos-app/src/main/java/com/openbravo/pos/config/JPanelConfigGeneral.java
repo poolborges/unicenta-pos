@@ -242,7 +242,6 @@ public class JPanelConfigGeneral extends javax.swing.JPanel implements PanelConf
         setOpaque(false);
         setPreferredSize(new java.awt.Dimension(800, 450));
 
-        jPanel11.setBackground(new java.awt.Color(255, 255, 255));
         jPanel11.setOpaque(false);
         jPanel11.setPreferredSize(new java.awt.Dimension(750, 450));
 

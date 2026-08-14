@@ -140,8 +140,6 @@ public class JPanelConfigPayment extends javax.swing.JPanel implements PanelConf
         setOpaque(false);
         setPreferredSize(new java.awt.Dimension(590, 450));
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         jPanel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jPanel2.setPreferredSize(new java.awt.Dimension(600, 200));
         jPanel2.setLayout(new java.awt.GridLayout(1, 1));
@@ -159,7 +157,6 @@ public class JPanelConfigPayment extends javax.swing.JPanel implements PanelConf
             }
         });
 
-        jchkPaymentTest.setBackground(new java.awt.Color(255, 255, 255));
         jchkPaymentTest.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jchkPaymentTest.setText(AppLocal.getIntString("label.paymenttestmode")); // NOI18N
         jchkPaymentTest.setPreferredSize(new java.awt.Dimension(200, 30));
@@ -196,7 +193,7 @@ public class JPanelConfigPayment extends javax.swing.JPanel implements PanelConf
                             .addComponent(jcboPaymentGateway, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
                             .addComponent(jchkPaymentTest, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
