@@ -83,6 +83,10 @@ public abstract class Formats<T> {
 
     protected Formats() {
     }
+    
+    public static double fixDecimals(Number value) {
+        return Math.rint((value).doubleValue() * 1000000.0) / 1000000.0;
+    }
 
     public static int getCurrencyDecimals() {
         return m_currencyformat.getMaximumFractionDigits();
@@ -232,7 +236,7 @@ public abstract class Formats<T> {
 
         @Override
         protected String formatValueInt(Double value) {
-            return m_doubleformat.format(DoubleUtils.fixDecimals((Number) value)); // quickfix for 3838
+            return m_doubleformat.format(Formats.fixDecimals((Number) value)); // quickfix for 3838
         }
 
         @Override
@@ -250,7 +254,7 @@ public abstract class Formats<T> {
 
         @Override
         protected String formatValueInt(Double value) {
-            return m_percentformat.format(DoubleUtils.fixDecimals((Number) value)); // quickfix for 3838
+            return m_percentformat.format(Formats.fixDecimals((Number) value)); // quickfix for 3838
         }
 
         @Override
@@ -273,7 +277,7 @@ public abstract class Formats<T> {
 
         @Override
         protected String formatValueInt(Double value) {
-            return m_currencyformat.format(DoubleUtils.fixDecimals((Number) value)); // quickfix for 3838
+            return m_currencyformat.format(Formats.fixDecimals((Number) value)); // quickfix for 3838
         }
 
         @Override
