@@ -41,6 +41,7 @@ public class ProductsWarehousePanel extends JPanelTable2 {
 
     private JParamsLocation m_paramslocation;
     private ProductsWarehouseEditor jeditor;
+    private DataLogicInventory dlInventory;
 
     /** Creates a new instance of ProductsWarehousePanel */
     public ProductsWarehousePanel() {
@@ -51,6 +52,7 @@ public class ProductsWarehousePanel extends JPanelTable2 {
      */
     @Override
     protected void init() {
+        dlInventory = (DataLogicInventory) app.getBean("com.openbravo.pos.inventory.DataLogicInventory");
 
         m_paramslocation = new JParamsLocation();
         m_paramslocation.init(app);
@@ -66,10 +68,7 @@ public class ProductsWarehousePanel extends JPanelTable2 {
                 new Field("STOCKMAXIMUM", Datas.DOUBLE, Formats.DOUBLE),
                 new Field("UNITS", Datas.DOUBLE, Formats.DOUBLE));
 
-        lpr = new ListProviderCreator(new PreparedSentence(app.getSession(),
-                DataLogicSales.SQL_WAREHOUSE_STOCK_LIST,
-                new SerializerWriteBasicExt(new Datas[] { Datas.OBJECT, Datas.STRING }, new int[] { 1, 1 }),
-                new WarehouseSerializerRead()),
+        lpr = new ListProviderCreator(dlInventory.getWarehouseStockList(new WarehouseSerializerRead()),
                 m_paramslocation);
 
         SentenceExec updatesent = new SentenceExecTransaction(app.getSession()) {
@@ -79,12 +78,10 @@ public class ProductsWarehousePanel extends JPanelTable2 {
                 if (values[0] == null) {
                     // INSERT
                     values[0] = UUID.randomUUID().toString();
-                    return new PreparedSentence(app.getSession(), DataLogicSales.SQL_STOCKLEVEL_INSERT,
-                            new SerializerWriteBasicExt(row.getDatas(), new int[] { 0, 4, 1, 5, 6 })).exec(params);
+                    return dlInventory.getStockLevelInsert().exec(new Object[] { values[0], values[4], values[1], values[5], values[6] });
                 } else {
                     // UPDATE
-                    return new PreparedSentence(app.getSession(), DataLogicSales.SQL_STOCKLEVEL_UPDATE,
-                            new SerializerWriteBasicExt(row.getDatas(), new int[] { 5, 6, 0 })).exec(params);
+                    return dlInventory.getStockLevelUpdate().exec(new Object[] { values[5], values[6], values[0] });
                 }
             }
         };

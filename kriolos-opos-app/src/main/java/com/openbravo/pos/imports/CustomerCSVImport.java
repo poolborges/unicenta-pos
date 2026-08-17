@@ -60,6 +60,7 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
 
     private DataLogicSales m_dlSales;
     private DataLogicSystem m_dlSystem;
+    private DataLogicImport m_dlImport;
     private DataLogicCustomers m_dlCustomer;
 
     protected SaveProvider spr;
@@ -104,12 +105,18 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
         dbSession = oApp.getSession();
         
         AppProperties props = oApp.getProperties();
+        
+        m_dlCustomer = new DataLogicCustomers();
+        m_dlCustomer.init(dbSession);
 
         m_dlSales = new DataLogicSales();
         m_dlSales.init(dbSession);
 
         m_dlSystem = new DataLogicSystem();
         m_dlSystem.init(dbSession);
+
+        m_dlImport = new DataLogicImport();
+        m_dlImport.init(dbSession);
 
         spr = new DefaultSaveProvider(
                 m_dlSales.getCustomerUpdate(),
@@ -422,7 +429,7 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
      */
     private void updateRecord(String cID) throws BasicException {
 //        custInfo = new CustomerInfoExt();
-        custInfo = m_dlSales.getCustomerInfo(cID);
+        custInfo = m_dlCustomer.findCustomerInfoExtById(cID);
         createCustomer("update");
         noChange++;
     }
@@ -625,7 +632,7 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
         mycust[4] = customerName;                                               // Name string
 
         try {
-            m_dlSystem.execCustomerAddCSVEntry(mycust);
+            m_dlImport.execCustomerAddCSVEntry(mycust);
         } catch (BasicException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
@@ -641,7 +648,7 @@ public class CustomerCSVImport extends JPanel implements JPanelView {
         mycust[1] = customerName;
 
         try {
-            return (m_dlSystem.getCustomerRecordType(mycust));
+            return (m_dlImport.getCustomerRecordType(mycust));
         } catch (BasicException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }

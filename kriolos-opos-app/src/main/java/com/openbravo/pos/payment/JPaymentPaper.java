@@ -17,7 +17,6 @@ package com.openbravo.pos.payment;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.ComboBoxValModel;
-import com.openbravo.data.loader.SentenceList;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.pos.customers.DataLogicCustomers;
@@ -25,24 +24,29 @@ import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.util.RoundUtils;
+import com.openbravo.pos.voucher.DataLogicVouchers;
 import com.openbravo.pos.voucher.VoucherInfo;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author JG uniCenta
  */
 public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterface {
+    
+    private static final Logger LOGGER = Logger.getLogger(JPaymentPaper.class.getName());
 
     private final JPaymentNotifier paymentNotifier;
 
     private DataLogicSales datalogicSales;
     private DataLogicCustomers datalogicCustomers;
+    private DataLogicVouchers dataLogicVouchers;
     private ComboBoxValModel voucherComboBoxValModel;
-    private SentenceList<VoucherInfo> voucherSentenceList;
 
     private double totalPayed;
     private double totalToPay;
@@ -74,12 +78,13 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
         try {
             datalogicSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
             datalogicCustomers = (DataLogicCustomers) app.getBean("com.openbravo.pos.customers.DataLogicCustomers");
-            voucherSentenceList = datalogicSales.getVoucherList();
+            dataLogicVouchers = (DataLogicVouchers) app.getBean("com.openbravo.pos.voucher.DataLogicVouchers");
+         
 
             initComponents();
 
             voucherComboBoxValModel = new ComboBoxValModel();
-            List<VoucherInfo> voucherList = voucherSentenceList.list();
+            List<VoucherInfo> voucherList = dataLogicVouchers.getVoucherList();
             voucherList.add(0, null);
 
             voucherComboBoxValModel = new ComboBoxValModel(voucherList);
@@ -88,6 +93,7 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
             webLblcustomerName.setText(null);
 
         } catch (BasicException ex) {
+            LOGGER.log(Level.WARNING, "Exeception on init: ", ex);
         }
     }
 
@@ -125,10 +131,12 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
     public PaymentInfo executePayment() {
         try {
             String id = voucherComboBoxValModel.getSelectedKey().toString();
-            VoucherInfo m_voucherInfo1 = datalogicCustomers.getVoucherInfo(id);
+            VoucherInfo m_voucherInfo1 = dataLogicVouchers.getVoucherInfo(id);
             voucherNumber = m_voucherInfo1.getVoucherNumber();
         } catch (BasicException ex) {
+            LOGGER.log(Level.WARNING, "Exeception on execute payment: ", ex);
         }
+        
         return new PaymentInfoTicket(totalPayed, paymentMethod, voucherNumber);
 
     }
@@ -290,7 +298,7 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
             try {
 
                 String id = voucherComboBoxValModel.getSelectedKey().toString();
-                VoucherInfo m_voucherInfo = datalogicCustomers.getVoucherInfo(id);
+                VoucherInfo m_voucherInfo = dataLogicVouchers.getVoucherInfo(id);
 
                 if (m_voucherInfo != null) {
                     m_jTendered.setDoubleValue(m_voucherInfo.getAmount());
@@ -301,7 +309,7 @@ public class JPaymentPaper extends javax.swing.JPanel implements JPaymentInterfa
                     printState();
                 }
             } catch (BasicException ex) {
-//                ex.printStackTrace();
+                LOGGER.log(Level.WARNING, "Exeception on select voucher: ", ex);
             }
 
         }

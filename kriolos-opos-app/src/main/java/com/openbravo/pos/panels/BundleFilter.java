@@ -23,6 +23,7 @@ import com.openbravo.data.loader.SerializerWriteString;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.reports.ReportEditorCreator;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import java.awt.Component;
@@ -39,7 +40,8 @@ import javax.swing.event.EventListenerList;
 public class BundleFilter extends javax.swing.JPanel implements ReportEditorCreator {
 
     private ProductInfoExt product;
-    private DataLogicSales m_dlSales;
+    private DataLogicPIM dataLogicPIM;
+    private AppView appView;
     
     protected EventListenerList listeners = new EventListenerList();
 
@@ -50,7 +52,9 @@ public class BundleFilter extends javax.swing.JPanel implements ReportEditorCrea
 
     @Override
     public void init(AppView app) {   
-         m_dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
+           
+        this.appView = app;
+        this.dataLogicPIM = (DataLogicPIM) app.getBean("com.openbravo.pos.pim.DataLogicPIM");
     }
 
     @Override
@@ -119,7 +123,7 @@ public class BundleFilter extends javax.swing.JPanel implements ReportEditorCrea
 
     private void assignProductByCode() {
         try {
-            ProductInfoExt prod = m_dlSales.getProductInfoByCode(m_jBarcode1.getText());
+            ProductInfoExt prod = dataLogicPIM.getProductInfoByCode(m_jBarcode1.getText());
             if (prod == null) {
                 Toolkit.getDefaultToolkit().beep();
             }
@@ -133,7 +137,7 @@ public class BundleFilter extends javax.swing.JPanel implements ReportEditorCrea
 
     private void assignProductByReference() {
         try {
-            ProductInfoExt prod = m_dlSales.getProductInfoByReference(m_jReference1.getText());
+            ProductInfoExt prod = dataLogicPIM.getProductInfoByReference(m_jReference1.getText());
             if (prod == null) {
                 Toolkit.getDefaultToolkit().beep();
             }
@@ -277,7 +281,7 @@ public class BundleFilter extends javax.swing.JPanel implements ReportEditorCrea
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
         
-        assignProduct(JProductFinder.showMessage(this, m_dlSales, JProductFinder.PRODUCT_NORMAL));       
+        assignProduct(JProductFinder.showMessage(this, this.appView, JProductFinder.PRODUCT_NORMAL));       
         
 }//GEN-LAST:event_searchActionPerformed
 

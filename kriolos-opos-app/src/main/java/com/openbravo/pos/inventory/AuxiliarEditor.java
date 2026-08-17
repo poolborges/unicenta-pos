@@ -23,8 +23,8 @@ import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.panels.JProductFinder;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import java.awt.Component;
 import java.awt.Toolkit;
@@ -36,21 +36,25 @@ import java.util.UUID;
  */
 public class AuxiliarEditor extends javax.swing.JPanel implements EditorRecord {
 
-    private DataLogicSales m_dlSales;
+    private DataLogicPIM dataLogicPIM;
     
     private String id;
     private String product;
     private String product2;
     private String name;
-    
     private String productID;
+    
+    //
+    private AppView appView;
 
     /** Creates new form AuxiliarEditor
      * @param app
      * @param dirty */
     public AuxiliarEditor(AppView app, DirtyManager dirty) {
+           
+        this.appView = app;
 
-        m_dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
+        dataLogicPIM = (DataLogicPIM) app.getBean("com.openbravo.pos.pim.DataLogicPIM");
 
         initComponents();
      
@@ -218,7 +222,7 @@ public class AuxiliarEditor extends javax.swing.JPanel implements EditorRecord {
 
     private void assignProductByCode() {
         try {
-            ProductInfoExt prod = m_dlSales.getProductInfoByCode(m_jBarcode.getText());
+            ProductInfoExt prod = dataLogicPIM.getProductInfoByCode(m_jBarcode.getText());
             assignProduct(prod);
             if (prod == null) {
                 Toolkit.getDefaultToolkit().beep();       
@@ -233,7 +237,7 @@ public class AuxiliarEditor extends javax.swing.JPanel implements EditorRecord {
 
     private void assignProductByReference() {
         try {
-            ProductInfoExt prod = m_dlSales.getProductInfoByReference(m_jReference.getText());
+            ProductInfoExt prod = dataLogicPIM.getProductInfoByReference(m_jReference.getText());
             assignProduct(prod);
             if (prod == null) {
                 Toolkit.getDefaultToolkit().beep();       
@@ -381,7 +385,7 @@ public class AuxiliarEditor extends javax.swing.JPanel implements EditorRecord {
 
     private void m_jSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jSearchActionPerformed
         
-        assignProduct(JProductFinder.showMessage(this, m_dlSales, JProductFinder.PRODUCT_AUXILIAR));
+        assignProduct(JProductFinder.showMessage(this, appView, JProductFinder.PRODUCT_AUXILIAR));
         
 }//GEN-LAST:event_m_jSearchActionPerformed
 

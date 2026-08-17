@@ -16,8 +16,10 @@
 package com.openbravo.pos.catalog;
 
 import com.openbravo.basic.BasicException;
+import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
-import com.openbravo.pos.ticket.CategoryInfo;
+import com.openbravo.pos.pim.CategoryInfo;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import com.openbravo.pos.ticket.TaxInfo;
 import java.awt.CardLayout;
@@ -62,11 +64,11 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
     private CategoryInfo showingcategory = null;
     private CatalogController controller;
 
-    public JCatalog(DataLogicSales dlSales) {
-        this(dlSales, true, true);
+    public JCatalog(AppView app) {
+        this(app, true, true);
     }
 
-    private JCatalog(DataLogicSales dlSales, boolean pricevisible, boolean taxesincluded) {
+    private JCatalog(AppView app, boolean pricevisible, boolean taxesincluded) {
 
         this.pricevisible = pricevisible;
         this.taxesincluded = taxesincluded;
@@ -76,8 +78,12 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
 
         categoriesJList.addListSelectionListener(this);
         categoriesScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(35, 35));
+        
+        
+        DataLogicSales dataLogicSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
+        DataLogicPIM dataLogicPIM = (DataLogicPIM) app.getBean("com.openbravo.pos.pim.DataLogicPIM");
 
-        controller = new CatalogController(dlSales);
+        controller = new CatalogController(dataLogicSales, dataLogicPIM);
     }
 
     @Override

@@ -49,8 +49,7 @@ import javax.swing.JFrame;
 public class JTicketsFinder extends javax.swing.JDialog implements EditorCreator {
 
     private ListProvider lpr;
-    private SentenceList m_sentcat;
-    private ComboBoxValModel m_CategoryModel;
+    private ComboBoxValModel<TaxCategoryInfo>  m_CategoryModel;
     private DataLogicSales dlSales;
     private DataLogicCustomers dlCustomers;
     private FindTicketsInfo selectedTicket;
@@ -151,20 +150,13 @@ public class JTicketsFinder extends javax.swing.JDialog implements EditorCreator
        
         jcboMoney.setModel(ListQBFModelNumber.getMandatoryNumber());
         
-        m_sentcat = dlSales.getUserList();
+ 
         m_CategoryModel = new ComboBoxValModel(); 
         
-        List catlist=null;
+        List<TaxCategoryInfo> taxCategoryList = dlSales.getTaxCategoriesListAll();
+        taxCategoryList.add(0, null);
 
-        try {
-            catlist = m_sentcat.list();
-        } catch (BasicException ex) {
-            ex.getMessage();
-        }
-
-        catlist.add(0, null);
-
-        m_CategoryModel = new ComboBoxValModel(catlist);
+        m_CategoryModel = new ComboBoxValModel(taxCategoryList);
         jcboUser.setModel(m_CategoryModel);      
     }
     
@@ -737,7 +729,7 @@ public class JTicketsFinder extends javax.swing.JDialog implements EditorCreator
         try {
             jtxtCustomer.setText(finder.getSelectedCustomer() == null
                     ? null
-                    : dlSales.loadCustomerExt(finder.getSelectedCustomer().getId()).toString());
+                    : dlCustomers.findCustomerInfoExtById(finder.getSelectedCustomer().getId()).toString());
         } catch (BasicException e) {
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotfindcustomer"), e);
             msg.show(this);            

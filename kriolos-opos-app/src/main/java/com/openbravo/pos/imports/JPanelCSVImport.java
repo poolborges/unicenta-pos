@@ -23,7 +23,11 @@ import com.openbravo.data.loader.*;
 import com.openbravo.data.user.DefaultSaveProvider;
 import com.openbravo.data.user.SaveProvider;
 import com.openbravo.pos.forms.*;
+import com.openbravo.pos.inventory.DataLogicInventory;
+import com.openbravo.pos.inventory.TaxCategoryInfo;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.sales.TaxesLogic;
+import com.openbravo.pos.suppliers.DataLogicSuppliers;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import org.apache.commons.lang3.StringUtils;
 
@@ -74,6 +78,10 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
 
     private DataLogicSales m_dlSales;
     private DataLogicSystem m_dlSystem;
+    private DataLogicInventory m_dlInventory;
+    private DataLogicImport m_dlImport;
+    private DataLogicSuppliers supplierDataLogic;
+    private DataLogicPIM dataLogicPIM;
 
     protected SaveProvider spr;
 
@@ -81,7 +89,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     private String categoryName;
     private String categoryParentid;
     private Integer categoryCatorder;
-    private SentenceList m_sentcat;
+    private List<TaxCategoryInfo> taxCategoryInfos;
     private ComboBoxValModel m_CategoryModel;
     private HashMap cat_list = new HashMap();
     private ArrayList badCategories = new ArrayList();
@@ -134,6 +142,12 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         dbSession = oApp.getSession();
         
         AppProperties props = oApp.getProperties();
+        
+        this.dataLogicPIM = new DataLogicPIM();
+        this.dataLogicPIM.init(dbSession);
+        
+        this.supplierDataLogic = new DataLogicSuppliers();
+        this.supplierDataLogic.init(dbSession);
 
         m_dlSales = new DataLogicSales();
         m_dlSales.init(dbSession);
@@ -141,10 +155,16 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         m_dlSystem = new DataLogicSystem();
         m_dlSystem.init(dbSession);
 
+        m_dlInventory = new DataLogicInventory();
+        m_dlInventory.init(dbSession);
+
+        m_dlImport = new DataLogicImport();
+        m_dlImport.init(dbSession);
+
         spr = new DefaultSaveProvider(
-                m_dlSales.getProductCatUpdate(),
-                m_dlSales.getProductCatInsert(),
-                m_dlSales.getProductCatDelete());
+                dataLogicPIM.productUpdate(),
+                dataLogicPIM.productInsert(),
+                dataLogicPIM.getProductCatDelete());
 
         last_folder = props.getProperty("CSV.last_folder");
         config_file = props.getConfigFile();
@@ -511,10 +531,10 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
             newcat[2] = true;
 
             try {
-                m_dlSales.createCategory(newcat);
+                dataLogicPIM.createCategory(newcat);
 
                 cat_list = new HashMap<>();
-                for (Object category : m_sentcat.list()) {
+                for (Object category : taxCategoryInfos) {
                     m_CategoryModel.setSelectedItem(category);
                     cat_list.put(category.toString(), m_CategoryModel.getSelectedKey().toString());
                 }
@@ -556,7 +576,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
             newsupp[3] = true;
 
             try {
-                m_dlSales.createSupplier(newsupp);
+                supplierDataLogic.createSupplier(newsupp);
 
                 supp_list = new HashMap<>();
                 for (Object supplier : m_sentsupp.list()) {
@@ -610,7 +630,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     private void updateRecord(String pID) {
         prodInfo = new ProductInfoExt();
         try {
-            prodInfo = m_dlSales.getProductInfo(pID);
+            prodInfo = dataLogicPIM.getProductInfo(pID);
             dOriginalRate = taxeslogic.getTaxRate(prodInfo.getTaxCategoryID());
             dCategory = ((String) cat_list.get(prodInfo.getCategoryID())
                     == null) ? prodInfo.getCategoryID()
@@ -673,20 +693,20 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         taxcatmodel = new ComboBoxValModel(taxcatsent.list());
 
         // Get categories list
-        m_sentcat = m_dlSales.getCategoriesList();
-        m_CategoryModel = new ComboBoxValModel(m_sentcat.list());
+        taxCategoryInfos = m_dlSales.getTaxCategoriesListAll();
+        m_CategoryModel = new ComboBoxValModel(taxCategoryInfos);
         m_CategoryModel.add(reject_bad_category);
         jComboDefaultCategory.setModel(m_CategoryModel);
 
         // Build the cat_list for later use
         cat_list = new HashMap<>();
-        for (Object category : m_sentcat.list()) {
+        for (Object category : taxCategoryInfos) {
             m_CategoryModel.setSelectedItem(category);
             cat_list.put(category.toString(), m_CategoryModel.getSelectedKey().toString());
         }
 
         // Get suppliers list
-        m_sentsupp = m_dlSales.getSuppList();
+        m_sentsupp = supplierDataLogic.getSuppList();
         m_SupplierModel = new ComboBoxValModel(m_sentsupp.list());
         m_SupplierModel.add(reject_bad_supplier);
         jComboDefaultSupplier.setModel(m_SupplierModel);
@@ -921,14 +941,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         values[1] = ProductID;
         values[2] = (double) Units;
 
-        PreparedSentence sentence = new PreparedSentence(dbSession,
-                "INSERT INTO stockcurrent ( "
-                + "LOCATION, PRODUCT, UNITS) VALUES (?, ?, ?)",
-                 new SerializerWriteBasicExt((new Datas[]{
-            Datas.STRING, Datas.STRING, Datas.DOUBLE}),
-                        new int[]{0, 1, 2}));
-
-        sentence.exec(values);
+        m_dlInventory.getStockCurrentInsert().exec(values);
     }
 
     /**
@@ -954,7 +967,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         myprod[11] = productTax;                                                // Tax
         myprod[12] = Supplier;                                                  // Supplier
         try {
-            m_dlSystem.execAddCSVEntry(myprod);
+            m_dlImport.execAddCSVEntry(myprod);
         } catch (BasicException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
@@ -971,7 +984,7 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         myprod[1] = productBarcode;
         myprod[2] = productName;
         try {
-            return (m_dlSystem.getProductRecordType(myprod));
+            return (m_dlImport.getProductRecordType(myprod));
         } catch (BasicException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
@@ -1799,17 +1812,13 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
 
     private void jComboCategoryItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboCategoryItemStateChanged
 
-        try {
-            if (jComboCategory.getSelectedItem() == "[ USE DEFAULT CATEGORY ]") {
-                m_CategoryModel = new ComboBoxValModel(m_sentcat.list());
-                jComboDefaultCategory.setModel(m_CategoryModel);
-            } else {
-                m_CategoryModel = new ComboBoxValModel(m_sentcat.list());
-                m_CategoryModel.add(reject_bad_category);
-                jComboDefaultCategory.setModel(m_CategoryModel);
-            }
-        } catch (BasicException ex) {
-            LOGGER.log(Level.WARNING, null, ex);
+        if (jComboCategory.getSelectedItem() == "[ USE DEFAULT CATEGORY ]") {
+            m_CategoryModel = new ComboBoxValModel(taxCategoryInfos);
+            jComboDefaultCategory.setModel(m_CategoryModel);
+        } else {
+            m_CategoryModel = new ComboBoxValModel(taxCategoryInfos);
+            m_CategoryModel.add(reject_bad_category);
+            jComboDefaultCategory.setModel(m_CategoryModel);
         }
         checkFieldMapping();
     }//GEN-LAST:event_jComboCategoryItemStateChanged

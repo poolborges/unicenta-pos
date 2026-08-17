@@ -174,7 +174,7 @@ public class JDialogNewCustomer extends javax.swing.JDialog {
         getContentPane().add(jPanel2, java.awt.BorderLayout.SOUTH);
 
         setSize(new java.awt.Dimension(714, 487));
-        //REMOVED SET LOCATION RELATIVE TO
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void m_jBtnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jBtnOKActionPerformed
@@ -194,7 +194,7 @@ public class JDialogNewCustomer extends javax.swing.JDialog {
                 int status = dlCustomer.getTableCustomers().getInsertSentence().exec(customer);
 
                 if (status > 0) {
-                    selectedCustomer = dlSales.loadCustomerExt(m_oId);
+                    selectedCustomer = dlCustomer.findCustomerInfoExtById(m_oId);
                     dispose();
                 } else {
                     MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE,

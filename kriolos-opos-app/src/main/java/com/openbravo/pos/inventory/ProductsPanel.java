@@ -24,6 +24,7 @@ import com.openbravo.data.user.DefaultSaveProvider;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.panels.JPanelTable2;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.ticket.ProductFilter;
 
 import java.awt.Component;
@@ -39,7 +40,7 @@ public class ProductsPanel extends JPanelTable2 implements EditorListener {
     private ProductsEditor jeditor;
     private ProductFilter jproductfilter = null;        
     
-    private DataLogicSales m_dlSales = null;
+    private DataLogicPIM dataLogicPIM = null;
     
     public ProductsPanel() {
     }
@@ -49,19 +50,19 @@ public class ProductsPanel extends JPanelTable2 implements EditorListener {
      */
     @Override
     protected void init() {   
-        m_dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
+        dataLogicPIM = (DataLogicPIM) app.getBean("com.openbravo.pos.pim.DataLogicPIM");
         
         jproductfilter = new ProductFilter();     
         jproductfilter.init(app);
 
-        row = m_dlSales.getProductsRow();
+        row = dataLogicPIM.getProductsRow();
 
-        lpr =  new ListProviderCreator(m_dlSales.getProductCatQBF());
+        lpr =  new ListProviderCreator(dataLogicPIM.getProductCatQBF());
 
         spr = new DefaultSaveProvider(
-            m_dlSales.getProductCatUpdate(),
-            m_dlSales.getProductCatInsert(),
-            m_dlSales.getProductCatDelete());
+            dataLogicPIM.productUpdate(),
+            dataLogicPIM.productInsert(),
+            dataLogicPIM.getProductCatDelete());
         
         jeditor = new ProductsEditor(app, dirty);       
     }

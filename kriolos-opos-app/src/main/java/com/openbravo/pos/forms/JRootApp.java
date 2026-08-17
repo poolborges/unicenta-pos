@@ -532,11 +532,12 @@ public class JRootApp extends JPanel implements AppView {
         statusBarFirstPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         appInfoLabel.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        appInfoLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         appInfoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/display.png"))); // NOI18N
         appInfoLabel.setText("*Hostname");
-        appInfoLabel.setMaximumSize(new java.awt.Dimension(200, 32));
-        appInfoLabel.setMinimumSize(new java.awt.Dimension(200, 32));
-        appInfoLabel.setPreferredSize(new java.awt.Dimension(200, 32));
+        appInfoLabel.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        appInfoLabel.setMinimumSize(new java.awt.Dimension(200, 40));
+        appInfoLabel.setPreferredSize(new java.awt.Dimension(400, 40));
         statusBarFirstPanel.add(appInfoLabel);
 
         statusBarPanel.add(statusBarFirstPanel);

@@ -20,7 +20,9 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.user.ListProvider;
 import com.openbravo.data.user.ListProviderCreator;
 import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.ticket.ProductFilterSales;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import com.openbravo.pos.ticket.ProductRenderer;
@@ -39,7 +41,7 @@ public class JProductFinder extends javax.swing.JDialog {
     public final static int PRODUCT_NORMAL = 1;
     public final static int PRODUCT_AUXILIAR = 2;
     public final static int PRODUCT_BUNDLE = 3;    
-    private DataLogicSales dlSales;
+    private DataLogicPIM dataLogicPIM;
     
     private JProductFinder(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -49,25 +51,28 @@ public class JProductFinder extends javax.swing.JDialog {
         super(parent, modal);
     }    
     
-    private ProductInfoExt init(DataLogicSales dlSales, int productsType) {
+    private ProductInfoExt init(AppView app, int productsType) {
 
         initComponents();      
+        
+        
+        dataLogicPIM = (DataLogicPIM) app.getBean("com.openbravo.pos.pim.DataLogicPIM");
         
         jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(35, 35));
         jScrollPane1.getHorizontalScrollBar().setPreferredSize(new Dimension(35, 35));        
 
-        ProductFilterSales jproductfilter = new ProductFilterSales(dlSales, m_jKeys);
+        ProductFilterSales jproductfilter = new ProductFilterSales(app, m_jKeys);
         jproductfilter.activate();
         m_jProductSelect.add(jproductfilter, BorderLayout.CENTER);
         switch (productsType) {
             case PRODUCT_NORMAL:
-                lpr = new ListProviderCreator(dlSales.getProductListNormal(), jproductfilter);
+                lpr = new ListProviderCreator(dataLogicPIM.getProductListNormal(), jproductfilter);
                 break;
             case PRODUCT_AUXILIAR:               
-                lpr = new ListProviderCreator(dlSales.getProductListAuxiliar(), jproductfilter);
+                lpr = new ListProviderCreator(dataLogicPIM.getProductListAuxiliar(), jproductfilter);
                 break;
             default: // PRODUCT_ALL
-                lpr = new ListProviderCreator(dlSales.getProductList(), jproductfilter);                
+                lpr = new ListProviderCreator(dataLogicPIM.getProductList(), jproductfilter);                
                 break;
                 
         }
@@ -101,8 +106,8 @@ public class JProductFinder extends javax.swing.JDialog {
      * @param dlSales
      * @return
      */
-    public static ProductInfoExt showMessage(Component parent, DataLogicSales dlSales) {
-        return showMessage(parent, dlSales, PRODUCT_ALL);
+    public static ProductInfoExt showMessage(Component parent, AppView app) {
+        return showMessage(parent, app, PRODUCT_ALL);
     }
 
     /**
@@ -112,7 +117,7 @@ public class JProductFinder extends javax.swing.JDialog {
      * @param productsType
      * @return
      */
-    public static ProductInfoExt showMessage(Component parent, DataLogicSales dlSales, int productsType) {
+    public static ProductInfoExt showMessage(Component parent, AppView app, int productsType) {
 
         Window window = getWindow(parent);
 
@@ -122,7 +127,7 @@ public class JProductFinder extends javax.swing.JDialog {
         } else {
             myMsg = new JProductFinder((Dialog) window, true);
         }
-        return myMsg.init(dlSales, productsType);
+        return myMsg.init(app, productsType);
     }
     
     private static class MyListData extends javax.swing.AbstractListModel {
@@ -285,7 +290,7 @@ public class JProductFinder extends javax.swing.JDialog {
         getContentPane().add(jPanel4, java.awt.BorderLayout.EAST);
 
         setSize(new java.awt.Dimension(758, 634));
-        //REMOVED SET LOCATION RELATIVE TO
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jListProductsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListProductsMouseClicked

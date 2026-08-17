@@ -34,6 +34,7 @@ import com.openbravo.data.loader.SentenceList;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.catalog.CatalogSelector;
 import com.openbravo.pos.catalog.JCatalog;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.printer.TicketParser;
 import com.openbravo.pos.sales.JProductAttEdit;
 import com.openbravo.pos.ticket.ProductInfoExt;
@@ -51,6 +52,7 @@ public final class StockDiaryEditor extends javax.swing.JPanel implements Editor
     private final DataLogicSystem m_dlSystem;    
     private final DataLogicSales m_dlSales;
     private final DataLogicSuppliers m_dlSuppliers;    
+    private DataLogicPIM dataLogicPIM;
     private final TicketParser m_TTP;
     
     private final CatalogSelector m_cat;
@@ -85,7 +87,8 @@ public final class StockDiaryEditor extends javax.swing.JPanel implements Editor
         m_App = app;
         m_dlSystem = (DataLogicSystem) m_App.getBean("com.openbravo.pos.forms.DataLogicSystem");
         m_dlSales = (DataLogicSales) m_App.getBean("com.openbravo.pos.forms.DataLogicSales");
-        m_dlSuppliers = (DataLogicSuppliers) m_App.getBean("com.openbravo.pos.suppliers.DataLogicSuppliers");        
+        m_dlSuppliers = (DataLogicSuppliers) m_App.getBean("com.openbravo.pos.suppliers.DataLogicSuppliers");   
+        dataLogicPIM = (DataLogicPIM) app.getBean("com.openbravo.pos.pim.DataLogicPIM");
         m_TTP = new TicketParser(m_App.getDeviceTicket(), m_dlSystem);
         
         initComponents();
@@ -111,7 +114,7 @@ public final class StockDiaryEditor extends javax.swing.JPanel implements Editor
 
         m_jreason.setModel(m_ReasonModel);
 
-        m_cat = new JCatalog(m_dlSales);
+        m_cat = new JCatalog(app);
         m_cat.addActionListener(new CatalogListener());
 
         catcontainer.add(m_cat.getComponent(), BorderLayout.CENTER);        
@@ -440,7 +443,7 @@ public final class StockDiaryEditor extends javax.swing.JPanel implements Editor
     
     private void assignProductByCode() {
         try {
-            ProductInfoExt oProduct = m_dlSales.getProductInfoByCode(m_jcodebar.getText());
+            ProductInfoExt oProduct = dataLogicPIM.getProductInfoByCode(m_jcodebar.getText());
             if (oProduct == null) {       
                 assignProduct(null);
                 Toolkit.getDefaultToolkit().beep();                   
@@ -456,7 +459,7 @@ public final class StockDiaryEditor extends javax.swing.JPanel implements Editor
     
     private void assignProductByReference() {
         try {
-            ProductInfoExt oProduct = m_dlSales.getProductInfoByReference(m_jreference.getText());
+            ProductInfoExt oProduct = dataLogicPIM.getProductInfoByReference(m_jreference.getText());
             if (oProduct == null) {       
                 assignProduct(null);
                 Toolkit.getDefaultToolkit().beep();                   
@@ -921,7 +924,7 @@ public final class StockDiaryEditor extends javax.swing.JPanel implements Editor
 
     private void jEditProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jEditProductActionPerformed
         
-        assignProduct(JProductFinder.showMessage(this, m_dlSales));
+        assignProduct(JProductFinder.showMessage(this, m_App));
 
 }//GEN-LAST:event_jEditProductActionPerformed
 

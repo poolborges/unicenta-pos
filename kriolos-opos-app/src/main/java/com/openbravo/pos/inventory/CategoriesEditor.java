@@ -19,7 +19,6 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.ComboBoxValModel;
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
-import com.openbravo.data.loader.SentenceList;
 import com.openbravo.data.user.DirtyManager;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
@@ -40,7 +39,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import com.openbravo.pos.catalog.CategoryStock;
-import com.openbravo.pos.ticket.CategoryInfo;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.util.DataTypeUtils;
 import java.awt.Font;
 import javax.swing.table.JTableHeader;
@@ -60,6 +59,7 @@ public final class CategoriesEditor extends JPanel implements EditorRecord {
     private CategoriesEditor.StockTableModel stockModel;
 
     private final DataLogicSales dlSales;
+    private final DataLogicPIM dataLogicPIM;
 
     /**
      * Creates new form JPanelCategories
@@ -71,6 +71,7 @@ public final class CategoriesEditor extends JPanel implements EditorRecord {
 
         initComponents();
 
+        dataLogicPIM = (DataLogicPIM) app.getBean("com.openbravo.pos.pim.DataLogicPIM");
         dlSales = (DataLogicSales) app.getBean("com.openbravo.pos.forms.DataLogicSales");
         categoryParentModel = new ComboBoxValModel(); 
 
@@ -93,7 +94,7 @@ public final class CategoriesEditor extends JPanel implements EditorRecord {
     @Override
     public void refresh() {
 
-        List categories = dlSales.getCategoriesListAll();
+        List categories = dataLogicPIM.getCategoriesListAll();
         categories.add(0, null);
         categoryParentModel = new ComboBoxValModel(categories);
         categoryParentCombox.setModel(categoryParentModel);
@@ -266,7 +267,7 @@ public final class CategoriesEditor extends JPanel implements EditorRecord {
     private List<CategoryStock> getProductsByCategoryId(String categoryId) {
 
         try {
-            categoryStockList = dlSales.getCategorysProductList(categoryId);
+            categoryStockList = dataLogicPIM.getCategorysProductList(categoryId);
         }
         catch (BasicException ex) {
             LOGGER.log(Level.SEVERE, "Exception get products by category id: " + categoryId, ex);

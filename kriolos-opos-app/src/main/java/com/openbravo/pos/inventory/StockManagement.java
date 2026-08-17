@@ -29,6 +29,7 @@ import com.openbravo.pos.catalog.CatalogSelector;
 import com.openbravo.pos.catalog.JCatalog;
 import com.openbravo.pos.forms.*;
 import com.openbravo.pos.panels.JProductFinder;
+import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.printer.TicketParser;
 import com.openbravo.pos.printer.TicketPrinterException;
 import com.openbravo.pos.sales.JProductAttEdit2;
@@ -71,6 +72,7 @@ public class StockManagement extends JPanel implements JPanelView {
     private final DataLogicSystem m_dlSystem;
     private final DataLogicSales m_dlSales;
     private final DataLogicSuppliers m_dlSuppliers;
+    private DataLogicPIM dataLogicPIM;
     private final TicketParser m_TTP;
 
     private final CatalogSelector m_cat;
@@ -120,6 +122,7 @@ public class StockManagement extends JPanel implements JPanelView {
         m_dlSystem = (DataLogicSystem) m_App.getBean("com.openbravo.pos.forms.DataLogicSystem");
         m_dlSales = (DataLogicSales) m_App.getBean("com.openbravo.pos.forms.DataLogicSales");
         m_dlSuppliers = (DataLogicSuppliers) m_App.getBean("com.openbravo.pos.suppliers.DataLogicSuppliers");
+        dataLogicPIM = (DataLogicPIM) app.getBean("com.openbravo.pos.pim.DataLogicPIM");
         m_TTP = new TicketParser(m_App.getDeviceTicket(), m_dlSystem);
         stockModel = new ProductStockTableModel(new ArrayList<>());
 
@@ -156,7 +159,7 @@ public class StockManagement extends JPanel implements JPanelView {
 
         m_SuppliersModel = new ComboBoxValModel();
 
-        m_cat = new JCatalog(m_dlSales);
+        m_cat = new JCatalog(app);
         m_cat.addActionListener(new CatalogListener());
         catcontainer.add(m_cat.getComponent(), BorderLayout.CENTER);
 
@@ -283,7 +286,7 @@ public class StockManagement extends JPanel implements JPanelView {
     private void incProductByCode(String sCode, double dQuantity) {
 
         try {
-            ProductInfoExt oProduct = m_dlSales.getProductInfoByCode(sCode);
+            ProductInfoExt oProduct = dataLogicPIM.getProductInfoByCode(sCode);
             if (oProduct == null) {
                 Toolkit.getDefaultToolkit().beep();
             } else {
@@ -1288,7 +1291,7 @@ public class StockManagement extends JPanel implements JPanelView {
 
     private void m_jListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jListActionPerformed
 
-        ProductInfoExt prod = JProductFinder.showMessage(StockManagement.this, m_dlSales);
+        ProductInfoExt prod = JProductFinder.showMessage(StockManagement.this, m_App);
         if (prod != null) {
             buttonTransition(prod);
         }

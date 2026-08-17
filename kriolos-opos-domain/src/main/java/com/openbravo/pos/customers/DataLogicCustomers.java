@@ -34,16 +34,16 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
 
     protected Session s;
     private static final Datas[] RESERVATION_DATA = new Datas[]{
-        Datas.STRING,     //R.ID 
-        Datas.TIMESTAMP,  //R.CREATED
-        Datas.TIMESTAMP,  //R.DATENEW
-        Datas.STRING,     //C.CUSTOMER
-        Datas.STRING,     //customers.TAXID
-        Datas.STRING,     //customers.SEARCHKEY
-        Datas.STRING,     //COALESCE(customers.NAME, R.TITLE)
-        Datas.INT,        //R.CHAIRS
-        Datas.BOOLEAN,    //R.ISDONE
-        Datas.STRING      //R.DESCRIPTION
+        Datas.STRING, //R.ID 
+        Datas.TIMESTAMP, //R.CREATED
+        Datas.TIMESTAMP, //R.DATENEW
+        Datas.STRING, //C.CUSTOMER
+        Datas.STRING, //customers.TAXID
+        Datas.STRING, //customers.SEARCHKEY
+        Datas.STRING, //COALESCE(customers.NAME, R.TITLE)
+        Datas.INT, //R.CHAIRS
+        Datas.BOOLEAN, //R.ISDONE
+        Datas.STRING //R.DESCRIPTION
     };
 
     private static final Datas[] CUSTOMER_DATA = new Datas[]{
@@ -291,37 +291,7 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
         return tcustomers;
     }
 
-    // <editor-fold defaultstate="collapsed" desc="Voucher">
-    public final PreparedSentence getVoucherNumber() {
-        return new PreparedSentence(s,
-                "SELECT SUBSTRING(MAX(VOUCHER_NUMBER),10,3) AS LAST_NUMBER FROM vouchers "
-                + "WHERE SUBSTRING(VOUCHER_NUMBER,1,8) = ?",
-                SerializerWriteString.INSTANCE, (SerializerRead<String>) (DataRead dr) -> dr.getString(1));
-    }
-
-    public final VoucherInfo getVoucherInfo(String id) throws BasicException {
-        return (VoucherInfo) new PreparedSentence(s,
-                "SELECT vouchers.ID, VOUCHER_NUMBER, CUSTOMER, "
-                + "customers.NAME, AMOUNT, STATUS "
-                + "FROM vouchers "
-                + "JOIN customers ON customers.id = vouchers.CUSTOMER "
-                + "WHERE STATUS='A' AND vouchers.ID=?" //"WHERE STATUS='A' "                         
-                ,
-                 SerializerWriteString.INSTANCE,
-                VoucherInfo.getSerializerRead()).<VoucherInfo>find(id);
-    }
-
-    public final VoucherInfo getVoucherInfoAll(String id) throws BasicException {
-        return (VoucherInfo) new PreparedSentence(s,
-                "SELECT vouchers.ID, VOUCHER_NUMBER, CUSTOMER, "
-                + "customers.NAME, AMOUNT, STATUS "
-                + "FROM vouchers "
-                + "JOIN customers ON customers.id = vouchers.CUSTOMER  "
-                + "WHERE vouchers.ID=?",
-                SerializerWriteString.INSTANCE,
-                VoucherInfo.getSerializerRead()).<VoucherInfo>find(id);
-    }
-    // </editor-fold>
+    
 
     protected static class CustomerInfoRead implements SerializerRead<CustomerInfo> {
 
@@ -399,6 +369,170 @@ public class DataLogicCustomers extends BeanFactoryDataSingle {
                 customerSentenceExecUpdate(),
                 customerSentenceExecInsert(),
                 customerSentenceExecDelete());
+    }
+
+    /**
+     *
+     * @param card
+     * @return
+     * @throws BasicException
+     */
+    public CustomerInfoExt findCustomerInfoExtByCard(String card) throws BasicException {
+        return (CustomerInfoExt) new PreparedSentence(this.s,
+                "SELECT "
+                + "ID, "
+                + "TAXID, "
+                + "SEARCHKEY, "
+                + "NAME, "
+                + "TAXCATEGORY, "
+                + "CARD, "
+                + "MAXDEBT, "
+                + "ADDRESS, "
+                + "ADDRESS2, "
+                + "POSTAL, "
+                + "CITY, "
+                + "REGION, "
+                + "COUNTRY, "
+                + "FIRSTNAME, "
+                + "LASTNAME, "
+                + "EMAIL, "
+                + "PHONE, "
+                + "PHONE2, "
+                + "FAX, "
+                + "NOTES, "
+                + "VISIBLE, "
+                + "CURDATE, "
+                + "CURDEBT, "
+                + "IMAGE, "
+                + "ISVIP, "
+                + "DISCOUNT, "
+                + "MEMODATE "
+                + "FROM customers "
+                + "WHERE CARD = ? AND VISIBLE = " + this.s.DB.TRUE() + " "
+                + "ORDER BY NAME",
+                SerializerWriteString.INSTANCE,
+                new CustomerInfoExtRead()).find(card);
+    }
+
+    /**
+     *
+     * @param name
+     * @return
+     * @throws BasicException
+     */
+    public CustomerInfoExt findCustomerInfoExtByName(String name) throws BasicException {
+        return (CustomerInfoExt) new PreparedSentence(this.s,
+                "SELECT "
+                + "ID, "
+                + "SEARCHKEY, "
+                + "TAXID, "
+                + "NAME, "
+                + "TAXCATEGORY, "
+                + "CARD, "
+                + "MAXDEBT, "
+                + "ADDRESS, "
+                + "ADDRESS2, "
+                + "POSTAL, "
+                + "CITY, "
+                + "REGION, "
+                + "COUNTRY, "
+                + "FIRSTNAME, "
+                + "LASTNAME, "
+                + "EMAIL, "
+                + "PHONE, "
+                + "PHONE2, "
+                + "FAX, "
+                + "NOTES, "
+                + "VISIBLE, "
+                + "CURDATE, "
+                + "CURDEBT, "
+                + "IMAGE, "
+                + "ISVIP, "
+                + "DISCOUNT, "
+                + "MEMODATE "
+                + "FROM customers "
+                + "WHERE NAME = ? AND VISIBLE = " + this.s.DB.TRUE() + " "
+                + "ORDER BY NAME",
+                SerializerWriteString.INSTANCE,
+                new CustomerInfoExtRead()).find(name);
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     * @throws BasicException
+     */
+    public final CustomerInfoExt findCustomerInfoExtById(String id) throws BasicException {
+        return new PreparedSentence<String, CustomerInfoExt>(this.s,
+                "SELECT "
+                + "ID, "
+                + "SEARCHKEY, "
+                + "TAXID, "
+                + "NAME, "
+                + "TAXCATEGORY, "
+                + "CARD, "
+                + "MAXDEBT, "
+                + "ADDRESS, "
+                + "ADDRESS2, "
+                + "POSTAL, "
+                + "CITY, "
+                + "REGION, "
+                + "COUNTRY, "
+                + "FIRSTNAME, "
+                + "LASTNAME, "
+                + "EMAIL, "
+                + "PHONE, "
+                + "PHONE2, "
+                + "FAX, "
+                + "NOTES, "
+                + "VISIBLE, "
+                + "CURDATE, "
+                + "CURDEBT, "
+                + "IMAGE, "
+                + "ISVIP, "
+                + "DISCOUNT, "
+                + "MEMODATE "
+                + "FROM customers WHERE ID = ?",
+                SerializerWriteString.INSTANCE,
+                new CustomerInfoExtRead()).find(id);
+    }
+
+    protected static class CustomerInfoExtRead implements SerializerRead<CustomerInfoExt> {
+
+        @Override
+        public CustomerInfoExt readValues(DataRead dr) throws BasicException {
+            CustomerInfoExt c = new CustomerInfoExt(dr.getString(1));
+            c.setSearchkey(dr.getString(2));
+            c.setTaxid(dr.getString(3));
+            c.setTaxCustomerID(dr.getString(3));
+            c.setName(dr.getString(4));
+            c.setTaxCustCategoryID(dr.getString(5));
+            c.setCard(dr.getString(6));
+            c.setMaxdebt(dr.getDouble(7));
+            c.setAddress(dr.getString(8));
+            c.setAddress2(dr.getString(9));
+            c.setPostal(dr.getString(10));
+            c.setCity(dr.getString(11));
+            c.setRegion(dr.getString(12));
+            c.setCountry(dr.getString(13));
+            c.setFirstname(dr.getString(14));
+            c.setLastname(dr.getString(15));
+            c.setEmail(dr.getString(16));
+            c.setPhone1(dr.getString(17));
+            c.setPhone2(dr.getString(18));
+            c.setFax(dr.getString(19));
+            c.setNotes(dr.getString(20));
+            c.setVisible(dr.getBoolean(21));
+            c.setCurdate(dr.getTimestamp(22));
+            c.setAccdebt(dr.getDouble(23));
+            c.setImage(ImageUtils.readImage(dr.getBytes(24)));
+            c.setisVIP(dr.getBoolean(25));
+            c.setDiscount(dr.getDouble(26));
+            c.setMemoDate(dr.getString(27));
+
+            return c;
+        }
     }
 
 }

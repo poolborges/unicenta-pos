@@ -55,7 +55,7 @@ public class JPanelConfigCompany extends javax.swing.JPanel implements PanelConf
 // JG - For future
         lblLogo.setVisible(false);
         jLbllogoPath.setVisible(false);
-        webSwtch_Logo.setVisible(false);
+        printCompanyLogo.setVisible(false);
         
     }
 
@@ -140,9 +140,7 @@ public class JPanelConfigCompany extends javax.swing.JPanel implements PanelConf
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblTktHeader1 = new javax.swing.JLabel();
-        lblTktFooter1 = new javax.swing.JLabel();
-        webSwtch_Logo = new javax.swing.JCheckBox();
+        printCompanyLogo = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         jtxtTktHeader3 = new javax.swing.JTextField();
         jtxtTktFooter6 = new javax.swing.JTextField();
@@ -157,30 +155,20 @@ public class JPanelConfigCompany extends javax.swing.JPanel implements PanelConf
         jtxtTktFooter2 = new javax.swing.JTextField();
         jtxtTktFooter1 = new javax.swing.JTextField();
         jLogo = new javax.swing.JLabel();
+        lblTktHeader1 = new javax.swing.JLabel();
+        lblTktFooter1 = new javax.swing.JLabel();
         jLbllogoPath = new javax.swing.JLabel();
         lblLogo = new javax.swing.JLabel();
 
         setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         setOpaque(false);
-        setPreferredSize(new java.awt.Dimension(700, 500));
+        setPreferredSize(new java.awt.Dimension(700, 530));
 
-        lblTktHeader1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        lblTktHeader1.setText(AppLocal.getIntString("label.tktheader1")); // NOI18N
-        lblTktHeader1.setMaximumSize(new java.awt.Dimension(0, 25));
-        lblTktHeader1.setMinimumSize(new java.awt.Dimension(0, 0));
-        lblTktHeader1.setPreferredSize(new java.awt.Dimension(150, 30));
-
-        lblTktFooter1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        lblTktFooter1.setText(AppLocal.getIntString("label.tktfooter1")); // NOI18N
-        lblTktFooter1.setMaximumSize(new java.awt.Dimension(0, 25));
-        lblTktFooter1.setMinimumSize(new java.awt.Dimension(0, 0));
-        lblTktFooter1.setPreferredSize(new java.awt.Dimension(150, 30));
-
-        webSwtch_Logo.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        webSwtch_Logo.setPreferredSize(new java.awt.Dimension(80, 30));
-        webSwtch_Logo.addActionListener(new java.awt.event.ActionListener() {
+        printCompanyLogo.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        printCompanyLogo.setPreferredSize(new java.awt.Dimension(80, 30));
+        printCompanyLogo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                webSwtch_LogoActionPerformed(evt);
+                printCompanyLogoActionPerformed(evt);
             }
         });
 
@@ -276,6 +264,18 @@ public class JPanelConfigCompany extends javax.swing.JPanel implements PanelConf
         jLogo.setOpaque(true);
         jLogo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
+        lblTktHeader1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lblTktHeader1.setText(AppLocal.getIntString("label.tktheader1")); // NOI18N
+        lblTktHeader1.setMaximumSize(new java.awt.Dimension(0, 25));
+        lblTktHeader1.setMinimumSize(new java.awt.Dimension(0, 0));
+        lblTktHeader1.setPreferredSize(new java.awt.Dimension(150, 30));
+
+        lblTktFooter1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lblTktFooter1.setText(AppLocal.getIntString("label.tktfooter1")); // NOI18N
+        lblTktFooter1.setMaximumSize(new java.awt.Dimension(0, 25));
+        lblTktFooter1.setMinimumSize(new java.awt.Dimension(0, 0));
+        lblTktFooter1.setPreferredSize(new java.awt.Dimension(150, 30));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -283,28 +283,34 @@ public class JPanelConfigCompany extends javax.swing.JPanel implements PanelConf
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jtxtTktFooter5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jtxtTktFooter4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jtxtTktFooter3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jtxtTktFooter2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jtxtTktFooter1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jtxtTktHeader6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jtxtTktHeader5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jtxtTktHeader4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jtxtTktHeader3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jtxtTktHeader2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jtxtTktHeader1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jtxtTktFooter6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblTktHeader1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jtxtTktFooter5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jtxtTktFooter4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jtxtTktFooter3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jtxtTktFooter2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jtxtTktFooter1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jtxtTktHeader6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jtxtTktHeader5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jtxtTktHeader4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jtxtTktHeader3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jtxtTktHeader2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jtxtTktHeader1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jtxtTktFooter6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTktFooter1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblTktHeader1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jtxtTktHeader1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
                 .addComponent(jtxtTktHeader2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -316,7 +322,9 @@ public class JPanelConfigCompany extends javax.swing.JPanel implements PanelConf
                 .addComponent(jtxtTktHeader5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
                 .addComponent(jtxtTktHeader6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblTktFooter1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jtxtTktFooter1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
                 .addComponent(jtxtTktFooter2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -331,16 +339,15 @@ public class JPanelConfigCompany extends javax.swing.JPanel implements PanelConf
                 .addContainerGap())
         );
 
-        jLbllogoPath.setBackground(new java.awt.Color(255, 255, 255));
-        jLbllogoPath.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLbllogoPath.setForeground(new java.awt.Color(153, 153, 153));
-        jLbllogoPath.setText(AppLocal.getIntString("label.tktheader1")); // NOI18N
+        jLbllogoPath.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLbllogoPath.setText(AppLocal.getIntString("label.tktLogoPath")); // NOI18N
         jLbllogoPath.setMaximumSize(new java.awt.Dimension(0, 25));
         jLbllogoPath.setMinimumSize(new java.awt.Dimension(0, 0));
         jLbllogoPath.setPreferredSize(new java.awt.Dimension(150, 30));
 
         lblLogo.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         lblLogo.setText(AppLocal.getIntString("label.tktheader1")); // NOI18N
+        lblLogo.setFocusable(false);
         lblLogo.setMaximumSize(new java.awt.Dimension(0, 25));
         lblLogo.setMinimumSize(new java.awt.Dimension(0, 0));
         lblLogo.setPreferredSize(new java.awt.Dimension(150, 30));
@@ -351,50 +358,39 @@ public class JPanelConfigCompany extends javax.swing.JPanel implements PanelConf
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(lblTktFooter1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblTktHeader1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(lblLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(webSwtch_Logo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jLbllogoPath, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblLogo, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                    .addComponent(jLbllogoPath, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(printCompanyLogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(lblLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(webSwtch_Logo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(52, 52, 52)
-                        .addComponent(lblTktHeader1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(126, 126, 126)
+                        .addComponent(lblLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLbllogoPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(38, 38, 38)
-                        .addComponent(lblTktFooter1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(printCompanyLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void webSwtch_LogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_webSwtch_LogoActionPerformed
+    private void printCompanyLogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printCompanyLogoActionPerformed
 // JG - For future
-        if (webSwtch_Logo.isSelected()) {
+        if (printCompanyLogo.isSelected()) {
 
         } else {
 
         }
 
-    }//GEN-LAST:event_webSwtch_LogoActionPerformed
+    }//GEN-LAST:event_printCompanyLogoActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -416,7 +412,7 @@ public class JPanelConfigCompany extends javax.swing.JPanel implements PanelConf
     private javax.swing.JLabel lblLogo;
     private javax.swing.JLabel lblTktFooter1;
     private javax.swing.JLabel lblTktHeader1;
-    private javax.swing.JCheckBox webSwtch_Logo;
+    private javax.swing.JCheckBox printCompanyLogo;
     // End of variables declaration//GEN-END:variables
     
 }
