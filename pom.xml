@@ -148,6 +148,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>kriolos-opos-app</module>
         <module>kriolos-opos-jpackage</module>
         <module>docs</module>
+        <module>kriolos-opos-l10n-pt-cv</module>
     </modules>
 
     <dependencyManagement>
@@ -196,6 +197,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <groupId>${project.groupId}</groupId>
                 <artifactId>kriolos-opos-lib-report</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-spi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.google.auto.service</groupId>
+                <artifactId>auto-service</artifactId>
+                <version>1.1.1</version>
+                <scope>provided</scope>
             </dependency>
             
             <dependency>
@@ -312,13 +325,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.15.0</version>
                     <configuration>
+                        <!-- Inherits global properties definition keys -->
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                        <failOnError>true</failOnError>
+                        
+                        <!-- Code quality auditing flags -->
                         <showWarnings>true</showWarnings>
                         <showDeprecation>true</showDeprecation>
+                        
+                        <!-- Advanced bytecode debugging setup for native stacktraces -->
                         <debug>true</debug>
                         <debuglevel>lines,vars,source</debuglevel>
+                        
                         <compilerArgs>
+                            <!-- Enforces all standard Lint validation constraints on internal bytecode -->
                             <arg>-Xlint:all</arg>
                         </compilerArgs>
+                        <!-- Explicit optimization configuration for IDE incremental compilation safety -->
+                        <annotationProcessorPaths>
+                            <!-- 
+                                Wires the compiler execution loop directly to the AutoService processor.
+                                Ensures text descriptors are accurately written to target bytecode regions.
+                            -->
+                            <path>
+                                <groupId>com.google.auto.service</groupId>
+                                <artifactId>auto-service</artifactId>
+                                <version>1.1.1</version>
+                            </path>
+                        </annotationProcessorPaths>
                     </configuration>
                 </plugin>
 
