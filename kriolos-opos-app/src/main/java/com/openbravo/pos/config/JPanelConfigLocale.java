@@ -172,23 +172,11 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
 
     private void showHelp() {
         
-        Locale originalLocale = Locale.getDefault();
-
-        //Set Current Locale to What is selected;
-        Locale.setDefault(((LocaleInfo) jcboLocale.getSelectedItem()).getLocale());
-
-        //Set Format/Pattern for: Number, Date, Currency 
-        Formats.setIntegerPattern(readWithDefault(jcboInteger.getSelectedItem()));
-        Formats.setDoublePattern(readWithDefault(jcboDouble.getSelectedItem()));
-        Formats.setCurrencyPattern(readWithDefault(jcboCurrency.getSelectedItem()));
-        Formats.setPercentPattern(readWithDefault(jcboPercent.getSelectedItem()));
-        Formats.setDatePattern(readWithDefault(jcboDate.getSelectedItem()));
-        Formats.setTimePattern(readWithDefault(jcboTime.getSelectedItem()));
-        Formats.setDateTimePattern(readWithDefault(jcboDatetime.getSelectedItem()));
+        Locale locale = ((LocaleInfo) jcboLocale.getSelectedItem()).getLocale();
         
         Date nowDate = new Date();
 
-        jcboLocale.setToolTipText("<html>Localte IETF BCP 47 Tag: " + Locale.getDefault().toLanguageTag());
+        jcboLocale.setToolTipText("<html>Localte IETF BCP 47 Tag: " + locale.toLanguageTag());
         jcboInteger.setToolTipText("<html>Integer formated(123): " + Formats.INT.formatValue(123));
         jcboDouble.setToolTipText("<html>Double formated(123.52): " + Formats.DOUBLE.formatValue(123.52));
         jcboCurrency.setToolTipText("<html>Currency formated(123.55): " + Formats.CURRENCY.formatValue(123.55));
@@ -197,8 +185,6 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
         jcboTime.setToolTipText("<html>Time formated(now): " + Formats.TIME.formatValue(nowDate));
         jcboDatetime.setToolTipText("<html>Timestamp formated(now): " + Formats.TIMESTAMP.formatValue(nowDate));
 
-        //Revert Original
-        Locale.setDefault(originalLocale);
     }
 
     /**
