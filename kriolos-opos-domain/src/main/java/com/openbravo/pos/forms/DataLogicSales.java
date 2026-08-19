@@ -197,7 +197,6 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      * @return
      * @throws BasicException
      */
-    @SuppressWarnings("unchecked")
     public final List<ProductStock> getProductStockList(String pId) throws BasicException {
 
         String SQL_STOCK = """
@@ -240,33 +239,36 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      * @return
      * @throws BasicException
      */
-    @SuppressWarnings("unchecked")
     public final List<ReprintTicketInfo> getReprintTicketList() throws BasicException {
-        return (List<ReprintTicketInfo>) new StaticSentence(sessionDB,
-                "SELECT "
-                + "T.TICKETID, "
-                + "T.TICKETTYPE, "
-                + "R.DATENEW, "
-                + "P.NAME, "
-                + "C.NAME, "
-                + "SUM(PM.TOTAL), "
-                + "T.STATUS "
-                + "FROM receipts "
-                + "R JOIN tickets T ON R.ID = T.ID LEFT OUTER JOIN payments PM "
-                + "ON R.ID = PM.RECEIPT LEFT OUTER JOIN customers C "
-                + "ON C.ID = T.CUSTOMER LEFT OUTER JOIN people P ON T.PERSON = P.ID "
-                + "GROUP BY "
-                + "T.ID, "
-                + "T.TICKETID, "
-                + "T.TICKETTYPE, "
-                + "R.DATENEW, "
-                + "P.NAME, "
-                + "C.NAME "
-                + "ORDER BY R.DATENEW DESC, T.TICKETID "
-                + "LIMIT 10 ",
-                null,
-                new SerializerReadClass(ReprintTicketInfo.class)).list();
+        return (List<ReprintTicketInfo>) new StaticSentence(sessionDB, """
+            SELECT 
+                T.TICKETID, 
+                T.TICKETTYPE, 
+                R.DATENEW, 
+                P.NAME, 
+                C.NAME, 
+                SUM(PM.TOTAL), 
+                T.STATUS 
+            FROM receipts R 
+            JOIN tickets T ON R.ID = T.ID 
+            LEFT OUTER JOIN payments PM ON R.ID = PM.RECEIPT 
+            LEFT OUTER JOIN customers C ON C.ID = T.CUSTOMER 
+            LEFT OUTER JOIN people P ON T.PERSON = P.ID 
+            GROUP BY 
+                T.ID, 
+                T.TICKETID, 
+                T.TICKETTYPE, 
+                R.DATENEW, 
+                P.NAME, 
+                C.NAME,
+                T.STATUS 
+            ORDER BY R.DATENEW DESC, T.TICKETID 
+            LIMIT 10
+            """,
+            null,
+            new SerializerReadClass(ReprintTicketInfo.class)).list();
     }
+
 
     /**
      *
@@ -302,42 +304,47 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     // Tickets and Receipt list
     public SentenceList<FindTicketsInfo> getTicketsList() {
         return new StaticSentence(sessionDB,
-                new QBFBuilder(
-                        "SELECT "
-                        + "T.TICKETID, "
-                        + "T.TICKETTYPE, "
-                        + "R.DATENEW, "
-                        + "P.NAME, "
-                        + "C.NAME, "
-                        + "SUM(PM.TOTAL), "
-                        + "T.STATUS "
-                        + "FROM receipts "
-                        + "R JOIN tickets T ON R.ID = T.ID LEFT OUTER JOIN payments PM "
-                        + "ON R.ID = PM.RECEIPT LEFT OUTER JOIN customers C "
-                        + "ON C.ID = T.CUSTOMER LEFT OUTER JOIN people P ON T.PERSON = P.ID "
-                        + "WHERE ?(QBF_FILTER) "
-                        + "GROUP BY "
-                        + "T.ID, "
-                        + "T.TICKETID, "
-                        + "T.TICKETTYPE, "
-                        + "R.DATENEW, "
-                        + "P.NAME, "
-                        + "C.NAME "
-                        + "ORDER BY R.DATENEW DESC, T.TICKETID",
+                new QBFBuilder("""
+                        SELECT 
+                            T.TICKETID, 
+                            T.TICKETTYPE, 
+                            R.DATENEW, 
+                            P.NAME, 
+                            C.NAME, 
+                            SUM(PM.TOTAL), 
+                            T.STATUS 
+                        FROM receipts R 
+                        JOIN tickets T ON R.ID = T.ID 
+                        LEFT OUTER JOIN payments PM ON R.ID = PM.RECEIPT 
+                        LEFT OUTER JOIN customers C ON C.ID = T.CUSTOMER 
+                        LEFT OUTER JOIN people P ON T.PERSON = P.ID 
+                        WHERE ?(QBF_FILTER) 
+                        GROUP BY 
+                            T.ID, 
+                            T.TICKETID, 
+                            T.TICKETTYPE, 
+                            R.DATENEW, 
+                            P.NAME, 
+                            C.NAME,
+                            T.STATUS
+                        ORDER BY R.DATENEW DESC, T.TICKETID
+                        """,
                         new String[]{
                             "T.TICKETID", "T.TICKETTYPE", "PM.TOTAL", "R.DATENEW",
-                            "R.DATENEW", "P.NAME",
-                            "C.NAME"}),
+                            "R.DATENEW", "P.NAME", "C.NAME"
+                        }),
                 new SerializerWriteBasic(new Datas[]{
-            Datas.OBJECT, Datas.INT,
-            Datas.OBJECT, Datas.INT,
-            Datas.OBJECT, Datas.DOUBLE,
-            Datas.OBJECT, Datas.TIMESTAMP,
-            Datas.OBJECT, Datas.TIMESTAMP,
-            Datas.OBJECT, Datas.STRING,
-            Datas.OBJECT, Datas.STRING}),
+                    Datas.OBJECT, Datas.INT,
+                    Datas.OBJECT, Datas.INT,
+                    Datas.OBJECT, Datas.DOUBLE,
+                    Datas.OBJECT, Datas.TIMESTAMP,
+                    Datas.OBJECT, Datas.TIMESTAMP,
+                    Datas.OBJECT, Datas.STRING,
+                    Datas.OBJECT, Datas.STRING
+                }),
                 new SerializerReadClass(FindTicketsInfo.class));
     }
+
 
     // User list
     /**
@@ -411,32 +418,36 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      * @return
      * @throws BasicException
      */
-    @SuppressWarnings("unchecked")
     public final List<CustomerTransaction> getCustomersTransactionList(String cId) throws BasicException {
 
-        // TODO: TICKETLINE MUST STORE: _tax_value, _line_amount(Qty x price)
-        // _line_total (Price x Qty x Tax), line_prod_name
-        // TODO: CALCULATION MUST BE DONE Java using BigDecimal
-        return new PreparedSentence<>(sessionDB,
-                "SELECT tickets.TICKETID, "
-                + "products.NAME AS PNAME, "
-                + "SUM(ticketlines.UNITS) AS UNITS, "
-                + "SUM(ticketlines.UNITS * ticketlines.PRICE) AS AMOUNT, "
-                + "SUM(ticketlines.UNITS * ticketlines.PRICE * (1.0 + taxes.RATE)) AS TOTAL, "
-                + "receipts.DATENEW, "
-                + "customers.ID AS CID "
-                + "FROM ((((ticketlines ticketlines "
-                + "INNER JOIN taxes taxes ON (ticketlines.TAXID = taxes.ID)) "
-                + "INNER JOIN tickets tickets ON (tickets.ID = ticketlines.TICKET)) "
-                + "INNER JOIN customers customers ON (customers.ID = tickets.CUSTOMER)) "
-                + "INNER JOIN receipts receipts ON (tickets.ID = receipts.ID)) "
-                + "LEFT OUTER JOIN products products ON (ticketlines.PRODUCT = products.ID) "
-                + "WHERE tickets.CUSTOMER = ? "
-                + "GROUP BY customers.ID, receipts.DATENEW, tickets.TICKETID, "
-                + "products.NAME, tickets.TICKETTYPE "
-                + "ORDER BY receipts.DATENEW DESC",
-                SerializerWriteString.INSTANCE,
-                CustomerTransaction.getSerializerRead()).list(cId);
+    // TODO: TICKETLINE MUST STORE: _tax_value, _line_amount(Qty x price)
+    // _line_total (Price x Qty x Tax), line_prod_name
+    // TODO: CALCULATION MUST BE DONE Java using BigDecimal
+    return new PreparedSentence<>(sessionDB, """
+            SELECT 
+                tickets.TICKETID, 
+                products.NAME AS PNAME, 
+                SUM(ticketlines.UNITS) AS UNITS, 
+                SUM(ticketlines.UNITS * ticketlines.PRICE) AS AMOUNT, 
+                SUM(ticketlines.UNITS * ticketlines.PRICE * (1.0 + taxes.RATE)) AS TOTAL, 
+                receipts.DATENEW, 
+                customers.ID AS CID 
+            FROM ticketlines ticketlines 
+            INNER JOIN taxes taxes ON ticketlines.TAXID = taxes.ID 
+            INNER JOIN tickets tickets ON tickets.ID = ticketlines.TICKET 
+            INNER JOIN customers customers ON customers.ID = tickets.CUSTOMER 
+            INNER JOIN receipts receipts ON tickets.ID = receipts.ID 
+            LEFT OUTER JOIN products products ON ticketlines.PRODUCT = products.ID 
+            WHERE tickets.CUSTOMER = ? 
+            GROUP BY 
+                customers.ID, 
+                receipts.DATENEW, 
+                tickets.TICKETID, 
+                products.NAME
+            ORDER BY receipts.DATENEW DESC
+            """,
+            SerializerWriteString.INSTANCE,
+            CustomerTransaction.getSerializerRead()).list(cId);
     }
 
     /**

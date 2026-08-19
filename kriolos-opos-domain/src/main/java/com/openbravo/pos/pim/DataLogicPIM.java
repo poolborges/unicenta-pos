@@ -507,11 +507,11 @@ public class DataLogicPIM extends BeanFactoryDataSingle {
                     false, false,
                     true),
             new Field(AppLocal.getIntString("label.UOM"), Datas.STRING, Formats.STRING),
-            new Field("MEMODATE", Datas.TIMESTAMP, Formats.DATE),
+            new Field("MEMODATE", Datas.TIMESTAMP, Formats.TIMESTAMP),
             new Field("ISCATALOG", Datas.BOOLEAN, Formats.BOOLEAN),
-            new Field("CATORDER", Datas.INT, Formats.INT));
-
-    ;
+            new Field("CATORDER", Datas.INT, Formats.INT)
+    );
+    
 
     public final Row getProductsRow() {
         return productsRow;

@@ -247,14 +247,6 @@ public class PaymentsModel {
      *
      * @return
      */
-    public String getDateStartDerby() {
-        return Formats.DATETIME.formatValue(m_dDateStart);
-    }
-
-    /**
-     *
-     * @return
-     */
     public String printHost() {
         return StringUtils.encodeXML(m_sHost);
     }

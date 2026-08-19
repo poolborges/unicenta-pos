@@ -128,7 +128,7 @@ public abstract class DataWriteUtils {
         if (value == null) {
             return "NULL";
         } else {
-            return '\'' + getEscaped(value) + '\'';
+            return "'" + getEscaped(value) + "'";
         }
     }
 
@@ -152,7 +152,7 @@ public abstract class DataWriteUtils {
                 .toLocalDateTime();
 
         // Formats the timestamp and wraps it in SQL single quotes
-        return '\'' + DATETIME_FORMAT.format(localDateTime) + '\'';
+        return "'" + DATETIME_FORMAT.format(localDateTime) + "'";
     }
 
     /**
@@ -175,7 +175,7 @@ public abstract class DataWriteUtils {
                 .toLocalDateTime();
 
         // Formats the timestamp and wraps it in SQL single quotes
-        return '\'' + SQL_TIME_FORMAT.format(localDateTime) + '\'';
+        return "'" + SQL_TIME_FORMAT.format(localDateTime) + "'";
     }
 
     /**

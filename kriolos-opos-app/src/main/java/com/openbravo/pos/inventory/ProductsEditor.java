@@ -558,7 +558,7 @@ public final class ProductsEditor extends com.openbravo.pos.panels.ValidationPan
         m_jPrintTo.setSelectedItem(myprod[26]);
         m_SuppliersModel.setSelectedKey(myprod[27]);
         m_UomModel.setSelectedKey(myprod[28]);
-        m_jdate.setText(Formats.DATE.formatValue((Date) myprod[29]));
+        m_jdate.setText(Formats.TIMESTAMP.formatValue((Date) myprod[29]));
         m_jInCatalog.setSelected(((Boolean) myprod[30]));
         m_jCatalogOrder.setText(Formats.INT.formatValue((Integer) myprod[31]));
     }
