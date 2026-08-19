@@ -68,3 +68,18 @@ The resulting `.jar` file will automatically contain the compiled classes alongs
 
 Distributed under the terms of the open-source *{opensource-license}* license. Contributions must follow the guidelines outlined in the repository root `CONTRIBUTING.adoc` document.
 
+
+
+== References
+
+Decreto-Lei n.º 79/2021: 
+Aprova o Regime Jurídico da Faturação Eletrónica (RJFE) em Cabo Verde. 
+Este documento detalha a obrigatoriedade da emissão de faturas eletrónicas, faturas-recibo 
+e os requisitos técnicos dos sistemas de faturação e transmissão de dados 
+(como a estrutura do ficheiro XML e os dados que devem constar obrigatoriamente no talão impresso).
+
+
+Código do Imposto sobre o Valor Acrescentado (Código do IVA): 
+Regulamenta como as taxas (como a taxa normal de 15%) devem ser aplicadas, gravadas 
+e apresentadas nos documentos fiscais. Exige que todos os montantes sejam expressos 
+de forma clara na moeda legal do país (CVE / $).
