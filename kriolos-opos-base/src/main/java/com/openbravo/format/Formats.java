@@ -56,11 +56,10 @@ public abstract class Formats<T> {
     private static DateTimeFormatter m_timeformat = getTimeFormatter();
     private static DateTimeFormatter m_datetimeformat = getDateTimeFormatter();
     private static DateTimeFormatter m_hourminformat = getHourMinFormatter();
-    
-    private static Locale m_locale = Locale.getDefault();
-    
 
-    private static Locale getLocale(){
+    private static Locale m_locale = Locale.getDefault();
+
+    private static Locale getLocale() {
         return m_locale != null ? m_locale : Locale.getDefault();
     }
 
@@ -96,16 +95,17 @@ public abstract class Formats<T> {
         return text == null || text.isBlank();
     }
 
-    protected Formats() {}
-    
+    protected Formats() {
+    }
+
     public static void setLocale(Locale locale) {
         if (locale != null) {
             m_locale = locale;
-        }else {
+        } else {
             m_locale = Locale.getDefault();
         }
     }
-    
+
     public static void setIntegerFormatter(NumberFormat format) {
         if (format != null) {
             m_integerformat = format;
@@ -123,7 +123,7 @@ public abstract class Formats<T> {
             m_currencyformat = format;
         }
     }
-    
+
     public static void setPercentFormatter(NumberFormat format) {
         if (format != null) {
             m_percentformat = format;
@@ -215,26 +215,30 @@ public abstract class Formats<T> {
      * @return A re-instantiated legacy java.util.Date object tracking the
      * mapped timestamp.
      */
-    public java.util.Date parseToLegacyDate(String dateText, DateTimeFormatter formatter, java.time.ZoneId zoneId) {
+    protected java.util.Date parseToLegacyDate(String dateText, DateTimeFormatter formatter, java.time.ZoneId zoneId) throws ParseException {
         if (dateText == null || formatter == null || zoneId == null) {
             return null;
         }
 
-        // 1. Parses text directly into a modern regional timezone ZonedDateTime vector layer
-        // Note: If the pattern lacks time offsets (e.g. only dd/MM/yyyy), use LocalDateTime.parse and bind the zone later.
-        java.time.LocalDateTime localDateTime = java.time.LocalDateTime.parse(dateText, formatter);
+        try {
+            // 1. Parses text directly into a modern regional timezone ZonedDateTime vector layer
+            // Note: If the pattern lacks time offsets (e.g. only dd/MM/yyyy), use LocalDateTime.parse and bind the zone later.
+            java.time.LocalDateTime localDateTime = java.time.LocalDateTime.parse(dateText, formatter);
 
-        // 2. Bundles the local clock coordinates together with the active regional timezone offset
-        java.time.ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
+            // 2. Bundles the local clock coordinates together with the active regional timezone offset
+            java.time.ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
 
-        // 3. Extracts the modern epoch instant timeline marker
-        java.time.Instant instant = zonedDateTime.toInstant();
+            // 3. Extracts the modern epoch instant timeline marker
+            java.time.Instant instant = zonedDateTime.toInstant();
 
-        // 4. Feeds the instant factory into the legacy constructor to rebuild the historical Date object
-        return java.util.Date.from(instant);
+            // 4. Feeds the instant factory into the legacy constructor to rebuild the historical Date object
+            return java.util.Date.from(instant);
+        } catch (java.time.format.DateTimeParseException ex) {
+            throw new ParseException(ex.getParsedString(), ex.getErrorIndex());
+        }
     }
 
-    public java.util.Date parseToLegacyDate(String dateText, DateTimeFormatter formatter) {
+    protected java.util.Date parseToLegacyDate(String dateText, DateTimeFormatter formatter) throws ParseException {
         return parseToLegacyDate(dateText, formatter, getZoneId());
     }
 

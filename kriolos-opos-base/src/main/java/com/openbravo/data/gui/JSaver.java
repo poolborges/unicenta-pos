@@ -144,8 +144,7 @@ public class JSaver extends JPanel implements StateListener {
         try {
             m_bd.saveData();
         } catch (BasicException eD) {
-            MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE, LocalRes.getIntString("message.nosave"), eD);
-            msg.show(this);
+            JMessageDialog.showMessage(this.getParent(),new MessageInf(MessageInf.SGN_NOTICE, LocalRes.getIntString("message.nosave"), eD));
         }          
     }//GEN-LAST:event_jbtnSaveActionPerformed
 
@@ -153,8 +152,7 @@ public class JSaver extends JPanel implements StateListener {
         try {
             m_bd.actionDelete();
         } catch (BasicException eD) {
-            MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE, LocalRes.getIntString("message.nodelete"), eD);
-            msg.show(this);
+            JMessageDialog.showMessage(this.getParent(),new MessageInf(MessageInf.SGN_NOTICE, LocalRes.getIntString("message.nodelete"), eD));
         }        
     }//GEN-LAST:event_jbtnDeleteActionPerformed
 
@@ -162,8 +160,7 @@ public class JSaver extends JPanel implements StateListener {
         try {
             m_bd.actionInsert();
         } catch (BasicException eD) {
-            MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE, LocalRes.getIntString("message.nonew"), eD);
-            msg.show(this);
+            JMessageDialog.showMessage(this.getParent(),new MessageInf(MessageInf.SGN_NOTICE, LocalRes.getIntString("message.nonew"), eD));
         }
     }//GEN-LAST:event_jbtnNewActionPerformed
    
