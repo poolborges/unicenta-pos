@@ -58,33 +58,38 @@ public abstract class Formats<T> {
     private static DateTimeFormatter m_hourminformat = getHourMinFormatter();
     
     private static Locale m_locale = Locale.getDefault();
+    
+
+    private static Locale getLocale(){
+        return m_locale != null ? m_locale : Locale.getDefault();
+    }
 
     /**
      * @return Format.MEDIUM: YYYY/MM/DD
      */
     private static DateTimeFormatter getDateFormatterDefault() {
-        return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(m_locale);
+        return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(getLocale());
     }
 
     /**
      * @return Format.MEDIUM: YYYY/MM/DD HH:MM:SS
      */
     private static DateTimeFormatter getDateTimeFormatter() {
-        return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM).withLocale(m_locale);
+        return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM).withLocale(getLocale());
     }
 
     /**
      * @return Format.MEDIUM: HH:MM:SS
      */
     private static DateTimeFormatter getTimeFormatter() {
-        return DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM).withLocale(m_locale);
+        return DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM).withLocale(getLocale());
     }
 
     /**
      * @return Format.SHORT: HH:MM
      */
     private static DateTimeFormatter getHourMinFormatter() {
-        return DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(m_locale);
+        return DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(getLocale());
     }
 
     private static boolean isNullOrBlank(String text) {
