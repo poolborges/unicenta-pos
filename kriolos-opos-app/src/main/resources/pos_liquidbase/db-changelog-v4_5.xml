@@ -9,6 +9,11 @@
                     http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.9.xsd 
                     http://www.liquibase.org/xml/ns/dbchangelog 
                     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+    
+    <!-- PROPERTIES -->
+    <property name="tipo_datetime" value="TEXT" dbms="sqlite"/>
+    <property name="tipo_datetime" value="datetime" dbms="!sqlite"/>
+    
     <changeSet author="pauloborges (generated)" id="1603928315936-1">
         <createTable tableName="applications">
             <column name="id" type="VARCHAR(255)">
@@ -205,7 +210,7 @@
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0.0" name="discount" type="DOUBLE"/>
-            <column defaultValueDate="2022-01-01T00:00:01" name="memodate" type="datetime"/>
+            <column name="memodate" type="datetime"/>
         </createTable>
         <modifySql dbms="mysql,mariadb">
             <replace replace="BLOB" with="MEDIUMBLOB"/>
@@ -213,7 +218,7 @@
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-13">
         <createTable tableName="draweropened">
-            <column defaultValueComputed="CURRENT_TIMESTAMP" name="opendate" type="timestamp">
+            <column defaultValueComputed="now()" name="opendate" type="datetime">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)"/>
@@ -256,7 +261,7 @@
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-16">
         <createTable tableName="lineremoved">
-            <column defaultValueComputed="CURRENT_TIMESTAMP" name="removeddate" type="timestamp">
+            <column defaultValueComputed="now()" name="removeddate" type="datetime">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)"/>
@@ -300,12 +305,12 @@
             <column name="attributes" type="VARCHAR(255)"/>
             <column name="notes" type="VARCHAR(255)"/>
             <column name="ticketid" type="VARCHAR(50)"/>
-            <column defaultValueComputed="CURRENT_TIMESTAMP" name="ordertime" type="timestamp">
+            <column defaultValueComputed="now()" name="ordertime" type="datetime">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="1" name="displayid" type="INT"/>
             <column name="auxiliary" type="INT"/>
-            <column name="completetime" type="timestamp"/>
+            <column name="completetime" type="datetime"/>
         </createTable>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-20">
@@ -463,7 +468,7 @@
             <column defaultValue="1" name="printto" type="VARCHAR(255)"/>
             <column name="supplier" type="VARCHAR(255)"/>
             <column defaultValue="0" name="uom" type="VARCHAR(255)"/>
-            <column defaultValueDate="2022-01-01T00:00:01" name="memodate" type="datetime"/>
+            <column name="memodate" type="datetime"/>
         </createTable>
         <modifySql dbms="mysql,mariadb">
             <replace replace="BLOB" with="MEDIUMBLOB"/>
@@ -542,7 +547,7 @@
             <column name="created" type="datetime">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueDate="2022-01-01T00:00:01" name="datenew" type="datetime">
+            <column name="datenew" type="datetime">
                 <constraints nullable="false"/>
             </column>
             <column name="title" type="VARCHAR(255)">
@@ -618,10 +623,10 @@
             <column name="breakid" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueComputed="CURRENT_TIMESTAMP" name="starttime" type="timestamp">
+            <column defaultValueComputed="now()" name="starttime" type="datetime">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueComputed="CURRENT_TIMESTAMP" name="endtime" type="timestamp">
+            <column defaultValueComputed="now()" name="endtime" type="datetime">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -1104,7 +1109,7 @@
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-90">
         <createIndex indexName="reservations_inx_1" tableName="reservations">
-            <column defaultValueDate="2022-01-01T00:00:01" name="datenew"/>
+            <column name="datenew"/>
         </createIndex>
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-91">
