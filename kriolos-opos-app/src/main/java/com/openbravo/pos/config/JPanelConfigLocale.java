@@ -182,6 +182,7 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
         jcboCurrency.setToolTipText("<html>Currency formated(123.55): " + Formats.CURRENCY.formatValue(123.55));
         jcboPercent.setToolTipText("<html>Percentage formated(0.23): " + Formats.PERCENT.formatValue(0.23));
         jcboDate.setToolTipText("<html>Date formated(now): " + Formats.DATE.formatValue(nowDate));
+        jcboDate.setToolTipText("<html>DateTime formated(now): " + Formats.DATETIME.formatValue(nowDate));
         jcboTime.setToolTipText("<html>Time formated(now): " + Formats.TIME.formatValue(nowDate));
         jcboDatetime.setToolTipText("<html>Timestamp formated(now): " + Formats.TIMESTAMP.formatValue(nowDate));
 
