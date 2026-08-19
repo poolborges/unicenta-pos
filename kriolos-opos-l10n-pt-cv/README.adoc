@@ -10,6 +10,13 @@ The `kriolos-opos-l10n-pt-cv` module is an official pluggable localization exten
 
 This sub-artifact configures the point-of-sale subsystem to operate within the financial, linguistic, and regulatory boundaries of **Cape Verde**.
 
+
+.How to enable localization (pt_CV)
+----
+localization.configure=provider
+localization.locale=pt-CV
+----
+
 == Features
 
 * **Strict IETF BCP 47 Compliance:** Instantiates locale environments via modern `Locale.Builder` APIs to completely prevent runtime context pollution.
