@@ -33,6 +33,8 @@ public interface DataRead {
 
     public java.util.Date getTimestamp(int columnIndex) throws BasicException;
     
+    public java.util.Date getDate(int columnIndex) throws BasicException;
+    
     public byte[] getBytes(int columnIndex) throws BasicException;
 
     public Object getObject(int columnIndex) throws BasicException;

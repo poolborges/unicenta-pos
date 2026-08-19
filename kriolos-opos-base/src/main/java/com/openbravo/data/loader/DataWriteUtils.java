@@ -13,25 +13,37 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.data.loader;
 
-import static com.openbravo.data.loader.Datas.DATETIME_FORMAT;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
  * Utility class to get SQL string representation of some classes.
- * 
- * @author  adrian, poolborges
+ *
+ * @author adrian, poolborges
  */
 public abstract class DataWriteUtils {
-    
+
     /**
-     * Get Object SQL string represention.
-     *   Support instanceof Double, Integer, Boolean, String, Date, byte[]
-     * 
-     * @param value 
+     * SQL date-time formatter with millisecond precision. DateTimeFormatter is
+     * immutable and safe for concurrent use by multiple threads.
+     */
+    private final static DateTimeFormatter DATETIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    
+    
+    private final static DateTimeFormatter SQL_TIME_FORMAT = DateTimeFormatter.ofPattern("HH:MM:SS");
+    
+    
+
+    /**
+     * Get Object SQL string represention. Support instanceof Double, Integer,
+     * Boolean, String, Date, byte[]
+     *
+     * @param value
      * @return string representation
      */
     public static String getSQLValue(Object value) {
@@ -47,19 +59,19 @@ public abstract class DataWriteUtils {
             return getSQLValue((String) value);
         } else if (value instanceof Date) {
             return getSQLValue((Date) value);
-        }else if (value instanceof byte[]){
-            return getSQLValue((byte[])value);
-        }else {
+        } else if (value instanceof byte[]) {
+            return getSQLValue((byte[]) value);
+        } else {
             return getSQLValue(value.toString());
-        }            
+        }
     }
-    
+
     /**
-     * Get string represention of Integer. 
-     * 
+     * Get string represention of Integer.
+     *
      * @param value
-     * @return string representatin of interger, otherwich "NULL" 
-     * 
+     * @return string representatin of interger, otherwich "NULL"
+     *
      * @see Integer#toString()
      */
     public static String getSQLValue(Integer value) {
@@ -69,13 +81,13 @@ public abstract class DataWriteUtils {
             return value.toString();
         }
     }
-    
+
     /**
-     * Get Double SQL string representation.  
-     * 
+     * Get Double SQL string representation.
+     *
      * @param value
      * @return string of value or "NULL" if value is null
-     * 
+     *
      * @see Double#toString()
      */
     public static String getSQLValue(Double value) {
@@ -85,13 +97,13 @@ public abstract class DataWriteUtils {
             return value.toString();
         }
     }
-    
+
     /**
-     * Get SQL string boolean representation. 
-     * 
+     * Get SQL string boolean representation.
+     *
      * @param value boolean value
-     * @return  "TRUE" or "FALSE" or "NULL"
-     * 
+     * @return "TRUE" or "FALSE" or "NULL"
+     *
      * @see Boolean#toString()
      */
     public static String getSQLValue(Boolean value) {
@@ -101,15 +113,15 @@ public abstract class DataWriteUtils {
             return value ? "TRUE" : "FALSE";
         }
     }
-    
+
     /**
-     * Get String SQL represention. 
-     * 
-     *    eg: Paulo would represented as 'Paulo'
-     * 
-     * @param value string 
+     * Get String SQL represention.
+     *
+     * eg: Paulo would represented as 'Paulo'
+     *
+     * @param value string
      * @return the string enclosure by 'EXAMPLE OF STRING'
-     * 
+     *
      * @see this#getEscaped
      */
     public static String getSQLValue(String value) {
@@ -119,26 +131,55 @@ public abstract class DataWriteUtils {
             return '\'' + getEscaped(value) + '\'';
         }
     }
-    
+
     /**
-     * Get Date SQL representation. 
-     * 
-     *   PREVIOUS VERSION return {ts 'yyyy-MM-dd HH:mm:ss.SSS'}
+     * Returns the standard SQL string representation of a Date object using
+     * modern Java Time API.
      *
-     * @param value
-     * @return DATETIME formated as 'yyyy-MM-dd HH:mm:ss.SSS'
+     * @param value the legacy Date object to format
+     * @return the formatted DATETIME string enclosed in single quotes, or
+     * "NULL" if the input is null
+     * @see #DATETIME_FORMAT
      */
     public static String getSQLValue(Date value) {
         if (value == null) {
             return "NULL";
-        } else {
-            return "'" + DATETIME_FORMAT.format(value) + "'";
         }
+
+        // Converts legacy java.util.Date to modern java.time.LocalDateTime using the system default time zone
+        LocalDateTime localDateTime = value.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+
+        // Formats the timestamp and wraps it in SQL single quotes
+        return '\'' + DATETIME_FORMAT.format(localDateTime) + '\'';
     }
-    
+
     /**
-     * Escape special charater with. 
-     * Example special "\", "\n", "\r", ""
+     * Returns the standard SQL 'TIME string representation of a Date object using
+     * modern Java Time API.
+     *
+     * @param value the legacy Date object to format
+     * @return the formatted TIME string enclosed in single quotes, or
+     * "NULL" if the input is null
+     * @see #SQL_TIME_FORMAT
+     */
+    public static String getSQLTimeValue(Date value) {
+        if (value == null) {
+            return "NULL";
+        }
+
+        // Converts legacy java.util.Date to modern java.time.LocalDateTime using the system default time zone
+        LocalDateTime localDateTime = value.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+
+        // Formats the timestamp and wraps it in SQL single quotes
+        return '\'' + SQL_TIME_FORMAT.format(localDateTime) + '\'';
+    }
+
+    /**
+     * Escape special charater with. Example special "\", "\n", "\r", ""
      *
      * @param value string
      * @return escaped string
@@ -150,7 +191,7 @@ public abstract class DataWriteUtils {
                 case '\\':
                     sb.append("\\\\");
                     break;
-                 case '\'':
+                case '\'':
                     sb.append("\\'");
                     break;
                 case '\n':
@@ -159,7 +200,7 @@ public abstract class DataWriteUtils {
                 case '\r':
                     sb.append("\\r");
                     break;
-                default: 
+                default:
                     sb.append(value.charAt(i));
                     break;
             }
@@ -168,9 +209,8 @@ public abstract class DataWriteUtils {
     }
 
     /**
-     * Get byte array SQL string representation
-     * Use String(byte[], UTF-8)
-     * 
+     * Get byte array SQL string representation Use String(byte[], UTF-8)
+     *
      * @param value byte array (byte[])
      * @return "NULL" if null, or converted UTF-F string eclosure with ''
      */
@@ -183,4 +223,4 @@ public abstract class DataWriteUtils {
             return "'" + res + "'";
         }
     }
- }
+}

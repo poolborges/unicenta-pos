@@ -144,14 +144,12 @@ public class SupplierTransaction {
             @Override
             public SupplierTransaction readValues(DataRead dr) throws BasicException {
 
-                String dateValue = dr.getString(1);
+                Date date = dr.getDate(1);
                 String productName = dr.getString(2);
                 String unit = dr.getString(3);
                 Double price = dr.getDouble(4);
                 Integer reason = dr.getInt(5);
                 String supplierId = dr.getString(6);                
-
-                Date date = Formats.DATETIME.parseValue(dateValue);
                
                 return new SupplierTransaction(date, productName, unit, price, reason, supplierId);                
             }

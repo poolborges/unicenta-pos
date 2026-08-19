@@ -145,7 +145,7 @@ public class FinancialReportServiceImpl implements FinancialReportService {
         report.setSalesLines(asales != null ? asales : new ArrayList<>());
 
         // 8. Removed Lines
-        String startDateFormatted = Formats.DATETIME.formatValue(dateStart);
+        String startDateFormatted = DataWriteUtils.getSQLValue(dateStart);
         List<RemovedProductLines> removedLines = new StaticSentence(session,
                 "SELECT lineremoved.NAME, lineremoved.TICKETID, lineremoved.PRODUCTNAME, COALESCE(SUM(lineremoved.UNITS),0) AS TOTAL_UNITS  "
                         + "FROM lineremoved "

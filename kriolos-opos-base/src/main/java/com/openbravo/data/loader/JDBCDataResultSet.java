@@ -20,6 +20,7 @@ import com.openbravo.basic.BasicException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -86,6 +87,19 @@ public final class JDBCDataResultSet<T> implements DataResultSet<T> {
         try {
             java.sql.Timestamp ts = m_rs.getTimestamp(columnIndex);
             return ts == null ? null : new java.util.Date(ts.getTime());
+        } catch (SQLException eSQL) {
+            LOGGER.log(Level.SEVERE, "Exception on JDBCDataResultSet. ColumnIndex: "+columnIndex, eSQL);
+            throw new BasicException(eSQL);
+        }
+    }
+    
+    
+
+    @Override
+    public Date getDate(int columnIndex) throws BasicException {
+        try {
+            Date dt = m_rs.getDate(columnIndex);
+            return dt == null ? null : dt;
         } catch (SQLException eSQL) {
             LOGGER.log(Level.SEVERE, "Exception on JDBCDataResultSet. ColumnIndex: "+columnIndex, eSQL);
             throw new BasicException(eSQL);

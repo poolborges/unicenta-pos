@@ -201,10 +201,9 @@ public class CustomerTransaction {
                 String unit = dr.getString(3);
                 Double amount = dr.getDouble(4);
                 Double total = dr.getDouble(5);
-                String dateValue = dr.getString(6);
+                Date date = dr.getDate(6);
                 String customerId = dr.getString(7);                
 
-                Date date = Formats.DATETIME.parseValue(dateValue);
                 return new CustomerTransaction(ticketId, productName, unit, amount, total, date, customerId);                
             }
         };

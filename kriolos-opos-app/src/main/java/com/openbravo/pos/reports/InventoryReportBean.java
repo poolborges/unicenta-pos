@@ -107,6 +107,11 @@ public class InventoryReportBean extends PanelReportBean {
         }
 
         @Override
+        public Date getDate(int columnIndex) throws BasicException {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        @Override
         public byte[] getBytes(int columnIndex) throws BasicException {
             return new byte[0];
         }
