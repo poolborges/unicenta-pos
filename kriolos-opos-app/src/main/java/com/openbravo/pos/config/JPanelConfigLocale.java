@@ -173,6 +173,8 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
     }
 
     private void showHelp() {
+        
+        Locale originalLocale = Locale.getDefault();
 
         //Set Current Locale to What is selected;
         Locale.setDefault(((LocaleInfo) jcboLocale.getSelectedItem()).getLocale());
@@ -185,18 +187,20 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
         Formats.setDatePattern(readWithDefault(jcboDate.getSelectedItem()));
         Formats.setTimePattern(readWithDefault(jcboTime.getSelectedItem()));
         Formats.setDateTimePattern(readWithDefault(jcboDatetime.getSelectedItem()));
-
-        jcboLocale.setToolTipText("<html>IETF BCP 47 Tag: " + Locale.getDefault().toLanguageTag());
-        jcboInteger.setToolTipText("<html>123 formated: " + Formats.INT.formatValue(123));
-        jcboDouble.setToolTipText("<html>123.45 formated: " + Formats.DOUBLE.formatValue(123.45));
-        jcboCurrency.setToolTipText("<html>123.45 formated: " + Formats.CURRENCY.formatValue(123.45));
-        jcboPercent.setToolTipText("<html>0.23 formated: " + Formats.PERCENT.formatValue(0.23));
-        jcboDate.setToolTipText("<html>Date formated: " + Formats.DATE.formatValue(new Date()));
-        jcboTime.setToolTipText("<html>Time formated: " + Formats.TIME.formatValue(new Date()));
-        jcboDatetime.setToolTipText("<html>DateTime formated: " + Formats.TIMESTAMP.formatValue(new Date()));
-
         
+        Date nowDate = new Date();
 
+        jcboLocale.setToolTipText("<html>Localte IETF BCP 47 Tag: " + Locale.getDefault().toLanguageTag());
+        jcboInteger.setToolTipText("<html>Integer formated(123): " + Formats.INT.formatValue(123));
+        jcboDouble.setToolTipText("<html>Double formated(123.52): " + Formats.DOUBLE.formatValue(123.52));
+        jcboCurrency.setToolTipText("<html>Currency formated(123.55): " + Formats.CURRENCY.formatValue(123.55));
+        jcboPercent.setToolTipText("<html>Percentage formated(0.23): " + Formats.PERCENT.formatValue(0.23));
+        jcboDate.setToolTipText("<html>Date formated(now): " + Formats.DATE.formatValue(nowDate));
+        jcboTime.setToolTipText("<html>Time formated(now): " + Formats.TIME.formatValue(nowDate));
+        jcboDatetime.setToolTipText("<html>Timestamp formated(now): " + Formats.TIMESTAMP.formatValue(nowDate));
+
+        //Revert Original
+        Locale.setDefault(originalLocale);
     }
 
     /**
