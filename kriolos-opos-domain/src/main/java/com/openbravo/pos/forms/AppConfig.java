@@ -16,6 +16,8 @@
 package com.openbravo.pos.forms;
 
 import com.openbravo.format.Formats;
+import com.openbravo.pos.spi.localization.LocalizationFactory;
+import com.openbravo.pos.spi.localization.LocalizationProvider;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -366,10 +368,15 @@ public class AppConfig implements AppProperties {
 
         propConfig.setProperty("machine.hostname", getLocalHostName());
 
+        //Localization - Legacy 
         Locale l = Locale.getDefault();
         propConfig.setProperty("user.language", l.getLanguage());
         propConfig.setProperty("user.country", l.getCountry());
         propConfig.setProperty("user.variant", l.getVariant());
+        
+        //Localization - 
+        propConfig.setProperty("localization.configure", "legacy");
+        propConfig.setProperty("localization.locale", "");
 
         propConfig.setProperty("swing.defaultlaf", "com.formdev.flatlaf.FlatDarkLaf");
 
@@ -448,12 +455,40 @@ public class AppConfig implements AppProperties {
         }
 
         //Set I18n or Language 
-        String slang = config.getProperty("user.language");
-        String scountry = config.getProperty("user.country");
-        String svariant = config.getProperty("user.variant");
-        if (slang != null && !slang.equals("") && scountry != null && svariant != null) {
-            Locale.setDefault(new Locale(slang, scountry, svariant));
+        String langTagLang = config.getProperty("user.language");
+        String langTagCountry = config.getProperty("user.country");
+        String langTagVariant = config.getProperty("user.variant");
+        String langTagScript = config.getProperty("user.script");
+        var localeBuilder = new Locale.Builder();
+        
+        if (!isNullOrBlank(langTagVariant)) {
+            localeBuilder.setVariant(langTagVariant);
         }
+        
+        if (!isNullOrBlank(langTagScript)) {
+            localeBuilder.setScript(langTagScript);
+        }
+        
+        if(!isNullOrBlank(langTagCountry)){
+            localeBuilder.setRegion(langTagCountry);
+        }
+        
+        if(!isNullOrBlank(langTagLang)){
+            localeBuilder.setLanguage(langTagLang);
+            
+            Locale.setDefault(localeBuilder.build());
+        }
+        
+        // Localization configuration switch
+        String localizationMode = config.getProperty("localization.configure", "legacy");
+        if ("provider".equalsIgnoreCase(localizationMode)) {
+            applyLocalizationProvider(config);
+        }else {
+            applyLocalizationLegacy(config);
+        }
+    }
+
+    private static void applyLocalizationLegacy(AppConfig config) {
 
         //Set Format/Pattern for: Number, Date, Currency 
         Formats.setIntegerPattern(config.getProperty("format.integer"));
@@ -464,7 +499,41 @@ public class AppConfig implements AppProperties {
         Formats.setTimePattern(config.getProperty("format.time"));
         Formats.setDateTimePattern(config.getProperty("format.datetime"));
     }
-}
+    
+    private static void applyLocalizationProvider(AppConfig config) {
+        // Build target locale from "localization.locale" (ex: "pt-CV")
+        Locale targetLocale = parseLocaleTag(config.getProperty("localization.locale"));
+        try {
+            
+            LocalizationProvider provider = LocalizationFactory.getInstance().getProvider(targetLocale);
+            
+            //Set Format/Pattern for: Number, Date, Currency 
+            Formats.setIntegerFormatter(provider.getIntegerFormatter());
+            Formats.setDoubleFormat(provider.getDoubleFormatter());
+            Formats.setCurrencyFormat(provider.getCurrencyFormatter());
+            Formats.setPercentFormatter(provider.getPercentFormatter());
+            Formats.setDateFormat(provider.getDateFormatter());
+            Formats.setTimeFormatter(provider.getTimeFormatter());
+            Formats.setDateTimeFormatter(provider.getDateTimeFormatter());
+            
+            LOGGER.log(Level.INFO, "Localization provider applied: {0} for locale: {1}",
+                new Object[]{provider.getClass().getSimpleName(), targetLocale.toLanguageTag()});
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "SPI localization failed, falling back to JDK defaults", e);
+        }
+    }
+    /** Parses a BCP 47 / IETF language tag like "pt-CV" into a Locale. Returns system default if null/empty. */
+    private static Locale parseLocaleTag(String tag) {
+        if (tag == null || tag.isBlank()) {
+            return Locale.getDefault();
+        }
+        return Locale.forLanguageTag(tag);
+    }
+
+    private static boolean isNullOrBlank(String text){
+            return text == null || text.isBlank();
+        }
+    }
 
 class SortedStoreProperties extends Properties {
 
