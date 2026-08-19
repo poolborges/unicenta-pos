@@ -188,7 +188,7 @@ public abstract class Formats<T> {
         }
 
         // 1. Converts legacy Date millisecond matrix into a modern instant timeline anchor
-        java.time.Instant instant = legacyDate.toInstant();
+        java.time.Instant instant = java.time.Instant.ofEpochMilli(legacyDate.getTime());
 
         // 2. Binds the instant timestamp to a specific geographic ZoneId timezone layout
         java.time.ZonedDateTime zonedDateTime = java.time.ZonedDateTime.ofInstant(instant, zoneId);
