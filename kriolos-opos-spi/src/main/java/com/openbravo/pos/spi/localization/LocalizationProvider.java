@@ -1,16 +1,14 @@
 package com.openbravo.pos.spi.localization;
 
 import java.text.NumberFormat;
-import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Locale;
 
 /**
- * Service Provider Interface (SPI) for regional POS localization extensions.
- * <p>
- * Third-party developers implement this interface to provision custom currency formatting, 
- * date configurations, numeric parsing rules, and localized downstream services (e.g., 
- * tax frameworks, electronic invoicing) tied to a specific geographic region.
- * </p>
+ * Service Provider Interface (SPI) for point-of-sale regional localization extensions.
+ * Encapsulates transactional formatting patterns and localized extension hooks.
  * 
  * @author KriolOS POS
  * @since 1.0.0
@@ -18,52 +16,122 @@ import java.util.Locale;
 public interface LocalizationProvider {
     
     /**
-     * Verifies if this provider handles the requested system locale.
+     * Evaluates if this provider handles the requested system locale context.
      * 
      * @param locale The active runtime locale injected by the POS core engine.
-     * @return {@code true} if this provider can handle compliance and formatting for the given locale.
+     * @return true if this provider supports the given locale context threshold.
      */
     boolean supports(Locale locale);
-    
+
     /**
-     * Resolves the customized currency formatter for the target region.
-     * <p>
-     * Implementation note: Regions without minor fractional units (such as CLP in Chile)
-     * must explicitly clear or round fraction configurations here.
-     * </p>
+     * Resolves the primary native geographic locale bound to this provider module.
      * 
-     * @return A thread-safe or newly instantiated {@link NumberFormat} configured for regional currency.
+     * @return The active regional Locale token. Must never be null.
      */
-    NumberFormat getCurrencyFormatter();
+    Locale getLocale();
     
     /**
-     * Resolves the calendar date formatting style compliant with regional standards.
+     * Resolves the customized currency formatter matching the target region legal rules.
      * 
-     * @return A {@link DateFormat} instance ready for UI or receipt printing layouts.
+     * @return A tailored NumberFormat instance configured for regional currency.
      */
-    DateFormat getDateFormatter();
-    
+    default NumberFormat getCurrencyFormatter(){
+        return NumberFormat.getCurrencyInstance(getLocale());
+    }
+
     /**
-     * Resolves the general numeric decimal/thousand grouping format for standard inventory counts.
+     * Resolves the general decimal and thousands grouping numeric layout context.
      * 
-     * @return A standard {@link NumberFormat} built for local numeric layouts.
+     * @return A standard NumberFormat built for local general numeric representations.
      */
-    NumberFormat getNumberFormatter();
-    
+    default NumberFormat getNumberFormatter() {
+        return NumberFormat.getNumberInstance(getLocale());
+    }
+
     /**
-     * Hook point for extensible, runtime-discovered business operations.
-     * <p>
-     * Functions as an Abstract Factory pattern variant. Allows the host POS system 
-     * to request specialized services (like fiscal compliance bridges or electronic ticketing)
-     * decoupled from the main application core.
-     * </p>
+     * Resolves a rigid integer formatter completely stripped of fractional trailing units.
      * 
-     * @param <T> The operational type of the requested service interface.
-     * @param serviceClass The class type defining the targeted regional business contract.
-     * @return An active implementation instance provided by the third-party JAR, or {@code null} if unsupported.
+     * @return A NumberFormat instance configured strictly for whole integer numbers.
+     */
+    default NumberFormat getIntegerFormatter() {
+        NumberFormat nf = NumberFormat.getIntegerInstance(getLocale());
+        if (nf instanceof DecimalFormat decimalFormat) {
+            decimalFormat.setGroupingUsed(true);
+        }
+        return nf;
+    }
+
+    /**
+     * Resolves an extended precision double formatter designed for material item weight scales.
+     * 
+     * @return A NumberFormat instance built for fractional floating-point representations.
+     */
+    default NumberFormat getDoubleFormatter() {
+        NumberFormat nf = NumberFormat.getNumberInstance(getLocale());
+        nf.setMinimumFractionDigits(2);
+        nf.setMaximumFractionDigits(4);
+        if (nf instanceof DecimalFormat decimalFormat) {
+            decimalFormat.setGroupingUsed(true);
+        }
+        return nf;
+    }
+
+    /**
+     * Resolves a percentage formatting layout tailored for taxation or commercial discounts.
+     * 
+     * @return A specialized NumberFormat built for percentage value expressions.
+     */
+    default NumberFormat getPercentFormatter() {
+        NumberFormat nf = NumberFormat.getPercentInstance(getLocale());
+        nf.setMinimumFractionDigits(0);
+        nf.setMaximumFractionDigits(2);
+        return nf;
+    }
+        
+    /**
+     * Resolves the standard calendar date layout compliant with regional standards.
+     * 
+     * @return An unmodifiable DateTimeFormatter built for localized date representation.
+     */
+    default DateTimeFormatter getDateFormatter() {
+        return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(getLocale());
+    }
+
+    /**
+     * Resolves a combined, immutable date and time audit trail signature pattern.
+     * 
+     * @return A modern localized DateTimeFormatter matching full calendar and clock markers.
+     */
+    default DateTimeFormatter getDateTimeFormatter() {
+        return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM).withLocale(getLocale());
+    }
+
+    /**
+     * Resolves a precise time slice layout pattern capturing seconds boundaries.
+     * 
+     * @return A modern localized DateTimeFormatter mapping running hour, minute, and second sequences.
+     */
+    default DateTimeFormatter getTimeFormatter() {
+        return DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM).withLocale(getLocale());
+    }
+
+    /**
+     * Resolves an ergonomic user-facing timestamp completely stripped of running second indicators.
+     * 
+     * @return A modern localized DateTimeFormatter tracking concise hour and minute sequences.
+     */
+    default DateTimeFormatter getHourMinFormatter() {
+        return DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(getLocale());
+    }
+
+    /**
+     * Abstract Factory extension gateway used to resolve localized pluggable business services.
+     * 
+     * @param <T> The target service contract interface token type.
+     * @param serviceClass The class mirror layout matching the requested regional business contract.
+     * @return An active implementation instance provided by the vendor JAR, or null if unsupported.
      */
     default <T> T getLocalService(Class<T> serviceClass) {
-        // Default implementation provides no extended fiscal services out of the box.
         return null;
     }
 }

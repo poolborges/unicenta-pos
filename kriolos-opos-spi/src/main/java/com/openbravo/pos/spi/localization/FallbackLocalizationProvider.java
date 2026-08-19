@@ -16,8 +16,6 @@
  */
 package com.openbravo.pos.spi.localization;
 
-import java.text.DateFormat;
-import java.text.NumberFormat;
 import java.util.Locale;
 
 
@@ -39,17 +37,7 @@ class FallbackLocalizationProvider implements LocalizationProvider {
     }
 
     @Override
-    public NumberFormat getCurrencyFormatter() {
-        return NumberFormat.getCurrencyInstance(defaultLocale);
-    }
-
-    @Override
-    public DateFormat getDateFormatter() {
-        return DateFormat.getDateInstance(DateFormat.MEDIUM, defaultLocale);
-    }
-
-    @Override
-    public NumberFormat getNumberFormatter() {
-        return NumberFormat.getNumberInstance(defaultLocale);
+    public Locale getLocale() {
+        return defaultLocale;
     }
 }

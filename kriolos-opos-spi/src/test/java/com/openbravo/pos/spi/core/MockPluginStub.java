@@ -4,7 +4,6 @@ import com.openbravo.pos.spi.annotation.PluginMetadata;
 import com.openbravo.pos.spi.annotation.PropertyDefinition;
 import com.openbravo.pos.spi.provider.ConfigurableProvider;
 import com.openbravo.pos.spi.localization.LocalizationProvider;
-import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Map;
@@ -68,6 +67,10 @@ public class MockPluginStub implements LocalizationProvider, ConfigurableProvide
     }
 
     @Override public NumberFormat getCurrencyFormatter() { return null; }
-    @Override public DateFormat getDateFormatter() { return null; }
     @Override public NumberFormat getNumberFormatter() { return null; }
+
+    @Override
+    public Locale getLocale() {
+        return Locale.getDefault();
+    }
 }
