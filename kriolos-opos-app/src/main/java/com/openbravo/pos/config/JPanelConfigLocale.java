@@ -77,11 +77,9 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
         jcboDouble.addItem("#0.0");
         jcboDouble.addItem("#,##0.#");
 
+        jcboCurrency.removeAllItems();
         jcboCurrency.addItem(DEFAULT_VALUE);
-        jcboCurrency.addItem("\u00A4 #0.00");
-        jcboCurrency.addItem("'$' #,##0.00");
-        jcboCurrency.addItem("#00 '$'");
-        jcboCurrency.addItem("#,##0'$'");
+        CurrencyPatterns.getAllPatterns().forEach(jcboCurrency::addItem);
 
         jcboPercent.addItem(DEFAULT_VALUE);
         jcboPercent.addItem("#,##0.##%");
