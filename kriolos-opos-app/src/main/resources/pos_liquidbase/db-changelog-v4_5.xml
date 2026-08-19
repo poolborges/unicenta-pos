@@ -218,7 +218,7 @@
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-13">
         <createTable tableName="draweropened">
-            <column defaultValueComputed="now()" name="opendate" type="datetime">
+            <column name="opendate" type="datetime">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)"/>
@@ -261,7 +261,7 @@
     </changeSet>
     <changeSet author="pauloborges (generated)" id="1603928315936-16">
         <createTable tableName="lineremoved">
-            <column defaultValueComputed="now()" name="removeddate" type="datetime">
+            <column name="removeddate" type="datetime">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)"/>
@@ -305,7 +305,7 @@
             <column name="attributes" type="VARCHAR(255)"/>
             <column name="notes" type="VARCHAR(255)"/>
             <column name="ticketid" type="VARCHAR(50)"/>
-            <column defaultValueComputed="now()" name="ordertime" type="datetime">
+            <column name="ordertime" type="datetime">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="1" name="displayid" type="INT"/>
@@ -623,10 +623,10 @@
             <column name="breakid" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueComputed="now()" name="starttime" type="datetime">
+            <column name="starttime" type="datetime">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueComputed="now()" name="endtime" type="datetime">
+            <column name="endtime" type="datetime">
                 <constraints nullable="false"/>
             </column>
         </createTable>
