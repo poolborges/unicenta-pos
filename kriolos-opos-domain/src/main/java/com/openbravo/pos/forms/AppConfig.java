@@ -454,6 +454,17 @@ public class AppConfig implements AppProperties {
             LOGGER.log(Level.WARNING, "Cannot set Look and Feel: " + lafClass, e);
         }
 
+        // Localization configuration switch
+        String localizationMode = config.getProperty("localization.configure", "legacy");
+        if ("provider".equalsIgnoreCase(localizationMode)) {
+            applyLocalizationProvider(config);
+        }else {
+            applyLocalizationLegacy(config);
+        }
+    }
+
+    private static void applyLocalizationLegacy(AppConfig config) {
+        
         //Set I18n or Language 
         String langTagLang = config.getProperty("user.language");
         String langTagCountry = config.getProperty("user.country");
@@ -478,17 +489,6 @@ public class AppConfig implements AppProperties {
             
             Locale.setDefault(localeBuilder.build());
         }
-        
-        // Localization configuration switch
-        String localizationMode = config.getProperty("localization.configure", "legacy");
-        if ("provider".equalsIgnoreCase(localizationMode)) {
-            applyLocalizationProvider(config);
-        }else {
-            applyLocalizationLegacy(config);
-        }
-    }
-
-    private static void applyLocalizationLegacy(AppConfig config) {
 
         //Set Format/Pattern for: Number, Date, Currency 
         Formats.setIntegerPattern(config.getProperty("format.integer"));
