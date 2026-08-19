@@ -565,7 +565,7 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
                         appView.getActiveCashDateEnd(), 0 });
 
                 dataLogicSystem
-                        .execDrawerOpened(new Object[] { appView.getAppUserView().getUser().getName(), "Close Cash" });
+                        .execDrawerOpened(appView.getAppUserView().getUser().getName(), "Close Cash", new Date());
 
                 // ponemos la fecha de fin
                 m_PaymentsToClose.setDateEnd(dNow);
