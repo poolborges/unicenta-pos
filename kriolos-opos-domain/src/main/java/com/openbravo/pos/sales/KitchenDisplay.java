@@ -15,19 +15,17 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.sales;
 
-import com.openbravo.format.Formats;
+import com.openbravo.data.loader.DataWriteUtils;
 import com.openbravo.pos.forms.AppView;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Administrator
- */
+
 public class KitchenDisplay {
 
     private final static Logger LOGGER = Logger.getLogger(KitchenDisplay.class.getName());
@@ -54,17 +52,29 @@ public class KitchenDisplay {
      * @param attributes
      */
     public void addRecord(String id, String table, String pickupID, String product, String multiply, String attributes) {
-        Date date = new Date();
+       
         String SQL = "INSERT INTO KITCHENDISPLAY (ID, ORDERTIME, PLACE, PICKUPID, PRODUCT, MULTIPLY, ATTRIBUTES) VALUES (?, ?, ?, ?, ?, ?, ?) ";
+        
+        /*
+        Parameter Breakdown
+            ID: Unique key for the kitchen display row.
+            ORDERTIME: sql DATETIME when the order was placed.
+            PLACE: Table, room, or location identifier.
+            PICKUPID: Order or receipt sequence number for pickup.
+            PRODUCT: Name or ID of the menu item.
+            MULTIPLY: Quantity of the product ordered.
+            ATTRIBUTES: Extra modifiers or notes for the item.
+        */
 
         try {
             Connection conDB = m_App.getSession().getConnection();
+            LocalDateTime now = LocalDateTime.now();
 
             try (PreparedStatement pstmt = conDB.prepareStatement(SQL)) {
                 //Diable auto-commit because manual end the end
                 pstmt.getConnection().setAutoCommit(false);
                 pstmt.setString(1, id);
-                pstmt.setString(2, Formats.HOURMIN.formatValue(date));
+                pstmt.setObject(2, now);
                 pstmt.setString(3, table);
                 pstmt.setString(4, pickupID);
                 pstmt.setString(5, product);

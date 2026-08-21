@@ -381,12 +381,12 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
         txtFax.setText(Formats.STRING.formatValue((String)customer[18]));
         m_jNotes.setText((String) customer[19]);
         m_jVisible.setSelected(((Boolean) customer[20]));
-        txtCurdate.setText(Formats.DATE.formatValue((Date)customer[21]));
+        txtCurdate.setText(Formats.TIMESTAMP.formatValue((Date)customer[21]));
         txtCurdebt.setText(Formats.CURRENCY.formatValue((Double)customer[22]));
         m_jImage.setImage((BufferedImage) customer[23]);
         m_jVip.setSelected(((Boolean) customer[24]));
         txtDiscount.setText(Formats.DOUBLE.formatValue((Double)customer[25]));
-        m_jdate.setText(Formats.DATE.formatValue((Date)customer[26]));
+        m_jdate.setText(Formats.TIMESTAMP.formatValue((Date)customer[26]));
     }
 
     /**
@@ -574,7 +574,7 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
                     return customerTransaction.getTicketId();
                 case 1:
                     Date transactionDate = customerTransaction.getTransactionDate();
-                    String formattedDate = Formats.DATETIME.formatValue(transactionDate);
+                    String formattedDate = Formats.TIMESTAMP.formatValue(transactionDate);
                     return formattedDate;
                 case 2:
                     return customerTransaction.getProductName();

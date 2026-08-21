@@ -459,14 +459,12 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      * @param drawer
      * @throws BasicException
      */
-    public final void execDrawerOpened(Object[] drawer) throws BasicException {
-        final SentenceExec m_draweropened = new StaticSentence(this.session,
-                "INSERT INTO draweropened ( NAME, TICKETID) "
-                + "VALUES (?, ?)",
-                new SerializerWriteBasic(new Datas[]{
-            Datas.STRING,
-            Datas.STRING}));
-        m_draweropened.exec(drawer);
+    public final void execDrawerOpened(String name, String action, Date openDate) throws BasicException {
+        final SentenceExec m_draweropened = new PreparedSentence<>(this.session,
+                "INSERT INTO draweropened ( NAME, TICKETID, OPENDATE) "
+                + "VALUES (?, ?, ?)",
+                new SerializerWriteBasic(new Datas[]{Datas.STRING, Datas.STRING, Datas.TIMESTAMP}));
+        m_draweropened.exec(new Object[] {name, action, openDate});
     }
 //// </editor-fold> 
 

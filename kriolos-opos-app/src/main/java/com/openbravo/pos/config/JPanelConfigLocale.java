@@ -77,11 +77,9 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
         jcboDouble.addItem("#0.0");
         jcboDouble.addItem("#,##0.#");
 
+        jcboCurrency.removeAllItems();
         jcboCurrency.addItem(DEFAULT_VALUE);
-        jcboCurrency.addItem("\u00A4 #0.00");
-        jcboCurrency.addItem("'$' #,##0.00");
-        jcboCurrency.addItem("#00 '$'");
-        jcboCurrency.addItem("#,##0'$'");
+        CurrencyPatterns.getAllPatterns().forEach(jcboCurrency::addItem);
 
         jcboPercent.addItem(DEFAULT_VALUE);
         jcboPercent.addItem("#,##0.##%");
@@ -93,12 +91,6 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
         jcboDatetime.addItem(DEFAULT_VALUE);
 
         setupListerner();
-        
-        System.out.println("Verificar (120 CVE) pt-CV Currency: 120.30 "
-                + NumberFormat.getCurrencyInstance(new Locale("pt", "CV")).format(120.30)
-                + "\n\rVerificar (120 Kuanza) pt-AO Currency: 120.30 "
-                + NumberFormat.getCurrencyInstance(new Locale("pt", "AO")).format(120.30));
-
     }
 
     private void setupListerner() {
@@ -173,29 +165,20 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
     }
 
     private void showHelp() {
-
-        //Set Current Locale to What is selected;
-        Locale.setDefault(((LocaleInfo) jcboLocale.getSelectedItem()).getLocale());
-
-        //Set Format/Pattern for: Number, Date, Currency 
-        Formats.setIntegerPattern(readWithDefault(jcboInteger.getSelectedItem()));
-        Formats.setDoublePattern(readWithDefault(jcboDouble.getSelectedItem()));
-        Formats.setCurrencyPattern(readWithDefault(jcboCurrency.getSelectedItem()));
-        Formats.setPercentPattern(readWithDefault(jcboPercent.getSelectedItem()));
-        Formats.setDatePattern(readWithDefault(jcboDate.getSelectedItem()));
-        Formats.setTimePattern(readWithDefault(jcboTime.getSelectedItem()));
-        Formats.setDateTimePattern(readWithDefault(jcboDatetime.getSelectedItem()));
-
-        jcboLocale.setToolTipText("<html>IETF BCP 47 Tag: " + Locale.getDefault().toLanguageTag());
-        jcboInteger.setToolTipText("<html>123 formated: " + Formats.INT.formatValue(123));
-        jcboDouble.setToolTipText("<html>123.45 formated: " + Formats.DOUBLE.formatValue(123.45));
-        jcboCurrency.setToolTipText("<html>123.45 formated: " + Formats.CURRENCY.formatValue(123.45));
-        jcboPercent.setToolTipText("<html>0.23 formated: " + Formats.PERCENT.formatValue(0.23));
-        jcboDate.setToolTipText("<html>Date formated: " + Formats.DATE.formatValue(new Date()));
-        jcboTime.setToolTipText("<html>Time formated: " + Formats.TIME.formatValue(new Date()));
-        jcboDatetime.setToolTipText("<html>DateTime formated: " + Formats.TIMESTAMP.formatValue(new Date()));
-
         
+        Locale locale = ((LocaleInfo) jcboLocale.getSelectedItem()).getLocale();
+        
+        Date nowDate = new Date();
+
+        jcboLocale.setToolTipText("<html>Localte IETF BCP 47 Tag: " + locale.toLanguageTag());
+        jcboInteger.setToolTipText("<html>Integer formated(123): " + Formats.INT.formatValue(123));
+        jcboDouble.setToolTipText("<html>Double formated(123.52): " + Formats.DOUBLE.formatValue(123.52));
+        jcboCurrency.setToolTipText("<html>Currency formated(123.55): " + Formats.CURRENCY.formatValue(123.55));
+        jcboPercent.setToolTipText("<html>Percentage formated(0.23): " + Formats.PERCENT.formatValue(0.23));
+        jcboDate.setToolTipText("<html>Date formated(now): " + Formats.DATE.formatValue(nowDate));
+        jcboDate.setToolTipText("<html>DateTime formated(now): " + Formats.DATETIME.formatValue(nowDate));
+        jcboTime.setToolTipText("<html>Time formated(now): " + Formats.TIME.formatValue(nowDate));
+        jcboDatetime.setToolTipText("<html>Timestamp formated(now): " + Formats.TIMESTAMP.formatValue(nowDate));
 
     }
 

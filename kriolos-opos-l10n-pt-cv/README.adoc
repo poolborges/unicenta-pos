@@ -1,0 +1,92 @@
+= KriolOS POS - L10n Extension for Cape Verde (pt-CV)
+KriolOS POS Community <dev@kriolos.org>
+v1.0.0, 2026-08-17
+:description: Localization module providing legal compliance, monetary formatting, and fiscal layouts for the Cape Verdean market.
+:opensource-license: GPLv3
+
+== Overview
+
+The `kriolos-opos-l10n-pt-cv` module is an official pluggable localization extension for **KriolOS POS**. It implements the core contractual specifications defined by the system's runtime layer (`kriolos-opos-spi`).
+
+This sub-artifact configures the point-of-sale subsystem to operate within the financial, linguistic, and regulatory boundaries of **Cape Verde**.
+
+
+.How to enable localization (pt_CV)
+----
+localization.configure=provider
+localization.locale=pt-CV
+----
+
+== Features
+
+* **Strict IETF BCP 47 Compliance:** Instantiates locale environments via modern `Locale.Builder` APIs to completely prevent runtime context pollution.
+* **Flexible CVE Formatting:** Handles the specific layout of the Cape Verdean Escudo (`CVE`), offering modular parameters to process standard integer displays or fixed fractional tails (`.00`) for custom ERP sync matrices.
+* **Automated SPI Compilation Mapping:** Embeds Google's compile-time `@AutoService` metadata processor to register provider entries automatically without explicit file maintenance.
+
+== Architectural Pipeline
+
+This module injects itself into the main lifecycle loop using Java's native `ServiceLoader` discovery infrastructure. 
+
+[plantuml, l10n-architecture, svg]
+----
+@startuml
+actor "POS Checkout Engine" as Core
+database "Classpath SPI Registry" as Meta
+component "PtCvLocalizationProvider" as Provider
+
+Core -> Meta : Scans for LocalizationProvider.class
+Meta -> Provider : Discovers annotated bytecode via AutoService
+Provider --> Core : Injects custom CVE Formatters
+@enduml
+----
+
+== Configuration Options
+
+The behavior of the monetary engine can be customized to match specific corporate reporting or layout rules:
+
+[cols="2,1,4", options="header"]
+|===
+
+| Formatting Execution Mode | Target Output (7500.00) | Main Target Use Case
+
+| **Standard Integer (Default)**
+| `7.500 $ú`
+| Customer receipts, touch-screen cash desk monitors, fast-checkout environments.
+
+| **Forced Fractional Tail**
+| `7.500,00 $ú`
+| Automated banking exports, inter-company ledger integration, corporate auditing grids.
+|===
+
+== Build and Deployment
+
+This module is managed inside the root multi-module declaration block and compiles under **Java 17 (LTS)** specifications.
+
+To compile the module and bundle the binary artifact cleanly:
+
+[source,bash]
+----
+mvn clean package -pl kriolos-opos-l10n-pt-cv
+----
+
+The resulting `.jar` file will automatically contain the compiled classes alongside the generated service registration manifest at `/META-INF/services/com.openbravo.pos.spi.localization.LocalizationProvider`.
+
+== License
+
+Distributed under the terms of the open-source *{opensource-license}* license. Contributions must follow the guidelines outlined in the repository root `CONTRIBUTING.adoc` document.
+
+
+
+== References
+
+Decreto-Lei n.º 79/2021: 
+Aprova o Regime Jurídico da Faturação Eletrónica (RJFE) em Cabo Verde. 
+Este documento detalha a obrigatoriedade da emissão de faturas eletrónicas, faturas-recibo 
+e os requisitos técnicos dos sistemas de faturação e transmissão de dados 
+(como a estrutura do ficheiro XML e os dados que devem constar obrigatoriamente no talão impresso).
+
+
+Código do Imposto sobre o Valor Acrescentado (Código do IVA): 
+Regulamenta como as taxas (como a taxa normal de 15%) devem ser aplicadas, gravadas 
+e apresentadas nos documentos fiscais. Exige que todos os montantes sejam expressos 
+de forma clara na moeda legal do país (CVE / $).

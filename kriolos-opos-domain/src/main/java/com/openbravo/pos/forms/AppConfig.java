@@ -16,6 +16,8 @@
 package com.openbravo.pos.forms;
 
 import com.openbravo.format.Formats;
+import com.openbravo.pos.spi.localization.LocalizationFactory;
+import com.openbravo.pos.spi.localization.LocalizationProvider;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -68,7 +70,7 @@ public class AppConfig implements AppProperties {
         this.properties = new SortedStoreProperties();
     }
 
-    private static File getBaseApplicationDataDirectory(){
+    private static File getBaseApplicationDataDirectory() {
 
         String os = System.getProperty("os.name").toLowerCase();
         String userHome = System.getProperty("user.home");
@@ -112,7 +114,6 @@ public class AppConfig implements AppProperties {
         return new File(baseDirectory, APP_CONFIG_FILE_NAME);
     }
 
-
     public String getAppDataDirectory() {
         return getBaseApplicationDataDirectory().getAbsolutePath();
     }
@@ -127,7 +128,6 @@ public class AppConfig implements AppProperties {
     public String getProperty(String sKey) {
         return properties.getProperty(sKey);
     }
-
 
     @Override
     public String getProperty(String sKey, String defaultValue) {
@@ -274,30 +274,30 @@ public class AppConfig implements AppProperties {
     public void load() {
         File file = getConfigFile();
         LOGGER.log(Level.INFO, "Try Loading configuration file: {0}", configfile.getAbsolutePath());
-    try {
-        if (file.exists() && file.isFile()) {
-            try (InputStream in = new FileInputStream(file)) {
-                properties.load(in);
-            }
+        try {
+            if (file.exists() && file.isFile()) {
+                try (InputStream in = new FileInputStream(file)) {
+                    properties.load(in);
+                }
 
-            //File not empty
-            if (getProperty("db.URL") == null) {
+                //File not empty
+                if (getProperty("db.URL") == null) {
+                    properties = defaultConfig();
+                    save();
+                }
+            } else {
                 properties = defaultConfig();
                 save();
             }
-        } else {
-            properties = defaultConfig();
-            save();
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, MessageFormat.format("IOException on load configuration file: {0}", file.getAbsolutePath()), e);
+            try {
+                LOGGER.log(Level.INFO, "Providing default configuration: ", e);
+                properties = defaultConfig();
+            } catch (Exception ex) {
+                LOGGER.log(Level.WARNING, "Fail getting default/factory configuration", ex);
+            }
         }
-    }catch (IOException e) {
-        LOGGER.log(Level.WARNING, MessageFormat.format("IOException on load configuration file: {0}", file.getAbsolutePath()), e);
-        try {
-            LOGGER.log(Level.INFO, "Providing default configuration: ", e);
-            properties = defaultConfig();
-        } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Fail getting default/factory configuration", ex);
-        }
-    }
     }
 
     /**
@@ -321,7 +321,7 @@ public class AppConfig implements AppProperties {
     public void save() throws IOException {
 
         LOGGER.log(Level.INFO, "Saving configuration to file: {0}", configfile.getAbsolutePath());
-        try ( OutputStream out = new FileOutputStream(configfile)) {
+        try (OutputStream out = new FileOutputStream(configfile)) {
             properties.store(out, AppLocal.APP_NAME + ". Configuration file.");
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, "Fail saving configuration to file: " + configfile.getAbsolutePath(), ex);
@@ -350,7 +350,7 @@ public class AppConfig implements AppProperties {
 
 // primary DB
         propConfig.setProperty("db.name", "Main DB");
-        propConfig.setProperty("db.URL", "jdbc:hsqldb:file:"+Paths.get(baseDirectory.getAbsolutePath(), "kriolopos").toString());
+        propConfig.setProperty("db.URL", "jdbc:hsqldb:file:" + Paths.get(baseDirectory.getAbsolutePath(), "kriolopos").toString());
         propConfig.setProperty("db.schema", "kriolopos");
         propConfig.setProperty("db.options", ";shutdown=true");
         propConfig.setProperty("db.user", "kriolopos");
@@ -366,10 +366,15 @@ public class AppConfig implements AppProperties {
 
         propConfig.setProperty("machine.hostname", getLocalHostName());
 
+        //Localization - Legacy 
         Locale l = Locale.getDefault();
         propConfig.setProperty("user.language", l.getLanguage());
         propConfig.setProperty("user.country", l.getCountry());
         propConfig.setProperty("user.variant", l.getVariant());
+
+        //Localization - SPI 
+        propConfig.setProperty("localization.configure", "legacy");
+        propConfig.setProperty("localization.locale", "");
 
         propConfig.setProperty("swing.defaultlaf", "com.formdev.flatlaf.FlatDarkLaf");
 
@@ -447,13 +452,45 @@ public class AppConfig implements AppProperties {
             LOGGER.log(Level.WARNING, "Cannot set Look and Feel: " + lafClass, e);
         }
 
-        //Set I18n or Language 
-        String slang = config.getProperty("user.language");
-        String scountry = config.getProperty("user.country");
-        String svariant = config.getProperty("user.variant");
-        if (slang != null && !slang.equals("") && scountry != null && svariant != null) {
-            Locale.setDefault(new Locale(slang, scountry, svariant));
+        // Localization configuration switch
+        String localizationMode = config.getProperty("localization.configure", "legacy");
+        if ("provider".equalsIgnoreCase(localizationMode)) {
+            applyLocalizationProvider(config);
+        } else {
+            applyLocalizationLegacy(config);
         }
+    }
+
+    private static void applyLocalizationLegacy(AppConfig config) {
+        
+        LOGGER.log(Level.INFO, "Localization from legacy properties");
+
+        //Set I18n or Language 
+        String langTagLang = config.getProperty("user.language");
+        String langTagCountry = config.getProperty("user.country");
+        String langTagVariant = config.getProperty("user.variant");
+        String langTagScript = config.getProperty("user.script");
+        var localeBuilder = new Locale.Builder();
+
+        if (!isNullOrBlank(langTagVariant)) {
+            localeBuilder.setVariant(langTagVariant);
+        }
+
+        if (!isNullOrBlank(langTagScript)) {
+            localeBuilder.setScript(langTagScript);
+        }
+
+        if (!isNullOrBlank(langTagCountry)) {
+            localeBuilder.setRegion(langTagCountry);
+        }
+
+        if (!isNullOrBlank(langTagLang)) {
+            localeBuilder.setLanguage(langTagLang);
+
+            Locale.setDefault(localeBuilder.build());
+        }
+        
+        LOGGER.log(Level.INFO, "Localization locale default: "+Locale.getDefault().toLanguageTag());
 
         //Set Format/Pattern for: Number, Date, Currency 
         Formats.setIntegerPattern(config.getProperty("format.integer"));
@@ -463,6 +500,50 @@ public class AppConfig implements AppProperties {
         Formats.setDatePattern(config.getProperty("format.date"));
         Formats.setTimePattern(config.getProperty("format.time"));
         Formats.setDateTimePattern(config.getProperty("format.datetime"));
+    }
+
+    private static void applyLocalizationProvider(AppConfig config) {
+        
+        
+        LOGGER.log(Level.INFO, "Localization from SPI Provider");
+        
+        // Build target locale from "localization.locale" (ex: "pt-CV")
+        Locale targetLocale = parseLocaleTag(config.getProperty("localization.locale"));
+        try {
+            
+            Locale.setDefault(targetLocale);
+
+            LocalizationProvider provider = LocalizationFactory.getInstance().getProvider(targetLocale);
+
+            //Set Format/Pattern for: Number, Date, Currency 
+            Formats.setIntegerFormatter(provider.getIntegerFormatter());
+            Formats.setDoubleFormat(provider.getDoubleFormatter());
+            Formats.setCurrencyFormat(provider.getCurrencyFormatter());
+            Formats.setPercentFormatter(provider.getPercentFormatter());
+            Formats.setDateFormat(provider.getDateFormatter());
+            Formats.setTimeFormatter(provider.getTimeFormatter());
+            Formats.setDateTimeFormatter(provider.getDateTimeFormatter());
+
+            LOGGER.log(Level.INFO, "Localization provider applied: {0} for locale: {1}",
+                    new Object[]{provider.getClass().getSimpleName(), targetLocale.toLanguageTag()});
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "SPI localization failed, falling back to JDK defaults", e);
+        }
+    }
+
+    /**
+     * Parses a BCP 47 / IETF language tag like "pt-CV" into a Locale. Returns
+     * system default if null/empty.
+     */
+    private static Locale parseLocaleTag(String tag) {
+        if (tag == null || tag.isBlank()) {
+            return Locale.getDefault();
+        }
+        return Locale.forLanguageTag(tag);
+    }
+
+    private static boolean isNullOrBlank(String text) {
+        return text == null || text.isBlank();
     }
 }
 

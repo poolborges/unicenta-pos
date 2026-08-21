@@ -312,7 +312,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
         m_jNotes.setText((String) supplier[17]);
         m_jVisible.setSelected(((Boolean) supplier[18]));
 
-        txtCurdate.setText(Formats.DATE.formatValue((Date)supplier[19]));
+        txtCurdate.setText(Formats.TIMESTAMP.formatValue((Date)supplier[19]));
         txtCurdebt.setText(Formats.CURRENCY.formatValue((Double)supplier[20]));
 
         m_jVATID.setText((String) supplier[21]);
@@ -505,7 +505,7 @@ public final class SuppliersView extends com.openbravo.pos.panels.ValidationPane
 
                 case 0:
                     Date transactionDate = supplierTransaction.getTransactionDate();
-                    String formattedDate = Formats.DATETIME.formatValue(transactionDate);
+                    String formattedDate = Formats.TIMESTAMP.formatValue(transactionDate);
                     return formattedDate;
                 case 1:
                     return supplierTransaction.getProductName();

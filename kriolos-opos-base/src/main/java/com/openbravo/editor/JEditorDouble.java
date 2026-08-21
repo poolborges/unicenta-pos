@@ -15,7 +15,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.editor;
 
-import com.openbravo.format.DoubleUtils;
 import com.openbravo.format.Formats;
 
 /**
@@ -61,7 +60,7 @@ public class JEditorDouble extends JEditorNumber<Double> {
     }
     
     private String formatDouble(Double value) {
-        String sNumber = Double.toString(DoubleUtils.fixDecimals(value));
+        String sNumber = Double.toString(Formats.fixDecimals(value));
         if (sNumber.endsWith(".0")) {
             sNumber = sNumber.substring(0, sNumber.length() - 2);
         }

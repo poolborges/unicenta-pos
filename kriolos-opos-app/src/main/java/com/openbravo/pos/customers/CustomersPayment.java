@@ -155,7 +155,7 @@ public class CustomersPayment extends javax.swing.JPanel implements JPanelView, 
         txtNotes.setText(customer.getNotes());
         txtMaxdebt.setText(Formats.CURRENCY.formatValue(customer.getMaxdebt()));
         txtCurdebt.setText(Formats.CURRENCY.formatValue(customer.getAccdebt()));
-        txtCurdate.setText(Formats.DATE.formatValue(customer.getCurdate()));
+        txtCurdate.setText(Formats.TIMESTAMP.formatValue(customer.getCurdate()));
         txtPrePay.setValue(null);
 
         txtNotes.setEnabled(true);

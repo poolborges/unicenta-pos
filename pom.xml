@@ -29,9 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <description>KriolOS.POS (Kriol Open Source Point Of Sales)</description>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> <!-- Centralizes the target Java version for compliance -->
+        <maven.compiler.release>17</maven.compiler.release>
 
         <netbeans.version>RELEASE240</netbeans.version>
 
@@ -148,6 +147,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>kriolos-opos-app</module>
         <module>kriolos-opos-jpackage</module>
         <module>docs</module>
+        <module>kriolos-opos-l10n-pt-cv</module>
     </modules>
 
     <dependencyManagement>
@@ -196,6 +196,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <groupId>${project.groupId}</groupId>
                 <artifactId>kriolos-opos-lib-report</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-spi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-l10n-pt-cv</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.google.auto.service</groupId>
+                <artifactId>auto-service</artifactId>
+                <version>1.1.1</version>
+                <scope>provided</scope>
             </dependency>
             
             <dependency>
@@ -307,19 +324,67 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <version>3.6.3</version>
                 </plugin>
 
+                <!-- Compiler Plugin: Enforces strict Java 17 API compatibility -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.15.0</version>
                     <configuration>
+                        <!-- Inherits global properties definition keys -->
+                        <!-- 
+                        -->
+                        <release>${maven.compiler.release}</release>
+                        <failOnError>true</failOnError>
+                        
+                        <!-- Code quality auditing flags -->
                         <showWarnings>true</showWarnings>
                         <showDeprecation>true</showDeprecation>
+                        
+                        <!-- Advanced bytecode debugging setup for native stacktraces -->
                         <debug>true</debug>
                         <debuglevel>lines,vars,source</debuglevel>
+                        
                         <compilerArgs>
+                            <!-- Enforces all standard Lint validation constraints on internal bytecode -->
                             <arg>-Xlint:all</arg>
                         </compilerArgs>
+                        <!-- Explicit optimization configuration for IDE incremental compilation safety -->
+                        <annotationProcessorPaths>
+                            <!-- 
+                                Wires the compiler execution loop directly to the AutoService processor.
+                                Ensures text descriptors are accurately written to target bytecode regions.
+                            -->
+                            <path>
+                                <groupId>com.google.auto.service</groupId>
+                                <artifactId>auto-service</artifactId>
+                                <version>1.1.1</version>
+                            </path>
+                        </annotationProcessorPaths>
                     </configuration>
+                </plugin>
+                
+                <!-- Enforcer Plugin: Ensures the build tool is JDK 17 or newer -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.5.0</version>
+                    <executions>
+                        <execution>
+                            <id>enforce-java-version</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <requireJavaVersion>
+                                        <!-- Allows JDK 17 and any version above it -->
+                                        <version>[17,)</version>
+                                        <message>Error: This project requires JDK 17 or higher to build!</message>
+                                    </requireJavaVersion>
+                                </rules>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
 
                 <plugin>
@@ -392,6 +457,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
+            
+            <!-- Enforcer JDK  -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+
 
         </plugins>
 

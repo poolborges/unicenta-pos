@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 KriolOS
+ * Copyright (C) 2023 Paulo Borges
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,12 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.openbravo.pos.spi.provider;
+package com.openbravo.pos.spi.localization;
+
+import java.util.Locale;
+
 
 /**
- *
- * @author poolborges
+ * Standard internal generic execution layer providing localized formatting
+ * default constants.
  */
-public class Spi {
-    
+class FallbackLocalizationProvider implements LocalizationProvider {
+
+    private final Locale defaultLocale;
+
+    FallbackLocalizationProvider(Locale locale) {
+        this.defaultLocale = locale != null ? locale : Locale.getDefault();
+    }
+
+    @Override
+    public boolean supports(Locale locale) {
+        return true;
+    }
+
+    @Override
+    public Locale getLocale() {
+        return defaultLocale;
+    }
 }

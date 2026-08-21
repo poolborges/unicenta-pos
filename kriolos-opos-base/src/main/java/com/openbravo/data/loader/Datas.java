@@ -18,8 +18,6 @@ package com.openbravo.data.loader;
 
 import com.openbravo.basic.BasicException;
 import java.awt.image.BufferedImage;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
 
@@ -41,7 +39,6 @@ public abstract class Datas<T> {
     public final static Datas<Object> SERIALIZABLE = new DatasSERIALIZABLE();
     public final static Datas<Object> NULL = new DatasNULL();
 
-    public final static DateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
     private Datas() {}
 
@@ -213,7 +210,7 @@ public abstract class Datas<T> {
         
         @Override
         protected String toStringAbstract(Date value) {
-            return DATETIME_FORMAT.format(value);
+            return DataWriteUtils.getSQLValue(value);
         }
         
         @Override

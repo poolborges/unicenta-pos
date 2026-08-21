@@ -339,7 +339,7 @@ public class ResultSetHelper {
       result = Character.class;
       break;
     case Types.DATE:
-      result = java.sql.Date.class;
+      result = java.util.Date.class;
       break;
     case Types.DECIMAL:
       result = Double.class;

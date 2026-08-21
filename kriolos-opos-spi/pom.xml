@@ -12,4 +12,12 @@
     <properties>
         <exec.mainClass>com.openbravo.pos.spi.provider.BootPosSpi</exec.mainClass>
     </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies> 
 </project>

@@ -33,7 +33,7 @@ public class ObjectArrayDataRead implements DataRead{
     private void ensureSize(int columnIndex)throws BasicException {
         if (columnIndex > content.length){
         
-              throw new BasicException("Index is > than Object");
+              throw new BasicException("Column Index is > than Object length");
         }
     }
     
@@ -64,6 +64,11 @@ public class ObjectArrayDataRead implements DataRead{
 
     @Override
     public Date getTimestamp(int columnIndex) throws BasicException {
+        return get(columnIndex);
+    }
+
+    @Override
+    public Date getDate(int columnIndex) throws BasicException {
         return get(columnIndex);
     }
 

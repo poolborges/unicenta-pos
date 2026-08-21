@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -79,6 +80,11 @@ public abstract class BatchSentence extends BaseSentence {
 
         @Override
         public java.util.Date getTimestamp(int columnIndex) throws BasicException {
+            throw new BasicException(LocalRes.getIntString(L10N_EXCEPTION_NODATASET));
+        }
+        
+        @Override
+        public Date getDate(int columnIndex) throws BasicException {
             throw new BasicException(LocalRes.getIntString(L10N_EXCEPTION_NODATASET));
         }
 

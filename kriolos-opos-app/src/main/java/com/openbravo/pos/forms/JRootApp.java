@@ -16,7 +16,6 @@
 package com.openbravo.pos.forms;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.loader.Session;
 import com.openbravo.format.Formats;
@@ -34,7 +33,6 @@ import java.awt.ComponentOrientation;
 import java.awt.Cursor;
 import java.io.*;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,8 +74,7 @@ public class JRootApp extends JPanel implements AppView {
     }
 
     private String getLineDate() {
-        DateFormat df = DateFormat.getDateInstance(DateFormat.DEFAULT, getDefaultLocale());
-        return df.format(new Date());
+        return Formats.DATE.formatValue(new Date());
     }
 
     public JRootApp(AppProperties props) {

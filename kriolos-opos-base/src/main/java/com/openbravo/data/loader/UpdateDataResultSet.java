@@ -56,6 +56,11 @@ public class UpdateDataResultSet<T> implements DataResultSet<T> {
     }
 
     @Override
+    public Date getDate(int columnIndex) throws BasicException {
+        throw new BasicException(LocalRes.getIntString("exception.nodataset"));
+    }
+
+    @Override
     public byte[] getBytes(int columnIndex) throws BasicException {
         throw new BasicException(LocalRes.getIntString("exception.nodataset"));
     }

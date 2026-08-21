@@ -26,6 +26,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
@@ -193,7 +194,7 @@ public class TicketParser extends DefaultHandler {
                 deviceTicket.getDevicePrinter(readString(attributes.getValue("printer"), "1")).openDrawer();
                 // Cashdrawer has been activated record the data in the table
                 try {
-                    dataLogicSystem.execDrawerOpened(new Object[]{currentUser, ticketId});
+                    dataLogicSystem.execDrawerOpened(currentUser, ticketId, new Date());
                 } catch (BasicException ex) {
                     LOGGER.log(Level.SEVERE, "Failed to log drawer opened event.", ex);
                 }

@@ -2,7 +2,6 @@ package com.openbravo.pos.reports;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.*;
-import com.openbravo.format.Formats;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +24,7 @@ public class FinancialReportServiceImpl implements FinancialReportService {
         report.setDateEnd(dateEnd);
 
         // 1. Payments (Count, SUM)
-        Object[] valtickets = (Object[]) new StaticSentence(session,
+        Object[] valtickets = (Object[]) new PreparedSentence(session,
                 "SELECT COUNT(*) AS total_count, COALESCE(SUM(payments.TOTAL), 0) AS total_sum "
                         + "FROM payments, receipts "
                         + "WHERE payments.RECEIPT = receipts.ID AND receipts.MONEY = ?",
@@ -44,7 +43,7 @@ public class FinancialReportServiceImpl implements FinancialReportService {
         }
 
         // 2. Payment Lines
-        List<PaymentsListLine> paymentLines = new StaticSentence(session,
+        List<PaymentsListLine> paymentLines = new PreparedSentence(session,
                 "SELECT payments.PAYMENT, SUM(payments.TOTAL), payments.NOTES, COUNT(payments.PAYMENT) "
                         + "FROM payments, receipts "
                         + "WHERE payments.RECEIPT = receipts.ID AND receipts.MONEY = ? "
@@ -56,7 +55,7 @@ public class FinancialReportServiceImpl implements FinancialReportService {
         report.setPaymentLines(paymentLines != null ? paymentLines : new ArrayList<>());
 
         // 3. Category Sales Summary
-        Object[] valcategorysales = (Object[]) new StaticSentence(session,
+        Object[] valcategorysales = (Object[]) new PreparedSentence(session,
                 "SELECT COUNT(*), "
                         + "SUM(ticketlines.UNITS), "
                         + "SUM((ticketlines.PRICE + ticketlines.PRICE * taxes.RATE ) * ticketlines.UNITS) "
@@ -82,7 +81,7 @@ public class FinancialReportServiceImpl implements FinancialReportService {
         }
 
         // 4. Category Sales Lines
-        List<CategorySalesLine> categorys = new StaticSentence(session,
+        List<CategorySalesLine> categorys = new PreparedSentence(session,
                 "SELECT a.NAME, SUM(c.UNITS), SUM(c.UNITS * (c.PRICE + (c.PRICE * d.RATE))) "
                         + "FROM categories as a "
                         + "LEFT JOIN products as b on a.id = b.CATEGORY "
@@ -98,7 +97,7 @@ public class FinancialReportServiceImpl implements FinancialReportService {
         report.setCategorySalesLines(categorys != null ? categorys : new ArrayList<>());
 
         // 5. Sales Summary
-        Object[] recsales = (Object[]) new StaticSentence(session,
+        Object[] recsales = (Object[]) new PreparedSentence(session,
                 "SELECT COUNT(DISTINCT receipts.ID), COALESCE(SUM(ticketlines.UNITS * ticketlines.PRICE), 0) "
                         + "FROM receipts, ticketlines "
                         + "WHERE receipts.ID = ticketlines.TICKET AND receipts.MONEY = ?",
@@ -116,7 +115,7 @@ public class FinancialReportServiceImpl implements FinancialReportService {
         }
 
         // 6. Taxes Summary
-        Object[] rectaxes = (Object[]) new StaticSentence(session,
+        Object[] rectaxes = (Object[]) new PreparedSentence(session,
                 "SELECT COALESCE(SUM(taxlines.AMOUNT), 0), COALESCE(SUM(taxlines.BASE), 0) "
                         + "FROM receipts, taxlines "
                         + "WHERE receipts.ID = taxlines.RECEIPT AND receipts.MONEY = ?",
@@ -132,7 +131,7 @@ public class FinancialReportServiceImpl implements FinancialReportService {
         }
 
         // 7. Sales Lines (Taxes breakdown)
-        List<SalesLine> asales = new StaticSentence(session,
+        List<SalesLine> asales = new PreparedSentence(session,
                 "SELECT taxcategories.NAME, COALESCE(SUM(taxlines.AMOUNT),0), COALESCE(SUM(taxlines.BASE),0), COALESCE(SUM(taxlines.BASE + taxlines.AMOUNT),0) "
                         + "FROM receipts, taxlines, taxes, taxcategories "
                         + "WHERE receipts.ID = taxlines.RECEIPT AND taxlines.TAXID = taxes.ID AND taxes.CATEGORY = taxcategories.ID "
@@ -145,32 +144,31 @@ public class FinancialReportServiceImpl implements FinancialReportService {
         report.setSalesLines(asales != null ? asales : new ArrayList<>());
 
         // 8. Removed Lines
-        String startDateFormatted = Formats.DATETIME.formatValue(dateStart);
-        List<RemovedProductLines> removedLines = new StaticSentence(session,
+        List<RemovedProductLines> removedLines = new PreparedSentence(session,
                 "SELECT lineremoved.NAME, lineremoved.TICKETID, lineremoved.PRODUCTNAME, COALESCE(SUM(lineremoved.UNITS),0) AS TOTAL_UNITS  "
                         + "FROM lineremoved "
                         + "WHERE lineremoved.REMOVEDDATE > ? "
                         + "GROUP BY lineremoved.NAME, lineremoved.TICKETID, lineremoved.PRODUCTNAME",
-                SerializerWriteString.INSTANCE,
+                SerializerWriteDate.INSTANCE,
                 new SerializerReadClass(RemovedProductLines.class))
-                .list(startDateFormatted);
+                .list(dateStart);
 
         report.setRemovedProductLines(removedLines != null ? removedLines : new ArrayList<>());
 
         // 9. Drawer Opened Lines
-        List<DrawerOpenedLines> drawerOpenedLines = new StaticSentence(session,
+        List<DrawerOpenedLines> drawerOpenedLines = new PreparedSentence(session,
                 "SELECT OPENDATE, NAME, TICKETID  "
                         + "FROM draweropened "
                         + "WHERE TICKETID = 'No Sale' AND OPENDATE > ? "
                         + "GROUP BY NAME, OPENDATE, TICKETID",
-                SerializerWriteString.INSTANCE,
+                SerializerWriteDate.INSTANCE,
                 new SerializerReadClass(DrawerOpenedLines.class))
-                .list(startDateFormatted);
+                .list(dateStart);
 
         report.setDrawerOpenedLines(drawerOpenedLines != null ? drawerOpenedLines : new ArrayList<>());
 
         // 10. Product Sales Summary
-        Object[] valproductsales = (Object[]) new StaticSentence(session,
+        Object[] valproductsales = (Object[]) new PreparedSentence(session,
                 "SELECT COUNT(*), SUM(ticketlines.UNITS), "
                         + "SUM((ticketlines.PRICE + ticketlines.PRICE * taxes.RATE ) * ticketlines.UNITS) "
                         + "FROM ticketlines, tickets, receipts, taxes "
@@ -196,7 +194,7 @@ public class FinancialReportServiceImpl implements FinancialReportService {
         }
 
         // 11. Product Sales Lines
-        List<ProductSalesLine> products = new StaticSentence(session,
+        List<ProductSalesLine> products = new PreparedSentence(session,
                 "SELECT products.NAME, SUM(ticketlines.UNITS), ticketlines.PRICE, taxes.RATE "
                         + "FROM ticketlines, tickets, receipts, products, taxes "
                         + "WHERE ticketlines.PRODUCT = products.ID "

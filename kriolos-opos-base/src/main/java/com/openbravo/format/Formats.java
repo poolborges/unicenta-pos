@@ -15,15 +15,16 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.format;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import com.openbravo.basic.BasicException;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Locale;
 
 /**
  *
@@ -31,29 +32,6 @@ import com.openbravo.basic.BasicException;
  * @param <T>
  */
 public abstract class Formats<T> {
-
-    private final static String DEFAULT_PERCENT_FORMAT = "#,##0.##%";
-    private final static String DEFAULT_HOURMIN_FORMAT = "H:mm:ss";
-    private final static String DEFAULT_SIMPLEDATE_FORMAT = "yyyy-MM-dd";
-
-    /**
-     *
-     * "yyyy-MM-dd HH:mm:ss" => "2025-10-03 01:22:48" 
-     *
-     */
-    private final static String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    
-    /**
-     * ISO 8601 
-     * 
-     * "yyyy-MM-dd'T'HH:mm:ss'Z'" => "2023-10-27T15:30:00Z"
-     * 
-     * Z: A literal character indicating that the time is in UTC, with a zero offset from UTC
-     * 
-     * Example: 
-     *      2025-10-13T16:32:41
-     */
-    private static final String DATETIME_FORMAT_ISO8601 = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
     public final static Formats<Object> NULL = new FormatsNULL();
     public final static Formats<Integer> INT = new FormatsINT();
@@ -67,21 +45,205 @@ public abstract class Formats<T> {
     public final static Formats<Date> TIME = new FormatsTIME();
     public final static Formats<byte[]> BYTEA = new FormatsBYTEA();
     public final static Formats<Date> HOURMIN = new FormatsHOURMIN();
-    public final static Formats<Date> SIMPLEDATE = new FormatsSIMPLEDATE();
     public final static Formats<Date> DATETIME = new FormatsDATETIME();
 
     //Support those format up
     private static NumberFormat m_integerformat = NumberFormat.getIntegerInstance();
     private static NumberFormat m_doubleformat = NumberFormat.getNumberInstance();
     private static NumberFormat m_currencyformat = NumberFormat.getCurrencyInstance();
-    private static NumberFormat m_percentformat = NumberFormat.getCurrencyInstance(); //new DecimalFormat(DEFAULT_PERCENT_FORMAT);
-    private static DateFormat m_dateformat = DateFormat.getDateInstance();
-    private static DateFormat m_timeformat = DateFormat.getTimeInstance();
-    private static DateFormat m_datetimeformat = DateFormat.getDateTimeInstance();
-    private static final DateFormat m_hourminformat = new SimpleDateFormat(DEFAULT_HOURMIN_FORMAT);
-    private static final DateFormat m_simpledate = new SimpleDateFormat(DEFAULT_SIMPLEDATE_FORMAT);
+    private static NumberFormat m_percentformat = NumberFormat.getPercentInstance();
+    private static DateTimeFormatter m_dateformat = getDateFormatterDefault();
+    private static DateTimeFormatter m_timeformat = getTimeFormatter();
+    private static DateTimeFormatter m_datetimeformat = getDateTimeFormatter();
+    private static DateTimeFormatter m_hourminformat = getHourMinFormatter();
+
+    private static Locale m_locale = Locale.getDefault();
+
+    private static Locale getLocale() {
+        return m_locale != null ? m_locale : Locale.getDefault();
+    }
+
+    /**
+     * @return Format.MEDIUM: YYYY/MM/DD
+     */
+    private static DateTimeFormatter getDateFormatterDefault() {
+        return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(getLocale());
+    }
+
+    /**
+     * @return Format.MEDIUM: YYYY/MM/DD HH:MM:SS
+     */
+    private static DateTimeFormatter getDateTimeFormatter() {
+        return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM).withLocale(getLocale());
+    }
+
+    /**
+     * @return Format.MEDIUM: HH:MM:SS
+     */
+    private static DateTimeFormatter getTimeFormatter() {
+        return DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM).withLocale(getLocale());
+    }
+
+    /**
+     * @return Format.SHORT: HH:MM
+     */
+    private static DateTimeFormatter getHourMinFormatter() {
+        return DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(getLocale());
+    }
+
+    private static boolean isNullOrBlank(String text) {
+        return text == null || text.isBlank();
+    }
 
     protected Formats() {
+    }
+
+    public static void setLocale(Locale locale) {
+        if (locale != null) {
+            m_locale = locale;
+        } else {
+            m_locale = Locale.getDefault();
+        }
+    }
+
+    public static void setIntegerFormatter(NumberFormat format) {
+        if (format != null) {
+            m_integerformat = format;
+        }
+    }
+
+    public static void setDoubleFormat(NumberFormat format) {
+        if (format != null) {
+            m_doubleformat = format;
+        }
+    }
+
+    public static void setCurrencyFormat(NumberFormat format) {
+        if (format != null) {
+            m_currencyformat = format;
+        }
+    }
+
+    public static void setPercentFormatter(NumberFormat format) {
+        if (format != null) {
+            m_percentformat = format;
+        }
+    }
+
+    public static void setDateFormat(DateTimeFormatter format) {
+        if (format != null) {
+            m_dateformat = format;
+        }
+    }
+
+    public static void setTimeFormatter(DateTimeFormatter format) {
+        if (format != null) {
+            m_timeformat = format;
+        }
+    }
+
+    public static void setDateTimeFormatter(DateTimeFormatter format) {
+        if (format != null) {
+            m_datetimeformat = format;
+        }
+    }
+
+    public static void getHourMinFormatter(DateTimeFormatter format) {
+        if (format != null) {
+            m_hourminformat = format;
+        }
+    }
+
+    /**
+     * Resolves the authoritative operational time zone boundary linked to the
+     * provider regional context. Functions as a defensive boundary preventing
+     * clock desynchronization across cloud infrastructures.
+     *
+     * @return The active geographic {@link java.time.ZoneId} anchor. Defaults
+     * to the JVM system default.
+     */
+    private static java.time.ZoneId getZoneId() {
+        // Enforces a deterministic, immutable global clock fallback boundary instead of OS-dependent states
+        //return java.time.ZoneOffset.UTC;
+
+        // Safe infrastructure fallback boundary
+        return java.time.ZoneId.systemDefault();
+    }
+
+    /**
+     * Formats a legacy java.util.Date object utilizing a modern
+     * DateTimeFormatter layer. Extracts the millisecond instant timeline and
+     * binds it to a structural ZoneId boundary.
+     *
+     * @param legacyDate The old java.util.Date instance to format.
+     * @param formatter The modern thread-safe DateTimeFormatter matrix
+     * template.
+     * @param zoneId The specific geographic ZoneId boundary (e.g.,
+     * ZoneId.systemDefault()).
+     * @return A localized formatted String representation of the temporal mark.
+     */
+    public String formatLegacyDate(java.util.Date legacyDate, DateTimeFormatter formatter, java.time.ZoneId zoneId) {
+        if (legacyDate == null || formatter == null || zoneId == null) {
+            return "";
+        }
+
+        // 1. Converts legacy Date millisecond matrix into a modern instant timeline anchor
+        java.time.Instant instant = java.time.Instant.ofEpochMilli(legacyDate.getTime());
+
+        // 2. Binds the instant timestamp to a specific geographic ZoneId timezone layout
+        java.time.ZonedDateTime zonedDateTime = java.time.ZonedDateTime.ofInstant(instant, zoneId);
+
+        // 3. Executes the formatting pipeline returning a thread-safe immutable String representation
+        return formatter.format(zonedDateTime);
+    }
+
+    public String formatLegacyDate(java.util.Date legacyDate, DateTimeFormatter formatter) {
+        return formatLegacyDate(legacyDate, formatter, getZoneId());
+    }
+
+    /**
+     * Parses a localized date string token into a legacy java.util.Date object
+     * context. Converts formatted text records back into millisecond epoch
+     * structures via java.time abstractions.
+     *
+     * @param dateText The formatted text string representation of the date to
+     * parse.
+     * @param formatter The active modern DateTimeFormatter layout used during
+     * parsing evaluation.
+     * @param zoneId The evaluation ZoneId target utilized to compute regional
+     * timeline displacement offsets.
+     * @return A re-instantiated legacy java.util.Date object tracking the
+     * mapped timestamp.
+     */
+    protected java.util.Date parseToLegacyDate(String dateText, DateTimeFormatter formatter, java.time.ZoneId zoneId) throws ParseException {
+        if (dateText == null || formatter == null || zoneId == null) {
+            return null;
+        }
+
+        try {
+            // 1. Parses text directly into a modern regional timezone ZonedDateTime vector layer
+            // Note: If the pattern lacks time offsets (e.g. only dd/MM/yyyy), use LocalDateTime.parse and bind the zone later.
+            java.time.LocalDateTime localDateTime = java.time.LocalDateTime.parse(dateText, formatter);
+
+            // 2. Bundles the local clock coordinates together with the active regional timezone offset
+            java.time.ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
+
+            // 3. Extracts the modern epoch instant timeline marker
+            java.time.Instant instant = zonedDateTime.toInstant();
+
+            // 4. Feeds the instant factory into the legacy constructor to rebuild the historical Date object
+            return java.util.Date.from(instant);
+        } catch (java.time.format.DateTimeParseException ex) {
+            throw new ParseException(ex.getParsedString(), ex.getErrorIndex());
+        }
+    }
+
+    protected java.util.Date parseToLegacyDate(String dateText, DateTimeFormatter formatter) throws ParseException {
+        return parseToLegacyDate(dateText, formatter, getZoneId());
+    }
+
+    public static double fixDecimals(Number value) {
+        return Math.rint((value).doubleValue() * 1000000.0) / 1000000.0;
     }
 
     public static int getCurrencyDecimals() {
@@ -145,26 +307,20 @@ public abstract class Formats<T> {
     }
 
     public static void setDatePattern(String pattern) {
-        if (pattern == null || pattern.equals("")) {
-            m_dateformat = DateFormat.getDateInstance();
-        } else {
-            m_dateformat = new SimpleDateFormat(pattern);
+        if (!isNullOrBlank(pattern)) {
+            m_dateformat = DateTimeFormatter.ofPattern(pattern, getLocale());
         }
     }
 
     public static void setTimePattern(String pattern) {
-        if (pattern == null || pattern.equals("")) {
-            m_timeformat = DateFormat.getTimeInstance();
-        } else {
-            m_timeformat = new SimpleDateFormat(pattern);
+        if (!isNullOrBlank(pattern)) {
+            m_timeformat = DateTimeFormatter.ofPattern(pattern, getLocale());
         }
     }
 
     public static void setDateTimePattern(String pattern) {
-        if (pattern == null || pattern.equals("")) {
-            m_datetimeformat = DateFormat.getDateTimeInstance();
-        } else {
-            m_datetimeformat = new SimpleDateFormat(pattern);
+        if (!isNullOrBlank(pattern)) {
+            m_datetimeformat = DateTimeFormatter.ofPattern(pattern, getLocale());
         }
     }
 
@@ -232,7 +388,7 @@ public abstract class Formats<T> {
 
         @Override
         protected String formatValueInt(Double value) {
-            return m_doubleformat.format(DoubleUtils.fixDecimals((Number) value)); // quickfix for 3838
+            return m_doubleformat.format(Formats.fixDecimals((Number) value)); // quickfix for 3838
         }
 
         @Override
@@ -250,7 +406,7 @@ public abstract class Formats<T> {
 
         @Override
         protected String formatValueInt(Double value) {
-            return m_percentformat.format(DoubleUtils.fixDecimals((Number) value)); // quickfix for 3838
+            return m_percentformat.format(Formats.fixDecimals((Number) value)); // quickfix for 3838
         }
 
         @Override
@@ -273,7 +429,7 @@ public abstract class Formats<T> {
 
         @Override
         protected String formatValueInt(Double value) {
-            return m_currencyformat.format(DoubleUtils.fixDecimals((Number) value)); // quickfix for 3838
+            return m_currencyformat.format(Formats.fixDecimals((Number) value));
         }
 
         @Override
@@ -313,16 +469,12 @@ public abstract class Formats<T> {
 
         @Override
         protected String formatValueInt(Date value) {
-            return m_datetimeformat.format(value);
+            return formatLegacyDate(value, m_datetimeformat);
         }
 
         @Override
         protected Date parseValueInt(String value) throws ParseException {
-            try {
-                return m_datetimeformat.parse(value);
-            } catch (ParseException e) {
-                return m_dateformat.parse(value);
-            }
+            return parseToLegacyDate(value, m_datetimeformat);
         }
 
         @Override
@@ -333,20 +485,14 @@ public abstract class Formats<T> {
 
     private static final class FormatsDATETIME extends Formats<Date> {
 
-        final SimpleDateFormat dateFormat = new SimpleDateFormat(DEFAULT_DATETIME_FORMAT);
-
         @Override
         protected String formatValueInt(Date value) {
-            return dateFormat.format(value);
+            return formatLegacyDate(value, m_datetimeformat);
         }
 
         @Override
         protected Date parseValueInt(String value) throws ParseException {
-            try {
-                return dateFormat.parse(value);
-            } catch (ParseException e) {
-                return dateFormat.parse(value);
-            }
+            return parseToLegacyDate(value, m_datetimeformat);
         }
 
         @Override
@@ -359,12 +505,12 @@ public abstract class Formats<T> {
 
         @Override
         protected String formatValueInt(Date value) {
-            return m_dateformat.format(value);
+            return formatLegacyDate(value, m_dateformat);
         }
 
         @Override
         protected Date parseValueInt(String value) throws ParseException {
-            return m_dateformat.parse(value);
+            return parseToLegacyDate(value, m_dateformat);
         }
 
         @Override
@@ -377,12 +523,12 @@ public abstract class Formats<T> {
 
         @Override
         protected String formatValueInt(Date value) {
-            return m_timeformat.format(value);
+            return formatLegacyDate(value, m_timeformat);
         }
 
         @Override
         protected Date parseValueInt(String value) throws ParseException {
-            return m_timeformat.parse(value);
+            return parseToLegacyDate(value, m_timeformat);
         }
 
         @Override
@@ -421,12 +567,12 @@ public abstract class Formats<T> {
 
         @Override
         protected String formatValueInt(Date value) {
-            return m_hourminformat.format(value);
+            return formatLegacyDate(value, m_hourminformat);
         }
 
         @Override
         protected Date parseValueInt(String value) throws ParseException {
-            return m_hourminformat.parse(value);
+            return parseToLegacyDate(value, m_hourminformat);
         }
 
         @Override
@@ -434,28 +580,6 @@ public abstract class Formats<T> {
 
             return javax.swing.SwingConstants.CENTER;
 
-        }
-
-    }
-
-    private static final class FormatsSIMPLEDATE extends Formats<Date> {
-
-        @Override
-        protected String formatValueInt(Date value) {
-
-            return m_simpledate.format(value);
-        }
-
-        @Override
-        protected Date parseValueInt(String value) throws ParseException {
-
-            return m_simpledate.parse(value);
-        }
-
-        @Override
-        public int getAlignment() {
-
-            return javax.swing.SwingConstants.CENTER;
         }
 
     }
