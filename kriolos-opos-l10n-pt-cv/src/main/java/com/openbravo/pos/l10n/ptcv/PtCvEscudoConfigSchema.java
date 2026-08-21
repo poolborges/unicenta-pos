@@ -1,8 +1,6 @@
 package com.openbravo.pos.l10n.ptcv;
 
-import com.openbravo.pos.spi.annotation.PluginMetadata;
 import com.openbravo.pos.spi.annotation.PropertyDefinition;
-import static com.openbravo.pos.spi.core.PluginCategory.L10N;
 
 /**
  * Static metadata configuration schema definition for the Cape Verdean localization module.
@@ -22,7 +20,7 @@ import static com.openbravo.pos.spi.core.PluginCategory.L10N;
 public final class PtCvEscudoConfigSchema {
     
     /** Unique fully-qualified identification signature preventing classpath layout collisions */
-    public static final String PLUGIN_ID = "org.kriolos.pos.l10n.cv.escudo";
+    public static final String PLUGIN_ID = "org.kriolos.pos.l10n.ptcv";
     
     /** Individual literal URI string constants safely compiled into the constant pool */
     public static final String SELECTOR_PT_CV = "l10n:pt-CV";
