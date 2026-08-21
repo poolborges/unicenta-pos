@@ -8,14 +8,13 @@ import com.openbravo.pos.spi.provider.ConfigProperty;
 import com.openbravo.pos.spi.provider.PropertyType;
 import com.openbravo.pos.spi.localization.LocalizationProvider;
 
-import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.ServiceLoader;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -27,6 +26,8 @@ import java.util.stream.Collectors;
  * @since 1.0.0
  */
 public final class PluginManager {
+
+    private static final Logger LOGGER = Logger.getLogger(PluginManager.class.getName());
 
     private static PluginManager instance;
     private ConfigurationStore configurationStore;
@@ -234,25 +235,66 @@ public final class PluginManager {
         if (serviceType == null || uniquePluginId == null) {
             return null;
         }
+        
+        return getInstanceById(serviceType, uniquePluginId);
+    }
+
+    private <T> T getInstance(Class<T> serviceType, PluginFilter filter) {
 
         ServiceLoader<T> loader = ServiceLoader.load(serviceType);
 
         for (ServiceLoader.Provider<T> provider : loader.stream().toList()) {
             Class<? extends T> clazz = provider.type();
-            if (clazz.isAnnotationPresent(PluginMetadata.class)) {
-                PluginMetadata annotation = clazz.getAnnotation(PluginMetadata.class);
-                if (uniquePluginId.equalsIgnoreCase(annotation.id())) {
+
+            if (filter != null & filter.matches(clazz)) {
+                try {
                     T instance = provider.get();
 
-                    if (instance instanceof ConfigurableProvider configurable) {
-                        Map<String, String> persistedSettings = configurationStore.loadSettings(uniquePluginId);
+                    String pluginId = null;
+                    if (clazz.isAnnotationPresent(PluginMetadata.class)) {
+                        PluginMetadata annotation = clazz.getAnnotation(PluginMetadata.class);
+                        pluginId = annotation.id();
+                    }
+
+                    if (pluginId != null && instance instanceof ConfigurableProvider configurable) {
+                        Map<String, String> persistedSettings = configurationStore.loadSettings(pluginId);
                         configurable.configure(persistedSettings);
                     }
                     return instance;
+                } catch (Exception e) {
+                    return null;
                 }
             }
         }
         return null;
+    }
+
+    public <T> T getInstanceBySelector(Class<T> serviceType, String selector) {
+        // Implementation for getting instance by selection
+        return getInstance(serviceType, new PluginFilter() {
+            @Override
+            public boolean matches(Class<?> clazz) {
+                if (clazz.isAnnotationPresent(PluginMetadata.class)) {
+                    PluginMetadata annotation = clazz.getAnnotation(PluginMetadata.class);
+                    return java.util.Arrays.asList(annotation.selectors()).contains(selector);
+                }
+                return false;
+            }
+        });
+    }
+
+    public <T> T getInstanceById(Class<T> serviceType, String pluginId) {
+        // Implementation for getting instance by ID
+        return getInstance(serviceType, new PluginFilter() {
+            @Override
+            public boolean matches(Class<?> clazz) {
+                if (clazz.isAnnotationPresent(PluginMetadata.class)) {
+                    PluginMetadata annotation = clazz.getAnnotation(PluginMetadata.class);
+                    return annotation.id().equals(pluginId);
+                }
+                return false;
+            }
+        });
     }
 
     private List<ConfigProperty> parseSchemaProperties(Class<?> schemaClass) {
@@ -267,5 +309,10 @@ public final class PluginManager {
             configProperties.add(new ConfigProperty(def.key(), def.label(), def.i18nLabelKey(), def.description(), PropertyType.fromCode(def.type()), def.required(), def.defaultValue()));
         }
         return List.copyOf(configProperties);
+    }
+
+    public interface PluginFilter {
+
+        boolean matches(Class<?> clazz);
     }
 }

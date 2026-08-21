@@ -3,6 +3,7 @@ package com.openbravo.pos.spi.localization;
 import com.openbravo.pos.spi.core.PluginManager;
 import com.openbravo.pos.spi.provider.ProviderFactory;
 import java.util.Locale;
+import java.util.logging.Logger;
 
 /**
  * Centralized domain factory registry responsible for managing and producing localization extensions.
@@ -13,6 +14,8 @@ import java.util.Locale;
  * @since 1.0.0
  */
 public final class LocalizationFactory implements ProviderFactory<Locale, LocalizationProvider> {
+    
+    private static final Logger LOGGER = Logger.getLogger(LocalizationFactory.class.getName());
 
     private static LocalizationFactory instance;
 
@@ -45,6 +48,8 @@ public final class LocalizationFactory implements ProviderFactory<Locale, Locali
      */
     @Override
     public LocalizationProvider getProvider(Locale targetLocale) {
+        LOGGER.info("Search Localization SPI for: "+targetLocale.toLanguageTag());
+        
         if (targetLocale == null || targetLocale.getCountry().isEmpty()) {
             return new FallbackLocalizationProvider(Locale.getDefault());
         }
@@ -56,7 +61,7 @@ public final class LocalizationFactory implements ProviderFactory<Locale, Locali
         // CASCADE LEVEL 1: Specific Dialect Region Matching Selector (e.g., "l10n:pt-CV")
         if (!languageToken.isEmpty()) {
             String fullLocaleUri = "l10n:" + languageToken + "-" + countryToken;
-            LocalizationProvider dialectProvider = manager.getInstance(LocalizationProvider.class, fullLocaleUri);
+            LocalizationProvider dialectProvider = manager.getInstanceBySelector(LocalizationProvider.class, fullLocaleUri);
             if (dialectProvider != null) {
                 return dialectProvider;
             }
@@ -64,7 +69,7 @@ public final class LocalizationFactory implements ProviderFactory<Locale, Locali
 
         // CASCADE LEVEL 2: General Sovereign Country Matching Selector (e.g., "l10n:CV")
         String standaloneCountryUri = "l10n:" + countryToken;
-        LocalizationProvider countryProvider = manager.getInstance(LocalizationProvider.class, standaloneCountryUri);
+        LocalizationProvider countryProvider = manager.getInstanceBySelector(LocalizationProvider.class, standaloneCountryUri);
         if (countryProvider != null) {
             return countryProvider;
         }
