@@ -91,12 +91,6 @@ public class JPanelConfigLocale extends javax.swing.JPanel implements PanelConfi
         jcboDatetime.addItem(DEFAULT_VALUE);
 
         setupListerner();
-        
-        System.out.println("Verificar (120 CVE) pt-CV Currency: 120.30 "
-                + NumberFormat.getCurrencyInstance(new Locale("pt", "CV")).format(120.30)
-                + "\n\rVerificar (120 Kuanza) pt-AO Currency: 120.30 "
-                + NumberFormat.getCurrencyInstance(new Locale("pt", "AO")).format(120.30));
-
     }
 
     private void setupListerner() {
