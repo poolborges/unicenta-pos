@@ -308,19 +308,19 @@ public abstract class Formats<T> {
 
     public static void setDatePattern(String pattern) {
         if (!isNullOrBlank(pattern)) {
-            m_dateformat = DateTimeFormatter.ofLocalizedPattern(pattern);
+            m_dateformat = DateTimeFormatter.ofPattern(pattern, getLocale());
         }
     }
 
     public static void setTimePattern(String pattern) {
         if (!isNullOrBlank(pattern)) {
-            m_timeformat = DateTimeFormatter.ofLocalizedPattern(pattern);
+            m_timeformat = DateTimeFormatter.ofPattern(pattern, getLocale());
         }
     }
 
     public static void setDateTimePattern(String pattern) {
         if (!isNullOrBlank(pattern)) {
-            m_datetimeformat = DateTimeFormatter.ofLocalizedPattern(pattern);
+            m_datetimeformat = DateTimeFormatter.ofPattern(pattern, getLocale());
         }
     }
 
