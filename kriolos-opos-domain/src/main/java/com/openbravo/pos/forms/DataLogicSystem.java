@@ -46,7 +46,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
     private Session session;
     private String m_dbVersion;
     private TableDefinition<ResourceInfo> m_tresources;
-    
+
     public DataLogicSystem() {
     }
 
@@ -54,24 +54,26 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
     public void init(Session session) {
         this.session = session;
         this.m_dbVersion = this.session.DB.getName();
-        
-        m_tresources = new TableDefinition(session,
-            "resources",
-            new String[]{
-                "ID", "NAME", "RESTYPE", "CONTENT"},
-            new String[]{
-                "ID",
-                AppLocal.getIntString("label.name"),
-                AppLocal.getIntString("label.type"),
-                "CONTENT"},
-            new Datas[]{
-                Datas.STRING, Datas.STRING, Datas.INT, Datas.BYTES},
-            new Formats[]{
-                Formats.STRING, Formats.STRING, Formats.INT, Formats.NULL},
-            new int[]{0}
-    );
 
-//// <editor-fold defaultstate="collapsed" desc="START OF PRODUCT">
+        m_tresources = new TableDefinition(session,
+                "resources",
+                new String[]{
+                    "ID", "NAME", "RESTYPE", "CONTENT"},
+                new String[]{
+                    "ID",
+                    AppLocal.getIntString("label.name"),
+                    AppLocal.getIntString("label.type"),
+                    "CONTENT"},
+                new Datas[]{
+                    Datas.STRING, Datas.STRING, Datas.INT, Datas.BYTES},
+                new Formats[]{
+                    Formats.STRING, Formats.STRING, Formats.INT, Formats.NULL},
+                new int[]{0}
+        );
+
+    
+
+    //// <editor-fold defaultstate="collapsed" desc="START OF PRODUCT">
 // </editor-fold>
 //// <editor-fold defaultstate="collapsed" desc="START OF CUSTOMER">
 //// </editor-fold>   
@@ -111,7 +113,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         m_dummy.exec();
     }
 
-//// <editor-fold defaultstate="collapsed" desc="START OF PEOPLE">
+    //// <editor-fold defaultstate="collapsed" desc="START OF PEOPLE">
   
     /**
      *
@@ -173,7 +175,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
 
         String content = new String();
         try {
-            content = Formats.BYTEA.formatValue((byte[])m_rolepermissions.find(sRole));
+            content = Formats.BYTEA.formatValue((byte[]) m_rolepermissions.find(sRole));
         } catch (BasicException e) {
             LOGGER.log(Level.SEVERE, "Exception on format permissions for role: " + sRole, e);
         }
@@ -193,7 +195,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
 
         m_changepassword.exec(userdata);
     }
-    
+
     /**
      *
      * @param permissions
@@ -209,7 +211,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         m_updatepermissions.exec(permissions);
     }
 
-//// </editor-fold> 
+    //// </editor-fold> 
     
 //// <editor-fold defaultstate="collapsed" desc="START OF RESOURCE">
     private byte[] getResource(String name) {
@@ -308,7 +310,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      * @return
      */
     public final BufferedImage getResourceAsImage(String sName) {
-        
+
         LOGGER.log(Level.INFO, "Get image resource id: " + sName);
         BufferedImage img = null;
         try {
@@ -358,7 +360,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         return p;
     }
 
-//// </editor-fold> 
+    //// </editor-fold> 
     //// <editor-fold defaultstate="collapsed" desc="START OF CASH">
     
     /**
@@ -375,6 +377,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                 SerializerReadString.INSTANCE).find(id)
                 != null;
     }
+
     /**
      *
      * @param host
@@ -464,29 +467,46 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                 "INSERT INTO draweropened ( NAME, TICKETID, OPENDATE) "
                 + "VALUES (?, ?, ?)",
                 new SerializerWriteBasic(new Datas[]{Datas.STRING, Datas.STRING, Datas.TIMESTAMP}));
-        m_draweropened.exec(new Object[] {name, action, openDate});
+        m_draweropened.exec(new Object[]{name, action, openDate});
     }
-//// </editor-fold> 
+
+    //// </editor-fold> 
 
     
 //// <editor-fold defaultstate="collapsed" desc="START OF LINEREMOVED">
      
+    
+    private static Object[] arrayAddElement(Object[] original, Object element) {
+        Object[] expanded = Arrays.copyOf(original, original.length + 1);
+        expanded[expanded.length - 1] = element;
+
+        return expanded;
+    }
+
     /**
      *
-     * @param line
+     * @param username
+     * @param ticketId
+     * @param productId
+     * @param productName
+     * @param quantity
      */
-    public final void execLineRemoved(Object[] line) {
+    public final void execTicketLineRemoved(String username, String ticketId, String productId, String productName, double quantity) {
 
         final SentenceExec m_lineremoved = new StaticSentence(this.session,
-                "INSERT INTO lineremoved (NAME, TICKETID, PRODUCTID, PRODUCTNAME, UNITS) "
-                + "VALUES (?, ?, ?, ?, ?)",
+                """
+                INSERT INTO lineremoved (NAME, TICKETID, PRODUCTID, PRODUCTNAME, UNITS, REMOVEDDATE)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                """,
                 new SerializerWriteBasic(new Datas[]{
             Datas.STRING, Datas.STRING,
             Datas.STRING, Datas.STRING,
-            Datas.DOUBLE
+            Datas.DOUBLE, Datas.TIMESTAMP
         }));
 
         try {
+            Object[] line = new Object[]{username, ticketId, productId, productName, quantity, new Date()};
+
             m_lineremoved.exec(line);
         } catch (BasicException e) {
             LOGGER.log(Level.SEVERE, "Exception on execute line removed: ", e);
@@ -497,21 +517,25 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      *
      * @param ticket
      */
-    public final void execTicketRemoved(Object[] ticket) {
+    public final void execTicketRemoved(String username) {
         final SentenceExec m_ticketremoved = new StaticSentence(this.session,
-                "INSERT INTO lineremoved (NAME, TICKETID, PRODUCTNAME, UNITS) "
-                + "VALUES (?, ?, ?, ?)",
+                """
+                INSERT INTO lineremoved (NAME, TICKETID, PRODUCTNAME, UNITS, REMOVEDDATE)
+                    VALUES (?, ?, ?, ?, ?)
+                """,
                 new SerializerWriteBasic(new Datas[]{
             Datas.STRING, Datas.STRING,
-            Datas.STRING, Datas.DOUBLE
+            Datas.STRING, Datas.DOUBLE, Datas.TIMESTAMP
         }));
         try {
-            m_ticketremoved.exec(ticket);
+            Object[] ticketDeleted = new Object[]{ username, "Void", "Ticket Deleted", 0.0, new Date()};
+            m_ticketremoved.exec(ticketDeleted);
         } catch (BasicException e) {
             LOGGER.log(Level.SEVERE, "Exception on execute ticket removed: ", e);
         }
     }
-//// </editor-fold>  
+
+    //// </editor-fold>  
     
     /**
      *
@@ -527,7 +551,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         return (String) m_locationfind.find(iLocation);
     }
 
-//// </editor-fold> 
+    //// </editor-fold> 
 
     public final void updatePlaces(int x, int y, String id) throws BasicException {
         final SentenceExec m_updatePlaces = new StaticSentence(this.session,
@@ -537,7 +561,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
     }
 
     public final List<VoucherInfo> getVouchersActiveList() throws BasicException {
-        final SentenceList<VoucherInfo>  m_voucherlist = new StaticSentence(this.session,
+        final SentenceList<VoucherInfo> m_voucherlist = new StaticSentence(this.session,
                 "SELECT id, voucher_number, customer, amount, status FROM vouchers WHERE status LIKE 'A'",
                 SerializerWriteString.INSTANCE,
                 VoucherInfo.getSerializerRead());
@@ -545,7 +569,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         return m_voucherlist.list();
     }
 
-//// <editor-fold defaultstate="collapsed" desc="START OF ORDER">   
+    //// <editor-fold defaultstate="collapsed" desc="START OF ORDER">   
     
     /**
      * 
@@ -578,22 +602,22 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                 + "?, ?, ?, ?, ? ) ",
                 new SerializerWriteBasic(new Datas[]{
             Datas.STRING, // OrderId
-            Datas.INT,    // Qty
+            Datas.INT, // Qty
             Datas.STRING, // Details
             Datas.STRING, // Attributes
             Datas.STRING, // Notes
             Datas.STRING, // TicketId
             Datas.TIMESTAMP, // OrderTime
-            Datas.INT,    // DisplayId
-            Datas.INT,    // Auxiliary
-            Datas.TIMESTAMP  // CompleteTime
+            Datas.INT, // DisplayId
+            Datas.INT, // Auxiliary
+            Datas.TIMESTAMP // CompleteTime
         }));
         m_addOrder.exec(new Object[]{orderId, qty, details, attributes, notes, ticketId,
-                ordertime, displayId, auxiliary, completetime});
+            ordertime, displayId, auxiliary, completetime});
     }
 
     /**
-     * 
+     *
      * @param orderId
      * @param qty
      * @param details
@@ -604,7 +628,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
      * @param displayId
      * @param auxiliary
      * @param completetime
-     * @throws BasicException 
+     * @throws BasicException
      */
     public final void updateOrder(String orderId, Integer qty,
             String details, String attributes, String notes, String ticketId,
@@ -637,13 +661,14 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
             Datas.STRING // CompleteTime
         }));
         m_updateOrder.exec(new Object[]{orderId, qty, details, attributes, notes, ticketId,
-                ordertime, displayId, auxiliary, completetime});
+            ordertime, displayId, auxiliary, completetime});
     }
 
     /**
      * Delete Order
+     *
      * @param orderId
-     * @throws BasicException 
+     * @throws BasicException
      */
     public void deleteOrder(String orderId) throws BasicException {
         final SentenceExec m_deleteOrder = new StaticSentence(this.session,
@@ -651,7 +676,8 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                 SerializerWriteString.INSTANCE);
         m_deleteOrder.exec(orderId);
     }
-//// </editor-fold> 
+
+    //// </editor-fold> 
     
     private final static class AppuserReader implements SerializerRead<AppUser> {
 
