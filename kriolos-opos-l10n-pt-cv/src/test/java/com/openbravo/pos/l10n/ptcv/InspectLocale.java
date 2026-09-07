@@ -26,8 +26,13 @@ public class InspectLocale {
         System.out.println("Java Version  : " + System.getProperty("java.version"));
         System.out.println("--------------------------------------------------");
 
-        printCountryLocale("pt", "CV", "CVE");
-        printCountryLocale("pt", "MZ", "MZN");
+        printCountryLocale("pt", "AO", "AOA"); //Angola
+        printCountryLocale("pt", "BR", "BRL"); //Brasil
+        printCountryLocale("pt", "CV", "CVE"); //Cabo Verde
+        printCountryLocale("pt", "GW", "XOF"); // Guine-Bissau
+        printCountryLocale("pt", "MZ", "MZN"); //Mozambique
+        printCountryLocale("pt", "ST", "STN"); //São Tomé e Principe: STN = New, STD = [1975, 2017]
+        printCountryLocale("pt", "PT", "EUR"); //Portugal
     }
 
     private static void printCountryLocale(String lang, String country, String currencySymbol) {
@@ -49,7 +54,9 @@ public class InspectLocale {
         System.out.println("Raw Integer Formatter (1500.75)   : " + integer.format(1500.75));
         System.out.println("Raw Percent Formatter (0.15)      : " + percent.format(0.15));
         System.out.println("Raw Currency Formatter (1500.0)   : " + currency.format(1500.0));
-        System.out.println("Raw Currency Formatter (1200.50)   : " + currency.format(1500.50));
+        System.out.println("Raw Currency Formatter (1200.50)   : " + currency.format(1200.50));
+        System.out.println("Raw Currency Symbol      : " + Currency.getInstance(cvLocale).getSymbol());
+        System.out.println("Raw Currency Name     : " + Currency.getInstance(cvLocale).getDisplayName());
         System.out.println("Raw Currency Symbol      : " + Currency.getInstance(currencySymbol).getSymbol(cvLocale));
         System.out.println("Raw Currency Name     : " + Currency.getInstance(currencySymbol).getDisplayName(cvLocale));
 
