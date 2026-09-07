@@ -19,9 +19,6 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.*;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.admin.ResourceInfo;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppUser;
-import com.openbravo.pos.forms.BeanFactoryDataSingle;
 import com.openbravo.pos.util.ThumbNailBuilder;
 import com.openbravo.pos.voucher.VoucherInfo;
 import java.awt.image.BufferedImage;
@@ -41,14 +38,13 @@ import javax.swing.ImageIcon;
  */
 public class DataLogicSystem extends BeanFactoryDataSingle {
 
-    private final static Logger LOGGER = Logger.getLogger(ImageUtils.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(DataLogicSystem.class.getName());
 
     private Session session;
     private String m_dbVersion;
     private TableDefinition<ResourceInfo> m_tresources;
 
-    public DataLogicSystem() {
-    }
+    public DataLogicSystem() {}
 
     @Override
     public void init(Session session) {
@@ -70,19 +66,6 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                     Formats.STRING, Formats.STRING, Formats.INT, Formats.NULL},
                 new int[]{0}
         );
-
-    
-
-    //// <editor-fold defaultstate="collapsed" desc="START OF PRODUCT">
-// </editor-fold>
-//// <editor-fold defaultstate="collapsed" desc="START OF CUSTOMER">
-//// </editor-fold>   
-
-//// <editor-fold defaultstate="collapsed" desc="START OF CASH">
-//// </editor-fold>   
-//// <editor-fold defaultstate="collapsed" desc="START OF LOCATION AND PLACES">
-//// </editor-fold>   
-
 
     }
 
@@ -107,13 +90,8 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         return ("");
     }
 
-    public final void execDummy() throws BasicException {
 
-        SentenceExec m_dummy = new StaticSentence(this.session, "SELECT * FROM people WHERE 1 = 0");
-        m_dummy.exec();
-    }
-
-    //// <editor-fold defaultstate="collapsed" desc="START OF PEOPLE">
+//// <editor-fold defaultstate="collapsed" desc="START OF PEOPLE">
   
     /**
      *
@@ -213,6 +191,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
 
     //// </editor-fold> 
     
+
 //// <editor-fold defaultstate="collapsed" desc="START OF RESOURCE">
     private byte[] getResource(String name) {
 
@@ -361,101 +340,10 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
     }
 
     //// </editor-fold> 
-    //// <editor-fold defaultstate="collapsed" desc="START OF CASH">
+
+
+/// <editor-fold defaultstate="collapsed" desc="START OF CASH REGISTER">
     
-    /**
-     *
-     * @param id
-     * @return
-     * @throws BasicException
-     */
-    public final boolean isCashActive(String id) throws BasicException {
-
-        return new PreparedSentence(this.session,
-                "SELECT MONEY FROM closedcash WHERE DATEEND IS NULL AND MONEY = ?",
-                SerializerWriteString.INSTANCE,
-                SerializerReadString.INSTANCE).find(id)
-                != null;
-    }
-
-    /**
-     *
-     * @param host
-     * @return
-     * @throws BasicException
-     */
-    public final int getSequenceCash(String host) throws BasicException {
-        final SentenceFind m_sequencecash = new PreparedSentence(this.session,
-                "SELECT MAX(HOSTSEQUENCE) FROM closedcash WHERE HOST = ?",
-                SerializerWriteString.INSTANCE,
-                SerializerReadInteger.INSTANCE);
-
-        Integer i = (Integer) m_sequencecash.find(host);
-        return (i == null) ? 1 : i;
-    }
-
-    /**
-     *
-     * @param sActiveCashIndex
-     * @return
-     * @throws BasicException
-     */
-    public final Object[] findActiveCash(String sActiveCashIndex) throws BasicException {
-
-        final SentenceFind m_activecash = new PreparedSentence(this.session,
-                "SELECT HOST, HOSTSEQUENCE, DATESTART, DATEEND, NOSALES "
-                + "FROM closedcash WHERE MONEY = ?",
-                SerializerWriteString.INSTANCE,
-                new SerializerReadBasic(new Datas[]{
-            Datas.STRING,
-            Datas.INT,
-            Datas.TIMESTAMP,
-            Datas.TIMESTAMP,
-            Datas.INT}));
-
-        return (Object[]) m_activecash.find(sActiveCashIndex);
-    }
-
-    /**
-     *
-     * @param sClosedCashIndex
-     * @return
-     * @throws BasicException
-     */
-    public final Object[] findClosedCash(String sClosedCashIndex) throws BasicException {
-
-        final SentenceFind m_closedcash = new StaticSentence(this.session,
-                "SELECT HOST, HOSTSEQUENCE, DATESTART, DATEEND, NOSALES "
-                + "FROM closedcash WHERE HOSTSEQUENCE = ?",
-                SerializerWriteString.INSTANCE,
-                new SerializerReadBasic(new Datas[]{
-            Datas.STRING,
-            Datas.INT,
-            Datas.TIMESTAMP,
-            Datas.TIMESTAMP,
-            Datas.INT}));
-
-        return (Object[]) m_closedcash.find(sClosedCashIndex);
-    }
-
-    /**
-     *
-     * @param cash
-     * @throws BasicException
-     */
-    public final void execInsertCash(Object[] cash) throws BasicException {
-        final SentenceExec m_insertcash = new StaticSentence(this.session,
-                "INSERT INTO closedcash(MONEY, HOST, HOSTSEQUENCE, DATESTART, DATEEND) "
-                + "VALUES (?, ?, ?, ?, ?)",
-                new SerializerWriteBasic(new Datas[]{
-            Datas.STRING,
-            Datas.STRING,
-            Datas.INT,
-            Datas.TIMESTAMP,
-            Datas.TIMESTAMP}));
-
-        m_insertcash.exec(cash);
-    }
 
     /**
      *
@@ -470,72 +358,12 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         m_draweropened.exec(new Object[]{name, action, openDate});
     }
 
-    //// </editor-fold> 
+//// </editor-fold> 
 
-    
-//// <editor-fold defaultstate="collapsed" desc="START OF LINEREMOVED">
-     
-    
-    private static Object[] arrayAddElement(Object[] original, Object element) {
-        Object[] expanded = Arrays.copyOf(original, original.length + 1);
-        expanded[expanded.length - 1] = element;
 
-        return expanded;
-    }
 
-    /**
-     *
-     * @param username
-     * @param ticketId
-     * @param productId
-     * @param productName
-     * @param quantity
-     */
-    public final void execTicketLineRemoved(String username, String ticketId, String productId, String productName, double quantity) {
+// <editor-fold defaultstate="collapsed" desc="START OF LOCATION AND PLACES">
 
-        final SentenceExec m_lineremoved = new StaticSentence(this.session,
-                """
-                INSERT INTO lineremoved (NAME, TICKETID, PRODUCTID, PRODUCTNAME, UNITS, REMOVEDDATE)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                """,
-                new SerializerWriteBasic(new Datas[]{
-            Datas.STRING, Datas.STRING,
-            Datas.STRING, Datas.STRING,
-            Datas.DOUBLE, Datas.TIMESTAMP
-        }));
-
-        try {
-            Object[] line = new Object[]{username, ticketId, productId, productName, quantity, new Date()};
-
-            m_lineremoved.exec(line);
-        } catch (BasicException e) {
-            LOGGER.log(Level.SEVERE, "Exception on execute line removed: ", e);
-        }
-    }
-
-    /**
-     *
-     * @param ticket
-     */
-    public final void execTicketRemoved(String username) {
-        final SentenceExec m_ticketremoved = new StaticSentence(this.session,
-                """
-                INSERT INTO lineremoved (NAME, TICKETID, PRODUCTNAME, UNITS, REMOVEDDATE)
-                    VALUES (?, ?, ?, ?, ?)
-                """,
-                new SerializerWriteBasic(new Datas[]{
-            Datas.STRING, Datas.STRING,
-            Datas.STRING, Datas.DOUBLE, Datas.TIMESTAMP
-        }));
-        try {
-            Object[] ticketDeleted = new Object[]{ username, "Void", "Ticket Deleted", 0.0, new Date()};
-            m_ticketremoved.exec(ticketDeleted);
-        } catch (BasicException e) {
-            LOGGER.log(Level.SEVERE, "Exception on execute ticket removed: ", e);
-        }
-    }
-
-    //// </editor-fold>  
     
     /**
      *
@@ -551,7 +379,6 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         return (String) m_locationfind.find(iLocation);
     }
 
-    //// </editor-fold> 
 
     public final void updatePlaces(int x, int y, String id) throws BasicException {
         final SentenceExec m_updatePlaces = new StaticSentence(this.session,
@@ -560,6 +387,9 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         m_updatePlaces.exec(new Object[]{x, y, id});
     }
 
+    
+//// </editor-fold>
+    
     public final List<VoucherInfo> getVouchersActiveList() throws BasicException {
         final SentenceList<VoucherInfo> m_voucherlist = new StaticSentence(this.session,
                 "SELECT id, voucher_number, customer, amount, status FROM vouchers WHERE status LIKE 'A'",
@@ -569,7 +399,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
         return m_voucherlist.list();
     }
 
-    //// <editor-fold defaultstate="collapsed" desc="START OF ORDER">   
+//// <editor-fold defaultstate="collapsed" desc="START OF ORDER">   
     
     /**
      * 

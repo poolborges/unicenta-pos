@@ -15,6 +15,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.panels;
 
+import com.openbravo.pos.reports.CashReport;
 import com.openbravo.pos.forms.JPanelView;
 import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.forms.AppView;
@@ -38,8 +39,9 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
-import com.openbravo.pos.payment.CashManagementService;
-import com.openbravo.pos.payment.CashManagementServiceImpl;
+import com.openbravo.pos.cash.CashManagementService;
+import com.openbravo.pos.cash.CashManagementServiceImpl;
+import com.openbravo.pos.cash.CashRegister;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -53,7 +55,7 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
     private AppView appView;
     private DataLogicSystem dataLogicSystem;
 
-    private PaymentsModel m_PaymentsToClose = null;
+    private CashReport paymentsToClose = null;
 
     private CashManagementService cashManagementService;
 
@@ -74,7 +76,7 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
         dataLogicSystem = (DataLogicSystem) appView.getBean("com.openbravo.pos.forms.DataLogicSystem");
         ticketParser = new TicketParser(appView.getDeviceTicket(), dataLogicSystem);
 
-        cashManagementService = new CashManagementServiceImpl(appView.getSession(), dataLogicSystem);
+        cashManagementService = new CashManagementServiceImpl(appView.getSession());
 
         m_jTicketTable.setDefaultRenderer(Object.class, new TableRendererBasic(
                 new Formats[] { new FormatsPayment(), Formats.CURRENCY, Formats.INT }));
@@ -141,29 +143,29 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
         m_jsalestable.setModel(new DefaultTableModel());
 
         // LoadData
-        m_PaymentsToClose = PaymentsModel.loadInstance(appView);
+        paymentsToClose = CashReport.loadInstance(appView);
 
         // Populate Data
-        m_jSequence.setText(m_PaymentsToClose.printSequence());
-        m_jMinDate.setText(m_PaymentsToClose.printDateStart());
-        m_jMaxDate.setText(m_PaymentsToClose.printDateEnd());
+        m_jSequence.setText(paymentsToClose.printSequence());
+        m_jMinDate.setText(paymentsToClose.printDateStart());
+        m_jMaxDate.setText(paymentsToClose.printDateEnd());
 
-        if (m_PaymentsToClose.getPayments() != 0
-                || m_PaymentsToClose.getSales() != 0) {
+        if (paymentsToClose.getPayments() != 0
+                || paymentsToClose.getSales() != 0) {
 
             m_jPrintCashPreview.setEnabled(true);
             m_jCloseCash.setEnabled(true);
 
-            m_jCount.setText(m_PaymentsToClose.printPayments());
-            m_jCash.setText(m_PaymentsToClose.printPaymentsTotal());
+            m_jCount.setText(paymentsToClose.printPayments());
+            m_jCash.setText(paymentsToClose.printPaymentsTotal());
 
-            m_jSales.setText(m_PaymentsToClose.printSales());
-            m_jSalesSubtotal.setText(m_PaymentsToClose.printSalesBase());
-            m_jSalesTaxes.setText(m_PaymentsToClose.printSalesTaxes());
-            m_jSalesTotal.setText(m_PaymentsToClose.printSalesTotal());
+            m_jSales.setText(paymentsToClose.printSales());
+            m_jSalesSubtotal.setText(paymentsToClose.printSalesBase());
+            m_jSalesTaxes.setText(paymentsToClose.printSalesTaxes());
+            m_jSalesTotal.setText(paymentsToClose.printSalesTotal());
         }
 
-        m_jTicketTable.setModel(m_PaymentsToClose.getPaymentsModel());
+        m_jTicketTable.setModel(paymentsToClose.getPaymentsModel());
 
         TableColumnModel jColumns = m_jTicketTable.getColumnModel();
         jColumns.getColumn(0).setPreferredWidth(100);
@@ -173,7 +175,7 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
         jColumns.getColumn(2).setPreferredWidth(100);
         jColumns.getColumn(2).setResizable(false);
 
-        m_jsalestable.setModel(m_PaymentsToClose.getSalesModel());
+        m_jsalestable.setModel(paymentsToClose.getSalesModel());
 
         jColumns = m_jsalestable.getColumnModel();
         jColumns.getColumn(0).setPreferredWidth(100);
@@ -184,8 +186,8 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
         jColumns.getColumn(2).setResizable(false);
 
         try {
-            numOfNoSales = cashManagementService.getNumOfNoSales(m_PaymentsToClose.getDateStart());
-            numOfLinesRemoved = cashManagementService.getNumOfRemovedLines(m_PaymentsToClose.getDateStart());
+            numOfNoSales = cashManagementService.getNumOfNoSales(paymentsToClose.getDateStart());
+            numOfLinesRemoved = cashManagementService.getNumOfRemovedLines(paymentsToClose.getDateStart());
         } catch (BasicException ex) {
             Logger.getLogger(JPanelCloseMoney.class.getName()).log(Level.WARNING,
                     "Exception on loading Close Cash data: ", ex);
@@ -205,7 +207,7 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
         } else {
             try {
                 ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
-                script.put("payments", m_PaymentsToClose);
+                script.put("payments", paymentsToClose);
                 script.put("nosales", numOfNoSales.toString());
                 ticketParser.printTicket(script.eval(sresource).toString());
                 // JG 16 May 2012 use multicatch
@@ -528,8 +530,7 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
             try {
                 // Fire cash.closed event
                 ScriptEngine scriptEngine = ScriptFactory.getScriptEngine(ScriptFactory.BEANSHELL);
-                DataLogicSystem dlSystem = (DataLogicSystem) appView.getBean("com.openbravo.pos.forms.DataLogicSystem");
-                String script = dlSystem.getResourceAsXML(scriptId);
+                String script = dataLogicSystem.getResourceAsXML(scriptId);
                 scriptEngine.eval(script);
             } catch (BeanFactoryException | ScriptException e) {
                 LOGGER.log(Level.WARNING, "Exception on executing script: " + scriptId, e);
@@ -556,19 +557,21 @@ public class JPanelCloseMoney extends JPanel implements JPanelView, BeanFactoryA
                 // Creamos una nueva caja
                 appView.setActiveCash(UUID.randomUUID().toString(),
                         appView.getActiveCashSequence() + 1, dNow, null);
-
-                // creamos la caja activa
-                dataLogicSystem.execInsertCash(new Object[] { appView.getActiveCashIndex(),
-                        appView.getProperties().getHost(),
-                        appView.getActiveCashSequence(),
-                        appView.getActiveCashDateStart(),
-                        appView.getActiveCashDateEnd(), 0 });
-
-                dataLogicSystem
-                        .execDrawerOpened(appView.getAppUserView().getUser().getName(), "Close Cash", new Date());
+                
+                
+                CashRegister cash = new CashRegister();
+                cash.setMoney(appView.getActiveCashIndex());
+                cash.setHost(appView.getProperties().getHost());
+                cash.setHostsequence(appView.getActiveCashSequence());
+                cash.setStartDate(appView.getActiveCashDateStart());
+                cash.setEndDate(appView.getActiveCashDateEnd());
+                
+                cashManagementService.addCloseCash(cash);
+                
+                dataLogicSystem.execDrawerOpened(appView.getAppUserView().getUser().getName(), "Close Cash", dNow);
 
                 // ponemos la fecha de fin
-                m_PaymentsToClose.setDateEnd(dNow);
+                paymentsToClose.setDateEnd(dNow);
 
                 // print report
                 printPayments("Printer.CloseCash");

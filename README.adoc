@@ -118,6 +118,33 @@ export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
 ./mvnw -pl :kriolos-opos-app compile exec:java
 ----
 
+
+== Configuration File
+
+Configuration file
+
+* Windows: %APPDATA%/KriolOS/kriolos-opos.properties
+* Linux: ~/.local/share/kriolos/kriolos-opos.properties
+** XDG_DATA_HOME/kriolos/kriolos-opos.properties
+* macOS: ~/Library/Application Support/KriolOS/kriolos-opos.properties
+
+
+=== Configure Locale with SPI 
+
+
+.Example to use in Cabo Verde (This is use custom spi l10n-pt-cv)
+----
+localization.configure=provider
+localization.locale=pt-CV
+----
+
+.Example to use in Mozambique (Will use default Java)
+----
+localization.configure=provider
+localization.locale=pt-MZ
+----
+
+
 == Run DB on Docker 
 
 .Run MySQL database for Developer Env 

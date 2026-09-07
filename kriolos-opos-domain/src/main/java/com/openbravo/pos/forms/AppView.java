@@ -49,12 +49,6 @@ public interface AppView {
     public Date getActiveCashDateStart();
     public Date getActiveCashDateEnd();
 
-    /*ClosedCash*/
-    public void setClosedCash(String value, int iSeq, Date dStart, Date dEnd);    
-    public String getClosedCashIndex();    
-    public int getClosedCashSequence();    
-    public Date getClosedCashDateStart();
-    public Date getClosedCashDateEnd();
 
     public String getInventoryLocation();
     

@@ -265,10 +265,9 @@ public class DataLogicSales extends BeanFactoryDataSingle {
             ORDER BY R.DATENEW DESC, T.TICKETID 
             LIMIT 10
             """,
-            null,
-            new SerializerReadClass(ReprintTicketInfo.class)).list();
+                null,
+                new SerializerReadClass(ReprintTicketInfo.class)).list();
     }
-
 
     /**
      *
@@ -334,17 +333,16 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                             "R.DATENEW", "P.NAME", "C.NAME"
                         }),
                 new SerializerWriteBasic(new Datas[]{
-                    Datas.OBJECT, Datas.INT,
-                    Datas.OBJECT, Datas.INT,
-                    Datas.OBJECT, Datas.DOUBLE,
-                    Datas.OBJECT, Datas.TIMESTAMP,
-                    Datas.OBJECT, Datas.TIMESTAMP,
-                    Datas.OBJECT, Datas.STRING,
-                    Datas.OBJECT, Datas.STRING
-                }),
+            Datas.OBJECT, Datas.INT,
+            Datas.OBJECT, Datas.INT,
+            Datas.OBJECT, Datas.DOUBLE,
+            Datas.OBJECT, Datas.TIMESTAMP,
+            Datas.OBJECT, Datas.TIMESTAMP,
+            Datas.OBJECT, Datas.STRING,
+            Datas.OBJECT, Datas.STRING
+        }),
                 new SerializerReadClass(FindTicketsInfo.class));
     }
-
 
     // User list
     /**
@@ -420,10 +418,10 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      */
     public final List<CustomerTransaction> getCustomersTransactionList(String cId) throws BasicException {
 
-    // TODO: TICKETLINE MUST STORE: _tax_value, _line_amount(Qty x price)
-    // _line_total (Price x Qty x Tax), line_prod_name
-    // TODO: CALCULATION MUST BE DONE Java using BigDecimal
-    return new PreparedSentence<>(sessionDB, """
+        // TODO: TICKETLINE MUST STORE: _tax_value, _line_amount(Qty x price)
+        // _line_total (Price x Qty x Tax), line_prod_name
+        // TODO: CALCULATION MUST BE DONE Java using BigDecimal
+        return new PreparedSentence<>(sessionDB, """
             SELECT 
                 tickets.TICKETID, 
                 products.NAME AS PNAME, 
@@ -446,8 +444,8 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 products.NAME
             ORDER BY receipts.DATENEW DESC
             """,
-            SerializerWriteString.INSTANCE,
-            CustomerTransaction.getSerializerRead()).list(cId);
+                SerializerWriteString.INSTANCE,
+                CustomerTransaction.getSerializerRead()).list(cId);
     }
 
     /**
@@ -803,20 +801,20 @@ public class DataLogicSales extends BeanFactoryDataSingle {
         SentenceExec taxlinesinsert = new PreparedSentence(sessionDB,
                 "INSERT INTO taxlines (ID, RECEIPT, TAXID, BASE, AMOUNT) VALUES (?, ?, ?, ?, ?)",
                 SerializerWriteParams.INSTANCE);
-        
+
         return taxlinesinsert.exec(new DataParams() {
-                            @Override
-                            public void writeValues() throws BasicException {
-                                setString(1, UUID.randomUUID().toString());
-                                setString(2, ticketId);
-                                setString(3, taxId);
-                                setDouble(4, taxableAmount);
-                                setDouble(5, taxAmount);
-                            }
-                        });
+            @Override
+            public void writeValues() throws BasicException {
+                setString(1, UUID.randomUUID().toString());
+                setString(2, ticketId);
+                setString(3, taxId);
+                setDouble(4, taxableAmount);
+                setDouble(5, taxAmount);
+            }
+        });
     }
 
-    private int updateVoucherNonActive(String voucherNumber) throws BasicException  {
+    private int updateVoucherNonActive(String voucherNumber) throws BasicException {
         return DataLogicVouchers.updateVoucherNonActive(voucherNumber, sessionDB);
     }
 
@@ -1515,6 +1513,46 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                         .exec(params);
             }
         };
+    }
+
+    public final void addTicketLineRemoved(String username, String ticketId, String productId, String productName, double quantity) {
+
+        final SentenceExec m_lineremoved = new StaticSentence(this.sessionDB,
+                """
+                INSERT INTO lineremoved (NAME, TICKETID, PRODUCTID, PRODUCTNAME, UNITS, REMOVEDDATE)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                new SerializerWriteBasic(new Datas[]{
+            Datas.STRING, Datas.STRING,
+            Datas.STRING, Datas.STRING,
+            Datas.DOUBLE, Datas.TIMESTAMP
+        }));
+
+        try {
+            Object[] line = new Object[]{username, ticketId, productId, productName, quantity, new Date()};
+
+            m_lineremoved.exec(line);
+        } catch (BasicException e) {
+            LOGGER.log(Level.SEVERE, "Exception on execute line removed: ", e);
+        }
+    }
+
+    public final void addTicketDeleted(String username) {
+        final SentenceExec m_ticketremoved = new StaticSentence(this.sessionDB,
+                """
+                INSERT INTO lineremoved (NAME, TICKETID, PRODUCTNAME, UNITS, REMOVEDDATE)
+                    VALUES (?, ?, ?, ?, ?)
+                """,
+                new SerializerWriteBasic(new Datas[]{
+            Datas.STRING, Datas.STRING,
+            Datas.STRING, Datas.DOUBLE, Datas.TIMESTAMP
+        }));
+        try {
+            Object[] ticketDeleted = new Object[]{username, "Void", "Ticket Deleted", 0.0, new Date()};
+            m_ticketremoved.exec(ticketDeleted);
+        } catch (BasicException e) {
+            LOGGER.log(Level.SEVERE, "Exception on execute ticket removed: ", e);
+        }
     }
 
 }

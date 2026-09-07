@@ -124,7 +124,7 @@ public class JTicketsBagShared extends JTicketsBag {
     @Override
     public void deleteTicket() {
 
-        dlSystem.execTicketRemoved(m_App.getAppUserView().getUser().getName());
+        dlSales.addTicketDeleted(m_App.getAppUserView().getUser().getName());
         updateCount();
     }
 

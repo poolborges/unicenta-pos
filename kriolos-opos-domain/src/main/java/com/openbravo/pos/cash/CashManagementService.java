@@ -1,4 +1,4 @@
-package com.openbravo.pos.payment;
+package com.openbravo.pos.cash;
 
 import com.openbravo.basic.BasicException;
 import java.util.Date;
@@ -8,9 +8,17 @@ import java.util.Date;
  */
 public interface CashManagementService {
 
+    void addCloseCash(CashRegister cash) throws BasicException;
+    
     void closeCash(String host, int sequence, String money, Date dateEnd, int noSales) throws BasicException;
+    
+    boolean isCashActive(String id) throws BasicException;
 
-    CloseCash getCloseCashBySequence(String host, int sequence) throws BasicException;
+    CashRegister getCloseCashBySequence(String host, int sequence) throws BasicException;
+    
+    CashRegister getCloseCashByMoney(String moneyToken) throws BasicException;
+    
+    int getCloseCashSequenceByHost(String host) throws BasicException;
 
     int getNumOfNoSales(Date startDate) throws BasicException;
 
