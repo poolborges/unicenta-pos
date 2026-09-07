@@ -28,6 +28,8 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.util.Exceptions;
 
 /**
@@ -35,6 +37,8 @@ import org.openide.util.Exceptions;
  * @author psb
  */
 public class CatalogController {
+    
+    private final static Logger LOGGER = Logger.getLogger(CatalogController.class.getName());
     
     private static final int TAB_DEFAULT_WIDTH = 94;
     private static final int TAB_DEFAULT_HEIGHT = 80;
@@ -58,7 +62,7 @@ public class CatalogController {
             this.taxeslogic = new TaxesLogic(dlLogicSales.getTaxList().list());
         }
         catch (BasicException ex) {
-            Exceptions.printStackTrace(ex);
+            LOGGER.log(Level.WARNING,"construct taxe logic",ex);
         }
         
         tnbcat = new ThumbNailBuilder(CAT_DEFAULT_WIDTH, CAT_DEFAULT_HEIGHT, "com/openbravo/images/category.png");
@@ -78,7 +82,7 @@ public class CatalogController {
             list = filterCategories(dataLogicPIM.getRootCategories());
         }
         catch (BasicException ex) {
-            Exceptions.printStackTrace(ex);
+            LOGGER.log(Level.WARNING,"get root categories",ex);
         }
         
         return list;
@@ -94,7 +98,7 @@ public class CatalogController {
             list = dataLogicPIM.getProductConstant();
         }
         catch (BasicException ex) {
-            Exceptions.printStackTrace(ex);
+            LOGGER.log(Level.WARNING,"get constant products",ex);
         }
         return list;
     }
@@ -106,7 +110,7 @@ public class CatalogController {
             list = filterCategories(dataLogicPIM.getSubcategories(categoryId));
         }
         catch (BasicException ex) {
-            Exceptions.printStackTrace(ex);
+            LOGGER.log(Level.WARNING,"get subcategories: "+categoryId, ex);
         }
         
         return list;
@@ -118,7 +122,7 @@ public class CatalogController {
             list = dataLogicPIM.getProductCatalog(categoryId);
         }
         catch (BasicException ex) {
-            Exceptions.printStackTrace(ex);
+            LOGGER.log(Level.WARNING,"find product by category: "+categoryId, ex);
         }
         return list;
     }
@@ -133,7 +137,7 @@ public class CatalogController {
             list = dataLogicPIM.getProductComposite(productId);
         }
         catch (BasicException ex) {
-            Exceptions.printStackTrace(ex);
+            LOGGER.log(Level.WARNING,"get companion products: "+productId, ex);
         }
         return list;
     }
@@ -144,7 +148,7 @@ public class CatalogController {
             data = dataLogicPIM.getProductInfo(productId);
         }
         catch (BasicException ex) {
-            Exceptions.printStackTrace(ex);
+            LOGGER.log(Level.WARNING,"get product info: "+productId,ex);
         }
         return data;
     }
