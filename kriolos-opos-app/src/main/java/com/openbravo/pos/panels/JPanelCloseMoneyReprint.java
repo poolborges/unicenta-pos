@@ -16,6 +16,7 @@
 
 package com.openbravo.pos.panels;
 
+import com.openbravo.pos.reports.CashReprintModel;
 import com.openbravo.pos.forms.JPanelView;
 import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.forms.AppView;
@@ -35,8 +36,8 @@ import java.awt.Dimension;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.openbravo.pos.payment.CashManagementService;
-import com.openbravo.pos.payment.CashManagementServiceImpl;
+import com.openbravo.pos.cash.CashManagementService;
+import com.openbravo.pos.cash.CashManagementServiceImpl;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -53,12 +54,11 @@ public class JPanelCloseMoneyReprint extends JPanel implements JPanelView, BeanF
     private DataLogicSystem dataLogicSystem;
     private CashManagementService cashManagementService;
 
-    private PaymentsReprintModel m_PaymentsClosed = null;
+    private CashReprintModel paymentsClosed = null;
 
     private TicketParser ticketParser;
 
-    private Integer numOfNoSales;
-    private Integer numOfLinesRemoved;
+    private Integer numOfNoSales = 0;
 
     /** Creates new form JPanelCloseMoneyReprint */
     public JPanelCloseMoneyReprint() {
@@ -76,7 +76,7 @@ public class JPanelCloseMoneyReprint extends JPanel implements JPanelView, BeanF
         appView = app;
         dataLogicSystem = (DataLogicSystem) appView.getBean("com.openbravo.pos.forms.DataLogicSystem");
         ticketParser = new TicketParser(appView.getDeviceTicket(), dataLogicSystem);
-        cashManagementService = new CashManagementServiceImpl(appView.getSession(), dataLogicSystem);
+        cashManagementService = new CashManagementServiceImpl(appView.getSession());
 
         m_jTicketTable.setDefaultRenderer(Object.class, new TableRendererBasic(
                 new Formats[] { new FormatsPayment(), Formats.CURRENCY }));
@@ -163,26 +163,26 @@ public class JPanelCloseMoneyReprint extends JPanel implements JPanelView, BeanF
         m_jTicketTable.setModel(new DefaultTableModel());
         m_jsalestable.setModel(new DefaultTableModel());
 
-        m_PaymentsClosed = PaymentsReprintModel.loadInstance(appView);
+        paymentsClosed = CashReprintModel.loadInstance(appView);
 
-        if (m_PaymentsClosed != null && (m_PaymentsClosed.getPayments() > 0
-                || m_PaymentsClosed.getSales() > 0)) {
+        if (paymentsClosed != null && (paymentsClosed.getPayments() > 0
+                || paymentsClosed.getSales() > 0)) {
 
-            m_jSequence.setText(m_PaymentsClosed.printSequence());
-            m_jMinDate.setText(m_PaymentsClosed.printDateStart());
-            m_jMaxDate.setText(m_PaymentsClosed.printDateEnd());
+            m_jSequence.setText(paymentsClosed.printSequence());
+            m_jMinDate.setText(paymentsClosed.printDateStart());
+            m_jMaxDate.setText(paymentsClosed.printDateEnd());
 
             m_jPrint.setEnabled(true);
 
-            m_jCount.setText(m_PaymentsClosed.printPayments());
-            m_jCash.setText(m_PaymentsClosed.printPaymentsTotal());
+            m_jCount.setText(paymentsClosed.printPayments());
+            m_jCash.setText(paymentsClosed.printPaymentsTotal());
 
-            m_jSales.setText(m_PaymentsClosed.printSales());
-            m_jSalesSubtotal.setText(m_PaymentsClosed.printSalesBase());
-            m_jSalesTaxes.setText(m_PaymentsClosed.printSalesTaxes());
-            m_jSalesTotal.setText(m_PaymentsClosed.printSalesTotal());
+            m_jSales.setText(paymentsClosed.printSales());
+            m_jSalesSubtotal.setText(paymentsClosed.printSalesBase());
+            m_jSalesTaxes.setText(paymentsClosed.printSalesTaxes());
+            m_jSalesTotal.setText(paymentsClosed.printSalesTotal());
 
-            m_jTicketTable.setModel(m_PaymentsClosed.getPaymentsReprintModel());
+            m_jTicketTable.setModel(paymentsClosed.getPaymentsReprintModel());
 
             TableColumnModel jColumns = m_jTicketTable.getColumnModel();
             jColumns.getColumn(0).setPreferredWidth(225);
@@ -190,7 +190,7 @@ public class JPanelCloseMoneyReprint extends JPanel implements JPanelView, BeanF
             jColumns.getColumn(1).setPreferredWidth(100);
             jColumns.getColumn(1).setResizable(false);
 
-            m_jsalestable.setModel(m_PaymentsClosed.getSalesModel());
+            m_jsalestable.setModel(paymentsClosed.getSalesModel());
 
             jColumns = m_jsalestable.getColumnModel();
             jColumns.getColumn(0).setPreferredWidth(125);
@@ -201,10 +201,10 @@ public class JPanelCloseMoneyReprint extends JPanel implements JPanelView, BeanF
             jColumns.getColumn(2).setResizable(false);
 
             numOfNoSales = 0;
-            numOfLinesRemoved = 0;
+            Integer numOfLinesRemoved = 0;
             try {
-                numOfNoSales = cashManagementService.getNumOfNoSales(m_PaymentsClosed.getDateStart());
-                numOfLinesRemoved = cashManagementService.getNumOfVoidLines(m_PaymentsClosed.getDateStart());
+                numOfNoSales = cashManagementService.getNumOfNoSales(paymentsClosed.getDateStart());
+                numOfLinesRemoved = cashManagementService.getNumOfVoidLines(paymentsClosed.getDateStart());
             } catch (BasicException ex) {
                 Logger.getLogger(JPanelCloseMoneyReprint.class.getName()).log(Level.WARNING,
                         "Exception on loading Close Cash data: ", ex);
@@ -225,7 +225,7 @@ public class JPanelCloseMoneyReprint extends JPanel implements JPanelView, BeanF
         } else {
             try {
                 ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
-                script.put("payments", m_PaymentsClosed);
+                script.put("payments", paymentsClosed);
                 script.put("nosales", numOfNoSales.toString());
                 ticketParser.printTicket(script.eval(sresource).toString());
             } catch (ScriptException | TicketPrinterException e) {

@@ -724,7 +724,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         salesService.removeLine(m_oTicket, ticketLineNumber);
 
         //Insert into lineremoved (For Audity) 
-        dlSystem.execTicketLineRemoved(
+        dlSales.addTicketLineRemoved(
                 m_App.getAppUserView().getUser().getName(),
                 ticketID,
                 ticketLine.getProductID(),

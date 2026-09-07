@@ -19,6 +19,9 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.loader.Session;
 import com.openbravo.format.Formats;
+import com.openbravo.pos.cash.CashManagementService;
+import com.openbravo.pos.cash.CashManagementServiceImpl;
+import com.openbravo.pos.cash.CashRegister;
 import com.openbravo.pos.printer.DeviceTicket;
 import com.openbravo.pos.printer.TicketParser;
 import com.openbravo.pos.printer.TicketPrinterException;
@@ -41,7 +44,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.time.Instant;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -52,22 +54,25 @@ public class JRootApp extends JPanel implements AppView {
     private static final Logger LOGGER = Logger.getLogger(JRootApp.class.getName());
     private static final long serialVersionUID = 1L;
 
-    private final AppProperties appFileProperties;
+    private final AppProperties appProperties;
     private Session session;
-    private DataLogicSystem m_dlSystem;
+    private DataLogicSystem dlogicSystem;
+    private CashManagementService cashManagementService;
 
     private Properties hostSavedProperties = null;
-    private CashDrawer activeCash = new CashDrawer();
-    private CashDrawer closedCash = new CashDrawer();
-    private String m_sInventoryLocation;
+    private CashRegister activeCash = new CashRegister();
+    private String inventoryLocation;
 
-    private DeviceScale m_Scale;
-    private DeviceScanner m_Scanner;
-    private DeviceTicket m_DeviceTicket;
-    private TicketParser m_TicketParser;
+    private DeviceScale deviceScale;
+    private DeviceScanner deviceScanner;
+    private DeviceTicket deviceTicket;
+    private TicketParser ticketParser;
 
-    private JPrincipalApp m_principalapp = null;
+    private JPrincipalApp principalApp = null;
     private JAuthPanel mAuthPanel = null;
+
+    private static final String HOST_PROP_KEY_ACTIVECASH = "activecash";
+    private static final String HOST_PROP_KEY_LOCATION = "location";
 
     private String getLineTimer() {
         return Formats.HOURMIN.formatValue(new Date());
@@ -80,34 +85,35 @@ public class JRootApp extends JPanel implements AppView {
     public JRootApp(AppProperties props) {
         initComponents();
 
-        appFileProperties = props;
+        appProperties = props;
     }
 
-    public void initApp() throws BasicException{
+    public void initApp() throws BasicException {
 
         applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 
         try {
-            session = AppViewConnection.createSession(this, appFileProperties);
+            session = AppViewConnection.createSession(this, appProperties);
 
-        } catch (BasicException e) {
-            LOGGER.log(Level.WARNING, "Exception on DB createSession", e);
+        }
+        catch (BasicException e) {
             throw new BasicException("Exception on DB createSession", e);
         }
 
-        m_dlSystem = (DataLogicSystem) getBean("com.openbravo.pos.forms.DataLogicSystem");
+        dlogicSystem = (DataLogicSystem) getBean("com.openbravo.pos.forms.DataLogicSystem");
+
+        cashManagementService = new CashManagementServiceImpl(session);
 
         LOGGER.log(Level.INFO, "DB Migration execution Starting");
         try {
             com.openbravo.pos.data.DBMigrator.execDBMigration(session);
             LOGGER.log(Level.INFO, "Database verification or migration done sucessfully");
-        }catch(BasicException ex) {
+        }
+        catch (BasicException ex) {
             throw new BasicException("Database verification fail", ex);
         }
 
-        logStartup();
-
-        hostSavedProperties = m_dlSystem.getResourceAsProperties(getHostID());
+        hostSavedProperties = dlogicSystem.getResourceAsProperties(getHostPropertyId());
 
         if (checkActiveCash()) {
             LOGGER.log(Level.WARNING, "Fail on verify ActiveCash");
@@ -123,15 +129,14 @@ public class JRootApp extends JPanel implements AppView {
         setStatusBarPanel();
 
         showLoginPanel();
+
+        logStartup();
     }
 
     private void setTitlePanel() {
-        
-        String customTile = m_dlSystem.getResourceAsText("Window.Title");
-        if(customTile == null){
-        
-        }
-        
+
+        String customTile = dlogicSystem.getResourceAsText("Window.Title");
+
         appTitleLabel.setText(customTile);
         appTitleLabel.repaint();
 
@@ -147,54 +152,61 @@ public class JRootApp extends JPanel implements AppView {
         });
 
         clockTimer.start();*/
-        
     }
 
-    private String getHostID() {
-        return appFileProperties.getHost() + "/properties";
+    private String getHostPropertyId() {
+        return appProperties.getHost() + "/properties";
     }
 
     private void setInventoryLocation() {
-        m_sInventoryLocation = hostSavedProperties.getProperty("location");
-        if (m_sInventoryLocation == null) {
-            m_sInventoryLocation = "0";
-            hostSavedProperties.setProperty("location", m_sInventoryLocation);
-            m_dlSystem.setResourceAsProperties(getHostID(), hostSavedProperties);
+        inventoryLocation = hostSavedProperties.getProperty(HOST_PROP_KEY_LOCATION);
+        if (inventoryLocation == null) {
+            inventoryLocation = "0";
+            hostSavedProperties.setProperty(HOST_PROP_KEY_LOCATION, inventoryLocation);
+            dlogicSystem.setResourceAsProperties(getHostPropertyId(), hostSavedProperties);
         }
     }
 
     private void initPeripheral() {
-        m_DeviceTicket = new DeviceTicket(this, appFileProperties);
+        deviceTicket = new DeviceTicket(this, appProperties);
 
-        m_TicketParser = new TicketParser(getDeviceTicket(), m_dlSystem);
+        ticketParser = new TicketParser(getDeviceTicket(), dlogicSystem);
         printerStart();
 
-        m_Scale = new DeviceScale(this, appFileProperties);
+        deviceScale = new DeviceScale(this, appProperties);
 
-        m_Scanner = DeviceScannerFactory.createInstance(appFileProperties);
+        deviceScanner = DeviceScannerFactory.createInstance(appProperties);
     }
 
     private boolean checkActiveCash() {
         try {
-            String sActiveCashIndex = hostSavedProperties.getProperty("activecash");
-            Object[] valcash = sActiveCashIndex == null
-                    ? null
-                    : m_dlSystem.findActiveCash(sActiveCashIndex);
-            if (valcash == null || !appFileProperties.getHost().equals(valcash[0])) {
-                setActiveCash(UUID.randomUUID().toString(),
-                        m_dlSystem.getSequenceCash(appFileProperties.getHost()) + 1, new Date(), null);
-                m_dlSystem.execInsertCash(
-                        new Object[]{getActiveCashIndex(), appFileProperties.getHost(),
-                            getActiveCashSequence(),
-                            getActiveCashDateStart(),
-                            getActiveCashDateEnd()});
-            } else {
-                setActiveCash(sActiveCashIndex,
-                        (Integer) valcash[1],
-                        (Date) valcash[2],
-                        (Date) valcash[3]);
+            String activeCash = hostSavedProperties.getProperty(HOST_PROP_KEY_ACTIVECASH);
+            CashRegister cash = null;
+
+            if (activeCash != null) {
+                cash = cashManagementService.getCloseCashByMoney(activeCash);
             }
-        } catch (BasicException e) {
+
+            if (cash != null && appProperties.getHost().equals(cash.getHost()) && cash.getEndDate() == null) {
+                setActiveCash(activeCash, cash.getHostsequence(), cash.getStartDate(), cash.getEndDate());
+
+            } else {
+
+                int currentSequence = cashManagementService.getCloseCashSequenceByHost(appProperties.getHost());
+
+                setActiveCash(UUID.randomUUID().toString(), currentSequence + 1, new Date(), null);
+
+                cash = new CashRegister();
+                cash.setMoney(getActiveCashIndex());
+                cash.setHost(appProperties.getHost());
+                cash.setHostsequence(getActiveCashSequence());
+                cash.setStartDate(getActiveCashDateStart());
+                cash.setEndDate(getActiveCashDateEnd());
+
+                cashManagementService.addCloseCash(cash);
+            }
+        }
+        catch (BasicException e) {
             MessageInf msg = new MessageInf(MessageInf.SGN_NOTICE,
                     AppLocal.getIntString("message.cannotclosecash"), e);
             msg.show(this);
@@ -208,42 +220,49 @@ public class JRootApp extends JPanel implements AppView {
         String sUserPath = AppConfig.getInstance().getAppDataDirectory();
 
         Instant machineTimestamp = Instant.now();
-        String sContent = sUserPath + ","
-                + machineTimestamp + ","
-                + AppLocal.APP_ID + ","
-                + AppLocal.APP_NAME + ","
-                + AppLocal.APP_VERSION + "\n";
+        String sContent = ""
+                + "timestamp: "+ machineTimestamp 
+                + ", appId: " + AppLocal.APP_ID 
+                + ", appName: " + AppLocal.APP_NAME 
+                + ", appVersion: " + AppLocal.APP_VERSION 
+                + ", appDir: "+ sUserPath 
+                + ", host: "+ appProperties.getHost() 
+                + ", hostCash: "+ getActiveCashIndex()
+                + ", hostCashSeq: "+ getActiveCashSequence()
+                + ", hostCashStart: "+ getActiveCashDateStart()
+                + "\n";
 
         try {
             Files.write(new File(sUserPath, AppLocal.getLogFileName()).toPath(), sContent.getBytes(),
                     StandardOpenOption.APPEND, StandardOpenOption.CREATE);
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
     private String readDataBaseVersion() {
         try {
-            return m_dlSystem.findVersion();
-        } catch (BasicException ed) {
+            return dlogicSystem.findVersion();
+        }
+        catch (BasicException ed) {
             return null;
         }
     }
 
-
     @Override
     public DeviceTicket getDeviceTicket() {
-        return m_DeviceTicket;
+        return deviceTicket;
     }
 
     @Override
     public DeviceScale getDeviceScale() {
-        return m_Scale;
+        return deviceScale;
     }
 
     @Override
     public DeviceScanner getDeviceScanner() {
-        return m_Scanner;
+        return deviceScanner;
     }
 
     @Override
@@ -253,73 +272,43 @@ public class JRootApp extends JPanel implements AppView {
 
     @Override
     public String getInventoryLocation() {
-        return m_sInventoryLocation;
+        return inventoryLocation;
     }
 
     @Override
     public String getActiveCashIndex() {
-        return activeCash.getCashIndex();
+        return activeCash.getMoney();
     }
 
     @Override
     public int getActiveCashSequence() {
-        return activeCash.getCashSequence();
+        return activeCash.getHostsequence();
     }
 
     @Override
     public Date getActiveCashDateStart() {
-        return activeCash.getCashDateStart();
+        return activeCash.getStartDate();
     }
 
     @Override
     public Date getActiveCashDateEnd() {
-        return activeCash.getCashDateEnd();
+        return activeCash.getEndDate();
     }
 
     @Override
-    public void setActiveCash(String sIndex, int iSeq, Date dStart, Date dEnd) {
-        activeCash.setCashIndex(sIndex);
-        activeCash.setCashSequence(iSeq);
-        activeCash.setCashDateStart(dStart);
-        activeCash.setCashDateEnd(dEnd);
+    public void setActiveCash(String sIndex, int sequenceNumber, Date startDate, Date endDate) {
+        activeCash.setMoney(sIndex);
+        activeCash.setHostsequence(sequenceNumber);
+        activeCash.setStartDate(startDate);
+        activeCash.setEndDate(endDate);
 
-        hostSavedProperties.setProperty("activecash", activeCash.getCashIndex());
-        m_dlSystem.setResourceAsProperties(getHostID(), hostSavedProperties);
-    }
-
-    @Override
-    public String getClosedCashIndex() {
-        return closedCash.getCashIndex();
-    }
-
-    @Override
-    public int getClosedCashSequence() {
-        return closedCash.getCashSequence();
-    }
-
-    @Override
-    public Date getClosedCashDateStart() {
-        return closedCash.getCashDateStart();
-    }
-
-    @Override
-    public Date getClosedCashDateEnd() {
-        return closedCash.getCashDateEnd();
-    }
-
-    @Override
-    public void setClosedCash(String sIndex, int iSeq, Date dStart, Date dEnd) {
-        closedCash.setCashIndex(sIndex);
-        closedCash.setCashSequence(iSeq);
-        closedCash.setCashDateStart(dStart);
-        closedCash.setCashDateEnd(dEnd);
-        hostSavedProperties.setProperty("closecash", closedCash.getCashIndex());
-        m_dlSystem.setResourceAsProperties(getHostID(), hostSavedProperties);
+        hostSavedProperties.setProperty(HOST_PROP_KEY_ACTIVECASH, activeCash.getMoney());
+        dlogicSystem.setResourceAsProperties(getHostPropertyId(), hostSavedProperties);
     }
 
     @Override
     public AppProperties getProperties() {
-        return appFileProperties;
+        return appProperties;
     }
 
     @Override
@@ -339,7 +328,7 @@ public class JRootApp extends JPanel implements AppView {
 
     @Override
     public AppUserView getAppUserView() {
-        return m_principalapp;
+        return principalApp;
     }
 
     @Override
@@ -352,21 +341,22 @@ public class JRootApp extends JPanel implements AppView {
 
     private void printerStart() {
 
-        String sresource = m_dlSystem.getResourceAsXML("Printer.Start");
-        if (sresource == null) {
-            m_DeviceTicket.getDeviceDisplay().writeVisor(AppLocal.APP_NAME, AppLocal.APP_VERSION);
-        } else {
+        String sresource = dlogicSystem.getResourceAsXML("Printer.Start");
+
+        deviceTicket.getDeviceDisplay().writeVisor(AppLocal.APP_NAME, AppLocal.APP_VERSION);
+
+        if (sresource != null) {
+
             try {
                 ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
                 script.put("appname", AppLocal.APP_NAME);
                 script.put("appShortDescription", AppLocal.APP_SHORT_DESCRIPTION);
                 String xmlContent = script.eval(sresource).toString();
-                m_TicketParser.printTicket(xmlContent);
-            } catch (TicketPrinterException eTP) {
-                m_DeviceTicket.getDeviceDisplay().writeVisor(AppLocal.APP_NAME, AppLocal.APP_VERSION);
+                ticketParser.printTicket(xmlContent);
+
             }
-            catch (ScriptException ex) {
-                Exceptions.printStackTrace(ex);
+            catch (TicketPrinterException | ScriptException ex) {
+                LOGGER.log(Level.WARNING, "Print start: ", ex);
             }
         }
     }
@@ -381,23 +371,23 @@ public class JRootApp extends JPanel implements AppView {
         LOGGER.log(Level.WARNING, "INFO :: showMainAppPanel");
         if (closeAppView()) {
 
-            m_principalapp = new JPrincipalApp(this, user);
+            principalApp = new JPrincipalApp(this, user);
 
-            statusBarSecondPanel.add(m_principalapp.getNotificator());
+            statusBarSecondPanel.add(principalApp.getNotificator());
             statusBarSecondPanel.revalidate();
 
-            String viewID = "_" + m_principalapp.getUser().getId();
-            contentContainerPanel.add(m_principalapp, viewID);
+            String viewID = "_" + principalApp.getUser().getId();
+            contentContainerPanel.add(principalApp, viewID);
             showView(viewID);
 
-            m_principalapp.activate();
+            principalApp.activate();
         }
     }
-    
+
     //Release hardware,files,...
     private void releaseResources() {
-        if(m_DeviceTicket != null){
-            m_DeviceTicket.getDeviceDisplay().clearVisor();
+        if (deviceTicket != null) {
+            deviceTicket.getDeviceDisplay().clearVisor();
         }
     }
 
@@ -405,17 +395,18 @@ public class JRootApp extends JPanel implements AppView {
 
         if (closeAppView()) {
             releaseResources();
-            if(session != null){
+            if (session != null) {
                 try {
                     session.close();
-                } catch (SQLException ex) {
+                }
+                catch (SQLException ex) {
                     LOGGER.log(Level.WARNING, "", ex);
                 }
             }
             java.awt.Window parent = SwingUtilities.getWindowAncestor(this);
-            if(parent != null){
+            if (parent != null) {
                 parent.dispose();
-            }else {
+            } else {
                 this.setVisible(false);
                 this.setEnabled(false);
             }
@@ -425,17 +416,17 @@ public class JRootApp extends JPanel implements AppView {
     @Override
     public boolean closeAppView() {
 
-        if (m_principalapp == null) {
+        if (principalApp == null) {
             return true;
-        } else if (!m_principalapp.deactivate()) {
+        } else if (!principalApp.deactivate()) {
             return false;
         } else {
-            statusBarSecondPanel.remove(m_principalapp.getNotificator());
+            statusBarSecondPanel.remove(principalApp.getNotificator());
             statusBarSecondPanel.revalidate();
             statusBarSecondPanel.repaint();
 
-            contentContainerPanel.remove(m_principalapp);
-            m_principalapp = null;
+            contentContainerPanel.remove(principalApp);
+            principalApp = null;
 
             //showLoginPanel();
             return true;
@@ -445,7 +436,7 @@ public class JRootApp extends JPanel implements AppView {
     private void showLoginPanel() {
         LOGGER.log(Level.WARNING, "INFO :: showLoginPanel");
         if (mAuthPanel == null) {
-            mAuthPanel = new JAuthPanel(m_dlSystem, new JAuthPanel.AuthListener() {
+            mAuthPanel = new JAuthPanel(dlogicSystem, new JAuthPanel.AuthListener() {
                 @Override
                 public void onSucess(AppUser user) {
                     openAppView(user);
@@ -460,18 +451,20 @@ public class JRootApp extends JPanel implements AppView {
         String sWareHouse;
 
         try {
-            sWareHouse = m_dlSystem.findLocationName(m_sInventoryLocation);
-        } catch (BasicException e) {
+            sWareHouse = dlogicSystem.findLocationName(inventoryLocation);
+        }
+        catch (BasicException e) {
             sWareHouse = "";
         }
 
         String url;
         try {
             url = session.getURL();
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             url = "";
         }
-        appInfoLabel.setText("<html>" + appFileProperties.getHost() + " ;<b>WareHouse<b>: " + sWareHouse + "<br>" + url + "</html>");
+        appInfoLabel.setText("<html>" + appProperties.getHost() + " ;<b>WareHouse<b>: " + sWareHouse + "<br>" + url + "</html>");
     }
 
     /**

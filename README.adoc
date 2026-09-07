@@ -141,7 +141,7 @@ localization.locale=pt-CV
 .Example to use in Mozambique (Will use default Java)
 ----
 localization.configure=provider
-localization.locale=pt-CV
+localization.locale=pt-MZ
 ----
 
 

@@ -13,7 +13,7 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package com.openbravo.pos.panels;
+package com.openbravo.pos.reports;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.format.Formats;
@@ -39,85 +39,85 @@ import javax.swing.table.AbstractTableModel;
  * @authors adrianromero, jackgerrard, janarnagel
  *
  */
-public class PaymentsModel {
+public class CashReport {
 
-    private String m_sHost;
-    private String m_sUser;
-    private int m_iSeq;
-    private Date m_dDateStart;
-    private Date m_dDateEnd;
-    private Date rDate;
-    private Date m_dPrintDate;
+    private String machineName;
+    private String username;
+    private int sequenceNumber;
+    private Date startDate;
+    private Date endDate;
+    private Date generatedDate;
+    private Date printDate;
 
-    private Integer m_iPayments;
-    private Double m_dPaymentsTotal;
-    private java.util.List<PaymentsListLine> m_lpayments;
+    private Integer paymentsCount;
+    private Double paymentsTotal;
+    private java.util.List<PaymentsListLine> paymentLines;
 
     // JG 9 Nov 12
-    private Integer m_iCategorySalesRows;
-    private Double m_dCategorySalesTotalUnits;
-    private Double m_dCategorySalesTotal;
-    private java.util.List<CategorySalesLine> m_lcategorysales;
+    private Integer categorySalesRows;
+    private Double categorySalesTotalUnits;
+    private Double categorySalesTotal;
+    private java.util.List<CategorySalesLine> categorySalesLines;
     // end
 
     // by janar153 @ 01.12.2013
-    private Integer m_iProductSalesRows;
-    private Double m_dProductSalesTotalUnits;
-    private Double m_dProductSalesTotal;
-    private java.util.List<ProductSalesLine> m_lproductsales;
+    private Integer productSalesCount;
+    private Double productSalesTotalUnits;
+    private Double productSalesTotal;
+    private java.util.List<ProductSalesLine> productSalesLines;
     // end
 
     // added by janar153 @ 29.12.2013
-    private java.util.List<RemovedProductLines> m_lremovedlines;
+    private java.util.List<RemovedProductLines> removedProductLines;
 
-    private java.util.List<DrawerOpenedLines> m_ldraweropenedlines;
+    private java.util.List<DrawerOpenedLines> drawerOpenedLines;
 
     private final static String[] PAYMENTHEADERS = { "label.Payment", "label.paymenttotal", "label.qty" };
 
-    private Integer m_iSales;
-    private Double m_dSalesBase;
-    private Double m_dSalesTaxes;
-    private Double m_dSalesTaxNet;
-    private java.util.List<SalesLine> m_lsales;
+    private Integer salesCount;
+    private Double salesBaseValue;
+    private Double salesTaxes;
+    private Double salesTaxNet;
+    private java.util.List<SalesLine> salesLines;
 
     private final static String[] SALEHEADERS = { "label.taxcategory", "label.totaltax", "label.totalnet" };
 
-    private PaymentsModel() {
+    private CashReport() {
     }
 
     /**
      *
      * @return
      */
-    public static PaymentsModel emptyInstance() {
+    public static CashReport emptyInstance() {
 
-        PaymentsModel p = new PaymentsModel();
+        CashReport p = new CashReport();
 
-        p.m_iPayments = 0;
-        p.m_dPaymentsTotal = 0.0;
+        p.paymentsCount = 0;
+        p.paymentsTotal = 0.0;
         // JG 16 May 2013 use diamond inference
-        p.m_lpayments = new ArrayList<>();
+        p.paymentLines = new ArrayList<>();
 
         // JG 9 Nov 12
-        p.m_iCategorySalesRows = 0;
-        p.m_dCategorySalesTotalUnits = 0.0;
-        p.m_dCategorySalesTotal = 0.0;
-        p.m_lcategorysales = new ArrayList<>();
+        p.categorySalesRows = 0;
+        p.categorySalesTotalUnits = 0.0;
+        p.categorySalesTotal = 0.0;
+        p.categorySalesLines = new ArrayList<>();
         // end
-        p.m_iSales = null;
-        p.m_dSalesBase = null;
-        p.m_dSalesTaxes = null;
-        p.m_dSalesTaxNet = null;
+        p.salesCount = null;
+        p.salesBaseValue = null;
+        p.salesTaxes = null;
+        p.salesTaxNet = null;
 
         // JG 16 May 2013 use diamond inference
         // by janar153 @ 01.12.2013
-        p.m_iProductSalesRows = 0;
-        p.m_dProductSalesTotalUnits = 0.0;
-        p.m_dProductSalesTotal = 0.0;
-        p.m_lproductsales = new ArrayList<>();
-        p.m_lremovedlines = new ArrayList<>();
+        p.productSalesCount = 0;
+        p.productSalesTotalUnits = 0.0;
+        p.productSalesTotal = 0.0;
+        p.productSalesLines = new ArrayList<>();
+        p.removedProductLines = new ArrayList<>();
 
-        p.m_lsales = new ArrayList<>();
+        p.salesLines = new ArrayList<>();
 
         return p;
     }
@@ -128,48 +128,47 @@ public class PaymentsModel {
      * @return
      * @throws BasicException
      */
-    public static PaymentsModel loadInstance(AppView app) throws BasicException {
+    public static CashReport loadInstance(AppView app) throws BasicException {
 
-        PaymentsModel p = PaymentsModel.emptyInstance();
+        CashReport p = CashReport.emptyInstance();
 
         // Global Properties
-        p.m_sHost = app.getProperties().getHost();
-        p.m_sUser = app.getAppUserView().getUser().getName();
-        p.m_iSeq = app.getActiveCashSequence();
-        p.m_dDateStart = app.getActiveCashDateStart();
-        p.m_dDateEnd = null;
+        p.machineName = app.getProperties().getHost();
+        p.username = app.getAppUserView().getUser().getName();
+        p.sequenceNumber = app.getActiveCashSequence();
+        p.startDate = app.getActiveCashDateStart();
+        p.endDate = null;
 
         FinancialReportService reportService = new FinancialReportServiceImpl(app.getSession());
-        FinancialReport report = reportService.getFinancialReport(app.getActiveCashIndex(), p.m_dDateStart,
-                p.m_dDateEnd);
+        FinancialReport report = reportService.getFinancialReport(app.getActiveCashIndex(), p.startDate, p.endDate);
 
         // Map FinancialReport to PaymentsModel
-        p.m_iPayments = report.getPaymentCount();
-        p.m_dPaymentsTotal = report.getPaymentTotal();
-        p.m_lpayments = report.getPaymentLines();
+        p.paymentsCount = report.getPaymentCount();
+        p.paymentsTotal = report.getPaymentTotal();
+        p.paymentLines = report.getPaymentLines();
 
-        p.m_iCategorySalesRows = report.getCategorySalesRows();
-        p.m_dCategorySalesTotalUnits = report.getCategorySalesTotalUnits();
-        p.m_dCategorySalesTotal = report.getCategorySalesTotal();
-        p.m_lcategorysales = report.getCategorySalesLines();
+        p.categorySalesRows = report.getCategorySalesRows();
+        p.categorySalesTotalUnits = report.getCategorySalesTotalUnits();
+        p.categorySalesTotal = report.getCategorySalesTotal();
+        p.categorySalesLines = report.getCategorySalesLines();
 
-        p.m_iSales = report.getSalesCount();
-        p.m_dSalesBase = report.getSalesBase();
+        p.salesCount = report.getSalesCount();
+        p.salesBaseValue = report.getSalesBase();
 
-        p.m_dSalesTaxes = report.getSalesTaxes();
+        p.salesTaxes = report.getSalesTaxes();
         // Recalculate TaxNet if likely not in report or add to report.
         // For now we trust the service/report to provide what's needed or calculate it.
         // Original logic had it from a query.
         // Let's assume for now we use the report data.
 
-        p.m_lsales = report.getSalesLines();
-        p.m_lremovedlines = report.getRemovedProductLines();
-        p.m_ldraweropenedlines = report.getDrawerOpenedLines();
+        p.salesLines = report.getSalesLines();
+        p.removedProductLines = report.getRemovedProductLines();
+        p.drawerOpenedLines = report.getDrawerOpenedLines();
 
-        p.m_iProductSalesRows = report.getProductSalesRows();
-        p.m_dProductSalesTotalUnits = report.getProductSalesTotalUnits();
-        p.m_dProductSalesTotal = report.getProductSalesTotal();
-        p.m_lproductsales = report.getProductSalesLines();
+        p.productSalesCount = report.getProductSalesRows();
+        p.productSalesTotalUnits = report.getProductSalesTotalUnits();
+        p.productSalesTotal = report.getProductSalesTotal();
+        p.productSalesLines = report.getProductSalesLines();
 
         return p;
     }
@@ -179,7 +178,7 @@ public class PaymentsModel {
      * @return
      */
     public int getPayments() {
-        return m_iPayments;
+        return paymentsCount;
     }
 
     /**
@@ -187,7 +186,7 @@ public class PaymentsModel {
      * @return
      */
     public double getTotal() {
-        return m_dPaymentsTotal;
+        return paymentsTotal;
     }
 
     /**
@@ -195,7 +194,7 @@ public class PaymentsModel {
      * @return
      */
     public String getHost() {
-        return m_sHost;
+        return machineName;
     }
 
     /**
@@ -203,7 +202,7 @@ public class PaymentsModel {
      * @return
      */
     public String getUser() {
-        return m_sUser;
+        return username;
     }
 
     /**
@@ -211,7 +210,7 @@ public class PaymentsModel {
      * @return
      */
     public int getSequence() {
-        return m_iSeq;
+        return sequenceNumber;
     }
 
     public String getPrintDate() {
@@ -224,7 +223,7 @@ public class PaymentsModel {
      * @return
      */
     public Date getDateStart() {
-        return m_dDateStart;
+        return startDate;
     }
 
     /**
@@ -232,7 +231,7 @@ public class PaymentsModel {
      * @param dValue
      */
     public void setDateEnd(Date dValue) {
-        m_dDateEnd = dValue;
+        endDate = dValue;
     }
 
     /**
@@ -240,7 +239,7 @@ public class PaymentsModel {
      * @return
      */
     public Date getDateEnd() {
-        return m_dDateEnd;
+        return endDate;
     }
 
     /**
@@ -248,7 +247,7 @@ public class PaymentsModel {
      * @return
      */
     public String printHost() {
-        return StringUtils.encodeXML(m_sHost);
+        return StringUtils.encodeXML(machineName);
     }
 
     /**
@@ -256,7 +255,7 @@ public class PaymentsModel {
      * @return
      */
     public String printUser() {
-        return StringUtils.encodeXML(m_sUser);
+        return StringUtils.encodeXML(username);
     }
 
     /**
@@ -264,7 +263,7 @@ public class PaymentsModel {
      * @return
      */
     public String printSequence() {
-        return Formats.INT.formatValue(m_iSeq);
+        return Formats.INT.formatValue(sequenceNumber);
     }
 
     public String printDate() {
@@ -277,7 +276,7 @@ public class PaymentsModel {
      * @return
      */
     public String printDateStart() {
-        return Formats.TIMESTAMP.formatValue(m_dDateStart);
+        return Formats.TIMESTAMP.formatValue(startDate);
     }
 
     /**
@@ -285,7 +284,7 @@ public class PaymentsModel {
      * @return
      */
     public String printDateEnd() {
-        return Formats.TIMESTAMP.formatValue(m_dDateEnd);
+        return Formats.TIMESTAMP.formatValue(endDate);
     }
 
     /**
@@ -293,7 +292,7 @@ public class PaymentsModel {
      * @return
      */
     public String printPayments() {
-        return Formats.INT.formatValue(m_iPayments);
+        return Formats.INT.formatValue(paymentsCount);
     }
 
     /**
@@ -301,7 +300,7 @@ public class PaymentsModel {
      * @return
      */
     public String printPaymentsTotal() {
-        return Formats.CURRENCY.formatValue(m_dPaymentsTotal);
+        return Formats.CURRENCY.formatValue(paymentsTotal);
     }
 
     /**
@@ -309,7 +308,7 @@ public class PaymentsModel {
      * @return
      */
     public List<PaymentsListLine> getPaymentLines() {
-        return m_lpayments;
+        return paymentLines;
     }
 
     /**
@@ -317,7 +316,7 @@ public class PaymentsModel {
      * @return
      */
     public int getSales() {
-        return m_iSales == null ? 0 : m_iSales;
+        return salesCount == null ? 0 : salesCount;
     }
 
     /**
@@ -325,7 +324,7 @@ public class PaymentsModel {
      * @return
      */
     public String printSales() {
-        return Formats.INT.formatValue(m_iSales);
+        return Formats.INT.formatValue(salesCount);
     }
 
     /**
@@ -333,7 +332,7 @@ public class PaymentsModel {
      * @return
      */
     public String printSalesBase() {
-        return Formats.CURRENCY.formatValue(m_dSalesBase);
+        return Formats.CURRENCY.formatValue(salesBaseValue);
     }
 
     /**
@@ -341,7 +340,7 @@ public class PaymentsModel {
      * @return
      */
     public String printSalesTaxes() {
-        return Formats.CURRENCY.formatValue(m_dSalesTaxes);
+        return Formats.CURRENCY.formatValue(salesTaxes);
     }
 
     /**
@@ -349,9 +348,9 @@ public class PaymentsModel {
      * @return
      */
     public String printSalesTotal() {
-        return Formats.CURRENCY.formatValue((m_dSalesBase == null || m_dSalesTaxes == null)
+        return Formats.CURRENCY.formatValue((salesBaseValue == null || salesTaxes == null)
                 ? null
-                : m_dSalesBase + m_dSalesTaxes);
+                : salesBaseValue + salesTaxes);
     }
 
     /**
@@ -359,7 +358,7 @@ public class PaymentsModel {
      * @return
      */
     public List<SalesLine> getSaleLines() {
-        return m_lsales;
+        return salesLines;
     }
 
     // JG 9 Nov 12
@@ -368,7 +367,7 @@ public class PaymentsModel {
      * @return
      */
     public double getCategorySalesRows() {
-        return m_iCategorySalesRows;
+        return categorySalesRows;
     }
 
     /**
@@ -376,7 +375,7 @@ public class PaymentsModel {
      * @return
      */
     public String printCategorySalesRows() {
-        return Formats.INT.formatValue(m_iCategorySalesRows);
+        return Formats.INT.formatValue(categorySalesRows);
     }
 
     /**
@@ -384,7 +383,7 @@ public class PaymentsModel {
      * @return
      */
     public double getCategorySalesTotalUnits() {
-        return m_dCategorySalesTotalUnits;
+        return categorySalesTotalUnits;
     }
 
     /**
@@ -392,7 +391,7 @@ public class PaymentsModel {
      * @return
      */
     public String printCategorySalesTotalUnits() {
-        return Formats.DOUBLE.formatValue(m_dCategorySalesTotalUnits);
+        return Formats.DOUBLE.formatValue(categorySalesTotalUnits);
     }
 
     /**
@@ -400,7 +399,7 @@ public class PaymentsModel {
      * @return
      */
     public double getCategorySalesTotal() {
-        return m_dCategorySalesTotal;
+        return categorySalesTotal;
     }
 
     /**
@@ -408,7 +407,7 @@ public class PaymentsModel {
      * @return
      */
     public String printCategorySalesTotal() {
-        return Formats.CURRENCY.formatValue(m_dCategorySalesTotal);
+        return Formats.CURRENCY.formatValue(categorySalesTotal);
     }
 
     /**
@@ -416,7 +415,7 @@ public class PaymentsModel {
      * @return
      */
     public List<CategorySalesLine> getCategorySalesLines() {
-        return m_lcategorysales;
+        return categorySalesLines;
     }
     // end
 
@@ -426,7 +425,7 @@ public class PaymentsModel {
      * @return
      */
     public double getProductSalesRows() {
-        return m_iProductSalesRows;
+        return productSalesCount;
     }
 
     /**
@@ -434,7 +433,7 @@ public class PaymentsModel {
      * @return
      */
     public String printProductSalesRows() {
-        return Formats.INT.formatValue(m_iProductSalesRows);
+        return Formats.INT.formatValue(productSalesCount);
     }
 
     /**
@@ -442,7 +441,7 @@ public class PaymentsModel {
      * @return
      */
     public double getProductSalesTotalUnits() {
-        return m_dProductSalesTotalUnits;
+        return productSalesTotalUnits;
     }
 
     /**
@@ -450,7 +449,7 @@ public class PaymentsModel {
      * @return
      */
     public String printProductSalesTotalUnits() {
-        return Formats.DOUBLE.formatValue(m_dProductSalesTotalUnits);
+        return Formats.DOUBLE.formatValue(productSalesTotalUnits);
     }
 
     /**
@@ -458,7 +457,7 @@ public class PaymentsModel {
      * @return
      */
     public double getProductSalesTotal() {
-        return m_dProductSalesTotal;
+        return productSalesTotal;
     }
 
     /**
@@ -466,7 +465,7 @@ public class PaymentsModel {
      * @return
      */
     public String printProductSalesTotal() {
-        return Formats.CURRENCY.formatValue(m_dProductSalesTotal);
+        return Formats.CURRENCY.formatValue(productSalesTotal);
     }
 
     /**
@@ -474,7 +473,7 @@ public class PaymentsModel {
      * @return
      */
     public List<ProductSalesLine> getProductSalesLines() {
-        return m_lproductsales;
+        return productSalesLines;
     }
     // end
 
@@ -484,7 +483,7 @@ public class PaymentsModel {
      * @return
      */
     public List<RemovedProductLines> getRemovedProductLines() {
-        return m_lremovedlines;
+        return removedProductLines;
     }
 
     /**
@@ -493,7 +492,7 @@ public class PaymentsModel {
      * @return
      */
     public List<DrawerOpenedLines> getDrawerOpenedLines() {
-        return m_ldraweropenedlines;
+        return drawerOpenedLines;
     }
 
     /**
@@ -509,7 +508,7 @@ public class PaymentsModel {
 
             @Override
             public int getRowCount() {
-                return m_lsales.size();
+                return salesLines.size();
             }
 
             @Override
@@ -519,7 +518,7 @@ public class PaymentsModel {
 
             @Override
             public Object getValueAt(int row, int column) {
-                SalesLine l = m_lsales.get(row);
+                SalesLine l = salesLines.get(row);
                 switch (column) {
                     case 0:
                         return l.getTaxName();
@@ -547,7 +546,7 @@ public class PaymentsModel {
 
             @Override
             public int getRowCount() {
-                return m_lpayments.size();
+                return paymentLines.size();
             }
 
             @Override
@@ -557,7 +556,7 @@ public class PaymentsModel {
 
             @Override
             public Object getValueAt(int row, int column) {
-                PaymentsListLine l = m_lpayments.get(row);
+                PaymentsListLine l = paymentLines.get(row);
                 switch (column) {
                     case 0:
                         return l.getType();

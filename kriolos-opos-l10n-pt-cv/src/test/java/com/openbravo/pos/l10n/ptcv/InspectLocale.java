@@ -1,3 +1,4 @@
+package com.openbravo.pos.l10n.ptcv;
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
 import java.time.ZonedDateTime;
@@ -7,9 +8,10 @@ import java.util.Locale;
 import java.util.Currency;
 
 /**
- * System utility designed for Pop!_OS terminal boundaries to print raw localization 
- * formatting structures compiled inside the active OpenJDK CLDR database matrix.
- * 
+ * System utility designed for Pop!_OS terminal boundaries to print raw
+ * localization formatting structures compiled inside the active OpenJDK CLDR
+ * database matrix.
+ *
  * @author KriolOS POS
  * @since 1.0.0
  */
@@ -17,29 +19,40 @@ public class InspectLocale {
 
     public static void main(String[] args) {
         // Enforces evaluation targeting Cape Verde regional parameters
-        Locale cvLocale = new Locale.Builder().setLanguage("pt").setRegion("CV").build();
-        ZonedDateTime now = ZonedDateTime.now();
-        
         System.out.println("==================================================");
         System.out.println("     KRIOLOS POS - CLDR INSPECTOR ON POP!_OS      ");
         System.out.println("==================================================");
-        System.out.println("Target Locale : " + cvLocale.toString() + " (Cape Verde)");
         System.out.println("JVM Vendor    : " + System.getProperty("java.vendor"));
         System.out.println("Java Version  : " + System.getProperty("java.version"));
         System.out.println("--------------------------------------------------");
+
+        printCountryLocale("pt", "CV", "CVE");
+        printCountryLocale("pt", "MZ", "MZN");
+    }
+
+    private static void printCountryLocale(String lang, String country, String currencySymbol) {
+        Locale cvLocale = new Locale.Builder().setLanguage(lang).setRegion(country).build();
+
+        ZonedDateTime now = ZonedDateTime.now();
+
 
         // 1. Raw Core Numeric Formatting Patterns
         NumberFormat num = NumberFormat.getNumberInstance(cvLocale);
         NumberFormat integer = NumberFormat.getIntegerInstance(cvLocale);
         NumberFormat percent = NumberFormat.getPercentInstance(cvLocale);
         NumberFormat currency = NumberFormat.getCurrencyInstance(cvLocale);
-
+        
+        System.out.println("--------------------------------------------------");
+        
+        System.out.println("Target Locale (Country Code) : " + cvLocale.toString());
         System.out.println("Raw Double Formatter (1500.75)    : " + num.format(1500.75));
         System.out.println("Raw Integer Formatter (1500.75)   : " + integer.format(1500.75));
         System.out.println("Raw Percent Formatter (0.15)      : " + percent.format(0.15));
         System.out.println("Raw Currency Formatter (1500.0)   : " + currency.format(1500.0));
-        System.out.println("Raw Currency Symbol Extracted     : " + Currency.getInstance("CVE").getSymbol(cvLocale));
-        
+        System.out.println("Raw Currency Formatter (1200.50)   : " + currency.format(1500.50));
+        System.out.println("Raw Currency Symbol      : " + Currency.getInstance(currencySymbol).getSymbol(cvLocale));
+        System.out.println("Raw Currency Name     : " + Currency.getInstance(currencySymbol).getDisplayName(cvLocale));
+
         // 2. Underlying Bytecode Mask Patterns (Patterns used by the JVM)
         if (currency instanceof DecimalFormat df) {
             System.out.println("Underlying Decimal Pattern String : " + df.toPattern());

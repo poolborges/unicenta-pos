@@ -18,7 +18,6 @@ package com.openbravo.pos.sales;
 import com.openbravo.pos.customers.DataLogicCustomers;
 import com.openbravo.pos.panels.JTicketsFinder;
 import com.openbravo.pos.ticket.FindTicketsInfo;
-import com.openbravo.pos.ticket.TicketTaxInfo;
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -26,11 +25,11 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.JMessageDialog;
 import com.openbravo.data.gui.ListKeyed;
 import com.openbravo.data.gui.MessageInf;
+import com.openbravo.pos.cash.CashManagementService;
+import com.openbravo.pos.cash.CashManagementServiceImpl;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.forms.AppProperties;
 import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.BeanFactoryApp;
-import com.openbravo.pos.forms.BeanFactoryException;
 import com.openbravo.pos.forms.DataLogicSales;
 import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.printer.DeviceTicket;
@@ -72,6 +71,8 @@ public class JTicketsBagTicket extends JTicketsBag {
     private final JPanelTicketEdits m_panelticketedit;
 
     private final AppView m_App;
+    
+    private CashManagementService cashManagementService;
 
     /**
      * Creates new form JTicketsBagTicket
@@ -109,6 +110,8 @@ public class JTicketsBagTicket extends JTicketsBag {
         } catch (BasicException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
+        
+        cashManagementService = new CashManagementServiceImpl(m_App.getSession());
     }
 
     /**
@@ -274,15 +277,18 @@ public class JTicketsBagTicket extends JTicketsBag {
 
     private void printTicket() {
 
+        
+
         try {
-            m_jEdit.setEnabled(
-                    m_ticket != null
-                            && (m_ticket.getTicketType() == TicketInfo.RECEIPT_NORMAL
-                                    && m_ticket.getTicketStatus() == 0)
-                            && m_dlSystem.isCashActive(m_ticket.getActiveCash()));
+            if(m_ticket != null){
+                boolean activeCAsh = cashManagementService.isCashActive(m_ticket.getActiveCash());
+                boolean ticketAllow = (m_ticket.getTicketType() == TicketInfo.RECEIPT_NORMAL && m_ticket.getTicketStatus() == 0);
+            
+                m_jEdit.setEnabled(ticketAllow && activeCAsh);
+            }
         } catch (BasicException e) {
 
-            LOGGER.log(Level.WARNING, null, e);
+            LOGGER.log(Level.WARNING, "Exception on enable edit button", e);
             m_jEdit.setEnabled(false);
             m_jRefund.setEnabled(false);
         }

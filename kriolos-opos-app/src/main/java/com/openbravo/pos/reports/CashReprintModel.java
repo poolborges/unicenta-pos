@@ -13,7 +13,7 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package com.openbravo.pos.panels;
+package com.openbravo.pos.reports;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.format.Formats;
@@ -30,9 +30,9 @@ import java.util.logging.Logger;
 
 import com.openbravo.pos.forms.BeanFactoryException;
 import com.openbravo.pos.forms.DataLogicSystem;
-import com.openbravo.pos.payment.CashManagementService;
-import com.openbravo.pos.payment.CashManagementServiceImpl;
-import com.openbravo.pos.payment.CloseCash;
+import com.openbravo.pos.cash.CashManagementService;
+import com.openbravo.pos.cash.CashManagementServiceImpl;
+import com.openbravo.pos.cash.CashRegister;
 import com.openbravo.pos.reports.CategorySalesLine;
 import com.openbravo.pos.reports.DrawerOpenedLines;
 import com.openbravo.pos.reports.FinancialReport;
@@ -43,9 +43,9 @@ import com.openbravo.pos.reports.ProductSalesLine;
 import com.openbravo.pos.reports.RemovedProductLines;
 import com.openbravo.pos.reports.SalesLine;
 
-public class PaymentsReprintModel {
+public class CashReprintModel {
 
-    private static final Logger LOGGER = Logger.getLogger(PaymentsReprintModel.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CashReprintModel.class.getName());
     private String host;
     private String user;
     private int hostSequence;
@@ -81,12 +81,12 @@ public class PaymentsReprintModel {
 
     private final static String[] SALEHEADERS = { "label.taxcategory", "label.totaltax", "label.totalnet" };
 
-    private PaymentsReprintModel() {
+    private CashReprintModel() {
     }
 
-    public static PaymentsReprintModel emptyInstance() {
+    public static CashReprintModel emptyInstance() {
 
-        PaymentsReprintModel p = new PaymentsReprintModel();
+        CashReprintModel p = new CashReprintModel();
 
         p.payments = 0;
         p.paymentsTotal = 0.0;
@@ -119,9 +119,9 @@ public class PaymentsReprintModel {
      * @return
      * @throws BasicException
      */
-    public static PaymentsReprintModel loadInstance(AppView app) throws BasicException {
+    public static CashReprintModel loadInstance(AppView app) throws BasicException {
 
-        PaymentsReprintModel p = new PaymentsReprintModel();
+        CashReprintModel p = new CashReprintModel();
 
         p.user = app.getAppUserView().getUser().getName();
         p.host = app.getProperties().getHost();
@@ -145,20 +145,9 @@ public class PaymentsReprintModel {
         }
 
         if (sequence != -1) {
-            DataLogicSystem dlSystem = null;
-            try {
-                dlSystem = (DataLogicSystem) app.getBean("com.openbravo.pos.forms.DataLogicSystem");
-            } catch (BeanFactoryException e) {
-                // Return null or throw BasicException. Since we are just reprinting, logging
-                // might be enough,
-                // but CashManagementService might need it.
-                // For now, we proceed, as getCloseCashBySequence doesn't strictly need it, but
-                // it is better to have it.
-                LOGGER.warning("Could not load DataLogicSystem bean.");
-            }
 
-            CashManagementService cashService = new CashManagementServiceImpl(app.getSession(), dlSystem);
-            CloseCash ccash = cashService.getCloseCashBySequence(p.host, sequence);
+            CashManagementService cashService = new CashManagementServiceImpl(app.getSession());
+            CashRegister ccash = cashService.getCloseCashBySequence(p.host, sequence);
 
             if (ccash == null) {
                 JOptionPane.showMessageDialog(frame,
@@ -167,8 +156,8 @@ public class PaymentsReprintModel {
                         JOptionPane.WARNING_MESSAGE);
                 return null;
             } else {
-                p.startDate = ccash.getDatestart();
-                p.endDate = ccash.getDateend();
+                p.startDate = ccash.getStartDate();
+                p.endDate = ccash.getEndDate();
 
                 FinancialReportService reportService = new FinancialReportServiceImpl(app.getSession());
                 FinancialReport report = reportService.getFinancialReport(ccash.getMoney(), p.startDate, p.endDate);
