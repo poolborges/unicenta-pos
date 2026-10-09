@@ -19,7 +19,6 @@ package com.openbravo.pos.sales.modern;
 import com.openbravo.pos.catalog.CatalogService;
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.pim.CategoryInfo;
-import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.sales.modern.two.ModernTwoCatalogPane;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import com.openbravo.pos.ui.api.catalog.CatalogSelector;

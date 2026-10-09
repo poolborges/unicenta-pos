@@ -31,7 +31,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import org.openide.util.Exceptions;
 
 public class JUploadProductsPanel extends JPanel {
 

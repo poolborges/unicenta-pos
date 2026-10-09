@@ -50,7 +50,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import org.openide.util.Exceptions;
 
 public class JTicketsReprintPanel extends JPanel {
 
@@ -106,7 +105,7 @@ public class JTicketsReprintPanel extends JPanel {
             repaint();
         }
         catch (BasicException ex) {
-            Exceptions.printStackTrace(ex);
+            LOGGER.log(Level.WARNING, "Exceptin load ticket", ex);
         }
     }
 

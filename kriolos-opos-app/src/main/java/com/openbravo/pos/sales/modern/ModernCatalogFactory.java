@@ -14,7 +14,7 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package com.openbravo.pos.catalog;
+package com.openbravo.pos.sales.modern;
 
 import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.sales.modern.ModernTouchCatalog;

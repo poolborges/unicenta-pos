@@ -18,7 +18,7 @@ package com.openbravo.pos.sales.modern.two;
 
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.pim.CategoryInfo;
-import com.openbravo.pos.sales.modern.WrapLayout;
+import com.openbravo.ui.layout.WrapLayout;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import com.openbravo.pos.ui.components.ButtonSize;
 import com.openbravo.pos.ui.components.POSButtonFactory;
