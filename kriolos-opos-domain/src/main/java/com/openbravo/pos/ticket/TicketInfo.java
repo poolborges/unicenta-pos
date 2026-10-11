@@ -263,7 +263,7 @@ public final class TicketInfo implements SerializableRead, Externalizable {
 
         if (info == null) {
             if (ticketId == 0) {
-                name.add("(" + Formats.HOURMIN.formatValue(creationDate) + ")");
+                name.add("(" + Formats.TIME.formatValue(creationDate) + ")");
             } else {
                 name.add(Integer.toString(ticketId));
             }
@@ -275,7 +275,7 @@ public final class TicketInfo implements SerializableRead, Externalizable {
             name.add(customer.getName());
         }
 
-        return org.apache.commons.lang3.StringUtils.join(name, " - ");
+        return name == null ? "" : String.join(" - ", name);
     }
 
     public String getName() {
