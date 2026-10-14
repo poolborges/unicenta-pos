@@ -1,7 +1,6 @@
 module kriolos.opos.spi {
     requires java.logging;
 
-    exports com.openbravo.pos.printer;
     exports com.openbravo.pos.spi.annotation;
     exports com.openbravo.pos.spi.core;
     exports com.openbravo.pos.spi.hardware;

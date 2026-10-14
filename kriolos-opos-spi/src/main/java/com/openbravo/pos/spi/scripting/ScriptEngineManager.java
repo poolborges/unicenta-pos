@@ -46,6 +46,13 @@ public final class ScriptEngineManager {
     }
 
     /**
+     * Reloads all SPI providers from the environment / classpath.
+     */
+    public static synchronized void reload() {
+        PROVIDER_LOADER.reload();
+    }
+
+    /**
      * Returns all discovered {@link ScriptEngineProvider} implementations.
      *
      * @return unmodifiable collection of all loaded providers.

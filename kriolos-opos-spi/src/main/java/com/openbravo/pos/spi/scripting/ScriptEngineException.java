@@ -25,6 +25,10 @@ package com.openbravo.pos.spi.scripting;
 public class ScriptEngineException extends Exception {
 
     private static final long serialVersionUID = 1L;
+    
+    public ScriptEngineException(Throwable cause) {
+        super(cause);
+    }
 
     public ScriptEngineException(String message) {
         super(message);

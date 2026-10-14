@@ -16,6 +16,7 @@
  */
 package com.openbravo.pos.printer;
 
+import com.openbravo.pos.spi.hardware.PosImage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

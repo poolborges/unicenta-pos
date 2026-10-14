@@ -14,7 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.openbravo.pos.printer;
+package com.openbravo.pos.spi.hardware.printer;
+
+import com.openbravo.pos.spi.hardware.VirtualDevice;
 
 /**
  * Marker and accessor interface for virtual or interactive fiscal printers

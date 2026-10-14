@@ -14,8 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.openbravo.pos.printer;
+package com.openbravo.pos.spi.hardware;
 
+import com.openbravo.pos.spi.hardware.printer.DeviceFiscalPrinter;
+import com.openbravo.pos.spi.hardware.printer.DevicePrinter;
+import com.openbravo.pos.spi.hardware.display.DeviceDisplay;
 import java.util.List;
 
 /**
