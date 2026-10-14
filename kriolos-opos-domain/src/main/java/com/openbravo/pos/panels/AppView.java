@@ -14,12 +14,17 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package com.openbravo.pos.forms;
+package com.openbravo.pos.panels;
  
+import com.openbravo.pos.admin.AppUserView;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.Session;
-import com.openbravo.pos.printer.DeviceTicket;
-import com.openbravo.pos.printer.TicketParser;
+import com.openbravo.app.AppProperties;
+import com.openbravo.pos.container.BeanFactoryException;
+import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.pos.spi.hardware.DeviceTicket;
+
+import com.openbravo.pos.ticket.TicketParser;
 import java.util.Date;
 
 /**

@@ -17,8 +17,8 @@
 package com.openbravo.pos.inventory;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.BeanContainer;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.container.BeanContainer;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Date;

@@ -13,13 +13,17 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package com.openbravo.pos.forms;
+package com.openbravo.pos.admin;
 
+import com.openbravo.pos.container.BeanFactoryDataSingle;
+import com.openbravo.pos.container.BeanFactoryException;
+import com.openbravo.pos.admin.AppUser;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.*;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.admin.ResourceInfo;
-import com.openbravo.pos.util.ThumbNailBuilder;
+import com.openbravo.app.AppLocal;
+import com.openbravo.util.ThumbNailBuilder;
 import com.openbravo.pos.voucher.VoucherInfo;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;

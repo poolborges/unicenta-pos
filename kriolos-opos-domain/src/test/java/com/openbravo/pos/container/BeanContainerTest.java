@@ -14,8 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.openbravo.pos.forms;
+package com.openbravo.pos.container;
 
+import com.openbravo.pos.resources.ResourceService;
+import com.openbravo.pos.admin.SystemService;
+import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.pos.container.BeanFactoryApp;
+import com.openbravo.pos.container.BeanContainer;
+import com.openbravo.pos.container.BeanFactoryException;
+import com.openbravo.pos.panels.AppView;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;

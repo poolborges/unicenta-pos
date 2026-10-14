@@ -1,6 +1,6 @@
 package com.openbravo.pos.imports;
 
-import com.openbravo.pos.forms.BeanFactoryDataSingle;
+import com.openbravo.pos.container.BeanFactoryDataSingle;
 import com.openbravo.data.loader.Session;
 import com.openbravo.data.loader.SentenceExec;
 import com.openbravo.data.loader.SentenceFind;

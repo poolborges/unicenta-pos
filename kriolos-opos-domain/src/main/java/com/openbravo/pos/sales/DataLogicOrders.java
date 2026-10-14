@@ -14,10 +14,11 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package com.openbravo.pos.forms;
+package com.openbravo.pos.sales;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.*;
+import com.openbravo.pos.container.BeanFactoryDataSingle;
 import com.openbravo.pos.sales.RemoteOrder;
 import com.openbravo.pos.sales.RemoteOrderService;
 

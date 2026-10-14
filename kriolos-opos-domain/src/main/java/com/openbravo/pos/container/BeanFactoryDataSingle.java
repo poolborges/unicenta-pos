@@ -14,10 +14,10 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package com.openbravo.pos.forms;
+package com.openbravo.pos.container;
 
 import com.openbravo.data.loader.Session;
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.panels.AppView;
 
 /**
  *

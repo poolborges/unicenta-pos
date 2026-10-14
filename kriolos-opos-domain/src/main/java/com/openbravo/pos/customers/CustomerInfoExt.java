@@ -17,7 +17,7 @@
 package com.openbravo.pos.customers;
 
 import com.openbravo.format.Formats;
-import com.openbravo.pos.util.RoundUtils;
+import com.openbravo.util.RoundUtils;
 import java.awt.image.BufferedImage;
 import java.util.Date;
 

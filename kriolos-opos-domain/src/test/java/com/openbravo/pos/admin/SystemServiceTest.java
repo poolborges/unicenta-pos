@@ -14,8 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.openbravo.pos.forms;
+package com.openbravo.pos.admin;
 
+import com.openbravo.pos.resources.ResourceService;
+import com.openbravo.pos.admin.SystemService;
+import com.openbravo.pos.admin.SecurityService;
+import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.pos.container.BeanContainer;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.admin.AppUser;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.TableDefinition;
 import com.openbravo.pos.admin.ResourceInfo;

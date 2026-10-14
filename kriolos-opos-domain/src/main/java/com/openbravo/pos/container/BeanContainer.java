@@ -1,5 +1,6 @@
-package com.openbravo.pos.forms;
+package com.openbravo.pos.container;
 
+import com.openbravo.pos.panels.AppView;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Objects;
@@ -62,13 +63,19 @@ public final class BeanContainer {
             Map.entry("com.openbravo.pos.pim.DataLogicCategories", "com.openbravo.pos.pim.DataLogicCategories"),
             Map.entry("com.openbravo.pos.pim.DataLogicUom", "com.openbravo.pos.pim.DataLogicUom"),
             Map.entry("com.openbravo.pos.sales.SharedTicketService", "com.openbravo.pos.sales.DataLogicReceipts"),
-            Map.entry("com.openbravo.pos.sales.TicketLifecycleService", "com.openbravo.pos.forms.DataLogicSales"),
+            Map.entry("com.openbravo.pos.sales.TicketLifecycleService", "com.openbravo.pos.sales.DataLogicSales"),
             Map.entry("com.openbravo.pos.suppliers.SupplierService", "com.openbravo.pos.suppliers.DataLogicSuppliers"),
             Map.entry("com.openbravo.pos.admin.PeopleService", "com.openbravo.pos.admin.DataLogicAdmin"),
-            Map.entry("com.openbravo.pos.forms.SecurityService", "com.openbravo.pos.forms.DataLogicSystem"),
-            Map.entry("com.openbravo.pos.forms.ResourceService", "com.openbravo.pos.forms.DataLogicSystem"),
-            Map.entry("com.openbravo.pos.forms.SystemService", "com.openbravo.pos.forms.DataLogicSystem"),
-            Map.entry("com.openbravo.pos.sales.RemoteOrderService", "com.openbravo.pos.forms.DataLogicOrders"),
+            Map.entry("com.openbravo.pos.admin.SecurityService", "com.openbravo.pos.admin.DataLogicSystem"),
+            Map.entry("com.openbravo.pos.resources.ResourceService", "com.openbravo.pos.admin.DataLogicSystem"),
+            Map.entry("com.openbravo.pos.admin.SystemService", "com.openbravo.pos.admin.DataLogicSystem"),
+            Map.entry("com.openbravo.pos.forms.SecurityService", "com.openbravo.pos.admin.DataLogicSystem"),
+            Map.entry("com.openbravo.pos.forms.ResourceService", "com.openbravo.pos.admin.DataLogicSystem"),
+            Map.entry("com.openbravo.pos.forms.SystemService", "com.openbravo.pos.admin.DataLogicSystem"),
+            Map.entry("com.openbravo.pos.forms.DataLogicSystem", "com.openbravo.pos.admin.DataLogicSystem"),
+            Map.entry("com.openbravo.pos.forms.DataLogicSales", "com.openbravo.pos.sales.DataLogicSales"),
+            Map.entry("com.openbravo.pos.forms.DataLogicOrders", "com.openbravo.pos.sales.DataLogicOrders"),
+            Map.entry("com.openbravo.pos.sales.RemoteOrderService", "com.openbravo.pos.sales.DataLogicOrders"),
             Map.entry("com.openbravo.pos.inventory.InventoryService", "com.openbravo.pos.inventory.DataLogicInventory"),
             Map.entry("com.openbravo.pos.inventory.StockService", "com.openbravo.pos.inventory.DataLogicInventory"),
             Map.entry("com.openbravo.pos.payment.TreasuryService", "com.openbravo.pos.payment.DataLogicPayments"),

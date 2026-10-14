@@ -28,7 +28,7 @@ import com.openbravo.data.loader.TableDefinition;
 import com.openbravo.data.user.EditorCreator;
 import com.openbravo.data.user.ListProvider;
 import com.openbravo.data.user.SaveProvider;
-import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.pos.sales.DataLogicSales;
 import java.util.Collections;
 import java.util.List;
 

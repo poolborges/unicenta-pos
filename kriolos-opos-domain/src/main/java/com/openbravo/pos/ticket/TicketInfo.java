@@ -23,12 +23,12 @@ import com.openbravo.data.loader.DataRead;
 import com.openbravo.data.loader.SerializableRead;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.customers.CustomerInfoExt;
-import com.openbravo.pos.forms.AppConfig;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.config.AppConfig;
+import com.openbravo.app.AppLocal;
 import com.openbravo.pos.payment.PaymentInfo;
 import com.openbravo.pos.payment.PaymentInfoMagcard;
 import com.openbravo.pos.payment.PaymentInfoTicket;
-import com.openbravo.pos.util.StringUtils;
+import com.openbravo.util.StringUtils;
 import java.io.*;
 import java.util.*;
 

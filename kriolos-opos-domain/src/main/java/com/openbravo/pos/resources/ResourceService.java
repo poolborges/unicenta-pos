@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.openbravo.pos.forms;
+package com.openbravo.pos.resources;
 
 import com.openbravo.data.loader.TableDefinition;
 import com.openbravo.pos.admin.ResourceInfo;

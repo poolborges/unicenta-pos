@@ -3,7 +3,7 @@ package com.openbravo.pos.reports;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.DataRead;
 import com.openbravo.data.loader.SerializableRead;
-import com.openbravo.pos.util.StringUtils;
+import com.openbravo.util.StringUtils;
 import java.io.Serializable;
 
 public class DrawerOpenedLines implements SerializableRead, Serializable {

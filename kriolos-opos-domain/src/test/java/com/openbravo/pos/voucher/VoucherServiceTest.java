@@ -18,8 +18,8 @@ package com.openbravo.pos.voucher;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.TableDefinition;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.BeanContainer;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.container.BeanContainer;
 import java.lang.reflect.Proxy;
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -17,8 +17,8 @@
 package com.openbravo.pos.imports;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.BeanContainer;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.container.BeanContainer;
 import java.lang.reflect.Proxy;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.DisplayName;

@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.openbravo.pos.forms;
+package com.openbravo.pos.admin;
 
-import com.openbravo.pos.util.SAXParserUtils;
+import com.openbravo.util.SAXParserUtils;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashSet;

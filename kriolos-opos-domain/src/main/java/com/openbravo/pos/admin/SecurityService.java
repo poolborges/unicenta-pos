@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.openbravo.pos.forms;
+package com.openbravo.pos.admin;
 
+import com.openbravo.pos.admin.AppUser;
 import com.openbravo.basic.BasicException;
 import java.util.List;
 

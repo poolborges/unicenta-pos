@@ -13,11 +13,13 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>
-package com.openbravo.pos.forms;
+package com.openbravo.pos.config;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.Session;
-import com.openbravo.pos.util.AltEncrypter;
+import com.openbravo.app.AppLocal;
+import com.openbravo.app.AppProperties;
+import com.openbravo.util.AltEncrypter;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileInputStream;

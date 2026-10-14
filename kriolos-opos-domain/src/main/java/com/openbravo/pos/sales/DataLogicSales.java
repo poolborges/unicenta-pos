@@ -13,7 +13,7 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package com.openbravo.pos.forms;
+package com.openbravo.pos.sales;
 
 import com.openbravo.pos.ticket.TicketTaxInfo;
 import com.openbravo.pos.ticket.TicketInfo;
@@ -36,8 +36,8 @@ import com.openbravo.data.model.Row;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.customers.CustomerTransaction;
 import com.openbravo.pos.customers.DataLogicCustomers;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.BeanFactoryDataSingle;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.container.BeanFactoryDataSingle;
 import com.openbravo.pos.inventory.*;
 import com.openbravo.pos.sales.restaurant.FloorsInfo;
 import com.openbravo.pos.sales.restaurant.DataLogicRestaurant;
@@ -49,6 +49,9 @@ import com.openbravo.pos.payment.PaymentInfoTicket;
 import com.openbravo.pos.payment.TreasuryService;
 import com.openbravo.pos.catalog.CatalogService;
 import com.openbravo.pos.catalog.CatalogServiceImpl;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.container.BeanFactoryDataSingle;
+import com.openbravo.pos.container.BeanFactoryException;
 import com.openbravo.pos.sales.ReprintTicketInfo;
 import com.openbravo.pos.sales.TicketLifecycleService;
 import com.openbravo.pos.voucher.DataLogicVouchers;

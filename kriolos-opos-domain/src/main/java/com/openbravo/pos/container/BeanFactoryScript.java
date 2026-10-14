@@ -14,13 +14,16 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package com.openbravo.pos.forms;
+package com.openbravo.pos.container;
 
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.container.BeanFactoryApp;
+import com.openbravo.pos.container.BeanFactoryException;
+import com.openbravo.pos.container.BeanFactory;
+import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.scripting.ScriptEngine;
 import com.openbravo.pos.scripting.ScriptException;
 import com.openbravo.pos.scripting.ScriptFactory;
-import com.openbravo.pos.util.StringUtils;
+import com.openbravo.util.StringUtils;
 import java.io.IOException;
 
 /**

@@ -20,7 +20,7 @@
 package com.openbravo.pos.suppliers;
 
 import com.openbravo.format.Formats;
-import com.openbravo.pos.util.RoundUtils;
+import com.openbravo.util.RoundUtils;
 import java.util.Date;
 
 /**

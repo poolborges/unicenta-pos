@@ -13,10 +13,10 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package com.openbravo.pos.forms;
+package com.openbravo.pos.admin;
 
 import com.openbravo.pos.ticket.UserInfo;
-import com.openbravo.pos.util.Hashcypher;
+import com.openbravo.util.Hashcypher;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.Icon;

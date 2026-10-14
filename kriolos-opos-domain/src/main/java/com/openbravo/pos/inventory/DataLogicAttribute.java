@@ -28,7 +28,7 @@ import com.openbravo.data.loader.SerializerWriteBasic;
 import com.openbravo.data.loader.SerializerWriteString;
 import com.openbravo.data.loader.Session;
 import com.openbravo.data.loader.StaticSentence;
-import com.openbravo.pos.forms.BeanFactoryDataSingle;
+import com.openbravo.pos.container.BeanFactoryDataSingle;
 import com.openbravo.pos.inventory.AttributeInstInfo;
 import com.openbravo.pos.inventory.AttributeSetInfo;
 import java.util.List;

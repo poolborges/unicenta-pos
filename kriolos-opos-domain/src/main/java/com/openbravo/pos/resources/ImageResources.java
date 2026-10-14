@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.resources;
 
-import com.openbravo.pos.util.ThumbNailBuilder;
+import com.openbravo.util.ThumbNailBuilder;
 
 import javax.swing.*;
 import java.net.URL;

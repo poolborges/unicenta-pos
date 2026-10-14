@@ -14,15 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.openbravo.pos.printer;
+package com.openbravo.pos.ticket;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.ImageUtils;
-import com.openbravo.pos.forms.DataLogicSystem;
-import com.openbravo.pos.forms.SystemService;
-import com.openbravo.pos.ticket.TicketInfo;
-import com.openbravo.pos.util.AudioUtils;
-import com.openbravo.pos.util.SAXParserUtils;
+import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.pos.admin.SystemService;
+import com.openbravo.pos.spi.hardware.display.DeviceDisplay;
+import com.openbravo.pos.spi.hardware.printer.DevicePrinter;
+import com.openbravo.pos.spi.hardware.DeviceTicket;
+import com.openbravo.pos.spi.hardware.PosImage;
+import com.openbravo.pos.spi.hardware.PrinterTextUtils;
+import com.openbravo.pos.spi.hardware.printer.TicketPrinterException;
+import com.openbravo.util.AudioUtils;
+import com.openbravo.util.SAXParserUtils;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Reader;

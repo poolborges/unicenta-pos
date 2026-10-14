@@ -18,8 +18,8 @@ package com.openbravo.pos.sales;
 
 import com.openbravo.data.loader.SentenceList;
 import com.openbravo.data.loader.TableDefinition;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.BeanContainer;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.container.BeanContainer;
 import com.openbravo.pos.inventory.TaxCategoryInfo;
 import com.openbravo.pos.inventory.TaxCustCategoryInfo;
 import com.openbravo.pos.ticket.TaxInfo;

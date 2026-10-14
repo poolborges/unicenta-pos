@@ -9,7 +9,7 @@ import com.openbravo.data.model.Row;
 import com.openbravo.data.user.EditorCreator;
 import com.openbravo.data.user.ListProvider;
 import com.openbravo.data.user.SaveProvider;
-import com.openbravo.pos.forms.BeanFactoryDataSingle;
+import com.openbravo.pos.container.BeanFactoryDataSingle;
 import com.openbravo.pos.inventory.AttributeSetInfo;
 import com.openbravo.pos.pim.CategoryInfo;
 import com.openbravo.pos.pim.DataLogicCategories;

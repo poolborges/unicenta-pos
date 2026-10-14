@@ -4,7 +4,7 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.DataRead;
 import com.openbravo.data.loader.SerializableRead;
 import com.openbravo.format.Formats;
-import com.openbravo.pos.util.StringUtils;
+import com.openbravo.util.StringUtils;
 import java.io.Serializable;
 
 public class RemovedProductLines implements SerializableRead, Serializable {
