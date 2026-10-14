@@ -17,10 +17,10 @@
 package com.openbravo.pos.forms.components;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.pos.forms.AppProperties;
-import com.openbravo.pos.forms.AppProperties.DatabaseConfig;
-import com.openbravo.pos.forms.AppUser;
-import com.openbravo.pos.forms.SecurityService;
+import com.openbravo.app.AppProperties;
+import com.openbravo.app.AppProperties.DatabaseConfig;
+import com.openbravo.pos.admin.AppUser;
+import com.openbravo.pos.admin.SecurityService;
 import java.awt.Component;
 import java.awt.Container;
 import java.io.File;

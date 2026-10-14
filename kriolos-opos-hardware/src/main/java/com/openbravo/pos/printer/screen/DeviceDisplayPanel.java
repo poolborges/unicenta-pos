@@ -16,8 +16,8 @@
  */
 package com.openbravo.pos.printer.screen;
 
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.printer.DeviceDisplay;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.spi.hardware.display.DeviceDisplay;
 import com.openbravo.pos.printer.DeviceDisplayEngine;
 import java.awt.*;
 import javax.swing.JComponent;

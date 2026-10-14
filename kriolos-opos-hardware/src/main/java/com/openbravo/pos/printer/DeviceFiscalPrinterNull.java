@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.printer;
 
-import javax.swing.JComponent;
+import com.openbravo.pos.spi.hardware.printer.DeviceFiscalPrinter;
 
 /**
  *
@@ -44,14 +44,6 @@ public class DeviceFiscalPrinterNull implements DeviceFiscalPrinter {
         return null;
     }
 
-    /**
-     *
-     * @return
-     */
-    @Override
-    public JComponent getFiscalComponent() {
-        return null;
-    }
     
     /**
      *

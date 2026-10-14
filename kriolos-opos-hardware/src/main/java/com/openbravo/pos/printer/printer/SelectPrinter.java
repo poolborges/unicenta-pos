@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.printer.printer;
 
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Paulo Borges
+ * Copyright (C) 2026 Kriolos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,6 @@ module kriolos.opos.base {
     exports com.openbravo.data.user; 
     exports com.openbravo.editor;  
     exports com.openbravo.format; 
-    exports com.openbravo.pos.forms; 
-    exports com.openbravo.pos.util;
+    exports com.openbravo.app; 
+    exports com.openbravo.util;
 }

@@ -16,15 +16,14 @@
 package com.openbravo.pos.config;
 
 import com.openbravo.data.user.DirtyManager;
-import com.openbravo.pos.forms.AppConfig;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import com.openbravo.pos.ui.api.sales.SaleLayoutDefinition;
 import com.openbravo.pos.ui.api.sales.SaleLayoutManager;
 import com.openbravo.pos.ui.api.POSThemeDefinition;
 import com.openbravo.pos.ui.api.POSThemeManager;
 import java.awt.Component;
 import javax.swing.UIManager;
-import com.openbravo.pos.util.FileChooserEvent;
+import com.openbravo.util.FileChooserEvent;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.logging.Level;

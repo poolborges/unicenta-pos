@@ -18,7 +18,7 @@ package com.openbravo.pos.inventory;
 
 import com.openbravo.format.Formats;
 import com.openbravo.pos.suppliers.SupplierInfo;
-import com.openbravo.pos.util.StringUtils;
+import com.openbravo.util.StringUtils;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;

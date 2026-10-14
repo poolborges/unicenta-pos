@@ -1,2 +1,2 @@
 com.openbravo.pos.catalog.ClassicCatalogFactory
-com.openbravo.pos.catalog.ModernCatalogFactory
+com.openbravo.pos.sales.modern.ModernCatalogFactory

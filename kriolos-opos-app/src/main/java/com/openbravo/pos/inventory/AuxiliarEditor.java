@@ -21,8 +21,8 @@ import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.user.DirtyManager;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.catalog.CatalogService;
 import com.openbravo.pos.panels.JProductFinderPanel;
 import com.openbravo.pos.pim.DataLogicPIM;
@@ -228,7 +228,7 @@ public class AuxiliarEditor extends javax.swing.JPanel implements EditorRecord {
             ProductInfoExt prod = catalogService.getProductInfoByCode(m_jBarcode.getText());
             assignProduct(prod);
             if (prod == null) {
-                com.openbravo.pos.util.NotifyUtils.beep();       
+                com.openbravo.util.NotifyUtils.beep();       
             }
         } catch (BasicException eData) {
             assignProduct(null);
@@ -243,7 +243,7 @@ public class AuxiliarEditor extends javax.swing.JPanel implements EditorRecord {
             ProductInfoExt prod = catalogService.getProductInfoByReference(m_jReference.getText());
             assignProduct(prod);
             if (prod == null) {
-                com.openbravo.pos.util.NotifyUtils.beep();       
+                com.openbravo.util.NotifyUtils.beep();       
             }
         } catch (BasicException eData) {
             assignProduct(null);

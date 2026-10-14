@@ -15,6 +15,8 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>
 package com.openbravo.pos.forms;
 
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.config.AppConfig;
 import com.openbravo.pos.instance.InstanceManager;
 
 import java.io.File;

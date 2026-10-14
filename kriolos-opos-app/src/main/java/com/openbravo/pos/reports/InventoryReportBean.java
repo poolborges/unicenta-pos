@@ -2,8 +2,8 @@ package com.openbravo.pos.reports;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.*;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.BeanFactoryException;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.container.BeanFactoryException;
 
 import java.util.ArrayList;
 import java.util.Date;

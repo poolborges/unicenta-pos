@@ -16,10 +16,10 @@
 package com.openbravo.pos.sales;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppProperties;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.JPanelView;
+import com.openbravo.app.AppLocal;
+import com.openbravo.app.AppProperties;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.panels.JPanelView;
 import com.openbravo.pos.ui.api.sales.SaleLayoutManager;
 import java.awt.BorderLayout;
 import java.util.Objects;

@@ -16,7 +16,7 @@
 
 package com.openbravo.pos.payment;
 
-import com.openbravo.pos.forms.AppProperties;
+import com.openbravo.app.AppProperties;
 
 
 /**

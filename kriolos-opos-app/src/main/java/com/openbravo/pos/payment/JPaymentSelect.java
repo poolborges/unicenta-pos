@@ -19,10 +19,10 @@ import com.openbravo.format.Formats;
 import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.pos.customers.CustomerService;
 import com.openbravo.pos.customers.DataLogicCustomers;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.DataLogicSystem;
-import com.openbravo.pos.forms.ResourceService;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.pos.resources.ResourceService;
 import com.openbravo.pos.resources.ImageResources;
 
 import java.awt.*;

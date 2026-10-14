@@ -35,8 +35,8 @@ import com.openbravo.data.user.ListProvider;
 import com.openbravo.data.user.ListProviderCreator;
 import com.openbravo.data.user.SaveProvider;
 import com.openbravo.format.Formats;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.BeanFactoryDataSingle;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.container.BeanFactoryDataSingle;
 import java.util.List;
 
 /**

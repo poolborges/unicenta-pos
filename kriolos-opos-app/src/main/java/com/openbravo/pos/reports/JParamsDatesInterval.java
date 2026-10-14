@@ -23,8 +23,8 @@ import com.openbravo.data.loader.QBFCompareEnum;
 import com.openbravo.data.loader.SerializerWrite;
 import com.openbravo.data.loader.SerializerWriteBasic;
 import com.openbravo.format.Formats;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.panels.AppView;
 import java.awt.Component;
 import java.util.Date;
 

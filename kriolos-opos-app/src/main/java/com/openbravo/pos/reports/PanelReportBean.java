@@ -19,9 +19,9 @@ package com.openbravo.pos.reports;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.*;
 import com.openbravo.data.user.EditorCreator;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.BeanFactoryException;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.container.BeanFactoryException;
 import java.util.ArrayList;
 import java.util.List;
 

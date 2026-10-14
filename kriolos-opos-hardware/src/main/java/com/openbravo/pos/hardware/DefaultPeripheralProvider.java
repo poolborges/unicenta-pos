@@ -16,6 +16,7 @@
  */
 package com.openbravo.pos.hardware;
 
+import com.openbravo.pos.spi.hardware.printer.TicketPrinterException;
 import com.google.auto.service.AutoService;
 import com.openbravo.pos.printer.*;
 import com.openbravo.pos.printer.escpos.*;

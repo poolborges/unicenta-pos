@@ -16,7 +16,7 @@
 package com.openbravo.pos.sales.restaurant;
 
 import com.openbravo.data.gui.NullIcon;
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.panels.AppView;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;

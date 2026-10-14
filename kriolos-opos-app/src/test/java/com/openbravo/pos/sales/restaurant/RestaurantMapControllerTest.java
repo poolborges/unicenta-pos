@@ -17,10 +17,10 @@
 package com.openbravo.pos.sales.restaurant;
 
 import com.openbravo.pos.customers.CustomerInfoExt;
-import com.openbravo.pos.forms.AppProperties;
-import com.openbravo.pos.forms.AppUser;
-import com.openbravo.pos.forms.AppUserView;
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.app.AppProperties;
+import com.openbravo.pos.admin.AppUser;
+import com.openbravo.pos.admin.AppUserView;
+import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.sales.SharedTicketService;
 import com.openbravo.pos.sales.TicketsEditor;
 import com.openbravo.pos.ticket.TicketInfo;

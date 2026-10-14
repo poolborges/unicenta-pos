@@ -1,0 +1,284 @@
+= KriolOS POS - XML 
+
+
+* JTicket Confiuration (FIXED XML) : Ticket.Buttons.xml
+* Application Permission (FIXED XML)
+* JTicket Lines (Velocity Template): Ticket.Line.xml 
+* Ticket Parser (Velocity Template)    , TO generate: 
+** Command to Receipt printer, 
+** Create GUI Printr Ticket Representation, 
+** Create Print Queue Entrys (for PrintService), 
+** Send Attach PDF, 
+** Save PDF File
+
+
+== Ticket.Buttons.xml
+
+* Buttons for Sales Pane (JTicketPanel)
+* Events: those are fired in diferent flow in order to execute (beansheel script)
+* Properties:
+** Category Height
+** Product Buttom: width(imag-width), heigth (imag-heigth)
+** Print Receipt Enabled
+** Tax Included
+** Tax CategoryId ()
+** Price Visible
+
+
+.Example
+----
+<configuration>
+    <button key="button.totaldiscount" image="discount" code="script.totaldiscount"/>
+    <event key="ticket.close" code="Ticket.Close"/>
+
+    <property key="catheight" value="320" />
+    <property key="imgwidth" value="107"/>
+    <property key="imgheight" value="60"/>
+    <property key="printselected" value="true"/>
+    <property key="taxesincluded" value="true"/>
+    <property key="taxcategoryid" value="001"/> 
+    <property key="pricevisible" value="true" />
+
+<!--LEGACY WILL STIL TO BE SUPPORTED IN PARSER, BUT PREFERED NEW -->
+    <cat-height value="320" />
+    <img-width value="107"/>
+	<img-height value="60"/>
+    <printselected value="true"/>
+    <taxesincluded value="true"/>
+    <taxcategoryid value="001"/>
+    <pricevisible value="true" />
+</configuration>
+----
+
+
+== Current Ticket Panel (JTicketPanel)
+
+
+Track Ticket Panel Complexity
+
+
+* public interface TicketsEditor
+* public abstract class JPanelTicket extends JPanel implements JPanelView, TicketsEditor
+* JPanelTicketEdits extends JPanelTicket
+** private JTicketCatalogLines m_catandlines;
+** protected JTicketsBag getJTicketsBag() { return new JTicketsBagTicket(getAppView(), this); }
+* JTicketCatalogLines extends javax.swing.JPanel
+** private JRefundLines refoundLines;
+** private CatalogSelector catalogExplorer;
+* public abstract class JTicketsBag extends JPanel //Base Class
+**  protected TicketsEditor m_panelticket; 
+* public class JTicketsBagTicket extends JTicketsBag
+**  private final JTicketsBagTicketBag m_TicketsBagTicketBag;
+**  private final JPanelTicketEdits m_panelticketedit;
+* public class JTicketsBagTicketBag extends javax.swing.JPanel
+
+Need a complexity Analysis and design and Simplification
+
+* Complexity Analysis: Class Diagram, 
+
+
+
+=== Refound Ticket
+
+Why 
+
+* Better Design is need, because is complete mess
+
+JTicketsBag
+
+* Has a button (m_jRefund) to show refound
+
+----
+private void m_jRefundActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_m_jRefundActionPerformed
+
+        java.util.List aRefundLines = new ArrayList();
+
+        for (int i = 0; i < m_ticket.getLinesCount(); i++) {
+            TicketLineInfo newline = new TicketLineInfo(m_ticket.getLine(i));
+            aRefundLines.add(newline);
+        }
+
+        m_ticketCopy = null;
+        m_TicketsBagTicketBag.showRefund();
+        m_panelticketedit.showRefundLines(aRefundLines);
+
+        TicketInfo refundticket = new TicketInfo();
+        refundticket.setTicketType(TicketInfo.RECEIPT_REFUND);
+        refundticket.setTicketStatus(m_ticket.getTicketId());
+        refundticket.setCustomer(m_ticket.getCustomer());
+        refundticket.setPayments(m_ticket.getPayments());
+        refundticket.setOldTicket(true);
+        m_panelticketedit.setActiveTicket(refundticket, null);
+    }
+-----
+
+
+=== Edit Ticket
+
+----
+private void m_jEditActionPerformed(java.awt.event.ActionEvent evt) {
+    m_ticketCopy = m_ticket;
+    m_TicketsBagTicketBag.showEdit();
+    m_panelticketedit.showCatalog();
+    // Indicate that this a ticket in edit mode
+    m_ticketCopy.setOldTicket(true);
+    m_panelticketedit.setActiveTicket(m_ticket.copyTicket(), null);
+
+}
+----
+
+= Analysis and Design of new Sales
+
+* Aditable
+* Journal every action must be logged in Database.
+** Change of qy, product price, tax, ...
+** Add/Remove Product
+** Change customer, payments, ...
+** Discount (amount or percentage)
+
+When Closed 
+
+* Ephermal: ?
+* Immutable: Must have a reference to the Journal Entry
+* Must contain all information to rebuild the ticket
+* Nothing can be recalculate from external tables/information
+** TAX, Price, discounts, etc. (should be stored in the ticket)
+** Must contain all Tax info (rate, tax base, total tax, tax inclusive, tax exclusive, etc.)
+* Store in references table, but also maintain a SINGLE XML/JSON Representation
+
+
+Implementation 
+
+* Prefer composition over inheritance: 
+* Avoid inheritance: 
+
+UI
+
+* Configurable
+** XML or JSON based configuration 
+** Layout: 
+*** Split in two columns: Left (CatalogExplorer), Right (TicketPanel)
+*** Layout TMB  (Top+Middle+Bottom)
+**** top: none, middle: (left: CatalogExplorer, right: TicketPanel), bottom: Common
+*** Layo
+**
+
+
+== Sales new Generation 
+
+Req and Analsys the Future (Sales Pane): Active Sales Workflow: A 
+
+* Ticket Panel show products (Catalog Explorer) that allow user to select to add to the Ticket Cart (TicketInfo)
+* Ticket Panel should be able to show products from different categories (Categories -  to add to the Ticket Cart (TicketInfo)
+* Ticket Panel should be able to add products to the TicketInfo
+* Ticket Panel should be able to show TicketInfo using a TicketSummary
+* Buttons for actions such: Pay, Cancel, Hold, Print
+* Screen state: 
+** Salling: Add, remove, update products to the TicketInfo
+** Payment: Multi-payment, Split/Multi-tender,  
+** Split Items (should result in 2 or more TicketInfo)
+*** Each can have: different customer, payments. Result into multiples receipt
+** Merge (Merge all items from one or more TicketInfo). result a single receipt
+
+TicketSummaryPane
+
+* Ticket Summary is a Component that show TicketInfo
+* Maybe provide way to edit TicketInfo (quantity, price, product, etc.)
+* Maybe provide way to remove TicketLineInfo
+* Maybe provide way to add TicketLineInfo
+* Maybe provide way to show customer information
+
+Ticket Actions: 
+
+* Pay,
+* Cancel,
+* Hold,
+
+
+Flows
+
+* Sales: 
+* Refound: Refound is a new Ticket with negative quantities?
+** Does it mean refund to a payment method or refund to a customer?
+
+
+Sales States
+
+* Draft,
+* Paid,
+* Cancelled,
+
+
+User Interations SalesPage
+
+* User Opens Sales Page
+    * Show  Catalog and Ticket Panel
+    * Catalog Panel show products from different categories (Categories -  to add to the Ticket Cart (TicketInfo)
+        * C
+
+== Refound 
+
+* 
+
+
+== Edit Sale
+
+What is the state of the Sale 
+
+* Paid:
+* Cancelled
+* Draft
+
+* If a Sale is paid: 
+** We need to create a new Ticket with negative quantities
+** Or just reverse the payments?  
+* If a Sale is Cancelled:
+** We should not be able to edit the Sale
+* If a Sale is Draft:
+** We can edit the Sale
+
+
+
+== Catalog (CatalogExplorer) Refine
+
+
+* CatalogSelector rename to CatalogExplorer
+* JCatalog implement CatalogExplorer 
+** (Classic - for legacy support)
+* CatalogFactory 
+
+
+CatalogExplorer
+
+* showSearchBox: boolean
+* setCatalogConfig(CatalogConfig config)
+* refreshCatalog()
+
+CatalogExplorerConfig (catalog)
+* showOnlyProductsAvailable: boolean
+* showFixedCategories: boolean
+* showFixedProducts: boolean
+* showSearchBox: boolean
+* showCategories: boolean
+* showCategoryIcons: boolean
+* showProductsIcons: boolean
+* size: Size (width, height)
+* ProductPriceVisible: boolean
+* ProductPriceType: buy price, sell price tax included, sell price tax exclusive 
+* productsListingLayout: Grid, StackedList, Table, 
+
+
+. Example of possible configuration
+[source, xml]
+----
+<configuration>
+    <property key="catalog-explorer:show-search-box" value="true" />
+    <property key="catalog-explorer:show-categories" value="true" />
+    <property key="catalog-explorer:show-category-icons" value="true" />
+    <property key="catalog-explorer:show-products-icons" value="true" />
+    <property key="catalog-explorer:size" value="107,60" />
+    <property key="catalog-explorer:product-price-visible" value="true" />
+    <property key="catalog-explorer:product-price-type" value="sell-price-tax-included" />
+    <property key="catalog-explorer:products-listing-layout" value="grid" />
+</configuration>    
+----

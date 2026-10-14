@@ -16,6 +16,8 @@
  */
 package com.openbravo.pos.printer;
 
+import com.openbravo.pos.spi.hardware.PrinterTextUtils;
+
 /**
  *
  * @author adrianromero

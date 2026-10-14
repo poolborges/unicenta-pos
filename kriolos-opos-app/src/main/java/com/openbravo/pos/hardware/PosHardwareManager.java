@@ -17,10 +17,10 @@
 package com.openbravo.pos.hardware;
 
 import com.openbravo.data.user.BrowsableEditableData;
-import com.openbravo.pos.forms.AppProperties;
+import com.openbravo.app.AppProperties;
 import com.openbravo.pos.printer.DefaultDeviceTicket;
-import com.openbravo.pos.printer.DeviceDisplay;
-import com.openbravo.pos.printer.DeviceTicket;
+import com.openbravo.pos.spi.hardware.display.DeviceDisplay;
+import com.openbravo.pos.spi.hardware.DeviceTicket;
 import com.openbravo.pos.printer.screen.DeviceDisplayAdvance;
 import com.openbravo.pos.printer.screen.DeviceDisplayPanel;
 import com.openbravo.pos.scale.DeviceScale;

@@ -22,7 +22,7 @@ import java.util.*;
 import javax.swing.*;
 import java.awt.Component;
 import javax.swing.event.EventListenerList;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

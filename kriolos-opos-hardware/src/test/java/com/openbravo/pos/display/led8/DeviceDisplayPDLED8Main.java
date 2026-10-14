@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.display.led8;
 
-import com.openbravo.pos.printer.TicketPrinterException;
+import com.openbravo.pos.spi.hardware.printer.TicketPrinterException;
 import com.openbravo.pos.printer.escpos.PrinterWritterRXTX;
 
 /**

@@ -17,8 +17,8 @@ package com.openbravo.beans;
 
 import com.openbravo.data.gui.modal.PosUIModal;
 import com.openbravo.editor.JEditorPassword;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.util.Hashcypher;
+import com.openbravo.app.AppLocal;
+import com.openbravo.util.Hashcypher;
 import java.awt.Component;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;

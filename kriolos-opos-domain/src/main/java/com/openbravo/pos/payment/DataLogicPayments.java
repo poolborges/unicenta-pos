@@ -25,7 +25,7 @@ import com.openbravo.data.loader.SerializerWriteBasicExt;
 import com.openbravo.data.loader.Session;
 import com.openbravo.data.user.DefaultSaveProvider;
 import com.openbravo.data.user.SaveProvider;
-import com.openbravo.pos.forms.BeanFactoryDataSingle;
+import com.openbravo.pos.container.BeanFactoryDataSingle;
 import java.util.Date;
 
 /**

@@ -19,14 +19,13 @@
 
 package com.openbravo.pos.imports;
 
-import com.openbravo.pos.forms.JPanelView;
-import com.openbravo.pos.forms.AppConfig;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppProperties;
+import com.openbravo.pos.panels.JPanelView;
+import com.openbravo.pos.config.AppConfig;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.app.AppLocal;
+import com.openbravo.app.AppProperties;
 import com.openbravo.basic.BasicException;
-import com.openbravo.pos.forms.*;
-import com.openbravo.pos.util.AltEncrypter;
+import com.openbravo.util.AltEncrypter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;

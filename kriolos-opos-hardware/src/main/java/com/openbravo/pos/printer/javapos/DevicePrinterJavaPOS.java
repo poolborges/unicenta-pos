@@ -17,8 +17,10 @@
 package com.openbravo.pos.printer.javapos;
 
 import com.openbravo.data.loader.ImageUtils;
-import com.openbravo.pos.printer.DevicePrinter;
-import com.openbravo.pos.printer.TicketPrinterException;
+import com.openbravo.pos.spi.hardware.printer.DevicePrinter;
+import com.openbravo.pos.spi.hardware.PosImage;
+import com.openbravo.pos.printer.SwingPosImage;
+import com.openbravo.pos.spi.hardware.printer.TicketPrinterException;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,7 +61,7 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
     /** Creates a new instance of DevicePrinterJavaPOS
      * @param sDevicePrinterName
      * @param sDeviceDrawerName
-     * @throws com.openbravo.pos.printer.TicketPrinterException */
+     * @throws com.openbravo.pos.spi.hardware.printer.TicketPrinterException */
     public DevicePrinterJavaPOS(String sDevicePrinterName, String sDeviceDrawerName) throws TicketPrinterException {
         
         m_sName = sDevicePrinterName;
@@ -111,15 +113,6 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
 
     /**
      *
-     * @return
-     */
-    @Override
-    public JComponent getPrinterComponent() {
-        return null;
-    }
-
-    /**
-     *
      */
     @Override
     public void reset() {
@@ -142,20 +135,32 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
      * @param image
      */
     @Override
-    public void printImage(BufferedImage image) {
+    public void printImage(PosImage image) {
+        if (image == null) return;
         try {
-            if (m_printer.getCapRecBitmap()) { // si podemos imprimir bitmaps.
-                
-                File f = File.createTempFile("jposimg", ".png");
-                try (OutputStream out = new FileOutputStream(f)) {
-                    out.write(ImageUtils.writeImage(image));
+            if (m_printer.getCapRecBitmap()) {
+                byte[] bytes = image.getBytes();
+                if (bytes == null || bytes.length == 0) {
+                    BufferedImage bimg = image.unwrap(BufferedImage.class);
+                    if (bimg != null) {
+                        bytes = ImageUtils.writeImage(bimg);
+                    }
                 }
-                
-                m_printer.printBitmap(POSPrinterConst.PTR_S_RECEIPT, f.getAbsolutePath(), POSPrinterConst.PTR_BM_ASIS, POSPrinterConst.PTR_BM_CENTER);
+                if (bytes != null && bytes.length > 0) {
+                    File f = File.createTempFile("jposimg", ".png");
+                    try (OutputStream out = new FileOutputStream(f)) {
+                        out.write(bytes);
+                    }
+                    m_printer.printBitmap(POSPrinterConst.PTR_S_RECEIPT, f.getAbsolutePath(), POSPrinterConst.PTR_BM_ASIS, POSPrinterConst.PTR_BM_CENTER);
+                }
             }
         } catch (IOException | JposException e) {
-            LOGGER.log(Level.WARNING, "Excepion on printImage: ",e);
+            LOGGER.log(Level.WARNING, "Exception on printImage: ", e);
         }
+    }
+
+    public void printImage(BufferedImage image) {
+        printImage(SwingPosImage.of(image));
     }
     
     /**

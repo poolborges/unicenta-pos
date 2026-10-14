@@ -17,9 +17,9 @@ package com.openbravo.pos.reports;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.format.Formats;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.util.StringUtils;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.util.StringUtils;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.openbravo.pos.forms.BeanFactoryException;
+import com.openbravo.pos.container.BeanFactoryException;
 import com.openbravo.pos.cash.CashManagementService;
 import com.openbravo.pos.cash.CashManagementServiceImpl;
 import com.openbravo.pos.cash.CashRegister;

@@ -18,9 +18,8 @@ package com.openbravo.pos.sales;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.payment.JPaymentSelect;
 import com.openbravo.pos.ticket.TicketInfo;
 import java.awt.Component;

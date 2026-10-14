@@ -18,7 +18,7 @@ package com.openbravo.pos.inventory;
 
 import com.openbravo.format.Formats;
 import com.openbravo.pos.ticket.ProductInfoExt;
-import com.openbravo.pos.util.StringUtils;
+import com.openbravo.util.StringUtils;
 
 /**
  *

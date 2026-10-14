@@ -16,7 +16,9 @@
  */
 package com.openbravo.pos.printer;
 
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.spi.hardware.printer.DevicePrinter;
+import com.openbravo.pos.spi.hardware.PosImage;
+import com.openbravo.app.AppLocal;
 
 /**
  *
@@ -59,15 +61,6 @@ public class DevicePrinterNull implements DevicePrinter {
 
     /**
      *
-     * @return
-     */
-    @Override
-    public javax.swing.JComponent getPrinterComponent() {
-        return null;
-    }
-
-    /**
-     *
      */
     @Override
     public void reset() {
@@ -99,7 +92,7 @@ public class DevicePrinterNull implements DevicePrinter {
      * @param image
      */
     @Override
-    public void printImage(java.awt.image.BufferedImage image) {
+    public void printImage(PosImage image) {
     }
 
     /**

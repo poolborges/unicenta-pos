@@ -16,8 +16,8 @@
  */
 package com.openbravo.pos.sales.modern.one;
 
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.sales.modern.WrapLayout;
+import com.openbravo.app.AppLocal;
+import com.openbravo.ui.layout.WrapLayout;
 import com.openbravo.pos.pim.CategoryInfo;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import java.awt.BorderLayout;

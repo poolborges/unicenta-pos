@@ -16,7 +16,7 @@
 
 package com.openbravo.pos.sales;
 
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.ticket.TicketInfo;
 import java.lang.reflect.Proxy;
 import org.junit.jupiter.api.DisplayName;

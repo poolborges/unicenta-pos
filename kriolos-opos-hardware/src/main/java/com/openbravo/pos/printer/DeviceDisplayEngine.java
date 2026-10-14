@@ -16,6 +16,7 @@
  */
 package com.openbravo.pos.printer;
 
+import com.openbravo.pos.spi.hardware.display.DeviceDisplay;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

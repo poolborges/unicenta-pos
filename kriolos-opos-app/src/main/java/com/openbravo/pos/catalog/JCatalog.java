@@ -1,89 +1,133 @@
-//    KriolOS POS
-//    Copyright (c) 2019-2023 KriolOS
-//
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.catalog;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.app.AppLocal;
+import com.openbravo.app.AppProperties;
+import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.pim.CategoryInfo;
-import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.sales.TaxService;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import com.openbravo.pos.ticket.TaxInfo;
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.Font;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.*;
+import javax.swing.AbstractListModel;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /**
+ * Modernized touch-friendly catalog selector component. Integrates categorized
+ * product navigation and dynamic grid layouts.
  *
  * @author adrianromero
+ * @author poolborges
+ * @author KriolOS
  */
 public class JCatalog extends JPanel implements ListSelectionListener, CatalogSelector {
 
+    private static final long serialVersionUID = 1L;
     private static final int DEFAULT_CATALOG_PANEL_HEIGHT = 245;
 
-    protected EventListenerList listeners = new EventListenerList();
+    protected final EventListenerList listeners = new EventListenerList();
 
-    private boolean pricevisible;
-    private boolean taxesincluded;
+    private final boolean priceVisible;
+    private final boolean taxesIncluded;
 
-    // Set of Products panels
     private final Map<String, ProductInfoExt> productsCached = new HashMap<>();
     private final Set<String> categoriesCached = new HashSet<>();
 
-    private CategoryInfo showingcategory = null;
-    private CatalogController controller;
+    private CategoryInfo showingCategory = null;
+    private final CatalogController controller;
+
+    // UI Components
+    private JPanel categoriesContainer;
+    private JPanel rootCategoriesPanel;
+    private JPanel subCategoriesPanel;
+    private JScrollPane categoriesScrollPane;
+    private JList<CategoryInfo> categoriesList;
+
+    private JLabel subCatIndicatorLabel;
+    private JButton subCatBackButton;
+    private JPanel productsGridPane;
+
+    private AppProperties config;
 
     public JCatalog(AppView app) {
         this(app, true, true);
     }
 
-    private JCatalog(AppView app, boolean pricevisible, boolean taxesincluded) {
+    public JCatalog(AppView app, boolean priceVisible, boolean taxesIncluded) {
+        //this.priceVisible = priceVisible;
+        //this.taxesIncluded = taxesIncluded;
 
-        this.pricevisible = pricevisible;
-        this.taxesincluded = taxesincluded;
+        config = app.getProperties();
 
-        initComponents();
-        setPreferredSize(new Dimension(0, DEFAULT_CATALOG_PANEL_HEIGHT));
+        int panelHeight = getCatalogPanelHeight();
+        int catWidth = getCatalogCategoriesWidth();
+        boolean showPrice = getBoolean("catalog.price.visible", true);
+        boolean taxInc = getBoolean("catalog.taxes.included", true);
 
-        categoriesJList.addListSelectionListener(this);
-        categoriesScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(35, 35));
-        
-        
+        this.priceVisible = showPrice;
+        this.taxesIncluded = taxInc;
+
         TaxService taxService = app.getBean(TaxService.class);
         CatalogService catalogService = app.getBean(CatalogService.class);
+        this.controller = new CatalogController(taxService, catalogService);
 
-        controller = new CatalogController(taxService, catalogService);
+        initComponents();
+        setPreferredSize(new Dimension(0, panelHeight));
+        categoriesContainer.setPreferredSize(new Dimension(catWidth, 0));
+        categoriesContainer.setMinimumSize(new Dimension(catWidth - 40, 0));
+    }
+    
+    
+    private boolean getBoolean(String configKey, boolean defaultValue) {
+        return Boolean.parseBoolean(config.getProperty(configKey, Boolean.toString(defaultValue)));
+    }
+
+    private int getCatalogPanelHeight() {
+        return Integer.parseInt(config.getProperty("catalog.panel.height", "300"));
+    }
+
+    private int getCatalogCategoriesWidth() {
+        return Integer.parseInt(config.getProperty("catalog.categories.width", "240"));
+    }
+
+    private ProductCardV2.ViewMode getCatalogCardViewMode() {
+        String mode = config.getProperty("catalog.card.viewmode", "DETAILED");
+        return "COMPACT".equalsIgnoreCase(mode)
+                ? ProductCardV2.ViewMode.COMPACT
+                : ProductCardV2.ViewMode.DETAILED;
     }
 
     @Override
@@ -93,7 +137,6 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
 
     @Override
     public void showCatalogPanel(String id) {
-
         if (id == null) {
             showRootCategoriesPanel();
         } else {
@@ -103,29 +146,19 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
 
     @Override
     public void loadCatalog() throws BasicException {
-
-        // delete all categories panel
         productsGridPane.removeAll();
-
         productsCached.clear();
         categoriesCached.clear();
+        showingCategory = null;
 
-        showingcategory = null;
-
-        // Load all categories.
         List<CategoryInfo> categories = controller.getRootCategories();
+        categoriesList.setModel(new CategoriesListModel(categories));
 
-        // Select the first category
-        categoriesJList.setCellRenderer(new SmallCategoryRenderer());
-        categoriesJList.setModel(new CategoriesListModel(categories));
-
-        if (categoriesJList.getModel().getSize() == 0) {
-            categoriesScrollPane.setVisible(false);
-            categoriesVerticalSeparatorPane.setVisible(false);
+        if (categoriesList.getModel().getSize() == 0) {
+            categoriesContainer.setVisible(false);
         } else {
-            categoriesScrollPane.setVisible(true);
-            categoriesVerticalSeparatorPane.setVisible(true);
-            categoriesJList.setSelectedIndex(0);
+            categoriesContainer.setVisible(true);
+            categoriesList.setSelectedIndex(0);
         }
 
         showRootCategoriesPanel();
@@ -133,21 +166,18 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
 
     @Override
     public void setComponentEnabled(boolean value) {
-
-        categoriesJList.setEnabled(value);
+        categoriesList.setEnabled(value);
         categoriesScrollPane.setEnabled(value);
-        subCatlIndicatorJLabel.setEnabled(value);
-        subCatBackJButton.setEnabled(value);
+        subCatIndicatorLabel.setEnabled(value);
+        subCatBackButton.setEnabled(value);
         productsGridPane.setEnabled(value);
 
         synchronized (productsGridPane.getTreeLock()) {
-            int compCount = productsGridPane.getComponentCount();
-            for (int i = 0; i < compCount; i++) {
-                productsGridPane.getComponent(i).setEnabled(value);
+            for (Component comp : productsGridPane.getComponents()) {
+                comp.setEnabled(value);
             }
         }
-
-        this.setEnabled(value);
+        super.setEnabled(value);
     }
 
     @Override
@@ -162,114 +192,92 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
 
     @Override
     public void valueChanged(ListSelectionEvent evt) {
-
         if (!evt.getValueIsAdjusting()) {
-            int i = categoriesJList.getSelectedIndex();
-            if (i >= 0) {
-                Rectangle oRect = categoriesJList.getCellBounds(i, i);
-                categoriesJList.scrollRectToVisible(oRect);
+            int selectedIndex = categoriesList.getSelectedIndex();
+            if (selectedIndex >= 0) {
+                Rectangle cellBounds = categoriesList.getCellBounds(selectedIndex, selectedIndex);
+                if (cellBounds != null) {
+                    categoriesList.scrollRectToVisible(cellBounds);
+                }
+                CategoryInfo selected = categoriesList.getSelectedValue();
+                if (selected != null) {
+                    showProductGridByCat(selected.getID());
+                }
             }
         }
     }
 
     protected void fireSelectedProduct(ProductInfoExt prod) {
-        EventListener[] l = listeners.getListeners(ActionListener.class);
-        ActionEvent e = null;
-        for (EventListener l1 : l) {
-            if (e == null) {
-                e = new ActionEvent(prod, ActionEvent.ACTION_PERFORMED, prod.getID());
+        EventListener[] list = listeners.getListeners(ActionListener.class);
+        ActionEvent event = null;
+        for (EventListener listener : list) {
+            if (event == null) {
+                event = new ActionEvent(prod, ActionEvent.ACTION_PERFORMED, prod.getID());
             }
-            ((ActionListener) l1).actionPerformed(e);
+            ((ActionListener) listener).actionPerformed(event);
         }
     }
 
     private void showProductGridByCat(String categoryId) {
         if (!categoriesCached.contains(categoryId)) {
-
             JCatalogTab catalogTab = new JCatalogTab();
             catalogTab.applyComponentOrientation(getComponentOrientation());
             productsGridPane.add(catalogTab, categoryId);
             categoriesCached.add(categoryId);
 
-            // 1 - SHOW ALL PRODUCT (SET AS CONSTANT) IN CATEGORIY
-            List<ProductInfoExt> prods = controller.getProductConstant();
-            for (ProductInfoExt prod : prods) {
-
-                Image imageIcon = controller.getThumbNailOrDefault(prod.getImage());
-
-                String tooltip = (prod.getTextTip() != null && !prod.getTextTip().isBlank()) ? prod.getTextTip() : null;
-
-                catalogTab.addButton(
-                        new ImageIcon(imageIcon),
-                        new SelectProductListener(prod),
-                        getProductLabel(prod, true),
-                        tooltip);
-
+            // 1. Show constant products
+            List<ProductInfoExt> constantProducts = controller.getProductConstant();
+            for (ProductInfoExt prod : constantProducts) {
+                catalogTab.addCatalogItem(buildCatalogItem(prod), new SelectProductListener(prod));
             }
 
-            // 2 - SHOW ALL SUB-CATEGORIES
-            List<CategoryInfo> categories = controller.getSubcategories(categoryId);
-            for (CategoryInfo cat : categories) {
-                String catName = "";
-                if (cat.getCatShowName()) {
-                    catName = cat.getName();
-                }
+            // 2. Show subcategories
+            List<CategoryInfo> subCategories = controller.getSubcategories(categoryId);
+            for (CategoryInfo subCat : subCategories) {
+                String catName = subCat.getCatShowName() ? subCat.getName() : "";
+                Image img = controller.getThumbNailOrDefaultSubCat(subCat.getImage());
 
-                Image imageIcons = controller.getThumbNailOrDefaultSubCat(cat.getImage());
-
-                catalogTab.addButton(
-                        new ImageIcon(imageIcons),
-                        new SelectCategoryListener(cat),
-                        catName,
-                        null);
+                CatalogItem catItem = new CatalogItem(catName);
+                catItem.setImage(img);
+                catItem.setTextTip(subCat.getTextTip());
+                catalogTab.addCatalogItem(catItem, new SelectCategoryListener(subCat));
             }
 
-            // 3 - SHOW ALL PRODUCT IN SELECTED CATEGORIY
+            // 3. Show category products
             List<ProductInfoExt> products = controller.findProductByCategory(categoryId);
             for (ProductInfoExt prod : products) {
                 catalogTab.addCatalogItem(buildCatalogItem(prod), new SelectProductListener(prod));
             }
         }
-        CardLayout cl = (CardLayout) (productsGridPane.getLayout());
+
+        CardLayout cl = (CardLayout) productsGridPane.getLayout();
         cl.show(productsGridPane, categoryId);
     }
 
     private CatalogItem buildCatalogItem(ProductInfoExt product) {
+        String title = (product.getDisplay() != null && !product.getDisplay().isBlank())
+                ? product.getDisplay()
+                : product.getName();
 
-        String produtTitle;
-
-        if (product.getDisplay() != null && !product.getDisplay().isBlank()) {
-            produtTitle = product.getDisplay();
-        } else {
-            produtTitle = product.getName();
-        }
-
-        CatalogItem item = new CatalogItem(produtTitle);
-        
-        String tooltip = (product.getTextTip() != null && !product.getTextTip().isBlank()) ? product.getTextTip() : null;
-        item.setTextTip(tooltip);
+        CatalogItem item = new CatalogItem(title);
+        item.setTextTip(product.getTextTip());
 
         if (product.getImage() != null) {
-            Image imageIcon = controller.getThumbNailOrDefault(product.getImage());
-
-            if (imageIcon != null) {
-                item.setImage(imageIcon);
-            }
-        }else {
-             item.setImage(null);
+            Image icon = controller.getThumbNailOrDefault(product.getImage());
+            item.setImage(icon);
+        } else {
+            item.setImage(null);
         }
 
-        if (pricevisible) {
-            String produtprice;
-            if (taxesincluded) {
+        if (priceVisible) {
+            String priceStr;
+            if (taxesIncluded) {
                 TaxInfo tax = controller.getTaxInfo(product.getTaxCategoryID());
-                produtprice = product.printPriceSellTax(tax);
-
+                priceStr = product.printPriceSellTax(tax);
             } else {
-                produtprice = product.printPriceSell();
+                priceStr = product.printPriceSell();
             }
-
-            item.setPrice(produtprice);
+            item.setPrice(priceStr);
         } else {
             item.setPrice(null);
         }
@@ -277,157 +285,158 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
         return item;
     }
 
-    private String getProductLabel(ProductInfoExt product) {
-        return getProductLabel(product, false);
-    }
+    private void setSubCatIndicator(Icon icon, String label) {
+        subCatIndicatorLabel.setText(label);
+        subCatIndicatorLabel.setIcon(icon);
 
-    private String getProductLabel(ProductInfoExt product, boolean isHtml) {
-
-        String productLabel = "";
-        String produtTitle = "";
-        String produtprice = "";
-
-        if (!"".equals(product.getDisplay())) {
-            produtTitle = product.getDisplay();
-        } else {
-            produtTitle = product.getName();
-        }
-
-        if (pricevisible) {
-            if (taxesincluded) {
-                TaxInfo tax = controller.getTaxInfo(product.getTaxCategoryID());
-                produtprice = product.printPriceSellTax(tax);
-
-            } else {
-                produtprice = product.printPriceSell();
-            }
-
-            if (isHtml) {
-                productLabel = "<html><center>"
-                        + produtTitle
-                        + "<br>"
-                        + produtprice
-                        + "</center></html>";
-            } else {
-                productLabel = produtprice;
-            }
-
-        } else {
-            productLabel = produtTitle;
-        }
-
-        return productLabel;
-    }
-
-    private void setSubCatlIndicator(Icon icon, String label, String texttip) {
-
-        subCatlIndicatorJLabel.setText(label);
-        subCatlIndicatorJLabel.setIcon(icon);
-
-        // Show subcategories panel
-        CardLayout cl = (CardLayout) (categoriesPane.getLayout());
-        cl.show(categoriesPane, "subcategories");
-    }
-
-    private void selectRootCategories() {
-        // Show root categories panel
-        CardLayout cl = (CardLayout) (categoriesPane.getLayout());
-        cl.show(categoriesPane, "rootcategories");
+        CardLayout cl = (CardLayout) categoriesContainer.getLayout();
+        cl.show(categoriesContainer, "subcategories");
     }
 
     private void showRootCategoriesPanel() {
+        CardLayout cl = (CardLayout) categoriesContainer.getLayout();
+        cl.show(categoriesContainer, "rootcategories");
 
-        selectRootCategories();
-        // Show selected root category
-        CategoryInfo cat = (CategoryInfo) categoriesJList.getSelectedValue();
-
-        if (cat != null) {
-            showProductGridByCat(cat.getID());
+        CategoryInfo selected = categoriesList.getSelectedValue();
+        if (selected != null) {
+            showProductGridByCat(selected.getID());
         }
-        showingcategory = null;
+        showingCategory = null;
     }
 
     private void showSubcategoryPanel(CategoryInfo category) {
-
-        // this is the new panel that displays when a sub catergory is selected mouse does not work here 
-        Image imageIcons = controller.getThumbNailOrDefaultCat(category.getImage());
-
-        setSubCatlIndicator(
-                new ImageIcon(imageIcons),
-                category.getName(),
-                category.getTextTip());
-
+        Image img = controller.getThumbNailOrDefaultCat(category.getImage());
+        setSubCatIndicator(new ImageIcon(img), category.getName());
         showProductGridByCat(category.getID());
-        showingcategory = category;
+        showingCategory = category;
     }
 
     private void showProductPanel(String id) {
-
         ProductInfoExt product = productsCached.get(id);
 
         if (product == null) {
             if (productsCached.containsKey(id)) {
-                // It is an empty panel
-                if (showingcategory == null) {
-                    showRootCategoriesPanel();
-                } else {
-                    showSubcategoryPanel(showingcategory);
-                }
+                restorePreviousCategoryView();
             } else {
-                // Create  products panel
-                List<ProductInfoExt> products = controller.getProductCompanion(id);
-                if (products.isEmpty()) {
+                List<ProductInfoExt> companionProducts = controller.getProductCompanion(id);
+                if (companionProducts.isEmpty()) {
                     productsCached.put(id, null);
-
-                    if (showingcategory == null) {
-                        showRootCategoriesPanel();
-                    } else {
-                        showSubcategoryPanel(showingcategory);
-                    }
+                    restorePreviousCategoryView();
                 } else {
-
                     product = controller.getProductInfo(id);
                     if (product != null) {
                         productsCached.put(id, product);
 
-                        JCatalogTab jcurrTab = new JCatalogTab();
-                        jcurrTab.applyComponentOrientation(getComponentOrientation());
-                        productsGridPane.add(jcurrTab, "PRODUCT." + id);
+                        JCatalogTab productTab = new JCatalogTab();
+                        productTab.applyComponentOrientation(getComponentOrientation());
+                        productsGridPane.add(productTab, "PRODUCT." + id);
 
-                        // Add products
-                        for (ProductInfoExt prod : products) {
-                            jcurrTab.addButton(
-                                    new ImageIcon(controller.getThumbNailOrDefault(prod.getImage())),
-                                    new SelectProductListener(prod),
-                                    getProductLabel(prod),
-                                    prod.getTextTip()
-                            );
+                        for (ProductInfoExt prod : companionProducts) {
+                            productTab.addCatalogItem(buildCatalogItem(prod), new SelectProductListener(prod));
                         }
-                        setSubCatlIndicator(new ImageIcon(controller.getThumbNailOrDefault(product.getImage())),
-                                product.getDisplay(), product.getTextTip());
 
-                        CardLayout cl = (CardLayout) (productsGridPane.getLayout());
+                        setSubCatIndicator(
+                                new ImageIcon(controller.getThumbNailOrDefault(product.getImage())),
+                                product.getDisplay()
+                        );
+
+                        CardLayout cl = (CardLayout) productsGridPane.getLayout();
                         cl.show(productsGridPane, "PRODUCT." + id);
                     } else {
                         productsCached.put(id, null);
-                        if (showingcategory == null) {
-                            showRootCategoriesPanel();
-                        } else {
-                            showSubcategoryPanel(showingcategory);
-                        }
+                        restorePreviousCategoryView();
                     }
                 }
             }
         } else {
-            setSubCatlIndicator(
+            setSubCatIndicator(
                     new ImageIcon(controller.getThumbNailOrDefault(product.getImage())),
-                    product.getName(), product.getTextTip());
+                    product.getName()
+            );
 
-            CardLayout cl = (CardLayout) (productsGridPane.getLayout());
+            CardLayout cl = (CardLayout) productsGridPane.getLayout();
             cl.show(productsGridPane, "PRODUCT." + id);
         }
     }
 
+    private void restorePreviousCategoryView() {
+        if (showingCategory == null) {
+            showRootCategoriesPanel();
+        } else {
+            showSubcategoryPanel(showingCategory);
+        }
+    }
+
+    private void initComponents() {
+        setLayout(new BorderLayout(8, 0));
+        setBorder(new EmptyBorder(4, 4, 4, 4));
+
+        // --- 1. Left Categories Container (Root vs Subcategory Switcher) ---
+        categoriesContainer = new JPanel(new CardLayout());
+        categoriesContainer.setPreferredSize(new Dimension(240, 0));
+        categoriesContainer.setMinimumSize(new Dimension(200, 0));
+
+        // 1.1 Root Categories View
+        rootCategoriesPanel = new JPanel(new BorderLayout());
+        rootCategoriesPanel.setOpaque(false);
+
+        categoriesList = new JList<>();
+        categoriesList.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        categoriesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        categoriesList.setFixedCellHeight(46);
+        categoriesList.setCellRenderer(new ModernCategoryRenderer());
+        categoriesList.addListSelectionListener(this);
+
+        categoriesScrollPane = new JScrollPane(categoriesList);
+        categoriesScrollPane.setBorder(BorderFactory.createLineBorder(
+                UIManager.getColor("Component.borderColor") != null
+                ? UIManager.getColor("Component.borderColor")
+                : new Color(220, 224, 230), 1));
+        categoriesScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        categoriesScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        categoriesScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(28, 28));
+
+        rootCategoriesPanel.add(categoriesScrollPane, BorderLayout.CENTER);
+        categoriesContainer.add(rootCategoriesPanel, "rootcategories");
+
+        // 1.2 Subcategory Breadcrumb & Navigation Header
+        subCategoriesPanel = new JPanel(new BorderLayout(5, 5));
+        subCategoriesPanel.setOpaque(false);
+        subCategoriesPanel.setBorder(new EmptyBorder(6, 6, 6, 6));
+
+        subCatIndicatorLabel = new JLabel("Category", SwingConstants.LEFT);
+        subCatIndicatorLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        subCatIndicatorLabel.setIconTextGap(8);
+
+        subCatBackButton = new JButton(AppLocal.getIntString("button.back") != null
+                ? AppLocal.getIntString("button.back") : "Voltar");
+        try {
+            subCatBackButton.setIcon(new ImageIcon(getClass().getResource("/com/openbravo/images/2uparrow.png")));
+        }
+        catch (Exception ignored) {
+        }
+        subCatBackButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        subCatBackButton.setFocusPainted(false);
+        subCatBackButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        subCatBackButton.putClientProperty("JButton.buttonType", "roundRect");
+        subCatBackButton.setMargin(new Insets(6, 12, 6, 12));
+        subCatBackButton.addActionListener(e -> showRootCategoriesPanel());
+
+        subCategoriesPanel.add(subCatIndicatorLabel, BorderLayout.CENTER);
+        subCategoriesPanel.add(subCatBackButton, BorderLayout.EAST);
+
+        categoriesContainer.add(subCategoriesPanel, "subcategories");
+
+        add(categoriesContainer, BorderLayout.LINE_START);
+
+        // --- 2. Products Grid Panel (CardLayout) ---
+        productsGridPane = new JPanel(new CardLayout());
+        productsGridPane.setOpaque(false);
+        add(productsGridPane, BorderLayout.CENTER);
+    }
+
+
+    // --- Action Listeners & List Models ---
     private class SelectProductListener implements ActionListener {
 
         private final ProductInfoExt prod;
@@ -456,252 +465,61 @@ public class JCatalog extends JPanel implements ListSelectionListener, CatalogSe
         }
     }
 
-    private class CategoriesListModel extends AbstractListModel<CategoryInfo> {
+    private static class CategoriesListModel extends AbstractListModel<CategoryInfo> {
 
-        private final List<CategoryInfo> m_aCategories;
+        private static final long serialVersionUID = 1L;
+        private final List<CategoryInfo> categories;
 
-        public CategoriesListModel(List<CategoryInfo> aCategories) {
-            m_aCategories = aCategories;
+        public CategoriesListModel(List<CategoryInfo> categories) {
+            this.categories = categories;
         }
 
         @Override
         public int getSize() {
-            return m_aCategories.size();
+            return categories != null ? categories.size() : 0;
         }
 
         @Override
-        public CategoryInfo getElementAt(int i) {
-            return m_aCategories.get(i);
-        }
-    }
-
-    private class SmallCategoryRenderer extends DefaultListCellRenderer {
-
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value,
-                int index, boolean isSelected, boolean cellHasFocus) {
-
-            super.getListCellRendererComponent(list, null, index, isSelected, cellHasFocus);
-            CategoryInfo cat = (CategoryInfo) value;
-            setText(cat.getName());
-            Image imageIcons = controller.getThumbNailOrDefaultCat(cat.getImage());
-            setIcon(new ImageIcon(imageIcons));
-
-            return this;
+        public CategoryInfo getElementAt(int index) {
+            return categories.get(index);
         }
     }
 
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+     * Touch-optimized list cell renderer for category items with scaled icons.
+     * Prevents vertical image overflow and layout overlapping on fixed-height
+     * cells.
      */
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private class ModernCategoryRenderer extends DefaultListCellRenderer {
 
-        categoriesPane = new javax.swing.JPanel();
-        rootCategoriesPane = new javax.swing.JPanel();
-        categoriesScrollPane = new javax.swing.JScrollPane();
-        categoriesJList = new javax.swing.JList();
-        categoriesVerticalSeparatorPane = new javax.swing.JPanel();
-        categoriesVSEndPane = new javax.swing.JPanel();
-        subCategoriesPane = new javax.swing.JPanel();
-        subCatLeftJPanel = new javax.swing.JPanel();
-        subCatlIndicatorJLabel = new javax.swing.JLabel();
-        subCatRigthJPanel = new javax.swing.JPanel();
-        subCatActionsJPanel = new javax.swing.JPanel();
-        subCatBackJButton = new javax.swing.JButton();
-        productsGridPane = new javax.swing.JPanel();
+        private static final long serialVersionUID = 1L;
+        private static final int ICON_SIZE = 24; // Fixed icon dimension to prevent vertical overlap
 
-        setLayout(new java.awt.BorderLayout());
+        @Override
+        public Component getListCellRendererComponent(JList<?> list, Object value,
+                int index, boolean isSelected, boolean cellHasFocus) {
 
-        categoriesPane.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        categoriesPane.setMaximumSize(new java.awt.Dimension(275, 600));
-        categoriesPane.setPreferredSize(new java.awt.Dimension(265, 0));
-        categoriesPane.setLayout(new java.awt.CardLayout());
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-        rootCategoriesPane.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        rootCategoriesPane.setMinimumSize(new java.awt.Dimension(200, 100));
-        rootCategoriesPane.setPreferredSize(new java.awt.Dimension(275, 130));
-        rootCategoriesPane.setLayout(new java.awt.BorderLayout());
+            if (value instanceof CategoryInfo cat) {
+                setText(cat.getName());
+                Image rawIcon = controller.getThumbNailOrDefaultCat(cat.getImage());
 
-        categoriesScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        categoriesScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        categoriesScrollPane.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        categoriesScrollPane.setPreferredSize(new java.awt.Dimension(265, 130));
-
-        categoriesJList.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        categoriesJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        categoriesJList.setFocusable(false);
-        categoriesJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                categoriesJListValueChanged(evt);
+                if (rawIcon != null) {
+                    // Smoothly scale the category image to fit within the cell bounds
+                    Image scaled = rawIcon.getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH);
+                    setIcon(new ImageIcon(scaled));
+                } else {
+                    setIcon(null);
+                }
             }
-        });
-        categoriesScrollPane.setViewportView(categoriesJList);
 
-        rootCategoriesPane.add(categoriesScrollPane, java.awt.BorderLayout.CENTER);
+            // Cell styling and padding configuration
+            setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+            setIconTextGap(12);
+            setVerticalAlignment(SwingConstants.CENTER);
 
-        categoriesVerticalSeparatorPane.setLayout(new java.awt.BorderLayout());
-
-        categoriesVSEndPane.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
-        categoriesVSEndPane.setLayout(new java.awt.GridLayout(0, 1, 0, 5));
-        categoriesVerticalSeparatorPane.add(categoriesVSEndPane, java.awt.BorderLayout.NORTH);
-
-        rootCategoriesPane.add(categoriesVerticalSeparatorPane, java.awt.BorderLayout.LINE_END);
-
-        categoriesPane.add(rootCategoriesPane, "rootcategories");
-
-        subCategoriesPane.setLayout(new java.awt.BorderLayout());
-
-        subCatLeftJPanel.setLayout(new java.awt.BorderLayout());
-
-        subCatlIndicatorJLabel.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        subCatlIndicatorJLabel.setText("Sub Category Indicator");
-        subCatLeftJPanel.add(subCatlIndicatorJLabel, java.awt.BorderLayout.NORTH);
-
-        subCategoriesPane.add(subCatLeftJPanel, java.awt.BorderLayout.WEST);
-
-        subCatRigthJPanel.setLayout(new java.awt.BorderLayout());
-
-        subCatActionsJPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
-        subCatActionsJPanel.setLayout(new java.awt.GridLayout(0, 1, 0, 5));
-
-        subCatBackJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/2uparrow.png"))); // NOI18N
-        subCatBackJButton.setFocusPainted(false);
-        subCatBackJButton.setFocusable(false);
-        subCatBackJButton.setMargin(new java.awt.Insets(8, 14, 8, 14));
-        subCatBackJButton.setPreferredSize(new java.awt.Dimension(60, 45));
-        subCatBackJButton.setRequestFocusEnabled(false);
-        subCatBackJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                subCatBackJButtonActionPerformed(evt);
-            }
-        });
-        subCatActionsJPanel.add(subCatBackJButton);
-
-        subCatRigthJPanel.add(subCatActionsJPanel, java.awt.BorderLayout.NORTH);
-
-        subCategoriesPane.add(subCatRigthJPanel, java.awt.BorderLayout.LINE_END);
-
-        categoriesPane.add(subCategoriesPane, "subcategories");
-
-        add(categoriesPane, java.awt.BorderLayout.LINE_START);
-
-        productsGridPane.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        productsGridPane.setLayout(new java.awt.CardLayout());
-        add(productsGridPane, java.awt.BorderLayout.CENTER);
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void categoriesJListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_categoriesJListValueChanged
-
-        if (!evt.getValueIsAdjusting()) {
-            CategoryInfo cat = (CategoryInfo) categoriesJList.getSelectedValue();
-            if (cat != null) {
-                showProductGridByCat(cat.getID());
-            }
+            return this;
         }
-
-    }//GEN-LAST:event_categoriesJListValueChanged
-
-    private void subCatBackJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subCatBackJButtonActionPerformed
-
-        showRootCategoriesPanel();
-
-    }//GEN-LAST:event_subCatBackJButtonActionPerformed
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JList categoriesJList;
-    private javax.swing.JPanel categoriesPane;
-    private javax.swing.JScrollPane categoriesScrollPane;
-    private javax.swing.JPanel categoriesVSEndPane;
-    private javax.swing.JPanel categoriesVerticalSeparatorPane;
-    private javax.swing.JPanel productsGridPane;
-    private javax.swing.JPanel rootCategoriesPane;
-    private javax.swing.JPanel subCatActionsJPanel;
-    private javax.swing.JButton subCatBackJButton;
-    private javax.swing.JPanel subCatLeftJPanel;
-    private javax.swing.JPanel subCatRigthJPanel;
-    private javax.swing.JPanel subCategoriesPane;
-    private javax.swing.JLabel subCatlIndicatorJLabel;
-    // End of variables declaration//GEN-END:variables
-
-}
-
-class TextPaneWithBackground extends JTextPane {
-
-    private BufferedImage background;
-
-    public TextPaneWithBackground(BufferedImage background) {
-        this.background = background;
-        setForeground(Color.WHITE);
-        setOpaque(false);
-    }
-
-    @Override
-    public Dimension getPreferredScrollableViewportSize() {
-        return background == null ? super.getPreferredScrollableViewportSize() : new Dimension(background.getWidth(), background.getHeight());
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return background == null ? super.getPreferredSize() : new Dimension(background.getWidth(), background.getHeight());
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-
-        Graphics2D g2d = (Graphics2D) g.create();
-
-        if (isOpaque()) {
-            g2d.setColor(getBackground());
-            g2d.fillRect(0, 0, getWidth(), getHeight());
-        }
-
-        if (background != null) {
-            int x = (getWidth() - background.getWidth()) / 2;
-            int y = (getHeight() - background.getHeight()) / 2;
-            g2d.drawImage(background, x, y, this);
-        }
-
-        getUI().paint(g2d, this);
-        g2d.dispose();
-    }
-}
-
-class ButtonWithBackground extends JButton {
-
-    private BufferedImage background;
-
-    public ButtonWithBackground(BufferedImage background) {
-        this.background = background;
-        setForeground(Color.WHITE);
-        setOpaque(false);
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return background == null ? super.getPreferredSize() : new Dimension(background.getWidth(), background.getHeight());
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-
-        Graphics2D g2d = (Graphics2D) g.create();
-
-        if (isOpaque()) {
-            g2d.setColor(getBackground());
-            g2d.fillRect(0, 0, getWidth(), getHeight());
-        }
-
-        if (background != null) {
-            int x = (getWidth() - background.getWidth()) / 2;
-            int y = (getHeight() - background.getHeight()) / 2;
-            g2d.drawImage(background, x, y, this);
-        }
-
-        getUI().paint(g2d, this);
-        g2d.dispose();
     }
 }

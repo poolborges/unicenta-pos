@@ -2,7 +2,7 @@ package com.openbravo.pos.sales.shared;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.modal.PosUIModal;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import com.openbravo.pos.sales.DataLogicReceipts;
 import com.openbravo.pos.sales.SharedTicketInfo;
 import com.openbravo.pos.sales.SharedTicketService;

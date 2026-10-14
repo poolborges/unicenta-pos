@@ -16,7 +16,7 @@
 package com.openbravo.pos.sales;
 
 import com.openbravo.data.loader.DataWriteUtils;
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.panels.AppView;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

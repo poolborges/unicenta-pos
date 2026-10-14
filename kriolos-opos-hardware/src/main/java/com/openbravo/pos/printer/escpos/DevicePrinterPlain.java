@@ -16,8 +16,9 @@
  */
 package com.openbravo.pos.printer.escpos;
 
-import com.openbravo.pos.printer.DevicePrinter;
-import com.openbravo.pos.printer.TicketPrinterException;
+import com.openbravo.pos.spi.hardware.printer.DevicePrinter;
+import com.openbravo.pos.spi.hardware.PosImage;
+import com.openbravo.pos.spi.hardware.printer.TicketPrinterException;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,15 +67,6 @@ public class DevicePrinterPlain implements DevicePrinter  {
 
     /**
      *
-     * @return
-     */
-    @Override
-    public JComponent getPrinterComponent() {
-        return null;
-    }
-
-    /**
-     *
      */
     @Override
     public void reset() {
@@ -92,7 +84,7 @@ public class DevicePrinterPlain implements DevicePrinter  {
      * @param image
      */
     @Override
-    public void printImage(BufferedImage image) {
+    public void printImage(PosImage image) {
     }
     
     /**

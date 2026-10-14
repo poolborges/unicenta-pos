@@ -15,6 +15,16 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.forms;
 
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.resources.ResourceService;
+import com.openbravo.pos.panels.JPanelView;
+import com.openbravo.pos.admin.SecurityService;
+import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.pos.container.BeanFactoryException;
+import com.openbravo.pos.panels.ProcessAction;
+import com.openbravo.pos.admin.AppUserPermissionsLoader;
+import com.openbravo.pos.admin.AppUserView;
+import com.openbravo.pos.admin.AppUser;
 import com.openbravo.pos.menu.JRootMenu;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.JMessagePanel;

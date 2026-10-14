@@ -19,7 +19,7 @@ package com.openbravo.pos.inventory;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.gui.modal.PosUIModal;
 import com.openbravo.data.user.BrowsableEditableData;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import com.openbravo.pos.hardware.PosHardwareManager;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -31,7 +31,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import org.openide.util.Exceptions;
 
 public class JUploadProductsPanel extends JPanel {
 

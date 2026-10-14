@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.printer.ticket;
 
-import com.openbravo.pos.printer.DevicePrinter;
+import com.openbravo.pos.spi.hardware.printer.DevicePrinter;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.ArrayList;

@@ -16,11 +16,17 @@
 
 package com.openbravo.pos.imports;
 
-import com.openbravo.pos.forms.JPanelView;
+import com.openbravo.app.AppProperties;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.resources.ResourceService;
+import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.pos.config.AppConfig;
+import com.openbravo.pos.container.BeanFactoryException;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.panels.JPanelView;
 import com.csvreader.CsvReader;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.Session;
-import com.openbravo.pos.forms.*;
 import com.openbravo.pos.inventory.ProductStock;
 import com.openbravo.pos.ticket.ProductInfoExt;
 

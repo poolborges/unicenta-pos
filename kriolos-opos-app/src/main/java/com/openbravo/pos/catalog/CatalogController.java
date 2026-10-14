@@ -17,14 +17,14 @@
 package com.openbravo.pos.catalog;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.pos.sales.DataLogicSales;
 import com.openbravo.pos.sales.TaxService;
 import com.openbravo.pos.sales.TaxesLogic;
 import com.openbravo.pos.pim.CategoryInfo;
 import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import com.openbravo.pos.ticket.TaxInfo;
-import com.openbravo.pos.util.ThumbNailBuilder;
+import com.openbravo.util.ThumbNailBuilder;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -32,7 +32,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.openide.util.Exceptions;
 
 /**
  *

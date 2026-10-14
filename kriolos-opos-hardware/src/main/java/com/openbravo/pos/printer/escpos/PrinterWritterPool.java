@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.printer.escpos;
 
-import com.openbravo.pos.printer.TicketPrinterException;
+import com.openbravo.pos.spi.hardware.printer.TicketPrinterException;
 import com.openbravo.pos.spi.hardware.ConnectorType;
 import com.openbravo.pos.spi.hardware.TransportType;
 

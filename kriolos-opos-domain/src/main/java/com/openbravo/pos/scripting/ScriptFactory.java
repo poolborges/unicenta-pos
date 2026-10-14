@@ -1,9 +1,6 @@
 //    KrOS POS
 //    Copyright (c) 2019-2023 KriolOS
 //    
-//
-//     
-//
 //    This program is free software: you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
 //    the Free Software Foundation, either version 3 of the License, or
@@ -19,47 +16,102 @@
 
 package com.openbravo.pos.scripting;
 
+import com.openbravo.pos.spi.scripting.ScriptEngineDefinition;
+import com.openbravo.pos.spi.scripting.ScriptEngineException;
+import com.openbravo.pos.spi.scripting.ScriptEngineManager;
+import com.openbravo.pos.spi.scripting.ScriptEngineType;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 /**
+ * Factory and adapter providing {@link ScriptEngine} instances backed by the modern
+ * {@link ScriptEngineManager} SPI.
  *
  * @author adrianromero
- * Created on 5 de marzo de 2007, 19:56
- *
+ * @author KriolOS POS
+ * @since 1.0.0
  */
 public class ScriptFactory {
-    
+
     /**
-     * Valocity ScriptEngine
+     * Velocity ScriptEngine identifier.
      */
     public static final String VELOCITY = "velocity";
 
     /**
-     * BeanSheal ScriptEngine
+     * BeanShell ScriptEngine identifier.
      */
     public static final String BEANSHELL = "beanshell";
 
     /**
-     *
+     * Rhino ScriptEngine identifier.
      */
     public static final String RHINO = "rhino";
-    
-    /** Creates a new instance of ScriptFactory */
+
+    /**
+     * Private constructor to prevent direct instantiation.
+     */
     private ScriptFactory() {
     }
-    
+
     /**
+     * Obtains an active {@link ScriptEngine} bridge for the specified engine name.
      *
-     * @param name
-     * @return
-     * @throws ScriptException
+     * @param name The engine name or identifier (e.g. "velocity", "beanshell").
+     * @return A configured {@link ScriptEngine} delegating to the SPI.
+     * @throws ScriptException If the requested engine is null or no SPI provider is registered.
      */
     public static ScriptEngine getScriptEngine(String name) throws ScriptException {
-        switch (name) {
-            case VELOCITY:
-                return new ScriptEngineVelocity();
-            case BEANSHELL:
-                return new ScriptEngineBeanshell();
-            default:
-                throw new ScriptException("Script engine not found: " + name);
+        if (name == null) {
+            throw new ScriptException("Script engine name cannot be null.");
         }
-    }    
+
+        Optional<ScriptEngineDefinition> definition = ScriptEngineManager.getEngineDefinition(name);
+        if (definition.isEmpty()) {
+            throw new ScriptException("Script engine not found: " + name);
+        }
+
+        return new SpiScriptEngineAdapter(definition.get().id(), definition.get().type());
+    }
+
+    /**
+     * Internal adapter bridging the legacy {@link ScriptEngine} interface to
+     * {@link ScriptEngineManager}.
+     */
+    private static class SpiScriptEngineAdapter implements ScriptEngine {
+
+        private final String engineId;
+        private final ScriptEngineType engineType;
+        private final Map<String, Object> bindings = new HashMap<>();
+
+        public SpiScriptEngineAdapter(String engineId, ScriptEngineType engineType) {
+            this.engineId = engineId;
+            this.engineType = engineType;
+        }
+
+        @Override
+        public void put(String key, Object value) {
+            bindings.put(key, value);
+        }
+
+        @Override
+        public Object get(String key) {
+            return bindings.get(key);
+        }
+
+        @Override
+        public Object eval(String src) throws ScriptException {
+            try {
+                if (engineType == ScriptEngineType.TEMPLATE) {
+                    return ScriptEngineManager.renderInline(engineId, src, bindings);
+                } else {
+                    return ScriptEngineManager.execute(engineId, src, bindings);
+                }
+            } catch (ScriptEngineException ex) {
+                throw new ScriptException(ex.getMessage(), ex);
+            }
+        }
+    }
 }

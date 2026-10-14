@@ -19,7 +19,7 @@ package com.openbravo.pos.businesspartner;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.customers.CustomerInfo;
 import com.openbravo.pos.resources.ImageResources;
-import com.openbravo.pos.util.ThumbNailBuilder;
+import com.openbravo.util.ThumbNailBuilder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;

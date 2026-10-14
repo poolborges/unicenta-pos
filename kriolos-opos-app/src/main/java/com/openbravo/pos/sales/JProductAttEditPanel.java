@@ -19,7 +19,7 @@ package com.openbravo.pos.sales;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.modal.PosUIModal;
 import com.openbravo.data.loader.Session;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import com.openbravo.pos.inventory.AttributeInstEntry;
 import com.openbravo.pos.inventory.AttributeInstInfo;
 import com.openbravo.pos.inventory.AttributeService;

@@ -16,7 +16,12 @@
  */
 package com.openbravo.pos.printer;
 
-import com.openbravo.pos.forms.AppProperties;
+import com.openbravo.pos.spi.hardware.printer.DevicePrinter;
+import com.openbravo.pos.spi.hardware.printer.TicketPrinterException;
+import com.openbravo.pos.spi.hardware.printer.DeviceFiscalPrinter;
+import com.openbravo.pos.spi.hardware.DeviceTicket;
+import com.openbravo.pos.spi.hardware.display.DeviceDisplay;
+import com.openbravo.app.AppProperties;
 import com.openbravo.pos.printer.escpos.*;
 import com.openbravo.pos.printer.javapos.DevicePrinterJavaPOS;
 import com.openbravo.pos.printer.printer.DevicePrinterPrinter;
@@ -26,7 +31,7 @@ import com.openbravo.pos.spi.hardware.display.DisplayConfig;
 import com.openbravo.pos.spi.hardware.display.DisplayDevice;
 import com.openbravo.pos.spi.hardware.printer.FiscalPrinterConfig;
 import com.openbravo.pos.spi.hardware.printer.FiscalPrinterDevice;
-import com.openbravo.pos.util.StringParser;
+import com.openbravo.util.StringParser;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Arrays;

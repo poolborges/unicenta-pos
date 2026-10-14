@@ -17,7 +17,7 @@
 package com.openbravo.pos.panels;
 
 import com.openbravo.data.loader.IKeyed;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 
 /**
  *

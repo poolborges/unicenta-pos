@@ -17,9 +17,9 @@
 package com.openbravo.pos.sales;
 
 import com.openbravo.data.gui.MessageInf;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.DataLogicSystem;
-import com.openbravo.pos.forms.ResourceService;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.pos.resources.ResourceService;
 import com.openbravo.pos.scripting.ScriptEngine;
 import com.openbravo.pos.scripting.ScriptException;
 import com.openbravo.pos.scripting.ScriptFactory;

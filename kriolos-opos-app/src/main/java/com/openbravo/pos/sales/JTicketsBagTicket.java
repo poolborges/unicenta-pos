@@ -28,15 +28,17 @@ import com.openbravo.data.gui.ListKeyed;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.cash.CashManagementService;
 import com.openbravo.pos.cash.CashManagementServiceImpl;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppProperties;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.DataLogicSystem;
-import com.openbravo.pos.forms.ResourceService;
+import com.openbravo.app.AppLocal;
+import com.openbravo.app.AppProperties;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.pos.resources.ResourceService;
 import com.openbravo.pos.hardware.PosHardwareManager;
-import com.openbravo.pos.printer.DeviceTicket;
-import com.openbravo.pos.printer.TicketParser;
-import com.openbravo.pos.printer.TicketPrinterException;
+import com.openbravo.pos.spi.hardware.printer.DevicePrinter;
+import com.openbravo.pos.spi.hardware.DeviceTicket;
+import com.openbravo.pos.ticket.TicketParser;
+import com.openbravo.pos.spi.hardware.printer.TicketPrinterException;
+import com.openbravo.pos.spi.hardware.printer.VirtualPrinter;
 import com.openbravo.pos.scripting.ScriptEngine;
 import com.openbravo.pos.scripting.ScriptException;
 import com.openbravo.pos.scripting.ScriptFactory;
@@ -112,7 +114,13 @@ public class JTicketsBagTicket extends JTicketsBag {
 
         m_jTicketEditor.addEditorKeys(m_jKeys);
 
-        m_jPanelTicket.add(previewDeviceTicket.getDevicePrinter("1").getPrinterComponent(), BorderLayout.CENTER);
+        DevicePrinter previewPrinter = previewDeviceTicket.getDevicePrinter("1");
+        if (previewPrinter instanceof VirtualPrinter virtualPrinter) {
+            JComponent comp = virtualPrinter.getComponent(JComponent.class);
+            if (comp != null) {
+                m_jPanelTicket.add(comp, BorderLayout.CENTER);
+            }
+        }
 
         salesService = new SalesServiceImpl(new TaxesLogic(taxService.getTaxListAll()));
         

@@ -17,7 +17,7 @@
 package com.openbravo.pos.sales;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.ticket.TicketLineInfo;
 import java.awt.Component;
 

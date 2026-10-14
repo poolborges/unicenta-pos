@@ -22,7 +22,7 @@ import com.openbravo.data.loader.SentenceExec;
 import com.openbravo.data.loader.SerializerWriteBasic;
 import com.openbravo.data.loader.Session;
 import com.openbravo.data.loader.StaticSentence;
-import com.openbravo.pos.forms.BeanFactoryDataSingle;
+import com.openbravo.pos.container.BeanFactoryDataSingle;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;

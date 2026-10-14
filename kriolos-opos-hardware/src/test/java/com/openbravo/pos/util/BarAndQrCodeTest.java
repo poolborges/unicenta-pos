@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Paulo Borges
+ * Copyright (C) 2026 Kriolos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
  */
 package com.openbravo.pos.util;
 
+import com.openbravo.pos.graphiccode.BarcodeImage;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
@@ -80,9 +81,9 @@ public class BarAndQrCodeTest {
         //default value
         String codeTypeInitial = codes[0];
         imgPanel.setImage((BufferedImage) BarcodeImage.getCode(enterText.getItemAt(0), codeTypeInitial));
-        imgPanel2.setImage(com.openbravo.pos.util.GraphicCode.getCode(enterText.getItemAt(0), codeTypeInitial));
+        imgPanel2.setImage(com.openbravo.pos.graphiccode.GraphicCode.getCode(enterText.getItemAt(0), codeTypeInitial));
         try {
-            imgPanel3.setImage(com.openbravo.pos.util.GraphicCode.generateQRCodeImage(enterText.getItemAt(0)));
+            imgPanel3.setImage(com.openbravo.pos.graphiccode.GraphicCode.generateQRCodeImage(enterText.getItemAt(0)));
         } catch (Exception ex) {
             System.getLogger(BarAndQrCodeTest.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
@@ -95,9 +96,9 @@ public class BarAndQrCodeTest {
             imgPanel2.setImage(null);
             imgPanel3.setImage(null);
             imgPanel.setImage((BufferedImage) BarcodeImage.getCode(enterText.getSelectedItem().toString(), codeType));
-            imgPanel2.setImage(com.openbravo.pos.util.GraphicCode.getCode(enterText.getSelectedItem().toString(), codeType));
+            imgPanel2.setImage(com.openbravo.pos.graphiccode.GraphicCode.getCode(enterText.getSelectedItem().toString(), codeType));
             try {
-                imgPanel3.setImage(com.openbravo.pos.util.GraphicCode.generateQRCodeImage(enterText.getSelectedItem().toString()));
+                imgPanel3.setImage(com.openbravo.pos.graphiccode.GraphicCode.generateQRCodeImage(enterText.getSelectedItem().toString()));
             } catch (Exception ex) {
                 System.getLogger(BarAndQrCodeTest.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }

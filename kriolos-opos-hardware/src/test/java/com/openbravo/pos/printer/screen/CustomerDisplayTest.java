@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.printer.screen;
 
-import com.openbravo.pos.util.ThumbNailBuilder;
+import com.openbravo.util.ThumbNailBuilder;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

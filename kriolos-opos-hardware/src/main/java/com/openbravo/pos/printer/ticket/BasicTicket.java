@@ -16,6 +16,8 @@
  */
 package com.openbravo.pos.printer.ticket;
 
+import com.openbravo.pos.spi.hardware.PosImage;
+import com.openbravo.pos.printer.SwingPosImage;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -64,11 +66,17 @@ public abstract class BasicTicket implements PrintItem {
     }
 
     // INTERFACE FOR PRINTER 2
-    public void printImage(BufferedImage image) {
+    public void printImage(PosImage image) {
+        BufferedImage bimg = SwingPosImage.toBufferedImage(image);
+        if (bimg != null) {
+            PrintItem pi = new PrintItemImage(bimg, getImageScale());
+            printItems.add(pi);
+            m_iBodyHeight += pi.getHeight();
+        }
+    }
 
-        PrintItem pi = new PrintItemImage(image, getImageScale());
-        printItems.add(pi);
-        m_iBodyHeight += pi.getHeight();
+    public void printImage(BufferedImage image) {
+        printImage(SwingPosImage.of(image));
     }
 
     public void printBarCode(String type, String position, String code) {

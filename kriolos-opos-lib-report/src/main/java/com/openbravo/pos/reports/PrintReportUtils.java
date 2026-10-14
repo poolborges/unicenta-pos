@@ -22,7 +22,7 @@ import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.BaseSentence;
-import com.openbravo.pos.util.ReportUtils;
+import com.openbravo.util.ReportUtils;
 import java.awt.Graphics2D;
 import java.io.FileOutputStream;
 import java.io.IOException;

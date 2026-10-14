@@ -16,8 +16,8 @@
  */
 package com.openbravo.pos.printer.escpos;
 
-import com.openbravo.pos.printer.DevicePrinter;
-import com.openbravo.pos.printer.PrinterTextUtils;
+import com.openbravo.pos.spi.hardware.printer.DevicePrinter;
+import com.openbravo.pos.spi.hardware.PrinterTextUtils;
 import java.awt.image.BufferedImage;
 
 /**

@@ -17,7 +17,7 @@
 package com.openbravo.pos.sales.modern.one;
 
 import com.openbravo.format.Formats;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import com.openbravo.pos.ticket.TicketLineInfo;
 import java.util.ArrayList;
 import java.util.List;

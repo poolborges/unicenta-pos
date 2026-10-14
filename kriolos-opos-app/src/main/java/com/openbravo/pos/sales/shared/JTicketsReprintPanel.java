@@ -18,14 +18,14 @@ package com.openbravo.pos.sales.shared;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.gui.modal.PosUIModal;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.DataLogicSystem;
-import com.openbravo.pos.forms.ResourceService;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.pos.resources.ResourceService;
 import com.openbravo.pos.sales.TicketLifecycleService;
 import com.openbravo.pos.hardware.PosHardwareManager;
-import com.openbravo.pos.printer.TicketParser;
-import com.openbravo.pos.printer.TicketPrinterException;
+import com.openbravo.pos.ticket.TicketParser;
+import com.openbravo.pos.spi.hardware.printer.TicketPrinterException;
 import com.openbravo.pos.sales.ReprintTicketInfo;
 import com.openbravo.pos.scripting.ScriptEngine;
 import com.openbravo.pos.scripting.ScriptException;
@@ -50,7 +50,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import org.openide.util.Exceptions;
 
 public class JTicketsReprintPanel extends JPanel {
 
@@ -106,7 +105,7 @@ public class JTicketsReprintPanel extends JPanel {
             repaint();
         }
         catch (BasicException ex) {
-            Exceptions.printStackTrace(ex);
+            LOGGER.log(Level.WARNING, "Exceptin load ticket", ex);
         }
     }
 

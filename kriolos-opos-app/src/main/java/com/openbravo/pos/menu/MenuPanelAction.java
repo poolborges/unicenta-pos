@@ -16,8 +16,8 @@
 
 package com.openbravo.pos.menu;
 
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppUserView;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.admin.AppUserView;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;

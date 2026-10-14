@@ -16,8 +16,8 @@
 package com.openbravo.pos.payment;
 
 import com.openbravo.pos.customers.CustomerInfoExt;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.panels.AppView;
 import java.awt.BorderLayout;
 import java.awt.Component;
 

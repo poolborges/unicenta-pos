@@ -25,8 +25,8 @@ import com.openbravo.data.loader.Session;
 import com.openbravo.data.loader.StaticSentence;
 import com.openbravo.data.loader.TableDefinition;
 import com.openbravo.format.Formats;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.BeanFactoryDataSingle;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.container.BeanFactoryDataSingle;
 import java.util.List;
 
 /**

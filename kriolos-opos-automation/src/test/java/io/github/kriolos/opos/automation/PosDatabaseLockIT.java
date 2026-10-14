@@ -1,12 +1,11 @@
 package io.github.kriolos.opos.automation;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.data.gui.JMessagePanel;
 import com.openbravo.data.gui.MessageInf;
-import com.openbravo.pos.forms.AppConfig;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppProperties;
-import com.openbravo.pos.forms.AppProperties.DatabaseConfig;
+import com.openbravo.pos.config.AppConfig;
+import com.openbravo.app.AppLocal;
+import com.openbravo.app.AppProperties;
+import com.openbravo.app.AppProperties.DatabaseConfig;
 import org.assertj.swing.core.BasicRobot;
 import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.core.Robot;
@@ -33,7 +32,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import org.openide.util.Exceptions;
 
 /**
  * Automated UI Robot Integration Test for verifying the isolated database connection test:
@@ -130,7 +128,7 @@ public class PosDatabaseLockIT {
         assertImageNotBlack(expandedCapture);
 
         // 5. Verify exception details text area contains connection failure information
-        JTextArea textArea = robot.finder().findByType(dialog.target(), JTextArea.class);
+        JTextArea textArea = robot.finder().findByName(dialog.target(), "kriolos:message:txt-exception", JTextArea.class);
         assertThat(textArea).isNotNull();
         assertThat(textArea.isShowing()).isTrue();
         assertThat(textArea.getText().length()).isGreaterThan(10);

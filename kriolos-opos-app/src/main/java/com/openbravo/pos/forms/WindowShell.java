@@ -15,12 +15,14 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.forms;
 
+import com.openbravo.app.AppProperties;
+import com.openbravo.app.AppLocal;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.JMessagePanel;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.config.JPanelConfiguration;
 import com.openbravo.pos.instance.AppMessage;
-import com.openbravo.pos.util.OSValidator;
+import com.openbravo.util.OSValidator;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;

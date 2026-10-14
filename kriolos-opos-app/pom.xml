@@ -94,6 +94,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <version>1.0.0-SNAPSHOT</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>kriolos-opos-scripting-bsvelocity</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
         <dependency> 
             <groupId>commons-codec</groupId>  
@@ -122,14 +127,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </dependency>    
         
         <!-- JDBC runtime DEPENDENCIES -->
-        <!-- 
-        <dependency> 
-            <groupId>com.mysql</groupId>  
-            <artifactId>mysql-connector-j</artifactId>  
-            <version>${mysql.version}</version> 
-            <scope>runtime</scope>
-        </dependency>  
-        -->
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
@@ -148,19 +145,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <version>2.5.250</version>
             <scope>runtime</scope>
         </dependency>
-        
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
             <version>10.17.1.0</version>
+            <scope>runtime</scope>
         </dependency>
-        
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.13</version>
+            <scope>runtime</scope>
         </dependency>
-        
         <!-- This not have JDBC4 setBlob YET 
         <dependency>
             <groupId>io.roastedroot</groupId>
@@ -169,11 +165,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <scope>runtime</scope>
         </dependency>
         -->
-        
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.53.4.0</version>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- rsyntaxtextarea -->

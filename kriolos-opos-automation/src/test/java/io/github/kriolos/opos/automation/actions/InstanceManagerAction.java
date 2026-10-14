@@ -1,8 +1,7 @@
 package io.github.kriolos.opos.automation.actions;
 
-import com.openbravo.pos.forms.AppConfig;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppProperties;
+import com.openbravo.app.AppLocal;
+import com.openbravo.app.AppProperties;
 import com.openbravo.pos.instance.AppMessage;
 import com.openbravo.pos.instance.InstanceManager;
 import io.github.kriolos.opos.automation.ScreenshotHelper;
