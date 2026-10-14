@@ -16,7 +16,7 @@
 
 package com.openbravo.data.loader;
 
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;

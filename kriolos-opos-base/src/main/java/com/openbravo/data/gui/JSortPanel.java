@@ -18,7 +18,7 @@ package com.openbravo.data.gui;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.modal.PosUIModal;
 import com.openbravo.data.loader.ComparatorCreator;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import java.awt.Component;
 import java.util.Comparator;
 import javax.swing.JButton;

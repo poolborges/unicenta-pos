@@ -11,6 +11,9 @@
     <artifactId>kriolos-opos-base</artifactId>
     <packaging>jar</packaging>
     <name>Kriolos.POS.Base</name>
+    <description>
+        POS Base Artifact
+    </description>
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
