@@ -140,6 +140,18 @@ public final class BsVelocityScriptEngineProvider implements ScriptEngineProvide
                 }
             }
             Object result = interpreter.eval(script);
+            if (bindings != null) {
+                try {
+                    for (String varName : interpreter.getNameSpace().getVariableNames()) {
+                        Object val = interpreter.get(varName);
+                        if (val != null) {
+                            bindings.put(varName, val);
+                        }
+                    }
+                } catch (UnsupportedOperationException ignored) {
+                    // bindings map was unmodifiable
+                }
+            }
             LOGGER.log(Level.FINE, "BeanShell script executed successfully.");
             return result;
         } catch (Exception ex) {
