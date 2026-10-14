@@ -1,0 +1,293 @@
+= Transaction Performance & High-Concurrency Architecture Strategy
+:toc: left
+:toc-title: Table of Contents
+:toclevels: 3
+:icons: font
+:source-highlighter: rouge
+:rouge-style: github
+:sectnums:
+:sectnumlevels: 2
+
+[.lead]
+Architectural blueprint for resolving connection pooling, read-write lock contention, and peripheral side-effect isolation while preserving **100% of KriolOS POS's ACID checkout transactional integrity**.
+
+'''
+
+== 1. Context & Architectural Mandate
+
+In the comparative transaction benchmark documented in **GitHub Issue #121**, KriolOS POS demonstrated industry-leading checkout throughput and latency:
+
+[cols="1,1,1,1,1", options="header"]
+|===
+| Benchmark Metric | KriolOS POS (Java) | React POS (Node) | Laravel POS (PHP) | JavaFX POS (Java)
+| **Mean Latency** | **90.2 ms** | 178.5 ms | 244.5 ms | 349.7 ms
+| **Throughput** | **2,218 tx/s** | 1,120 tx/s | 818 tx/s | 572 tx/s
+| **Atomicity** | **Full ACID (Single DB Tx)** | Partial (Per-request) | Full ACID | None (Sequential bare SQL)
+|===
+
+=== The Core Transactional Invariant
+
+[CAUTION]
+====
+**STRICT ARCHITECTURAL INVARIANT: ZERO COMPROMISE ON TRANSACTIONALITY**
+
+The #1 operational reason KriolOS outperforms other open-source POS engines without data corruption is its **strictly atomic `saveTicket()` multi-table transaction** in `com.openbravo.pos.sales.DataLogicSales`. 
+
+Any architectural modification (connection pooling, read-write query splitting, asynchronous domain eventing) **must preserve all-or-nothing atomicity** across financial receipts, ticket lines, payments, tax lines, stock ledger movements, local voucher redemption, and customer debt ledger entries. No partial commits, no phantom receipts, and no uncommitted inventory deductions are permissible.
+====
+
+'''
+
+== 2. Problem Statement: The 3 Critical Bottlenecks
+
+While KriolOS delivers exceptional single-station throughput, the benchmark analysis and codebase inspection identified three structural scaling ceilings:
+
+[cols="1,2,3", options="header"]
+|===
+| # | Bottleneck | Root Cause in Active Codebase
+
+| **B1**
+| **Single-Connection Bottleneck & Absence of Pooling**
+| `com.openbravo.data.loader.Session` holds a single physical `Connection mConnection`. Multi-threaded workers (background sync, RMI instances, barcode streams, future web/REST headless endpoints) collide on this single socket, triggering `"Transaction already started"` exceptions or serializing execution.
+
+| **B2**
+| **Read/Write Table Contention**
+| Reporting queries (ticket reprints, Z-reports, customer balances) run against the active transactional tables (`tickets`, `receipts`, `ticketlines`, `stockcurrent`), causing row/gap locks that stall the cashier's checkout lane.
+
+| **B3**
+| **In-Transaction Peripheral Overhead & Deadlock Risk**
+| Peripheral mutations (vouchers, customer debt, external fiscal signing, loyalty callbacks) execute inside the critical DB lock window. Network delays or secondary failures inflate lock times and risk deadlocks under multi-lane concurrency.
+|===
+
+'''
+
+== 3. Strategic Solution Blueprint
+
+The following diagram illustrates the target decoupled architecture:
+
+[source]
+----
+ +---------------------------------------------------------------------------------------+
+ |                                  KriolOS Application                                  |
+ |  (Swing AppShell / Headless REST Engine / Self-Checkout Kiosk / Mobile Taproom API)   |
+ +---------------------------------------------------------------------------------------+
+                                  |
+            +---------------------+---------------------+
+            |                                           |
+            v [WRITE PATH: saveTicket()]                v [READ PATH: Reprints, Reports, Search]
+ +-------------------------------------+     +-------------------------------------+
+ |       Transactional Sales Unit      |     |         Query & Report Engine       |
+ |  - High-Priority Connection Pool    |     |  - Read-Committed / Read Pool       |
+ |  - Strict ThreadLocal Connection    |     |  - Non-locking MVCC Snapshot Reads  |
+ |  - All 11 DB Mutations Atomic       |     |  - Zero locks on active checkout    |
+ +-------------------------------------+     +-------------------------------------+
+            |                                           |
+            | (On Commit Success)                       |
+            v                                           v
+ +-------------------------------------+     +-------------------------------------+
+ |    After-Commit Domain Publisher    |     |          MariaDB / MySQL DB         |
+ |  - Cash Drawer Kick                 |     |  - Primary Write Master             |
+ |  - Thermal ESC/POS Print Job        |     |  - Optional Read Replica            |
+ |  - Async Cloud Loyalty & Fiscal     |     +-------------------------------------+
+ +-------------------------------------+
+----
+
+'''
+
+== 4. Bottleneck 1: High-Performance Connection Pooling (HikariCP SPI)
+
+=== 4.1 Current Architecture Analysis
+
+In `com.openbravo.data.loader.Session`:
+[source,java]
+----
+public final class Session {
+    private Connection mConnection;        // Single shared connection!
+    private boolean isTransactionBegin;    // Flag prevents concurrency!
+    ...
+}
+----
+
+If thread A begins a sale transaction (`isTransactionBegin = true`), thread B attempting an audit query or second transaction fails instantly with `SQLException("Transaction already started")`.
+
+=== 4.2 Target Design: Thread-Scoped Unit of Work with HikariCP
+
+Instead of binding a physical connection to the long-lived `Session` instance, `Session` delegates connection acquisition to a managed `javax.sql.DataSource` backed by **HikariCP**:
+
+1. **Auto-commit operations**: Acquire connection from pool &rarr; execute statement &rarr; close (return to pool) via try-with-resources.
+2. **Transactional operations (`Transaction.execute()`)**:
+   * Acquire a dedicated connection from the pool.
+   * Bind connection to current thread (`ThreadLocal<ConnectionContext>`).
+   * Disable auto-commit: `connection.setAutoCommit(false)`.
+   * Execute all 11 operations of `saveTicket()` sequentially on that exact connection.
+   * Call `connection.commit()` and restore `connection.setAutoCommit(true)`.
+   * Release connection back to pool in a mandatory `finally` block.
+   * If any failure occurs, call `connection.rollback()` and rethrow `BasicException`.
+
+=== 4.3 Recommended Pool Configuration
+
+[source,properties]
+----
+# HikariCP Configuration for High-Concurrency POS
+kriolos.db.pool.minimum-idle=5
+kriolos.db.pool.maximum-pool-size=20
+kriolos.db.pool.idle-timeout=300000
+kriolos.db.pool.connection-timeout=5000
+kriolos.db.pool.max-lifetime=1800000
+kriolos.db.pool.leak-detection-threshold=15000
+----
+
+TIP: In embedded single-station desktop mode (Derby / HSQLDB), `maximum-pool-size=5` provides complete thread isolation between background scanners and the checkout UI while consuming minimal RAM.
+
+'''
+
+== 5. Bottleneck 2: Read vs. Write Contention & CQRS-Lite Separation
+
+=== 5.1 The Contention Problem
+
+During peak trading hours, running end-of-day reports (Z-reports, cash drawer audits, large ticket reprint searches) acquires shared locks or reads uncommitted blocks across `receipts`, `tickets`, and `ticketlines`. In standard MariaDB/InnoDB configurations, long-running SELECT queries can stall the checkout lane's INSERT operations.
+
+=== 5.2 Target Strategy: CQRS-Lite (Command-Query Responsibility Segregation)
+
+1. **Isolation Level Optimization**:
+   * Set read queries to use `TRANSACTION_READ_COMMITTED`.
+   * In MariaDB/MySQL InnoDB, non-locking consistent snapshot reads (MVCC) ensure read queries NEVER block checkout transactions:
+   [source,sql]
+   ----
+   SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+   ----
+
+2. **Dual-Pool DataSource Architecture**:
+   * **Write Pool (`ds-write`)**: Configured with small, ultra-fast connection limits (5–10 connections) dedicated exclusively to checkout commands (`DataLogicSales.saveTicket`, `StockService.recordStockMovement`).
+   * **Read Pool (`ds-read`)**: Sized for background searches, catalog navigation, and reporting without starving the checkout queue.
+   * Supports **Read Replicas** in multi-station cloud/server deployments transparently without code refactoring.
+
+3. **Reprint Query Pagination**:
+   * `getReprintTicketList()` currently fetches unbounded result sets.
+   * Refactor to indexed keyset pagination (`LIMIT 50`) to keep read query execution times under **5 ms**.
+
+'''
+
+== 6. Bottleneck 3: In-Transaction Side Effects & After-Commit Dispatch
+
+=== 6.1 Transactional Invariant Boundaries
+
+To eliminate lock contention and deadlocks without violating transactional integrity, we strictly categorize every operation in `saveTicket()`:
+
+[cols="2,1,3", options="header"]
+|===
+| Operation | Boundary | Rationale
+
+| **Receipt & Ticket Record**
+| **MUST BE IN-TX**
+| Core legal fiscal ledger.
+
+| **Ticket Lines & Taxes**
+| **MUST BE IN-TX**
+| Line-item audit and VAT ledger.
+
+| **Stock Movements & Inventory**
+| **MUST BE IN-TX**
+| Direct decrement of `stockcurrent` and `stockdiary` ensures stock can never be oversold or phantom-deducted.
+
+| **Local Voucher Invalidation**
+| **MUST BE IN-TX**
+| Prevents double-spending of the same voucher across concurrent checkout lanes.
+
+| **Customer Account Debt Update**
+| **MUST BE IN-TX**
+| Prevents customer credit limits from being breached by concurrent sales.
+
+| **Thermal ESC/POS Printing**
+| **POST-COMMIT ONLY**
+| Hardware I/O (jam, out of paper, slow serial baud rate) must NEVER hold open a database transaction lock.
+
+| **Cash Drawer Kick Signal**
+| **POST-COMMIT ONLY**
+| Drawer must only open if payment record was successfully persisted to the database.
+
+| **External Cloud Loyalty / Sync**
+| **POST-COMMIT ONLY**
+| Network roundtrips (HTTP APIs, webhooks) must NEVER run inside the DB lock window.
+|===
+
+=== 6.2 After-Commit Event Coordinator Pattern
+
+[source,java]
+----
+public final class TransactionCoordinator {
+
+    private final Session session;
+    private final List<Runnable> afterCommitHooks = new ArrayList<>();
+
+    public void registerAfterCommit(Runnable hook) {
+        afterCommitHooks.add(hook);
+    }
+
+    public <T> T execute(TransactionalAction<T> action) throws BasicException {
+        T result;
+        try {
+            session.begin();
+            result = action.run();
+            session.commit();
+        } catch (Exception ex) {
+            session.rollback();
+            afterCommitHooks.clear(); // Drop all peripheral actions on rollback!
+            throw ex;
+        }
+
+        // Fired ONLY when database commit has permanently succeeded:
+        for (Runnable hook : afterCommitHooks) {
+            try {
+                hook.run();
+            } catch (Throwable t) {
+                LOGGER.log(Level.WARNING, "Peripheral after-commit hook failure", t);
+            }
+        }
+        return result;
+    }
+}
+----
+
+==== Guarantees of this Pattern:
+1. **Zero Phantom Hardware Actions**: If the database rollback triggers (e.g. unique constraint violation, disk full), the drawer will NOT kick, the thermal receipt will NOT print, and external webhooks will NOT fire.
+2. **Minimal DB Lock Duration**: Lock duration is reduced from hundreds of milliseconds to under **15 ms**, maximizing throughput for multi-station retail deployments.
+
+'''
+
+== 7. Incremental Implementation Roadmap
+
+Following the project's **Agile Trunk-Based Integration Protocol**, this strategy will be executed in 3 isolated, zero-breaking-change PR phases:
+
+[cols="1,2,3", options="header"]
+|===
+| Phase | Branch | Scope & Deliverables
+
+| **Phase 1**
+| `feature/hikari-connection-pool`
+| 1. Add `com.zaxxer:HikariCP` to `kriolos-opos-base`. +
+  2. Implement `ConnectionPoolProvider` SPI. +
+  3. Refactor `Session.java` to support thread-scoped pooling while maintaining backward compatibility with `FakeDataSource`. +
+  4. Verify automation tests and concurrency test suite (`PosDatabaseLockIT`, `PosInstanceManagerIT`).
+
+| **Phase 2**
+| `feature/transaction-after-commit-hooks`
+| 1. Introduce `AfterCommitHook` in `Transaction.java`. +
+  2. Decouple ESC/POS printing and drawer kick in `JPanelTicket` from inside the save block to post-commit listener. +
+  3. Ensure transactional rollback cleans up all hooks.
+
+| **Phase 3**
+| `feature/cqrs-read-write-split`
+| 1. Configure `TRANSACTION_READ_COMMITTED` for reporting sessions. +
+  2. Paginate `getReprintTicketList()`. +
+  3. Implement dual-datasource abstraction in `BeanContainer`.
+|===
+
+'''
+
+== 8. Verification & QA Protocol
+
+To guarantee that no transactional regression occurs:
+1. **ACID Failure Injection Test**: Simulate database network kill during item 5 of `saveTicket()` &rarr; verify that no partial records exist in `receipts`, `tickets`, `ticketlines`, or `stockdiary`.
+2. **Multi-Lane Concurrency Benchmark**: Run 50 concurrent virtual cashiers executing `saveTicket()` against MariaDB &rarr; verify 0 deadlocks and 0 `"Transaction already started"` exceptions.
+3. **AssertJ-Swing Automation Suite**: Execute `mvn test -f kriolos-opos-automation/pom.xml` &rarr; verify all robot IT tests remain 100% green.

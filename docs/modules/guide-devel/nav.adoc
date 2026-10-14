@@ -18,6 +18,7 @@
 ** Database & Persistence
 *** xref:data-schema-overview.adoc[Database Schema Overview]
 *** xref:data-access-layer.adoc[Database Access Layer]
+*** xref:transaction-performance-strategy.adoc[Transaction Performance & Pooling Strategy]
 ** Peripherals & Hardware
 *** xref:hardware-peripherals.adoc[Peripheral & Scales Overview]
 *** xref:hardware-printers.adoc[Printers & ESC/POS]

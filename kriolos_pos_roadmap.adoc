@@ -465,11 +465,31 @@ record JournalEntry(
 
 '''
 
+== TASK 7 — Transaction Performance & High-Concurrency Architecture (Issue #121) ⭐
+
+[quote]
+____
+_"Address the 3 scaling ceilings identified in Issue #121 (Connection Pooling, Read-Write Contention, and Side-Effect Isolation) while maintaining 100% ACID checkout transactional integrity"_
+____
+
+**Why starred**: Solves multi-lane scalability and headless high-throughput barriers. Directly references `docs/modules/guide-devel/pages/transaction-performance-strategy.adoc`.
+
+=== Key Deliverables
+* **HikariCP Connection Pool**: Replace single shared connection in `Session` with pooled `ThreadLocal` connection acquisition.
+* **CQRS-Lite Read-Write Split**: `TRANSACTION_READ_COMMITTED` for reporting and reprints, preventing table lock contention on `saveTicket()`.
+* **After-Commit Hook Coordinator**: Decouple ESC/POS printing, cash drawer kick, and external loyalty APIs to post-commit phase, eliminating deadlock risks and long lock durations.
+
+=== Branch: `feature/transaction-performance-strategy`
+
+'''
+
 == Recommended Execution Order
 
 ----
-feature/spi-ui-agnostic            ← ⭐ unblocks all non-desktop runtimes (can run in parallel with Task 4)
-feature/scripting-spi              ← ⭐ unblocks engine swap + Quarkus deployment (can run in parallel)
+feature/spi-ui-agnostic            ← ⭐ (COMPLETED: PR #133)
+feature/scripting-spi              ← ⭐ (COMPLETED: PR #133)
+         ↓
+feature/transaction-performance    ← ⭐ unblocks multi-station scalability & connection pooling (Issue #121)
          ↓
 feature/bootstrap-vs-app-config    ← foundation for config-dependent tasks
          ↓
