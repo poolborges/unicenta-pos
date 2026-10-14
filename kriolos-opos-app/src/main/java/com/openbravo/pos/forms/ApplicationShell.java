@@ -81,7 +81,7 @@ public class ApplicationShell extends JPanel implements AppView {
     private static final String HOST_PROP_KEY_LOCATION = "location";
 
     private String getLineTimer() {
-        return Formats.HOURMIN.formatValue(new Date());
+        return Formats.TIME.formatValue(new Date());
     }
 
     private String getLineDate() {

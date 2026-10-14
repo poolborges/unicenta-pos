@@ -1,7 +1,6 @@
 package io.github.kriolos.opos.automation;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.data.gui.JMessagePanel;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.forms.AppConfig;
 import com.openbravo.pos.forms.AppLocal;
@@ -33,7 +32,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import org.openide.util.Exceptions;
 
 /**
  * Automated UI Robot Integration Test for verifying the isolated database connection test:

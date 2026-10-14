@@ -17,7 +17,7 @@
 package com.openbravo.pos.printer.screen;
 
 import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.printer.DevicePrinter;
+import com.openbravo.pos.printer.VirtualPrinter;
 import com.openbravo.pos.printer.ticket.BasicTicket;
 import com.openbravo.pos.printer.ticket.BasicTicketForScreen;
 import java.awt.Toolkit;
@@ -32,7 +32,7 @@ import javax.swing.SwingUtilities;
  * @author JG uniCenta
  * @author KriolOS
  */
-public class DevicePrinterPanel extends javax.swing.JPanel implements DevicePrinter {
+public class DevicePrinterPanel extends javax.swing.JPanel implements VirtualPrinter {
     
     private static final long serialVersionUID = 1L;
 
@@ -112,9 +112,16 @@ public class DevicePrinterPanel extends javax.swing.JPanel implements DevicePrin
         return null;
     }       
 
-    @Override
     public JComponent getPrinterComponent() {
         return this;
+    }
+    
+    @Override
+    public <T> T getComponent(Class<T> targetType) {
+        if (targetType.isInstance(this)) {
+            return targetType.cast(this);
+        }
+        return null;
     }
 
     @Override

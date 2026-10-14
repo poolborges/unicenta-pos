@@ -17,7 +17,6 @@
 package com.openbravo.pos.printer;
 
 import java.awt.image.BufferedImage;
-import javax.swing.JComponent;
 import com.openbravo.pos.spi.hardware.printer.PrinterDevice;
 import com.openbravo.pos.spi.hardware.printer.PrinterProtocol;
 import com.openbravo.pos.spi.hardware.printer.PrinterException;
@@ -81,7 +80,6 @@ public interface DevicePrinter extends PrinterDevice {
     @Override
     String getPrinterDescription();
 
-    JComponent getPrinterComponent();
 
     // Initialise
     void reset();

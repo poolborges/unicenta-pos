@@ -16,8 +16,6 @@
  */
 package com.openbravo.pos.printer;
 
-import com.openbravo.pos.printer.DevicePrinter;
-
 /**
  * Utility class for text and barcode formatting and alignment for printer
  * output. Fully optimized for Java 11+.

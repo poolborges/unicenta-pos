@@ -78,7 +78,7 @@ public class SalesAction {
     private JButton findProductButton(Container container) {
         if (container == null) return null;
         for (Component c : container.getComponents()) {
-            if (c instanceof com.openbravo.pos.catalog.ProductCardV1 pc && pc.isShowing()) {
+            if (c instanceof com.openbravo.pos.catalog.ProductCardV2 pc && pc.isShowing()) {
                 return pc;
             }
             if (c instanceof Container child) {

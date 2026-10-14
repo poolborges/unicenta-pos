@@ -59,15 +59,6 @@ public class DevicePrinterNull implements DevicePrinter {
 
     /**
      *
-     * @return
-     */
-    @Override
-    public javax.swing.JComponent getPrinterComponent() {
-        return null;
-    }
-
-    /**
-     *
      */
     @Override
     public void reset() {

@@ -66,15 +66,6 @@ public class DevicePrinterPlain implements DevicePrinter  {
 
     /**
      *
-     * @return
-     */
-    @Override
-    public JComponent getPrinterComponent() {
-        return null;
-    }
-
-    /**
-     *
      */
     @Override
     public void reset() {

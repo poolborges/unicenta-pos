@@ -23,6 +23,7 @@ import com.openbravo.pos.forms.JPanelView;
 import com.openbravo.pos.hardware.PosHardwareManager;
 import com.openbravo.pos.printer.DeviceFiscalPrinter;
 import com.openbravo.pos.printer.DevicePrinter;
+import com.openbravo.pos.printer.VirtualPrinter;
 import com.openbravo.pos.printer.screen.DevicePrinterPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -35,9 +36,9 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 /**
- * Panel to manage and preview printer tickets on screen.
- * Provides controls for zooming, printing, and resetting previews.
- * 
+ * Panel to manage and preview printer tickets on screen. Provides controls for
+ * zooming, printing, and resetting previews.
+ *
  * @author adrianromero
  * @author poolborges
  * @author KriolOS
@@ -66,10 +67,13 @@ public class JPanelPrinter extends JPanel implements JPanelView {
         }
 
         List<DevicePrinter> printers = appView.getDeviceTicket().getDevicePrinterAll();
-        for (int i = 0; i < printers.size(); i++) {
-            DevicePrinter printer = printers.get(i);
-            if (printer.getPrinterComponent() != null) {
-                printersJTabbedPane.add(printer.getPrinterName(), printer.getPrinterComponent());
+        for (DevicePrinter printer : printers) {
+            // Physical thermal printers (Epson, Star, Bixolon) are ignored here
+            if (printer instanceof VirtualPrinter virtualPrinter) {
+                JComponent comp = virtualPrinter.getComponent(JComponent.class);
+                if (comp != null) {
+                    printersJTabbedPane.add(printer.getPrinterName(), comp);
+                }
             }
         }
 
@@ -141,8 +145,9 @@ public class JPanelPrinter extends JPanel implements JPanelView {
 
     /**
      * Resolves the DevicePrinterPanel inside the currently active tab.
-     * 
-     * @return the active DevicePrinterPanel or null if not selected or applicable
+     *
+     * @return the active DevicePrinterPanel or null if not selected or
+     * applicable
      */
     private DevicePrinterPanel getSelectedPrinterPanel() {
         Component selected = printersJTabbedPane.getSelectedComponent();

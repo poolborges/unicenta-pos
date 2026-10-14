@@ -127,16 +127,6 @@ public class DevicePrinterPrinter implements DevicePrinter {
     }
 
     /**
-     * Getter that returns the printer's component
-     *
-     * @return printer's component
-     */
-    @Override
-    public JComponent getPrinterComponent() {
-        return null;
-    }
-
-    /**
      * Method that sets the current ticket as a null
      */
     @Override
