@@ -83,7 +83,8 @@ public final class BeanContainer {
             Map.entry("com.openbravo.pos.voucher.VoucherService", "com.openbravo.pos.voucher.DataLogicVouchers"),
             Map.entry("com.openbravo.pos.epm.ShiftService", "com.openbravo.pos.epm.DataLogicPresenceManagement"),
             Map.entry("com.openbravo.pos.imports.ImportService", "com.openbravo.pos.imports.DataLogicImport"),
-            Map.entry("com.openbravo.pos.sales.restaurant.RestaurantService", "com.openbravo.pos.sales.restaurant.DataLogicRestaurant")
+            Map.entry("com.openbravo.pos.sales.restaurant.RestaurantService", "com.openbravo.pos.sales.restaurant.DataLogicRestaurant"),
+            Map.entry("com.openbravo.pos.config.ApplicationConfigurationService", "com.openbravo.pos.config.ApplicationConfigurationServiceImpl")
     );
 
     /**
