@@ -17,6 +17,7 @@
 package com.openbravo.pos.printer;
 
 import com.openbravo.basic.BasicException;
+import com.openbravo.data.loader.ImageUtils;
 import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.forms.SystemService;
 import com.openbravo.pos.ticket.TicketInfo;
@@ -295,7 +296,7 @@ public class TicketParser extends DefaultHandler {
                 try {
                     BufferedImage image = (systemService != null) ? systemService.getResourceAsImage(currentText.toString()) : null;
                     if (image != null) {
-                        outputPrinter.printImage(image);
+                        outputPrinter.printImage(PosImage.of(ImageUtils.writeImage(image), image.getWidth(), image.getHeight(), image));
                     }
                 } catch (Exception ex) {
                     LOGGER.log(Level.SEVERE, "Failed to load image resource.", ex);

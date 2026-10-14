@@ -20,6 +20,8 @@ import com.openbravo.data.gui.JMessagePanel;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.forms.AppLocal;
 import com.openbravo.pos.printer.DevicePrinter;
+import com.openbravo.pos.printer.PosImage;
+import com.openbravo.pos.printer.SwingPosImage;
 import com.openbravo.pos.printer.ticket.BasicTicket;
 import com.openbravo.pos.printer.ticket.BasicTicketForPrinter;
 import com.openbravo.pos.util.ReportUtils;
@@ -148,6 +150,10 @@ public class DevicePrinterPrinter implements DevicePrinter {
      * @param image a buffered image object
      */
     @Override
+    public void printImage(PosImage image) {
+        m_ticketcurrent.printImage(image);
+    }
+
     public void printImage(BufferedImage image) {
         m_ticketcurrent.printImage(image);
     }

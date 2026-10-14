@@ -16,7 +16,6 @@
  */
 package com.openbravo.pos.printer;
 
-import java.awt.image.BufferedImage;
 import com.openbravo.pos.spi.hardware.printer.PrinterDevice;
 import com.openbravo.pos.spi.hardware.printer.PrinterProtocol;
 import com.openbravo.pos.spi.hardware.printer.PrinterException;
@@ -24,7 +23,7 @@ import com.openbravo.pos.spi.hardware.printer.PrinterException;
 /**
  * High-level contract for receipt and ticket printer operations.
  *
- * @author JG uniCenta / KriolOS Team
+ * @author JG uniCenta / KriolOS
  */
 public interface DevicePrinter extends PrinterDevice {
 
@@ -87,7 +86,7 @@ public interface DevicePrinter extends PrinterDevice {
     void beginReceipt();
 
     // Graphic renders
-    void printImage(BufferedImage image);
+    void printImage(PosImage image);
 
     void printLogo();
 

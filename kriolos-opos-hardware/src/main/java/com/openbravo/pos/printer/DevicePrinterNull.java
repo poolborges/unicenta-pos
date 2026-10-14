@@ -90,7 +90,7 @@ public class DevicePrinterNull implements DevicePrinter {
      * @param image
      */
     @Override
-    public void printImage(java.awt.image.BufferedImage image) {
+    public void printImage(PosImage image) {
     }
 
     /**

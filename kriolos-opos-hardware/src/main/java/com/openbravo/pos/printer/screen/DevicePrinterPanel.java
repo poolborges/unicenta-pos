@@ -17,6 +17,8 @@
 package com.openbravo.pos.printer.screen;
 
 import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.printer.PosImage;
+import com.openbravo.pos.printer.SwingPosImage;
 import com.openbravo.pos.printer.VirtualPrinter;
 import com.openbravo.pos.printer.ticket.BasicTicket;
 import com.openbravo.pos.printer.ticket.BasicTicketForScreen;
@@ -136,6 +138,12 @@ public class DevicePrinterPanel extends javax.swing.JPanel implements VirtualPri
     }
 
     @Override
+    public void printImage(PosImage image) {
+        if (currentTicket != null) {
+            currentTicket.printImage(image);
+        }
+    }
+
     public void printImage(BufferedImage image) {
         if (currentTicket != null) {
             currentTicket.printImage(image);

@@ -17,6 +17,7 @@
 package com.openbravo.pos.printer.escpos;
 
 import com.openbravo.pos.printer.DevicePrinter;
+import com.openbravo.pos.printer.PosImage;
 import com.openbravo.pos.printer.TicketPrinterException;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
@@ -83,7 +84,7 @@ public class DevicePrinterPlain implements DevicePrinter  {
      * @param image
      */
     @Override
-    public void printImage(BufferedImage image) {
+    public void printImage(PosImage image) {
     }
     
     /**
