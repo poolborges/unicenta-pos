@@ -16,8 +16,8 @@
  */
 package com.openbravo.pos.printer.escpos;
 
-import com.openbravo.pos.printer.DeviceTicket;
-import com.openbravo.pos.printer.PrinterTextUtils;
+import com.openbravo.pos.spi.hardware.DeviceTicket;
+import com.openbravo.pos.spi.hardware.PrinterTextUtils;
 
 /**
  *

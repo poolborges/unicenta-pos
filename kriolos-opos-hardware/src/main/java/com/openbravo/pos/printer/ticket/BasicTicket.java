@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.printer.ticket;
 
-import com.openbravo.pos.printer.PosImage;
+import com.openbravo.pos.spi.hardware.PosImage;
 import com.openbravo.pos.printer.SwingPosImage;
 import java.awt.Font;
 import java.awt.Graphics2D;

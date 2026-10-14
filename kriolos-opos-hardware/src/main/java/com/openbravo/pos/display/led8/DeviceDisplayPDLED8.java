@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.display.led8;
 
-import com.openbravo.pos.printer.PrinterTextUtils;
+import com.openbravo.pos.spi.hardware.PrinterTextUtils;
 import com.openbravo.pos.printer.escpos.DeviceDisplaySerial;
 import com.openbravo.pos.printer.escpos.PrinterWritter;
 import com.openbravo.pos.spi.hardware.display.DisplayProtocol;

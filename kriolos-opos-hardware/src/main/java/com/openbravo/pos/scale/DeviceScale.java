@@ -16,8 +16,8 @@
  */
 package com.openbravo.pos.scale;
 
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppProperties;
+import com.openbravo.app.AppLocal;
+import com.openbravo.app.AppProperties;
 import com.openbravo.pos.spi.hardware.PeripheralManager;
 import com.openbravo.pos.spi.hardware.scale.ScaleConfig;
 import com.openbravo.pos.spi.hardware.scale.ScaleDevice;

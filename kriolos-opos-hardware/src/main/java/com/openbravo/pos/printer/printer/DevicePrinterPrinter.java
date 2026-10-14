@@ -18,13 +18,13 @@ package com.openbravo.pos.printer.printer;
 
 import com.openbravo.data.gui.JMessagePanel;
 import com.openbravo.data.gui.MessageInf;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.printer.DevicePrinter;
-import com.openbravo.pos.printer.PosImage;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.spi.hardware.printer.DevicePrinter;
+import com.openbravo.pos.spi.hardware.PosImage;
 import com.openbravo.pos.printer.SwingPosImage;
 import com.openbravo.pos.printer.ticket.BasicTicket;
 import com.openbravo.pos.printer.ticket.BasicTicketForPrinter;
-import com.openbravo.pos.util.ReportUtils;
+import com.openbravo.util.ReportUtils;
 import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;

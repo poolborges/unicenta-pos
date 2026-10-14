@@ -16,7 +16,9 @@
  */
 package com.openbravo.pos.printer;
 
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.spi.hardware.printer.DevicePrinter;
+import com.openbravo.pos.spi.hardware.PosImage;
+import com.openbravo.app.AppLocal;
 
 /**
  *

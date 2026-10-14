@@ -16,10 +16,10 @@
  */
 package com.openbravo.pos.printer.screen;
 
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.printer.PosImage;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.spi.hardware.PosImage;
 import com.openbravo.pos.printer.SwingPosImage;
-import com.openbravo.pos.printer.VirtualPrinter;
+import com.openbravo.pos.spi.hardware.printer.VirtualPrinter;
 import com.openbravo.pos.printer.ticket.BasicTicket;
 import com.openbravo.pos.printer.ticket.BasicTicketForScreen;
 import java.awt.Toolkit;

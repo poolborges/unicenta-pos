@@ -17,7 +17,7 @@
 package com.openbravo.pos.scale;
 
 import com.openbravo.beans.JDoublePanel;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import java.awt.Component;
 import javax.swing.ImageIcon;
 

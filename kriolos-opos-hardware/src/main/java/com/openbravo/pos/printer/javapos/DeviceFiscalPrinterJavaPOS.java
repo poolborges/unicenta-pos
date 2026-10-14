@@ -16,10 +16,10 @@
  */
 package com.openbravo.pos.printer.javapos;
 
-import com.openbravo.pos.printer.DeviceFiscalPrinter;
-import com.openbravo.pos.printer.VirtualFiscalPrinter;
-import com.openbravo.pos.printer.TicketPrinterException;
-import com.openbravo.pos.util.RoundUtils;
+import com.openbravo.pos.spi.hardware.printer.DeviceFiscalPrinter;
+import com.openbravo.pos.spi.hardware.printer.VirtualFiscalPrinter;
+import com.openbravo.pos.spi.hardware.printer.TicketPrinterException;
+import com.openbravo.util.RoundUtils;
 import javax.swing.JComponent;
 import jpos.FiscalPrinter;
 import jpos.JposException;
@@ -37,7 +37,7 @@ public class DeviceFiscalPrinterJavaPOS extends javax.swing.JPanel implements Vi
     
     /** Creates new form DeviceFiscalPrinterJavaPOSPanel
      * @param sDeviceFiscalPrinterName
-     * @throws com.openbravo.pos.printer.TicketPrinterException */
+     * @throws com.openbravo.pos.spi.hardware.printer.TicketPrinterException */
     public DeviceFiscalPrinterJavaPOS(String sDeviceFiscalPrinterName) throws TicketPrinterException {
         m_sName = sDeviceFiscalPrinterName;
         

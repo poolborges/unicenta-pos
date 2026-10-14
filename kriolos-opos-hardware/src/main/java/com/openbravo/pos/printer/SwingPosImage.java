@@ -16,6 +16,7 @@
  */
 package com.openbravo.pos.printer;
 
+import com.openbravo.pos.spi.hardware.PosImage;
 import com.openbravo.data.loader.ImageUtils;
 import java.awt.image.BufferedImage;
 

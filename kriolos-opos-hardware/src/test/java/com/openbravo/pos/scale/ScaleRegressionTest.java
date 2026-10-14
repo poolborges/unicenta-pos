@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.scale;
 
-import com.openbravo.pos.forms.AppProperties;
+import com.openbravo.app.AppProperties;
 import gnu.io.SerialPortEvent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

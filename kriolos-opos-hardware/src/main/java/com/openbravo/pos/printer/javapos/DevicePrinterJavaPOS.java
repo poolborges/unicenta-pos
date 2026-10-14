@@ -17,10 +17,10 @@
 package com.openbravo.pos.printer.javapos;
 
 import com.openbravo.data.loader.ImageUtils;
-import com.openbravo.pos.printer.DevicePrinter;
-import com.openbravo.pos.printer.PosImage;
+import com.openbravo.pos.spi.hardware.printer.DevicePrinter;
+import com.openbravo.pos.spi.hardware.PosImage;
 import com.openbravo.pos.printer.SwingPosImage;
-import com.openbravo.pos.printer.TicketPrinterException;
+import com.openbravo.pos.spi.hardware.printer.TicketPrinterException;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,7 +61,7 @@ public class DevicePrinterJavaPOS  implements DevicePrinter {
     /** Creates a new instance of DevicePrinterJavaPOS
      * @param sDevicePrinterName
      * @param sDeviceDrawerName
-     * @throws com.openbravo.pos.printer.TicketPrinterException */
+     * @throws com.openbravo.pos.spi.hardware.printer.TicketPrinterException */
     public DevicePrinterJavaPOS(String sDevicePrinterName, String sDeviceDrawerName) throws TicketPrinterException {
         
         m_sName = sDevicePrinterName;

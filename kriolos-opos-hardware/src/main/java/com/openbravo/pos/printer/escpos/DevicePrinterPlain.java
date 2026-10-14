@@ -16,9 +16,9 @@
  */
 package com.openbravo.pos.printer.escpos;
 
-import com.openbravo.pos.printer.DevicePrinter;
-import com.openbravo.pos.printer.PosImage;
-import com.openbravo.pos.printer.TicketPrinterException;
+import com.openbravo.pos.spi.hardware.printer.DevicePrinter;
+import com.openbravo.pos.spi.hardware.PosImage;
+import com.openbravo.pos.spi.hardware.printer.TicketPrinterException;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;

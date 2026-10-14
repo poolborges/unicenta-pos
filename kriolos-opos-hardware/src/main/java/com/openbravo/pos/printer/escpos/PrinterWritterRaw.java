@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.printer.escpos;
 
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;

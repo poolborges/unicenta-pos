@@ -16,9 +16,9 @@
  */
 package com.openbravo.pos.printer.javapos;
 
-import com.openbravo.pos.printer.DeviceDisplay;
+import com.openbravo.pos.spi.hardware.display.DeviceDisplay;
 import com.openbravo.pos.printer.DeviceDisplayEngine;
-import com.openbravo.pos.printer.TicketPrinterException;
+import com.openbravo.pos.spi.hardware.printer.TicketPrinterException;
 import jpos.JposException;
 import jpos.LineDisplay;
 import jpos.LineDisplayConst;
@@ -36,7 +36,7 @@ public class DeviceDisplayJavaPOS implements DeviceDisplay {
     
     /** Creates a new instance of DeviceDisplayJavaPOS
      * @param sDeviceName
-     * @throws com.openbravo.pos.printer.TicketPrinterException */
+     * @throws com.openbravo.pos.spi.hardware.printer.TicketPrinterException */
     public DeviceDisplayJavaPOS(String sDeviceName) throws TicketPrinterException {
         m_sName = sDeviceName;
         

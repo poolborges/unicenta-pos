@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.openbravo.pos.util;
+package com.openbravo.pos.graphiccode;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;

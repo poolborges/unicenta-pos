@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.printer.escpos;
 
-import com.openbravo.pos.printer.TicketPrinterException;
+import com.openbravo.pos.spi.hardware.printer.TicketPrinterException;
 import gnu.io.*;
 import java.io.IOException;
 import java.io.OutputStream;

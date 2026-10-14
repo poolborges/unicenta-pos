@@ -1,8 +1,8 @@
 package com.openbravo.pos.printer.screen;
 
 import com.openbravo.format.Formats;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.util.ThumbNailBuilder;
+import com.openbravo.app.AppLocal;
+import com.openbravo.util.ThumbNailBuilder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;

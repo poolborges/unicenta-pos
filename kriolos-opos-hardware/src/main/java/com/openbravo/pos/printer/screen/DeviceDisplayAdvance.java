@@ -1,6 +1,6 @@
 package com.openbravo.pos.printer.screen;
 
-import com.openbravo.pos.printer.DeviceDisplay;
+import com.openbravo.pos.spi.hardware.display.DeviceDisplay;
 
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
