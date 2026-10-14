@@ -1,0 +1,237 @@
+= Specification: Robust Multi-Business, Multi-Region Document Number Series Architecture
+:toc: left
+:toc-title: Table of Contents
+:toclevels: 3
+:icons: font
+:source-highlighter: rouge
+:rouge-style: github
+:sectnums:
+:sectnumlevels: 2
+
+[.lead]
+Comprehensive, internationally compliant architectural specification for **Document Number Series** in KriolOS POS, engineered to support diverse commercial document types, multi-branch hierarchies, and stringent fiscal regulations across global jurisdictions (Resolves https://github.com/kriolos-obiz/kriolos-pos/issues/87[GitHub Issue #87]).
+
+'''
+
+== 1. Strategic Goals & Universal Scope
+
+Document numbering is not merely an internal counter; in commercial and fiscal software, it is the **legal backbone of transaction validity, taxation auditability, and fraud prevention**. 
+
+To serve small businesses, multi-store retail, and cross-border deployments, the KriolOS Document Series engine must satisfy three core pillars:
+
+1. **Multi-Business Document Flexibility**: Support all operational documents beyond sales tickets (invoices, credit notes, stock transfers, delivery notes, vouchers, purchase orders).
+2. **Multi-Region & Fiscal Compliance**: Comply out-of-the-box with jurisdictional rules (e.g., Portugal/Cape Verde SAF-T, Brazil NFC-e, France NF525, Spain TicketBAI/Veri*factu, UK HMRC VAT, and Angola AGT).
+3. **Multi-Tier Scoping & Fault Tolerance**: Allow series to be scoped at Company, Branch, or POS Terminal levels, with deterministic offline sequence leasing to eliminate duplicate numbers during network partitions.
+
+'''
+
+== 2. Document Domain Taxonomy
+
+[cols="1,2,2,3", options="header"]
+|===
+| Category | Document Type (`doc_type`) | Common Acronym | Typical Business Usage
+
+.4+| **Sales & Billing**
+| `sale.invoice` | `FT` (Fatura) | Formal commercial invoice with customer tax details.
+| `sale.simplified` | `FS` (Fatura Simplificada) | Over-the-counter retail receipt/invoice.
+| `sale.credit_note` | `NC` (Nota de Crédito) | Legal refund, return, or invoice correction.
+| `sale.debit_note` | `ND` (Nota de Débito) | Customer surcharge or price adjustment.
+
+.3+| **Order & Operations**
+| `sale.proforma` | `FP` (Pró-forma) | Non-fiscal price quote / commercial proposal.
+| `sale.pickup` | `TK` (Token / Senha) | Kitchen, counter, or bar pickup queue token.
+| `sale.table_order` | `PED` (Pedido) | Restaurant table service order sheet.
+
+.4+| **Inventory & Logistics**
+| `inventory.goods_receipt` | `GR` / `E` (Entrada) | Goods intake from supplier against purchase order.
+| `inventory.goods_issue` | `GI` / `S` (Saída) | Internal consumption, spoilage, or shrinkage write-off.
+| `inventory.transfer` | `GT` (Guia Transporte) | Inter-branch transport guide / waybill (fiscalized).
+| `inventory.count` | `INV` (Inventário) | Physical stock take / reconciliation adjustment.
+
+.2+| **Treasury & Finance**
+| `treasury.receipt` | `RC` (Recibo Caixa) | Cash/card debt settlement or payment receipt.
+| `treasury.voucher` | `VCH` (Vale / Voucher) | Gift voucher issuance or store credit note.
+|===
+
+'''
+
+== 3. Multi-Region & Fiscal Compliance Matrix
+
+Different jurisdictions impose strict syntactic, semantic, and sequence constraints on commercial series:
+
+[cols="1,2,3,2", options="header"]
+|===
+| Jurisdiction | Standard / Authority | Regulatory Rules | Compliant Series Example
+
+| **Portugal & Cape Verde**
+| **SAF-T (PT / CV)** + Portaria 363/2010
+| Gapless monotonic sequence. Series must be pre-communicated/certified. RSA cryptographic hash chaining of previous document hash + current record.
+| `FT SERIE2026/000001` +
+`FS A/1042` +
+`NC 2026/000015`
+
+| **Brazil**
+| **SEFAZ NFC-e / NF-e** (Model 65/55)
+| Strict 3-digit `Série` (1–999) + 9-digit `Número` (1–999.999.999). 44-digit numeric access key (`Chave de Acesso`) computed with state code, date, and check digit.
+| `Série 001 - N° 000000125`
+
+| **France**
+| **NF525 / Loi Anti-Fraude** + Factur-X
+| Unalterable continuous sequence per physical register. Sequential period and perpetual Z-closures with chained digital signatures.
+| `POS01-2026-000042`
+
+| **Spain**
+| **TicketBAI / Veri*factu**
+| Mandatory series per issuing device/store. Unique identification code (TBAI identifier) + QR code and cryptographic chaining.
+| `TBAI-B01-2026/000891`
+
+| **United Kingdom**
+| **HMRC VAT Notice 700**
+| Unique sequential numbers on a continuous series. No gaps allowed; separate series permitted for branches or distinct trading departments.
+| `INV-2026-00812`
+
+| **Angola & Mozambique**
+| **AGT / AT Certification**
+| Certified series registration. Document types strictly classified as FT, FR, NC, ND, GT with validation codes.
+| `FR AGT2026/000001`
+|===
+
+'''
+
+== 4. Multi-Tenant, Multi-Branch & Station Scoping
+
+To prevent sequence collision across distributed stores without requiring complex distributed locks, series are resolved through a hierarchical scoping model:
+
+```
+                  ┌──────────────────────────────────────────────┐
+                  │          Company / Tenant (Legal Entity)     │
+                  │   - Holds master legal series & Tax ID       │
+                  └──────────────────────┬───────────────────────┘
+                                         │
+                  ┌──────────────────────┴───────────────────────┐
+                  │             Branch / Store / Warehouse       │
+                  │   - Scoped Series (e.g. 'LISBON', 'PRAIA')   │
+                  └──────────────────────┬───────────────────────┘
+                                         │
+                  ┌──────────────────────┴───────────────────────┐
+                  │              POS Register / Station          │
+                  │   - Station Series (e.g. 'REG01', 'REG02')   │
+                  │   - Offline Leased Range (1000 - 1500)       │
+                  └──────────────────────────────────────────────┘
+```
+
+=== Scoping Rules
+1. **Global/Company Scope**: Used for central billing and webshop sales where all orders pass through a single central coordinator.
+2. **Branch/Location Scope**: Each physical store operates its own series (`LIS-FT 2026/1`, `OPO-FT 2026/1`).
+3. **Station/Register Scope**: Highly recommended for multi-lane retail. Each lane has an independent series (`POS01-FS/1`, `POS02-FS/1`).
+   * **Massive Advantage**: Registers NEVER contend for the same database row lock during checkout, completely eliminating checkout lock queues!
+
+'''
+
+== 5. Enhanced Database Schema: `doc_series`
+
+[source,sql]
+----
+CREATE TABLE doc_series (
+    id VARCHAR(36) PRIMARY KEY,                  -- Series UUID
+    company_id VARCHAR(36) NOT NULL DEFAULT 'DEFAULT',
+    store_id VARCHAR(36) DEFAULT NULL,           -- NULL = All stores in company
+    terminal_id VARCHAR(36) DEFAULT NULL,        -- NULL = All terminals in store
+    doc_type VARCHAR(32) NOT NULL,               -- e.g. 'sale.invoice', 'sale.credit_note'
+    code VARCHAR(16) NOT NULL,                   -- Short code: 'A', '2026', 'MAIN'
+    name VARCHAR(64) NOT NULL,                   -- Descriptive title
+    
+    -- Formatting template & separators
+    prefix_template VARCHAR(64) DEFAULT '',      -- e.g. '{DOC_CODE}/{STORE_CODE}-{YEAR}/'
+    suffix_template VARCHAR(32) DEFAULT '',      -- e.g. '-{TERMINAL_CODE}'
+    separator_char VARCHAR(4) DEFAULT '/',       -- Visual separator
+    padding_digits INT NOT NULL DEFAULT 6,       -- e.g. 6 -> '000001'
+    
+    -- Sequential state
+    start_number BIGINT NOT NULL DEFAULT 1,      -- Lower bound
+    end_number BIGINT DEFAULT NULL,              -- Optional ceiling threshold
+    current_index BIGINT NOT NULL DEFAULT 0,     -- Active committed counter
+    increment_by INT NOT NULL DEFAULT 1,         -- Step value
+    
+    -- Periodic Reset Policy
+    reset_policy VARCHAR(20) DEFAULT 'NEVER',    -- 'NEVER', 'MONTHLY', 'YEARLY', 'DAILY'
+    last_reset_date TIMESTAMP NULL,              -- Last evaluated reset timestamp
+    
+    -- Fiscal & Regulatory Certification
+    fiscal_certification_code VARCHAR(64) NULL,  -- e.g. AT/AGT registration code
+    is_gapless_mandatory BOOLEAN DEFAULT TRUE,   -- Rejects manual skips/jumps
+    requires_crypto_hash BOOLEAN DEFAULT FALSE,  -- Triggers SAF-T/TicketBAI chaining
+    
+    -- Validity & Activation
+    start_date TIMESTAMP NULL,                   -- Activation date
+    end_date TIMESTAMP NULL,                     -- Decommission date
+    is_enabled BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+);
+
+-- Unique index enforces exactly one active series per document type and scope:
+CREATE UNIQUE INDEX idx_doc_series_scope 
+ON doc_series (company_id, COALESCE(store_id, 'ALL'), COALESCE(terminal_id, 'ALL'), doc_type, is_enabled);
+----
+
+'''
+
+== 6. Offline Operation & Distributed Resilience
+
+In unstable network or mobile pop-up scenarios (e.g. food truck or beach kiosk), cashiers must continue issuing receipts without network access to the central database server.
+
+=== Strategy A: Station-Dedicated Series (Recommended)
+Assign each terminal a dedicated, isolated series code:
+* Terminal 1: `T01-2026/000001`
+* Terminal 2: `T02-2026/000001`
+
+Because sequences are completely disjoint, terminals generate gapless numbers locally with **zero risk of collision or duplicate numbers upon network reconnection**.
+
+=== Strategy B: Block Range Pre-Leasing
+For centralized series where all stations must share a single prefix:
+1. When online, the terminal leases a contiguous sequence block from the server (e.g. numbers `5001` to `5200`).
+2. The terminal consumes numbers locally from its secure local ledger.
+3. When the remaining pool drops below a low-water mark (e.g. 20 numbers), the terminal requests the next block in the background.
+
+'''
+
+== 7. Integration with KriolOS Transaction Engine
+
+The Document Series engine integrates cleanly into `com.openbravo.pos.sales.DataLogicSales`:
+
+[source,java]
+----
+Transaction t = new Transaction(sessionDB) {
+    @Override
+    public Object transact() throws BasicException {
+        // 1. Resolve active series with pessimistic row-lock to ensure gapless atomicity
+        DocumentSeries series = seriesService.lockActiveSeries(
+            sessionDB, 
+            ticket.getTicketType(), 
+            appView.getActiveStoreId(), 
+            appView.getActiveTerminalId()
+        );
+
+        // 2. Compute next formatted sequential identifier
+        FormattedDocumentNumber docNum = series.allocateNextNumber(ticket.getDate());
+
+        ticket.setDocumentNumber(docNum.formattedString());
+        ticket.setTicketId((int) docNum.rawIndex());
+        
+        // 3. Persist receipt, tickets, ticketlines, stock, and payments...
+        ...
+        
+        // 4. Update series counter within the exact same database transaction
+        seriesService.commitSeriesIncrement(sessionDB, series.getId(), docNum.rawIndex());
+        
+        return null;
+    }
+};
+t.execute();
+----
+
+[CAUTION]
+====
+The series increment and the ticket insert **MUST commit in the same physical database transaction**. If ticket saving fails or rolls back, the series allocation is rolled back simultaneously, strictly maintaining the legal gapless invariant!
+====

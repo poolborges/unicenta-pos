@@ -1,0 +1,185 @@
+= Specification: Next-Generation Sales Panel & Catalog Architecture
+:toc: left
+:toc-title: Table of Contents
+:toclevels: 3
+:icons: font
+:source-highlighter: rouge
+:rouge-style: github
+:sectnums:
+:sectnumlevels: 2
+
+[.lead]
+Architectural analysis and design blueprint for decomposing the legacy `JPanelTicket` monolith, reforming the ticket refund/edit workflows, introducing the `CatalogExplorer` abstraction, and formalizing the immutable closed ticket lifecycle.
+
+'''
+
+== 1. Sales View Configuration: `Ticket.Buttons.xml`
+
+The POS sales interface behavior and extension buttons are configured via `Ticket.Buttons.xml`. This configuration is parsed directly without template engines to inject user actions and layout sizing.
+
+=== 1.1 Configuration Elements
+
+[cols="1,2,3", options="header"]
+|===
+| Tag | Attributes | Description
+
+| `<button>`
+| `key`, `image`, `code`, `template`
+| Renders an action button on the sales pane that triggers a script (`code`) or template.
+
+| `<event>`
+| `key`, `code`
+| Hooks script execution to sales lifecycle events (`ticket.close`, `cash.close`).
+
+| `<property>`
+| `key`, `value`
+| UI sizing, default tax inclusion, and pricing visibility settings.
+|===
+
+=== 1.2 Configuration Template
+
+[source,xml]
+----
+<configuration>
+    <!-- Custom sales action buttons -->
+    <button key="button.totaldiscount" image="discount" code="script.totaldiscount"/>
+    <button key="button.print" image="ticket_print" template="Printer.TicketPreview"/>
+    <button key="button.refundit" name="button.refundit" code="script.Refundit"/>
+
+    <!-- Lifecycle event hooks -->
+    <event key="ticket.close" code="Ticket.Close"/>
+    <event key="cash.close" code="Cash.Close"/>
+
+    <!-- Sizing and presentation properties -->
+    <property key="catheight" value="320" />
+    <property key="imgwidth" value="107"/>
+    <property key="imgheight" value="60"/>
+    <property key="printselected" value="true"/>
+    <property key="taxesincluded" value="true"/>
+    <property key="taxcategoryid" value="001"/> 
+    <property key="pricevisible" value="true" />
+
+    <!-- Legacy backward-compatible syntax -->
+    <cat-height value="320" />
+    <img-width value="107"/>
+    <img-height value="60"/>
+    <printselected value="true"/>
+    <taxesincluded value="true"/>
+    <taxcategoryid value="001"/>
+    <pricevisible value="true" />
+</configuration>
+----
+
+'''
+
+== 2. Legacy Sales Architecture Complexity Analysis
+
+=== 2.1 The Inheritance Hierarchy Problem
+
+In the original Openbravo POS codebase, sales panel management suffered from excessive inheritance and circular references:
+
+[source]
+----
+TicketsEditor (interface)
+  └── JPanelTicket (abstract class, 3,300 lines, implements JPanelView, TicketsEditor)
+        └── JPanelTicketEdits
+              ├── m_catandlines (JTicketCatalogLines)
+              │     ├── refoundLines (JRefundLines)
+              │     └── catalogExplorer (CatalogSelector)
+              └── getJTicketsBag() -> JTicketsBagTicket
+                    ├── m_TicketsBagTicketBag (JTicketsBagTicketBag JPanel)
+                    └── m_panelticketedit (JPanelTicketEdits reference back!)
+----
+
+=== 2.2 Structural Deficiencies
+1. **Circular Coupling**: `JPanelTicketEdits` passes `this` to `JTicketsBagTicket`, which passes itself to `JTicketsBagTicketBag`, which reaches back into `JPanelTicketEdits` to toggle card panels.
+2. **Fragile Refund Mutations**: As seen in legacy `m_jRefundActionPerformed`, refund lines are built by creating an in-memory `TicketInfo(RECEIPT_REFUND)` with cloned lines, muting prices, and forcing UI mode switching that breaks state consistency:
+   [source,java]
+   ----
+   // Legacy refund flaw: manual state swapping
+   TicketInfo refundticket = new TicketInfo();
+   refundticket.setTicketType(TicketInfo.RECEIPT_REFUND);
+   refundticket.setTicketStatus(m_ticket.getTicketId());
+   refundticket.setCustomer(m_ticket.getCustomer());
+   refundticket.setPayments(m_ticket.getPayments());
+   refundticket.setOldTicket(true);
+   m_panelticketedit.setActiveTicket(refundticket, null);
+   ----
+3. **Edit Mode Confusion**: Editing an existing ticket (`m_jEditActionPerformed`) swaps `m_ticketCopy = m_ticket.copyTicket()`, making it difficult to track what was originally billed versus modified.
+
+'''
+
+== 3. Next-Generation Design Principles
+
+=== 3.1 Prefer Composition Over Inheritance
+* Decompose `JPanelTicket` into focused, reusable components:
+  1. **`CatalogExplorer`**: Pure catalog browsing, search, and category selection.
+  2. **`TicketSummaryPane`**: Order lines table, quantities, unit prices, discounts, and customer summary.
+  3. **`SalesActionPad`**: Keypad, tenders, hold/split/merge actions.
+  4. **`SalesCoordinator`**: Orchestrates state between Catalog, Ticket, and Payment without GUI coupling.
+
+=== 3.2 Sales Lifecycle States
+A sale transitions through explicit, immutable lifecycle states:
+* **`DRAFT`**: Active cart. Products can be added, updated, or removed; customer can be linked; discounts applied.
+* **`HELD` / `PARKED`**: Order temporarily saved (e.g. restaurant table or bar tab).
+* **`PAYMENT`**: Split-tender / multi-payment entry.
+* **`PAID` / `CLOSED`**: Finalized. Immutable. Stock and financial ledger committed.
+* **`CANCELLED`**: Abandoned before payment. Zero ledger mutations.
+
+=== 3.3 Refund Architecture Rule
+A refund on a `PAID` sale **MUST NEVER** mutate the original closed ticket. 
+Instead:
+1. The original ticket remains **100% immutable**.
+2. A new, dedicated `REFUND` ticket is generated with negative quantities, linked to the original ticket ID (`source_ticket_id`).
+3. Stock is returned via `MovementReason.IN_REFUND`.
+4. Payment reversals are recorded as explicit negative or refund tenders.
+
+'''
+
+== 4. Immutable & Self-Contained Closed Ticket
+
+[IMPORTANT]
+====
+**THE SELF-CONTAINED REBUILD INVARIANT**
+
+When a ticket transitions to `CLOSED`, it must contain **all data necessary to completely rebuild and reprint itself** without querying external catalog, tax, or customer tables.
+====
+
+1. **Tax Rates Stored at Sale Time**: The ticket must record the exact tax rate, tax category name, tax base, and computed tax amount per line. If a tax rate changes in the database next year, reprinting a 2026 ticket must print the 2026 tax rate, not the future rate.
+2. **Product Snapshots**: Product name, SKU/barcode, and purchase cost are snapshotted in the line item.
+3. **Structured Storage**: Preserved in relational tables (`tickets`, `ticketlines`, `taxlines`, `payments`) while maintaining a single canonical **JSON / XML payload** in `receipts.ATTRIBUTES` for instant reprint verification.
+
+'''
+
+== 5. `CatalogExplorer` Modernization
+
+The product catalog interface is decoupled from Swing hierarchy via the `CatalogExplorer` contract:
+
+=== 5.1 Architecture Contract
+[source,java]
+----
+public interface CatalogExplorer {
+    void setCatalogConfig(CatalogExplorerConfig config);
+    void setCatalogListener(CatalogListener listener);
+    void refreshCatalog();
+    void showCategories(boolean visible);
+    void filterProducts(String searchCriteria);
+}
+----
+
+=== 5.2 `CatalogExplorerConfig`
+Supports responsive layouts across desktop, tablet, and mobile screens:
+
+[source,xml]
+----
+<configuration>
+    <property key="catalog-explorer:show-search-box" value="true" />
+    <property key="catalog-explorer:show-categories" value="true" />
+    <property key="catalog-explorer:show-category-icons" value="true" />
+    <property key="catalog-explorer:show-products-icons" value="true" />
+    <property key="catalog-explorer:button-size" value="107,60" />
+    <property key="catalog-explorer:product-price-visible" value="true" />
+    <property key="catalog-explorer:product-price-type" value="sell-price-tax-included" />
+    <property key="catalog-explorer:products-listing-layout" value="grid" /> <!-- 'grid', 'list', 'table' -->
+</configuration>
+----

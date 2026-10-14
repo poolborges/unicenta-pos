@@ -1,11 +1,21 @@
 [[gd-development-database]]
-== Development Databaase
+= Database Access Layer
+:icons: font
 
-Chapter
+[.lead]
+Architecture and lifecycle of database sessions, sentences, and transactional execution in KriolOS POS.
 
-=== kriolpos-pos-base
+== 1. Core Persistence Components (`kriolos-opos-base`)
 
-* SequenceGeneric
-* Session
-* SessioDBMySQL
+The data access layer in KriolOS POS is built upon low-overhead JDBC abstractions that avoid the performance penalties of full Object-Relational Mappings (ORM):
 
+* **`com.openbravo.data.loader.Session`**: Encapsulates database connectivity and transaction state flags (`begin()`, `commit()`, `rollback()`).
+* **`com.openbravo.data.loader.Transaction<T>`**: Template pattern executing atomic multi-table business operations wrapped in a database transaction.
+* **`com.openbravo.data.loader.PreparedSentence`**: Type-safe, parameterized SQL statement execution leveraging JDBC `PreparedStatement` to prevent SQL injection.
+* **`com.openbravo.data.loader.SequenceGeneric`**: Thread-safe sequence generator for sequential ticket and invoice IDs.
+
+== 2. High-Performance Transaction Strategy
+
+For details on the high-concurrency roadmap, connection pooling (HikariCP), CQRS-lite read/write separation, and peripheral after-commit hook isolation, see:
+
+xref:transaction-performance-strategy.adoc[*Transaction Performance & High-Concurrency Architecture Strategy*]

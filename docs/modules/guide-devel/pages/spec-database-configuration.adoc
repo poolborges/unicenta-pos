@@ -1,0 +1,199 @@
+= Specification: Tiered Configuration Architecture (Bootstrap vs. Database Configuration)
+:toc: left
+:toc-title: Table of Contents
+:toclevels: 3
+:icons: font
+:source-highlighter: rouge
+:rouge-style: github
+:sectnums:
+:sectnumlevels: 2
+
+[.lead]
+Unified architectural specification merging **Roadmap Task 4** and **https://github.com/kriolos-obiz/kriolos-pos/issues/74[GitHub Issue #74]**: establishing a clean, two-phase lifecycle separating local pre-DB bootstrap configuration from centralized, database-backed application configuration.
+
+'''
+
+== 1. Context & Architectural Problem
+
+Historically, Openbravo POS maintained a single, monolithic configuration class (`com.openbravo.pos.config.AppConfig`) backed exclusively by a local properties file (`kriolos-opos.properties`).
+
+This legacy design suffers from severe architectural flaws:
+1. **Coupling of Bootstrap & Business Data**: Low-level infrastructure credentials (JDBC URL, database username, password) are mixed alongside high-level business settings (company legal name, VAT calculation modes, receipt headers) and physical station hardware (scanner port, printer model).
+2. **Administrative Overhead in Multi-Terminal Stores**: In a store with 5 POS registers, changing the store address, email SMTP server, or default tax rate requires manually modifying and restarting 5 separate `.properties` files across all machines.
+3. **Impediment to Headless & Cloud Deployments**: Web kiosks, self-ordering tablets, and backend microservices cannot rely on local GUI file dialogs or station-bound flat files.
+
+'''
+
+== 2. Two-Tier Configuration Architecture
+
+KriolOS POS establishes a strict, two-tier separation of concerns:
+
+[cols="1,2,2,3", options="header"]
+|===
+| Configuration Layer | Storage Mechanism | Lifecycle & Timing | Scope & Responsibility
+
+| **Tier 1: Bootstrap Configuration**
+| Local File (`kriolos-opos.properties`) + Environment Variables + CLI Flags
+| **Phase 1 (Pre-DB)**: Evaluated at JVM startup before any database connection exists.
+| **Infrastructure & Identity**: +
+  • JDBC URL, Driver, User, Password +
+  • Station UUID (`pos.uuid`) +
+  • Initial UI Locale & LookAndFeel theme +
+  • Provider selector: `pos.config.provider=database\|file`
+
+| **Tier 2: Application Configuration**
+| Database Table (`config_properties` / `pos_configuration`)
+| **Phase 2 (Post-DB)**: Loaded and cached immediately after the database session is established.
+| **Business & Operational**: +
+  • Company Legal Name, Tax ID (NIF/VAT), Address +
+  • Tax Calculation Strategy (Inclusive, Exclusive) +
+  • Currency formatting & cash rounding rules +
+  • Station-specific peripherals (Printers, Displays, Scales, Drawers)
+|===
+
+'''
+
+== 3. Application Startup Lifecycle (`ApplicationShell`)
+
+The application initialization sequence strictly follows a two-phase protocol:
+
+[source]
+----
+ +---------------------------------------------------------------------------------+
+ | JVM Launch (BootstrapPOS / ApplicationShell)                                    |
+ +---------------------------------------------------------------------------------+
+                                      │
+                                      ▼
+ [PHASE 1: PRE-DB BOOTSTRAP]
+ 1. Locate local 'kriolos-opos.properties' or resolve CLI / Environment variables
+ 2. Instantiate 'BootstrapConfiguration' (implements AppProperties)
+ 3. Initialize LaF Theme (FlatLaf / Native) and UI Language Locale
+ 4. Resolve 'pos.uuid' (Station UUID; auto-generated if first launch)
+ 5. Initialize JDBC Connection Pool (HikariCP) using Bootstrap DB credentials
+                                      │
+                                      ▼
+ [PHASE 2: POST-DB APPLICATION CONFIGURATION]
+ 6. Establish Database Session
+ 7. Initialize 'ApplicationConfigurationService' via BeanContainer
+ 8. Fetch Global settings (pos_id = '0000-0000-0000-0000')
+ 9. Fetch Station-specific settings (pos_id = {pos.uuid})
+ 10. Configure Business Services (TaxService, TicketParser, Peripherals)
+ 11. Render Login / Sales Shell
+----
+
+'''
+
+== 4. Database Schema: `config_properties`
+
+[source,sql]
+----
+CREATE TABLE config_properties (
+    pos_id VARCHAR(36) NOT NULL,             -- Terminal UUID, or '0000-0000-0000-0000' for Global
+    config_key VARCHAR(128) NOT NULL,        -- Key name (e.g. 'company.name', 'tax.calculation_mode')
+    config_value TEXT,                       -- Property value (plain text, JSON, or Base64)
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (pos_id, config_key)
+);
+
+CREATE INDEX idx_config_properties_lookup ON config_properties (pos_id, config_key);
+----
+
+=== 4.1 Hierarchical Property Resolution Rule
+
+When `applicationConfigurationService.get("machine.printer")` is requested by active terminal `POS-LANE-01`:
+
+```
+   Check Station-Specific: WHERE pos_id = 'POS-LANE-01' AND config_key = ?
+            │ (Found) ────────► Return value
+            │ (Not found)
+            ▼
+   Check Global Company:   WHERE pos_id = '0000-0000-0000-0000' AND config_key = ?
+            │ (Found) ────────► Return value
+            │ (Not found)
+            ▼
+   Check Bootstrap Fallback: Return default from BootstrapConfiguration / code default
+```
+
+=== 4.2 Property Scoping Breakdown
+
+==== Global Properties (`pos_id = '0000-0000-0000-0000'`)
+* `company.name`, `company.taxid`, `company.address`, `company.phone`, `company.logo`
+* `currency.code`, `currency.symbol`, `currency.rounding_mode`
+* `tax.calculation_mode` (e.g. `INCLUSIVE`, `EXCLUSIVE`, `PER_LINE`, `SUBTOTAL`)
+* `system.email.smtp_host`, `system.email.smtp_port`, `system.email.username`
+* `system.backup.auto_enabled`, `system.backup.cron_schedule`
+
+==== Terminal-Specific Properties (`pos_id = '{pos.uuid}'`)
+* `machine.printer.1`, `machine.printer.2`, `machine.printer.preview`
+* `machine.display.type`, `machine.display.com_port`
+* `machine.scale.type`, `machine.scale.baud_rate`
+* `machine.scanner.mode`, `machine.cashdrawer.pin`
+
+'''
+
+== 5. Configuration Provider SPI Design
+
+To allow seamless transitions between offline file mode, local MariaDB, and cloud configurations:
+
+[source,java]
+----
+package com.openbravo.pos.spi.config;
+
+public interface ConfigurationProvider {
+    String getProviderName();
+    
+    // Scoped property accessors
+    String getProperty(String key);
+    String getProperty(String key, String defaultValue);
+    String getProperty(String posId, String key);
+    
+    // Mutations
+    void setProperty(String posId, String key, String value) throws BasicException;
+    void removeProperty(String posId, String key) throws BasicException;
+    
+    // Bulk operations & cache management
+    Map<String, String> getAllProperties(String posId);
+    void reloadCache();
+}
+----
+
+=== Concrete Provider Implementations
+1. **`FileConfigurationProvider` (Fallback)**:
+   * Retained for offline emergency mode or embedded single-node environments.
+   * Directly reads and writes `kriolos-opos.properties`.
+2. **`DatabaseConfigurationProvider` (Default / Standard)**:
+   * Uses `BootstrapConfiguration` to connect to the database.
+   * Loads `config_properties` into an in-memory concurrent map (`ConcurrentHashMap`).
+   * Supports atomic database updates and hot cache invalidation without requiring a terminal restart.
+
+'''
+
+== 6. Class Refactoring Plan (Eliminating Bloated `AppConfig`)
+
+[cols="1,2,2", options="header"]
+|===
+| Legacy Component | Target Architecture Replacement | Responsibility
+
+| `com.openbravo.pos.config.AppConfig`
+| **`BootstrapConfiguration`** (`kriolos-opos-base`)
+| Purely pre-DB settings. Implements `AppProperties`. Stripped of all store, receipt, and tax properties.
+
+| Static property reads in UI panels
+| **`ApplicationConfigurationService`** (`kriolos-opos-domain`)
+| Registered in `BeanContainer`. Thread-safe, cached business and peripheral settings.
+
+| Configuration Dialog (`JFrmConfig`)
+| **Tabbed Config UI Split**
+| • **Tab "System / Hardware"**: Writes station-specific settings (`pos.uuid`). +
+  • **Tab "Company & Business"**: Restricted to Admin role; writes global settings (`0000-0000-0000-0000`) to DB.
+|===
+
+'''
+
+== 7. Backward Compatibility & Migration Strategy
+
+To ensure zero friction during upgrade:
+1. **Automatic Schema Migration**: Upon first startup against an existing database, a Liquibase / Flyway / SQL migration creates `config_properties`.
+2. **One-Time Property Lift**: If `config_properties` is empty, `ApplicationConfigurationService` reads the existing `kriolos-opos.properties` and lifts global company keys into `pos_id = '0000-0000-0000-0000'`, and peripheral keys into `pos_id = '{pos.uuid}'`.
+3. **Preserved Defaults**: The existing `kriolos-opos.properties` file is kept intact as the Tier 1 bootstrap file.

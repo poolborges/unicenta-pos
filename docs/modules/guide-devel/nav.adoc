@@ -7,6 +7,7 @@
 *** xref:arch-dev-environment.adoc[Development Environment & QA]
 *** xref:arch-domain-modeling.adoc[Domain Modeling]
 *** xref:spec-navigation-flow.adoc[Specification: Navigation History Flow]
+*** xref:spec-database-configuration.adoc[Specification: Tiered Configuration (Bootstrap vs. DB)]
 ** User Interface
 *** xref:ui-guidelines.adoc[UI Guidelines]
 *** xref:ui-modal-migration.adoc[Modal Architecture (PosUIModal)]
@@ -15,9 +16,13 @@
 *** xref:sales-layout-migration.adoc[Sales Layout Architecture Migration]
 *** xref:sales-ticket-lifecycle.adoc[Ticket Lifecycle & Taxes]
 *** xref:sales-backoffice-tickets.adoc[Back Office Tickets]
+*** xref:sales-next-gen-architecture.adoc[Next-Generation Sales & Catalog Architecture]
+*** xref:spec-document-series.adoc[Specification: Document Number Series Architecture]
+*** xref:spec-audit-journal.adoc[Specification: Audit Journal & Event Log]
 ** Database & Persistence
 *** xref:data-schema-overview.adoc[Database Schema Overview]
 *** xref:data-access-layer.adoc[Database Access Layer]
+*** xref:transaction-performance-strategy.adoc[Transaction Performance & Pooling Strategy]
 ** Peripherals & Hardware
 *** xref:hardware-peripherals.adoc[Peripheral & Scales Overview]
 *** xref:hardware-printers.adoc[Printers & ESC/POS]
@@ -25,6 +30,7 @@
 ** Reporting & Printing
 *** xref:report-jasper-overview.adoc[Reporting Overview (JasperReports)]
 *** xref:report-pdf-export.adoc[PDF Export]
+*** xref:spec-cash-reporting-standards.adoc[Specification: Standard Cash Reports (X/Z Reports & PosLog)]
 *** xref:resources-assets.adoc[Resources & Assets Overview]
 ** Troubleshooting
 *** xref:troubleshooting-known-issues.adoc[Known Issues]
