@@ -16,14 +16,17 @@
  */
 package com.openbravo.pos.printer;
 
-import javax.swing.JComponent;
 import com.openbravo.pos.spi.hardware.printer.FiscalPrinterDevice;
 import com.openbravo.pos.spi.hardware.printer.PrinterException;
 
 /**
  * High-level contract for fiscal receipt printing operations.
  *
- * @author JG uniCenta / KriolOS Team
+ * <p>Implementations that provide an interactive or visual UI component
+ * should also implement {@link VirtualFiscalPrinter}.</p>
+ *
+ * @author JG uniCenta / KriolOS
+ * @since 1.0.0
  */
 public interface DeviceFiscalPrinter extends FiscalPrinterDevice {
 
@@ -38,8 +41,6 @@ public interface DeviceFiscalPrinter extends FiscalPrinterDevice {
     }
 
     String getFiscalName();
-
-    JComponent getFiscalComponent();
 
     void beginReceipt();
 

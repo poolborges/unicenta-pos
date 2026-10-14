@@ -23,6 +23,7 @@ import com.openbravo.pos.forms.JPanelView;
 import com.openbravo.pos.hardware.PosHardwareManager;
 import com.openbravo.pos.printer.DeviceFiscalPrinter;
 import com.openbravo.pos.printer.DevicePrinter;
+import com.openbravo.pos.printer.VirtualFiscalPrinter;
 import com.openbravo.pos.printer.VirtualPrinter;
 import com.openbravo.pos.printer.screen.DevicePrinterPanel;
 import java.awt.BorderLayout;
@@ -78,8 +79,11 @@ public class JPanelPrinter extends JPanel implements JPanelView {
         }
 
         DeviceFiscalPrinter fiscalPrinter = appView.getDeviceTicket().getFiscalPrinter();
-        if (fiscalPrinter.getFiscalComponent() != null) {
-            printersJTabbedPane.add(fiscalPrinter.getFiscalName(), fiscalPrinter.getFiscalComponent());
+        if (fiscalPrinter instanceof VirtualFiscalPrinter virtualFiscalPrinter) {
+            JComponent comp = virtualFiscalPrinter.getComponent(JComponent.class);
+            if (comp != null) {
+                printersJTabbedPane.add(fiscalPrinter.getFiscalName(), comp);
+            }
         }
 
         // Action controls toolbar positioned at the bottom

@@ -34,9 +34,11 @@ import com.openbravo.pos.forms.AppView;
 import com.openbravo.pos.forms.DataLogicSystem;
 import com.openbravo.pos.forms.ResourceService;
 import com.openbravo.pos.hardware.PosHardwareManager;
+import com.openbravo.pos.printer.DevicePrinter;
 import com.openbravo.pos.printer.DeviceTicket;
 import com.openbravo.pos.printer.TicketParser;
 import com.openbravo.pos.printer.TicketPrinterException;
+import com.openbravo.pos.printer.VirtualPrinter;
 import com.openbravo.pos.scripting.ScriptEngine;
 import com.openbravo.pos.scripting.ScriptException;
 import com.openbravo.pos.scripting.ScriptFactory;
@@ -112,7 +114,13 @@ public class JTicketsBagTicket extends JTicketsBag {
 
         m_jTicketEditor.addEditorKeys(m_jKeys);
 
-        m_jPanelTicket.add(previewDeviceTicket.getDevicePrinter("1").getPrinterComponent(), BorderLayout.CENTER);
+        DevicePrinter previewPrinter = previewDeviceTicket.getDevicePrinter("1");
+        if (previewPrinter instanceof VirtualPrinter virtualPrinter) {
+            JComponent comp = virtualPrinter.getComponent(JComponent.class);
+            if (comp != null) {
+                m_jPanelTicket.add(comp, BorderLayout.CENTER);
+            }
+        }
 
         salesService = new SalesServiceImpl(new TaxesLogic(taxService.getTaxListAll()));
         

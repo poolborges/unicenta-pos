@@ -17,6 +17,7 @@
 package com.openbravo.pos.printer.javapos;
 
 import com.openbravo.pos.printer.DeviceFiscalPrinter;
+import com.openbravo.pos.printer.VirtualFiscalPrinter;
 import com.openbravo.pos.printer.TicketPrinterException;
 import com.openbravo.pos.util.RoundUtils;
 import javax.swing.JComponent;
@@ -26,8 +27,9 @@ import jpos.JposException;
 /**
  *
  * @author JG uniCenta
+ * @author KriolOS
  */
-public class DeviceFiscalPrinterJavaPOS extends javax.swing.JPanel implements DeviceFiscalPrinter  {
+public class DeviceFiscalPrinterJavaPOS extends javax.swing.JPanel implements VirtualFiscalPrinter {
     
     private final String m_sName;
     
@@ -67,14 +69,22 @@ public class DeviceFiscalPrinterJavaPOS extends javax.swing.JPanel implements De
         return m_sName;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
+    public <T> T getComponent(Class<T> targetType) {
+        if (targetType.isInstance(this)) {
+            return targetType.cast(this);
+        }
+        return null;
+    }
+
+    /**
+     * @deprecated Use {@link #getComponent(Class)} instead.
+     */
+    @Deprecated
     public JComponent getFiscalComponent() {
         return this;
     }
+
     
     /**
      *
