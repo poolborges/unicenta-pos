@@ -1,0 +1,521 @@
+= KriolOS POS — Next Task Roadmap
+:toc: left
+:toc-title: Contents
+:toclevels: 2
+:icons: font
+:source-highlighter: rouge
+:rouge-style: github
+:sectnums:
+:sectnumlevels: 1
+
+[.lead]
+Branch base: `main` (merged PR #132 — 2026-10-09) +
+Goal: _Small but Professional POS_
+
+'''
+
+== Context — What We Just Delivered
+
+[cols="1,3", options="header"]
+|===
+| Commit | What
+
+| `d6739efa`
+| Merged PR #132 — Hardware SPI, BeanContainer, lazy layout, dirty-mode auth, i18n
+
+| `76aed86d`
+| `feat(auth,i18n)`: user list disabled in dirty mode + UI string externalization
+
+| `7c4b2548`
+| `fix`: recursive bean resolution + lazy `JPanelTicketSales`
+|===
+
+These changes are the **platform foundation** for all items below: clean bootstrap, stable bean lifecycle, SPI isolation, and localizable UI.
+
+'''
+
+== TASK 6 — kriolos-opos-spi: UI-Agnostic SPI (remove java.desktop) ⭐
+
+[quote]
+____
+_"kriolos-spi must be UI agnostic — extract all dependencies from `java.desktop` so we can support web/Vaadin in the future"_
+____
+
+**Why starred**: blocking issue — as long as `kriolos-opos-spi` pulls `java.desktop` (AWT/Swing), it cannot be used by headless runtimes, Quarkus, or any web-tier implementation. All future deployment targets (Vaadin, webforJ, REST-only) depend on this being clean.
+
+=== Current Violations
+
+[cols="2,2,3", options="header"]
+|===
+| File | Offending import | Issue
+
+| `DevicePrinter.java`
+| `java.awt.image.BufferedImage`
+| Image type from AWT — blocks non-desktop runtimes
+
+| `DeviceFiscalPrinter.java`
+| `javax.swing.JComponent`
+| Swing component return type — hard Swing dependency
+|===
+
+=== Design
+
+**Principle**: `kriolos-opos-spi` must compile and run with `--limit-modules` that excludes `java.desktop`.
+All UI-toolkit types must be replaced with neutral abstractions or moved to a separate `kriolos-opos-spi-swing` adapter module.
+
+==== Image abstraction
+
+Replace `java.awt.image.BufferedImage` with a neutral `PosImage` SPI type:
+
+[source,java]
+----
+// com.openbravo.pos.spi.media.PosImage
+public interface PosImage {
+    int getWidth();
+    int getHeight();
+    String getFormat();          // "PNG", "JPEG", etc.
+    byte[] getBytes();           // raw encoded bytes
+}
+----
+
+* `DevicePrinter.printImage(PosImage image)` — replaces `printImage(BufferedImage)`.
+* Swing impl: `SwingPosImage implements PosImage` wraps `BufferedImage` — lives in `kriolos-opos-base` (already depends on `java.desktop`).
+* Web impl: `BytesPosImage implements PosImage` wraps a `byte[]` — no AWT.
+
+==== Fiscal component abstraction
+
+Replace `JComponent getFiscalComponent()` with a `ComponentHandle` SPI:
+
+[source,java]
+----
+// com.openbravo.pos.spi.ui.ComponentHandle<T>
+public interface ComponentHandle<T> {
+    T getComponent();
+    String getComponentType();   // "swing/JComponent", "vaadin/Component", "html/element"
+}
+----
+
+* `DeviceFiscalPrinter.getFiscalHandle()` returns `ComponentHandle<?>` — caller casts if it knows the runtime.
+* `getFiscalComponent()` deprecated but kept with `@Deprecated(forRemoval = true)` in a `kriolos-opos-spi-swing` compatibility shim.
+
+==== module-info changes
+
+[source,java]
+----
+// before
+module kriolos.opos.spi { }
+
+// after — zero java.desktop
+module kriolos.opos.spi {
+    exports com.openbravo.pos.spi.core;
+    exports com.openbravo.pos.spi.hardware;
+    exports com.openbravo.pos.spi.hardware.printer;
+    exports com.openbravo.pos.spi.hardware.display;
+    exports com.openbravo.pos.spi.hardware.scale;
+    exports com.openbravo.pos.spi.hardware.scanner;
+    exports com.openbravo.pos.spi.localization;
+    exports com.openbravo.pos.spi.media;
+    exports com.openbravo.pos.spi.ui;
+    exports com.openbravo.pos.spi.provider;
+    // NO requires java.desktop
+}
+----
+
+=== Sub-tasks
+
+. `PosImage` interface — `com.openbravo.pos.spi.media` package.
+. `ComponentHandle<T>` interface — `com.openbravo.pos.spi.ui` package.
+. `DevicePrinter` — replace `BufferedImage` parameter with `PosImage`.
+. `DeviceFiscalPrinter` — deprecate `getFiscalComponent()`, add `getFiscalHandle()`.
+. `module-info.java` — explicit exports, no `requires java.desktop`.
+. `SwingPosImage` adapter — in `kriolos-opos-base` (where `java.desktop` is already required).
+. Update all existing `DevicePrinter` implementors to use `PosImage`.
+. CI guard: add `--limit-modules` to the `kriolos-opos-spi` test JVM args to verify no `java.desktop` leaks.
+. Tests: `PosImageTest` (bytes round-trip), `DevicePrinterContractTest` (interface-only, no AWT).
+
+=== Branch: `feature/spi-ui-agnostic`
+
+'''
+
+== TASK 5 — Scripting SPI: BeanShell/Velocity now → QuickJS/Qute future ⭐
+
+[quote]
+____
+_"Script must go SPI — offer current implementation (BeanShell and Velocity), but future implementations will be QuickJS and Qute (Quarkus template engine)"_
+____
+
+**Why starred**: the scripting engine is currently embedded directly in business logic (e.g., ticket button events, receipt templates via Velocity).
+Making it SPI-backed is the prerequisite for swapping engines without touching callers — and for running on Quarkus/GraalVM where BeanShell is problematic.
+
+=== Engine Landscape
+
+[cols="2,2,1,3", options="header"]
+|===
+| Engine | Role | Status | Runtime concern
+
+| **BeanShell**
+| Button/event scripting (`.bsh` files)
+| Current
+| Reflection-heavy; incompatible with GraalVM `--no-fallback`
+
+| **Apache Velocity**
+| Receipt/report templates (`.vm` files)
+| Current
+| Classpath scanning at init; needs config
+
+| **QuickJS** (via GraalJS or Javet)
+| JS-based scripting — sandbox-friendly
+| Future
+| Works on GraalVM native; zero reflection
+
+| **Qute** (Quarkus template engine)
+| Receipt/report templates
+| Future
+| Quarkus-native; type-safe; CDI-integrated
+|===
+
+=== Design
+
+==== Script execution SPI
+
+[source,java]
+----
+// com.openbravo.pos.spi.scripting.ScriptEngine
+public interface ScriptEngine {
+    /** Unique engine identifier, e.g. "beanshell", "quickjs" */
+    String engineId();
+
+    /** File extension(s) this engine handles: ".bsh", ".js" */
+    Set<String> supportedExtensions();
+
+    /** Execute a script with the provided bindings; return result or null */
+    Object execute(String script, Map<String, Object> bindings) throws ScriptExecutionException;
+
+    /** Optionally pre-compile for repeated execution */
+    default CompiledScript compile(String script) throws ScriptExecutionException {
+        return ctx -> execute(script, ctx);
+    }
+}
+----
+
+[source,java]
+----
+// com.openbravo.pos.spi.scripting.TemplateEngine
+public interface TemplateEngine {
+    String engineId();                          // "velocity", "qute"
+    Set<String> supportedExtensions();          // ".vm", ".html"
+
+    /** Render a named template with the given model */
+    String render(String templateName, Map<String, Object> model) throws TemplateException;
+
+    /** Render an inline template string */
+    String renderInline(String templateSource, Map<String, Object> model) throws TemplateException;
+}
+----
+
+==== Registry
+
+[source,java]
+----
+// com.openbravo.pos.spi.scripting.ScriptEngineRegistry
+public interface ScriptEngineRegistry {
+    ScriptEngine getScriptEngine(String engineId);
+    TemplateEngine getTemplateEngine(String engineId);
+    ScriptEngine resolveByExtension(String fileExtension);
+    TemplateEngine resolveTemplateByExtension(String fileExtension);
+}
+----
+
+* Default impl loads providers via `ServiceLoader<ScriptEngine>` + `ServiceLoader<TemplateEngine>`.
+* Selected engine IDs read from `ApplicationConfiguration` keys:
+** `scripting.script.engine` → default `beanshell`
+** `scripting.template.engine` → default `velocity`
+
+==== Module layout
+
+----
+kriolos-opos-spi                    ← ScriptEngine, TemplateEngine, ScriptEngineRegistry interfaces
+kriolos-opos-scripting-bsvelocity   ← BeanshellScriptEngine + VelocityTemplateEngine  (current, renamed/restructured)
+kriolos-opos-scripting-quickjs      ← QuickJSScriptEngine  (future module, stub now)
+kriolos-opos-scripting-qute         ← QuteTemplateEngine   (future module, stub now)
+----
+
+==== Exceptions
+
+[source,java]
+----
+public class ScriptExecutionException extends Exception { ... }
+public class TemplateException extends Exception { ... }
+----
+
+=== Sub-tasks
+
+. `ScriptEngine` + `CompiledScript` interfaces — `com.openbravo.pos.spi.scripting` package in `kriolos-opos-spi`.
+. `TemplateEngine` interface — same package.
+. `ScriptExecutionException` + `TemplateException` checked exceptions.
+. `ScriptEngineRegistry` interface + default `ServiceLoaderScriptEngineRegistry` impl.
+. Restructure `kriolos-opos-scripting-bsvelocity`:
+** `BeanshellScriptEngine implements ScriptEngine` — wraps existing BeanShell invocation.
+** `VelocityTemplateEngine implements TemplateEngine` — wraps existing Velocity calls.
+** Register both via `META-INF/services`.
+. Create stub `kriolos-opos-scripting-quickjs` module (interface only, `UnsupportedOperationException` impls) — placeholder for future QuickJS integration.
+. Create stub `kriolos-opos-scripting-qute` module (interface only) — placeholder for Qute/Quarkus.
+. Wire `ScriptEngineRegistry` into `BeanContainer`; migrate all existing callers (ticket button events, receipt rendering).
+. Add `scripting.script.engine` + `scripting.template.engine` to `ApplicationConfiguration` seed defaults.
+. Tests:
+** `BeanshellScriptEngineTest` — execute simple arithmetic + binding access.
+** `VelocityTemplateEngineTest` — render known template with model.
+** `ScriptEngineRegistryTest` — ServiceLoader discovery, extension resolution.
+
+=== Branch: `feature/scripting-spi`
+
+'''
+
+== TASK 4 — Split BootstrapConfiguration from ApplicationConfiguration ⭐ Do First
+
+[quote]
+____
+_"Split BootstrapConfiguration(DB) from ApplicationConfig(Store in DB Tables)"_
+____
+
+**Why first**: every other task depends on knowing where config lives.
+
+=== Goal
+
+Clear separation between two configuration layers:
+
+[cols="1,2,2,3", options="header"]
+|===
+| Layer | Where stored | When read | Examples
+
+| **`BootstrapConfiguration`**
+| `.properties` file / env vars
+| At JVM startup, before DB
+| DB URL, credentials, host, locale, theme
+
+| **`ApplicationConfiguration`**
+| DB table `POS_CONFIGURATION`
+| After DB connected
+| Tax mode, store name, currency, peripherals
+|===
+
+=== Design
+
+* `AppConfig` → refactored to `BootstrapConfiguration implements AppProperties` (file only, no business data).
+* New `ApplicationConfigurationService`: `get(key)`, `get(key, default)`, `set(key, value)`, `reload()`.
+* `ApplicationShell` init sequence:
+. Phase 1 (before DB) — load `BootstrapConfiguration`
+. Phase 2 (after DB) — load `ApplicationConfiguration` via `ApplicationConfigurationService`
+
+=== Sub-tasks
+
+. `BootstrapConfiguration` — refactor `AppConfig`, strip store-level keys.
+. DB migration — `POS_CONFIGURATION(CONFIG_KEY PK, CONFIG_VALUE, MODIFIED_AT)` + seed defaults.
+. `ApplicationConfigurationService` bean — cache + invalidation.
+. Migrate existing store-level `.properties` keys → `POS_CONFIGURATION`.
+. Update `JFrmConfig` UI panels to write via `ApplicationConfigurationService`.
+. Tests: `BootstrapConfigurationTest`, `ApplicationConfigurationServiceTest` (in-memory HSQLDB).
+
+=== Branch: `feature/bootstrap-vs-app-config`
+
+'''
+
+== TASK 3 — Configurable TAX Calculation
+
+[quote]
+____
+_"Configurable TAX Calculation (inclusive, exclusive, row, subtotal)"_
+____
+
+**Depends on**: Task 4 (tax mode read from `ApplicationConfiguration`).
+
+=== Modes to Support
+
+[cols="2,4", options="header"]
+|===
+| Mode | Description
+
+| `EXCLUSIVE_PER_ROW`
+| Net price + tax per line (current default)
+
+| `INCLUSIVE_PER_ROW`
+| Price includes tax; extract per line
+
+| `EXCLUSIVE_SUBTOTAL`
+| Net price; tax on grand subtotal
+
+| `INCLUSIVE_SUBTOTAL`
+| Price includes tax; extract from subtotal
+|===
+
+=== Design
+
+Strategy pattern — `TaxCalculationStrategy` SPI:
+
+[source,java]
+----
+interface TaxCalculationStrategy {
+    TaxBreakdown calculate(List<TicketLine> lines, TaxRate rate);
+}
+----
+
+* `TaxCalculationStrategyFactory` reads `tax.calculation.mode` from `ApplicationConfiguration`.
+* Replace all inline tax math in `Ticket` with calls to selected strategy.
+* `TaxCalculationMode` enum: `INCLUSIVE_PER_ROW`, `EXCLUSIVE_PER_ROW`, `INCLUSIVE_SUBTOTAL`, `EXCLUSIVE_SUBTOTAL`.
+
+=== Sub-tasks
+
+. `TaxCalculationMode` enum + `TaxBreakdown` value object.
+. `TaxCalculationStrategy` interface + 4 implementations.
+. `TaxCalculationStrategyFactory` — selects from config.
+. Refactor `Ticket` to delegate tax math to strategy.
+. Tests: parametrized `TaxCalculationStrategyTest` (known price+rate → expected tax per mode).
+. Regression: existing totals unchanged for default `EXCLUSIVE_PER_ROW` mode.
+
+=== Branch: `feature/configurable-tax`
+
+'''
+
+== TASK 2 — Immutable & Self-Contained Closed Ticket
+
+[quote]
+____
+_"IMMUTABLE AND SELF-CONTAINED 'Close Ticket' out of Paid Ticket"_
+____
+
+**Depends on**: Task 3 (tax strategy must be stable before snapshot is defined).
+
+=== Goal
+
+Once a ticket transitions to **PAID** or **VOIDED**:
+
+* No field mutation allowed — throw `ClosedTicketMutationException`.
+* Ticket stores a **snapshot** of all line items, prices, taxes, discounts, customer — independent of future catalog changes.
+* Receipts can be reprinted from the snapshot even if products are deleted.
+
+=== Design
+
+* `OpenTicket` (mutable, in-progress) vs `ClosedTicket` (immutable, serialized).
+* `ClosedTicketLine` value object: `productId, productName, unitPrice, qty, taxRate, taxLabel, discountRate, totalNet, totalTax, totalGross`.
+* `ClosedTicket` record: `ticketId, closedAt, cashierId, warehouseId, paymentMethod, lines[], totals, customerId?, customerName?`.
+* Stored as JSON blob in `POS_RECEIPTS.SNAPSHOT` column.
+
+=== Sub-tasks
+
+. `ClosedTicketLine` + `ClosedTicket` record classes.
+. DB migration — add `SNAPSHOT` JSON column to `POS_RECEIPTS`.
+. Ticket state machine: `OPEN → PAID | VOIDED` — enforce no mutation after close.
+. `ReceiptRenderer` — render from `ClosedTicket` snapshot, not live DB.
+. `JPanelTicketSales` handoff — on payment confirm: extract snapshot → persist → clear mutable panel.
+. Tests: `ClosedTicketTest` (snapshot populated, immutable), `TicketLifecycleTest` (mutation rejected).
+
+=== Branch: `feature/immutable-closed-ticket`
+
+'''
+
+== TASK 1 — Audit Journal ("Every Auditable")
+
+[quote]
+____
+_"Journal — every auditable action — same idea as the GitHub Issue"_
+____
+
+**Depends on**: Tasks 4, 2 (stable lifecycle + config to know actor/terminal identity). +
+**Cross-cutting**: plugs into all lifecycle points — can be done in parallel with or after Task 2.
+
+=== Goal
+
+Append-only log of every business-significant event:
+
+* Login / logout
+* Ticket opened / paid / voided
+* Discount applied
+* Configuration changed
+* Inventory moved
+
+=== Design
+
+[source,java]
+----
+record JournalEntry(
+    UUID id,
+    Instant occurredAt,
+    String actorId,
+    String terminalId,
+    JournalEventType eventType,
+    String payload          // JSON
+)
+----
+
+* `JournalService` SPI with `void record(JournalEntry entry)`.
+* `JournalServiceImpl` registered as bean.
+* Decorator/wrapper approach preferred — wrap `SecurityService`, ticket payment, discount calls without changing callers.
+* **Append-only** — no UPDATE or DELETE on `POS_JOURNAL`.
+
+=== Sub-tasks
+
+. `JournalEntry` record + `JournalEventType` enum.
+. `JournalService` interface + `JournalServiceImpl`.
+. DB migration — `POS_JOURNAL(ID UUID PK, OCCURRED_AT, ACTOR_ID, TERMINAL_ID, EVENT_TYPE, PAYLOAD)` + index.
+. Decorators for `SecurityService` and ticket lifecycle.
+. Wire into `BeanContainer`.
+. Tests: `JournalServiceTest`, integration test (login → journal entry exists).
+
+=== Branch: `feature/audit-journal`
+
+'''
+
+== Recommended Execution Order
+
+----
+feature/spi-ui-agnostic            ← ⭐ unblocks all non-desktop runtimes (can run in parallel with Task 4)
+feature/scripting-spi              ← ⭐ unblocks engine swap + Quarkus deployment (can run in parallel)
+         ↓
+feature/bootstrap-vs-app-config    ← foundation for config-dependent tasks
+         ↓
+feature/configurable-tax           ← isolated, depends on config
+         ↓
+feature/immutable-closed-ticket    ← depends on stable lifecycle + tax
+         ↓
+feature/audit-journal              ← cross-cutting, plugs into everything
+----
+
+TIP: Tasks 5 and 6 (starred) are **parallel-safe** — they touch different modules (`kriolos-opos-spi` and `kriolos-opos-scripting-*`) and can be developed simultaneously or before the config foundation work.
+
+IMPORTANT: `feature/scripting-spi` depends on `feature/spi-ui-agnostic` being merged first if the scripting SPI interfaces live in `kriolos-opos-spi`. Alternatively develop on a common base branch.
+
+'''
+
+== Common Principles (All Tasks)
+
+[cols="2,5", options="header"]
+|===
+| Rule | Detail
+
+| **Conventional Commits**
+| `feat(journal):`, `feat(ticket):`, `feat(tax):`, `refactor(config):`, `refactor(spi):`, `feat(scripting):`
+
+| **No breaking API changes**
+| Deprecate old, introduce new, remove later
+
+| **Tests before merge**
+| Unit tests + min 1 integration test per task
+
+| **i18n from day one**
+| New UI strings → `pos_messages.properties` + `pos_messages_pt.properties`, case-insensitive alpha order
+
+| **No Exception translation**
+| Centralized Business Exception handler planned separately
+
+| **SPI-first**
+| Prefer `interface` + `BeanContainer` over direct instantiation
+
+| **Dirty-mode aware**
+| Any new UI with selectable resources follows AuthenticationPanel dirty-mode pattern
+
+| **UI-agnostic SPI**
+| `kriolos-opos-spi` must never `require java.desktop`; all AWT/Swing adapters live in `kriolos-opos-base` or `*-swing` shims
+
+| **Engine-agnostic scripting**
+| All scripting/templating calls go through `ScriptEngineRegistry`; no direct BeanShell/Velocity imports outside their own modules
+|===
