@@ -271,13 +271,14 @@ public class TemplateException extends Exception { ... }
 
 '''
 
-== TASK 4 — Split BootstrapConfiguration from ApplicationConfiguration ⭐ Do First
+== TASK 4 — Split BootstrapConfiguration from ApplicationConfiguration (Issue #74) ⭐ Do First
 
 [quote]
 ____
 _"Split BootstrapConfiguration(DB) from ApplicationConfig(Store in DB Tables)"_
 ____
 
+**Specification**: See `docs/modules/guide-devel/pages/spec-database-configuration.adoc` and https://github.com/kriolos-obiz/kriolos-pos/issues/74[Issue #74]. +
 **Why first**: every other task depends on knowing where config lives.
 
 === Goal
@@ -413,13 +414,14 @@ Once a ticket transitions to **PAID** or **VOIDED**:
 
 '''
 
-== TASK 1 — Audit Journal ("Every Auditable")
+== TASK 1 — Audit Journal ("Every Auditable") (Issue #86)
 
 [quote]
 ____
 _"Journal — every auditable action — same idea as the GitHub Issue"_
 ____
 
+**Specification**: See `docs/modules/guide-devel/pages/spec-audit-journal.adoc` and https://github.com/kriolos-obiz/kriolos-pos/issues/86[Issue #86]. +
 **Depends on**: Tasks 4, 2 (stable lifecycle + config to know actor/terminal identity). +
 **Cross-cutting**: plugs into all lifecycle points — can be done in parallel with or after Task 2.
 

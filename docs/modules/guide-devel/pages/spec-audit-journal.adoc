@@ -1,0 +1,135 @@
+= Specification: Audit Journal & Event Log Architecture
+:toc: left
+:toc-title: Table of Contents
+:toclevels: 3
+:icons: font
+:source-highlighter: rouge
+:rouge-style: github
+:sectnums:
+:sectnumlevels: 2
+
+[.lead]
+Architecture and event-sourcing specification for an immutable, append-only business audit journal in KriolOS POS (Resolves https://github.com/kriolos-obiz/kriolos-pos/issues/86[GitHub Issue #86]).
+
+'''
+
+== 1. Motivation & Architecture Pattern
+
+Modern retail security, forensic fraud investigation, and tax compliance require a transparent, tamper-evident historical log of all POS state transitions. 
+
+Rather than relying solely on mutable tables (where lines can be deleted or updated), the **Audit Journal** captures every operational milestone as a discrete, immutable domain event.
+
+=== Core Principles
+1. **Append-Only Immutability**: The journal is write-only. No `UPDATE` or `DELETE` statements are ever permitted on the journal table.
+2. **Context Completeness**: Every entry captures _who_ (`userId`), _where_ (`terminalId`/`storeId`), _when_ (`timestamp`), _what_ (`eventType`), and _details_ (`payload`).
+3. **Non-Intrusive Integration**: Uses decorator and observer patterns to record events without disrupting existing business logic.
+
+'''
+
+== 2. Database Schema: `pos_journal`
+
+[source,sql]
+----
+CREATE TABLE pos_journal (
+    event_id VARCHAR(36) PRIMARY KEY,        -- UUID
+    event_type VARCHAR(64) NOT NULL,         -- Structured category (e.g. 'Sales.OrderCreated')
+    occurred_at TIMESTAMP NOT NULL,          -- UTC event timestamp
+    user_id VARCHAR(36) NOT NULL,            -- Operator / Employee ID
+    terminal_id VARCHAR(36) NOT NULL,        -- POS register ID
+    store_id VARCHAR(36) DEFAULT 'DEFAULT',  -- Store / Location ID
+    payload_json TEXT NOT NULL               -- Event-specific JSON document
+);
+
+CREATE INDEX idx_pos_journal_type_time ON pos_journal (event_type, occurred_at);
+CREATE INDEX idx_pos_journal_user ON pos_journal (user_id, occurred_at);
+CREATE INDEX idx_pos_journal_terminal ON pos_journal (terminal_id, occurred_at);
+----
+
+'''
+
+== 3. Domain Event Taxonomy & Payloads
+
+Events follow a hierarchical namespaced notation (`<Context>.<Action>`):
+
+=== 3.1 Sales Lifecycle Events
+
+[cols="1,2,3", options="header"]
+|===
+| Event Type | Trigger Point | Example JSON Payload
+
+| `Sales.OrderCreated`
+| Cashier initiates a new sale or opens a restaurant table.
+| `{"orderId": "UUID", "ticketType": 0, "customerId": "UUID"}`
+
+| `Sales.ProductAdded`
+| Barcode scanned or item clicked in catalog.
+| `{"orderId": "UUID", "productId": "SKU-001", "quantity": 1.0, "unitPrice": 12.50}`
+
+| `Sales.ProductQuantityUpdated`
+| Cashier edits line multiplier (+, -, keyin).
+| `{"orderId": "UUID", "productId": "SKU-001", "oldQty": 1.0, "newQty": 3.0}`
+
+| `Sales.ProductRemoved`
+| Line deleted from active ticket (audit tracking).
+| `{"orderId": "UUID", "productId": "SKU-001", "reason": "Customer changed mind"}`
+
+| `Sales.DiscountApplied`
+| Line or ticket-level discount applied.
+| `{"orderId": "UUID", "discountType": "PERCENT", "amount": 10.0, "scope": "TICKET"}`
+
+| `Sales.CustomerAssigned`
+| Customer loyalty profile linked to ticket.
+| `{"orderId": "UUID", "customerId": "CUST-901", "customerName": "John Doe"}`
+
+| `Sales.PaymentTendered`
+| Tender captured (Cash, Card, Voucher, Debt).
+| `{"orderId": "UUID", "paymentMethod": "ccard", "amount": 45.00, "tendered": 50.00}`
+
+| `Sales.OrderCompleted`
+| Ticket finalized in `saveTicket()`.
+| `{"orderId": "UUID", "ticketNumber": "TVE/2026-0001", "grandTotal": 45.00}`
+
+| `Sales.ReceiptPrinted`
+| Thermal receipt printed to ESC/POS hardware.
+| `{"orderId": "UUID", "printerName": "thermal_kitchen"}`
+
+| `Sales.OrderSplit`
+| Restaurant ticket split across seats/guests.
+| `{"sourceOrderId": "UUID", "targetOrderIds": ["UUID-1", "UUID-2"]}`
+|===
+
+=== 3.2 Security & Hardware Events
+
+* `Security.UserLoggedIn`: Authentication attempt succeeded (`{"userId": "UUID", "role": "Manager"}`).
+* `Security.UserLoggedOut`: Explicit logout or inactivity lock.
+* `CashDrawer.DrawerOpened`: Manual drawer kick or no-sale event (`{"reason": "Manual Open / Change"}`).
+* `Hardware.ScaleWeightCaptured`: Tare/weight reading captured from serial scale.
+
+'''
+
+== 4. Service Architecture & SPI
+
+[source,java]
+----
+package com.openbravo.pos.spi.journal;
+
+public record JournalEntry(
+    String eventId,
+    String eventType,
+    Instant occurredAt,
+    String userId,
+    String terminalId,
+    String storeId,
+    String payloadJson
+) {}
+
+public interface JournalService {
+    void record(String eventType, Object payload);
+    void record(JournalEntry entry);
+    List<JournalEntry> queryEvents(JournalQuery query);
+}
+----
+
+=== Execution Safety
+* **Synchronous in-transaction recording**: For critical financial milestones (`Sales.OrderCompleted`, `Sales.PaymentTendered`), the journal record is committed inside the atomic checkout transaction to ensure the audit log and the ledger can never diverge.
+* **Non-blocking asynchronous recording**: For observational UI events (`Sales.ProductAdded`, `Sales.DiscountApplied`), events are queued into an in-memory buffer (`RingBuffer` / `ConcurrentLinkedQueue`) and flushed in batches, ensuring **zero UI stutter or checkout latency impact**.

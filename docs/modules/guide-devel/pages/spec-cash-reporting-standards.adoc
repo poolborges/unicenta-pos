@@ -1,0 +1,112 @@
+= Specification: Standard Cash Reporting Architecture (X/Z Reports & PosLog/SAF-T)
+:toc: left
+:toc-title: Table of Contents
+:toclevels: 3
+:icons: font
+:source-highlighter: rouge
+:rouge-style: github
+:sectnums:
+:sectnumlevels: 2
+
+[.lead]
+Specification for standard cash reconciliation reporting (X-Report vs. Z-Report) and international retail audit compliance standards (Resolves https://github.com/kriolos-obiz/kriolos-pos/issues/117[GitHub Issue #117]).
+
+'''
+
+== 1. Cash Report Fundamentals: X-Report vs. Z-Report
+
+In retail and hospitality operations, drawer reconciliation follows a strict regulatory distinction:
+
+[cols="1,2,2", options="header"]
+|===
+| Dimension | X-Report (Mid-Day Audit) | Z-Report (End-of-Day Final Closure)
+
+| **Purpose**
+| Shift inspection, cashier handoff, interim audit.
+| Daily fiscal closure and formal drawer reconciliation.
+
+| **Register Impact**
+| **Non-destructive**: Does NOT reset totals or sequence counters.
+| **Destructive / Resetting**: Resets register accumulators to zero, increments the sequential `Z-Counter`.
+
+| **Frequency**
+| Multiple times per shift/day as needed.
+| Exactly once per business trading day / drawer session.
+
+| **Fiscal Standing**
+| Informational only.
+| **Legal fiscal document** subject to statutory retention.
+|===
+
+'''
+
+== 2. International Compliance & Standards Mapping
+
+=== 2.1 ARTS PosLog Standard (NRF / OMG)
+* **Standard**: Association for Retail Technology Standards (ARTS) / National Retail Federation (NRF).
+* **Format**: XML / JSON schema (PosLog v6.0+).
+* **Application**: Universal enterprise interchange for transaction logs, tenders, line items, and tender reconciliation across POS and back-office ERPs (SAP, NetSuite, Dynamics).
+
+=== 2.2 SAF-T (Standard Audit File for Tax - OECD / Portugal)
+* **Requirement**: Mandatory annual or monthly XML export of all invoicing and cash transactions.
+* **Component**: `<SourceDocuments>` &rarr; `RC` (Recibos de Caixa / Cash Receipts).
+* **Rule**: Requires sequential numbering, RSA cryptographic hash chaining, and immutable closure records.
+
+=== 2.3 UK HMRC (Her Majesty's Revenue & Customs)
+* **Rule**: Notice 700 / VATREC3040 (VAT Traders' Records).
+* **Mandate**: Retailers **must retain all Z-Reports for a minimum of 6 years**. Records must clearly distinguish zero-rated, standard-rated, and exempt VAT totals alongside total takings and drawer discrepancies.
+
+=== 2.4 France E-Reporting & E-Invoicing
+* **Mandate**: Anti-fraud law (Loi Anti-Fraude TVA) + mandatory e-reporting for B2C transactions.
+* **Formats**: Factur-X (hybrid PDF/A-3 + XML), UBL (Universal Business Language), CII (Cross Industry Invoice).
+
+'''
+
+== 3. Target Z-Report Data Structure (`cash_session_closure`)
+
+To satisfy international compliance and auditing standards, drawer closures in `JPanelCloseMoney` persist a structured closure snapshot:
+
+[source,sql]
+----
+CREATE TABLE cash_session_closure (
+    id VARCHAR(36) PRIMARY KEY,              -- Closure UUID
+    sequence_z_num BIGINT NOT NULL,          -- Monotonic gapless Z-counter
+    terminal_id VARCHAR(36) NOT NULL,        -- POS register ID
+    opened_at TIMESTAMP NOT NULL,            -- Session opening timestamp
+    closed_at TIMESTAMP NOT NULL,            -- Session closing timestamp
+    opened_by VARCHAR(36) NOT NULL,          -- Opening cashier user ID
+    closed_by VARCHAR(36) NOT NULL,          -- Closing cashier user ID
+    opening_float_amount DECIMAL(12,2),      -- Opening cash float in drawer
+    closing_counted_cash DECIMAL(12,2),      -- Physically counted cash
+    expected_cash DECIMAL(12,2),             -- System calculated expected cash
+    cash_difference DECIMAL(12,2),           -- Over/Short variance
+    total_sales_gross DECIMAL(12,2) NOT NULL,-- Gross total sales
+    total_sales_net DECIMAL(12,2) NOT NULL,  -- Net total sales (excl. tax)
+    total_tax_amount DECIMAL(12,2) NOT NULL, -- Total VAT collected
+    tender_breakdown_json TEXT NOT NULL,     -- Totals per tender (Cash, Card, Voucher, Debt)
+    tax_breakdown_json TEXT NOT NULL,        -- Totals per VAT category (Base + Tax)
+    poslog_xml TEXT,                         -- Generated ARTS PosLog v6.0 XML
+    audit_hash VARCHAR(64)                   -- Cryptographic chain hash
+);
+
+CREATE UNIQUE INDEX idx_cash_z_terminal ON cash_session_closure (terminal_id, sequence_z_num);
+----
+
+'''
+
+== 4. Reporting Architecture & Export SPI
+
+1. **`CashReportingService` (Domain Service)**:
+   [source,java]
+   ----
+   public interface CashReportingService {
+       CashSessionSnapshot generateXReport(String sessionId) throws BasicException;
+       CashSessionClosure closeCashSessionAndGenerateZReport(CashClosingParameters params) throws BasicException;
+       String exportPosLog(String closureId) throws BasicException;
+       String exportSaftPtXml(LocalDate startDate, LocalDate endDate) throws BasicException;
+   }
+   ----
+
+2. **Integration with UI (`JPanelCloseMoney`)**:
+   * Cashiers execute count verification &rarr; system computes `cash_difference`.
+   * On confirmation, atomic transaction creates `cash_session_closure`, increments Z-Counter, resets active money session (`closedat = NOW()`), and triggers ESC/POS thermal printing of the official Z-Report.
