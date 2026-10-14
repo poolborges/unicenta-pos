@@ -17,11 +17,11 @@
 
 package com.openbravo.pos.epm;
 
-import com.openbravo.pos.forms.JPanelView;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.BeanFactoryException;
-import com.openbravo.pos.forms.BeanFactoryApp;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.panels.JPanelView;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.container.BeanFactoryException;
+import com.openbravo.pos.container.BeanFactoryApp;
+import com.openbravo.app.AppLocal;
 import com.openbravo.basic.BasicException;
 import com.openbravo.beans.JFlowPanel;
 import com.openbravo.data.gui.MessageInf;

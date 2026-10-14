@@ -16,7 +16,7 @@
 
 package com.openbravo.pos.sales;
 
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.payment.JPaymentSelect;
 import com.openbravo.pos.payment.JPaymentSelectReceipt;
 import com.openbravo.pos.payment.JPaymentSelectRefund;

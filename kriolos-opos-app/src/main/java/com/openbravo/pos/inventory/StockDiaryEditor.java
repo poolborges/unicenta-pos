@@ -18,10 +18,10 @@ package com.openbravo.pos.inventory;
 
 import com.openbravo.data.user.DirtyManager;
 import com.openbravo.data.user.EditorRecord;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.DataLogicSystem;
-import com.openbravo.pos.forms.ResourceService;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.pos.resources.ResourceService;
 import com.openbravo.pos.suppliers.SupplierService;
 import java.awt.Component;
 import com.openbravo.basic.BasicException;
@@ -36,7 +36,7 @@ import com.openbravo.pos.catalog.JCatalog;
 import com.openbravo.pos.catalog.CatalogService;
 import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.panels.JProductFinderPanel;
-import com.openbravo.pos.printer.TicketParser;
+import com.openbravo.pos.ticket.TicketParser;
 import com.openbravo.pos.sales.JProductAttEdit;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import java.awt.BorderLayout;
@@ -448,7 +448,7 @@ public final class StockDiaryEditor extends javax.swing.JPanel implements Editor
             ProductInfoExt oProduct = catalogService.getProductInfoByCode(m_jcodebar.getText());
             if (oProduct == null) {       
                 assignProduct(null);
-                com.openbravo.pos.util.NotifyUtils.beep();                   
+                com.openbravo.util.NotifyUtils.beep();                   
             } else {
                 assignProduct(oProduct);
             }
@@ -464,7 +464,7 @@ public final class StockDiaryEditor extends javax.swing.JPanel implements Editor
             ProductInfoExt oProduct = catalogService.getProductInfoByReference(m_jreference.getText());
             if (oProduct == null) {       
                 assignProduct(null);
-                com.openbravo.pos.util.NotifyUtils.beep();                   
+                com.openbravo.util.NotifyUtils.beep();                   
             } else {
                 assignProduct(oProduct);
             }

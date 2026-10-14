@@ -29,8 +29,8 @@ import com.openbravo.data.user.EditorCreator;
 import com.openbravo.editor.JEditorKeys;
 import com.openbravo.editor.JEditorString;
 import com.openbravo.pos.catalog.CatalogService;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.pim.CategoryInfo;
 import com.openbravo.pos.pim.DataLogicPIM;
 

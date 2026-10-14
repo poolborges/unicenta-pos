@@ -15,7 +15,13 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.imports;
 
-import com.openbravo.pos.forms.JPanelView;
+import com.openbravo.app.AppProperties;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.pos.config.AppConfig;
+import com.openbravo.pos.container.BeanFactoryException;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.panels.JPanelView;
 import com.csvreader.CsvReader;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.Session;
@@ -23,7 +29,6 @@ import com.openbravo.data.user.DefaultSaveProvider;
 import com.openbravo.data.user.SaveProvider;
 import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.pos.customers.DataLogicCustomers;
-import com.openbravo.pos.forms.*;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

@@ -17,14 +17,12 @@
 package com.openbravo.pos.panels;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.JPanelView;
+import com.openbravo.app.AppLocal;
 import com.openbravo.pos.hardware.PosHardwareManager;
-import com.openbravo.pos.printer.DeviceFiscalPrinter;
-import com.openbravo.pos.printer.DevicePrinter;
-import com.openbravo.pos.printer.VirtualFiscalPrinter;
-import com.openbravo.pos.printer.VirtualPrinter;
+import com.openbravo.pos.spi.hardware.printer.DeviceFiscalPrinter;
+import com.openbravo.pos.spi.hardware.printer.DevicePrinter;
+import com.openbravo.pos.spi.hardware.printer.VirtualFiscalPrinter;
+import com.openbravo.pos.spi.hardware.printer.VirtualPrinter;
 import com.openbravo.pos.printer.screen.DevicePrinterPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;

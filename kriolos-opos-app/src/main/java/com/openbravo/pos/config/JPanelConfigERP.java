@@ -17,9 +17,8 @@
 package com.openbravo.pos.config;
 
 import com.openbravo.data.user.DirtyManager;
-import com.openbravo.pos.forms.AppConfig;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.util.AltEncrypter;
+import com.openbravo.app.AppLocal;
+import com.openbravo.util.AltEncrypter;
 import java.awt.Component;
 
 /**

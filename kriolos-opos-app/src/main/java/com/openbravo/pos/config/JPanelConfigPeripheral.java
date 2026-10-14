@@ -16,10 +16,9 @@
 package com.openbravo.pos.config;
 
 import com.openbravo.data.user.DirtyManager;
-import com.openbravo.pos.forms.AppConfig;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.util.ReportUtils;
-import com.openbravo.pos.util.StringParser;
+import com.openbravo.app.AppLocal;
+import com.openbravo.util.ReportUtils;
+import com.openbravo.util.StringParser;
 import java.awt.CardLayout;
 import java.awt.Component;
 import javax.print.PrintService;

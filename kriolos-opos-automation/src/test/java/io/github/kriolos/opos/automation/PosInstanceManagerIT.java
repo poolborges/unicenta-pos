@@ -1,9 +1,7 @@
 package io.github.kriolos.opos.automation;
 
-import com.openbravo.pos.forms.AppConfig;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.pos.config.AppConfig;
 import com.openbravo.pos.forms.WindowShell;
-import com.openbravo.pos.forms.BootstrapPOS;
 import com.openbravo.pos.instance.InstanceManager;
 import io.github.kriolos.opos.automation.actions.InstanceManagerAction;
 import org.assertj.swing.core.BasicRobot;
@@ -14,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.SwingUtilities;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Field;

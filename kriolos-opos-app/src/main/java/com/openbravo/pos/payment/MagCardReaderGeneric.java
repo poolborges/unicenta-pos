@@ -16,8 +16,8 @@
 
 package com.openbravo.pos.payment;
 
-import com.openbravo.pos.util.LuhnAlgorithm;
-import com.openbravo.pos.util.StringUtils;
+import com.openbravo.util.LuhnAlgorithm;
+import com.openbravo.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 

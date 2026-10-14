@@ -16,7 +16,7 @@
 
 package com.openbravo.pos.sales.modern;
 
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.sales.modern.ModernTouchCatalog;
 import com.openbravo.pos.ui.api.catalog.CatalogDefinition;
 import com.openbravo.pos.ui.api.catalog.CatalogFactory;

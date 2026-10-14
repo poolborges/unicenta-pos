@@ -16,7 +16,9 @@
  */
 package com.openbravo.pos.forms;
 
-import com.openbravo.pos.forms.AppProperties.DatabaseConfig;
+import com.openbravo.pos.admin.SystemService;
+import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.app.AppProperties.DatabaseConfig;
 
 /**
  * Asynchronous callback contract for database activation and migration tasks.

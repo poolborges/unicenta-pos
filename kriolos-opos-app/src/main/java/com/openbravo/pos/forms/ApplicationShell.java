@@ -15,6 +15,19 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>
 package com.openbravo.pos.forms;
 
+import com.openbravo.app.AppLocal;
+import com.openbravo.app.AppProperties;
+import com.openbravo.app.AppProperties.DatabaseConfig;
+import com.openbravo.pos.admin.AppUser;
+import com.openbravo.pos.admin.AppUserView;
+import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.pos.admin.SecurityService;
+import com.openbravo.pos.admin.SystemService;
+import com.openbravo.pos.config.AppConfig;
+import com.openbravo.pos.container.BeanContainer;
+import com.openbravo.pos.container.BeanFactoryApp;
+import com.openbravo.pos.container.BeanFactoryException;
+import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.forms.components.AuthenticationPanel;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
@@ -23,12 +36,11 @@ import com.openbravo.format.Formats;
 import com.openbravo.pos.cash.CashManagementService;
 import com.openbravo.pos.cash.CashManagementServiceImpl;
 import com.openbravo.pos.cash.CashRegister;
-import com.openbravo.pos.forms.AppProperties.DatabaseConfig;
 import com.openbravo.pos.inventory.InventoryService;
 import com.openbravo.pos.hardware.PosHardwareManager;
-import com.openbravo.pos.printer.DeviceTicket;
-import com.openbravo.pos.printer.TicketParser;
-import com.openbravo.pos.printer.TicketPrinterException;
+import com.openbravo.pos.spi.hardware.DeviceTicket;
+import com.openbravo.pos.ticket.TicketParser;
+import com.openbravo.pos.spi.hardware.printer.TicketPrinterException;
 import com.openbravo.pos.spi.hardware.scale.ScaleDevice;
 import com.openbravo.pos.spi.hardware.scanner.ScannerDevice;
 import com.openbravo.pos.scripting.ScriptEngine;

@@ -1,7 +1,6 @@
 package com.openbravo.pos.instance;
 
-import com.openbravo.pos.forms.AppConfig; // Certifique-se de importar o seu gestor de configurações
-import com.openbravo.pos.forms.AppProperties;
+import com.openbravo.app.AppProperties;
 
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;

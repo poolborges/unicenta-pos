@@ -18,7 +18,7 @@ package com.openbravo.pos.sales;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import com.openbravo.pos.inventory.DataLogicInventory;
 import com.openbravo.pos.inventory.InventoryService;
 import com.openbravo.pos.inventory.LocationInfo;
@@ -29,7 +29,7 @@ import com.openbravo.pos.pim.CategoryInfo;
 import com.openbravo.pos.ticket.ProductInfoExt;
 import com.openbravo.pos.ticket.TicketInfo;
 import com.openbravo.pos.ticket.TicketLineInfo;
-import com.openbravo.pos.util.NotifyUtils;
+import com.openbravo.util.NotifyUtils;
 import java.awt.Component;
 import java.util.Date;
 import java.util.List;

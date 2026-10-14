@@ -18,7 +18,7 @@ package com.openbravo.pos.sales.modern.one;
 
 import com.openbravo.format.Formats;
 import com.openbravo.pos.customers.CustomerInfoExt;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import com.openbravo.ui.components.POSKeyBinder;
 import com.openbravo.pos.ticket.TicketInfo;
 import com.openbravo.pos.ui.components.ButtonSize;

@@ -16,7 +16,7 @@
 
 package com.openbravo.pos.payment;
 
-import com.openbravo.pos.forms.AppConfig;
+import com.openbravo.pos.config.AppConfig;
 import javax.swing.JPanel;
 
 /**

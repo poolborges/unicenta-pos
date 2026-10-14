@@ -15,6 +15,8 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>
 package com.openbravo.pos.forms;
 
+import com.openbravo.pos.config.AppConfig;
+
 /**
  * Legacy entry point. Deprecated in favor of {@link BootstrapPOS}.
  *

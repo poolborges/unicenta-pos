@@ -16,9 +16,9 @@
 package com.openbravo.pos.forms.components;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.JPanelView;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.panels.JPanelView;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 

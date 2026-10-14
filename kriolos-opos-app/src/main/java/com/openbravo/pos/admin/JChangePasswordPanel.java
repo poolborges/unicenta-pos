@@ -19,8 +19,8 @@ package com.openbravo.pos.admin;
 import com.openbravo.data.gui.JMessagePanel;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.gui.modal.PosUIModal;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.util.Hashcypher;
+import com.openbravo.app.AppLocal;
+import com.openbravo.util.Hashcypher;
 import java.awt.Component;
 import javax.swing.JPanel;
 

@@ -1,6 +1,6 @@
 package com.openbravo.pos.forms.components;
 
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.BorderFactory;

@@ -27,9 +27,9 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.JMessagePanel;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.gui.modal.PosUIModal;
-import com.openbravo.pos.forms.AppConfig;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.config.AppConfig;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.catalog.CatalogService;
 import com.openbravo.pos.ticket.TicketLineInfo;
 

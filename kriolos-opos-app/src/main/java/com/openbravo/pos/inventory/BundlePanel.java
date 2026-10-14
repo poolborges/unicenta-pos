@@ -21,7 +21,7 @@ import com.openbravo.data.loader.Datas;
 import com.openbravo.data.model.*;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import com.openbravo.pos.inventory.DataLogicInventory;
 import com.openbravo.pos.panels.BundleFilter;
 import com.openbravo.pos.panels.JPanelTable2;

@@ -17,7 +17,7 @@
 package com.openbravo.pos.inventory;
 
 import com.openbravo.format.Formats;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import java.awt.Component;
 import java.awt.Rectangle;
 import java.util.ArrayList;

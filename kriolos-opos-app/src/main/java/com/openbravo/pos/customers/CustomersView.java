@@ -21,12 +21,12 @@ import com.openbravo.data.loader.SentenceList;
 import com.openbravo.data.user.DirtyManager;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.BeanFactoryException;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.container.BeanFactoryException;
 import com.openbravo.pos.sales.DataLogicTax;
 import com.openbravo.pos.sales.TaxService;
-import com.openbravo.pos.util.StringUtils;
+import com.openbravo.util.StringUtils;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.image.BufferedImage;
@@ -1518,7 +1518,7 @@ public final class CustomersView extends com.openbravo.pos.panels.ValidationPane
             resetTranxTable();
         } else {
             LOGGER.log(System.Logger.Level.DEBUG, "Customer ID is null");
-            com.openbravo.pos.util.NotifyUtils.beep();
+            com.openbravo.util.NotifyUtils.beep();
         }
     }//GEN-LAST:event_jBtnShowTransActionPerformed
 

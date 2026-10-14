@@ -16,7 +16,7 @@
 
 package com.openbravo.pos.menu;
 
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;

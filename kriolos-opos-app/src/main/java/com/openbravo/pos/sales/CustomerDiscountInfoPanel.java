@@ -19,7 +19,7 @@ package com.openbravo.pos.sales;
 import com.openbravo.data.gui.modal.PosUIModal;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.customers.CustomerInfoExt;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;

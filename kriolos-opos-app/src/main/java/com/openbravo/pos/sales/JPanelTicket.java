@@ -15,11 +15,12 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.sales;
 
-import com.openbravo.pos.forms.JPanelView;
-import com.openbravo.pos.forms.DataLogicSales;
-import com.openbravo.pos.forms.DataLogicSystem;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppProperties;
+import com.openbravo.pos.resources.ResourceService;
+import com.openbravo.pos.panels.JPanelView;
+import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.app.AppLocal;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.ComboBoxValModel;
 import com.openbravo.pos.customers.CustomerInfoExt;
@@ -27,7 +28,6 @@ import com.openbravo.pos.customers.CustomerInfoGlobal;
 import com.openbravo.pos.customers.CustomerService;
 import com.openbravo.pos.customers.DataLogicCustomers;
 import com.openbravo.pos.domain.utils.AmountCalculatorUtil;
-import com.openbravo.pos.forms.*;
 import com.openbravo.pos.inventory.TaxCategoryInfo;
 import com.openbravo.pos.payment.JPaymentSelect;
 import com.openbravo.pos.payment.JPaymentSelectReceipt;
@@ -36,7 +36,7 @@ import com.openbravo.pos.ticket.ProductInfoExt;
 import com.openbravo.pos.ticket.TaxInfo;
 import com.openbravo.pos.ticket.TicketInfo;
 import com.openbravo.pos.ticket.TicketLineInfo;
-import com.openbravo.pos.util.InactivityListener;
+import com.openbravo.util.InactivityListener;
 
 import com.openbravo.pos.payment.PaymentService;
 import com.openbravo.pos.payment.PaymentServiceImpl;
@@ -494,7 +494,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private void applyLineQuantityChange(double amount, boolean isAbsolute) {
         int i = m_ticketlines.getSelectedIndex();
         if (i < 0) {
-            com.openbravo.pos.util.NotifyUtils.beep();
+            com.openbravo.util.NotifyUtils.beep();
             return;
         }
         if (ticketLineController != null) {
@@ -504,7 +504,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             } else if (res.status() == LineChangeResult.Status.REMOVED) {
                 refreshTicket();
             } else if (res.status() == LineChangeResult.Status.DENIED) {
-                com.openbravo.pos.util.NotifyUtils.beep();
+                com.openbravo.util.NotifyUtils.beep();
             }
         }
     }
@@ -559,7 +559,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     m_oTicket.insertLine(i, oLine);
                     m_ticketlines.insertTicketLine(i, oLine);
                 } else {
-                    com.openbravo.pos.util.NotifyUtils.beep();
+                    com.openbravo.util.NotifyUtils.beep();
                 }
             } else {
                 m_oTicket.addLine(oLine);
@@ -583,7 +583,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
             executeEvent(m_oTicket, m_oTicketExt, TicketConstants.EV_TICKET_CHANGE);
         } else {
-            com.openbravo.pos.util.NotifyUtils.beep();
+            com.openbravo.util.NotifyUtils.beep();
         }
     }
 
@@ -732,7 +732,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         } else if (prod.isVprice()) {
             addTicketLine(prod, getPorValue(), getInputValue());
         } else {
-            com.openbravo.pos.util.NotifyUtils.beep();
+            com.openbravo.util.NotifyUtils.beep();
         }
     }
 
@@ -744,7 +744,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             if (m_sBarcode.length() > 0) {
                 incProductByCode(m_sBarcode.toString());
             } else {
-                com.openbravo.pos.util.NotifyUtils.beep();
+                com.openbravo.util.NotifyUtils.beep();
             }
 
         } else {
@@ -769,7 +769,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                         stateToZero();
                     }
                 } else {
-                    com.openbravo.pos.util.NotifyUtils.beep();
+                    com.openbravo.util.NotifyUtils.beep();
                 }
             } else if (cTrans == '\u00a7'
                     && keypadStateMachine.isInputZero()
@@ -777,7 +777,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
 
                 int i = m_ticketlines.getSelectedIndex();
                 if (i < 0) {
-                    com.openbravo.pos.util.NotifyUtils.beep();
+                    com.openbravo.util.NotifyUtils.beep();
                 } else {
                     Double value = peripheralCoordinator.readWeight(this);
                     if (value != null) {
@@ -793,7 +793,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             } else if ((cTrans == '+' || cTrans == '-')
                     && keypadStateMachine.isInputZero()) {
                 if (cTrans == '-' && !m_App.hasPermission("sales.EditLines")) {
-                    com.openbravo.pos.util.NotifyUtils.beep();
+                    com.openbravo.util.NotifyUtils.beep();
                 } else if (keypadStateMachine.isPorZero()) {
                     applyLineQuantityChange(cTrans == '-' ? -1.0 : 1.0, false);
                 } else if (keypadStateMachine.isPorValid()) {
@@ -825,7 +825,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                             if (isRestaurantMode() && isAutoLogoutRestaurant()) {
                                 deactivate();
                             } else {
-                                ((ApplicationShell) m_App).closeAppView();
+                                (m_App).closeAppView();
                             }
                         }
 
@@ -833,7 +833,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
                     }
                     refreshTicket();
                 } else {
-                    com.openbravo.pos.util.NotifyUtils.beep();
+                    com.openbravo.util.NotifyUtils.beep();
                     LOGGER.log(System.Logger.Level.DEBUG, "Canno close Ticket, because m_oTicket is " + m_oTicket
                             + ", and LinesCount is " + (m_oTicket != null ? m_oTicket.getLinesCount() : 0));
                 }
@@ -1169,7 +1169,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private void editSelectedLine() {
         int i = m_ticketlines.getSelectedIndex();
         if (i < 0) {
-            com.openbravo.pos.util.NotifyUtils.beep();
+            com.openbravo.util.NotifyUtils.beep();
         } else {
             ticketLineController.editLine(this, m_oTicket.getLine(i))
                     .ifPresent(newline -> paintTicketLine(i, newline));
@@ -1179,7 +1179,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
     private void deleteSelectedLine() {
         int i = m_ticketlines.getSelectedIndex();
         if (i < 0) {
-            com.openbravo.pos.util.NotifyUtils.beep();
+            com.openbravo.util.NotifyUtils.beep();
         } else {
             removeTicketLine(i);
         }
@@ -1190,7 +1190,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         if (prod != null && m_oTicket != null) {
             buttonTransition(prod);
         } else {
-            com.openbravo.pos.util.NotifyUtils.beep();
+            com.openbravo.util.NotifyUtils.beep();
         }
     }
 
@@ -1200,7 +1200,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
         }
         int i = m_ticketlines.getSelectedIndex();
         if (i < 0) {
-            com.openbravo.pos.util.NotifyUtils.beep();
+            com.openbravo.util.NotifyUtils.beep();
         } else {
             TicketLineInfo line = m_oTicket.getLine(i);
             if (ticketLineController.editLineAttributes(this, m_App.getSession(), line)) {
@@ -1282,13 +1282,13 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, Tickets
             if (isRestaurantMode()) {
                 deactivate();
                 if (isAutoLogoutRestaurant()) {
-                    ((ApplicationShell) m_App).closeAppView();
+                    m_App.closeAppView();
                 } else {
                     setActiveTicket(null, null);
                 }
             } else {
                 deactivate();
-                ((ApplicationShell) m_App).closeAppView();
+                m_App.closeAppView();
             }
         }
     }

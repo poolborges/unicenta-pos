@@ -18,7 +18,7 @@ package com.openbravo.pos.ticket;
 
 import com.openbravo.format.Formats;
 import com.openbravo.pos.resources.ImageResources;
-import com.openbravo.pos.util.ThumbNailBuilder;
+import com.openbravo.util.ThumbNailBuilder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;

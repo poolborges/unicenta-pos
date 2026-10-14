@@ -15,13 +15,13 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.sales;
 
-import com.openbravo.pos.forms.AppLocal;
-import com.openbravo.pos.forms.AppUser;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.DataLogicSystem;
-import com.openbravo.pos.forms.ResourceService;
-import com.openbravo.pos.util.SAXParserUtils;
-import com.openbravo.pos.util.ThumbNailBuilder;
+import com.openbravo.app.AppLocal;
+import com.openbravo.pos.admin.AppUser;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.pos.resources.ResourceService;
+import com.openbravo.util.SAXParserUtils;
+import com.openbravo.util.ThumbNailBuilder;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;

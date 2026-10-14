@@ -16,6 +16,7 @@
  */
 package com.openbravo.pos.forms;
 
+import com.openbravo.pos.config.AppConfig;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.spi.localization.LocalizationFactory;
 import com.openbravo.pos.spi.localization.LocalizationProvider;

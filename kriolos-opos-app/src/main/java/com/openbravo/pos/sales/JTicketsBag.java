@@ -17,8 +17,7 @@
 package com.openbravo.pos.sales;
 
 import com.openbravo.pos.customers.CustomerInfoExt;
-import com.openbravo.pos.forms.AppView;
-import com.openbravo.pos.forms.DataLogicSales;
+import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.sales.BagMode;
 import com.openbravo.pos.sales.JTicketsBagMode;
 import com.openbravo.pos.ticket.TicketInfo;

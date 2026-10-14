@@ -16,7 +16,7 @@
 
 package com.openbravo.pos.payment;
 
-import com.openbravo.pos.forms.AppLocal;
+import com.openbravo.app.AppLocal;
 import javax.swing.JComponent;
 
 public class PaymentPanelBasic extends javax.swing.JPanel implements PaymentPanel {

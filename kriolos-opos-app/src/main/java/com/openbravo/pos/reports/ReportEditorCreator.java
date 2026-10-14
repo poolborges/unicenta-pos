@@ -18,7 +18,7 @@ package com.openbravo.pos.reports;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.user.FilterEditorCreator;
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.panels.AppView;
 import java.awt.Component;
 
 /**

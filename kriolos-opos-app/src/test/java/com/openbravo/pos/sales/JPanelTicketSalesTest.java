@@ -16,8 +16,8 @@
 
 package com.openbravo.pos.sales;
 
-import com.openbravo.pos.forms.AppProperties;
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.app.AppProperties;
+import com.openbravo.pos.panels.AppView;
 import java.lang.reflect.Proxy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

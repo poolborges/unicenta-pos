@@ -1,6 +1,6 @@
 package com.openbravo.pos.sales;
 
-import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.sales.restaurant.JTicketsBagRestaurantMap; // keep import if needed elsewhere
 import com.openbravo.pos.sales.shared.JTicketsBagShared;
 import com.openbravo.pos.sales.simple.JTicketsBagSimple;
