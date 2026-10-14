@@ -1,6 +1,6 @@
 package io.github.kriolos.opos.automation;
 
-
+import com.openbravo.pos.forms.BootstrapPOS;
 import io.github.kriolos.opos.automation.actions.DatabaseSelectionAction;
 import io.github.kriolos.opos.automation.actions.InstanceManagerAction;
 import io.github.kriolos.opos.automation.actions.LoginAction;

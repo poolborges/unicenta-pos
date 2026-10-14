@@ -1,6 +1,7 @@
 package io.github.kriolos.opos.automation;
 
 import com.openbravo.pos.config.AppConfig;
+import com.openbravo.pos.forms.BootstrapPOS;
 import com.openbravo.pos.forms.WindowShell;
 import com.openbravo.pos.instance.InstanceManager;
 import io.github.kriolos.opos.automation.actions.InstanceManagerAction;

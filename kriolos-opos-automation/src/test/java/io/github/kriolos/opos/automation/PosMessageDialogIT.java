@@ -18,6 +18,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.text.JTextComponent;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.image.BufferedImage;
@@ -77,10 +78,10 @@ public class PosMessageDialogIT {
         assertImageNotBlack(capture);
 
         // Verify message label contains expected text
-        JLabel messageLabel = robot.finder().find(dialog.target(), new GenericTypeMatcher<JLabel>(JLabel.class) {
+        JTextComponent messageLabel = robot.finder().find(dialog.target(), new GenericTypeMatcher<JTextComponent>(JTextComponent.class) {
             @Override
-            protected boolean isMatching(JLabel label) {
-                return label.getText() != null && label.getText().contains(testMsg);
+            protected boolean isMatching(JTextComponent comp) {
+                return comp.isShowing() && comp.getText() != null && comp.getText().contains(testMsg);
             }
         });
         assertThat(messageLabel).isNotNull();
@@ -127,7 +128,7 @@ public class PosMessageDialogIT {
         assertImageNotBlack(expandedCapture);
 
         // Verify stack trace text area is showing and contains root cause message
-        JTextArea textArea = robot.finder().findByType(dialog.target(), JTextArea.class);
+        JTextArea textArea = robot.finder().findByName(dialog.target(), "kriolos:message:txt-exception", JTextArea.class);
         assertThat(textArea).isNotNull();
         assertThat(textArea.isShowing()).isTrue();
         assertThat(textArea.getText()).contains(rootCauseMsg);

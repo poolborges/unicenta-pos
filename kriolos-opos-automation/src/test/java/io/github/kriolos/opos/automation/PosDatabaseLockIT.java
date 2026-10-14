@@ -128,7 +128,7 @@ public class PosDatabaseLockIT {
         assertImageNotBlack(expandedCapture);
 
         // 5. Verify exception details text area contains connection failure information
-        JTextArea textArea = robot.finder().findByType(dialog.target(), JTextArea.class);
+        JTextArea textArea = robot.finder().findByName(dialog.target(), "kriolos:message:txt-exception", JTextArea.class);
         assertThat(textArea).isNotNull();
         assertThat(textArea.isShowing()).isTrue();
         assertThat(textArea.getText().length()).isGreaterThan(10);
