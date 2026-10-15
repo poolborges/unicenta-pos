@@ -15,6 +15,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.app;
 
+import com.openbravo.pos.spi.config.BootstrapConfig;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -48,8 +49,9 @@ import java.util.logging.Logger;
  *
  * <p>Separated from application business configuration according to Architecture Specification:
  * {@code docs/modules/guide-devel/pages/spec-database-configuration.adoc}.
+ * Does NOT implement AppProperties as bootstrap is strictly used during initial setup.
  */
-public class BootstrapConfiguration implements AppProperties {
+public class BootstrapConfiguration implements BootstrapConfig {
 
     private static final Logger LOGGER = Logger.getLogger(BootstrapConfiguration.class.getName());
 
@@ -148,6 +150,10 @@ public class BootstrapConfiguration implements AppProperties {
         return properties.getProperty(sKey, defaultValue);
     }
 
+    public Properties getProperties() {
+        return properties;
+    }
+
     public void setProperty(String sKey, String sValue) {
         if (sValue == null) {
             properties.remove(sKey);
@@ -212,7 +218,6 @@ public class BootstrapConfiguration implements AppProperties {
         }
     }
 
-    @Override
     public File getConfigFile() {
         return configfile;
     }
@@ -263,7 +268,7 @@ public class BootstrapConfiguration implements AppProperties {
     }
 
     @Override
-    public DatabaseConfig getPrimary() {
+    public BootstrapConfig.DatabaseConfig getPrimaryDatabaseConfig() {
         if (properties == null) {
             return null;
         }
@@ -274,17 +279,17 @@ public class BootstrapConfiguration implements AppProperties {
         String password = getProperty("db.password", "kriolopos");
         String decryptPass = decryptPassword(user, password);
 
-        return new DatabaseConfig(name, url, user, decryptPass);
+        return new BootstrapConfig.DatabaseConfig(name, url, user, decryptPass);
     }
 
     @Override
-    public List<DatabaseConfig> getAll() {
-        List<DatabaseConfig> dbs = new ArrayList<>();
+    public List<BootstrapConfig.DatabaseConfig> getDatabaseConfigs() {
+        List<BootstrapConfig.DatabaseConfig> dbs = new ArrayList<>();
         if (properties == null) {
             return dbs;
         }
 
-        DatabaseConfig primary = getPrimary();
+        BootstrapConfig.DatabaseConfig primary = getPrimaryDatabaseConfig();
         if (primary != null) {
             dbs.add(primary);
         }
@@ -333,7 +338,7 @@ public class BootstrapConfiguration implements AppProperties {
             }
 
             String decryptPass = decryptPassword(user, password);
-            dbs.add(new DatabaseConfig(name, url, user, decryptPass));
+            dbs.add(new BootstrapConfig.DatabaseConfig(name, url, user, decryptPass));
         }
 
         return Collections.unmodifiableList(dbs);
