@@ -32,5 +32,7 @@
 *** xref:report-pdf-export.adoc[PDF Export]
 *** xref:spec-cash-reporting-standards.adoc[Specification: Standard Cash Reports (X/Z Reports & PosLog)]
 *** xref:resources-assets.adoc[Resources & Assets Overview]
+** Testing & Automation
+*** xref:automation-multilingual-audio-narration.adoc[Automated Video Showcase & Multi-Language Audio Narration]
 ** Troubleshooting
 *** xref:troubleshooting-known-issues.adoc[Known Issues]

@@ -9,6 +9,9 @@ import io.github.kriolos.opos.automation.actions.MenuNavigationAction;
 import io.github.kriolos.opos.automation.actions.NavigationHistoryAction;
 import io.github.kriolos.opos.automation.actions.PaymentDialogAction;
 import io.github.kriolos.opos.automation.actions.SalesAction;
+import io.github.kriolos.opos.automation.narration.PosAudioNarrator;
+import io.github.kriolos.opos.automation.video.FfmpegScreenGifGenerator;
+import io.github.kriolos.opos.automation.video.FfmpegScreenRecorder;
 import org.assertj.swing.core.BasicRobot;
 import org.assertj.swing.core.Robot;
 import org.assertj.swing.fixture.FrameFixture;
@@ -48,6 +51,7 @@ public abstract class BasePosRobotIT {
     protected Robot robot;
     protected ScreenshotHelper screenshotHelper;
     protected FfmpegScreenRecorder videoRecorder;
+    protected PosAudioNarrator narrator;
 
     // Reusable Action Drivers
     protected DatabaseSelectionAction dbSelection;
@@ -85,6 +89,10 @@ public abstract class BasePosRobotIT {
         // 1. By default for automated UI testing, isolate configuration and disable unique instance check
         AutomationTestConfig.applyTestEnvironment();
         System.setProperty("machine.uniqueinstance", System.getProperty("test.pos.uniqueinstance", "false"));
+
+        // Initialize Audio Narrator
+        narrator = new PosAudioNarrator(getScenarioName());
+        narrator.start();
 
         // 2. Initialize Reusable Action Drivers
         dbSelection = new DatabaseSelectionAction(robot, screenshotHelper, IS_HUMAN);
@@ -184,11 +192,24 @@ public abstract class BasePosRobotIT {
         }
         if (videoRecorder != null) {
             videoRecorder.stop();
-            if (RECORD_GIF) {
-                File videoFile = videoRecorder.getOutputFile();
-                if (videoFile != null && videoFile.exists()) {
+            File videoFile = videoRecorder.getOutputFile();
+            if (videoFile != null && videoFile.exists()) {
+                if (RECORD_GIF) {
                     File gifFile = new File(videoFile.getParentFile(), "session.gif");
                     FfmpegScreenGifGenerator.generateGif(videoFile, gifFile);
+                }
+                if (narrator != null) {
+                    narrator.compileNarratedVideos(videoFile, videoFile.getParentFile());
+                }
+                if (Boolean.getBoolean("test.playback.vlc") || Boolean.getBoolean("opos.playback.vlc")) {
+                    File playFile = new File(videoFile.getParentFile(), "session_youtube_multilingual.mp4");
+                    if (!playFile.exists()) {
+                        playFile = new File(videoFile.getParentFile(), "session_pt.mp4");
+                    }
+                    if (!playFile.exists()) {
+                        playFile = videoFile;
+                    }
+                    io.github.kriolos.opos.automation.video.VlcVideoPlayerPanel.showDemo(playFile);
                 }
             }
         }

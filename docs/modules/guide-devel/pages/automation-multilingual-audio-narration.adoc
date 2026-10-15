@@ -1,0 +1,349 @@
+= Automated Video Showcase & Multi-Language Audio Narration Architecture
+:author: Copyright (c) KriolOS Team.
+:toc:
+:toc-placement!:
+:icons: font
+
+Technical specification and architectural guide for generating synchronized video showcases with multi-language voiceover narration directly from automated UI robot tests.
+
+toc::[]
+
+== 1. Executive Summary & Vision
+
+Software demonstrations, tutorial videos, and marketing releases for modern retail POS applications usually require tedious, error-prone manual screen recording and voiceover editing. When marketing to diverse regions (e.g. Portuguese-speaking markets such as Brazil, Portugal, Cape Verde, Angola, and Mozambique, alongside international English-speaking markets), creating separate video assets manually doubles the production burden.
+
+`kriolos-opos-automation` introduces an **automated end-to-end video and multi-language audio narration pipeline**. As UI robot integration tests (`BasePosRobotIT`) execute functional flows (login, sales, inventory, close cash, configuration), the system:
+1. Records crisp H.264 video of the application in memory.
+2. Resolves localized explanation scripts from externalized properties bundles.
+3. Synthesizes voiceovers in multiple languages simultaneously.
+4. Mixes audio tracks on a precise timeline in pure Java (`javax.sound.sampled`).
+5. Assembles single-language MP4 videos (`session_pt.mp4`, `session_en.mp4`) as well as a **YouTube-compliant dual-audio video** (`session_youtube_multilingual.mp4`).
+
+---
+
+== 2. Comparison of Existing Solutions
+
+[cols="2,2,2,3", options="header"]
+|===
+| Approach | Multi-Language Support | Platform Portability | Trade-offs & Analysis
+
+| **Manual Video Recording & Voiceover**
+| ❌ High effort per language
+| N/A (Manual human labor)
+| Requires OBS/Kdenlive, manual dubbing, and re-recording every time the UI changes.
+
+| **OS Native CLI Synthesizers** (`RHVoice`, `say`, `SAPI`)
+| ✅ High quality native voices (e.g. `Leticia-F123` for PT, `slt`/`bdl` for EN)
+| ⚠️ Platform-specific binaries
+| Zero latency, no network cost, but requires binary packages installed on host. Ideal for local dev and release generation workstations.
+
+| **Pure Java Synthesizers** (MaryTTS, FreeTTS)
+| ⚠️ Variable voice naturalness
+| ✅ 100% JVM Portable
+| Runs on any JDK without native binaries. MaryTTS supports modular languages (EN, DE, FR, IT), though voice packages add ~30-50MB dependencies. FreeTTS is primarily limited to US English.
+
+| **Cloud TTS Services: Azure Neural Speech (`AzureTtsEngine`)**
+| ✅ Studio-grade broadcast naturalness (`pt-PT-RaquelNeural`, `en-US-AriaNeural`)
+| ✅ 100% JVM Portable (HTTP REST)
+| Generates broadcast/documentary-grade speech directly into 24kHz PCM WAV via Azure Cognitive Services. Configurable via `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION`.
+
+| **Edge Neural Speech (`EdgeNeuralTtsEngine`)**
+| ✅ Studio-grade naturalness (`pt-PT-RaquelNeural`, `en-US-AriaNeural`)
+| ✅ Automatic Managed Venv (`target/tts-env`)
+| Uses Microsoft Edge's Neural Speech protocol. Zero API keys, completely free, pristine broadcast-quality Portuguese and English voices.
+
+| **Synthetic Pure Java Fallback** (`MockJavaTtsEngine`)
+| ✅ Synthetic audio markers
+| ✅ 100% JVM Portable
+| Generates clean algorithmic WAV cues via `javax.sound.sampled`. Guarantees automated test suites pass on any headless CI runner without external audio software.
+
+| **FFmpeg `adelay` + `amix` Filters**
+| ⚠️ Complex command syntax
+| ⚠️ Requires external FFmpeg CLI
+| Spawns external processes, susceptible to pipe deadlocks when command-line buffer limits are exceeded.
+
+| **Pure Java Timeline Mixer (`JavaAudioTimelineMixer`)**
+| ✅ Unlimited channels & clips
+| ✅ 100% JVM Portable (`javax.sound.sampled`)
+| Direct in-memory PCM mixing (24kHz/44.1kHz 16-bit). Performs sample addition with clipping protection (`Short.MIN_VALUE` to `Short.MAX_VALUE`). High performance (<5ms).
+
+| **Embedded FFmpeg via Maven (`ws.schild:jave-all-deps`)**
+| N/A (Video / Audio Tooling)
+| ✅ Automatic Cross-Platform Extraction
+| Bundles pre-compiled FFmpeg binaries for Linux (x64, arm32, arm64), macOS (Intel, Apple Silicon), and Windows (x86, x64). Resolved automatically by `FfmpegLocator` without requiring system package managers.
+
+| **JavaCV & OpenCV (`bytedeco/javacv`, `actimem/pilecv4j`)**
+| N/A (Computer Vision / Frame Pipelines)
+| ⚠️ Heavy multi-platform native jars
+| Provides Java bindings to OpenCV and FFmpeg (via JavaCPP). Highly suited for real-time computer vision and image processing pipelines, though dependency footprints can exceed 300MB+.
+
+| **Embedded Swing VLC Player (`caprica/vlcj`)**
+| ✅ Hardware-accelerated multi-track playback
+| ⚠️ Requires host LibVLC
+| Embedded hardware-accelerated Swing canvas panel (`VlcVideoPlayerPanel`). Enables developers to preview recordings, scrub timelines, inspect timecodes, and toggle multi-language narration tracks directly inside Swing.
+|===
+
+---
+
+== 3. Architecture & Data Flow
+
+[source]
+----
+                   UI Robot Test Execution (e.g. PosSalesFlowIT)
+                                  │
+         ┌────────────────────────┴────────────────────────┐
+         ▼                                                 ▼
+   [UI Action Event]                              [Narration Cue Trigger]
+(Click button, enter PIN)                    narrator.narrateKey("showcase.login")
+         │                                                 │
+         ▼                                                 ▼
+[FfmpegScreenRecorder]                         [Script Bundle Resolution]
+(Pipes in-memory BGR24 frames)             /narration/narration_{lang}.properties
+         │                                        ├── PT: "Iniciando sessão..."
+         │                                        └── EN: "Logging in as..."
+         │                                                 │
+         │                                                 ▼
+         │                                      [Pluggable TtsEngine]
+         │                                (Native RHVoice / Pure Java Mock)
+         │                                        ├── cue_pt_01.wav (24kHz)
+         │                                        └── cue_en_01.wav (24kHz)
+         │                                                 │
+         ▼                                                 ▼
+   [session.mp4]                               [JavaAudioTimelineMixer]
+ (Raw video stream)                            (javax.sound.sampled PCM)
+         │                                        ├── narration_pt.wav
+         │                                        └── narration_en.wav
+         │                                                 │
+         └────────────────────────┬────────────────────────┘
+                                  ▼
+                            [FFmpeg Muxer]
+                                  │
+          ┌───────────────────────┼───────────────────────┐
+          ▼                       ▼                       ▼
+   `session_pt.mp4`        `session_en.mp4`    `session_youtube_multilingual.mp4`
+   (Portuguese Audio)      (English Audio)     (Track 1: por, Track 2: eng)
+----
+
+---
+
+== 4. Externalized Multi-Language Script Storage
+
+Narration transcripts are decoupled from Java test code and stored in standard UTF-8 properties resource bundles under `kriolos-opos-automation/src/test/resources/narration/`.
+
+=== 4.1 Portuguese (`narration_pt.properties`)
+
+[source,properties]
+----
+showcase.intro=Bem-vindo ao KriolOS POS, o seu sistema moderno e flexível de ponto de venda.
+showcase.database=Conectando e ativando a base de dados da loja em modo de alta performance.
+showcase.login=Iniciando sessão com o operador administrador no sistema.
+showcase.sales.catalog=A selecionar itens do catálogo interativo e a adicioná-los diretamente ao carrinho.
+showcase.customers=Acedendo à gestão de clientes, histórico de compras e contas correntes.
+showcase.products=Visualizando a gestão de produtos, controlo de stocks, preços e código de barras.
+showcase.closecash=Acedendo ao fecho de caixa diário e conferência dos movimentos de tesouraria.
+showcase.outro=Demonstração concluída. Obrigado por assistir ao KriolOS POS.
+----
+
+=== 4.2 English (`narration_en.properties`)
+[source,properties]
+----
+showcase.intro=Welcome to KriolOS POS, your modern and flexible point of sale system.
+showcase.database=Connecting and activating the store database in high performance mode.
+showcase.login=Logging in as the administrator operator to the system.
+showcase.sales.catalog=Selecting interactive catalog items and adding them directly to the shopping cart.
+showcase.customers=Accessing customer management, sales history, and credit accounts.
+showcase.products=Viewing comprehensive inventory management, stock levels, pricing, and barcodes.
+showcase.closecash=Performing the daily cash register closeout and payment reconciliation.
+showcase.outro=Demonstration completed. Thank you for watching KriolOS POS.
+----
+
+=== 4.3 French (`narration_fr.properties`)
+[source,properties]
+----
+showcase.intro=Bienvenue sur KriolOS POS, votre système de point de vente moderne et flexible.
+showcase.database=Connexion et activation de la base de données du magasin en mode haute performance.
+showcase.login=Connexion au système avec le compte administrateur.
+showcase.sales.catalog=Sélection des articles du catalogue interactif et ajout direct au panier.
+showcase.customers=Gestion du fichier clients, historique des achats et comptes de crédit.
+showcase.products=Gestion complète des stocks, des tarifs, des codes-barres et des articles.
+showcase.closecash=Clôture journalière de la caisse et rapprochement des flux de trésorerie.
+showcase.outro=Démonstration terminée. Merci d'avoir regardé KriolOS POS.
+----
+
+=== 4.4 Spanish (`narration_es.properties`)
+[source,properties]
+----
+showcase.intro=Bienvenido a KriolOS POS, su sistema de punto de venta moderno y flexible.
+showcase.database=Conectando y activando la base de datos de la tienda en modo de alto rendimiento.
+showcase.login=Iniciando sesión en el sistema con el operador administrador.
+showcase.sales.catalog=Seleccionando artículos del catálogo interactivo y agregándolos a la cesta.
+showcase.customers=Gestión de clientes, historial de compras y cuentas de crédito.
+showcase.products=Control integral de inventario, existencias, precios y códigos de barras.
+showcase.closecash=Realizando el cierre de caja diario y conciliación de movimientos de efectivo.
+showcase.outro=Demostración completada. Gracias por ver KriolOS POS.
+----
+
+=== 4.5 Arabic (`narration_ar.properties`)
+[source,properties]
+----
+showcase.intro=مرحبًا بكم في KriolOS POS، نظام نقاط البيع العصري والمرن لإدارة مبيعاتكم.
+showcase.database=جاري الاتصال بقاعدة بيانات المتجر وتفعيلها بأعلى مستويات الأداء.
+showcase.login=تسجيل الدخول إلى النظام باستخدام حساب المسؤول.
+showcase.sales.catalog=اختيار المنتجات من الدليل التفاعلي وإضافتها مباشرة إلى سلة المشتريات.
+showcase.customers=الوصول إلى إدارة العملاء وسجل المشتريات والحسابات الجارية.
+showcase.products=إدارة شاملة للمخزون ومتابعة الكميات والأسعار والباركود.
+showcase.closecash=إجراء إغلاق الصندوق اليومي ومطابقة حركة المقبوضات النقدية.
+showcase.outro=اكتمل العرض التوضيحي. شكرًا لمتابعتكم KriolOS POS.
+----
+
+=== 4.6 Chinese Simplified (`narration_zh-CN.properties`)
+[source,properties]
+----
+showcase.intro=欢迎使用 KriolOS POS，现代、高效且灵活的商业零售收银系统。
+showcase.database=正在连接并激活店铺数据库，启用高响应运行模式。
+showcase.login=正在以系统管理员身份登录收银终端。
+showcase.sales.catalog=正在从商品互动目录中点选商品，并实时添加到购物车。
+showcase.customers=正在访问客户资料管理、购买消费记录及往来账目。
+showcase.products=查看全功能库存管理、实时存货盘点、价格体系及条码管理。
+showcase.closecash=正在执行每日收银结账盘点与现金对账结算。
+showcase.outro=演示完毕。感谢您观看 KriolOS POS 演示。
+----
+
+---
+
+== 5. Core Components & Implementation
+
+=== 5.1 `TtsEngine` SPI
+
+[source,java]
+----
+public interface TtsEngine {
+    String getName();
+    boolean isAvailable();
+    File synthesize(String text, Language language, File outputWav);
+}
+----
+
+* **`AzureTtsEngine`**: Microsoft Azure Cognitive Services Speech REST API. Delivers studio-grade broadcast speech (`pt-PT-RaquelNeural`, `en-US-AriaNeural`). Configured via `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION`.
+* **`EdgeNeuralTtsEngine`**: Microsoft Edge Neural Speech engine. Provides the exact same broadcast neural voices (`pt-PT-RaquelNeural`, `en-US-AriaNeural`) without needing API keys. Automatically bootstraps a project-managed venv under `target/tts-env`.
+* **`RhVoiceTtsEngine`**: Native offline synthesizer calling `/usr/bin/RHVoice-test` with `Leticia-F123` (Portuguese) and `slt` (English). Enhanced with `-q best`, `-r 92` (relaxed pacing), `-t 98`, and FFmpeg vocal acoustic post-processing (`equalizer 3kHz -2.5dB`, `lowpass 7.5kHz`, `compand`) to eliminate metallic/robotic rasp.
+* **`MockJavaTtsEngine`**: 100% pure Java algorithmic tone generator via `javax.sound.sampled` for offline/CI runners without network or audio binaries.
+
+=== 5.2 Pure Java Timeline Mixing (`JavaAudioTimelineMixer`)
+
+The mixer processes timed clips without spawning external processes:
+1. Calculates target sample offset: `startFrame = (long) (offsetMs * (sampleRate / 1000.0))`.
+2. Decodes 16-bit PCM little-endian byte buffers into `short[]` arrays.
+3. Accumulates overlapping samples into a master timeline buffer with saturation clipping:
++
+[source,java]
+----
+int sum = masterBuffer[startSample + i] + src[i];
+if (sum > Short.MAX_VALUE) sum = Short.MAX_VALUE;
+else if (sum < Short.MIN_VALUE) sum = Short.MIN_VALUE;
+masterBuffer[startSample + i] = (short) sum;
+----
+4. Writes the continuous output WAV using `AudioSystem.write()`.
+
+=== 5.3 YouTube Multi-Audio Track Standard
+
+YouTube natively supports multiple audio tracks in a single MP4 container if tracks include ISO 639-2 language metadata. The FFmpeg muxer outputs:
+
+[source,bash]
+----
+ffmpeg -y -i session.mp4 -i narration_pt.wav -i narration_en.wav \
+  -map 0:v -map 1:a -map 2:a \
+  -c:v copy -c:a aac -b:a 192k \
+  -metadata:s:a:0 language=por -metadata:s:a:0 title="Português" \
+  -metadata:s:a:1 language=eng -metadata:s:a:1 title="English" \
+  -shortest session_youtube_multilingual.mp4
+----
+
+When uploaded to YouTube, viewers in Portuguese-speaking regions hear Portuguese by default, while global viewers hear English, with the option to switch languages via the player gear menu.
+
+---
+
+== 6. Adding a New Language (e.g. Spanish)
+
+To add Spanish (`es`) support:
+1. Add `narration_es.properties` in `src/test/resources/narration/`.
+2. Register the language in `PosAudioNarrator.Language`:
++
+[source,java]
+----
+ES("es", "spa", "Español", "esperanza");
+----
+3. The engine automatically discovers the new bundle, synthesizes Spanish audio cues, and generates `session_es.mp4`.
+
+---
+
+== 7. How to Run
+
+=== 7.1 Running with Auto Discovery (Default)
+[source,bash]
+----
+./mvnw test -f kriolos-opos-automation/pom.xml -Dtest=PosLoginIT
+----
+
+=== 7.2 Running with Azure Cognitive Services Neural Speech
+[source,bash]
+----
+./mvnw test -f kriolos-opos-automation/pom.xml -Dtest=PosLoginIT \
+  -Dtest.tts.engine=azure \
+  -Dazure.speech.key="YOUR_AZURE_KEY" \
+  -Dazure.speech.region="westeurope"
+----
+
+=== 7.3 Running with Edge Neural Speech (Free Broadcast Quality)
+[source,bash]
+----
+./mvnw test -f kriolos-opos-automation/pom.xml -Dtest=PosLoginIT -Dtest.tts.engine=edge
+----
+
+=== 7.4 Running with RHVoice (Offline Native Engine)
+[source,bash]
+----
+./mvnw test -f kriolos-opos-automation/pom.xml -Dtest=PosLoginIT -Dtest.tts.engine=rhvoice
+----
+
+Generated artifacts in `target/recordings/pos_login_run/`:
+* `session.mp4` (Raw video)
+* `session.gif` (Animated GIF showcase)
+* `session_pt.mp4` (Portuguese narrated video)
+* `session_en.mp4` (English narrated video)
+* `session_youtube_multilingual.mp4` (Dual-track YouTube video)
+
+---
+
+== 8. VLC Swing Demo Player Panel (`VlcVideoPlayerPanel`)
+
+`kriolos-opos-automation` includes an embedded Swing video player panel powered by link:https://github.com/caprica/vlcj[vlcj 4.8.3].
+
+=== Features
+* **Embedded Swing Canvas**: Hardware-accelerated rendering directly inside a `JPanel`.
+* **Transport Controls**: Play, Pause, Stop, Seek Slider with millisecond precision.
+* **Multi-Language Audio Track Switching**: Live combo box enabling users to switch between Portuguese and English audio tracks in `session_youtube_multilingual.mp4`.
+* **Volume Slider**: Real-time 0-100% volume control.
+* **Automatic Fallback**: Graceful fallback UI with setup instructions if native LibVLC is not installed on the host.
+
+=== How to Launch the VLC Player
+
+==== A. Automatic Post-Test Playback
+Pass `-Dtest.playback.vlc=true` or `-Dopos.playback.vlc=true` to any automation test:
+
+[source,bash]
+----
+./mvnw test -f kriolos-opos-automation/pom.xml -Dtest=PosLoginIT -Dtest.playback.vlc=true
+----
+
+==== B. Standalone Demo Launcher
+Run the standalone launcher passing the path to any recorded video:
+
+[source,bash]
+----
+# Run via Maven test runner
+./mvnw test -f kriolos-opos-automation/pom.xml -Dtest=VlcPlayerDemoTest -Dtest.playback.vlc=true
+
+# Or run directly via Java main class
+java -cp ... io.github.kriolos.opos.automation.video.VlcVideoPlayerPanel target/recordings/pos_login_run/session_youtube_multilingual.mp4
+----

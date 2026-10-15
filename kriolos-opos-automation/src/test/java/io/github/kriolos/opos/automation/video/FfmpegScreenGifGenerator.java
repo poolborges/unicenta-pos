@@ -1,4 +1,4 @@
-package io.github.kriolos.opos.automation;
+package io.github.kriolos.opos.automation.video;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -60,8 +60,14 @@ public class FfmpegScreenGifGenerator {
                 "fps=%d,scale=%d:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128[p];[s1][p]paletteuse=dither=bayer",
                 fps, width);
 
+        String ffmpeg = FfmpegLocator.getExecutablePath();
+        if (ffmpeg == null) {
+            LOGGER.log(Level.WARNING, "[GifGenerator] FFmpeg executable not found (neither Maven bundle nor system PATH)");
+            return false;
+        }
+
         ProcessBuilder pb = new ProcessBuilder(
-                "ffmpeg",
+                ffmpeg,
                 "-y",
                 "-i", videoInput.getAbsolutePath(),
                 "-vf", filter,
@@ -140,8 +146,14 @@ public class FfmpegScreenGifGenerator {
                     "fps=10,scale=%d:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=256:stats_mode=diff[p];[s1][p]paletteuse=dither=bayer",
                     targetWidth);
 
+            String ffmpeg = FfmpegLocator.getExecutablePath();
+            if (ffmpeg == null) {
+                LOGGER.log(Level.WARNING, "[GifGenerator] FFmpeg executable not found (neither Maven bundle nor system PATH)");
+                return false;
+            }
+
             ProcessBuilder pb = new ProcessBuilder(
-                    "ffmpeg",
+                    ffmpeg,
                     "-y",
                     "-f", "concat",
                     "-safe", "0",

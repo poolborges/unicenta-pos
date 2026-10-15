@@ -32,23 +32,48 @@ toc::[]
 kriolos-opos-automation/
 ├── pom.xml
 ├── README.adoc
-└── src/test/java/io/github/kriolos/opos/automation/
-    ├── BasePosRobotIT.java             <-- Abstract Base Robot Test Harness
-    ├── DatabaseSelectionIT.java        <-- Test Use Case 1: Select DB Only
-    ├── PosLoginIT.java                 <-- Test Use Case 2: Operator Login Only
-    ├── PosSalesFlowIT.java             <-- Test Use Case 3: Complete Sales & Cash Payment Flow
-    ├── PosNavigationIT.java            <-- Test Use Case 4: Back/Forward Navigation History
-    ├── PosSalesRobotIT.java            <-- Complete Suite (delegates to Action Drivers)
-    ├── FfmpegScreenRecorder.java       <-- Wayland-safe in-memory frame recording to MP4
-    ├── ScreenshotHelper.java           <-- Wayland-safe in-memory Swing PNG snapshot engine
-    └── actions/                        <-- Reusable UI Drivers / Robot Action Facades
-        ├── DatabaseSelectionAction.java <-- Multi-database selection dialog handler
-        ├── MainWindowAction.java        <-- WindowShell lifecycle and window sizing
-        ├── LoginAction.java             <-- Operator selection & password dialog
-        ├── MenuNavigationAction.java    <-- Side menu navigation & view switching
-        ├── NavigationHistoryAction.java <-- Back/Forward navigation buttons & URN assertion
-        ├── SalesAction.java             <-- Catalog product clicks & '=' payment trigger
-        └── PaymentDialogAction.java     <-- Payment method tab selection & confirmation
+└── src/test/
+    ├── resources/
+    │   └── narration/
+    │       ├── narration_pt.properties     <-- Portuguese narration transcript
+    │       ├── narration_en.properties     <-- English narration transcript
+    │       ├── narration_fr.properties     <-- French narration transcript
+    │       ├── narration_es.properties     <-- Spanish narration transcript
+    │       ├── narration_ar.properties     <-- Arabic narration transcript
+    │       └── narration_zh-CN.properties  <-- Chinese (Simplified) narration transcript
+    └── java/io/github/kriolos/opos/automation/
+        ├── BasePosRobotIT.java             <-- Abstract Base Robot Test Harness
+        ├── DatabaseSelectionIT.java        <-- Test Use Case 1: Select DB Only
+        ├── PosLoginIT.java                 <-- Test Use Case 2: Operator Login Only
+        ├── PosSalesFlowIT.java             <-- Test Use Case 3: Complete Sales Flow
+        ├── PosNavigationIT.java            <-- Test Use Case 4: Navigation History
+        ├── PosSalesRobotIT.java            <-- Complete Suite
+        ├── ScreenshotHelper.java           <-- Wayland-safe Swing PNG snapshot engine
+        ├── actions/                        <-- Reusable UI Drivers / Robot Action Facades
+        │   ├── DatabaseSelectionAction.java
+        │   ├── MainWindowAction.java
+        │   ├── LoginAction.java
+        │   ├── MenuNavigationAction.java
+        │   ├── NavigationHistoryAction.java
+        │   ├── SalesAction.java
+        │   └── PaymentDialogAction.java
+        ├── narration/                      <-- Multilingual Audio Narration Engine
+        │   ├── PosAudioNarrator.java       <-- Orchestrator & Multi-track video generator
+        │   ├── TtsEngine.java              <-- Pluggable SPI for Speech Synthesizers
+        │   ├── AzureTtsEngine.java         <-- Microsoft Azure Neural Speech (Studio/Broadcast)
+        │   ├── EdgeNeuralTtsEngine.java    <-- Microsoft Edge Neural Speech (Free Broadcast)
+        │   ├── RhVoiceTtsEngine.java       <-- Native RHVoice with acoustic smoothing EQ
+        │   ├── MockJavaTtsEngine.java      <-- Pure Java algorithmic fallback for CI
+        │   └── JavaAudioTimelineMixer.java <-- 100% pure Java PCM timeline audio mixer
+        └── video/                          <-- Video Recording, GIF & VLC Playback
+            ├── FfmpegScreenRecorder.java   <-- Background desktop frame capture loop
+            ├── FfmpegScreenGifGenerator.java <-- Two-pass animated GIF palette generator
+            ├── VideoRecorderEngine.java    <-- Video recorder SPI
+            ├── FfmpegNativeVideoEngine.java <-- Native H.264 MP4 recorder
+            ├── JavaAnimatedGifVideoEngine.java <-- Pure Java fallback engine
+            ├── VideoRecorderEngineFactory.java <-- Auto-discovery factory
+            ├── FfmpegLocator.java          <-- Maven JAVE / System FFmpeg locator
+            └── VlcVideoPlayerPanel.java    <-- Embedded VLC Swing Player Panel (vlcj)
 ----
 
 ---
@@ -204,8 +229,20 @@ After test execution, all recordings and milestone snapshots are saved under `ta
 [cols="1,2", options="header"]
 |===
 | Artifact | Description
-| `target/recordings/pos_sales_run/session.mp4`
+| `.../session.mp4`
 | Full video recording of the Swing session (H.264 / 25 fps).
+
+| `.../session_pt.mp4`
+| Video with continuous **Portuguese** voiceover narration (`Leticia-F123`).
+
+| `.../session_en.mp4`
+| Video with continuous **English** voiceover narration (`slt`).
+
+| `.../session_youtube_multilingual.mp4`
+| **YouTube-ready dual audio track video** (Track 1: Portuguese `por`, Track 2: English `eng`).
+
+| `.../session.gif`
+| Lightweight animated GIF showcase compiled from video session.
 
 | `.../screenshots/*_01_app_started.png`
 | Snapshot taken immediately after `BootstrapPOS` initializes and displays `WindowShell`.
@@ -222,6 +259,40 @@ After test execution, all recordings and milestone snapshots are saved under `ta
 | `.../screenshots/*_05_final_state.png`
 | Final screen capture before teardown and window closure.
 |===
+
+---
+
+== Multi-Language Audio Narration & YouTube Video Generation
+
+Tests extending `BasePosRobotIT` can emit synchronized, bilingual narration cues during test execution:
+
+[source,java]
+----
+// Trigger an explanation cue using externalized resource bundles
+narrator.narrateKey("showcase.intro");
+FrameFixture window = bootAndAttachMainWindow();
+
+narrator.narrateKey("showcase.login");
+login.login(window, TARGET_OPERATOR, TARGET_PASSWORD);
+
+narrator.narrateKey("showcase.sales.catalog");
+sales.addCatalogItem(window);
+----
+
+=== Transcript Bundles
+
+Scripts are externalized in standard properties files under `src/test/resources/narration/`:
+* `narration_pt.properties` (Portuguese voiceover script)
+* `narration_en.properties` (English voiceover script)
+
+=== Pure Java Timeline Mixing (`JavaAudioTimelineMixer`)
+
+Audio timeline mixing is performed **100% in pure Java** using standard `javax.sound.sampled` APIs:
+* Samples from each synthesized cue are accumulated at exact millisecond timeline offsets.
+* Overlapping audio cues are mixed in memory using 16-bit PCM sample addition with saturation clipping.
+* Pluggable `TtsEngine` SPI allows using native synthesizers (`RHVoice-test`) with automatic fallback to pure Java synthetic audio (`MockJavaTtsEngine`) in headless environments.
+
+For a full technical analysis comparing existing TTS and mixing solutions, see the xref:../../docs/modules/guide-devel/pages/automation-multilingual-audio-narration.adoc[Multi-Language Narration Architecture Guide].
 
 ---
 
