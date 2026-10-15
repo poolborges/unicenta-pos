@@ -1,54 +1,45 @@
-//    KriolOS POS
-//    Copyright (c) 2019-2023 KriolOS
-//
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.payment;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
 
 /**
- * PaymentSelect for Receipt Payment
+ * PaymentSelect for Receipt Payment.
  * 
- * @author adrianromero
+ * @author KriolOS
  */
 public class JPaymentSelectReceipt extends JPaymentSelect {
 
     private static final long serialVersionUID = 1L;
 
-    protected JPaymentSelectReceipt(java.awt.Frame parent, boolean modal, ComponentOrientation o) {
-        super(parent, modal, o);
+    public JPaymentSelectReceipt(Component parent, ComponentOrientation o) {
+        super(parent, o);
     }
 
+    public JPaymentSelectReceipt(Component parent) {
+        this(parent, parent != null ? parent.getComponentOrientation() : null);
+    }
+
+    public JPaymentSelectReceipt() {
+        this((Component) null, (ComponentOrientation) null);
+    }
+
+    @Deprecated
+    protected JPaymentSelectReceipt(java.awt.Frame parent, boolean modal, ComponentOrientation o) {
+        super(parent, o);
+    }
+
+    @Deprecated
     protected JPaymentSelectReceipt(java.awt.Dialog parent, boolean modal, ComponentOrientation o) {
-        super(parent, modal, o);
+        super(parent, o);
     }
 
     public static JPaymentSelect getDialog(Component parent) {
-         
-        Window window = getWindow(parent);
-        
-        if (window instanceof Frame) { 
-            return new JPaymentSelectReceipt((Frame) window, true, parent.getComponentOrientation());
-        } else {
-            return new JPaymentSelectReceipt((Dialog) window, true, parent.getComponentOrientation());
-        }
+        return new JPaymentSelectReceipt(parent);
     }
 
     @Override
     protected void addTabs() {
-        
         addTabPayment(new JPaymentSelect.JPaymentCashCreator());
         // TODO: CARD addTabPayment(new JPaymentSelect.JPaymentCardCreator());
         addTabPayment(new JPaymentSelect.JPaymentChequeCreator());
@@ -62,7 +53,6 @@ public class JPaymentSelectReceipt extends JPaymentSelect {
 
     @Override
     protected void setStatusPanel(boolean isPositive, boolean isComplete) {
-        
         setAddEnabled(isPositive && !isComplete);
         setOKEnabled(isComplete);
     }
