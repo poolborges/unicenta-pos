@@ -32,13 +32,16 @@ public class PosLoginIT extends BasePosRobotIT {
         LOGGER.log(Level.INFO, "[PosLoginIT] Starting Operator Login test use case...");
 
         // 1. Boot POS and attach main window
+        narrator.narrateKey("showcase.intro");
         FrameFixture window = bootAndAttachMainWindow();
 
         // 2. Perform operator login
+        narrator.narrateKey("showcase.login");
         login.login(window, TARGET_OPERATOR, TARGET_PASSWORD);
 
         // 3. Verify authenticated state
         pace(1000, 50);
+        narrator.narrateKey("showcase.outro");
         screenshotHelper.captureComponent(window.target(), "03_logged_in_state");
         LOGGER.log(Level.INFO, "[PosLoginIT] Operator login test use case completed successfully.");
     }
