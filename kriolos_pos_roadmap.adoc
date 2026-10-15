@@ -543,43 +543,47 @@ ____
 **Why starred**: Fundamental architecture requirement for multi-runtime deployments (Quarkus headless, web-tier, CLI, cloud services). `kriolos-opos-base` contains core domain, data loader, and configuration logic, but is currently chained to `java.desktop` due to 17 legacy UI components.
 
 === Key Architectural Directives
-1. **Zero NetBeans `.form` Files in `kriolos-opos-ui`**: Any component moved from `kriolos-opos-base` into `kriolos-opos-ui` must be rewritten as clean, programmatic Java. No `.form` files may be transferred.
-2. **General Reusable UI Building Blocks**: Upgraded components in `kriolos-opos-ui` must leverage `PaneBuilder`, `FlexLayout`, `WrapLayout`, and `SwingBinder` to serve as modern reusable UI primitives across the application.
-3. **Neutral Media Abstraction**: Decouple `Datas.IMAGE` in `com.openbravo.data.loader` from `java.awt.image.BufferedImage` by adopting `byte[]` / `PosImage` (from Task 6).
+1. **Namespace Standardization**:
+   * **`kriolos-opos-base`**: Everything inside `kriolos-opos-base` must use the root package namespace **`com.openbravo.base.*`** (e.g., `com.openbravo.base.basic`, `com.openbravo.base.data.loader`, `com.openbravo.base.app`, etc.).
+   * **`kriolos-opos-ui`**: Everything inside `kriolos-opos-ui` must use the root package namespace **`com.openbravo.ui.*`** (e.g., `com.openbravo.ui.editor`, `com.openbravo.ui.beans`, `com.openbravo.ui.navigation`, `com.openbravo.ui.components`, `com.openbravo.ui.laf`).
+2. **Zero NetBeans `.form` Files in `kriolos-opos-ui`**: Any component moved from `kriolos-opos-base` into `kriolos-opos-ui` must be rewritten as clean, programmatic Java. No `.form` files may be transferred.
+3. **General Reusable UI Building Blocks**: Upgraded components in `kriolos-opos-ui` must leverage `PaneBuilder`, `FlexLayout`, `WrapLayout`, and `SwingBinder` to serve as modern reusable UI primitives across the application.
+4. **Neutral Media Abstraction**: Decouple `Datas.IMAGE` in `com.openbravo.data.loader` from `java.awt.image.BufferedImage` by adopting `byte[]` / `PosImage` (from Task 6).
 
 === Package Extraction Inventory (Moving from `base` to `ui`)
 
 [cols="2,2,3", options="header"]
 |===
-| Package | Legacy .form Files | Modernization Strategy
+| Legacy Package | Legacy .form Files | Modernization & Destination Package
 
 | `com.openbravo.editor.*`
 | 9 `.form` files (`JEditorAbstract`, `JEditorKeys`, `JEditorString`, `JEditorNumber`, etc.)
-| Rewrite into pure programmatic Java editor suite. Dynamic font metrics, touch-aware, modular keypad layouts.
+| Rewrite into pure programmatic Java editor suite under **`com.openbravo.ui.editor.*`**. Dynamic font metrics, touch-aware, modular keypad layouts.
 
 | `com.openbravo.beans.*`
 | 4 `.form` files (`JCalendarDialog`, `JNumberDialog`, `JPasswordDialog`, `DateUtils`)
-| Modernize into `PosUIModal` reactive panels (`PaneBuilder` + `FlexLayout`).
+| Modernize into `PosUIModal` reactive panels (`PaneBuilder` + `FlexLayout`) under **`com.openbravo.ui.beans.*`**.
 
 | `com.openbravo.data.gui.*`
 | 4 `.form` files (`JListNavigator`, `JNavigator`, `JLookup`, `ListFilterPanel`)
-| Modernize as reusable programmatic data navigation components with `SwingBinder`.
+| Modernize as reusable programmatic data navigation components with `SwingBinder` under **`com.openbravo.ui.navigation.*`**.
 |===
 
-=== Retained in `kriolos-opos-base` (Headless Core)
-* `com.openbravo.basic` (headless core utilities)
-* `com.openbravo.data.loader` (JDBC engine, `Session`, `SentenceExec`, `SentenceList`, headless types)
-* `com.openbravo.data.model` (domain models)
-* `com.openbravo.data.user` (headless user/security entities)
-* `com.openbravo.format` (headless data formatters)
-* `com.openbravo.pos.config` (BootstrapConfiguration)
-* `com.openbravo.pos.util` (headless helpers)
+=== Retained in `kriolos-opos-base` (Headless Core under `com.openbravo.base.*`)
+* `com.openbravo.base.basic` (headless core utilities)
+* `com.openbravo.base.data.loader` (JDBC engine, `Session`, `SentenceExec`, `SentenceList`, headless types)
+* `com.openbravo.base.data.model` (domain models)
+* `com.openbravo.base.data.user` (headless user/security entities)
+* `com.openbravo.base.format` (headless data formatters)
+* `com.openbravo.base.config` (BootstrapConfiguration)
+* `com.openbravo.base.util` (headless helpers)
 
 === Sub-tasks
-. Move and modernize `com.openbravo.editor.*` to `kriolos-opos-ui` without `.form` files.
-. Move and modernize `com.openbravo.beans.*` to `kriolos-opos-ui` without `.form` files.
-. Move and modernize `com.openbravo.data.gui.*` to `kriolos-opos-ui` without `.form` files.
-. Abstract `Datas.IMAGE` in `com.openbravo.data.loader` to use `byte[]` / `PosImage`.
+. Move and modernize `com.openbravo.editor.*` to `com.openbravo.ui.editor.*` in `kriolos-opos-ui` without `.form` files.
+. Move and modernize `com.openbravo.beans.*` to `com.openbravo.ui.beans.*` in `kriolos-opos-ui` without `.form` files.
+. Move and modernize `com.openbravo.data.gui.*` to `com.openbravo.ui.navigation.*` in `kriolos-opos-ui` without `.form` files.
+. Standardize remaining packages in `kriolos-opos-base` under `com.openbravo.base.*`.
+. Abstract `Datas.IMAGE` in `com.openbravo.base.data.loader` to use `byte[]` / `PosImage`.
 . Remove `requires transitive java.desktop;` from `kriolos-opos-base/src/main/java/module-info.java`.
 . Add `--limit-modules` test build to CI enforcing that `kriolos-opos-base` contains zero desktop references.
 

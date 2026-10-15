@@ -1,0 +1,87 @@
+= KriolOS POS — Core UI Components (`com.openbravo.ui.components`)
+:author: KriolOS
+:email: dev@kriolos.org
+:revnumber: 1.0.0
+:toc: left
+:toclevels: 3
+:icons: font
+:source-highlighter: rouge
+:experimental:
+
+== 1. Package Overview & Mission
+
+The `com.openbravo.ui.components` package provides standardized dialogs, form builders, screen locking glass overlays, and feedback notifications for the KriolOS POS ecosystem.
+
+Building enterprise POS user interfaces requires strict consistency: standardized touch target sizes, non-blocking asynchronous feedback, transparent glass screen blocking during fiscal hardware communication, and responsive form composition.
+
+'''
+
+== 2. Component Catalog
+
+=== 2.1. GenericUIBlocker (JLayer Screen Locking)
+A universal, non-modal screen blocker built on Swing's `LayerUI<JPanel>`. Intercepts mouse and keyboard inputs during long operations without locking EDT execution:
+
+* **Two Modes**:
+  - `GenericUIBlocker.Mode.SPINNER`: Rotating radar spinner with animated fade-in.
+  - `GenericUIBlocker.Mode.FLASH_ERROR`: Tactile red screen flash (600ms) with warning text for communication timeouts or scanner read failures.
+* **Customizable Overlay**: Adjustable opacity (`setMaxAlpha(int)`), custom background color (`setBackgroundColor(Color)`), and dynamic status labels (`setMainText(String)`).
+* **Escape & Abort Interception**: Supports `setCancelCallback(Runnable)` triggered when the operator presses kbd:[ESC] to cancel a stalled fiscal printer sync.
+* **Zero Layout Impact**: Wraps the target content inside `JLayer<JPanel>`, requiring zero modification to existing dialog or panel layouts.
+
+[source,java]
+----
+GenericUIBlocker blocker = new GenericUIBlocker();
+blocker.setMainText("SYNCHRONIZING FISCAL PRINTER...");
+blocker.setCancelCallback(() -> {
+    blocker.setBlocking(false);
+    ToastManager.show(frame, "Operation cancelled by user (ESC)", ToastManager.WARNING);
+});
+
+// Wrap existing content panel
+JLayer<JPanel> layer = new JLayer<>(myContentPanel, blocker);
+frame.setContentPane(layer);
+
+// Trigger lock
+blocker.setBlocking(true, GenericUIBlocker.Mode.SPINNER);
+----
+
+=== 2.2. ToastManager & ToastNotification (Heads-Up Feedback)
+Lightweight floating toast notifications anchored to the parent `JFrame`:
+
+* **Thread-Safe Queue**: Managed via `ToastManager.show(parentFrame, message, color)`.
+* **Automatic Layout Stacking**: Multiple simultaneous toasts stack vertically without overlap.
+* **Translucency Fallback**: Automatically queries hardware support; falls back gracefully on systems without native composite translucency.
+* **Standard Palettes**:
+  - `ToastManager.SUCCESS` (Emerald Green)
+  - `ToastManager.INFO` (Primary Blue)
+  - `ToastManager.WARNING` (Amber)
+  - `ToastManager.ERROR` (Coral Red)
+
+[source,java]
+----
+ToastManager.show(frame, "Invoice #48291 printed successfully!", ToastManager.SUCCESS);
+----
+
+=== 2.3. PaneBuilder (Unified Form & Tab Builder)
+A fluent form builder abstracting `GridBagLayout` complexity and enforcing POS touch guidelines:
+
+* **Touch Dimension Standards**: Enforces minimum touch target heights (35px for fields, 45px for action footers, 150px minimum width).
+* **Automatic Tooltips**: Generates tooltips automatically from field labels.
+* **Proportional Multi-Column Footers**: `addFooter(new double[]{0.5, 0.5}, btnSave, btnCancel)`.
+* **Multi-Tab Support**: `startTab("General")`, `startTab("Permissions")`, `buildTabs()`.
+* **Scrollable Views**: Configurable viewport wrapping via `setScrollable(true)`.
+
+[source,java]
+----
+PaneBuilder form = new PaneBuilder().setScrollable(true);
+form.add("Operator Name:", txtName);
+form.add("Corporate Email:", txtEmail);
+form.add("Role:", cmbRole);
+form.addFooter(new double[]{0.5, 0.5}, btnSave, btnCancel);
+
+JPanel formPanel = form.build();
+----
+
+=== 2.4. ComponentFactory & ComponentUtils
+* **`ComponentFactory`**: Centralizes dimension enforcement (`enforceFieldSize`, `enforceFooterSize`) and standardized labels (`createLabel`).
+* **`ComponentUtils`**: Hierarchy utilities such as locating parent frames (`getParentFrame(Component)`).

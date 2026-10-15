@@ -1,0 +1,220 @@
+= KriolOS POS — Animation & Micro-Interactions Architecture
+:author: KriolOS
+:email: dev@kriolos.org
+:revnumber: 1.0.0
+:toc: left
+:toclevels: 3
+:icons: font
+:source-highlighter: rouge
+:experimental:
+
+== 1. Executive Summary & Design Philosophy
+
+The `kriolos-opos-ui` animation architecture delivers fluid, mobile-grade tactile feedback and micro-interactions for modern Point of Sale (POS) environments. 
+
+POS terminals demand high tactile reassurance: operators rapidly ring up items on capacitive touchscreens, barcode scanners beep continuously, and cash drawers open. Subtle visual confirmation reduces operator cognitive load and eliminates duplicate taps without interrupting transaction throughput.
+
+=== Key Architecture Pillars
+
+[cols="1,3"]
+|===
+| **Principle** | **Description**
+
+| **60 FPS Hardware Timing**
+| Built atop the proven Timing Framework 7.4.3 engine (`org.bidib.net.java.timingframework`), animations run synchronized with native Swing repaint cycles without EDT starvation or thread locks.
+
+| **Look-and-Feel (LAF) Agnostic**
+| Zero hardcoded theme assumptions. All components query `UIManager` dynamically and compute ITU-R BT.709 perceived luminance at runtime, adapting flawlessly to FlatLaf Light, FlatLaf Dark, Nimbus, Metal, or System LAFs.
+
+| **Self-Contained Package**
+| The `com.openbravo.ui.animation` package encapsulates all color contrast, alpha blending, Bézier mathematics, and rendering utilities within `AnimationUtils`. It carries zero circular dependencies on external UI packages.
+
+| **Zero Magic Numbers**
+| Every duration, alpha channel, curve coefficient, and boundary clamp is formalized as a named `public static final` constant.
+|===
+
+'''
+
+== 2. Mathematical Motion Curves & Easing
+
+Abrupt linear transitions feel artificial and robotic. KriolOS animations leverage physical Cubic Bézier splines and organic acceleration curves:
+
+[cols="2,2,4"]
+|===
+| **Interpolator Constant** | **Formula / Curve** | **Typical POS Usage**
+
+| `NativeAnimator.FAST_OUT_SLOW_IN`
+| Cubic Spline: `(0.4, 0.0, 0.2, 1.0)`
+| Material Design standard curve. Used for touch ripples, view slide transitions, and cart flying badges.
+
+| `NativeAnimator.EASE_OUT`
+| Cubic Spline: `(0.0, 0.0, 0.58, 1.0)`
+| Decelerating curve. Ideal for sudden key-press flashes and toast appearances.
+
+| `NativeAnimator.ANTICIPATE`
+| Tension Polynomial: `t² * ((s+1)*t - s)`
+| Tension-driven wind-up before motion. Great for modal dismissals and returning items.
+
+| `NativeAnimator.OVERSHOOT`
+| Tension Polynomial: `(t-1)² * ((s+1)*(t-1) + s) + 1`
+| Bouncy overshoot beyond destination. Ideal for badge notifications and counters.
+|===
+
+'''
+
+== 3. Component Reference & API
+
+=== 3.1. AnimationUtils (Core Mathematics & Color Suite)
+
+`AnimationUtils` is the self-contained utility heart of the animation package. It calculates relative perceived luminance, resolves component background hierarchies, and blends colors:
+
+[source,java]
+----
+// Check if a resolved component background is dark
+Color bg = AnimationUtils.resolveBackground(myComponent);
+boolean dark = AnimationUtils.isDark(bg);
+
+// Obtain high-contrast foreground (white on dark, dark slate on light)
+Color textFg = AnimationUtils.getContrastingColor(bg);
+
+// Evaluate 2D quadratic Bézier curve: B(t) = (1-t)²*P0 + 2(1-t)t*P_ctrl + t²*P1
+Point2D.Float pos = AnimationUtils.evaluateQuadraticBezier(startPoint, ctrlPoint, endPoint, fraction);
+----
+
+=== 3.2. RippleEffect & RippleButton (Material Touch Feedback)
+
+Expanding translucent radial waves indicate physical contact on touchscreens.
+
+* `RippleEffect.applyTo(JComponent)`: Attaches a ripple listener to any standard component.
+* `RippleButton`: Ready-to-use button with rounded corners, rollover highlights, and automatic ripple rendering.
+
+[source,java]
+----
+RippleButton btnPay = new RippleButton("Cash Payment (F1)");
+btnPay.setBackground(new Color(41, 128, 185));
+btnPay.setForeground(Color.WHITE);
+btnPay.setCornerRadius(8);
+btnPay.addActionListener(e -> processPayment());
+----
+
+=== 3.3. RollingNumberLabel (Animated Totals & Price Counters)
+
+Instead of instant numeric jumps, `RollingNumberLabel` smoothly interpolates between monetary and quantitative states using easing curves.
+
+[source,java]
+----
+RollingNumberLabel lblTotal = new RollingNumberLabel(0.00, "CVE ", "");
+lblTotal.setFont(new Font("Monospaced", Font.BOLD, 28));
+
+// Smoothly roll from 0.00 to 1,500.00 over 500ms
+lblTotal.rollTo(1500.00);
+
+// Or animate directly using BigDecimal
+lblTotal.rollTo(new BigDecimal("2350.50"));
+----
+
+=== 3.4. SlidePanel (Directional View Transitions)
+
+Mobile-grade container replacing abrupt card transitions with horizontal or vertical slides.
+
+[source,java]
+----
+SlidePanel slidePanel = new SlidePanel();
+slidePanel.addView("catalog", catalogPanel);
+slidePanel.addView("checkout", checkoutPanel);
+
+// Slide forward into checkout
+slidePanel.slideTo("checkout", SlidePanel.Direction.LEFT);
+
+// Slide backward returning to catalog
+slidePanel.slideTo("catalog", SlidePanel.Direction.RIGHT);
+----
+
+=== 3.5. PulseEffect (High-Priority Attention Halo)
+
+Creates a subtle, breathing sinusoidal glow around high-priority action buttons (e.g., "Pay Now", kitchen alerts, supervisor approvals).
+
+[source,java]
+----
+JButton btnAuthorize = new JButton("AUTHORIZE OVERRIDE");
+PulseEffect pulse = PulseEffect.on(btnAuthorize)
+        .setPulseColor(new Color(231, 76, 60))
+        .setMaxExpansion(8);
+
+// Start continuous loop
+pulse.start(800);
+
+// Stop when resolved
+pulse.stop();
+----
+
+=== 3.6. ShimmerPanel (Skeleton Loading Placeholders)
+
+Replaces conventional blocking spinners with placeholder skeleton shapes swept by a continuous linear gradient light wave.
+
+[source,java]
+----
+ShimmerPanel skeleton = new ShimmerPanel();
+// Add placeholder blocks: (x, y, width, height, cornerRadius)
+skeleton.addBlock(10, 10, 80, 60, 8);
+skeleton.addBlock(100, 15, 200, 16, 4);
+skeleton.addBlock(100, 38, 140, 12, 4);
+
+// Start animated sweep
+skeleton.startShimmer();
+
+// Stop when data arrives
+skeleton.stopShimmer();
+----
+
+=== 3.7. FlyEffect (Parabolic Bézier Fly-to-Cart)
+
+When a product card is tapped, an elevated badge flies across the window along a parabolic arc directly into the ticket or shopping cart badge.
+
+[source,java]
+----
+FlyEffect.fly(btnProductCard, btnCartBadge, "Cachupa", () -> {
+    cartBadge.setText("Cart: " + (++itemCount) + " items");
+    ToastManager.show(frame, "Item added to cart!", ToastManager.SUCCESS);
+});
+----
+
+=== 3.8. Tactical Feedback: ShakeEffect & KeyClickEffect
+
+* `ShakeEffect.play(component)`: Damped horizontal sine wave oscillation (4 cycles over 200ms) for validation errors or barcode scan failures.
+* `KeyClickEffect.play(component)`: Instantaneous tactile flash highlight restoring via `EASE_OUT` (150ms) for virtual numeric keypad buttons.
+
+'''
+
+== 4. Look-and-Feel (LAF) Agnostic Design Patterns
+
+To support runtime theme switches (e.g. switching between FlatLaf Light and FlatLaf Dark during day/night cashier shifts), all animation classes follow these core rules:
+
+1. **Dynamic Background Resolution**: Never assume a white or black parent. Components invoke `AnimationUtils.resolveBackground(component)` to determine the effective color.
+2. **Contrast Inversion**: If `AnimationUtils.isDark(bg)` is true, highlights use light overlays (`Color(255, 255, 255, alpha)`). If light, dark overlays are applied.
+3. **`updateUI()` Overrides**: Custom components call `super.updateUI()` and re-query default `UIManager` color keys:
++
+[source,java]
+----
+@Override
+public void updateUI() {
+    super.updateUI();
+    Color bg = UIManager.getColor("Button.background");
+    if (bg != null) setBackground(bg);
+}
+----
+
+'''
+
+== 5. Automated Verification & UIDemo Showcase
+
+The entire suite is verified via automated unit tests and an interactive workbench:
+
+* **Unit Tests**:
+  - `AnimationUtilsTest`: Verifies luminance calculations, contrast selection, alpha clamping, and quadratic Bézier interpolation.
+  - `RollingNumberLabelTest`: Verifies decimal formatting, `rollTo()` updates, and `setValueImmediate()`.
+  - `SlidePanelTest`: Verifies multi-view registration and transition bounds.
+  - `RippleButtonTest`: Verifies corner radius and ripple lifecycle.
+* **Interactive Showcase**: Run `UIDemo.java` and navigate to:
+  - Tab 3: _Haptic Feedback & Animations_
+  - Tab 5: _Touch Micro-Interactions (New Animations)_

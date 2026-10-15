@@ -131,6 +131,38 @@ public abstract class JEditorAbstract extends javax.swing.JPanel implements Edit
         super.setEnabled(b);
     }
     
+    @Override
+    public void setFont(java.awt.Font font) {
+        super.setFont(font);
+        if (m_jText != null) {
+            m_jText.setFont(font);
+            revalidate();
+            repaint();
+        }
+    }
+
+    @Override
+    public java.awt.Dimension getPreferredSize() {
+        java.awt.Dimension d = super.getPreferredSize();
+        java.awt.Font font = (m_jText != null && m_jText.getFont() != null) ? m_jText.getFont() : getFont();
+        int minH = 32;
+        if (font != null) {
+            java.awt.FontMetrics fm = getFontMetrics(font);
+            if (fm != null) {
+                // Line height + vertical margins (4px) + borders (4px)
+                minH = Math.max(minH, fm.getHeight() + 8);
+            }
+        }
+        int prefW = Math.max(d != null ? d.width : 0, 100);
+        int prefH = Math.max(d != null ? d.height : 0, minH);
+        return new java.awt.Dimension(prefW, prefH);
+    }
+
+    @Override
+    public java.awt.Dimension getMinimumSize() {
+        return getPreferredSize();
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -153,10 +185,9 @@ public abstract class JEditorAbstract extends javax.swing.JPanel implements Edit
         m_jText.setContentAreaFilled(false);
         m_jText.setFocusPainted(false);
         m_jText.setFocusable(false);
-        m_jText.setMinimumSize(new java.awt.Dimension(100, 25));
-        m_jText.setPreferredSize(new java.awt.Dimension(100, 25));
+        m_jText.setMargin(new java.awt.Insets(2, 6, 2, 6));
         m_jText.setRequestFocusEnabled(false);
-        m_jText.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        m_jText.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
         m_jText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 m_jTextActionPerformed(evt);
@@ -168,7 +199,7 @@ public abstract class JEditorAbstract extends javax.swing.JPanel implements Edit
 
         m_jMode.setFont(new java.awt.Font("Dialog", 0, 9)); // NOI18N
         m_jMode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_jMode.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        m_jMode.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
         m_jMode.setPreferredSize(new java.awt.Dimension(32, 0));
         add(m_jMode, java.awt.BorderLayout.LINE_END);
     }// </editor-fold>//GEN-END:initComponents

@@ -2,10 +2,14 @@ name: Java CI
 
 on:
   push:
-    branches: [ main, 'feature/**', 'fix/**' ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -31,7 +35,7 @@ jobs:
         distribution: 'temurin'
         cache: 'maven'
 
-    # Instala o servidor gráfico virtual e bibliotecas gráficas X11 para Swing/AWT no Linux
+    # Install virtual framebuffer and X11 graphics libraries for Swing/AWT on Linux
     - name: Install GUI Dependencies (Linux)
       if: runner.os == 'Linux'
       run: |
@@ -45,11 +49,11 @@ jobs:
            elif [ "$RUNNER_OS" == "macOS" ]; then
               chmod +x ./mvnw
            else
-              echo "$RUNNER_OS not need change permission"
+              echo "$RUNNER_OS does not require permission changes"
            fi
       shell: bash
 
-    # Executa os testes usando xvfb-run com buffer 24-bit TrueColor no Linux
+    # Run tests using xvfb-run with 24-bit TrueColor buffer on Linux
     - name: Run tests and collect coverage
       run: |
         if [ "$RUNNER_OS" == "Linux" ]; then
@@ -61,4 +65,5 @@ jobs:
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
+
 

@@ -1,0 +1,95 @@
+= KriolOS POS — UI Module (`kriolos-opos-ui`)
+:toc: macro
+:toclevels: 2
+
+== Overview
+
+`kriolos-opos-ui` is a decoupled, modern Java Swing UI & UX architecture module designed for the **KriolOS POS** ecosystem. It delivers responsive layouts, type-safe reactive data binding, screen blocking, non-intrusive HUD toasts, and hardware-accelerated animations while maintaining zero third-party database or backend dependencies.
+
+* **Target Java Version:** Java 17+
+* **Core Dependencies:** `org.bidib.net.java.timingframework:timingframework-swing` (7.4.3)
+* **Packaging:** Standard JAR (`io.github.kriolos:kriolos-opos-ui`)
+
+---
+
+== Core Architectural Subsystems
+
+[cols="1,2,2", options="header"]
+|===
+| Subsystem | Key Classes | Capabilities
+
+| **1. Layout Engine**
+| `FlexLayout`, `FlexFactory`, `WrapLayout`
+| CSS Flexbox implementation for Swing (`ROW`/`COLUMN`, `flexGrow`, `percentBasis`, `gap`, `JustifyContent`, `AlignItems`). `WrapLayout` provides fluid component wrapping in `JScrollPane` with auto-calculated height.
+
+| **2. Data Binding Engine**
+| `SwingBinder`, `BindingBuilder`, `Converters`, `Validator`
+| Type-safe two-way data binding inspired by Vaadin Flow. Supports `JTextField`, `JCheckBox`, `JComboBox`, `JFormattedTextField`, `JRadioButton`, `JSlider`, `JSpinner`, and `JTextArea`. Includes dirty tracking, live validation borders, tooltips, and type converters.
+
+| **3. Form Construction**
+| `PaneBuilder`, `ComponentFactory`, `ComponentUtils`
+| Fluent form builders enforcing consistent POS touch dimensions (35px fields, 45px footers), multi-column proportional rows, required-field indicators (`*`), tabs, and bottom anchor footers.
+
+| **4. Glass Blocker & HUD Toasts**
+| `GenericUIBlocker`, `ToastManager`, `ToastNotification`
+| `LayerUI<JPanel>` screen blocker with animated spinner, tactile flash error banner, `ESC` key abort callback, configurable transparency levels (0-255 / float opacity), and custom overlay background colors. Adaptive translucent floating toast notifications with auto-stacking and hardware fallback.
+
+| **5. Motion & Tactile Feedback**
+| `NativeAnimator`, `PropertySetter`, `ShakeEffect`, `KeyClickEffect`
+| Timing Framework facade featuring standard cubic Bézier curves (`FAST_OUT_SLOW_IN`, `ANTICIPATE`, `EASE_IN_OUT`), method-reference property animation (`PropertySetter`), sine-wave error shake (`ShakeEffect`), and touch-pad highlight feedback (`KeyClickEffect`).
+|===
+
+---
+
+== How to Run the Interactive Showcase Demo
+
+The test suite includes `com.openbravo.ui.UIDemo`, an interactive multi-tab showcase that exercises every component in the library (Data Binding, Flexbox, Animations, Screen Blocker, and Toasts):
+
+[source,bash]
+----
+MAVEN_OPTS="-Dawt.useSystemAAFontSettings=lcd -Dswing.aatext=true" mvn test-compile exec:java   -Dexec.mainClass="com.openbravo.ui.UIDemo"   -Dexec.classpathScope=test
+----
+
+Or using the Maven Wrapper:
+
+[source,bash]
+----
+MAVEN_OPTS="-Dawt.useSystemAAFontSettings=lcd -Dswing.aatext=true" ./mvnw test-compile exec:java   -Dexec.mainClass="com.openbravo.ui.UIDemo"   -Dexec.classpathScope=test
+----
+
+NOTE: `com.openbravo.ui.FlexDashboardDemo` is also available as a compatible alias pointing to `UIDemo`.
+
+---
+
+== Testing & Allure Reports
+
+The project uses JUnit 5 alongside the Allure framework to record test results and execution metrics. Test artifacts are generated directly in `target/allure-results`.
+
+=== 1. Execute Unit Tests
+
+Run all unit tests to execute test cases and populate raw Allure data:
+
+[source,bash]
+----
+mvn test
+----
+
+=== 2. Generate Static HTML Report
+
+To compile the standalone HTML report:
+
+[source,bash]
+----
+mvn allure:report
+----
+
+The resulting report is located at `target/site/allure-maven-plugin/index.html`.
+
+=== 3. Serve Report in Browser
+
+To automatically build the report and open it in a local web server:
+
+[source,bash]
+----
+mvn allure:serve
+----

@@ -1,0 +1,7 @@
+/target/
+/.idea/
+*.iml
+.nb-attrs
+.DS_Store
+allure-results/
+.allure/
