@@ -433,21 +433,31 @@ public class PaneBuilder {
         } else {
             label.setText(plainText + ":");
         }
-        Dimension labelSize = new Dimension(globalLabelWidth, globalFieldHeight);
-        label.setMinimumSize(labelSize);
-        label.setPreferredSize(labelSize);
-        label.setMaximumSize(labelSize);
+        Font font = label.getFont();
+        int fontHeight = globalFieldHeight;
+        if (font != null) {
+            FontMetrics fm = label.getFontMetrics(font);
+            if (fm != null) {
+                fontHeight = Math.max(fontHeight, fm.getHeight() + 8);
+            }
+        }
+        Dimension minSize = new Dimension(globalLabelWidth, globalFieldHeight);
+        Dimension prefSize = new Dimension(globalLabelWidth, fontHeight);
+        label.setMinimumSize(minSize);
+        label.setPreferredSize(prefSize);
         label.setHorizontalAlignment(SwingConstants.RIGHT);
         return label;
     }
 
     private void configureComponentSizes(Component comp, int minWidth, int minHeight) {
-        Dimension min = new Dimension(minWidth, minHeight);
-        comp.setMinimumSize(min);
-
         Dimension pref = comp.getPreferredSize();
-        int prefWidth = (pref != null) ? Math.max(pref.width, minWidth) : minWidth;
-        comp.setPreferredSize(new Dimension(prefWidth, minHeight));
+        int fontMetricHeight = ComponentFactory.calculateFontMetricHeight(comp);
+        int effectiveMinHeight = Math.max(minHeight, globalFieldHeight);
+        int targetHeight = Math.max(effectiveMinHeight, Math.max(pref != null ? pref.height : 0, fontMetricHeight));
+        int targetWidth = (pref != null) ? Math.max(pref.width, minWidth) : minWidth;
+
+        comp.setMinimumSize(new Dimension(minWidth, effectiveMinHeight));
+        comp.setPreferredSize(new Dimension(targetWidth, targetHeight));
     }
 
     private void applyVerticalSpacer(JPanel targetPanel, int row) {

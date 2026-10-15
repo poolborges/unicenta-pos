@@ -80,20 +80,34 @@ public class SystemSettings {
         UIManager.put("Table.font", touchFontPlain);
         UIManager.put("TableHeader.font", touchFontBold);
         UIManager.put("TextField.font", touchFontPlain);
+        UIManager.put("PasswordField.font", touchFontPlain);
+        UIManager.put("FormattedTextField.font", touchFontPlain);
+        UIManager.put("ComboBox.font", touchFontPlain);
+        UIManager.put("Spinner.font", touchFontPlain);
 
-        // --- 2. Button Hitbox Scaling (The 48px Touch Rule) ---
-        // Adds thick internal padding [Top, Left, Bottom, Right] for finger selection
-        UIManager.put("Button.margin", new Insets(12, 24, 12, 24));
-        UIManager.put("ToggleButton.margin", new Insets(12, 24, 12, 24));
+        // --- 2. Button Hitbox Scaling (Touch Rule) ---
+        // Balanced internal padding [Top, Left, Bottom, Right] allowing comfortable finger tap
+        UIManager.put("Button.margin", new Insets(8, 16, 8, 16));
+        UIManager.put("ToggleButton.margin", new Insets(8, 16, 8, 16));
 
         // Hard fallback layout boundaries to ensure buttons never collapse
-        UIManager.put("Button.minimumHeight", 48);
-        UIManager.put("ToggleButton.minimumHeight", 48);
+        UIManager.put("Button.minimumHeight", 40);
+        UIManager.put("ToggleButton.minimumHeight", 40);
 
         // --- 3. Form & Input Component Enhancements ---
-        // Expands search fields and manual numeric price fields
-        UIManager.put("TextField.margin", new Insets(8, 12, 8, 12));
-        UIManager.put("TextField.minimumHeight", 45);
+        // Standardized padding and height floor across all input components to prevent text clipping
+        Insets inputMargin = new Insets(6, 12, 6, 12);
+        UIManager.put("TextField.margin", inputMargin);
+        UIManager.put("PasswordField.margin", inputMargin);
+        UIManager.put("FormattedTextField.margin", inputMargin);
+        UIManager.put("ComboBox.padding", inputMargin);
+        UIManager.put("Spinner.padding", inputMargin);
+
+        UIManager.put("TextField.minimumHeight", 38);
+        UIManager.put("PasswordField.minimumHeight", 38);
+        UIManager.put("FormattedTextField.minimumHeight", 38);
+        UIManager.put("ComboBox.minimumHeight", 38);
+        UIManager.put("Spinner.minimumHeight", 38);
 
         // --- 4. Selection Toggles & Vectors ---
         // Scales native tiny selection boxes so they can be easily checked on tablets
