@@ -82,7 +82,8 @@ public abstract class BasePosRobotIT {
         screenshotHelper = new ScreenshotHelper(getScenarioName());
         robot = BasicRobot.robotWithCurrentAwtHierarchy();
 
-        // 1. By default for automated UI testing, disable unique instance check to allow multi-instance execution
+        // 1. By default for automated UI testing, isolate configuration and disable unique instance check
+        AutomationTestConfig.applyTestEnvironment();
         System.setProperty("machine.uniqueinstance", System.getProperty("test.pos.uniqueinstance", "false"));
 
         // 2. Initialize Reusable Action Drivers
@@ -104,18 +105,20 @@ public abstract class BasePosRobotIT {
         LOGGER.log(Level.INFO, "[BasePosRobotIT] Pacing mode: {0}",
                 (IS_HUMAN ? "HUMAN (observational delays enabled)" : "ROBOT (fast/no artificial delays)"));
 
-        // 4. Launch application
+        // 4. Launch application with isolated test configuration passed as main argument
         launchApplication();
     }
 
     /**
-     * Launches BootstrapPOS in a background thread.
+     * Launches BootstrapPOS in a background thread with the isolated test configuration file.
      */
     protected void launchApplication() {
-        LOGGER.log(Level.INFO, "[BasePosRobotIT] Launching KriolOS POS Application...");
+        String[] mainArgs = AutomationTestConfig.getMainArgs();
+        LOGGER.log(Level.INFO, "[BasePosRobotIT] Launching KriolOS POS Application with test config: {0}...",
+                (mainArgs.length > 0 ? mainArgs[0] : "none"));
         Thread posThread = new Thread(() -> {
             try {
-                BootstrapPOS.main(new String[]{});
+                BootstrapPOS.main(mainArgs);
             } catch (Throwable t) {
                 LOGGER.log(Level.SEVERE, "[BasePosRobotIT] Exception in BootstrapPOS: " + t.getMessage(), t);
             }

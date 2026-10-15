@@ -56,7 +56,8 @@ public class FfmpegScreenGifGenerator {
         }
 
         long start = System.currentTimeMillis();
-        String filter = String.format("fps=%d,scale=%d:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128[p];[s1][p]paletteuse=dither=bayer",
+        String filter = String.format(java.util.Locale.ROOT,
+                "fps=%d,scale=%d:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128[p];[s1][p]paletteuse=dither=bayer",
                 fps, width);
 
         ProcessBuilder pb = new ProcessBuilder(
@@ -70,10 +71,11 @@ public class FfmpegScreenGifGenerator {
 
         try {
             Process process = pb.start();
+            String output = new String(process.getInputStream().readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
             boolean finished = process.waitFor(60, TimeUnit.SECONDS);
             if (!finished) {
                 process.destroyForcibly();
-                LOGGER.log(Level.WARNING, "[GifGenerator] FFmpeg process timed out after 60s");
+                LOGGER.log(Level.WARNING, "[GifGenerator] FFmpeg process timed out after 60s. Output: {0}", output);
                 return false;
             }
 
@@ -84,7 +86,8 @@ public class FfmpegScreenGifGenerator {
                         new Object[]{duration, gifOutput.getAbsolutePath(), gifOutput.length()});
                 return true;
             } else {
-                LOGGER.log(Level.WARNING, "[GifGenerator] FFmpeg failed with exit code: {0}", exitCode);
+                LOGGER.log(Level.WARNING, "[GifGenerator] FFmpeg failed with exit code: {0}. Output:\n{1}",
+                        new Object[]{exitCode, output});
                 return false;
             }
         } catch (Exception e) {
@@ -133,7 +136,8 @@ public class FfmpegScreenGifGenerator {
             }
 
             long start = System.currentTimeMillis();
-            String filter = String.format("fps=10,scale=%d:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=256:stats_mode=diff[p];[s1][p]paletteuse=dither=bayer",
+            String filter = String.format(java.util.Locale.ROOT,
+                    "fps=10,scale=%d:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=256:stats_mode=diff[p];[s1][p]paletteuse=dither=bayer",
                     targetWidth);
 
             ProcessBuilder pb = new ProcessBuilder(
@@ -149,12 +153,13 @@ public class FfmpegScreenGifGenerator {
             pb.redirectErrorStream(true);
 
             Process process = pb.start();
+            String output = new String(process.getInputStream().readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
             boolean finished = process.waitFor(90, TimeUnit.SECONDS);
             concatFile.delete();
 
             if (!finished) {
                 process.destroyForcibly();
-                LOGGER.log(Level.WARNING, "[GifGenerator] FFmpeg process timed out after 90s");
+                LOGGER.log(Level.WARNING, "[GifGenerator] FFmpeg process timed out after 90s. Output: {0}", output);
                 return false;
             }
 
@@ -165,7 +170,8 @@ public class FfmpegScreenGifGenerator {
                         new Object[]{imageFiles.size(), duration, gifOutput.getAbsolutePath(), gifOutput.length()});
                 return true;
             } else {
-                LOGGER.log(Level.WARNING, "[GifGenerator] FFmpeg failed with exit code: {0}", exitCode);
+                LOGGER.log(Level.WARNING, "[GifGenerator] FFmpeg failed with exit code: {0}. Output:\n{1}",
+                        new Object[]{exitCode, output});
                 return false;
             }
         } catch (Exception e) {

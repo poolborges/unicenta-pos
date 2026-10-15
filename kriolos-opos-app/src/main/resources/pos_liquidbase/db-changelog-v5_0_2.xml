@@ -11,31 +11,22 @@
                     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">    
 
     <changeSet id="20261015-01" author="pauloborges (issue-74)">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="config_properties"/>
-            </not>
-        </preConditions>
         <createTable tableName="config_properties">
             <column name="pos_id" type="VARCHAR(36)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_config_properties"/>
+                <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="config_key" type="VARCHAR(128)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_config_properties"/>
+                <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="config_value" type="VARCHAR(4096)">
                 <constraints nullable="true"/>
             </column>
-            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+            <column name="created_at" type="datetime">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+            <column name="updated_at" type="datetime">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createIndex indexName="idx_config_properties_lookup" tableName="config_properties">
-            <column name="pos_id"/>
-            <column name="config_key"/>
-        </createIndex>
     </changeSet>
 </databaseChangeLog>
