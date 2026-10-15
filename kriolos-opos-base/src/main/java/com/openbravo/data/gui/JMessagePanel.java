@@ -173,13 +173,13 @@ public class JMessagePanel extends JPanel {
     public Dimension getPreferredSize() {
         Dimension pref = super.getPreferredSize();
         int minW = 560;
-        int minH = (jscrException != null && jscrException.isVisible()) ? 420 : 230;
+        int minH = (jscrException != null && jscrException.isVisible()) ? 420 : 300;
         return new Dimension(Math.max(pref.width, minW), Math.max(pref.height, minH));
     }
 
     @Override
     public Dimension getMinimumSize() {
-        int minH = (jscrException != null && jscrException.isVisible()) ? 380 : 200;
+        int minH = (jscrException != null && jscrException.isVisible()) ? 400 : 300;
         return new Dimension(500, minH);
     }
 
