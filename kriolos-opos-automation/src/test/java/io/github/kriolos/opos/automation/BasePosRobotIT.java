@@ -9,6 +9,9 @@ import io.github.kriolos.opos.automation.actions.MenuNavigationAction;
 import io.github.kriolos.opos.automation.actions.NavigationHistoryAction;
 import io.github.kriolos.opos.automation.actions.PaymentDialogAction;
 import io.github.kriolos.opos.automation.actions.SalesAction;
+import io.github.kriolos.opos.automation.narration.PosAudioNarrator;
+import io.github.kriolos.opos.automation.video.FfmpegScreenGifGenerator;
+import io.github.kriolos.opos.automation.video.FfmpegScreenRecorder;
 import org.assertj.swing.core.BasicRobot;
 import org.assertj.swing.core.Robot;
 import org.assertj.swing.fixture.FrameFixture;
@@ -197,6 +200,16 @@ public abstract class BasePosRobotIT {
                 }
                 if (narrator != null) {
                     narrator.compileNarratedVideos(videoFile, videoFile.getParentFile());
+                }
+                if (Boolean.getBoolean("test.playback.vlc") || Boolean.getBoolean("opos.playback.vlc")) {
+                    File playFile = new File(videoFile.getParentFile(), "session_youtube_multilingual.mp4");
+                    if (!playFile.exists()) {
+                        playFile = new File(videoFile.getParentFile(), "session_pt.mp4");
+                    }
+                    if (!playFile.exists()) {
+                        playFile = videoFile;
+                    }
+                    io.github.kriolos.opos.automation.video.VlcVideoPlayerPanel.showDemo(playFile);
                 }
             }
         }

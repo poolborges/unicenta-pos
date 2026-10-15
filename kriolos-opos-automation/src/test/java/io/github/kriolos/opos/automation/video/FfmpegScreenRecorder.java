@@ -1,5 +1,4 @@
-package io.github.kriolos.opos.automation;
-
+package io.github.kriolos.opos.automation.video;
 import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Frame;
@@ -33,9 +32,7 @@ public class FfmpegScreenRecorder {
     private final int width;
     private final int height;
     private final int fps;
-
-    private Process ffmpegProcess;
-    private OutputStream ffmpegStdin;
+    private final VideoRecorderEngine engine;
     private Thread captureThread;
     private final AtomicBoolean isRunning = new AtomicBoolean(false);
 
@@ -44,49 +41,30 @@ public class FfmpegScreenRecorder {
     }
 
     public FfmpegScreenRecorder(File outputFile, int width, int height, int fps) {
+        this(outputFile, width, height, fps, io.github.kriolos.opos.automation.video.VideoRecorderEngineFactory.createEngine());
+    }
+
+    public FfmpegScreenRecorder(File outputFile, int width, int height, int fps, VideoRecorderEngine engine) {
         this.outputFile = outputFile;
         this.width = (width % 2 == 0) ? width : width + 1; // H.264 requires even dimensions
         this.height = (height % 2 == 0) ? height : height + 1;
         this.fps = fps > 0 ? fps : 12;
+        this.engine = (engine != null) ? engine : io.github.kriolos.opos.automation.video.VideoRecorderEngineFactory.createEngine();
     }
 
     /**
-     * Starts the FFmpeg video recording process and the background frame capture loop.
+     * Starts the video recording process and the background frame capture loop.
      */
     public void start() throws IOException {
-        if (outputFile.getParentFile() != null) {
-            outputFile.getParentFile().mkdirs();
-        }
+        engine.start(outputFile, width, height, fps);
+        isRunning.set(true);
 
-        ProcessBuilder pb = new ProcessBuilder(
-                "ffmpeg", "-y",
-                "-f", "rawvideo",
-                "-pix_fmt", "bgr24",
-                "-s", width + "x" + height,
-                "-r", String.valueOf(fps),
-                "-i", "-",
-                "-c:v", "libx264",
-                "-preset", "ultrafast",
-                "-pix_fmt", "yuv420p",
-                outputFile.getAbsolutePath()
-        );
-        pb.redirectErrorStream(true);
+        captureThread = new Thread(this::runCaptureLoop, "ScreenRecorder-Loop");
+        captureThread.setDaemon(true);
+        captureThread.start();
 
-        try {
-            ffmpegProcess = pb.start();
-            ffmpegStdin = ffmpegProcess.getOutputStream();
-            isRunning.set(true);
-
-            captureThread = new Thread(this::runCaptureLoop, "FfmpegScreenRecorder-Loop");
-            captureThread.setDaemon(true);
-            captureThread.start();
-
-            LOGGER.log(Level.INFO, "[ScreenRecorder] In-memory Swing frame recording started (Canvas: {0}x{1} @ {2} fps) -> {3}",
-                    new Object[]{width, height, fps, outputFile.getAbsolutePath()});
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "[ScreenRecorder] Failed to start FFmpeg: " + e.getMessage(), e);
-            throw e;
-        }
+        LOGGER.log(Level.INFO, "[ScreenRecorder] Started recording with {0} (Canvas: {1}x{2} @ {3} fps)",
+                new Object[]{engine.getName(), width, height, fps});
     }
 
     /**
@@ -194,13 +172,8 @@ public class FfmpegScreenRecorder {
 
             g2.dispose();
 
-            // Write raw video frame to FFmpeg stdin
-            try {
-                ffmpegStdin.write(frameData);
-                ffmpegStdin.flush();
-            } catch (IOException e) {
-                break;
-            }
+            // Record frame using pluggable engine (FFmpeg or pure Java)
+            engine.recordFrame(frameBuffer);
 
             long elapsed = System.currentTimeMillis() - loopStart;
             long sleepTime = frameDelayMs - elapsed;
@@ -227,29 +200,12 @@ public class FfmpegScreenRecorder {
             captureThread.interrupt();
         }
 
-        if (ffmpegStdin != null) {
-            try {
-                ffmpegStdin.flush();
-                ffmpegStdin.close(); // Signals EOF to FFmpeg
-            } catch (IOException ignored) {}
-        }
-
-        if (ffmpegProcess != null && ffmpegProcess.isAlive()) {
-            try {
-                boolean exited = ffmpegProcess.waitFor(5, TimeUnit.SECONDS);
-                if (!exited) {
-                    ffmpegProcess.destroyForcibly();
-                }
-            } catch (InterruptedException e) {
-                ffmpegProcess.destroyForcibly();
-                Thread.currentThread().interrupt();
-            }
-            LOGGER.log(Level.INFO, "[ScreenRecorder] Video recording finalized and saved to: {0} ({1} bytes)",
-                    new Object[]{outputFile.getAbsolutePath(), outputFile.length()});
-        }
+        engine.stop();
+        LOGGER.log(Level.INFO, "[ScreenRecorder] Video recording finalized and saved to: {0} ({1} bytes)",
+                new Object[]{getOutputFile().getAbsolutePath(), getOutputFile().length()});
     }
 
     public File getOutputFile() {
-        return outputFile;
+        return (engine != null) ? engine.getOutputFile() : outputFile;
     }
 }

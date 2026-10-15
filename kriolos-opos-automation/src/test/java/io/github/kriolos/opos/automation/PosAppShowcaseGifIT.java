@@ -1,6 +1,7 @@
 package io.github.kriolos.opos.automation;
 
 import com.openbravo.pos.forms.WordspacePanel;
+import io.github.kriolos.opos.automation.video.FfmpegScreenGifGenerator;
 import java.awt.Component;
 import java.awt.Container;
 import java.io.File;

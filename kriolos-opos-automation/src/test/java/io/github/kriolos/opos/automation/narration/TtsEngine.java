@@ -1,6 +1,6 @@
 package io.github.kriolos.opos.automation.narration;
 
-import io.github.kriolos.opos.automation.PosAudioNarrator.Language;
+import io.github.kriolos.opos.automation.narration.PosAudioNarrator.Language;
 import java.io.File;
 
 /**

@@ -1,10 +1,7 @@
-package io.github.kriolos.opos.automation;
+package io.github.kriolos.opos.automation.narration;
 
-import io.github.kriolos.opos.automation.narration.JavaAudioTimelineMixer;
 import io.github.kriolos.opos.automation.narration.JavaAudioTimelineMixer.TimedAudioClip;
-import io.github.kriolos.opos.automation.narration.MockJavaTtsEngine;
-import io.github.kriolos.opos.automation.narration.RhVoiceTtsEngine;
-import io.github.kriolos.opos.automation.narration.TtsEngine;
+import io.github.kriolos.opos.automation.video.FfmpegLocator;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -38,19 +35,27 @@ public class PosAudioNarrator {
     private static final Logger LOGGER = Logger.getLogger(PosAudioNarrator.class.getName());
 
     public enum Language {
-        PT("pt", "por", "Português", "Leticia-F123"),
-        EN("en", "eng", "English", "slt");
+        PT("pt", "por", "Português", "Leticia-F123", "pt-PT-RaquelNeural", "pt-PT"),
+        EN("en", "eng", "English", "slt", "en-US-AriaNeural", "en-US"),
+        FR("fr", "fra", "Français", "claire", "fr-FR-DeniseNeural", "fr-FR"),
+        ES("es", "spa", "Español", "esperanza", "es-ES-ElviraNeural", "es-ES"),
+        AR("ar", "ara", "العربية", "maged", "ar-EG-SalmaNeural", "ar-EG"),
+        ZH_CN("zh-CN", "zho", "中文 (简体)", "zh", "zh-CN-XiaoxiaoNeural", "zh-CN");
 
         private final String code;
         private final String iso6392;
         private final String label;
         private final String voiceName;
+        private final String neuralVoice;
+        private final String bcp47;
 
-        Language(String code, String iso6392, String label, String voiceName) {
+        Language(String code, String iso6392, String label, String voiceName, String neuralVoice, String bcp47) {
             this.code = code;
             this.iso6392 = iso6392;
             this.label = label;
             this.voiceName = voiceName;
+            this.neuralVoice = neuralVoice;
+            this.bcp47 = bcp47;
         }
 
         public String getCode() {
@@ -67,6 +72,14 @@ public class PosAudioNarrator {
 
         public String getVoiceName() {
             return voiceName;
+        }
+
+        public String getNeuralVoice() {
+            return neuralVoice;
+        }
+
+        public String getBcp47() {
+            return bcp47;
         }
     }
 
@@ -97,10 +110,41 @@ public class PosAudioNarrator {
     }
 
     private static TtsEngine resolveDefaultTtsEngine() {
-        RhVoiceTtsEngine nativeEngine = new RhVoiceTtsEngine();
-        if (nativeEngine.isAvailable()) {
-            return nativeEngine;
+        String configured = System.getProperty("test.tts.engine", "auto").trim().toLowerCase();
+
+        if ("azure".equals(configured)) {
+            return new AzureTtsEngine();
         }
+        if ("edge".equals(configured) || "neural".equals(configured)) {
+            return new EdgeNeuralTtsEngine();
+        }
+        if ("rhvoice".equals(configured)) {
+            return new RhVoiceTtsEngine();
+        }
+        if ("mock".equals(configured) || "java".equals(configured)) {
+            return new MockJavaTtsEngine();
+        }
+
+        // Automatic discovery order:
+        // 1. Azure Speech (if subscription key is configured)
+        AzureTtsEngine azure = new AzureTtsEngine();
+        if (azure.isAvailable()) {
+            return azure;
+        }
+
+        // 2. Edge Neural Speech (broadcast quality without API keys)
+        EdgeNeuralTtsEngine edge = new EdgeNeuralTtsEngine();
+        if (edge.isAvailable()) {
+            return edge;
+        }
+
+        // 3. Native RHVoice
+        RhVoiceTtsEngine rhVoice = new RhVoiceTtsEngine();
+        if (rhVoice.isAvailable()) {
+            return rhVoice;
+        }
+
+        // 4. Pure Java Mock Fallback
         return new MockJavaTtsEngine();
     }
 
@@ -125,6 +169,11 @@ public class PosAudioNarrator {
 
     public TtsEngine getTtsEngine() {
         return ttsEngine;
+    }
+
+    public String getLocalizedText(String scriptKey, Language language) {
+        Properties bundle = scriptBundles.get(language);
+        return (bundle != null) ? bundle.getProperty(scriptKey) : null;
     }
 
     public boolean isTtsAvailable() {
@@ -216,16 +265,21 @@ public class PosAudioNarrator {
             }
         }
 
-        // 2. Build multi-track YouTube video if both tracks exist
-        if (mixedAudioTracks.containsKey(Language.PT) && mixedAudioTracks.containsKey(Language.EN)) {
+        // 2. Build multi-track YouTube video if more than one track exists
+        if (mixedAudioTracks.size() > 1) {
             File ytVideo = new File(outputDir, "session_youtube_multilingual.mp4");
-            muxYouTubeDualAudio(rawVideoMp4, mixedAudioTracks.get(Language.PT), mixedAudioTracks.get(Language.EN), ytVideo);
+            muxYouTubeMultiAudio(rawVideoMp4, mixedAudioTracks, ytVideo);
         }
     }
 
     private void muxVideoWithAudio(File video, File audio, File outputVideo, String isoLang, String langTitle) {
+        String ffmpeg = FfmpegLocator.getExecutablePath();
+        if (ffmpeg == null) {
+            LOGGER.log(Level.WARNING, "[AudioNarrator] Cannot mux video: FFmpeg executable not found.");
+            return;
+        }
         List<String> cmd = List.of(
-                "ffmpeg", "-y",
+                ffmpeg, "-y",
                 "-i", video.getAbsolutePath(),
                 "-i", audio.getAbsolutePath(),
                 "-c:v", "copy",
@@ -243,29 +297,55 @@ public class PosAudioNarrator {
         }
     }
 
-    private void muxYouTubeDualAudio(File video, File ptAudio, File enAudio, File outputVideo) {
-        List<String> cmd = List.of(
-                "ffmpeg", "-y",
-                "-i", video.getAbsolutePath(),
-                "-i", ptAudio.getAbsolutePath(),
-                "-i", enAudio.getAbsolutePath(),
-                "-map", "0:v",
-                "-map", "1:a",
-                "-map", "2:a",
-                "-c:v", "copy",
-                "-c:a", "aac",
-                "-b:a", "192k",
-                "-metadata:s:a:0", "language=por",
-                "-metadata:s:a:0", "title=Português",
-                "-metadata:s:a:1", "language=eng",
-                "-metadata:s:a:1", "title=English",
-                "-shortest",
-                outputVideo.getAbsolutePath()
-        );
-        executeProcess(cmd, "Mux YouTube Multilingual Video");
+    private void muxYouTubeMultiAudio(File video, Map<Language, File> audioTracks, File outputVideo) {
+        String ffmpeg = FfmpegLocator.getExecutablePath();
+        if (ffmpeg == null) {
+            LOGGER.log(Level.WARNING, "[AudioNarrator] Cannot mux YouTube video: FFmpeg executable not found.");
+            return;
+        }
+
+        List<String> cmd = new ArrayList<>();
+        cmd.add(ffmpeg);
+        cmd.add("-y");
+        cmd.add("-i");
+        cmd.add(video.getAbsolutePath());
+
+        List<Map.Entry<Language, File>> entries = new ArrayList<>(audioTracks.entrySet());
+        for (Map.Entry<Language, File> entry : entries) {
+            cmd.add("-i");
+            cmd.add(entry.getValue().getAbsolutePath());
+        }
+
+        cmd.add("-map");
+        cmd.add("0:v");
+
+        for (int i = 0; i < entries.size(); i++) {
+            cmd.add("-map");
+            cmd.add((i + 1) + ":a");
+        }
+
+        cmd.add("-c:v");
+        cmd.add("copy");
+        cmd.add("-c:a");
+        cmd.add("aac");
+        cmd.add("-b:a");
+        cmd.add("192k");
+
+        for (int i = 0; i < entries.size(); i++) {
+            Language lang = entries.get(i).getKey();
+            cmd.add("-metadata:s:a:" + i);
+            cmd.add("language=" + lang.getIso6392());
+            cmd.add("-metadata:s:a:" + i);
+            cmd.add("title=" + lang.getLabel());
+        }
+
+        cmd.add("-shortest");
+        cmd.add(outputVideo.getAbsolutePath());
+
+        executeProcess(cmd, "Mux YouTube Multi-Audio Video (" + entries.size() + " tracks)");
         if (outputVideo.exists()) {
-            LOGGER.log(Level.INFO, "[AudioNarrator] Successfully generated YouTube Multilingual Video: {0} ({1} bytes)",
-                    new Object[]{outputVideo.getName(), outputVideo.length()});
+            LOGGER.log(Level.INFO, "[AudioNarrator] Successfully generated YouTube Multilingual Video with {0} audio tracks: {1} ({2} bytes)",
+                    new Object[]{entries.size(), outputVideo.getName(), outputVideo.length()});
         }
     }
 

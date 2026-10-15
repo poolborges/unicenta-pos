@@ -56,6 +56,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- VLCJ for Embedded Swing Video Player Panel -->
+        <dependency>
+            <groupId>uk.co.caprica</groupId>
+            <artifactId>vlcj</artifactId>
+            <version>4.8.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Bundled FFmpeg Binaries (Cross-Platform Embedded FFmpeg via Maven) -->
+        <dependency>
+            <groupId>ws.schild</groupId>
+            <artifactId>jave-all-deps</artifactId>
+            <version>3.5.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
