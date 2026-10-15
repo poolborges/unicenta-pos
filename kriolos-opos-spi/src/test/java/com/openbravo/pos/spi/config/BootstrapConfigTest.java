@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,7 +35,7 @@ public class BootstrapConfigTest {
 
         @Override
         public String getStationId() {
-            return props.getOrDefault(KEY_POS_UUID, "test-station-uuid");
+            return props.getOrDefault(KEY_MACHINE_UUID, "test-station-uuid");
         }
 
         @Override
@@ -81,16 +80,12 @@ public class BootstrapConfigTest {
         assertEquals(10, cfg.getDatabasePoolMaxSize(10));
         assertNull(cfg.getDatabaseEngine());
         assertNull(cfg.getDatabaseDriver());
-        assertNull(cfg.getDatabaseDriverLibrary());
-        assertEquals("legacy", cfg.getLocalizationMode());
-        assertNull(cfg.getLocalizationLocale());
-        assertNotNull(cfg.getStartupLocale());
     }
 
     @Test
     void testConfiguredValues() {
         TestBootstrapConfig cfg = new TestBootstrapConfig();
-        cfg.set(BootstrapConfig.KEY_POS_UI_THEME, "modern-dark");
+        cfg.set(BootstrapConfig.KEY_UI_THEME, "modern-dark");
         cfg.set(BootstrapConfig.KEY_MACHINE_SCREENMODE, "fullscreen");
         cfg.set(BootstrapConfig.KEY_MACHINE_UNIQUEINSTANCE, "false");
         cfg.set(BootstrapConfig.KEY_MACHINE_RMI_PORT, "4005");
@@ -100,10 +95,6 @@ public class BootstrapConfigTest {
         cfg.set(BootstrapConfig.KEY_DB_POOL_MAX_SIZE, "30");
         cfg.set(BootstrapConfig.KEY_DB_ENGINE, "mariadb");
         cfg.set(BootstrapConfig.KEY_DB_DRIVER, "org.mariadb.jdbc.Driver");
-        cfg.set(BootstrapConfig.KEY_LOCALIZATION_CONFIGURE, "provider");
-        cfg.set(BootstrapConfig.KEY_LOCALIZATION_LOCALE, "pt-CV");
-        cfg.set(BootstrapConfig.KEY_FORMAT_INTEGER, "#,##0");
-        cfg.set(BootstrapConfig.KEY_FORMAT_CURRENCY, "CVE #,##0.00");
 
         assertEquals("modern-dark", cfg.getUiTheme());
         assertEquals("fullscreen", cfg.getScreenMode());
@@ -118,31 +109,12 @@ public class BootstrapConfigTest {
         assertEquals(30, cfg.getDatabasePoolMaxSize(10));
         assertEquals("mariadb", cfg.getDatabaseEngine());
         assertEquals("org.mariadb.jdbc.Driver", cfg.getDatabaseDriver());
-        assertEquals("provider", cfg.getLocalizationMode());
-        assertEquals("pt-CV", cfg.getLocalizationLocale());
-        assertEquals(Locale.forLanguageTag("pt-CV"), cfg.getStartupLocale());
-        assertEquals("#,##0", cfg.getIntegerPattern());
-        assertEquals("CVE #,##0.00", cfg.getCurrencyPattern());
     }
 
     @Test
-    void testLegacyThemeFallback() {
+    void testThemeConfiguration() {
         TestBootstrapConfig cfg = new TestBootstrapConfig();
-        cfg.set(BootstrapConfig.KEY_UI_THEME, "metal");
-        assertEquals("metal", cfg.getUiTheme());
-
-        cfg.set(BootstrapConfig.KEY_POS_UI_THEME, "flatlaf-dark");
+        cfg.set(BootstrapConfig.KEY_UI_THEME, "flatlaf-dark");
         assertEquals("flatlaf-dark", cfg.getUiTheme());
-    }
-
-    @Test
-    void testLegacyLocaleFallback() {
-        TestBootstrapConfig cfg = new TestBootstrapConfig();
-        cfg.set(BootstrapConfig.KEY_USER_LANGUAGE, "fr");
-        cfg.set(BootstrapConfig.KEY_USER_COUNTRY, "CA");
-
-        Locale locale = cfg.getStartupLocale();
-        assertEquals("fr", locale.getLanguage());
-        assertEquals("CA", locale.getCountry());
     }
 }

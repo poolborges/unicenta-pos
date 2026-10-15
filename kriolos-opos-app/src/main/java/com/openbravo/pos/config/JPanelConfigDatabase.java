@@ -1,689 +1,722 @@
-//    KriolOS POS
-//    Copyright (c) 2019-2023 KriolOS
-//
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.pos.config;
 
+import com.openbravo.app.AppLocal;
+import com.openbravo.app.BootstrapConfiguration;
 import com.openbravo.data.gui.JMessagePanel;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.loader.Session;
 import com.openbravo.data.user.DirtyManager;
-import com.openbravo.app.AppLocal;
+import com.openbravo.ui.components.ButtonFactory;
+import com.openbravo.ui.components.ButtonSize;
+import com.openbravo.ui.components.ComponentFactory;
+import com.openbravo.ui.components.PaneBuilder;
+import com.openbravo.ui.components.UIColor;
+import com.openbravo.ui.icon.IconKey;
 import com.openbravo.util.AltEncrypter;
+import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.HeadlessException;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * @author Jack Gerrard
- * @author adrianromero
+ * Modern, handcrafted Database Configuration panel.
+ *
+ * <p>Provides full CRUD management over primary and secondary database connection
+ * profiles backed by {@link AppConfig}, featuring an interactive table, detail form,
+ * connection testing, and OS-independent file-based database paths (defaulting to SQLite).</p>
+ *
+ * @author KriolOS
  */
-public class JPanelConfigDatabase extends javax.swing.JPanel implements PanelConfig {
-    
+public class JPanelConfigDatabase extends JPanel implements PanelConfig {
+
+    private static final long serialVersionUID = 1L;
+    private static final Logger LOGGER = Logger.getLogger(JPanelConfigDatabase.class.getName());
+
     private final DirtyManager dirty = new DirtyManager();
-    
-    /** Creates new form JPanelConfigDatabase */
-    public JPanelConfigDatabase() {
-        
-        initComponents();
-        jcboDBDriver.addActionListener(dirty);
-        jcboDBDriver.addItem("MariaDB");
-        jcboDBDriver.addItem("MySQL");
-        jcboDBDriver.addItem("HSQLDB");
-        jcboDBDriver.setSelectedIndex(0);
-        multiDB.addActionListener(dirty);        
-        
-// primary DB        
-        jtxtDbName.getDocument().addDocumentListener(dirty);
-        jtxtDbURL.getDocument().addDocumentListener(dirty);
-        jtxtDbSchema.getDocument().addDocumentListener(dirty);        
-        jtxtDbOptions.getDocument().addDocumentListener(dirty);
-        jtxtDbPassword.getDocument().addDocumentListener(dirty);
-        jtxtDbUser.getDocument().addDocumentListener(dirty);        
+    private boolean updatingForm = false;
 
-// secondary DB        
-        jtxtDbName1.getDocument().addDocumentListener(dirty);        
-        jtxtDbURL1.getDocument().addDocumentListener(dirty);
-        jtxtDbSchema1.getDocument().addDocumentListener(dirty);                
-        jtxtDbOptions1.getDocument().addDocumentListener(dirty);
-        jtxtDbPassword1.getDocument().addDocumentListener(dirty);
-        jtxtDbUser1.getDocument().addDocumentListener(dirty);        
-        
-        checkMulBD();
+    // Profiles model
+    private final List<DatabaseProfile> profiles = new ArrayList<>();
+    private final DatabaseTableModel tableModel = new DatabaseTableModel();
+    private int selectedIndex = -1;
 
-    }
+    // UI Components: Table & Actions
+    private JTable tblDatabases;
+    private JButton btnNew;
+    private JButton btnDelete;
+    private JLabel lblTableStatus;
+
+    // UI Components: Form
+    private JLabel lblFormTitle;
+    private JTextField txtDbName;
+    private JTextField txtDbURL;
+    private JTextField txtDbSchema;
+    private JTextField txtDbOptions;
+    private JTextField txtDbUser;
+    private JPasswordField txtDbPassword;
+    private JButton btnTestConnection;
+    private JLabel lblConnectionStatus;
 
     /**
-     *
-     * @return
+     * Creates new database configuration panel.
      */
+    public JPanelConfigDatabase() {
+        initComponents();
+    }
+
+    private void initComponents() {
+        setLayout(new BorderLayout(10, 10));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // 1. Header Panel
+        add(createHeaderPanel(), BorderLayout.NORTH);
+
+        // 2. Center: Split Pane (Table on Left, Form on Right)
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createTablePanel(), createFormPanel());
+        splitPane.setContinuousLayout(true);
+        splitPane.setOneTouchExpandable(true);
+        splitPane.setResizeWeight(0.40);
+        splitPane.setDividerLocation(380);
+        splitPane.setBorder(BorderFactory.createEmptyBorder());
+
+        add(splitPane, BorderLayout.CENTER);
+    }
+
+    private JPanel createHeaderPanel() {
+        JPanel header = new JPanel(new BorderLayout(10, 10));
+        header.setOpaque(false);
+
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        titlePanel.setOpaque(false);
+
+        JLabel lblTitle = new JLabel(AppLocal.getIntString("label.database"));
+        lblTitle.setFont(lblTitle.getFont().deriveFont(Font.BOLD, 18f));
+        titlePanel.add(lblTitle);
+
+        JLabel lblDesc = new JLabel(AppLocal.getIntString("label.database.checkingparams"));
+        lblDesc.setFont(lblDesc.getFont().deriveFont(Font.PLAIN, 12f));
+        lblDesc.setForeground(UIColor.MUTED);
+        titlePanel.add(lblDesc);
+
+        header.add(titlePanel, BorderLayout.WEST);
+        return header;
+    }
+
+    private JPanel createTablePanel() {
+        JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(UIColor.MUTED, 1),
+                " " + AppLocal.getIntString("label.database") + " "
+        ));
+
+        // Toolbar
+        JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.LEADING, 6, 6));
+        toolbar.setOpaque(false);
+
+        btnNew = ButtonFactory.createActionButton(
+                " " + AppLocal.getIntString("Button.newcustomer"),
+                IconKey.PLUS,
+                ButtonSize.MEDIUM,
+                e -> onNewDatabase()
+        );
+        btnNew.setToolTipText("Add new database connection slot");
+
+        btnDelete = ButtonFactory.createActionButton(
+                " " + AppLocal.getIntString("button.delete"),
+                IconKey.DELETE,
+                ButtonSize.MEDIUM,
+                e -> onDeleteDatabase()
+        );
+        btnDelete.setToolTipText("Delete selected secondary database connection");
+
+        toolbar.add(btnNew);
+        toolbar.add(btnDelete);
+        panel.add(toolbar, BorderLayout.NORTH);
+
+        // Table
+        tblDatabases = new JTable(tableModel);
+        tblDatabases.setRowHeight(34);
+        tblDatabases.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tblDatabases.setShowGrid(true);
+        tblDatabases.setFillsViewportHeight(true);
+
+        // Alignment & Column Widths
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        tblDatabases.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        tblDatabases.getColumnModel().getColumn(0).setPreferredWidth(80);
+        tblDatabases.getColumnModel().getColumn(1).setPreferredWidth(120);
+        tblDatabases.getColumnModel().getColumn(2).setPreferredWidth(180);
+
+        tblDatabases.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int row = tblDatabases.getSelectedRow();
+                if (row >= 0 && row < profiles.size()) {
+                    selectProfile(row);
+                }
+            }
+        });
+
+        JScrollPane scrollPane = new JScrollPane(tblDatabases);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        // Footer status
+        lblTableStatus = new JLabel("0 databases configured");
+        lblTableStatus.setBorder(BorderFactory.createEmptyBorder(4, 6, 4, 6));
+        lblTableStatus.setFont(lblTableStatus.getFont().deriveFont(Font.PLAIN, 11f));
+        lblTableStatus.setForeground(UIColor.MUTED);
+        panel.add(lblTableStatus, BorderLayout.SOUTH);
+
+        return panel;
+    }
+
+    private JPanel createFormPanel() {
+        JPanel formContainer = new JPanel(new BorderLayout(8, 8));
+        formContainer.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(UIColor.MUTED, 1),
+                " Connection Details "
+        ));
+
+        // Form Title
+        lblFormTitle = new JLabel("Database Parameters", SwingConstants.LEFT);
+        lblFormTitle.setFont(lblFormTitle.getFont().deriveFont(Font.BOLD, 14f));
+        lblFormTitle.setBorder(BorderFactory.createEmptyBorder(6, 12, 4, 12));
+        formContainer.add(lblFormTitle, BorderLayout.NORTH);
+
+        // Fields
+        txtDbName = new JTextField();
+        txtDbURL = new JTextField();
+        txtDbSchema = new JTextField();
+        txtDbOptions = new JTextField();
+        txtDbUser = new JTextField();
+        txtDbPassword = new JPasswordField();
+
+        DocumentListener docListener = new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                onFormFieldChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                onFormFieldChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                onFormFieldChanged();
+            }
+        };
+
+        txtDbName.getDocument().addDocumentListener(docListener);
+        txtDbURL.getDocument().addDocumentListener(docListener);
+        txtDbSchema.getDocument().addDocumentListener(docListener);
+        txtDbOptions.getDocument().addDocumentListener(docListener);
+        txtDbUser.getDocument().addDocumentListener(docListener);
+        txtDbPassword.getDocument().addDocumentListener(docListener);
+
+        // Build with PaneBuilder
+        PaneBuilder builder = new PaneBuilder()
+                .setLabelSize(120)
+                .setFieldHeight(34)
+                .setScrollable(true)
+                .add(AppLocal.getIntString("label.DbName"), true, txtDbName)
+                .add(AppLocal.getIntString("label.DbURL"), true, txtDbURL)
+                .add(AppLocal.getIntString("label.DbSchema"), txtDbSchema)
+                .add(AppLocal.getIntString("label.DbOptions"), txtDbOptions)
+                .add(AppLocal.getIntString("label.DbUser"), txtDbUser)
+                .add(AppLocal.getIntString("label.DbPassword"), txtDbPassword);
+
+        formContainer.add(builder.build(), BorderLayout.CENTER);
+
+        // Footer: Test Connection & Feedback
+        JPanel footer = new JPanel(new BorderLayout(8, 8));
+        footer.setBorder(BorderFactory.createEmptyBorder(8, 12, 10, 12));
+
+        lblConnectionStatus = new JLabel(" ");
+        lblConnectionStatus.setFont(lblConnectionStatus.getFont().deriveFont(Font.PLAIN, 12f));
+        footer.add(lblConnectionStatus, BorderLayout.CENTER);
+
+        btnTestConnection = ButtonFactory.createActionButton(
+                " " + AppLocal.getIntString("button.test"),
+                IconKey.DATABASE,
+                ButtonSize.MEDIUM,
+                e -> onTestConnection()
+        );
+        ComponentFactory.enforceFooterSize(btnTestConnection);
+        footer.add(btnTestConnection, BorderLayout.EAST);
+
+        formContainer.add(footer, BorderLayout.SOUTH);
+
+        return formContainer;
+    }
+
+    private void onFormFieldChanged() {
+        if (updatingForm || selectedIndex < 0 || selectedIndex >= profiles.size()) {
+            return;
+        }
+
+        DatabaseProfile p = profiles.get(selectedIndex);
+        p.setName(txtDbName.getText().trim());
+        p.setUrl(txtDbURL.getText().trim());
+        p.setSchema(txtDbSchema.getText().trim());
+        p.setOptions(txtDbOptions.getText().trim());
+        p.setUser(txtDbUser.getText().trim());
+        p.setPassword(new String(txtDbPassword.getPassword()));
+
+        tableModel.fireTableRowsUpdated(selectedIndex, selectedIndex);
+        lblFormTitle.setText("Editing: " + p.getName() + (p.isPrimary() ? " (Primary)" : ""));
+        dirty.setDirty(true);
+    }
+
+    private void selectProfile(int index) {
+        if (index < 0 || index >= profiles.size()) {
+            return;
+        }
+        selectedIndex = index;
+        DatabaseProfile p = profiles.get(index);
+
+        updatingForm = true;
+        try {
+            txtDbName.setText(p.getName());
+            txtDbURL.setText(p.getUrl());
+            txtDbSchema.setText(p.getSchema());
+            txtDbOptions.setText(p.getOptions());
+            txtDbUser.setText(p.getUser());
+            txtDbPassword.setText(p.getPassword());
+
+            lblFormTitle.setText("Editing: " + p.getName() + (p.isPrimary() ? " (Primary)" : ""));
+            lblConnectionStatus.setText(" ");
+
+            btnDelete.setEnabled(!p.isPrimary());
+        } finally {
+            updatingForm = false;
+        }
+    }
+
+    private void onNewDatabase() {
+        // Find next available slot id
+        int nextId = 1;
+        Set<String> existingIds = new HashSet<>();
+        for (DatabaseProfile p : profiles) {
+            existingIds.add(p.getId());
+        }
+        while (existingIds.contains(String.valueOf(nextId))) {
+            nextId++;
+        }
+
+        String slotId = String.valueOf(nextId);
+        String defaultPath = getOsIndependentSqlitePath("kriolopos_" + slotId + ".db");
+
+        DatabaseProfile newProfile = new DatabaseProfile(
+                slotId,
+                "DB " + slotId + " (Secondary)",
+                defaultPath,
+                "",
+                "",
+                "",
+                "",
+                false
+        );
+
+        profiles.add(newProfile);
+        tableModel.fireTableRowsInserted(profiles.size() - 1, profiles.size() - 1);
+
+        tblDatabases.setRowSelectionInterval(profiles.size() - 1, profiles.size() - 1);
+        updateTableControls();
+        dirty.setDirty(true);
+        txtDbName.requestFocusInWindow();
+    }
+
+    private void onDeleteDatabase() {
+        if (selectedIndex < 0 || selectedIndex >= profiles.size()) {
+            return;
+        }
+
+        DatabaseProfile p = profiles.get(selectedIndex);
+        if (p.isPrimary()) {
+            JMessagePanel.showMessage(this,
+                    new MessageInf(MessageInf.SGN_WARNING, "The primary database cannot be deleted."));
+            return;
+        }
+
+        int res = JMessagePanel.showConfirmDialog(this,
+                new MessageInf(MessageInf.SGN_WARNING, "Are you sure you want to delete profile '" + p.getName() + "'?"));
+
+        if (res == 0) { // Confirmed
+            int toRemove = selectedIndex;
+            profiles.remove(toRemove);
+            tableModel.fireTableRowsDeleted(toRemove, toRemove);
+
+            int nextSelect = Math.min(toRemove, profiles.size() - 1);
+            if (nextSelect >= 0) {
+                tblDatabases.setRowSelectionInterval(nextSelect, nextSelect);
+            }
+            updateTableControls();
+            dirty.setDirty(true);
+        }
+    }
+
+    private void onTestConnection() {
+        if (selectedIndex < 0 || selectedIndex >= profiles.size()) {
+            return;
+        }
+
+        DatabaseProfile p = profiles.get(selectedIndex);
+        String fullUrl = p.getFullUrl();
+        String user = p.getUser();
+        String password = p.getPassword();
+
+        lblConnectionStatus.setText("Testing connection...");
+        lblConnectionStatus.setForeground(UIColor.PRIMARY);
+
+        try {
+            Session session = new Session(fullUrl, user, password);
+            Connection conn = session.getConnection();
+            boolean isValid = (conn != null) && conn.isValid(2000);
+
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+            }
+
+            if (isValid) {
+                lblConnectionStatus.setText("✓ Connection successful!");
+                lblConnectionStatus.setForeground(UIColor.SUCCESS);
+                JMessagePanel.showMessage(this,
+                        new MessageInf(MessageInf.SGN_SUCCESS, AppLocal.getIntString("message.databasesuccess")));
+            } else {
+                lblConnectionStatus.setText("✗ Connection failed: invalid connection.");
+                lblConnectionStatus.setForeground(UIColor.DANGER);
+                JMessagePanel.showMessage(this,
+                        new MessageInf(MessageInf.SGN_WARNING, "Connection Error: Database connection is not valid."));
+            }
+        } catch (SQLException e) {
+            lblConnectionStatus.setText("✗ Connection error: " + e.getMessage());
+            lblConnectionStatus.setForeground(UIColor.DANGER);
+            JMessagePanel.showMessage(this,
+                    new MessageInf(MessageInf.SGN_WARNING,
+                            AppLocal.getIntString("message.databaseconnectionerror"), e));
+        } catch (Exception e) {
+            lblConnectionStatus.setText("✗ " + e.getMessage());
+            lblConnectionStatus.setForeground(UIColor.DANGER);
+            JMessagePanel.showMessage(this,
+                    new MessageInf(MessageInf.SGN_WARNING, "Unknown exception", e));
+        }
+    }
+
+    private String getOsIndependentSqlitePath(String fileName) {
+        File baseDir = BootstrapConfiguration.getBaseApplicationDataDirectory();
+        return "jdbc:sqlite:" + new File(baseDir, fileName).getAbsolutePath().replace('\\', '/');
+    }
+
+    private void updateTableControls() {
+        lblTableStatus.setText(profiles.size() + " database connection(s) configured");
+    }
+
     @Override
     public boolean hasChanged() {
         return dirty.isDirty();
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @Override
     public Component getConfigComponent() {
         return this;
     }
-   
-    /**
-     *
-     * @param config
-     */
+
     @Override
     public void loadProperties(AppConfig config) {
-        
-        multiDB.setSelected(Boolean.parseBoolean(config.getProperty("db.multi")));                
+        updatingForm = true;
+        try {
+            profiles.clear();
 
-        jcboDBDriver.setSelectedItem(config.getProperty("db.engine"));
+            // 1. Primary DB (Default to OS-independent file-based SQLite)
+            String defaultSqliteUrl = getOsIndependentSqlitePath("kriolopos.db");
+            String pName = config.getProperty("db.name", "DB 0 (SQLite)");
+            String pUrl = config.getProperty("db.URL", defaultSqliteUrl);
+            String pSchema = config.getProperty("db.schema", "");
+            String pOptions = config.getProperty("db.options", "");
+            String pUser = config.getProperty("db.user", "");
+            String pPass = decryptPassword(pUser, config.getProperty("db.password", ""));
 
-// primary DB              
-        jtxtDbName.setText(config.getProperty("db.name"));
-        jtxtDbURL.setText(config.getProperty("db.URL"));
-        jtxtDbSchema.setText(config.getProperty("db.schema"));        
-        jtxtDbOptions.setText(config.getProperty("db.options"));
-        String sDBUser = config.getProperty("db.user");
-        String sDBPassword = config.getProperty("db.password");        
+            DatabaseProfile primary = new DatabaseProfile("primary", pName, pUrl, pSchema, pOptions, pUser, pPass, true);
+            profiles.add(primary);
 
-        if (sDBUser != null && sDBPassword != null && sDBPassword.startsWith("crypt:")) {
-            AltEncrypter cypher = new AltEncrypter("cypherkey" + sDBUser);
-            sDBPassword = cypher.decrypt(sDBPassword.substring(6));
-        }        
-        jtxtDbUser.setText(sDBUser);
-        jtxtDbPassword.setText(sDBPassword);   
+            // 2. Discover Secondary DBs
+            Set<String> secondaryIds = new LinkedHashSet<>();
 
-// secondary DB        
-        jtxtDbName1.setText(config.getProperty("db1.name"));
-        jtxtDbURL1.setText(config.getProperty("db1.URL"));
-        jtxtDbSchema1.setText(config.getProperty("db1.schema"));                
-        jtxtDbOptions1.setText(config.getProperty("db1.options"));        
-        String sDBUser1 = config.getProperty("db1.user");
-        String sDBPassword1 = config.getProperty("db1.password");        
+            // Modern db.{id}.name or db.{id}.URL
+            if (config.getProperties() != null) {
+                for (String key : config.getProperties().stringPropertyNames()) {
+                    if (key.startsWith("db.") && key.endsWith(".name") && !key.equals("db.name")) {
+                        String sid = key.substring(3, key.length() - 5);
+                        secondaryIds.add(sid);
+                    } else if (key.startsWith("db.") && key.endsWith(".URL") && !key.equals("db.URL")) {
+                        String sid = key.substring(3, key.length() - 4);
+                        secondaryIds.add(sid);
+                    } else if (key.startsWith("db") && key.endsWith(".name") && !key.equals("db.name")) {
+                        // Legacy db1.name
+                        String sid = key.substring(2, key.length() - 5);
+                        if (!sid.isEmpty()) {
+                            secondaryIds.add(sid);
+                        }
+                    }
+                }
+            }
 
-        if (sDBUser1 != null && sDBPassword1 != null && sDBPassword1.startsWith("crypt:")) {
-            AltEncrypter cypher = new AltEncrypter("cypherkey" + sDBUser1);
-            sDBPassword1 = cypher.decrypt(sDBPassword1.substring(6));
-        }        
-        jtxtDbUser1.setText(sDBUser1);
-        jtxtDbPassword1.setText(sDBPassword1);          
-        
-        //dirty.setDirty(false);
-        
-        checkMulBD();
+            for (String sid : secondaryIds) {
+                String sName = config.getProperty("db." + sid + ".name", config.getProperty("db" + sid + ".name", "DB " + sid));
+                String sUrl = config.getProperty("db." + sid + ".URL", config.getProperty("db" + sid + ".URL", ""));
+                String sSchema = config.getProperty("db." + sid + ".schema", config.getProperty("db" + sid + ".schema", ""));
+                String sOptions = config.getProperty("db." + sid + ".options", config.getProperty("db" + sid + ".options", ""));
+                String sUser = config.getProperty("db." + sid + ".user", config.getProperty("db" + sid + ".user", ""));
+                String sPass = decryptPassword(sUser, config.getProperty("db." + sid + ".password", config.getProperty("db" + sid + ".password", "")));
+
+                if (!sUrl.isEmpty() || !sName.isEmpty()) {
+                    DatabaseProfile sec = new DatabaseProfile(sid, sName, sUrl, sSchema, sOptions, sUser, sPass, false);
+                    profiles.add(sec);
+                }
+            }
+
+            tableModel.fireTableDataChanged();
+            if (!profiles.isEmpty()) {
+                tblDatabases.setRowSelectionInterval(0, 0);
+                selectProfile(0);
+            }
+            updateTableControls();
+            dirty.setDirty(false);
+        } finally {
+            updatingForm = false;
+        }
     }
-   
-    /**
-     *
-     * @param config
-     */
+
     @Override
     public void saveProperties(AppConfig config) {
+        if (profiles.isEmpty()) {
+            dirty.setDirty(false);
+            return;
+        }
 
-// multi-db        
-        config.setProperty("db.multi",Boolean.toString(multiDB.isSelected()));
-        
-        config.setProperty("db.engine", comboValue(jcboDBDriver.getSelectedItem()));
+        // Save Primary DB
+        DatabaseProfile primary = profiles.get(0);
+        config.setProperty("db.name", primary.getName());
+        config.setProperty("db.URL", primary.getUrl());
+        config.setProperty("db.schema", primary.getSchema());
+        config.setProperty("db.options", primary.getOptions());
+        config.setProperty("db.user", primary.getUser());
+        config.setProperty("db.password", encryptPassword(primary.getUser(), primary.getPassword()));
 
-// primary DB
-        config.setProperty("db.name", jtxtDbName.getText());
-        config.setProperty("db.URL", jtxtDbURL.getText());
-        config.setProperty("db.schema", jtxtDbSchema.getText());        
-        config.setProperty("db.options", jtxtDbOptions.getText());
-        config.setProperty("db.user", jtxtDbUser.getText());
-        AltEncrypter cypher = new AltEncrypter("cypherkey" + jtxtDbUser.getText());       
-        config.setProperty("db.password", "crypt:" + 
-                cypher.encrypt(new String(jtxtDbPassword.getPassword())));
+        // Save Secondary DBs
+        for (int i = 1; i < profiles.size(); i++) {
+            DatabaseProfile sec = profiles.get(i);
+            String id = sec.getId();
 
-// secondary DB        
-        config.setProperty("db1.name", jtxtDbName1.getText());        
-        config.setProperty("db1.URL", jtxtDbURL1.getText());
-        config.setProperty("db1.schema", jtxtDbSchema1.getText());                
-        config.setProperty("db1.options", jtxtDbOptions1.getText());
-        config.setProperty("db1.user", jtxtDbUser1.getText());
-        cypher = new AltEncrypter("cypherkey" + jtxtDbUser1.getText());       
-        config.setProperty("db1.password", "crypt:" + 
-                cypher.encrypt(new String(jtxtDbPassword1.getPassword())));        
+            config.setProperty("db." + id + ".name", sec.getName());
+            config.setProperty("db." + id + ".URL", sec.getUrl());
+            config.setProperty("db." + id + ".schema", sec.getSchema());
+            config.setProperty("db." + id + ".options", sec.getOptions());
+            config.setProperty("db." + id + ".user", sec.getUser());
+            config.setProperty("db." + id + ".password", encryptPassword(sec.getUser(), sec.getPassword()));
+
+            // Mirror legacy db1.* keys if id is 1
+            if ("1".equals(id)) {
+                config.setProperty("db1.name", sec.getName());
+                config.setProperty("db1.URL", sec.getUrl());
+                config.setProperty("db1.schema", sec.getSchema());
+                config.setProperty("db1.options", sec.getOptions());
+                config.setProperty("db1.user", sec.getUser());
+                config.setProperty("db1.password", encryptPassword(sec.getUser(), sec.getPassword()));
+            }
+        }
 
         dirty.setDirty(false);
     }
 
-    private String comboValue(Object value) {
-        return value == null ? "" : value.toString();
+    private String decryptPassword(String user, String pass) {
+        if (user != null && pass != null && pass.startsWith("crypt:")) {
+            try {
+                AltEncrypter cypher = new AltEncrypter("cypherkey" + user);
+                return cypher.decrypt(pass.substring(6));
+            } catch (Exception e) {
+                LOGGER.log(Level.WARNING, "Failed to decrypt password for user " + user, e);
+                return "";
+            }
+        }
+        return pass != null ? pass : "";
     }
-    
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
-     */
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
 
-        jLabel6 = new javax.swing.JLabel();
-        jcboDBDriver = new javax.swing.JComboBox();
-        jLabel2 = new javax.swing.JLabel();
-        jtxtDbURL = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jtxtDbUser = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jtxtDbPassword = new javax.swing.JPasswordField();
-        jButtonTest = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JSeparator();
-        jLabel5 = new javax.swing.JLabel();
-        jButtonTest1 = new javax.swing.JButton();
-        jtxtDbPassword1 = new javax.swing.JPasswordField();
-        jtxtDbUser1 = new javax.swing.JTextField();
-        jtxtDbURL1 = new javax.swing.JTextField();
-        jLblDbURL1 = new javax.swing.JLabel();
-        jLblDbUser1 = new javax.swing.JLabel();
-        jLblDbPassword1 = new javax.swing.JLabel();
-        jLblDBName = new javax.swing.JLabel();
-        jtxtDbName = new javax.swing.JTextField();
-        jLblDbName1 = new javax.swing.JLabel();
-        jtxtDbName1 = new javax.swing.JTextField();
-        multiDB = new javax.swing.JCheckBox();
-        jLabel7 = new javax.swing.JLabel();
-        jtxtDbSchema = new javax.swing.JTextField();
-        jLblDbSchema1 = new javax.swing.JLabel();
-        jtxtDbSchema1 = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        jtxtDbOptions = new javax.swing.JTextField();
-        jLblDbOptions1 = new javax.swing.JLabel();
-        jtxtDbOptions1 = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-
-        setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        setOpaque(false);
-        setPreferredSize(new java.awt.Dimension(900, 500));
-
-        jLabel6.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages"); // NOI18N
-        jLabel6.setText(bundle.getString("label.database")); // NOI18N
-        jLabel6.setPreferredSize(new java.awt.Dimension(125, 30));
-
-        jcboDBDriver.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jcboDBDriver.setPreferredSize(new java.awt.Dimension(150, 30));
-        jcboDBDriver.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jcboDBDriverActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel2.setText(AppLocal.getIntString("label.DbURL")); // NOI18N
-        jLabel2.setPreferredSize(new java.awt.Dimension(125, 30));
-
-        jtxtDbURL.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jtxtDbURL.setPreferredSize(new java.awt.Dimension(275, 30));
-        jtxtDbURL.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jtxtDbURLActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel3.setText(AppLocal.getIntString("label.DbUser")); // NOI18N
-        jLabel3.setPreferredSize(new java.awt.Dimension(125, 30));
-
-        jtxtDbUser.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jtxtDbUser.setPreferredSize(new java.awt.Dimension(150, 30));
-
-        jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel4.setText(AppLocal.getIntString("label.DbPassword")); // NOI18N
-        jLabel4.setPreferredSize(new java.awt.Dimension(125, 30));
-
-        jtxtDbPassword.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jtxtDbPassword.setPreferredSize(new java.awt.Dimension(150, 30));
-
-        jButtonTest.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jButtonTest.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/database.png"))); // NOI18N
-        jButtonTest.setText(bundle.getString("button.test")); // NOI18N
-        jButtonTest.setPreferredSize(new java.awt.Dimension(110, 45));
-        jButtonTest.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonTestActionPerformed(evt);
-            }
-        });
-
-        jLabel5.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/logo.png"))); // NOI18N
-        jLabel5.setText(bundle.getString("message.DBDefault")); // NOI18N
-        jLabel5.setToolTipText("");
-        jLabel5.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        jLabel5.setPreferredSize(new java.awt.Dimension(889, 120));
-
-        jButtonTest1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jButtonTest1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/database.png"))); // NOI18N
-        jButtonTest1.setText(bundle.getString("button.test")); // NOI18N
-        jButtonTest1.setEnabled(false);
-        jButtonTest1.setPreferredSize(new java.awt.Dimension(110, 45));
-        jButtonTest1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonTest1ActionPerformed(evt);
-            }
-        });
-
-        jtxtDbPassword1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jtxtDbPassword1.setEnabled(false);
-        jtxtDbPassword1.setPreferredSize(new java.awt.Dimension(150, 30));
-
-        jtxtDbUser1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jtxtDbUser1.setEnabled(false);
-        jtxtDbUser1.setPreferredSize(new java.awt.Dimension(150, 30));
-
-        jtxtDbURL1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jtxtDbURL1.setEnabled(false);
-        jtxtDbURL1.setPreferredSize(new java.awt.Dimension(275, 30));
-
-        jLblDbURL1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLblDbURL1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLblDbURL1.setText(AppLocal.getIntString("label.DbURL")); // NOI18N
-        jLblDbURL1.setEnabled(false);
-        jLblDbURL1.setPreferredSize(new java.awt.Dimension(125, 30));
-
-        jLblDbUser1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLblDbUser1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLblDbUser1.setText(AppLocal.getIntString("label.DbUser")); // NOI18N
-        jLblDbUser1.setEnabled(false);
-        jLblDbUser1.setPreferredSize(new java.awt.Dimension(100, 30));
-
-        jLblDbPassword1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLblDbPassword1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLblDbPassword1.setText(AppLocal.getIntString("label.DbPassword")); // NOI18N
-        jLblDbPassword1.setEnabled(false);
-        jLblDbPassword1.setPreferredSize(new java.awt.Dimension(100, 30));
-
-        jLblDBName.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLblDBName.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLblDBName.setText(AppLocal.getIntString("label.DbName")); // NOI18N
-        jLblDBName.setPreferredSize(new java.awt.Dimension(125, 30));
-
-        jtxtDbName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jtxtDbName.setPreferredSize(new java.awt.Dimension(275, 30));
-
-        jLblDbName1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLblDbName1.setText(AppLocal.getIntString("label.DbName1")); // NOI18N
-        jLblDbName1.setEnabled(false);
-        jLblDbName1.setPreferredSize(new java.awt.Dimension(125, 30));
-
-        jtxtDbName1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jtxtDbName1.setEnabled(false);
-        jtxtDbName1.setPreferredSize(new java.awt.Dimension(275, 30));
-
-        multiDB.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        multiDB.setText(AppLocal.getIntString("label.multidb")); // NOI18N
-        multiDB.setToolTipText(AppLocal.getIntString("label.multidb")); // NOI18N
-        multiDB.setPreferredSize(new java.awt.Dimension(80, 30));
-        multiDB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                multiDBActionPerformed(evt);
-            }
-        });
-
-        jLabel7.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel7.setText(AppLocal.getIntString("label.DbSchema")); // NOI18N
-        jLabel7.setPreferredSize(new java.awt.Dimension(125, 30));
-
-        jtxtDbSchema.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jtxtDbSchema.setPreferredSize(new java.awt.Dimension(275, 30));
-
-        jLblDbSchema1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLblDbSchema1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLblDbSchema1.setText(AppLocal.getIntString("label.DbSchema")); // NOI18N
-        jLblDbSchema1.setEnabled(false);
-        jLblDbSchema1.setPreferredSize(new java.awt.Dimension(100, 30));
-
-        jtxtDbSchema1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jtxtDbSchema1.setEnabled(false);
-        jtxtDbSchema1.setPreferredSize(new java.awt.Dimension(275, 30));
-
-        jLabel8.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel8.setText(AppLocal.getIntString("label.DbOptions")); // NOI18N
-        jLabel8.setPreferredSize(new java.awt.Dimension(125, 30));
-
-        jtxtDbOptions.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jtxtDbOptions.setPreferredSize(new java.awt.Dimension(275, 30));
-
-        jLblDbOptions1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLblDbOptions1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLblDbOptions1.setText(AppLocal.getIntString("label.DbOptions")); // NOI18N
-        jLblDbOptions1.setEnabled(false);
-        jLblDbOptions1.setPreferredSize(new java.awt.Dimension(100, 30));
-
-        jtxtDbOptions1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jtxtDbOptions1.setEnabled(false);
-        jtxtDbOptions1.setPreferredSize(new java.awt.Dimension(275, 30));
-
-        jLabel9.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(51, 204, 255));
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel9.setText(bundle.getString("jpanelconfigdatabase.msg.info")); // NOI18N
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 880, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 880, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jtxtDbOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                                    .addComponent(jtxtDbSchema, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                                    .addComponent(jtxtDbUser, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
-                                    .addComponent(jtxtDbPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButtonTest, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLblDBName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jtxtDbURL, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jtxtDbName, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)))))
-                        .addGap(40, 40, 40)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLblDbName1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLblDbURL1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLblDbSchema1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLblDbOptions1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLblDbUser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLblDbPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jtxtDbName1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jtxtDbURL1, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addGap(11, 11, 11)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jtxtDbOptions1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jtxtDbSchema1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jButtonTest1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jtxtDbUser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jtxtDbPassword1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jcboDBDriver, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(multiDB, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(10, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jcboDBDriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(multiDB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLblDBName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLblDbName1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jtxtDbName1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jtxtDbName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLblDbURL1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jtxtDbURL1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jtxtDbURL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLblDbSchema1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jtxtDbSchema1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jtxtDbSchema, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLblDbOptions1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jtxtDbOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jtxtDbOptions1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jtxtDbUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jtxtDbUser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLblDbUser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jtxtDbPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLblDbPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jtxtDbPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonTest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonTest1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(38, Short.MAX_VALUE))
-        );
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void jcboDBDriverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcboDBDriverActionPerformed
-           
-        String selected = (String)jcboDBDriver.getSelectedItem();
-        
-        switch(selected){
-            case "MySQL":                   
-                //jtxtDbOptions.setText("?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull");
-                break;
-            case "MariaDB":            
-                //jtxtDbOptions.setText("?characterEncoding=utf8");
-                break;
-            case "PostgreSQL":
-                break;
-            case "Derby":
-                //jtxtDbOptions.setText(";create=true");
-                break;
-            case "HSQLDB":
-                //jtxtDbOptions.setText(";shutdown=true");
-                break;
-        }    
-    }//GEN-LAST:event_jcboDBDriverActionPerformed
-
-    private void jButtonTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTestActionPerformed
-        try {
-            String url = jtxtDbURL.getText() + jtxtDbSchema.getText() + jtxtDbOptions.getText();
-            String user = jtxtDbUser.getText();
-            String password = new String(jtxtDbPassword.getPassword());
-
-            Session session =  new Session(url, user, password);
-            Connection connection = session.getConnection();
-            boolean isValid;
-            isValid = (connection == null) ? false : connection.isValid(1000);
-            
-            if (isValid) {
-                JOptionPane.showMessageDialog(this, 
-                        AppLocal.getIntString("message.databasesuccess"), 
-                        "Connection Test", JOptionPane.INFORMATION_MESSAGE);
-              
-            } else {
-                JMessagePanel.showMessage(this, 
-                        new MessageInf(MessageInf.SGN_WARNING, "Connection Error"));
-            }
-        } catch (SQLException e) {
-            JMessagePanel.showMessage(this, 
-                    new MessageInf(MessageInf.SGN_WARNING, 
-                            AppLocal.getIntString("message.databaseconnectionerror"), e));            
-        } catch (HeadlessException e) {
-            JMessagePanel.showMessage(this, 
-                    new MessageInf(MessageInf.SGN_WARNING, "Unknown exception", e));
+    private String encryptPassword(String user, String pass) {
+        if (pass == null || pass.isEmpty()) {
+            return "";
         }
-    }//GEN-LAST:event_jButtonTestActionPerformed
-
-    private void jButtonTest1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTest1ActionPerformed
         try {
-            String url = jtxtDbURL1.getText() + jtxtDbSchema1.getText() + jtxtDbOptions1.getText();
-            String user = jtxtDbUser1.getText();
-            String password = new String(jtxtDbPassword1.getPassword());
-
-            Session session =  new Session(url, user, password);
-            Connection connection = session.getConnection();
-            boolean isValid;
-            isValid = (connection == null) ? false : connection.isValid(1000);
-
-            if (isValid) {
-                JOptionPane.showMessageDialog(this, 
-                        AppLocal.getIntString("message.databasesuccess"), 
-                        "Connection Test", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JMessagePanel.showMessage(this, 
-                        new MessageInf(MessageInf.SGN_WARNING, "Connection Error"));
-            }
-        } catch (SQLException e) {
-            JMessagePanel.showMessage(this, 
-                    new MessageInf(MessageInf.SGN_WARNING, 
-                            AppLocal.getIntString("message.databaseconnectionerror"), e));
-        } catch (HeadlessException e) {
-            JMessagePanel.showMessage(this, 
-                    new MessageInf(MessageInf.SGN_WARNING, "Unknown exception", e));
-        }
-    }//GEN-LAST:event_jButtonTest1ActionPerformed
-
-    private void checkMulBD(){
-
-        if (multiDB.isSelected()) {
-            jLblDbName1.setEnabled(true);
-            jtxtDbName1.setEnabled(true);
-            jLblDbOptions1.setEnabled(true);
-            jtxtDbOptions1.setEnabled(true);  
-//            jLblDBPort1.setEnabled(true);
-//            jtxtDbPort1.setEnabled(true);            
-            jLblDbURL1.setEnabled(true);
-            jtxtDbURL1.setEnabled(true);            
-            jLblDbSchema1.setEnabled(true);
-            jtxtDbSchema1.setEnabled(true);            
-            jLblDbUser1.setEnabled(true);
-            jtxtDbUser1.setEnabled(true);
-            jLblDbPassword1.setEnabled(true);
-            jtxtDbPassword1.setEnabled(true);
-            jButtonTest1.setEnabled(true);
-        } else {
-            jLblDbName1.setEnabled(false);
-            jtxtDbName1.setEnabled(false);
-            jLblDbOptions1.setEnabled(false);
-            jtxtDbOptions1.setEnabled(false);  
-//            jLblDBPort1.setEnabled(false);
-//            jtxtDbPort1.setEnabled(false);            
-            jLblDbURL1.setEnabled(false);
-            jtxtDbURL1.setEnabled(false);
-            jLblDbSchema1.setEnabled(false);
-            jtxtDbSchema1.setEnabled(false);              
-            jLblDbUser1.setEnabled(false);
-            jtxtDbUser1.setEnabled(false);
-            jLblDbPassword1.setEnabled(false);
-            jtxtDbPassword1.setEnabled(false);            
-            jButtonTest1.setEnabled(false);            
+            AltEncrypter cypher = new AltEncrypter("cypherkey" + (user != null ? user : ""));
+            return "crypt:" + cypher.encrypt(pass);
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Failed to encrypt password", e);
+            return pass;
         }
     }
-    private void multiDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_multiDBActionPerformed
-        checkMulBD();
-    }//GEN-LAST:event_multiDBActionPerformed
 
-    private void jtxtDbURLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtDbURLActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtxtDbURLActionPerformed
-    
-    
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonTest;
-    private javax.swing.JButton jButtonTest1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JLabel jLblDBName;
-    private javax.swing.JLabel jLblDbName1;
-    private javax.swing.JLabel jLblDbOptions1;
-    private javax.swing.JLabel jLblDbPassword1;
-    private javax.swing.JLabel jLblDbSchema1;
-    private javax.swing.JLabel jLblDbURL1;
-    private javax.swing.JLabel jLblDbUser1;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JComboBox jcboDBDriver;
-    private javax.swing.JTextField jtxtDbName;
-    private javax.swing.JTextField jtxtDbName1;
-    private javax.swing.JTextField jtxtDbOptions;
-    private javax.swing.JTextField jtxtDbOptions1;
-    private javax.swing.JPasswordField jtxtDbPassword;
-    private javax.swing.JPasswordField jtxtDbPassword1;
-    private javax.swing.JTextField jtxtDbSchema;
-    private javax.swing.JTextField jtxtDbSchema1;
-    private javax.swing.JTextField jtxtDbURL;
-    private javax.swing.JTextField jtxtDbURL1;
-    private javax.swing.JTextField jtxtDbUser;
-    private javax.swing.JTextField jtxtDbUser1;
-    private javax.swing.JCheckBox multiDB;
-    // End of variables declaration//GEN-END:variables
+    // =========================================================================
+    // INNER CLASSES: TableModel & Profile Model
+    // =========================================================================
 
-     
+    private class DatabaseTableModel extends AbstractTableModel {
+
+        private final String[] columns = {"Role", "Name", "JDBC URL"};
+
+        @Override
+        public int getRowCount() {
+            return profiles.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return columns.length;
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            return columns[column];
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            if (rowIndex < 0 || rowIndex >= profiles.size()) {
+                return null;
+            }
+            DatabaseProfile p = profiles.get(rowIndex);
+            switch (columnIndex) {
+                case 0:
+                    return p.isPrimary() ? "★ Primary" : "Slot " + p.getId();
+                case 1:
+                    return p.getName();
+                case 2:
+                    return p.getFullUrl();
+                default:
+                    return "";
+            }
+        }
+    }
+
+    public static class DatabaseProfile {
+
+        private String id;
+        private String name;
+        private String url;
+        private String schema;
+        private String options;
+        private String user;
+        private String password;
+        private boolean primary;
+
+        public DatabaseProfile(String id, String name, String url,
+                String schema, String options, String user, String password, boolean primary) {
+            this.id = id;
+            this.name = name;
+            this.url = url;
+            this.schema = schema;
+            this.options = options;
+            this.user = user;
+            this.password = password;
+            this.primary = primary;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getSchema() {
+            return schema;
+        }
+
+        public void setSchema(String schema) {
+            this.schema = schema;
+        }
+
+        public String getOptions() {
+            return options;
+        }
+
+        public void setOptions(String options) {
+            this.options = options;
+        }
+
+        public String getUser() {
+            return user;
+        }
+
+        public void setUser(String user) {
+            this.user = user;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public boolean isPrimary() {
+            return primary;
+        }
+
+        public void setPrimary(boolean primary) {
+            this.primary = primary;
+        }
+
+        public String getFullUrl() {
+            return (url != null ? url : "")
+                    + (schema != null ? schema : "")
+                    + (options != null ? options : "");
+        }
+    }
 }

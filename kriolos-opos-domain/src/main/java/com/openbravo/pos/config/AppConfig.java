@@ -228,8 +228,8 @@ public class AppConfig extends BootstrapConfiguration implements AppProperties {
 
         // 2. Overwrite / Populate dynamic runtime values safely using the enum keys
         File baseDirectory = getBaseApplicationDataDirectory();
-        String defaultDBURL = "jdbc:hsqldb:file:" + Paths.get(baseDirectory.getAbsolutePath(), "kriolopos.hsqldb").toString();
-        String defaultDBURL1 = "jdbc:sqlite:file:" + Paths.get(baseDirectory.getAbsolutePath(), "kriolopos.db").toString();
+        String defaultDBURL = "jdbc:sqlite:" + Paths.get(baseDirectory.getAbsolutePath(), "kriolopos.db").toString();
+        String defaultDBURL1 = "jdbc:sqlite:" + Paths.get(baseDirectory.getAbsolutePath(), "kriolopos_backup.db").toString();
         propConfig.setProperty(ConfigProperty.DB_URL.getName(), defaultDBURL);
         propConfig.setProperty(ConfigProperty.DB1_URL.getName(), defaultDBURL1);
 
@@ -295,23 +295,21 @@ enum ConfigProperty {
     LOCATION_CONFIGURE("localization.configure", "legacy"),
     LOCATION_LOCALE("localization.locale", ""),
     // CORE OVERRIDES
-    DB_MULTI("db.multi", "true"),
     OVERRIDE_CHECK("override.check", "false"),
     OVERRIDE_PIN("override.pin", ""),
     // DB DRIVERS
-    DB_DRIVERLIB("db.driverlib", ""),
     DB_ENGINE("db.engine", ""),
     DB_DRIVER("db.driver", ""),
     // PRIMARY DB (Dynamic URL)
-    DB_NAME("db.name", "DB 0 ()"),
-    DB_URL("db.URL", "jdbc:hsqldb:file:.local/share/kriolos/kriolopos;sql.syntax_mys=true"), // Dynamic
-    DB_SCHEMA("db.schema", "kriolopos"),
-    DB_OPTIONS("db.options", ";shutdown=true"),
-    DB_USER("db.user", "kriolopos"),
-    DB_PASSWORD("db.password", "kriolopos"),
+    DB_NAME("db.name", "DB 0 (SQLite)"),
+    DB_URL("db.URL", "jdbc:sqlite:kriolopos.db"), // Dynamic
+    DB_SCHEMA("db.schema", ""),
+    DB_OPTIONS("db.options", ""),
+    DB_USER("db.user", ""),
+    DB_PASSWORD("db.password", ""),
     // SECONDARY DB        
     DB1_NAME("db.1.name", "DB 1 (Sqlite)"),
-    DB1_URL("db.1.URL", "jdbc:sqlite:.local/share/kriolos/kriolopos.db"),
+    DB1_URL("db.1.URL", "jdbc:sqlite:kriolopos_backup.db"),
     DB1_SCHEMA("db.1.schema", "kriolopos"),
     DB1_OPTIONS("db.1.options", ""),
     DB1_USER("db.1.user", "kriolopos"),

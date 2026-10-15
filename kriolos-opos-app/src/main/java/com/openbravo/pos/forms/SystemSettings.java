@@ -38,14 +38,6 @@ public class SystemSettings {
         // Set the look and feel.
         String newThemeProperty = config.getUiTheme();
         applyPosTheme(newThemeProperty);
-
-        // Localization configuration switch
-        String localizationMode = config.getLocalizationMode();
-        if ("provider".equalsIgnoreCase(localizationMode)) {
-            applyLocalizationProvider(config);
-        } else {
-            applyLocalizationLegacy(config);
-        }
     }
 
     public static void applySystemProperties(AppConfig config) {
@@ -54,68 +46,5 @@ public class SystemSettings {
 
     public static void applyPosTheme(String themeId) {
         POSThemeManager.applyTheme(themeId);
-    }
-
-    private static void applyLocalizationLegacy(BootstrapConfig config) {
-
-        LOGGER.log(Level.INFO, "Localization from legacy properties");
-
-        Locale startupLocale = config.getStartupLocale();
-        Locale.setDefault(startupLocale);
-
-        LOGGER.log(Level.INFO, "Localization locale default: " + Locale.getDefault().toLanguageTag());
-
-        //Set Format/Pattern for: Number, Date, Currency 
-        Formats.setIntegerPattern(config.getIntegerPattern());
-        Formats.setDoublePattern(config.getDoublePattern());
-        Formats.setCurrencyPattern(config.getCurrencyPattern());
-        Formats.setPercentPattern(config.getPercentPattern());
-        Formats.setDatePattern(config.getDatePattern());
-        Formats.setTimePattern(config.getTimePattern());
-        Formats.setDateTimePattern(config.getDateTimePattern());
-    }
-
-    private static void applyLocalizationProvider(BootstrapConfig config) {
-
-        LOGGER.log(Level.INFO, "Localization from SPI Provider");
-
-        // Build target locale from "localization.locale" (ex: "pt-CV")
-        Locale targetLocale = parseLocaleTag(config.getLocalizationLocale());
-        try {
-
-            Locale.setDefault(targetLocale);
-
-            LocalizationProvider provider = LocalizationFactory.getInstance().getProvider(targetLocale);
-
-            //Set Format/Pattern for: Number, Date, Currency 
-            Formats.setIntegerFormatter(provider.getIntegerFormatter());
-            Formats.setDoubleFormat(provider.getDoubleFormatter());
-            Formats.setCurrencyFormat(provider.getCurrencyFormatter());
-            Formats.setPercentFormatter(provider.getPercentFormatter());
-            Formats.setDateFormat(provider.getDateFormatter());
-            Formats.setTimeFormatter(provider.getTimeFormatter());
-            Formats.setDateTimeFormatter(provider.getDateTimeFormatter());
-
-            LOGGER.log(Level.INFO, "Localization provider applied: {0} for locale: {1}",
-                    new Object[]{provider.getClass().getSimpleName(), targetLocale.toLanguageTag()});
-        }
-        catch (Exception e) {
-            LOGGER.log(Level.WARNING, "SPI localization failed, falling back to JDK defaults", e);
-        }
-    }
-
-    /**
-     * Parses a BCP 47 / IETF language tag like "pt-CV" into a Locale. Returns
-     * system default if null/empty.
-     */
-    private static Locale parseLocaleTag(String tag) {
-        if (tag == null || tag.isBlank()) {
-            return Locale.getDefault();
-        }
-        return Locale.forLanguageTag(tag);
-    }
-
-    private static boolean isNullOrBlank(String text) {
-        return text == null || text.isBlank();
     }
 }

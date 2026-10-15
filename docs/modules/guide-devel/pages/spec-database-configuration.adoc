@@ -37,8 +37,8 @@ KriolOS POS establishes a strict, two-tier separation of concerns:
 | **Phase 1 (Pre-DB)**: Evaluated at JVM startup before any database connection exists.
 | **Infrastructure & Identity**: +
   • JDBC URL, Driver, User, Password +
-  • Station UUID (`pos.uuid`) +
-  • Initial UI Locale & LookAndFeel theme +
+  • Station UUID (`machine.uuid`) +
+  • Initial LookAndFeel theme (`pos.ui.theme`) +
   • Provider selector: `pos.config.provider=database\|file`
 
 | **Tier 2: Application Configuration**
@@ -67,8 +67,8 @@ The application initialization sequence strictly follows a two-phase protocol:
  [PHASE 1: PRE-DB BOOTSTRAP]
  1. Locate local 'kriolos-opos.properties' or resolve CLI / Environment variables
  2. Instantiate 'BootstrapConfiguration' (implements AppProperties)
- 3. Initialize LaF Theme (FlatLaf / Native) and UI Language Locale
- 4. Resolve 'pos.uuid' (Station UUID; auto-generated if first launch)
+ 3. Initialize LaF Theme (FlatLaf / Native)
+ 4. Resolve 'machine.uuid' (Station UUID; auto-generated if first launch)
  5. Initialize JDBC Connection Pool (HikariCP) using Bootstrap DB credentials
                                       │
                                       ▼
@@ -76,7 +76,7 @@ The application initialization sequence strictly follows a two-phase protocol:
  6. Establish Database Session
  7. Initialize 'ApplicationConfigurationService' via BeanContainer
  8. Fetch Global settings (pos_id = '0000-0000-0000-0000')
- 9. Fetch Station-specific settings (pos_id = {pos.uuid})
+ 9. Fetch Station-specific settings (pos_id = {machine.uuid})
  10. Configure Business Services (TaxService, TicketParser, Peripherals)
  11. Render Login / Sales Shell
 ----
@@ -138,7 +138,7 @@ When `applicationConfigurationService.get("machine.printer")` is requested by ac
 * `system.email.smtp_host`, `system.email.smtp_port`, `system.email.username`
 * `system.backup.auto_enabled`, `system.backup.cron_schedule`
 
-==== Terminal-Specific Properties (`pos_id = '{pos.uuid}'`)
+==== Terminal-Specific Properties (`pos_id = '{machine.uuid}'`)
 * `machine.printer.1`, `machine.printer.2`, `machine.printer.preview`
 * `machine.display.type`, `machine.display.com_port`
 * `machine.scale.type`, `machine.scale.baud_rate`
@@ -199,7 +199,7 @@ public interface ConfigurationProvider {
 
 | Configuration Dialog (`JFrmConfig`)
 | **Tabbed Config UI Split**
-| • **Tab "System / Hardware"**: Writes station-specific settings (`pos.uuid`). +
+| • **Tab "System / Hardware"**: Writes station-specific settings (`machine.uuid`). +
   • **Tab "Company & Business"**: Restricted to Admin role; writes global settings (`0000-0000-0000-0000`) to DB.
 |===
 
@@ -209,5 +209,5 @@ public interface ConfigurationProvider {
 
 To ensure zero friction during upgrade:
 1. **Automatic Schema Migration**: Upon first startup against an existing database, a Liquibase / Flyway / SQL migration creates `config_properties`.
-2. **One-Time Property Lift**: If `config_properties` is empty, `ApplicationConfigurationService` reads the existing `kriolos-opos.properties` and lifts global company keys into `pos_id = '0000-0000-0000-0000'`, and peripheral keys into `pos_id = '{pos.uuid}'`.
+2. **One-Time Property Lift**: If `config_properties` is empty, `ApplicationConfigurationService` reads the existing `kriolos-opos.properties` and lifts global company keys into `pos_id = '0000-0000-0000-0000'`, and peripheral keys into `pos_id = '{machine.uuid}'`.
 3. **Preserved Defaults**: The existing `kriolos-opos.properties` file is kept intact as the Tier 1 bootstrap file.
