@@ -63,6 +63,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <failIfNoTests>false</failIfNoTests>
         <surefire.failIfNoSpecifiedTests>false</surefire.failIfNoSpecifiedTests>
 
+        <!-- flatlaf config -->
+        <flatlaf.version>2.6</flatlaf.version>
+
     </properties>
 
     <organization>
@@ -137,6 +140,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>kriolos-opos-spi</module>
         <module>kriolos-opos-assets-reports</module>
         <module>kriolos-opos-assets-image</module>
+        <module>kriolos-opos-assets-svg</module>
         <module>kriolos-opos-thirdparty</module>
         <module>kriolos-opos-base</module>
         <module>kriolos-opos-hardware</module>
@@ -254,6 +258,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-assets-svg</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>kriolos-opos-assets-reports</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -350,6 +359,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-core</artifactId>
                 <version>4.32.0</version>
+            </dependency>
+            
+            <!-- FlatLaf & Vector SVG extras -->
+            <dependency>
+                <groupId>com.formdev</groupId>
+                <artifactId>flatlaf</artifactId>
+                <version>${flatlaf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.formdev</groupId>
+                <artifactId>flatlaf-extras</artifactId>
+                <version>${flatlaf.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

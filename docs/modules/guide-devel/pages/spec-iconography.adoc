@@ -1,0 +1,395 @@
+= KriolOS POS — Iconography Specification & Agnostic Asset Architecture
+:author: KriolOS
+:email: dev@kriolos.org
+:revnumber: 1.0.0
+:revdate: 2026-10-15
+:toc: left
+:toclevels: 3
+:icons: font
+:source-highlighter: highlight.js
+
+== 1. Mission & Architectural Directive
+
+The KriolOS POS iconography system establishes a high-resolution, scalable, vector-first visual foundation for desktop, touch-tablet, and embedded POS terminals.
+
+[IMPORTANT]
+.Core Naming Rule: Form Over Function (Literal Depiction)
+====
+**Icon assets MUST be named strictly by what they visually depict (their literal physical or geometric shape), NEVER by their domain application or business function in code.**
+
+* ❌ **Wrong (Functional Naming)**: `customer.svg`, `pay.svg`, `delete-ticket.svg`, `cash-in.svg`, `parked-order.svg`, `nav-back.svg`.
+* ✅ **Right (Literal Depiction)**: `user.svg`, `credit-card.svg`, `trash.svg`, `arrow-down.svg`, `clock.svg`, `arrow-left.svg`.
+====
+
+A single physical icon (e.g., `user.svg` showing a person silhouette) is reused across multiple unrelated domains:
+* Customer selector in sales
+* Cashier / user login
+* Employee timeclock management
+* User management in back office
+
+Naming the file `customer.svg` couples an agnostic graphic asset to a specific business context, causing asset duplication, naming confusion, and rigid coupling.
+
+---
+
+== 2. Two-Tier Asset Architecture
+
+The icon system is decoupled into two complementary tiers:
+
+[plantuml, iconography-architecture, svg]
+----
+@startuml
+skinparam packageStyle rectangle
+skinparam monochrome true
+
+package "Assets Tier" {
+    [kriolos-opos-assets-svg] as SvgRepo #AliceBlue
+    note right of SvgRepo: Pure vector SVGs named\nby literal form (e.g. user.svg)
+
+    [kriolos-opos-assets-image] as PngRepo #LightYellow
+    note right of PngRepo: Legacy PNG bitmapped assets
+}
+
+package "UI Resolution Tier (kriolos-opos-ui)" {
+    class IconKey <<enum>> {
+        + CUSTOMER (maps to "user")
+        + PAYMENT (maps to "credit-card")
+        + DELETE_LINE (maps to "trash")
+        + CASH_IN (maps to "arrow-down")
+        + NAV_BACK (maps to "arrow-left")
+    }
+
+    class IconFactory <<utility>> {
+        + {static} getIcon(IconKey, size): Icon
+        + {static} getIcon(String literalName, size): Icon
+        + {static} getIconByLegacyPath(String path, size): Icon
+    }
+}
+
+package "Consumers" {
+    [Modern UI Panels] ..> IconFactory : programmatic
+    [Legacy NetBeans .form] ..> IconFactory : post-init or property code
+}
+
+IconFactory --> SvgRepo : 1. Resolve vector SVG
+IconFactory ..> PngRepo : 2. Fallback to PNG
+@enduml
+----
+
+=== 2.1 Asset Repository Module: `kriolos-opos-assets-svg`
+* Maven artifact: `io.github.kriolos.opos:kriolos-opos-assets-svg`
+* Contains pure vector SVG files under classpath: `/com/openbravo/images/svg/{literal-name}.svg`
+* Zero Java code, zero NetBeans dependencies.
+* Asset files use lowercase kebab-case naming: `arrow-left.svg`, `credit-card.svg`, `trash.svg`.
+
+=== 2.2 Reusable UI Module: `kriolos-opos-ui`
+* Hosts the agnostic resolver `IconFactory` and semantic mapping `IconKey`.
+* Provides runtime vector rasterization via `SvgIcon` with automatic display DPI scaling.
+* Provides seamless fallback to legacy PNGs from `kriolos-opos-assets-image`.
+
+---
+
+== 3. Vector SVG Technical Standards
+
+All SVG assets in `kriolos-opos-assets-svg` must conform to standard vector specifications:
+
+[cols="2,4", options="header"]
+|===
+| Attribute | Specification
+
+| **Canvas Grid**
+| `viewBox="0 0 24 24"`, default `width="24" height="24"`.
+
+| **Dynamic Theming**
+| `stroke="currentColor"` or `fill="currentColor"`. +
+Never hardcode fixed black (`#000000`) or white (`#ffffff`). Using `currentColor` ensures icons automatically inherit text/button color across FlatLaf Light, Dark, and high-contrast modes.
+
+| **Stroke Geometry**
+| `stroke-width="2"`, `stroke-linecap="round"`, `stroke-linejoin="round"`, `fill="none"` (outline style).
+
+| **Clean XML**
+| Stripped of Adobe Illustrator, Inkscape, and Figma editor metadata (`sodipodi`, `inkscape:version`, `xmlns:ai`).
+|===
+
+.Sample: `user.svg`
+[source,xml]
+----
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+  <circle cx="12" cy="7" r="4"/>
+</svg>
+----
+
+---
+
+== 4. Dynamic Coloring & Theming Specification (KriolOS POS Symbols Spec)
+
+A core requirement of the KriolOS POS iconography specification is that all symbols must be effortlessly colorable at runtime without altering the underlying SVG source files.
+
+=== 4.1 Tier 1: Automatic Ambient Tinting (`currentColor`)
+By mandating `stroke="currentColor"` and `fill="currentColor"`, icons behave like typography glyphs:
+* In standard light mode on a neutral button: Renders in the theme text color (`#1e293b`).
+* In dark mode: Automatically inverts to crisp theme text color (`#f8fafc`).
+* On a primary/accent button: Automatically inherits the high-contrast button text color (e.g. pure white `#ffffff` on `#2563eb`).
+
+=== 4.2 Tier 2: Programmatic Color Overrides & Filters
+Developers can supply explicit color tinting when creating or retrieving icons through `IconFactory` and `SvgIcon`:
+
+[source,java]
+----
+// 1. Explicit tinting via IconFactory
+Icon dangerTrash = IconFactory.getIcon(IconKey.DELETE, 24, Color.RED);
+Icon emeraldCash = IconFactory.getIcon(IconKey.CASH, 24, new Color(22, 163, 74));
+
+// 2. Color derivation from an existing SvgIcon
+SvgIcon baseUser = (SvgIcon) IconFactory.getIcon("user", 24);
+SvgIcon activeUser = baseUser.withColor(new Color(37, 99, 235)); // Royal blue
+----
+
+=== 4.3 Standard Semantic Status Palette
+For consistent touch feedback and accessibility across POS screens, icons use the standardized KriolOS status palette:
+
+[cols="2,2,2,4", options="header"]
+|===
+| Semantic Intent | Constant / Token | Hex Value | Operational Context
+
+| **Default**
+| `currentColor`
+| Ambient
+| Standard toolbars, form inputs, dialog navigation.
+
+| **Primary / Accent**
+| `IconPalette.PRIMARY`
+| `#2563eb` (Royal Blue)
+| Active tab, focused action, primary flow indicator.
+
+| **Success**
+| `IconPalette.SUCCESS`
+| `#16a34a` (Emerald Green)
+| Payment confirmed, cash register open, ticket settled, OK.
+
+| **Danger**
+| `IconPalette.DANGER`
+| `#ef4444` (Coral Red)
+| Void ticket, delete line item, reject transaction, cancel.
+
+| **Warning**
+| `IconPalette.WARNING`
+| `#f59e0b` (Amber Orange)
+| Low stock warning, parked ticket timeout, cash drawer limit.
+
+| **Muted / Inactive**
+| `IconPalette.MUTED`
+| `#9ca3af` (Slate Gray)
+| Disabled action, read-only control, inactive status hint.
+|===
+
+=== 4.4 ColorFilter Architecture in FlatLaf
+Under the hood, `SvgIcon` integrates with FlatLaf's `FlatSVGIcon.ColorFilter`:
+* Modifies RGB channel values during Graphics2D vector rendering.
+* Preserves anti-aliasing and subpixel vector fidelity without raster blur.
+* Caches colored variants by `(resourcePath, width, height, colorRGB)` key to eliminate redundant allocations.
+
+---
+
+== 5. Standard Iconography Specification Matrix
+
+The following specification maps literal visual glyph names to their standard filenames, legacy PNG equivalents, and POS domain contexts:
+
+[cols="2,2,2,3", options="header"]
+|===
+| Literal Form | SVG Asset Filename | Legacy PNG Equivalent | POS Domain Contexts
+
+| **User** (Person silhouette)
+| `user.svg`
+| `customer_sml.png`, `user.png`
+| Customer selection, cashier indicator, user profile.
+
+| **Users** (Group of people)
+| `users.svg`
+| `users.png`
+| People directory, employee roles, customer group.
+
+| **Credit Card**
+| `credit-card.svg`
+| `ccard.png`, `pay.svg`
+| Card checkout, electronic payment, bank terminal.
+
+| **Banknote** (Paper currency)
+| `banknote.svg`
+| `cash.png`
+| Cash payment, cash drawer count, tender reconciliation.
+
+| **Trash Can**
+| `trash.svg`
+| `sale_delete.png`, `editdelete.png`
+| Delete ticket line, purge record, remove item.
+
+| **Pencil**
+| `pencil.svg`
+| `edit.png`, `sale_editline.png`
+| Edit price/quantity, edit customer, modify line note.
+
+| **Plus**
+| `plus.svg`
+| `btnplus.png`
+| Increase quantity (+1), add new item, insert row.
+
+| **Minus**
+| `minus.svg`
+| `btnminus.png`
+| Decrease quantity (-1), decrement counter.
+
+| **Clock**
+| `clock.svg`
+| `timer.png`
+| Parked / layaway tickets, order holding duration, shifts.
+
+| **Pause Circle**
+| `pause-circle.svg`
+| *(none / unicode emoji)*
+| Suspend transaction, hold ticket, temporary pause.
+
+| **Clipboard List**
+| `clipboard-list.svg`
+| `reports.png`, `notes.png`
+| Parked orders list, open tables, bill review.
+
+| **Arrow Left**
+| `arrow-left.svg`
+| `1leftarrow.png`, `menu-left.png`
+| Back navigation, collapse menu, previous catalog page.
+
+| **Arrow Right**
+| `arrow-right.svg`
+| `1rightarrow.png`, `menu-right.png`
+| Forward navigation, expand menu, next catalog page.
+
+| **Arrow Up**
+| `arrow-up.svg`
+| `1uparrow.png`, `2uparrow.png`
+| Scroll up, subcategory parent jump.
+
+| **Arrow Down**
+| `arrow-down.svg`
+| `1downarrow.png`
+| Scroll down, deposit / cash in.
+
+| **Lock** (Padlock)
+| `lock.svg`
+| `password.png`, `encrypted.png`
+| Close cash register, lock terminal, supervisor override.
+
+| **Unlock**
+| `unlock.svg`
+| *(none)*
+| Unlock register, open drawer.
+
+| **Tag** (Price / Discount tag)
+| `tag.svg`
+| `discount.png`, `discount_b.png`
+| Line discount, ticket discount, promotional pricing.
+
+| **Magnifying Glass**
+| `search.svg`
+| `search24.png`, `search32.png`
+| Product lookup, customer search, receipt search.
+
+| **Printer**
+| `printer.svg`
+| `printer24.png`, `ticket_print.png`
+| Print receipt, reprint ticket, kitchen routing.
+
+| **Rotate CCW** (Reset / Counter-clockwise)
+| `rotate-ccw.svg`
+| `reload.png`
+| Clear ticket, reset form, reload catalog.
+
+| **Check** (Checkmark)
+| `check.svg`
+| `ok.png`
+| Confirm action, OK dialog, line verified.
+
+| **X** (Cross)
+| `x.svg`
+| `cancel.png`, `fileclose.png`
+| Cancel modal, discard changes, close panel.
+
+| **Delete Left** (Backspace)
+| `delete-left.svg`
+| `btnback.png`
+| Numpad backspace, clear last digit.
+
+| **Database** (Cylinder)
+| `database.svg`
+| `database.png`
+| Database selection, connection settings.
+
+| **Gear** (Cog)
+| `gear.svg`
+| `configuration.png`, `maintain.png`
+| System settings, peripheral configuration.
+|===
+
+---
+
+== 6. Agnostic Icon Access API
+
+Application code **must never** directly reference asset file paths or instantiate `new ImageIcon(getClass().getResource(...))`.
+
+=== 6.1 Programmatic Access via `IconKey`
+[source,java]
+----
+// Semantic domain key -> resolves to vector user.svg scaled to 24px
+Icon customerIcon = IconFactory.getIcon(IconKey.CUSTOMER, 24);
+
+// ButtonFactory helper
+JButton customerBtn = ButtonFactory.createActionButton(
+    "Customer: Guest",
+    IconKey.CUSTOMER,
+    ButtonSize.EXTRA_LARGE,
+    KeyEvent.VK_C,
+    "Select active customer",
+    e -> selectCustomer()
+);
+----
+
+=== 6.2 Literal Access by Form Name
+[source,java]
+----
+// Directly access literal glyph at arbitrary touch dimension
+Icon arrowLeft = IconFactory.getIcon("arrow-left", 32);
+Icon trashIcon = IconFactory.getIcon("trash", 24);
+----
+
+=== 6.3 NetBeans `.form` Migration Strategy
+
+There are 125 legacy `.form` files in `kriolos-opos-app`. During progressive migration:
+
+1. **Option A: Custom Creation / Post-Init Code in `.form`**:
+   In the NetBeans GUI builder, set the button or label `icon` property using **Custom Code**:
+   [source,java]
+   ----
+   btnCancel.setIcon(IconFactory.getIcon(IconKey.CANCEL, 24));
+   ----
+
+2. **Option B: Automatic Legacy Path Aliasing**:
+   `IconFactory.getIconByLegacyPath(String)` accepts existing legacy paths (e.g. `"/com/openbravo/images/customer_sml.png"`) and transparently translates them to the corresponding vector SVG (`user.svg`):
+   [source,java]
+   ----
+   // Automatically returns vector user.svg scaled appropriately
+   Icon icon = IconFactory.getIconByLegacyPath("/com/openbravo/images/customer_sml.png", 24);
+   ----
+
+3. **Option C: Pure Programmatic Refactoring (Task 10)**:
+   As `.form` files are eliminated (per Task 10 on the roadmap), replace them with `PaneBuilder`, `FlexLayout`, and `ButtonFactory` using `IconKey`.
+
+---
+
+== 7. Summary of Rules for Developers
+
+1. **New SVG Assets**: Place in `kriolos-opos-assets-svg/src/main/resources/com/openbravo/images/svg/{form-name}.svg`.
+2. **Name by Form**: Never name an icon after its action (e.g. use `arrow-left.svg`, NOT `back.svg`).
+3. **Use `currentColor`**: Keep SVGs theme-adaptable.
+4. **Use `IconFactory`**: Never bypass the resolver with hardcoded string paths in Java code.
+5. **No Breaking Changes**: Legacy PNG assets remain intact in `kriolos-opos-assets-image` as fallbacks.
