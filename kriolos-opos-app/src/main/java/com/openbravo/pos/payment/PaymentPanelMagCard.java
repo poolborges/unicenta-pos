@@ -16,12 +16,10 @@
 
 package com.openbravo.pos.payment;
 
+import com.openbravo.data.gui.JMessagePanel;
+import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.config.AppConfig;
 import com.openbravo.app.AppLocal;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.HeadlessException;
-import java.awt.Insets;
 import java.io.File;
 import javax.swing.*;
 
@@ -103,14 +101,14 @@ public class PaymentPanelMagCard extends javax.swing.JPanel implements PaymentPa
                 try {
                     msr.close();
                 } catch (JposException localJposException1) {
-                    JOptionPane.showMessageDialog(this, "Error Occured " + localJposException1.getMessage());
+                    JMessagePanel.showMessage(this, new MessageInf(MessageInf.SGN_WARNING, "Error Occurred: " + localJposException1.getMessage()));
                 }
             }
             try {
                 msr.open(this.logicalDeviceName);
                 this.openDevice = true;
             } catch (JposException localJposException2) {
-                JOptionPane.showMessageDialog(this, "Error Occured " + localJposException2.getMessage());
+                JMessagePanel.showMessage(this, new MessageInf(MessageInf.SGN_WARNING, "Error Occurred: " + localJposException2.getMessage()));
             }
             //Clear the field data.
             clear();
@@ -118,19 +116,19 @@ public class PaymentPanelMagCard extends javax.swing.JPanel implements PaymentPa
             try {
                 this.msr.claim(1000);
             } catch (JposException localJposException3) {
-                JOptionPane.showMessageDialog(this, "Error Occured " + localJposException3.getMessage());
+                JMessagePanel.showMessage(this, new MessageInf(MessageInf.SGN_WARNING, "Error Occurred: " + localJposException3.getMessage()));
             }
             try {
                 this.msr.setDataEventEnabled(true);
             } catch (JposException localJposException5) {
-                JOptionPane.showMessageDialog(this, "Error Occured " + localJposException5.getMessage());
+                JMessagePanel.showMessage(this, new MessageInf(MessageInf.SGN_WARNING, "Error Occurred: " + localJposException5.getMessage()));
             }
             try {
                 this.msr.setDeviceEnabled(true);
                 this.enabled = true;
             } catch (JposException localJposException4) {
                 this.enabled = false;
-                JOptionPane.showMessageDialog(this, "Error Occured " + localJposException4.getMessage());
+                JMessagePanel.showMessage(this, new MessageInf(MessageInf.SGN_WARNING, "Error Occurred: " + localJposException4.getMessage()));
             }
         }
     }
@@ -222,41 +220,15 @@ public class PaymentPanelMagCard extends javax.swing.JPanel implements PaymentPa
         String str3 = Integer.toString(paramErrorEvent.getErrorLocus());
         String str4 = Integer.toString(paramErrorEvent.getErrorResponse());
 
-        JOptionPane.showMessageDialog(this, "ErrorEvent: EC=" + str1 + ", ECE=" + str2 + ", EL=" + str3 + ", ER=" + str4, this.title, 0);
+        JMessagePanel.showMessage(this, new MessageInf(MessageInf.SGN_DANGER,
+                "ErrorEvent: EC=" + str1 + ", ECE=" + str2 + ", EL=" + str3 + ", ER=" + str4));
     }
 
     private void processJposException(JposException paramJposException, String paramString) {
-        JOptionPane.showMessageDialog(this, "Exception...message = " + paramJposException.getMessage() + " with errorCode = " + paramJposException.getErrorCode() + ", errorCodeExtended = " + paramJposException.getErrorCodeExtended(), this.title, 0);
-
-    }
-
-    class XmlDialog extends JDialog {
-
-        JScrollPane jScrollPane = new JScrollPane();
-        JTextArea jTextArea = new JTextArea();
-        GridBagLayout gridBagLayout1 = new GridBagLayout();
-
-        public XmlDialog(String arg2) throws HeadlessException {
-            try {
-                jaInit();
-                String str = "";
-                this.jTextArea.append(str);
-            } catch (Exception localException) {
-                localException.printStackTrace();
-            }
-
-        }
-
-        private void jaInit() throws Exception {
-            getContentPane().setLayout(this.gridBagLayout1);
-
-            this.jTextArea.setColumns(16);
-            this.jTextArea.setRows(18);
-
-            getContentPane().add(this.jScrollPane, new GridBagConstraints(0, 0, 2, 1, 1.0D, 1.0D, 10, 1, new Insets(15, 17, 0, 15), 364, 213));
-
-            this.jScrollPane.getViewport().add(this.jTextArea, null);
-        }
+        JMessagePanel.showMessage(this, new MessageInf(MessageInf.SGN_DANGER,
+                "Exception: " + paramJposException.getMessage() + " with errorCode = "
+                + paramJposException.getErrorCode() + ", errorCodeExtended = "
+                + paramJposException.getErrorCodeExtended()));
     }
     //--------------------------------------------------------------//
 

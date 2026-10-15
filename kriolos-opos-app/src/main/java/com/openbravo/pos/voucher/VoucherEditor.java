@@ -383,9 +383,7 @@ private void printBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         VoucherInfo voucherInfo = voucherService.getVoucherAll(voucherId);
         BufferedImage image = (resourceService != null) ? resourceService.getResourceAsImage("Window.Logo") : null;
         if (voucherInfo != null) {
-            JDialogReportPanel dialog = JDialogReportPanel
-                    .getDialog(this, m_app, voucherInfo, image);
-            dialog.setVisible(true);
+            JVoucherReportPanel.show(this, m_app, voucherInfo, image);
         }
 
     } catch (BasicException ex) {
