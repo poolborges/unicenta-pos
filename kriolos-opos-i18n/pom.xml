@@ -9,9 +9,36 @@
     </parent>  
     <groupId>io.github.kriolos.opos</groupId>
     <artifactId>kriolos-opos-i18n</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <name>Kriolos.POS.i18N</name>  
     <properties>
         <skipTests>true</skipTests>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.kriolos.opos</groupId>
+            <artifactId>kriolos-opos-spi</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.auto.service</groupId>
+            <artifactId>auto-service</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    <modules>
+        <module>kriolos-opos-i18n_pt</module>
+        <module>kriolos-opos-i18n_es</module>
+        <module>kriolos-opos-i18n_fr</module>
+        <module>kriolos-opos-i18n_ar</module>
+        <module>kriolos-opos-i18n_zh_cn</module>
+        <module>kriolos-opos-i18n_ru</module>
+        <module>kriolos-opos-i18n_id</module>
+        <module>kriolos-opos-i18n_hi</module>
+        <module>kriolos-opos-i18n_bn</module>
+        <module>kriolos-opos-i18n_jv</module>
+        <module>kriolos-opos-i18n_ar_kw</module>
+        <module>kriolos-opos-i18n-all</module>
+    </modules>
 </project>

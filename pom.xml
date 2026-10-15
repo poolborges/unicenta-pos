@@ -142,7 +142,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>kriolos-opos-hardware</module>
         <module>kriolos-opos-domain</module>
         <module>kriolos-opos-i18n</module>
-        <module>kriolos-opos-i18n_pt</module>
         <module>kriolos-opos-lib-report</module>
         <module>kriolos-opos-app</module>
         <module>kriolos-opos-jpackage</module>
@@ -180,10 +179,66 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <groupId>${project.groupId}</groupId>
                 <artifactId>kriolos-opos-i18n</artifactId>
                 <version>${project.version}</version>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>kriolos-opos-i18n_pt</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-i18n_es</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-i18n_fr</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-i18n_ar</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-i18n_zh_cn</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-i18n_ru</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-i18n_id</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-i18n_hi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-i18n_bn</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-i18n_jv</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-i18n_ar_kw</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-i18n-all</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

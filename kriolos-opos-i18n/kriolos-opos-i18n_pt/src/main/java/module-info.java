@@ -14,6 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-module io.github.kriolos.opos.i18n {
-    
+module io.github.kriolos.opos.i18n.pt {
+    requires kriolos.opos.spi;
+    requires static com.google.auto.service;
+
+    provides com.openbravo.pos.spi.i18n.I18nProvider with io.github.kriolos.opos.i18n.pt.PtI18nProvider;
 }
