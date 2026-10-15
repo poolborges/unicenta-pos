@@ -485,26 +485,206 @@ ____
 
 '''
 
+== TASK 8 — UI/UX: Font- & DPI-Agnostic Component Sizing & Touch Alignment ⭐
+
+[quote]
+____
+_"Issue in UI: text box are not dimension height agnostic, to accept multi font size.
+My suspicion check is that the root cause is related with applyGlobalTouchSettings"_
+____
+
+**Why starred**: Visual defect and accessibility blocker. In multi-resolution and touch environments, labels, text fields, and editors suffer severe vertical clipping and misaligned baseline layouts.
+
+=== Root Cause Analysis
+1. **The Rigid Clamp**: `ComponentFactory.enforceFieldSize()` and `PaneBuilder.configureComponentSizes()` enforce a rigid hardcoded `FIELD_HEIGHT = 35` and `globalFieldHeight = 35`.
+2. **Editor Button Rigid Box**: `JEditorAbstract` (base for `JEditorString`, `JEditorKeys`, `JEditorNumber`) hardcodes `m_jText.setPreferredSize(new Dimension(100, 25))`. `m_jText` is a `JButton` whose default FlatLaf borders and touch padding cannot fit 16pt text within 25px.
+3. **Touch Inset Clashing**: `applyGlobalTouchSettings()` injects `16pt` base font, `16px` vertical button insets, and `minimumHeight: 45` / `48` into FlatLaf UIDefaults. When components with hardcoded 25px or 35px heights are laid out, container layout managers clamp them or FlatLaf overrides clip text boundaries.
+4. **Legacy NetBeans .form Coordinates**: 147 `.form` files contain hardcoded component heights (25px, 30px) that prevent font-metric-based dynamic growth.
+
+=== Design & Sizing Principle
+* **Height-Agnostic Dynamic Rule**: Preferred height must NEVER be set to a static pixel constant.
+* Sizing must always be calculated from component font metrics, insets, and borders:
++
+[source,text]
+----
+targetPreferredHeight = Math.max(
+    component.getFontMetrics(component.getFont()).getHeight() + verticalInsets + borderPadding,
+    touchModeEnabled ? touchMinimumHeight : desktopMinimumHeight
+)
+----
+* Touch mode provides a **minimum floor** (e.g. 44px/48px), never a rigid clip.
+* In desktop mode, components fluidly scale up or down with user-selected UI font sizes (12pt, 14pt, 16pt, 18pt, 20pt) without truncation.
+
+=== Sub-tasks
+. Refactor `ComponentFactory.enforceFieldSize()` and `PaneBuilder.configureComponentSizes()`:
+  * Remove static `35px` clamp.
+  * Implement dynamic height calculation supporting user font configuration and HiDPI scaling.
+. Refactor `JEditorAbstract`:
+  * Remove `setPreferredSize(new Dimension(100, 25))`.
+  * Compute button editor preferred height dynamically using `FontMetrics` + touch floor.
+. Harmonize `applyGlobalTouchSettings()` in `AppView` / `PosUIModal`:
+  * Align FlatLaf `TextField.margin`, `Button.margin`, and `Component.minimumHeight`.
+  * Ensure consistent vertical baseline alignment across all input types (`JTextField`, `JComboBox`, `JSpinner`, `JEditorAbstract`).
+. Automated & Visual Verification:
+  * Test suite rendering components at 12pt, 14pt, 16pt, and 20pt fonts to guarantee zero text truncation.
+
+=== Branch: `feature/ui-font-agnostic-sizing`
+
+'''
+
+== TASK 9 — Headless Base: Decouple `kriolos-opos-base` from `java.desktop` & Modernize Components ⭐
+
+[quote]
+____
+_"kriolos-opos-base analysis the possibility to split or move ui component to kriolos-opos-ui, so base will became UI/swing (java.desktop) free.
+TO KNOW: When planning move ui component from kriolos-opos-base to kriolos-opos-ui, those must be upgraded to NOT depend on NetBeans .form (because this project must provide general UI classes to allow us to build better UI)"_
+____
+
+**Why starred**: Fundamental architecture requirement for multi-runtime deployments (Quarkus headless, web-tier, CLI, cloud services). `kriolos-opos-base` contains core domain, data loader, and configuration logic, but is currently chained to `java.desktop` due to 17 legacy UI components.
+
+=== Key Architectural Directives
+1. **Zero NetBeans `.form` Files in `kriolos-opos-ui`**: Any component moved from `kriolos-opos-base` into `kriolos-opos-ui` must be rewritten as clean, programmatic Java. No `.form` files may be transferred.
+2. **General Reusable UI Building Blocks**: Upgraded components in `kriolos-opos-ui` must leverage `PaneBuilder`, `FlexLayout`, `WrapLayout`, and `SwingBinder` to serve as modern reusable UI primitives across the application.
+3. **Neutral Media Abstraction**: Decouple `Datas.IMAGE` in `com.openbravo.data.loader` from `java.awt.image.BufferedImage` by adopting `byte[]` / `PosImage` (from Task 6).
+
+=== Package Extraction Inventory (Moving from `base` to `ui`)
+
+[cols="2,2,3", options="header"]
+|===
+| Package | Legacy .form Files | Modernization Strategy
+
+| `com.openbravo.editor.*`
+| 9 `.form` files (`JEditorAbstract`, `JEditorKeys`, `JEditorString`, `JEditorNumber`, etc.)
+| Rewrite into pure programmatic Java editor suite. Dynamic font metrics, touch-aware, modular keypad layouts.
+
+| `com.openbravo.beans.*`
+| 4 `.form` files (`JCalendarDialog`, `JNumberDialog`, `JPasswordDialog`, `DateUtils`)
+| Modernize into `PosUIModal` reactive panels (`PaneBuilder` + `FlexLayout`).
+
+| `com.openbravo.data.gui.*`
+| 4 `.form` files (`JListNavigator`, `JNavigator`, `JLookup`, `ListFilterPanel`)
+| Modernize as reusable programmatic data navigation components with `SwingBinder`.
+|===
+
+=== Retained in `kriolos-opos-base` (Headless Core)
+* `com.openbravo.basic` (headless core utilities)
+* `com.openbravo.data.loader` (JDBC engine, `Session`, `SentenceExec`, `SentenceList`, headless types)
+* `com.openbravo.data.model` (domain models)
+* `com.openbravo.data.user` (headless user/security entities)
+* `com.openbravo.format` (headless data formatters)
+* `com.openbravo.pos.config` (BootstrapConfiguration)
+* `com.openbravo.pos.util` (headless helpers)
+
+=== Sub-tasks
+. Move and modernize `com.openbravo.editor.*` to `kriolos-opos-ui` without `.form` files.
+. Move and modernize `com.openbravo.beans.*` to `kriolos-opos-ui` without `.form` files.
+. Move and modernize `com.openbravo.data.gui.*` to `kriolos-opos-ui` without `.form` files.
+. Abstract `Datas.IMAGE` in `com.openbravo.data.loader` to use `byte[]` / `PosImage`.
+. Remove `requires transitive java.desktop;` from `kriolos-opos-base/src/main/java/module-info.java`.
+. Add `--limit-modules` test build to CI enforcing that `kriolos-opos-base` contains zero desktop references.
+
+=== Branch: `feature/headless-base-decoupling`
+
+'''
+
+== TASK 10 — UI Modernization: NetBeans `.form` Elimination in `kriolos-opos-app`
+
+[quote]
+____
+_"Progressively eliminate all legacy NetBeans .form designer files from kriolos-opos-app, replacing them with programmatic, maintainable, reactive UI definitions"_
+____
+
+**Scope**: 125 legacy `.form` files remaining in `kriolos-opos-app`.
+
+=== Migration Phases
+[cols="1,2,3", options="header"]
+|===
+| Phase | Scope | Implementation
+
+| **Phase 1: Navigators & Dialogs**
+| 18 modal dialogs & filters in `kriolos-opos-app`
+| Modernize using `PosUIModal` and programmatic dialog factories.
+
+| **Phase 2: Configuration & Admin**
+| 15 config & user management panels (`JFrmConfig`, `JPanelConfig*`, `UsersPanel`)
+| Modernize using `PaneBuilder` multi-tab forms with validation.
+
+| **Phase 3: Master Data Maintenance**
+| 42 maintenance panels (Products, Categories, Customers, Taxes, Warehouses)
+| Modernize with standard Master-Detail `FlexLayout` + `SwingBinder`.
+
+| **Phase 4: Sales & Checkout Shell**
+| 50 sales, payment, ticket, and kitchen screens (`JPanelTicket`, `JPanelTicketSales`)
+| Modernize into responsive, touch-first responsive grid layouts.
+|===
+
+=== Sub-tasks
+. Phase 1: Migrate modal dialogs and filter panels to `PosUIModal` programmatic panels.
+. Phase 2: Migrate `JFrmConfig` and admin panels to `PaneBuilder`.
+. Phase 3: Migrate catalog & master data panels to `FlexLayout` + `SwingBinder`.
+. Phase 4: Migrate sales and ticket screens.
+. Remove legacy NetBeans GUI builder metadata and XML files.
+
+=== Branch: `feature/app-form-elimination`
+
+'''
+
+== TASK 11 — Quarkus-Desktop Distribution & Pluggable Bootstrap Configuration SPI ⭐
+
+[quote]
+____
+_"Must take in consideration that any those improve must support easily other provider. In future we will distribute with quarkus-desktop so we will take advantage of quarkus configuration (datasource, etc..) for boot configuration"_
+____
+
+**Why starred**: Future-proofs desktop packaging and enables cloud-native/hybrid deployment with Quarkus, native image compilation, and unified configuration profiles.
+
+=== Architecture Design
+1. **Pluggable `BootstrapConfigurationSource` SPI**:
+   * Define SPI interface for configuration sources (`PropertiesFileConfigSource`, `QuarkusConfigSource`, `EnvironmentConfigSource`).
+   * SPI resolution selects appropriate provider based on active runtime environment.
+2. **Quarkus Desktop Configuration Integration**:
+   * Leverage SmallRye / MicroProfile Config (`application.properties`, `@ConfigProperty`, profile-based config `dev`, `test`, `prod`).
+   * Read database connection URL, credentials, and pool settings directly from Quarkus `quarkus.datasource.*`.
+3. **DataSource Bridge**:
+   * Standalone desktop: Uses `HikariCP` pool initialized via `BootstrapConfiguration`.
+   * Quarkus desktop: Injects container-managed `AgroalDataSource` seamlessly into `Session`.
+
+=== Sub-tasks
+. Define `BootstrapConfigurationSource` and `BootstrapConfigurationProvider` SPI in `kriolos-opos-spi`.
+. Implement `FileBootstrapConfigurationProvider` in `kriolos-opos-base` (default standalone desktop).
+. Implement `QuarkusBootstrapConfigurationProvider` module for `quarkus-desktop` integration.
+. Bridge `Session` creation to accept either standalone `DataSource` or CDI-injected `DataSource`.
+. Integration tests verifying bootstrap config resolution under both standalone and Quarkus-managed environments.
+
+=== Branch: `feature/quarkus-desktop-config-spi`
+
+'''
+
 == Recommended Execution Order
 
 ----
 feature/spi-ui-agnostic            ← ⭐ (COMPLETED: PR #133)
 feature/scripting-spi              ← ⭐ (COMPLETED: PR #133)
+feature/bootstrap-vs-app-config    ← ⭐ (COMPLETED: PR branch ready)
          ↓
-feature/transaction-performance    ← ⭐ unblocks multi-station scalability & connection pooling (Issue #121)
+feature/ui-font-agnostic-sizing    ← ⭐ TASK 8: Fixes text box clipping & touch sizing immediately
          ↓
-feature/bootstrap-vs-app-config    ← foundation for config-dependent tasks
+feature/headless-base-decoupling   ← ⭐ TASK 9: Decouple base from java.desktop, move & modernize UI components
          ↓
-feature/configurable-tax           ← isolated, depends on config
+feature/quarkus-desktop-config-spi ← ⭐ TASK 11: Pluggable bootstrap config SPI (Quarkus desktop ready)
          ↓
-feature/immutable-closed-ticket    ← depends on stable lifecycle + tax
+feature/transaction-performance    ← ⭐ TASK 7: Multi-station scalability & connection pooling (Issue #121)
          ↓
-feature/audit-journal              ← cross-cutting, plugs into everything
+feature/configurable-tax           ← TASK 3: Configurable tax calculation strategies
+         ↓
+feature/immutable-closed-ticket    ← TASK 2: Immutable closed ticket snapshots
+         ↓
+feature/audit-journal              ← TASK 1: Audit journal service (Issue #86)
+         ↓
+feature/app-form-elimination       ← TASK 10: Progressive elimination of 125 .form files in opos-app
 ----
 
-TIP: Tasks 5 and 6 (starred) are **parallel-safe** — they touch different modules (`kriolos-opos-spi` and `kriolos-opos-scripting-*`) and can be developed simultaneously or before the config foundation work.
-
-IMPORTANT: `feature/scripting-spi` depends on `feature/spi-ui-agnostic` being merged first if the scripting SPI interfaces live in `kriolos-opos-spi`. Alternatively develop on a common base branch.
+TIP: Tasks 8 (UI font-agnostic sizing) and 9 (Headless base decoupling) work hand-in-hand: Task 8 fixes the sizing logic in `PaneBuilder`, `ComponentFactory`, and `JEditorAbstract`, and Task 9 moves the modernized, programmatic editor components into `kriolos-opos-ui`.
 
 '''
 
