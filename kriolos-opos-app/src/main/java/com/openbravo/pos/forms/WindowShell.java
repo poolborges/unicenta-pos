@@ -17,11 +17,14 @@ package com.openbravo.pos.forms;
 
 import com.openbravo.app.AppProperties;
 import com.openbravo.app.AppLocal;
+import com.openbravo.app.BootstrapAppPropertiesAdapter;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.JMessagePanel;
 import com.openbravo.data.gui.MessageInf;
+import com.openbravo.pos.config.AppConfig;
 import com.openbravo.pos.config.JPanelConfiguration;
 import com.openbravo.pos.instance.AppMessage;
+import com.openbravo.pos.spi.config.BootstrapConfig;
 import com.openbravo.util.OSValidator;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -51,11 +54,29 @@ public class WindowShell extends javax.swing.JFrame implements AppMessage {
 
     private final ApplicationShell m_rootapp;
     private final AppProperties m_props;
+    private BootstrapConfig m_bootstrapConfig;
+
+    public WindowShell(AppConfig config) {
+        this((BootstrapConfig) config);
+    }
+
+    public WindowShell(BootstrapConfig config) {
+        initComponents();
+        setName("kriolos:window:shell");
+        m_bootstrapConfig = config;
+        m_props = new BootstrapAppPropertiesAdapter(config);
+        m_rootapp = new ApplicationShell(config);
+    }
 
     public WindowShell(AppProperties props) {
         initComponents();
         setName("kriolos:window:shell");
         m_props = props;
+        if (props instanceof BootstrapAppPropertiesAdapter adapter) {
+            m_bootstrapConfig = adapter.getBootstrapConfig();
+        } else if (props instanceof BootstrapConfig bc) {
+            m_bootstrapConfig = bc;
+        }
         m_rootapp = new ApplicationShell(m_props);
     }
 
@@ -122,12 +143,13 @@ public class WindowShell extends javax.swing.JFrame implements AppMessage {
         }
 
         // THIS IS NEED HERE TO PRESENT CONFIG PANEL
-        String screenmode = m_props.getProperty("machine.screenmode");
+        String screenmode = (m_bootstrapConfig != null) ? m_bootstrapConfig.getScreenMode() : m_props.getProperty("machine.screenmode");
         if (null == screenmode) {
             modeWindow();
         } else {
-            switch (screenmode) {
+            switch (screenmode.toLowerCase()) {
                 case "fullscreen":
+                case "kiosk":
                     modeKiosk();
                     break;
                 case "windowmaximised":
