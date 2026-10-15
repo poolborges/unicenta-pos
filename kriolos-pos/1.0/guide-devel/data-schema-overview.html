@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Untitled :: KriolOS POS Documentation</title>
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-migration/index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Developer Guide</li>
+    <li>Database &amp; Persistence</li>
+    <li><a href="data-schema-overview.html">Database Schema Overview</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-devel/pages/data-schema-overview.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<div class="sect1">
+<h2 id="gd-database"><a class="anchor" href="#gd-database"></a>Database</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Provide Database info</p>
+</div>
+<div class="sect2">
+<h3 id="database-migration"><a class="anchor" href="#database-migration"></a>Database Migration</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Database Migration should be based on Liquidbase 4
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Reference</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://dba-presents.com/index.php/liquibase/216-liquibase-3-6-x-data-types-mapping-table" class="bare">https://dba-presents.com/index.php/liquibase/216-liquibase-3-6-x-data-types-mapping-table</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="database-access"><a class="anchor" href="#database-access"></a>Database Access</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Database Access Layer should be based on Liquidbase 4
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Reference</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Reladomo ORM - <a href="https://github.com/goldmansachs/reladomo" class="bare">https://github.com/goldmansachs/reladomo</a></p>
+</li>
+<li>
+<p>Reladomo Scala - <a href="https://www.youtube.com/watch?v=HjCHaZsEodc" class="bare">https://www.youtube.com/watch?v=HjCHaZsEodc</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="physical-schema"><a class="anchor" href="#physical-schema"></a>Physical Schema</h3>
+<div class="paragraph">
+<p>This section provide information about POS&#8217;s database schema</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. List of tables</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Table</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APP (Name and version number of the POS)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">attribute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ProductAttribute (eg: size, color, etc.)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">attributeinstance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ProductAttribute</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">attributeset</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ProductAttribute set (To define a product attributes)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">attributesetinstance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ProductAttribute</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">attributeuse</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ProductAttribute</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">breaks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EPM Shift Breaks(List of default Shift Breaks reazon)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">categories</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Product Categories</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">closedcash</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CashRegister (Closes)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">csvimport</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">customers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BusinessPartner (Customer)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">draweropened</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CashRegister (Log of all cash register opening)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">floors</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Space (Physical/virtual areas of Establishment)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lineremoved</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ticket (List of deleted ticketlines from the sales screen)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">leaves</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EPM Leaves (List of entrances/exits of people)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">locations</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inventory (Warehouses or Physical locations)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">moorers</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">orders</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Printer (Dynamic list of incomplete orders sent to remote printer)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">payments</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Payment (List of ALL payments received)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">people</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pickup_number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delivery (Incremental order number applied to boleto)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">places</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Space (Positioning of the physical object on the floor, as well as the current state)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">products</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Product (Information)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">products_bundle</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Product (Composite Product)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">products_cat</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Product (Product&#8217;s Categories)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">products_com</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Product (Product&#8217;s Companiam)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">receipts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ticket  (Receipt - Detail of the settlement of the tickets)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">reservation_customers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reservation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">revervations</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reservation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">resources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APP (Resources: image, jasper,&#8230;&#8203;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">roles</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User Roles</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sharedtickets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ticket</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">shift_breaks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EPM Shift (Breaks that occur in shifts)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">shifts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EPM Shift</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stockcurrent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inventory</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stockdiary</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inventory</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stocklevel</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inventory</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">suppliers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BusinessPartner (Supplier)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">taxcategories</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tax</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">taxcustcategories</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tax</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">taxes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ticket (Receipt - TaxLine)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">taxeslines</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tax</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">taxsuppcategories</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tax</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">thirdparties</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ticketlines</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ticket</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tickets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ticket</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ticketsnum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ticket</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ticketsnum_payment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ticket</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ticketsnum_refund</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ticket</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">uom</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Product (Unity Of Measure)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">vouches</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Payment (Vouches, Coupons)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="tables-details"><a class="anchor" href="#tables-details"></a>Tables details</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. categories Table</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Column</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">varchar(255)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">varchar(255)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parentid</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">varchar(255)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parent ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">image</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MEDIUMBLOB()</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">texttip</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">varchar(255)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">catshowname</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BOOLEAN</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">catorder</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">varchar(255)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Table payments</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Column</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">varchar(255)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">receipt</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">varchar(255)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Receipt number</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="group-of-tables"><a class="anchor" href="#group-of-tables"></a>Group of Tables</h3>
+<div class="paragraph">
+<p>Master Data</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Customers</p>
+</li>
+<li>
+<p>Product</p>
+<div class="ulist">
+<ul>
+<li>
+<p>products, products_cat, products_bundle, categories</p>
+</li>
+<li>
+<p>tax, taxline, taxsuppcategories, taxcustcategories</p>
+</li>
+<li>
+<p>attribute, attributeinstane, attributeset, attributesetinstane, attributeuse, attributevalue</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Supplier</p>
+</li>
+<li>
+<p>People (people, roles</p>
+</li>
+<li>
+<p>Misc (csvimport)</p>
+</li>
+<li>
+<p>System (application, resources)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Cash Register (Drawer)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>closedcash</p>
+</li>
+<li>
+<p>draweropened</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Delivery</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>pickup_number</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Work Hour (People/Emploee)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Work (leave, shift, shift_breaks, breaks)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Sales Order (POS)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Ticket (sharedtickets, lineremoved)</p>
+</li>
+<li>
+<p>Receipt</p>
+</li>
+<li>
+<p>Reservation/Booking (reservation, reservation_customers)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Payment</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>payments; ;vouches(Vouches, Coupons)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Inventory</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Stock (stockcurrent, stocklevel, stockdiary)</p>
+</li>
+<li>
+<p>Wareshouse (locations)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Space (Shop/Store/Restaurant Table)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>floors</p>
+</li>
+<li>
+<p>places</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Maritme</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Moorers (mooers, vessel</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="database-dataypes"><a class="anchor" href="#database-dataypes"></a>Database Dataypes</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Datatype MySQL and MariaDB</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Max size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SMALLINT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-32768 to 32767</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MEDIUMBLOB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">16MB = 16777215 bits</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LONGVARBINARY</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">16MB = 16777215 bits</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="connection"><a class="anchor" href="#connection"></a>Connection</h3>
+<div class="listingblock">
+<div class="title">Connection MySQL</div>
+<div class="content">
+<pre>com.mysql.cj.jdbc.Driver
+jdbc:mysql://localhost:3306/kriolopos?characterEncoding=utf8</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Connection MariaDB</div>
+<div class="content">
+<pre>org.mariadb.jdbc.Driver
+jdbc:mariadb://localhost:3306/kriolopos?characterEncoding=utf8
+jdbc:mariadb://localhost:3306/{DB_SCHEMA_NAME}?characterEncoding=utf8</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Connection HSQLDB</div>
+<div class="content">
+<pre>org.hsqldb.jdbcDriver
+jdbc:hsqldb:file:C:\Users\kriol\kriolopos-db;shutdown=true
+jdbc:hsqldb:file:" + (new File(new File(System.getProperty("user.home")), AppLocal.APP_DB + "-db")).getAbsolutePath() + ";shutdown=true"
+jdbc:hsqldb:file:~/kriolospos/</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Connection Derby</div>
+<div class="content">
+<pre>jdbc:derby:/home/dev/.local/share/kriolos/DERBY/kriolopos;shutdown=true
+jdbc:derby:/home/dev/.local/share/kriolos/DERBY/kriolopos;create=true</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Connection H2</div>
+<div class="content">
+<pre>jdbc:h2:file:/home/dev/.local/share/kriolos/dbh2/kriolopos;MODE=MySQL</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Connection SQLite</div>
+<div class="content">
+<pre>jdbc:sqlite:/home/dev/.local/share/kriolos/kriolopos.db</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="references"><a class="anchor" href="#references"></a>References</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://mariadb.com/kb/en/silent-column-changes/" class="bare">https://mariadb.com/kb/en/silent-column-changes/</a></p>
+</li>
+<li>
+<p><a href="https://wiki.ispirer.com/sqlways/mysql/data-types/mediumblob" class="bare">https://wiki.ispirer.com/sqlways/mysql/data-types/mediumblob</a></p>
+</li>
+<li>
+<p><a href="https://www.cmi.ac.in/~madhavan/courses/databases10/mysql-5.0-reference-manual/data-types.html" class="bare">https://www.cmi.ac.in/~madhavan/courses/databases10/mysql-5.0-reference-manual/data-types.html</a></p>
+</li>
+<li>
+<p><a href="https://federico-razzoli.com/text-and-blob-good-practices" class="bare">https://federico-razzoli.com/text-and-blob-good-practices</a></p>
+</li>
+<li>
+<p><a href="http://www.h2database.com/html/datatypes.html" class="bare">http://www.h2database.com/html/datatypes.html</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

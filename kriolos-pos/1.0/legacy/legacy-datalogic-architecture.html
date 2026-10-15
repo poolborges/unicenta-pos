@@ -1,0 +1,2189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Legacy Architecture — DataLogic Scope &amp; Monolith Analysis :: KriolOS POS Documentation</title>
+    <meta name="description" content="Architectural analysis of all 13 legacy DataLogic classes in KriolOS POS, documenting broad scope flaws, cross-domain contamination, target domain model, and decoupling roadmap.">
+    <meta name="keywords" content="legacy architecture, datalogic, monolith, domain modeling, refactoring, openbravo, bounded context">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-devel/index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-migration/index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-devel/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-devel/product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-devel/contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Legacy Architecture</li>
+    <li><a href="legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/legacy/pages/legacy-datalogic-architecture.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Legacy Architecture — DataLogic Scope &amp; Monolith Analysis</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#overview">1. Overview</a></li>
+<li><a href="#legacy-datalogic-inventory">2. Legacy DataLogic Inventory</a></li>
+<li><a href="#scope-analysis-anti-patterns">3. Scope Analysis &amp; Anti-Patterns</a>
+<ul class="sectlevel2">
+<li><a href="#datalogicsales-the-super-monolith-1608-loc">3.1. <code>DataLogicSales</code>: The Super-Monolith (1,608 LOC)</a></li>
+<li><a href="#datalogicsystem-the-catch-all-trap-537-loc">3.2. <code>DataLogicSystem</code>: The Catch-All Trap (537 LOC)</a></li>
+<li><a href="#datalogicinventory-vs-datalogicsales-anemic-fragmentation">3.3. <code>DataLogicInventory</code> vs <code>DataLogicSales</code>: Anemic Fragmentation</a></li>
+<li><a href="#datalogicreceipts-misnamed-component-420-loc">3.4. <code>DataLogicReceipts</code>: Misnamed Component (420 LOC)</a></li>
+<li><a href="#datalogiccustomers-hospitality-bleed">3.5. <code>DataLogicCustomers</code>: Hospitality Bleed</a></li>
+</ul>
+</li>
+<li><a href="#cross-domain-entity-matrix">4. Cross-Domain Entity Matrix</a></li>
+<li><a href="#target-business-module-architecture">5. Target Business Module Architecture</a></li>
+<li><a href="#decoupling-roadmap">6. Decoupling Roadmap</a>
+<ul class="sectlevel2">
+<li><a href="#phase-1-deduplication-bean-isolation">6.1. Phase 1: Deduplication &amp; Bean Isolation</a></li>
+<li><a href="#phase-2-domain-extraction-backwards-compatible-facades">6.2. Phase 2: Domain Extraction &amp; Backwards-Compatible Facades</a></li>
+<li><a href="#phase-3-pure-domain-services-hexagonal-ports">6.3. Phase 3: Pure Domain Services (Hexagonal Ports)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="overview"><a class="anchor" href="#overview"></a>1. Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the original Openbravo POS / uniCenta architecture inherited by KriolOS POS, data access and transactional business logic are coupled directly to the database via 13 monolithic <code>DataLogic*</code> classes located in <code>kriolos-opos-domain</code>.</p>
+</div>
+<div class="paragraph">
+<p>These classes are registered as singletons inside <code>BeanContainer</code> (extending <code>BeanFactoryDataSingle</code> or <code>BeanFactoryApp</code>). Over years of evolution, individual <code>DataLogic</code> classes accumulated multiple unrelated business concerns, resulting in <strong>broad scope anti-patterns</strong>, <strong>cross-domain entity coupling</strong>, and <strong>hidden dependencies</strong>.</p>
+</div>
+<div class="paragraph">
+<p>This document serves as the baseline record of the legacy data layer architecture to guide the long-term objective of extracting clean, well-defined Business Modules.</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="legacy-datalogic-inventory"><a class="anchor" href="#legacy-datalogic-inventory"></a>2. Legacy DataLogic Inventory</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 10%;">
+<col style="width: 30%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Class</th>
+<th class="tableblock halign-left valign-top">Package</th>
+<th class="tableblock halign-left valign-top">Lines</th>
+<th class="tableblock halign-left valign-top">Declared Purpose</th>
+<th class="tableblock halign-left valign-top">Scope Diagnosis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataLogicSales</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.forms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1,608</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sales &amp; checkout transactions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Super-Monolith</strong> (9 mixed domains)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataLogicPIM</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.pim</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1,199</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Product Information Management</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Heavy Monolith</strong> (Catalog + Pricing + Stock)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataLogicSystem</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.forms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">537</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System configuration &amp; core</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Catch-All Sink</strong> (Duplicates Orders &amp; Vouchers)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataLogicCustomers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.customers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">535</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Customer profiles &amp; debts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Cross-Domain Bleed</strong> (Dining reservations)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataLogicPresenceManagement</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.epm</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">447</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Employee presence / HR time clock</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Focused Domain</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataLogicReceipts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.sales</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">420</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Receipts / shared tickets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Misnamed</strong> (Exclusively Shared Tickets)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataLogicSuppliers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.suppliers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">354</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supplier master data &amp; accounts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Coupled to Stock Diary</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataLogicImport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.imports</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">177</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CSV data import engine</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Focused Domain</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataLogicAttribute</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.inventory</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">131</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Product attributes &amp; sets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Fragmented PIM</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataLogicAdmin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.admin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">125</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Admin user/role maintenance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Split Domain</strong> (Overlaps with <code>DataLogicSystem</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataLogicVouchers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.voucher</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">90</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Voucher &amp; gift card ledger</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Focused Domain</strong> (Bypassed by <code>DataLogicSystem</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataLogicInventory</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.inventory</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">72</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Warehouse inventory levels</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Anemic / Under-Scoped</strong> (Starved by Sales)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataLogicOrders</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.forms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">70</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kitchen / remote orders</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Orphaned / Duplicated</strong> in <code>DataLogicSystem</code></p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="scope-analysis-anti-patterns"><a class="anchor" href="#scope-analysis-anti-patterns"></a>3. Scope Analysis &amp; Anti-Patterns</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="datalogicsales-the-super-monolith-1608-loc"><a class="anchor" href="#datalogicsales-the-super-monolith-1608-loc"></a>3.1. <code>DataLogicSales</code>: The Super-Monolith (1,608 LOC)</h3>
+<div class="paragraph">
+<p><code>DataLogicSales</code> is the central God Object of the legacy system. Despite its name, it directly queries or mutates 29 database tables spanning <strong>9 distinct business domains</strong>:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Ticket Lifecycle &amp; Checkout (Core Sales Domain):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Methods: <code>loadTicket</code>, <code>loadLastTicket</code>, <code>saveTicket</code>, <code>deleteTicket</code>, <code>getTicketsList</code>, <code>getReprintTicket</code>, <code>getReprintTicketList</code>.</p>
+</li>
+<li>
+<p>Sequence Numbering: <code>getNextTicketIndex</code>, <code>getNextTicketRefundIndex</code>, <code>getNextPickupIndex</code>, <code>resetPickup</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Inventory &amp; Stock Diary (Inventory Domain):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Methods: <code>getProductStockState</code>, <code>getProductStockList</code>, <code>saveStockDiary</code>, <code>getStockDiaryInsert</code>, <code>getStockDiaryDelete</code>, <code>findProductStock</code>.</p>
+</li>
+<li>
+<p><strong>Issue:</strong> Stock diary recording and stock level checking are core inventory operations, yet they are stranded inside <code>DataLogicSales</code> rather than <code>DataLogicInventory</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Taxes &amp; Fiscality (Finance/Tax Domain):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Methods: <code>getTableTaxes</code>, <code>getTableTaxCategories</code>, <code>getTableTaxCustCategories</code>, <code>getTaxList</code>, <code>getTaxListAll</code>, <code>getTaxCategoriesList</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Customers &amp; Debt (CRM Domain):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Methods: <code>getCustomerInsert</code>, <code>getCustomerUpdate</code>, <code>getCustomerDelete</code>, <code>getCustomersTransactionList</code>, <code>updateCustomerDebt</code>.</p>
+</li>
+<li>
+<p><strong>Issue:</strong> Duplicates customer CRUD already provided by <code>DataLogicCustomers</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Locations &amp; Warehouses (Master Data Domain):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Methods: <code>getTableLocations</code>, <code>getLocationsList</code>, <code>getLocationsListAll</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Restaurant Layout (Hospitality Domain):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Methods: <code>getFloorsList</code>, <code>getFloorTablesList</code> (queries <code>floors</code> and <code>places</code> tables).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Product Master Data &amp; UOM (PIM / Catalog Domain):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Methods: <code>getTableUom</code>, <code>getUomInfoById</code>, <code>getUomList</code>, <code>getAttributeSetList</code>, <code>addProductsToCatalogWithCategoryId</code>, <code>removeProductsFromCatalogWithCategoryId</code>, <code>getProductImage</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Cash Movements &amp; Drawers (Treasury Domain):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Methods: <code>getPaymentMovementInsert</code>, <code>getPaymentMovementDelete</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Security &amp; Audit Logging (Surveillance Domain):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Methods: <code>addTicketLineRemoved</code>, <code>addTicketDeleted</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>DataLogicSales</code> contains tight couplings that bypass the bean container:
+* Instantiates <code>DataLogicCustomers</code> directly inside transaction logic:</p>
+</div>
+<div class="paragraph">
+<p>+</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">DataLogicCustomers customerDataLogic = new DataLogicCustomers();
+customerDataLogic.init(sessionDB);</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Calls static methods across other DataLogics:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>DataLogicVouchers.updateVoucherNonActive(&#8230;&#8203;)</code></p>
+</li>
+<li>
+<p><code>DataLogicPIM.getProductsBundle(&#8230;&#8203;)</code></p>
+</li>
+<li>
+<p><code>DataLogicPIM.getProductInfoExtById(&#8230;&#8203;)</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="datalogicsystem-the-catch-all-trap-537-loc"><a class="anchor" href="#datalogicsystem-the-catch-all-trap-537-loc"></a>3.2. <code>DataLogicSystem</code>: The Catch-All Trap (537 LOC)</h3>
+<div class="paragraph">
+<p>Located in <code>com.openbravo.pos.forms</code>, <code>DataLogicSystem</code> combines platform-level infrastructure with high-level application logic:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>System Metadata:</strong> <code>getDBVersion()</code>, <code>findVersion()</code>.</p>
+</li>
+<li>
+<p><strong>Security &amp; Auth (Overlapping with <code>DataLogicAdmin</code>):</strong></p>
+</li>
+<li>
+<p><code>listPeopleVisible()</code>, <code>findPeopleByCard()</code>, <code>getUser()</code>, <code>execChangePassword()</code>.</p>
+</li>
+<li>
+<p><code>getPermissions()</code>, <code>findRolePermissions()</code>, <code>execUpdatePermissions()</code>.</p>
+</li>
+<li>
+<p><strong>UI Resources &amp; Assets:</strong> <code>getTableResources()</code>, <code>getResourceAsBinary()</code>, <code>getResourceAsText()</code>, <code>setResource()</code>.</p>
+</li>
+<li>
+<p><strong>Kitchen Orders (Duplicate of <code>DataLogicOrders</code>):</strong></p>
+</li>
+<li>
+<p>Implements <code>addOrder()</code>, <code>updateOrder()</code>, and <code>deleteOrder()</code>. <code>DataLogicOrders</code> only contains <code>addOrder()</code> and is largely orphaned.</p>
+</li>
+<li>
+<p><strong>Vouchers (Duplicate of <code>DataLogicVouchers</code>):</strong></p>
+</li>
+<li>
+<p>Implements <code>getVouchersActiveList()</code> directly against the <code>vouchers</code> table rather than using <code>DataLogicVouchers</code>.</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="datalogicinventory-vs-datalogicsales-anemic-fragmentation"><a class="anchor" href="#datalogicinventory-vs-datalogicsales-anemic-fragmentation"></a>3.3. <code>DataLogicInventory</code> vs <code>DataLogicSales</code>: Anemic Fragmentation</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>DataLogicInventory</code> is only <strong>72 lines</strong> long and contains only 3 static statements for <code>stocklevel</code> and <code>stockcurrent</code>.</p>
+</li>
+<li>
+<p>All meaningful inventory operations—ledger transactions in <code>stockdiary</code>, stock valuations, multi-location stock calculations, and inventory adjustment statements—live inside <code>DataLogicSales</code>.</p>
+</li>
+<li>
+<p>Consequently, inventory UI screens (such as <code>StockManagement</code> and <code>StockDiaryEditor</code>) are forced to inject <code>DataLogicSales</code>, <code>DataLogicSystem</code>, <code>DataLogicSuppliers</code>, and <code>DataLogicPIM</code> concurrently.</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="datalogicreceipts-misnamed-component-420-loc"><a class="anchor" href="#datalogicreceipts-misnamed-component-420-loc"></a>3.4. <code>DataLogicReceipts</code>: Misnamed Component (420 LOC)</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The class name suggests receipt generation, printing, or fiscal receipt storage.</p>
+</li>
+<li>
+<p>In reality, it deals <strong>100% with networked shared/parked tickets</strong> (<code>sharedtickets</code> table):</p>
+</li>
+<li>
+<p><code>getSharedTicket()</code>, <code>getSharedTicketList()</code>, <code>insertSharedTicket()</code>, <code>updateSharedTicket()</code>, <code>lockSharedTicket()</code>, <code>unlockSharedTicket()</code>.</p>
+</li>
+<li>
+<p>Standard customer receipts and receipt reprints are handled entirely by <code>DataLogicSales</code> (<code>loadTicket</code>, <code>getReprintTicket</code>).</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="datalogiccustomers-hospitality-bleed"><a class="anchor" href="#datalogiccustomers-hospitality-bleed"></a>3.5. <code>DataLogicCustomers</code>: Hospitality Bleed</h3>
+<div class="paragraph">
+<p><code>DataLogicCustomers</code> manages customer accounts, cards, and tax numbers, but also includes table reservation management:
+* <code>getReservationsList()</code>, <code>getReservationsInsert()</code>, <code>getReservationsUpdate()</code>, <code>getReservationsDelete()</code>.
+* Interacts with <code>reservations</code> and <code>reservation_customers</code> tables (<code>CHAIRS</code>, <code>DATENEW</code>, etc.).
+* Table reservations belong to the <strong>Hospitality / Restaurant</strong> domain, not the generic CRM domain.</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="cross-domain-entity-matrix"><a class="anchor" href="#cross-domain-entity-matrix"></a>4. Cross-Domain Entity Matrix</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following matrix identifies tables accessed across multiple legacy DataLogic classes:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3336%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Entity / Table</th>
+<th class="tableblock halign-left valign-top"><code>Sales</code></th>
+<th class="tableblock halign-left valign-top"><code>System</code></th>
+<th class="tableblock halign-left valign-top"><code>PIM</code></th>
+<th class="tableblock halign-left valign-top"><code>Inventory</code></th>
+<th class="tableblock halign-left valign-top"><code>Customers</code></th>
+<th class="tableblock halign-left valign-top"><code>Admin</code></th>
+<th class="tableblock halign-left valign-top"><code>Suppliers</code></th>
+<th class="tableblock halign-left valign-top"><code>Vouchers</code></th>
+<th class="tableblock halign-left valign-top"><code>Orders</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>products</code>, <code>products_cat</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>stockdiary</code>, <code>stockcurrent</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>taxes</code>, <code>taxcategories</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>customers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>people</code>, <code>roles</code>, <code>permissions</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resources</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>locations</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>floors</code>, <code>places</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reservations</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vouchers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>orders</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="target-business-module-architecture"><a class="anchor" href="#target-business-module-architecture"></a>5. Target Business Module Architecture</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To transform the legacy monolith into clean, modular components, the 13 <code>DataLogic</code> classes should be decoupled into bounded contexts:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 42.8571%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Bounded Context</th>
+<th class="tableblock halign-left valign-top">Responsibilities</th>
+<th class="tableblock halign-left valign-top">Target Services</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>system</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database version, system properties, binary &amp; text resources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SystemDomainService</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>auth</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Users (<code>people</code>), roles, permissions, PIN/card authentication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SecurityDomainService</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>catalog</code> (PIM)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Products, categories, attributes, bundles, units of measure (UOM)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CatalogDomainService</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>inventory</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Warehouses, stock levels, stock diary ledger, stock adjustments</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InventoryDomainService</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>pricing-tax</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tax categories, tax rates, customer tax categories</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TaxDomainService</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>sales</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tickets, ticket lines, ticket sequence numbering, sales audit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SalesDomainService</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>sales-parked</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Networked shared/parked tickets, terminal locks, pickup tracking</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SharedTicketService</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>customer</code> (CRM)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Customer profiles, cards, account debts, transaction ledger</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CustomerDomainService</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>procurement</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supplier master data, supplier transactions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ProcurementDomainService</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>hospitality</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Restaurant floors, tables/places, table reservations, kitchen orders</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HospitalityDomainService</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>treasury</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cash drawer movements, payment ledger, vouchers/gift cards</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PaymentDomainService</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>workforce</code> (EPM)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shifts, breaks, leaves, employee check-in/out</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>WorkforceDomainService</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>data-exchange</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CSV import/export routines</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ImportExportService</code></p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="decoupling-roadmap"><a class="anchor" href="#decoupling-roadmap"></a>6. Decoupling Roadmap</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="phase-1-deduplication-bean-isolation"><a class="anchor" href="#phase-1-deduplication-bean-isolation"></a>6.1. Phase 1: Deduplication &amp; Bean Isolation</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Consolidate Kitchen Orders:</strong> Remove duplicate order methods in <code>DataLogicSystem</code> and consolidate onto <code>DataLogicOrders</code> (or target <code>HospitalityDomainService</code>).</p>
+</li>
+<li>
+<p><strong>Consolidate Vouchers:</strong> Remove direct voucher queries in <code>DataLogicSystem</code> and <code>DataLogicSales</code>, routing them through <code>DataLogicVouchers</code>.</p>
+</li>
+<li>
+<p><strong>Eliminate Ad-Hoc Instantiations:</strong> Replace <code>new DataLogicCustomers()</code> inside <code>DataLogicSales</code> with type-safe <code>app.getBean(DataLogicCustomers.class)</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="phase-2-domain-extraction-backwards-compatible-facades"><a class="anchor" href="#phase-2-domain-extraction-backwards-compatible-facades"></a>6.2. Phase 2: Domain Extraction &amp; Backwards-Compatible Facades</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Extract Inventory Logic (Completed):</strong> Moved <code>saveStockDiary</code>, <code>getProductStockState</code>, <code>getProductStockList</code>, and <code>findProductStock</code> from <code>DataLogicSales</code> into <code>DataLogicInventory</code>. Migrated <code>LocationsPanel</code>, <code>StockDiaryPanel</code>, <code>StockDiaryEditor</code>, <code>StockManagement</code>, <code>ProductsEditor</code>, and <code>StockQtyImport</code> to <code>DataLogicInventory</code>.</p>
+</li>
+<li>
+<p><strong>Extract Tax Logic (Completed):</strong> Extracted tax queries (<code>getTaxList</code>, <code>getTaxCategoriesList</code>, <code>getTaxCustCategoriesList</code>) and table definitions (<code>getTableTaxes</code>, <code>getTableTaxCategories</code>, <code>getTableTaxCustCategories</code>) into dedicated <code>DataLogicTax</code> (<code>com.openbravo.pos.sales.DataLogicTax</code>). Migrated <code>TaxPanel</code>, <code>TaxCategoriesPanel</code>, <code>TaxCustCategoriesPanel</code>, and <code>TaxEditor</code> to <code>DataLogicTax</code>.</p>
+</li>
+<li>
+<p><strong>Extract Hospitality (Completed):</strong> Extracted <code>floors</code> and <code>places</code> table definitions and queries from <code>DataLogicSales</code>, and extracted <code>reservations</code> ledger queries from <code>DataLogicCustomers</code> into dedicated <code>DataLogicRestaurant</code> (<code>com.openbravo.pos.sales.restaurant.DataLogicRestaurant</code>). Migrated <code>JPanelFloors</code>, <code>JPanelPlaces</code>, <code>PlacesEditor</code>, and <code>JTicketsBagRestaurantRes</code> to <code>DataLogicRestaurant</code>.</p>
+</li>
+<li>
+<p><strong>Consolidate CRM / Customer Debts (Completed):</strong> Moved customer debt transactions (<code>getCustomersTransactionList</code>, <code>updateCustomerDebt</code>) and customer CRUD sentences (<code>getCustomerInsert</code>, <code>getCustomerUpdate</code>, <code>getCustomerDelete</code>, <code>getCustomersRow</code>) from <code>DataLogicSales</code> into <code>DataLogicCustomers</code>. Migrated <code>CustomersView</code> to <code>DataLogicCustomers</code> &amp; <code>DataLogicTax</code>, and <code>CustomerCSVImport</code> to <code>DataLogicCustomers</code>. Retained <code>@Deprecated</code> proxy delegations in <code>DataLogicSales</code>.</p>
+</li>
+<li>
+<p><strong>Extract Catalog &amp; UOM to DataLogicPIM (Completed):</strong> Moved Units of Measure (<code>getTableUom</code>, <code>getUomInfoById</code>, <code>getUomList</code>, <code>getUomListAll</code>), Attribute Sets (<code>getAttributeSetList</code>, <code>getAttributeSetListAll</code>), product image lookup (<code>getProductImage</code>), and catalog category synchronization (<code>addProductsToCatalogWithCategoryId</code>, <code>removeProductsFromCatalogWithCategoryId</code>) into <code>DataLogicPIM</code>. Migrated <code>UomPanel</code>, <code>CategoriesEditor</code>, and <code>ProductsEditor</code> to <code>DataLogicPIM</code> and <code>DataLogicTax</code>. Retained <code>@Deprecated</code> proxy delegations in <code>DataLogicSales</code>.</p>
+</li>
+<li>
+<p><strong>Extract Treasury &amp; Cash Movements (Completed):</strong> Created <code>DataLogicPayments</code> (<code>com.openbravo.pos.payment.DataLogicPayments</code>) for cash drawer movements (<code>getPaymentMovementInsert</code>, <code>getPaymentMovementDelete</code>) and payment indexing (<code>getNextTicketPaymentIndex</code>). Migrated <code>JPanelPayments</code> to <code>DataLogicPayments</code>. Retained <code>@Deprecated</code> delegating proxies on <code>DataLogicSales</code>.</p>
+</li>
+<li>
+<p><strong>Extract Security &amp; Audit Logging (Completed):</strong> Created <code>DataLogicAudit</code> (<code>com.openbravo.pos.sales.DataLogicAudit</code>) for ticket line removal and void auditing (<code>addTicketLineRemoved</code>, <code>addTicketDeleted</code>). Migrated <code>TicketLineController</code> to use <code>DataLogicAudit</code>. Retained <code>@Deprecated</code> proxy delegations in <code>DataLogicSales</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="phase-3-pure-domain-services-hexagonal-ports"><a class="anchor" href="#phase-3-pure-domain-services-hexagonal-ports"></a>6.3. Phase 3: Pure Domain Services (Hexagonal Ports)</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Hospitality Domain Port (<code>PlaceService</code>):</strong> Enriched the <code>PlaceService</code> interface with dining table state operations (<code>moveCustomer</code>, <code>setCustomerNameInTable</code>, <code>setWaiterNameInTable</code>, <code>setTicketIdInTable</code>, table status locks). Decoupled Swing presentation layers (<code>RestaurantMapController</code>, <code>PlaceButtonRenderer</code>, <code>JTicketsBagRestaurant</code>) to depend on <code>PlaceService</code> instead of concrete <code>PlaceServiceImpl</code>.</p>
+</li>
+<li>
+<p><strong>Audit Logging Port (<code>AuditService</code>):</strong> Created <code>AuditService</code> (<code>com.openbravo.pos.sales.AuditService</code>) for security event and ticket line removal auditing. Made <code>DataLogicAudit</code> implement <code>AuditService</code> and registered type mapping in <code>BeanContainer</code>. Decoupled <code>TicketLineController</code> to consume <code>AuditService</code>.</p>
+</li>
+<li>
+<p><strong>Tax Domain Port (<code>TaxService</code>):</strong> Created <code>TaxService</code> (<code>com.openbravo.pos.sales.TaxService</code>) for tax rates, customer tax categories, and product tax category queries. Made <code>DataLogicTax</code> implement <code>TaxService</code> and mapped in <code>BeanContainer</code>.</p>
+</li>
+<li>
+<p><strong>CRM Domain Port (<code>CustomerService</code>):</strong> Created <code>CustomerService</code> (<code>com.openbravo.pos.customers.CustomerService</code>) covering customer lookup, card resolution, note updates, debt tracking, and customer transaction history. Made <code>DataLogicCustomers</code> implement <code>CustomerService</code> and mapped in <code>BeanContainer</code>.</p>
+</li>
+<li>
+<p><strong>Catalog &amp; PIM Domain Port (<code>CatalogService</code>):</strong> Populated <code>CatalogService</code> (<code>com.openbravo.pos.catalog.CatalogService</code>) covering product lookups (code, reference, barcode), category trees, constant products, composite bundles, product images, and UOM. Made <code>DataLogicPIM</code> implement <code>CatalogService</code> and mapped in <code>BeanContainer</code>. Decoupled <code>CatalogController</code>, <code>JCatalog</code>, and <code>SalesBarcodeScanCoordinator</code> to consume domain services.</p>
+</li>
+<li>
+<p><strong>Shared / Parked Ticket Domain Port (<code>SharedTicketService</code>):</strong> Created <code>SharedTicketService</code> (<code>com.openbravo.pos.sales.SharedTicketService</code>) for parked network tickets and restaurant table receipts (<code>getSharedTicket</code>, <code>getSharedTicketList</code>, <code>lockSharedTicket</code>, <code>unlockSharedTicket</code>, <code>updateSharedTicket</code>, etc.). Made <code>DataLogicReceipts</code> implement <code>SharedTicketService</code> and mapped in <code>BeanContainer</code>. Decoupled all presentation and sales controllers (<code>RestaurantMapController</code>, <code>JTicketsBagSharedPanel</code>, <code>JTicketsBagSharedList</code>, <code>JTicketsBagShared</code>, <code>OrderCustomerList</code>, <code>OrderSupplierList</code>, <code>JPanelTicket</code>, <code>ModernOne</code>, and <code>ModernTwo</code>) to consume <code>SharedTicketService</code>.</p>
+</li>
+<li>
+<p><strong>Ticket Lifecycle &amp; Sequencing Domain Port (<code>TicketLifecycleService</code>):</strong> Created <code>TicketLifecycleService</code> (<code>com.openbravo.pos.sales.TicketLifecycleService</code>) covering ticket persistence (<code>loadTicket</code>, <code>loadLastTicket</code>, <code>saveTicket</code>, <code>deleteTicket</code>), reprint retrieval (<code>getReprintTicket</code>, <code>getReprintTicketList</code>), search listing (<code>getTicketsList</code>), and index sequence generation (<code>getNextTicketIndex</code>, <code>getNextTicketRefundIndex</code>, <code>getNextPickupIndex</code>, <code>resetPickup</code>). Made <code>DataLogicSales</code> implement <code>TicketLifecycleService</code> and mapped in <code>BeanContainer</code>.</p>
+</li>
+<li>
+<p><strong>Decouple Sales &amp; Payment UI Callers (Completed):</strong> Migrated all ticket persistence, loading, reprint, and sequence generation callers in <code>kriolos-opos-app</code> away from <code>DataLogicSales</code> to pure domain ports (<code>TicketLifecycleService</code>, <code>TaxService</code>, <code>AuditService</code>):</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CustomersPayment</code>: Persists customer payment tickets via <code>TicketLifecycleService.saveTicket</code>.</p>
+</li>
+<li>
+<p><code>ModernOne</code> &amp; <code>ModernTwo</code>: Uses <code>TicketLifecycleService.saveTicket</code>, <code>TaxService.getTaxListAll</code>, and <code>AuditService.addTicketDeleted</code>.</p>
+</li>
+<li>
+<p><code>JPanelTicket</code>: Injects <code>TicketLifecycleService</code>, <code>TaxService</code>, and <code>AuditService</code> for ticket lines, payments, and reprints.</p>
+</li>
+<li>
+<p><code>JTicketsBagTicket</code> &amp; <code>JTicketsBag</code>: Uses <code>TicketLifecycleService</code> for deleting, loading, and searching tickets.</p>
+</li>
+<li>
+<p><code>JTicketsBagShared</code>: Uses <code>AuditService.addTicketDeleted</code> and <code>TicketLifecycleService.getReprintTicket</code>.</p>
+</li>
+<li>
+<p><code>JTicketsBagRestaurant</code> &amp; <code>RemoteOrderDisplay</code>: Uses <code>TicketLifecycleService.getNextPickupIndex</code> for order pickup sequence numbers.</p>
+</li>
+<li>
+<p><code>JTicketsReprintPanel</code>: Uses <code>TicketLifecycleService.getReprintTicketList</code> and <code>TicketLifecycleService.loadTicket</code>.</p>
+</li>
+<li>
+<p><code>JTicketsFinder</code> &amp; <code>JTicketsFinderPanel</code>: Injects <code>TicketLifecycleService</code> and <code>TaxService</code> for receipt lookups and tax category filters.</p>
+</li>
+<li>
+<p><code>ReceiptSplit</code>, <code>ReceiptSplitPanel</code>, <code>SimpleReceipt</code>: Decoupled from <code>DataLogicSales</code> parameter passing.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Eliminate Active <code>DataLogicSales</code> Callers Across App (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Migrated bundle and auxiliar product queries (<code>SQL_BUNDLE_LIST</code>, <code>SQL_AUXILIAR_LIST</code>) to <code>DataLogicInventory</code> (with deprecated delegates in <code>DataLogicSales</code>), decoupling <code>BundlePanel</code> and <code>AuxiliarPanel</code>.</p>
+</li>
+<li>
+<p>Migrated warehouse location queries (<code>getLocationsList</code>) in <code>JParamsLocation</code> to <code>DataLogicInventory</code>.</p>
+</li>
+<li>
+<p>Migrated tax listing in <code>JPanelReport</code> to <code>TaxService.getTaxListAll()</code>.</p>
+</li>
+<li>
+<p>Migrated tax category queries in <code>JPanelCSVImport</code> to <code>DataLogicTax</code>.</p>
+</li>
+<li>
+<p>Migrated pickup sequence reset in <code>JPanelTicketSetup</code> to direct database sequence sentence via session.</p>
+</li>
+<li>
+<p>Cleaned up unused <code>DataLogicSales</code> references, fields, and imports in <code>JNewCustomerPanel</code>, <code>JPaymentPaper</code>, <code>JPaymentVoucher</code>, <code>JPaymentSelect</code>, <code>CategoriesPanel</code>, <code>ProductsWarehousePanel</code>, <code>ProductsPanel</code>, <code>MaterialFilter</code>, <code>BundleFilter</code>, <code>AuxiliarFilter</code>, <code>LocationFilterSales</code>, <code>ProductFilter1</code>, <code>ProductFilter2</code>, <code>ProductFilter4</code>, <code>JCatalog</code>, and <code>SalesPaymentCoordinatorTest</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Eliminate Cross-Domain Bleed from <code>DataLogicSystem</code> (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Enriched <code>PlaceService</code>, <code>PlaceServiceImpl</code>, and <code>DataLogicRestaurant</code> with <code>updatePlaces(int x, int y, String id)</code> for dining table layout management. Retained <code>@Deprecated</code> delegator on <code>DataLogicSystem</code>.</p>
+</li>
+<li>
+<p>Decoupled <code>RestaurantMapController</code> to call <code>PlaceService.updatePlaces</code>, adding a clean constructor without <code>DataLogicSystem</code> and deprecating legacy constructors.</p>
+</li>
+<li>
+<p>Moved warehouse location lookup (<code>findLocationName</code>) to <code>DataLogicInventory</code>. Retained <code>@Deprecated</code> delegator on <code>DataLogicSystem</code> and migrated <code>StockQtyImport</code> to consume <code>DataLogicInventory</code> directly.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Supplier Management Domain Port (<code>SupplierService</code>) (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Created domain service port interface <code>SupplierService</code> (<code>com.openbravo.pos.suppliers.SupplierService</code>) covering supplier master data, lists, lookups, transactions, and persistence.</p>
+</li>
+<li>
+<p>Implemented <code>SupplierService</code> on <code>DataLogicSuppliers</code> and registered interface type mapping in <code>BeanContainer</code>.</p>
+</li>
+<li>
+<p>Decoupled all UI callers in <code>kriolos-opos-app</code> (<code>OrderSupplierList</code>, <code>JSupplierFinderPanel</code>, <code>JSupplierFinder</code>, <code>JNewSupplierPanel</code>, <code>JParamsSuppliers</code>, <code>ProductFilter3</code>, <code>StockDiaryEditor</code>, <code>StockManagement</code>, <code>ProductsEditor</code>, <code>SuppliersView</code>, <code>SuppliersPanel</code>, and <code>JPanelCSVImport</code>) to consume <code>SupplierService</code>.</p>
+</li>
+<li>
+<p>Maintained 100% binary backwards compatibility with <code>@Deprecated</code> constructors and adapter methods.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>User &amp; Role Administration Domain Port (<code>PeopleService</code>) (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Created domain service port interface <code>PeopleService</code> (<code>com.openbravo.pos.admin.PeopleService</code>) covering user metadata (<code>getTablePeople</code>), role metadata (<code>getTableRoles</code>), save provider (<code>getPeopleSaveProvider</code>), user queries (<code>getPeopleList</code>), role queries (<code>getRolesList</code>), and resources (<code>getResourceList</code>).</p>
+</li>
+<li>
+<p>Implemented <code>PeopleService</code> on <code>DataLogicAdmin</code> and registered interface type mapping in <code>BeanContainer</code>.</p>
+</li>
+<li>
+<p>Decoupled UI callers in <code>kriolos-opos-app</code>: <code>PeoplePanel</code>, <code>PeopleView</code>, <code>RolesPanel</code>, <code>JPeopleFinderPanel</code>, <code>JPeopleFinder</code>, and <code>JParamsUser</code> to consume <code>PeopleService</code>.</p>
+</li>
+<li>
+<p>Maintained 100% binary backwards compatibility with <code>@Deprecated</code> constructors and method overloads.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Runtime Authentication &amp; Authorization Domain Port (<code>SecurityService</code>) (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Created domain service port interface <code>SecurityService</code> (<code>com.openbravo.pos.forms.SecurityService</code>) covering user login listing (<code>listPeopleVisible</code>), magnetic card/badge swipe lookup (<code>findPeopleByCard</code>), role permission extraction (<code>findRolePermissions</code>, <code>getPermissions</code>), password modifications (<code>execChangePassword</code>), and permission updates (<code>execUpdatePermissions</code>).</p>
+</li>
+<li>
+<p>Implemented <code>SecurityService</code> on <code>DataLogicSystem</code> and registered interface type mapping in <code>BeanContainer</code>.</p>
+</li>
+<li>
+<p>Decoupled <code>AppUserPermissionsLoader</code>, <code>AuthenticationPanel</code>, <code>ApplicationShell</code>, and <code>WordspacePanel</code> to consume <code>SecurityService</code>.</p>
+</li>
+<li>
+<p>Retained 100% binary backwards compatibility with <code>@Deprecated</code> constructor overloads on <code>AppUserPermissionsLoader</code> and <code>AuthenticationPanel</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Remote Order Queue Service Provider (<code>RemoteOrderService</code> &amp; <code>RemoteOrderDisplayService</code>) (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Established <code>RemoteOrderService</code> (<code>com.openbravo.pos.sales.RemoteOrderService</code>) as the service provider interface (SPI port) for kitchen display queues.</p>
+</li>
+<li>
+<p>Default implementation <code>DataLogicOrders</code> stores order lines in the shared database table (<code>ORDERS</code>), queried by external kitchen display screens.</p>
+</li>
+<li>
+<p>Architecture supports pluggable providers (e.g., an HTTP / REST API client dispatching order lines to an external microservice or cloud kitchen display).</p>
+</li>
+<li>
+<p>Created domain record <code>RemoteOrder</code> (<code>com.openbravo.pos.sales.RemoteOrder</code>) encapsulating order lines with <code>Double qty</code> (supporting fractional item quantities) and <code>String displayId</code> (supporting alphanumeric kitchen display routing).</p>
+</li>
+<li>
+<p>Updated original Liquibase changelog (<code>pos_liquidbase/db-changelog-v4_5.xml</code>) for the <code>orders</code> table to define <code>qty</code> as <code>DOUBLE</code> (default <code>1.0</code>) and <code>displayid</code> as <code>VARCHAR(50)</code> (default <code>'1'</code>).</p>
+</li>
+<li>
+<p>Relocated and modernized remote kitchen dispatch coordinator to <code>RemoteOrderDisplayService</code> (<code>com.openbravo.pos.sales.RemoteOrderDisplayService</code>) in <code>kriolos-opos-domain</code>, which decomposes active <code>TicketInfo</code> lines into <code>RemoteOrder</code> records and delegates dispatching to <code>RemoteOrderService</code>.</p>
+</li>
+<li>
+<p>Maintained 100% binary backwards compatibility with <code>@Deprecated</code> method overloads on <code>DataLogicOrders</code> and <code>DataLogicSystem</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Warehouse &amp; Stock Ledger Domain Ports (<code>InventoryService</code> &amp; <code>StockService</code>) (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Extracted pure domain service ports <code>InventoryService</code> (<code>com.openbravo.pos.inventory.InventoryService</code>) and <code>StockService</code> (<code>com.openbravo.pos.inventory.StockService</code> extending <code>InventoryService</code>).</p>
+</li>
+<li>
+<p>Eliminated leakage of low-level <code>SentenceExec</code> and <code>SentenceList</code> from service ports:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Replaced raw <code>SentenceExec getStockCurrentInsert()</code> with clean domain methods <code>addStockEntry(StockEntry entry)</code> and <code>addStockEntry(locationId, productId, units)</code>.</p>
+</li>
+<li>
+<p>Introduced domain record <code>StockEntry</code> (<code>locationId</code>, <code>productId</code>, <code>attributeSetInstanceId</code>, <code>units</code>).</p>
+</li>
+<li>
+<p>Migrated <code>SentenceList&lt;LocationInfo&gt; getLocationsList()</code> across <code>InventoryService</code>, <code>DataLogicInventory</code>, and deprecated delegator on <code>DataLogicSales</code> to return <code>List&lt;LocationInfo&gt; throws BasicException</code>.</p>
+</li>
+<li>
+<p>Replaced raw query sentence <code>SentenceList getWarehouseStockList(SerializerRead sr)</code> with high-level <code>ListProvider getWarehouseStockListProvider(EditorCreator filter)</code> and <code>SaveProvider getWarehouseStockSaveProvider()</code>.</p>
+</li>
+<li>
+<p>Encapsulated stock diary writes and reversions via domain methods <code>recordStockMovement</code>, <code>revertStockMovement</code>, and <code>getStockDiarySaveProvider()</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Implemented <code>StockService</code> (and <code>InventoryService</code>) on <code>DataLogicInventory</code> and registered both interfaces in <code>BeanContainer</code>.</p>
+</li>
+<li>
+<p>Migrated callers across <code>kriolos-opos-app</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>StockDiaryPanel</code>: Injects <code>StockService</code> and uses <code>stockService.getStockDiarySaveProvider()</code>.</p>
+</li>
+<li>
+<p><code>StockDiaryEditor</code>: Injects <code>InventoryService</code>, consumes <code>inventoryService.getLocationsList()</code>, eliminating redundant <code>.list()</code> queries.</p>
+</li>
+<li>
+<p><code>StockManagement</code>: Injects <code>StockService</code> for <code>getLocationsListAll()</code>, <code>getProductStockList()</code>, and <code>saveStockDiary()</code>.</p>
+</li>
+<li>
+<p><code>ProductsWarehousePanel</code>: Injects <code>InventoryService</code>, uses <code>getWarehouseStockListProvider(m_paramslocation)</code> and <code>getWarehouseStockSaveProvider()</code>, eliminating internal <code>WarehouseSerializerRead</code>.</p>
+</li>
+<li>
+<p><code>LocationsPanel</code>: Injects <code>InventoryService</code> for <code>getTableLocations()</code>.</p>
+</li>
+<li>
+<p><code>ProductsEditor</code>: Injects <code>StockService</code> for <code>getProductStockList()</code>.</p>
+</li>
+<li>
+<p><code>JParamsLocation</code>: Injects <code>InventoryService</code> for <code>getLocationsList()</code>.</p>
+</li>
+<li>
+<p><code>SalesStockCoordinator</code>: Injects <code>InventoryService</code> and resolves location names via <code>InventoryService.getLocationsListAll()</code>.</p>
+</li>
+<li>
+<p><code>JPanelTicket</code>: Injects <code>InventoryService</code>, eliminated concrete <code>DataLogicInventory</code> field.</p>
+</li>
+<li>
+<p><code>BundlePanel</code> &amp; <code>AuxiliarPanel</code>: Consume <code>StockService.SQL_BUNDLE_LIST</code> and <code>StockService.SQL_AUXILIAR_LIST</code>.</p>
+</li>
+<li>
+<p><code>JPanelCSVImport</code>: Uses <code>inventoryService.addStockEntry("0", ProductID, Units)</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Maintained 100% binary backwards compatibility with <code>@Deprecated</code> delegators on <code>DataLogicSales</code> and legacy constructor overloads.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Treasury &amp; Cash Drawer Domain Port (<code>TreasuryService</code>) (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Extracted pure domain service port interface <code>TreasuryService</code> (<code>com.openbravo.pos.payment.TreasuryService</code>) and domain record <code>PaymentMovement</code> (<code>com.openbravo.pos.payment.PaymentMovement</code>) for cash in / cash out drawer movements and payment sequence indexing (<code>getNextTicketPaymentIndex</code>).</p>
+</li>
+<li>
+<p>Eliminated leakage of low-level <code>SentenceExec</code> on service ports:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Replaced raw <code>SentenceExec getPaymentMovementInsert()</code> and <code>SentenceExec getPaymentMovementDelete()</code> with clean domain methods <code>recordPaymentMovement(PaymentMovement movement)</code> and <code>deletePaymentMovement(receiptId, paymentId)</code>.</p>
+</li>
+<li>
+<p>Introduced high-level <code>SaveProvider getPaymentMovementSaveProvider()</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Implemented <code>TreasuryService</code> on <code>DataLogicPayments</code> and registered type mapping in <code>BeanContainer</code>.</p>
+</li>
+<li>
+<p>Decoupled <code>JPanelPayments</code> in <code>kriolos-opos-app</code> to inject <code>TreasuryService</code> and consume <code>treasuryService.getPaymentMovementSaveProvider()</code>, eliminating direct <code>DefaultSaveProvider</code> wrapping of <code>SentenceExec</code>.</p>
+</li>
+<li>
+<p>Added <code>getTreasuryService()</code> in <code>DataLogicSales</code> maintaining 100% binary backwards compatibility.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Product Attributes &amp; Attribute Sets Domain Port (<code>AttributeService</code>) (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Extracted pure domain service port interface <code>AttributeService</code> (<code>com.openbravo.pos.inventory.AttributeService</code>) and domain record <code>AttributeInstEntry</code> (<code>com.openbravo.pos.inventory.AttributeInstEntry</code>) for product attribute sets, attribute instances, and instance values.</p>
+</li>
+<li>
+<p>Eliminated leakage of low-level <code>SentenceList</code> and <code>SentenceExec</code> on attribute service ports:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Replaced raw query executions with high-level domain collection queries: <code>List&lt;AttributeInfo&gt; getAttributeList()</code>, <code>List&lt;AttributeSetInfo&gt; getAttributeSetList()</code>, <code>List&lt;AttributeInstInfo&gt; getAttributeInstList()</code>, and <code>List&lt;String&gt; getAttributeValues()</code>.</p>
+</li>
+<li>
+<p>Replaced manual, procedural multi-sentence transaction logic for finding/creating attribute set instances and value rows with domain method <code>String findOrCreateAttributeSetInstance(String attributeSetId, String description, List&lt;AttributeInstEntry&gt; entries)</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Implemented <code>AttributeService</code> on <code>DataLogicAttribute</code> and registered type mapping in <code>BeanContainer</code>.</p>
+</li>
+<li>
+<p>Decoupled callers across <code>kriolos-opos-app</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>AttributeFilter</code>: Injects <code>AttributeService</code> and calls <code>attributeService.getAttributeList()</code>.</p>
+</li>
+<li>
+<p><code>AttributeSetFilter</code>: Injects <code>AttributeService</code> and calls <code>attributeService.getAttributeSetList()</code>.</p>
+</li>
+<li>
+<p><code>AttributeUseEditor</code>: Injects <code>AttributeService</code> and calls <code>attributeService.getAttributeList()</code>.</p>
+</li>
+<li>
+<p><code>AttributeUsePanel</code> &amp; <code>AttributeValuesPanel</code>: Consume static constants <code>AttributeService.SQL_ATTRIBUTE_LIST</code> and <code>AttributeService.SQL_ATTRIBUTESET_LIST</code>.</p>
+</li>
+<li>
+<p><code>JProductAttEditPanel</code>: Injects <code>AttributeService</code> and creates attribute set instances through <code>attributeService.findOrCreateAttributeSetInstance(&#8230;&#8203;)</code>, eliminating direct coupling to <code>DataLogicAttribute</code> and <code>Session</code>.</p>
+</li>
+<li>
+<p><code>JProductAttEdit</code> &amp; <code>JProductAttEdit2</code>: Added overloaded constructors and factory methods accepting <code>AttributeService</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Maintained 100% binary backwards compatibility with <code>@Deprecated</code> legacy constructors and fields.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Voucher Issuance, Redemption &amp; Validation Domain Port (<code>VoucherService</code>) (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Extracted pure domain service port interface <code>VoucherService</code> (<code>com.openbravo.pos.voucher.VoucherService</code>) for voucher lifecycle management (issuance, sequence numbering, lookup, and redemption).</p>
+</li>
+<li>
+<p>Eliminated leakage of low-level <code>SentenceList</code> and raw <code>PreparedSentence</code> queries:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Replaced raw <code>PreparedSentence getVoucherNumber()</code> with clean domain method <code>findLastVoucherNumber(String prefix)</code> and default sequence generator <code>generateNextVoucherNumber()</code>.</p>
+</li>
+<li>
+<p>Replaced static raw query <code>updateVoucherNonActive(String, Session)</code> with instance domain method <code>deactivateVoucher(String voucherNumber)</code>.</p>
+</li>
+<li>
+<p>Modernized lookup methods <code>getVoucher(String id)</code>, <code>getVoucherAll(String id)</code>, and <code>getVoucherList()</code>.</p>
+</li>
+<li>
+<p>Centralized table definition via <code>TableDefinition getTableVouchers()</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Implemented <code>VoucherService</code> on <code>DataLogicVouchers</code> and registered type mapping in <code>BeanContainer</code>.</p>
+</li>
+<li>
+<p>Decoupled callers across <code>kriolos-opos-app</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JPaymentVoucher</code>: Injects <code>VoucherService</code> and calls <code>voucherService.getVoucherList()</code> and <code>voucherService.getVoucher(id)</code>, eliminating direct <code>DataLogicVouchers</code> and unused <code>DataLogicCustomers</code>.</p>
+</li>
+<li>
+<p><code>JPaymentPaper</code>: Injects <code>VoucherService</code> and calls <code>voucherService.getVoucherList()</code> and <code>voucherService.getVoucher(id)</code>.</p>
+</li>
+<li>
+<p><code>VoucherEditor</code>: Injects <code>VoucherService</code>, delegates voucher number generation to <code>voucherService.generateNextVoucherNumber()</code>, and calls <code>voucherService.getVoucherAll(voucherId)</code>.</p>
+</li>
+<li>
+<p><code>VoucherPanel</code>: Injects <code>VoucherService</code>, consumes <code>voucherService.getTableVouchers()</code>, and instantiates <code>VoucherEditor</code> with injected <code>VoucherService</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Added <code>getVoucherService()</code> and <code>getDataLogicVouchers()</code> on <code>DataLogicSales</code>, delegating <code>updateVoucherNonActive</code> to <code>getVoucherService().deactivateVoucher(voucherNumber)</code>.</p>
+</li>
+<li>
+<p>Updated <code>DataLogicSystem.getVouchersActiveList()</code> to resolve <code>VoucherService</code>.</p>
+</li>
+<li>
+<p>Maintained 100% binary backwards compatibility with <code>@Deprecated</code> legacy methods and constructor overloads.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Employee Presence &amp; Shift Management Domain Port (<code>ShiftService</code>) (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Extracted pure domain service port interface <code>ShiftService</code> (<code>com.openbravo.pos.epm.ShiftService</code>) and domain record <code>ShiftBreakActivity</code> (<code>com.openbravo.pos.epm.ShiftBreakActivity</code>) for employee shifts, check-in/out time clock, breaks, and leaves.</p>
+</li>
+<li>
+<p>Eliminated leakage of low-level <code>SentenceList</code> and raw query definitions:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Replaced raw <code>SentenceList getBreaksList()</code> and <code>getLeavesList()</code> with clean domain queries <code>List&lt;BreaksInfo&gt; getBreaksListAll()</code> and <code>List&lt;LeavesInfo&gt; getLeavesListAll()</code>.</p>
+</li>
+<li>
+<p>Replaced raw object arrays with strongly typed domain record <code>ShiftBreakActivity getLastBreakActivity(String userId)</code>.</p>
+</li>
+<li>
+<p>Encapsulated employee lookup query sentence into high-level provider <code>ListProvider getEmployeeListProvider(EditorCreator filter)</code>.</p>
+</li>
+<li>
+<p>Standardized all method names to standard Java camelCase (<code>checkIn</code>, <code>checkOut</code>, <code>isCheckedIn</code>, <code>startBreak</code>, <code>endBreak</code>, <code>isOnBreak</code>, <code>getShiftId</code>, <code>getLastCheckIn</code>, <code>getLastCheckOut</code>, <code>getStartBreakTime</code>, <code>getLastBreakId</code>, <code>getLastBreakName</code>, <code>isOnLeave</code>, <code>blockEmployee</code>).</p>
+</li>
+<li>
+<p>Preserved legacy PascalCase methods (<code>CheckIn</code>, <code>CheckOut</code>, etc.) as <code>@Deprecated</code> delegators for backwards compatibility.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Implemented <code>ShiftService</code> on <code>DataLogicPresenceManagement</code> and registered type mapping in <code>BeanContainer</code>.</p>
+</li>
+<li>
+<p>Decoupled callers across <code>kriolos-opos-app</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JPanelEmployeePresence</code>: Injects <code>ShiftService</code>, calls <code>shiftService.listBreaksVisible()</code>, <code>shiftService.startBreak()</code>, <code>shiftService.endBreak()</code>, <code>shiftService.checkIn()</code>, <code>shiftService.checkOut()</code>, <code>shiftService.isOnBreak()</code>, and consumes <code>ShiftBreakActivity</code>.</p>
+</li>
+<li>
+<p><code>BreaksView</code>: Injects <code>ShiftService</code> and calls <code>shiftService.getBreaksListAll()</code>, eliminating raw <code>SentenceList m_sentcat</code>.</p>
+</li>
+<li>
+<p><code>BreaksPanel</code>: Injects <code>ShiftService</code>, calls <code>shiftService.getTableBreaks()</code>, and instantiates <code>BreaksView</code> with injected <code>ShiftService</code>.</p>
+</li>
+<li>
+<p><code>LeavesView</code>: Injects <code>ShiftService</code>, calls <code>shiftService.isCheckedIn()</code>, <code>shiftService.blockEmployee()</code>, and passes <code>ShiftService</code> to <code>JEmployeeFinder</code>.</p>
+</li>
+<li>
+<p><code>LeavesPanel</code>: Injects <code>ShiftService</code>, calls <code>shiftService.getTableLeaves()</code>, and instantiates <code>LeavesView</code> with injected <code>ShiftService</code>.</p>
+</li>
+<li>
+<p><code>JEmployeeFinder</code> &amp; <code>JEmployeeFinderPanel</code>: Modernized to accept <code>ShiftService</code>, utilizing <code>shiftService.getEmployeeListProvider(this)</code> instead of direct <code>ListProviderCreator(SentenceList)</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Maintained 100% binary backwards compatibility with <code>@Deprecated</code> legacy constructors and overloads.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Batch CSV Data Import Domain Port (<code>ImportService</code>) (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Extracted pure domain service port interface <code>ImportService</code> (<code>com.openbravo.pos.imports.ImportService</code>) for batch CSV imports (products, customers, and stock quantities) and duplicate/change status resolution.</p>
+</li>
+<li>
+<p>Defined clean port methods:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>execCSVStockUpdate(Object[] csv)</code>: Inserts stock update entries into the import staging table.</p>
+</li>
+<li>
+<p><code>execAddCSVEntry(Object[] csv)</code>: Inserts product import entries into the staging table.</p>
+</li>
+<li>
+<p><code>execCustomerAddCSVEntry(Object[] csv)</code>: Inserts customer import entries into the staging table.</p>
+</li>
+<li>
+<p><code>getProductRecordType(&#8230;&#8203;)</code> &amp; <code>getCustomerRecordType(&#8230;&#8203;)</code>: Identifies whether an incoming CSV row matches an existing record, detects field differences (name, barcode, reference), or flags duplicate conflicts. Provided type-safe convenience overloads (<code>getProductRecordType(ref, code, name)</code> and <code>getCustomerRecordType(searchKey, name)</code>).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Implemented <code>ImportService</code> on <code>DataLogicImport</code> and registered alias mapping in <code>BeanContainer</code> (<code>com.openbravo.pos.imports.ImportService &#8594; com.openbravo.pos.imports.DataLogicImport</code>).</p>
+</li>
+<li>
+<p>Decoupled import UI components across <code>kriolos-opos-app</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CustomerCSVImport</code>: Resolves <code>ImportService</code> from <code>AppView</code>, delegating customer CSV entry creation and customer record type resolution.</p>
+</li>
+<li>
+<p><code>StockQtyImport</code>: Resolves <code>ImportService</code> from <code>AppView</code>, delegating stock quantity CSV updates.</p>
+</li>
+<li>
+<p><code>JPanelCSVImport</code>: Resolves <code>ImportService</code> from <code>AppView</code>, delegating product CSV entry insertion and product record type resolution.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Added <code>ImportServiceTest</code> in <code>kriolos-opos-domain</code> verifying container resolution and default method delegation.</p>
+</li>
+<li>
+<p>Maintained 100% binary backwards compatibility with <code>@Deprecated</code> legacy getters and constructors.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Hospitality &amp; Reservations Domain Port (<code>RestaurantService</code>) (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Extracted pure domain service port interface <code>RestaurantService</code> (<code>com.openbravo.pos.sales.restaurant.RestaurantService</code>) for hospitality floor plans, dining tables, places, and table reservations.</p>
+</li>
+<li>
+<p>Eliminated cross-domain bleed and raw query sentence exposure:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Extracted clean domain collection queries: <code>List&lt;FloorsInfo&gt; getFloorsListAll()</code> and <code>List&lt;FloorsInfo&gt; getFloorTablesListAll()</code>.</p>
+</li>
+<li>
+<p>Replaced manual <code>ListProviderCreator(getReservationsList(), &#8230;&#8203;)</code> and <code>DefaultSaveProvider(getReservationsUpdate(), &#8230;&#8203;)</code> with high-level providers: <code>ListProvider getReservationsListProvider(EditorCreator filter)</code> and <code>SaveProvider getReservationsSaveProvider()</code>.</p>
+</li>
+<li>
+<p>Maintained table management methods: <code>TableDefinition getTableFloors()</code>, <code>TableDefinition getTablePlaces()</code>, and <code>void updatePlaces(int x, int y, String id)</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Implemented <code>RestaurantService</code> on <code>DataLogicRestaurant</code> and registered alias mapping in <code>BeanContainer</code> (<code>com.openbravo.pos.sales.restaurant.RestaurantService &#8594; com.openbravo.pos.sales.restaurant.DataLogicRestaurant</code>).</p>
+</li>
+<li>
+<p>Decoupled legacy monolith callers:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>DataLogicCustomers</code>: Added <code>getRestaurantService()</code>, deprecated <code>getDataLogicRestaurant()</code>, and routed all legacy <code>@Deprecated</code> reservation delegates (<code>getReservationsList</code>, <code>getReservationsUpdate</code>, <code>getReservationsDelete</code>, <code>getReservationsInsert</code>) to <code>getRestaurantService()</code>.</p>
+</li>
+<li>
+<p><code>DataLogicSales</code>: Added <code>getRestaurantService()</code>, deprecated <code>getDataLogicRestaurant()</code>, and routed <code>@Deprecated</code> floor query delegates to <code>getRestaurantService()</code>.</p>
+</li>
+<li>
+<p><code>DataLogicSystem</code>: Updated <code>updatePlaces(&#8230;&#8203;)</code> to resolve <code>RestaurantService</code> from the bean container.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Modernized UI callers in <code>kriolos-opos-app</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JTicketsBagRestaurantRes</code>: Injects <code>RestaurantService</code> via <code>oApp.getBean(RestaurantService.class)</code> and uses <code>getReservationsListProvider</code> and <code>getReservationsSaveProvider</code>.</p>
+</li>
+<li>
+<p><code>JPanelFloors</code>: Resolves <code>RestaurantService</code> from <code>AppView</code> for table definitions.</p>
+</li>
+<li>
+<p><code>JPanelPlaces</code>: Resolves <code>RestaurantService</code> and passes it to <code>PlacesEditor</code>.</p>
+</li>
+<li>
+<p><code>PlacesEditor</code>: Updated to accept <code>RestaurantService</code> and consume <code>getFloorsListAll()</code> for combo box population; retained backwards-compatible constructors.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Added <code>RestaurantServiceTest</code> in <code>kriolos-opos-domain</code> verifying container resolution and interface contract.</p>
+</li>
+<li>
+<p>Maintained 100% binary backwards compatibility with <code>@Deprecated</code> legacy methods and constructor overloads.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Product Information Management &amp; Catalog Domain Port (<code>CatalogService</code>) (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Enriched and completed pure domain service port interface <code>CatalogService</code> (<code>com.openbravo.pos.catalog.CatalogService</code>) for product catalog, categories, pricing, unit of measures (UOM), and stock bundles:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Clean category operations: <code>getCategoryInfo(id)</code>, <code>getRootCategories()</code>, <code>getSubcategories(categoryId)</code>, <code>createCategory(Object[] category)</code>, <code>getCategoriesListAll()</code>, and <code>getCategorysProductList(categoryId)</code>.</p>
+</li>
+<li>
+<p>Catalog membership and pricing: <code>addProductsToCatalogWithCategoryId(categoryId)</code>, <code>removeProductsFromCatalogWithCategoryId(categoryId)</code>, and <code>updateProductPrice(productId, newPrice)</code>.</p>
+</li>
+<li>
+<p>Product metadata and UI providers: <code>getTableCategories()</code>, <code>getTableUom()</code>, <code>getProductsRow()</code>, <code>getProductSaveProvider()</code>, and <code>getProductListProvider(EditorCreator filter)</code>.</p>
+</li>
+<li>
+<p>High-level product and attribute lookups: <code>getProductInfo(id)</code>, <code>getProductInfoByCode(code)</code>, <code>getProductInfoByReference(ref)</code>, <code>getProductImage(id)</code>, <code>getUomListAll()</code>, and <code>getAttributeSetListAll()</code>.</p>
+</li>
+<li>
+<p>Preserved legacy queries as <code>@Deprecated</code> delegators: <code>getProductList()</code>, <code>getProductListNormal()</code>, <code>getProductListAuxiliar()</code>, <code>getCategoriesList_1()</code>, <code>getProductCatQBF()</code>, <code>productInsert()</code>, <code>productUpdate()</code>, and <code>getProductCatDelete()</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Implemented <code>CatalogService</code> on <code>DataLogicPIM</code> and verified type mapping in <code>BeanContainer</code> (<code>com.openbravo.pos.catalog.CatalogService &#8594; com.openbravo.pos.pim.DataLogicPIM</code>).</p>
+</li>
+<li>
+<p>Decoupled legacy monolith callers:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>DataLogicSales</code>: Added <code>getCatalogService()</code>, deprecated <code>getDataLogicPIM()</code>, and routed all catalog delegates (<code>addProductsToCatalogWithCategoryId</code>, <code>removeProductsFromCatalogWithCategoryId</code>, <code>getUomInfoById</code>, <code>getTableUom</code>, <code>getUomListAll</code>, <code>getAttributeSetListAll</code>) to <code>getCatalogService()</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Decoupled and modernized UI callers across <code>kriolos-opos-app</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CategoriesPanel</code> &amp; <code>UomPanel</code>: Inject <code>CatalogService</code> for <code>getTableCategories()</code> and <code>getTableUom()</code>.</p>
+</li>
+<li>
+<p><code>CategoriesEditor</code>: Injects <code>CatalogService</code> for <code>getCategoriesListAll()</code>, <code>getCategorysProductList()</code>, <code>addProductsToCatalogWithCategoryId()</code>, and <code>removeProductsFromCatalogWithCategoryId()</code>.</p>
+</li>
+<li>
+<p><code>ProductsPanel</code> &amp; <code>PriceImportPanel</code>: Inject <code>CatalogService</code>, consuming <code>getProductsRow()</code>, <code>getProductListProvider()</code>, and <code>getProductSaveProvider()</code>.</p>
+</li>
+<li>
+<p><code>ProductsEditor</code>: Injects <code>CatalogService</code> for <code>getCategoriesListAll()</code>, <code>getAttributeSetListAll()</code>, <code>getUomListAll()</code>, and <code>getProductImage()</code>.</p>
+</li>
+<li>
+<p><code>JProductLineEditPanel</code> &amp; <code>JProductLineEditTaxPanel</code>: Injected <code>CatalogService</code> for direct price updating (<code>updateProductPrice</code>).</p>
+</li>
+<li>
+<p><code>StockDiaryEditor</code>: Injects <code>CatalogService</code> for barcode and reference lookups.</p>
+</li>
+<li>
+<p><code>StockManagement</code>: Injects <code>CatalogService</code> for barcode product incremental lookup.</p>
+</li>
+<li>
+<p><code>AuxiliarEditor</code> &amp; <code>BundleEditor</code>: Inject <code>CatalogService</code> for product lookup by code and reference.</p>
+</li>
+<li>
+<p><code>AuxiliarFilter</code> &amp; <code>BundleFilter</code>: Inject <code>CatalogService</code> for filtering by code and reference.</p>
+</li>
+<li>
+<p><code>ProductFilter</code>, <code>ProductFilter1</code>, <code>ProductFilter2</code>, <code>ProductFilter3</code>, <code>ProductFilter4</code>, <code>ProductFilterSales</code>, <code>CategoryFilter</code>, <code>LocationFilterSales</code>: Inject <code>CatalogService</code> for category listings.</p>
+</li>
+<li>
+<p><code>MaterialFilter</code>: Injects <code>CatalogService</code> for <code>getProductList()</code>.</p>
+</li>
+<li>
+<p><code>JProductFinderPanel</code>: Injects <code>CatalogService</code> for normal, auxiliar, and all product listing queries.</p>
+</li>
+<li>
+<p><code>ModernTouchCatalog</code>, <code>ModernOne</code>, and <code>ModernTwo</code>: Injected <code>CatalogService</code> for root categories, catalog items, and barcode lookups.</p>
+</li>
+<li>
+<p><code>JPanelTicket</code>: Injects <code>CatalogService</code> and passes it to <code>SalesStockCoordinator</code>, <code>SalesBarcodeScanCoordinator</code>, and visor device display.</p>
+</li>
+<li>
+<p><code>JPanelCSVImport</code> &amp; <code>StockQtyImport</code>: Inject <code>CatalogService</code> for product save provider, category creation, and product lookups.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Created <code>CatalogServiceTest</code> in <code>kriolos-opos-domain</code> verifying container resolution and clean domain contracts.</p>
+</li>
+<li>
+<p>Maintained 100% binary backwards compatibility with <code>@Deprecated</code> legacy getters and constructors across all modified classes.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Customer Domain Decoupling (<code>CustomerService</code>) (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Enriched and completed pure domain service port interface <code>CustomerService</code> (<code>com.openbravo.pos.customers.CustomerService</code>):</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Added table definitions, row metadata, and save/list providers: <code>getTableCustomers()</code>, <code>getCustomersRow()</code>, <code>getCustomerSaveProvider()</code>, <code>getCustomerList()</code>, and <code>getCustomerListProvider(EditorCreator filter)</code>.</p>
+</li>
+<li>
+<p>Added customer search and lookup queries: <code>findCustomerInfoExtBySearchKey(searchKey)</code> and <code>findCustomerInfoExtByTaxId(taxId)</code>.</p>
+</li>
+<li>
+<p>Implemented all new interface methods in <code>DataLogicCustomers</code> and verified container alias mapping in <code>BeanContainer</code> (<code>com.openbravo.pos.customers.CustomerService &#8594; com.openbravo.pos.customers.DataLogicCustomers</code>).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Decoupled UI components, dialogs, modals, and controllers in <code>kriolos-opos-app</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JCustomerFinderPanel</code> &amp; <code>JCustomerFinder</code>: Updated constructors and static <code>show</code> methods to accept <code>CustomerService</code>, retaining <code>@Deprecated</code> overloads for <code>DataLogicCustomers</code>.</p>
+</li>
+<li>
+<p><code>JBusinessPartnerFinderPanel</code> &amp; <code>JBusinessPartnerFinder</code>: Decoupled to accept <code>CustomerService</code>, retaining <code>@Deprecated</code> backward-compatible delegates.</p>
+</li>
+<li>
+<p><code>JTicketsFinderPanel</code> &amp; <code>JTicketsFinder</code>: Decoupled customer lookups to <code>CustomerService</code>.</p>
+</li>
+<li>
+<p><code>SalesCustomerController</code>: Refactored to depend on pure <code>CustomerService</code>; updated <code>selectCustomer</code>, <code>findCustomer</code>, and retained <code>@Deprecated</code> constructor for binary compatibility.</p>
+</li>
+<li>
+<p><code>JPanelTicket</code>: Injects <code>CustomerService</code> and supplies it to <code>SalesCustomerController</code>, <code>SalesBarcodeScanCoordinator</code>, and <code>TicketLineController.splitTicket</code>.</p>
+</li>
+<li>
+<p><code>TicketLineController</code>: Updated <code>splitTicket</code> to accept <code>CustomerService</code> (with <code>@Deprecated</code> overload).</p>
+</li>
+<li>
+<p><code>ReceiptSplitPanel</code> &amp; <code>ReceiptSplit</code>: Added <code>CustomerService</code> constructors and <code>show</code> overloads.</p>
+</li>
+<li>
+<p><code>SimpleReceipt</code>: Updated to accept <code>CustomerService</code> for customer lookups; retained <code>@Deprecated</code> fields and constructors.</p>
+</li>
+<li>
+<p><code>ModernOne</code> &amp; <code>ModernTwo</code>: Injected <code>CustomerService</code> for customer search modal and lookup.</p>
+</li>
+<li>
+<p><code>CustomersPanel</code>: Injected <code>CustomerService</code> for <code>getTableCustomers()</code> and <code>getCustomerSaveProvider()</code>.</p>
+</li>
+<li>
+<p><code>CustomersView</code>: Injected <code>CustomerService</code> for <code>getCustomersTransactionList(cId)</code>.</p>
+</li>
+<li>
+<p><code>CustomersPayment</code>: Injected <code>CustomerService</code> for card lookup, customer update, and customer modal lookup.</p>
+</li>
+<li>
+<p><code>JNewCustomerPanel</code>: Injected <code>CustomerService</code> for <code>getTableCustomers().getInsertSentence()</code> and <code>findCustomerInfoExtById</code>.</p>
+</li>
+<li>
+<p><code>JParamsCustomer</code>: Injected <code>CustomerService</code> for customer modal lookup.</p>
+</li>
+<li>
+<p><code>JTicketsBagTicket</code> &amp; <code>JTicketsBagRestaurantRes</code>: Injected <code>CustomerService</code> and passed to customer/ticket finders.</p>
+</li>
+<li>
+<p><code>VoucherEditor</code>: Injected <code>CustomerService</code> for <code>getCustomerInfo</code> and customer lookup.</p>
+</li>
+<li>
+<p><code>JPaymentSelect</code>: Injected <code>CustomerService</code> and deprecated <code>DataLogicCustomers</code> field.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Created <code>CustomerServiceTest</code> in <code>kriolos-opos-domain</code> verifying container resolution and clean domain contracts.</p>
+</li>
+<li>
+<p>Updated <code>SalesCustomerControllerTest</code> to test both <code>CustomerService</code> and legacy deprecated constructors.</p>
+</li>
+<li>
+<p>Maintained 100% binary backwards compatibility with <code>@Deprecated</code> legacy methods and constructor overloads across all modified classes.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Tax Domain Decoupling &amp; Supplier Domain Verification (<code>TaxService</code> &amp; <code>SupplierService</code>) (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Enriched and completed pure domain service port interface <code>TaxService</code> (<code>com.openbravo.pos.sales.TaxService</code>):</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Added sentence list queries and table definitions: <code>getTaxList()</code>, <code>getTaxCustCategoriesList()</code>, <code>getTaxCategoriesList()</code>, <code>getTaxCategoryInfoList()</code>, <code>getTableTaxes()</code>, <code>getTableTaxCustCategories()</code>, and <code>getTableTaxCategories()</code>.</p>
+</li>
+<li>
+<p>Implemented all new interface methods in <code>DataLogicTax</code> and verified container alias mapping in <code>BeanContainer</code> (<code>com.openbravo.pos.sales.TaxService &#8594; com.openbravo.pos.sales.DataLogicTax</code>).</p>
+</li>
+<li>
+<p>Updated <code>DataLogicSales</code>: Added <code>getTaxService()</code>, deprecated <code>getDataLogicTax()</code>, and routed all tax queries (<code>getTaxList</code>, <code>getTaxListAll</code>, <code>getTaxCustCategoriesList</code>, <code>getTaxCustCategoriesListAll</code>, <code>getTaxCategoriesList</code>, <code>getTaxCategoriesListAll</code>) to <code>getTaxService()</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Decoupled all remaining UI panels, editors, and controllers in <code>kriolos-opos-app</code> away from <code>DataLogicTax</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>TaxPanel</code> &amp; <code>TaxEditor</code>: Injected <code>TaxService</code> and eliminated direct <code>DataLogicTax</code> dependency while preserving binary-compatible constructor overloads.</p>
+</li>
+<li>
+<p><code>TaxCategoriesPanel</code> &amp; <code>TaxCustCategoriesPanel</code>: Injected <code>TaxService</code> for <code>getTableTaxCategories()</code> and <code>getTableTaxCustCategories()</code>.</p>
+</li>
+<li>
+<p><code>ProductsEditor</code>: Injected <code>TaxService</code> for <code>getTaxListAll()</code> and <code>getTaxCategoriesListAll()</code>, deprecating <code>dlTax</code>.</p>
+</li>
+<li>
+<p><code>CustomersView</code>: Injected <code>TaxService</code> for <code>getTaxCustCategoriesList()</code>, deprecating <code>dlTax</code>.</p>
+</li>
+<li>
+<p><code>CatalogController</code>: Decoupled <code>CatalogController(DataLogicSales, DataLogicPIM)</code> constructor delegation to <code>dlSales.getTaxService()</code>.</p>
+</li>
+<li>
+<p><code>JPanelCSVImport</code>: Injected <code>TaxService</code> for <code>getTaxList()</code>, <code>getTaxCategoriesList()</code>, and <code>getTaxCategoriesListAll()</code>, deprecating <code>m_dlTax</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Created comprehensive domain unit test suites in <code>kriolos-opos-domain</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>TaxServiceTest</code>: Tests container resolution of <code>TaxService</code> to <code>DataLogicTax</code> and verifies tax rates, categories, and table definitions.</p>
+</li>
+<li>
+<p><code>SupplierServiceTest</code>: Tests container resolution of <code>SupplierService</code> to <code>DataLogicSuppliers</code> and verifies supplier master data, lists, and table definitions.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Maintained 100% binary backwards compatibility with <code>@Deprecated</code> legacy methods and constructor overloads across all modified classes.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>System &amp; Resource Domain Decoupling (<code>ResourceService</code> &amp; <code>SystemService</code>) (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Designed pure domain service port interfaces:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ResourceService</code> (<code>com.openbravo.pos.forms.ResourceService</code>): Handles all template, XML, property, image, and resource operations (<code>getTableResources()</code>, <code>getResourceAsBinary()</code>, <code>getResourceAsText()</code>, <code>getResourceAsXML()</code>, <code>getResourceAsImage()</code>, <code>getResourceAsProperties()</code>, <code>setResource()</code>, <code>setResourceAsBinary()</code>, <code>setResourceAsProperties()</code>).</p>
+</li>
+<li>
+<p><code>SystemService</code> (<code>com.openbravo.pos.forms.SystemService</code>): Inherits both <code>ResourceService</code> and <code>SecurityService</code>, adding core system runtime operations (<code>getDBVersion()</code>, <code>findVersion()</code>, <code>getUser()</code>, <code>execDrawerOpened(name, action, openDate)</code>).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Updated <code>DataLogicSystem</code> and <code>BeanContainer</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>DataLogicSystem</code> implements <code>SystemService</code> (and thus transitively <code>ResourceService</code> and <code>SecurityService</code>).</p>
+</li>
+<li>
+<p>Null-safe session handling in <code>DataLogicSystem.init(Session)</code> to support container lookups and mock environments without active database sessions.</p>
+</li>
+<li>
+<p>Registered container aliases in <code>BeanContainer</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>com.openbravo.pos.forms.ResourceService &#8594; com.openbravo.pos.forms.DataLogicSystem</code></p>
+</li>
+<li>
+<p><code>com.openbravo.pos.forms.SystemService &#8594; com.openbravo.pos.forms.DataLogicSystem</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Decoupled domain consumers:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>TicketParser</code>: Decoupled to accept pure <code>SystemService</code>, retaining <code>@Deprecated</code> backward-compatible constructor for <code>DataLogicSystem</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Decoupled UI panels, dialogs, editors, and controllers in <code>kriolos-opos-app</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ApplicationShell</code>: Injected <code>SystemService</code> for version checks, drawer tracking, and background initialization (<code>SwingWorker&lt;SystemService, String&gt;</code>). Decoupled location name resolution to <code>InventoryService</code>.</p>
+</li>
+<li>
+<p><code>DatabaseActivationCallback</code>: Added default overload <code>onSuccess(DatabaseConfig, SystemService)</code>, deprecating <code>DataLogicSystem</code> callback.</p>
+</li>
+<li>
+<p><code>WordspacePanel</code>: Decoupled to inject <code>ResourceService</code>, deprecating <code>dataLogicSystem</code> field.</p>
+</li>
+<li>
+<p><code>JRootMenu</code>: Updated <code>setRootMenu(&#8230;&#8203;, ResourceService)</code>, retaining <code>@Deprecated</code> overload for <code>DataLogicSystem</code>.</p>
+</li>
+<li>
+<p><code>ResourcesPanel</code>: Decoupled to <code>ResourceService.getTableResources()</code>.</p>
+</li>
+<li>
+<p><code>JPanelCloseMoney</code> &amp; <code>JPanelCloseMoneyReprint</code>: Decoupled to <code>SystemService</code> and <code>ResourceService</code>.</p>
+</li>
+<li>
+<p><code>CustomersPayment</code> &amp; <code>CustomerEventHandler</code>: Decoupled XML receipt resource loading to <code>ResourceService</code>.</p>
+</li>
+<li>
+<p><code>CashReprintModel</code>: Removed unused <code>DataLogicSystem</code> import.</p>
+</li>
+<li>
+<p><code>ProductsEditor</code>, <code>StockDiaryEditor</code>, <code>JPanelCSVImport</code>, <code>CustomerCSVImport</code>: Deprecated unused legacy fields and decoupled bean lookups.</p>
+</li>
+<li>
+<p><code>StockQtyImport</code> &amp; <code>StockManagement</code>: Decoupled to <code>ResourceService</code>.</p>
+</li>
+<li>
+<p><code>VoucherEditor</code>: Decoupled to <code>ResourceService.getResourceAsImage()</code>.</p>
+</li>
+<li>
+<p><code>JPaymentCashPos</code> &amp; <code>JPaymentSelect</code>: Decoupled to <code>ResourceService</code>.</p>
+</li>
+<li>
+<p><code>JPanelButtons</code>: Decoupled to <code>ResourceService.getResourceAsImage()</code>.</p>
+</li>
+<li>
+<p><code>JRefundLines</code> &amp; <code>JTicketCatalogLines</code>: Decoupled to <code>ResourceService</code>.</p>
+</li>
+<li>
+<p><code>JTicketsBagTicket</code>, <code>JTicketsBagShared</code>, <code>JTicketsReprintPanel</code>: Decoupled to <code>ResourceService</code>.</p>
+</li>
+<li>
+<p><code>ModernOne</code> &amp; <code>ModernTwo</code>: Decoupled to <code>ResourceService.getResourceAsXML()</code>.</p>
+</li>
+<li>
+<p><code>JTicketsBagRestaurant</code>: Decoupled to <code>ResourceService</code> for XML order templates and Beanshell scripts.</p>
+</li>
+<li>
+<p><code>SalesScriptCoordinator</code>: Added constructor taking <code>ResourceService</code>, deprecating <code>DataLogicSystem</code>.</p>
+</li>
+<li>
+<p><code>SalesPeripheralCoordinator</code>: Decoupled pole/secondary display line initialization and constructors to <code>ResourceService</code>.</p>
+</li>
+<li>
+<p><code>TicketLineController</code>: Decoupled <code>splitTicket</code> to accept <code>ResourceService</code>, deprecating legacy overloads.</p>
+</li>
+<li>
+<p><code>JPanelTicket</code>: Decoupled fields and delegates to <code>ResourceService</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Created domain unit test suite:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SystemServiceTest</code>: Validates container resolution of <code>SystemService</code> and <code>ResourceService</code> to <code>DataLogicSystem</code>, contract compliance, and resource query operations.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Maintained 100% binary backwards compatibility with <code>@Deprecated</code> legacy methods and constructor overloads across all modified classes.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Shared / Parked Ticket Domain Decoupling Verification (<code>SharedTicketService</code> &amp; <code>DataLogicReceipts</code>) (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Verified pure domain service port interface <code>SharedTicketService</code> (<code>com.openbravo.pos.sales.SharedTicketService</code>):</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Comprehensive CRUD, lock management, pickup IDs, and user filtering operations for parked tickets: <code>getSharedTicket()</code>, <code>getSharedTicketList()</code>, <code>getUserSharedTicketList()</code>, <code>getSharedTicketInfo()</code>, <code>insertSharedTicket()</code>, <code>updateSharedTicket()</code>, <code>updateRSharedTicket()</code>, <code>insertRSharedTicket()</code>, <code>lockSharedTicket()</code>, <code>unlockSharedTicket()</code>, <code>getLockState()</code>, <code>getPickupId()</code>, <code>getUserId()</code>, <code>deleteSharedTicket()</code>.</p>
+</li>
+<li>
+<p><code>DataLogicReceipts</code> implements <code>SharedTicketService</code> and is mapped in <code>BeanContainer</code> (<code>com.openbravo.pos.sales.SharedTicketService &#8594; com.openbravo.pos.sales.DataLogicReceipts</code>).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Validated complete decoupling in <code>kriolos-opos-app</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JTicketsBagSharedList</code>: Exposes <code>SharedTicketService</code> methods, retaining <code>@Deprecated</code> overloads for <code>DataLogicReceipts</code>.</p>
+</li>
+<li>
+<p><code>JTicketsBagSharedPanel</code>: Exposes <code>loadTickets</code> and <code>show</code> taking <code>SharedTicketService</code>, retaining <code>@Deprecated</code> overloads.</p>
+</li>
+<li>
+<p><code>JTicketsBagShared</code>: Injects <code>SharedTicketService</code> via <code>app.getBean(SharedTicketService.class)</code>.</p>
+</li>
+<li>
+<p><code>RestaurantMapController</code>: Injects <code>SharedTicketService</code>, retaining deprecated legacy accessor.</p>
+</li>
+<li>
+<p>Zero direct operational dependencies on <code>DataLogicReceipts</code> remain in <code>kriolos-opos-app</code> business logic.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Created domain unit test suite:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SharedTicketServiceTest</code> (<code>com.openbravo.pos.sales.SharedTicketServiceTest</code>): Tests container resolution of <code>SharedTicketService</code> to <code>DataLogicReceipts</code> (both via String key and Class literal) and verifies full contract compliance (CRUD, pickup IDs, user filtering, lock/unlock lifecycle).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Maintained 100% binary backwards compatibility with <code>@Deprecated</code> legacy methods and constructor overloads across all classes.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Product Information Management (PIM) Deconstruction &amp; Architectural Layering (Completed):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Decomposed Legacy <code>DataLogicPIM</code>:</strong> Broken down the legacy monolith (1,328 LOC) into focused, single-responsibility components in <code>com.openbravo.pos.pim</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>DataLogicCategories</code>: Standalone category data access managing the <code>categories</code> table.</p>
+</li>
+<li>
+<p><code>DataLogicUom</code>: Standalone unit of measure data access managing the <code>uom</code> table.</p>
+</li>
+<li>
+<p><code>DataLogicProducts</code>: Standalone product data access managing <code>products</code>, <code>products_cat</code>, <code>products_com</code>, <code>products_bundle</code>, and <code>attributeset</code>.</p>
+</li>
+<li>
+<p><code>UomInfo</code>: Created canonical model in <code>com.openbravo.pos.pim.UomInfo</code> with modern Java conventions, Javadoc, and <code>@author KriolOS</code>. Legacy <code>com.openbravo.pos.inventory.UomInfo</code> retained as <code>@Deprecated</code> alias.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Service Coordination Layer:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CatalogServiceImpl</code>: Upper-layer business service implementation coordinating <code>DataLogicProducts</code>, <code>DataLogicCategories</code>, and <code>DataLogicUom</code>. Registered as the container implementation for <code>CatalogService</code>.</p>
+</li>
+<li>
+<p><code>DataLogicPIM</code>: Converted into a deprecated transition class extending <code>CatalogServiceImpl</code> annotated with <code>@Deprecated(since = "10.0.0", forRemoval = true)</code> to ensure full backward compatibility across legacy app callers.</p>
+</li>
+<li>
+<p><code>DataLogicSales</code> &amp; <code>DataLogicInventory</code>: Decoupled from <code>DataLogicPIM</code>. <code>DataLogicSales</code> routes catalog operations through <code>CatalogService</code>; <code>DataLogicInventory</code> manages <code>products_bundle</code> directly.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Architectural Layering &amp; DDD Rules Established (<code>.agents/rules/</code>):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>architecture-layering.md</code>: Strict separation — DataLogics never call DataLogics; Services never call Services; Services coordinate DataLogics from the upper layer; Upper-layer components may call DataLogics directly only for maintenance/CRUD panels without cross-package coupling.</p>
+</li>
+<li>
+<p><code>domain-driven-design.md</code>: Services receive and return domain models (never raw <code>Object</code> or <code>Object[]</code>, and never <code>com.openbravo.data.*</code> primitives like <code>Sentence</code>, <code>Row</code>, <code>TableDefinition</code>, <code>SaveProvider</code>); multi-parameter methods must define records; eliminate magic strings/numbers; DataLogics must be type-safe.</p>
+</li>
+<li>
+<p><code>modern-java-conventions.md</code>: Strict ban on Hungarian prefixes (<code>m_sName</code>); standard JavaBean/record conventions; Java 17/21 idioms.</p>
+</li>
+<li>
+<p><code>javadoc-and-license.md</code>: Javadoc required for packages, classes, and methods; author strictly <code>@author KriolOS</code>; opportunistic removal of legacy file license headers when touching files.
+28: <strong>Next Decoupling Targets:</strong></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Modernize legacy UI panels calling <code>com.openbravo.data.*</code> persistence primitives to consume dedicated DataLogics directly rather than leaking through <code>CatalogService</code>.</p>
+</li>
+<li>
+<p>Continue replacing <code>Object[]</code> parameter arrays in remaining DataLogics with Java records.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

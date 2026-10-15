@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Untitled :: KriolOS POS Documentation</title>
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-devel/index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-migration/index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-devel/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-devel/product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-devel/contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>User Guide</li>
+    <li><a href="user-setup-guide.html">Setup &amp; Installation</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-user/pages/user-setup-guide.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<div class="sect1">
+<h2 id="user-setup-guide"><a class="anchor" href="#user-setup-guide"></a>Setup &amp; Installation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes how to launch and initialize KriolOS POS for first-time use based on the distribution artifacts generated by the project build.</p>
+</div>
+<div class="sect2">
+<h3 id="system-prerequisites"><a class="anchor" href="#system-prerequisites"></a>System Prerequisites</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Java Runtime</strong>: OpenJDK 17 or higher (Eclipse Temurin recommended) when running from JAR.</p>
+</li>
+<li>
+<p><strong>Display</strong>: Minimum screen resolution of 1024x768 (touch-screen optimized).</p>
+</li>
+<li>
+<p><strong>Database</strong>: Embedded Apache Derby, MariaDB 10.5+, MySQL 8.0+, or PostgreSQL 12+.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="launching-the-application"><a class="anchor" href="#launching-the-application"></a>Launching the Application</h3>
+<div class="paragraph">
+<p>KriolOS POS provides two distribution formats:</p>
+</div>
+<div class="sect3">
+<h4 id="1-native-distribution-jpackage"><a class="anchor" href="#1-native-distribution-jpackage"></a>1. Native Distribution (<code>jpackage</code>)</h4>
+<div class="paragraph">
+<p>Built via the <code>kriolos-krpos-jpackage</code> module:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Standalone Image Directory (<code>kriolosPOS-image-*</code>)</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Linux: Run <code>./bin/kriolosPOS</code> (or <code>./bin/kriolosPOS-Config</code> for configuration)</p>
+</li>
+<li>
+<p>Windows: Run <code>kriolosPOS.exe</code> (or <code>kriolosPOS-Config.exe</code> for configuration)</p>
+</li>
+<li>
+<p>macOS: Open <code>kriolosPOS.app</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Native System Installers</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Install via system package manager (<code>.deb</code> on Debian/Ubuntu, <code>.rpm</code> on Fedora/RHEL, <code>.msi</code> on Windows, <code>.dmg</code> on macOS).</p>
+</li>
+<li>
+<p>Launch using the created application desktop/menu shortcut.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="2-standalone-java-archive-kriolos-opos-app-zip"><a class="anchor" href="#2-standalone-java-archive-kriolos-opos-app-zip"></a>2. Standalone Java Archive (<code>kriolos-opos-app-*.zip</code>)</h4>
+<div class="paragraph">
+<p>Built via Maven assembly with the runtime <code>lib/</code> directory:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Main POS Application</strong>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -jar kriolos-opos-app-1.0.0-SNAPSHOT.jar</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Configuration Panel</strong>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java -cp "kriolos-opos-app-1.0.0-SNAPSHOT.jar:lib/*" com.openbravo.pos.config.JFrmConfig</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="default-users-and-roles"><a class="anchor" href="#default-users-and-roles"></a>Default Users and Roles</h3>
+<div class="paragraph">
+<p>Upon initial startup with a standard dataset, the following default credentials are provisioned:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Username</th>
+<th class="tableblock halign-left valign-top">Password</th>
+<th class="tableblock halign-left valign-top">Role</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>admin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>admin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ADMIN</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full administrative access, back-office configuration, user management.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>manager</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>manager</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MANAGER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Store manager, end-of-day reports, cashier supervision.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>empl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>empl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EMPLOYEE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Standard cashier, sales registration, and receipt generation.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For production environments, it is recommended to update default credentials via the <strong>Administration &#8594; Users</strong> panel.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

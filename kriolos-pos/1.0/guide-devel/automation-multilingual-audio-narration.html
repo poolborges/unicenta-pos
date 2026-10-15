@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Automated Video Showcase &amp; Multi-Language Audio Narration Architecture :: KriolOS POS Documentation</title>
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-migration/index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Developer Guide</li>
+    <li>Testing &amp; Automation</li>
+    <li><a href="automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-devel/pages/automation-multilingual-audio-narration.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Automated Video Showcase &amp; Multi-Language Audio Narration Architecture</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Technical specification and architectural guide for generating synchronized video showcases with multi-language voiceover narration directly from automated UI robot tests.</p>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle" class="title">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#1-executive-summary-vision">1. Executive Summary &amp; Vision</a></li>
+<li><a href="#2-comparison-of-existing-solutions">2. Comparison of Existing Solutions</a></li>
+<li><a href="#3-architecture-data-flow">3. Architecture &amp; Data Flow</a></li>
+<li><a href="#4-externalized-multi-language-script-storage">4. Externalized Multi-Language Script Storage</a>
+<ul class="sectlevel2">
+<li><a href="#4-1-portuguese-narration_pt-properties">4.1 Portuguese (<code>narration_pt.properties</code>)</a></li>
+<li><a href="#4-2-english-narration_en-properties">4.2 English (<code>narration_en.properties</code>)</a></li>
+<li><a href="#4-3-french-narration_fr-properties">4.3 French (<code>narration_fr.properties</code>)</a></li>
+<li><a href="#4-4-spanish-narration_es-properties">4.4 Spanish (<code>narration_es.properties</code>)</a></li>
+<li><a href="#4-5-arabic-narration_ar-properties">4.5 Arabic (<code>narration_ar.properties</code>)</a></li>
+<li><a href="#4-6-chinese-simplified-narration_zh-cn-properties">4.6 Chinese Simplified (<code>narration_zh-CN.properties</code>)</a></li>
+</ul>
+</li>
+<li><a href="#5-core-components-implementation">5. Core Components &amp; Implementation</a>
+<ul class="sectlevel2">
+<li><a href="#5-1-ttsengine-spi">5.1 <code>TtsEngine</code> SPI</a></li>
+<li><a href="#5-2-pure-java-timeline-mixing-javaaudiotimelinemixer">5.2 Pure Java Timeline Mixing (<code>JavaAudioTimelineMixer</code>)</a></li>
+<li><a href="#5-3-youtube-multi-audio-track-standard">5.3 YouTube Multi-Audio Track Standard</a></li>
+</ul>
+</li>
+<li><a href="#6-adding-a-new-language-e-g-spanish">6. Adding a New Language (e.g. Spanish)</a></li>
+<li><a href="#7-how-to-run">7. How to Run</a>
+<ul class="sectlevel2">
+<li><a href="#7-1-running-with-auto-discovery-default">7.1 Running with Auto Discovery (Default)</a></li>
+<li><a href="#7-2-running-with-azure-cognitive-services-neural-speech">7.2 Running with Azure Cognitive Services Neural Speech</a></li>
+<li><a href="#7-3-running-with-edge-neural-speech-free-broadcast-quality">7.3 Running with Edge Neural Speech (Free Broadcast Quality)</a></li>
+<li><a href="#7-4-running-with-rhvoice-offline-native-engine">7.4 Running with RHVoice (Offline Native Engine)</a></li>
+</ul>
+</li>
+<li><a href="#8-vlc-swing-demo-player-panel-vlcvideoplayerpanel">8. VLC Swing Demo Player Panel (<code>VlcVideoPlayerPanel</code>)</a>
+<ul class="sectlevel2">
+<li><a href="#features">Features</a></li>
+<li><a href="#how-to-launch-the-vlc-player">How to Launch the VLC Player</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="1-executive-summary-vision"><a class="anchor" href="#1-executive-summary-vision"></a>1. Executive Summary &amp; Vision</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Software demonstrations, tutorial videos, and marketing releases for modern retail POS applications usually require tedious, error-prone manual screen recording and voiceover editing. When marketing to diverse regions (e.g. Portuguese-speaking markets such as Brazil, Portugal, Cape Verde, Angola, and Mozambique, alongside international English-speaking markets), creating separate video assets manually doubles the production burden.</p>
+</div>
+<div class="paragraph">
+<p><code>kriolos-opos-automation</code> introduces an <strong>automated end-to-end video and multi-language audio narration pipeline</strong>. As UI robot integration tests (<code>BasePosRobotIT</code>) execute functional flows (login, sales, inventory, close cash, configuration), the system:
+1. Records crisp H.264 video of the application in memory.
+2. Resolves localized explanation scripts from externalized properties bundles.
+3. Synthesizes voiceovers in multiple languages simultaneously.
+4. Mixes audio tracks on a precise timeline in pure Java (<code>javax.sound.sampled</code>).
+5. Assembles single-language MP4 videos (<code>session_pt.mp4</code>, <code>session_en.mp4</code>) as well as a <strong>YouTube-compliant dual-audio video</strong> (<code>session_youtube_multilingual.mp4</code>).</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="2-comparison-of-existing-solutions"><a class="anchor" href="#2-comparison-of-existing-solutions"></a>2. Comparison of Existing Solutions</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 22.2222%;">
+<col style="width: 22.2222%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Approach</th>
+<th class="tableblock halign-left valign-top">Multi-Language Support</th>
+<th class="tableblock halign-left valign-top">Platform Portability</th>
+<th class="tableblock halign-left valign-top">Trade-offs &amp; Analysis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Manual Video Recording &amp; Voiceover</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌ High effort per language</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A (Manual human labor)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Requires OBS/Kdenlive, manual dubbing, and re-recording every time the UI changes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>OS Native CLI Synthesizers</strong> (<code>RHVoice</code>, <code>say</code>, <code>SAPI</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ High quality native voices (e.g. <code>Leticia-F123</code> for PT, <code>slt</code>/<code>bdl</code> for EN)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">⚠️ Platform-specific binaries</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Zero latency, no network cost, but requires binary packages installed on host. Ideal for local dev and release generation workstations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Pure Java Synthesizers</strong> (MaryTTS, FreeTTS)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">⚠️ Variable voice naturalness</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ 100% JVM Portable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Runs on any JDK without native binaries. MaryTTS supports modular languages (EN, DE, FR, IT), though voice packages add ~30-50MB dependencies. FreeTTS is primarily limited to US English.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Cloud TTS Services: Azure Neural Speech (<code>AzureTtsEngine</code>)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ Studio-grade broadcast naturalness (<code>pt-PT-RaquelNeural</code>, <code>en-US-AriaNeural</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ 100% JVM Portable (HTTP REST)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generates broadcast/documentary-grade speech directly into 24kHz PCM WAV via Azure Cognitive Services. Configurable via <code>AZURE_SPEECH_KEY</code> and <code>AZURE_SPEECH_REGION</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Edge Neural Speech (<code>EdgeNeuralTtsEngine</code>)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ Studio-grade naturalness (<code>pt-PT-RaquelNeural</code>, <code>en-US-AriaNeural</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ Automatic Managed Venv (<code>target/tts-env</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Uses Microsoft Edge&#8217;s Neural Speech protocol. Zero API keys, completely free, pristine broadcast-quality Portuguese and English voices.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Synthetic Pure Java Fallback</strong> (<code>MockJavaTtsEngine</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ Synthetic audio markers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ 100% JVM Portable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generates clean algorithmic WAV cues via <code>javax.sound.sampled</code>. Guarantees automated test suites pass on any headless CI runner without external audio software.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>FFmpeg <code>adelay</code> + <code>amix</code> Filters</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">⚠️ Complex command syntax</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">⚠️ Requires external FFmpeg CLI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spawns external processes, susceptible to pipe deadlocks when command-line buffer limits are exceeded.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Pure Java Timeline Mixer (<code>JavaAudioTimelineMixer</code>)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ Unlimited channels &amp; clips</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ 100% JVM Portable (<code>javax.sound.sampled</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Direct in-memory PCM mixing (24kHz/44.1kHz 16-bit). Performs sample addition with clipping protection (<code>Short.MIN_VALUE</code> to <code>Short.MAX_VALUE</code>). High performance (&lt;5ms).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Embedded FFmpeg via Maven (<code>ws.schild:jave-all-deps</code>)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A (Video / Audio Tooling)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ Automatic Cross-Platform Extraction</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bundles pre-compiled FFmpeg binaries for Linux (x64, arm32, arm64), macOS (Intel, Apple Silicon), and Windows (x86, x64). Resolved automatically by <code>FfmpegLocator</code> without requiring system package managers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>JavaCV &amp; OpenCV (<code>bytedeco/javacv</code>, <code>actimem/pilecv4j</code>)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A (Computer Vision / Frame Pipelines)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">⚠️ Heavy multi-platform native jars</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides Java bindings to OpenCV and FFmpeg (via JavaCPP). Highly suited for real-time computer vision and image processing pipelines, though dependency footprints can exceed 300MB+.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Embedded Swing VLC Player (<code>caprica/vlcj</code>)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ Hardware-accelerated multi-track playback</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">⚠️ Requires host LibVLC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Embedded hardware-accelerated Swing canvas panel (<code>VlcVideoPlayerPanel</code>). Enables developers to preview recordings, scrub timelines, inspect timecodes, and toggle multi-language narration tracks directly inside Swing.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="3-architecture-data-flow"><a class="anchor" href="#3-architecture-data-flow"></a>3. Architecture &amp; Data Flow</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">                   UI Robot Test Execution (e.g. PosSalesFlowIT)
+                                  │
+         ┌────────────────────────┴────────────────────────┐
+         ▼                                                 ▼
+   [UI Action Event]                              [Narration Cue Trigger]
+(Click button, enter PIN)                    narrator.narrateKey("showcase.login")
+         │                                                 │
+         ▼                                                 ▼
+[FfmpegScreenRecorder]                         [Script Bundle Resolution]
+(Pipes in-memory BGR24 frames)             /narration/narration_{lang}.properties
+         │                                        ├── PT: "Iniciando sessão..."
+         │                                        └── EN: "Logging in as..."
+         │                                                 │
+         │                                                 ▼
+         │                                      [Pluggable TtsEngine]
+         │                                (Native RHVoice / Pure Java Mock)
+         │                                        ├── cue_pt_01.wav (24kHz)
+         │                                        └── cue_en_01.wav (24kHz)
+         │                                                 │
+         ▼                                                 ▼
+   [session.mp4]                               [JavaAudioTimelineMixer]
+ (Raw video stream)                            (javax.sound.sampled PCM)
+         │                                        ├── narration_pt.wav
+         │                                        └── narration_en.wav
+         │                                                 │
+         └────────────────────────┬────────────────────────┘
+                                  ▼
+                            [FFmpeg Muxer]
+                                  │
+          ┌───────────────────────┼───────────────────────┐
+          ▼                       ▼                       ▼
+   `session_pt.mp4`        `session_en.mp4`    `session_youtube_multilingual.mp4`
+   (Portuguese Audio)      (English Audio)     (Track 1: por, Track 2: eng)</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="4-externalized-multi-language-script-storage"><a class="anchor" href="#4-externalized-multi-language-script-storage"></a>4. Externalized Multi-Language Script Storage</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Narration transcripts are decoupled from Java test code and stored in standard UTF-8 properties resource bundles under <code>kriolos-opos-automation/src/test/resources/narration/</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="4-1-portuguese-narration_pt-properties"><a class="anchor" href="#4-1-portuguese-narration_pt-properties"></a>4.1 Portuguese (<code>narration_pt.properties</code>)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">showcase.intro=Bem-vindo ao KriolOS POS, o seu sistema moderno e flexível de ponto de venda.
+showcase.database=Conectando e ativando a base de dados da loja em modo de alta performance.
+showcase.login=Iniciando sessão com o operador administrador no sistema.
+showcase.sales.catalog=A selecionar itens do catálogo interativo e a adicioná-los diretamente ao carrinho.
+showcase.customers=Acedendo à gestão de clientes, histórico de compras e contas correntes.
+showcase.products=Visualizando a gestão de produtos, controlo de stocks, preços e código de barras.
+showcase.closecash=Acedendo ao fecho de caixa diário e conferência dos movimentos de tesouraria.
+showcase.outro=Demonstração concluída. Obrigado por assistir ao KriolOS POS.</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="4-2-english-narration_en-properties"><a class="anchor" href="#4-2-english-narration_en-properties"></a>4.2 English (<code>narration_en.properties</code>)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">showcase.intro=Welcome to KriolOS POS, your modern and flexible point of sale system.
+showcase.database=Connecting and activating the store database in high performance mode.
+showcase.login=Logging in as the administrator operator to the system.
+showcase.sales.catalog=Selecting interactive catalog items and adding them directly to the shopping cart.
+showcase.customers=Accessing customer management, sales history, and credit accounts.
+showcase.products=Viewing comprehensive inventory management, stock levels, pricing, and barcodes.
+showcase.closecash=Performing the daily cash register closeout and payment reconciliation.
+showcase.outro=Demonstration completed. Thank you for watching KriolOS POS.</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="4-3-french-narration_fr-properties"><a class="anchor" href="#4-3-french-narration_fr-properties"></a>4.3 French (<code>narration_fr.properties</code>)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">showcase.intro=Bienvenue sur KriolOS POS, votre système de point de vente moderne et flexible.
+showcase.database=Connexion et activation de la base de données du magasin en mode haute performance.
+showcase.login=Connexion au système avec le compte administrateur.
+showcase.sales.catalog=Sélection des articles du catalogue interactif et ajout direct au panier.
+showcase.customers=Gestion du fichier clients, historique des achats et comptes de crédit.
+showcase.products=Gestion complète des stocks, des tarifs, des codes-barres et des articles.
+showcase.closecash=Clôture journalière de la caisse et rapprochement des flux de trésorerie.
+showcase.outro=Démonstration terminée. Merci d'avoir regardé KriolOS POS.</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="4-4-spanish-narration_es-properties"><a class="anchor" href="#4-4-spanish-narration_es-properties"></a>4.4 Spanish (<code>narration_es.properties</code>)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">showcase.intro=Bienvenido a KriolOS POS, su sistema de punto de venta moderno y flexible.
+showcase.database=Conectando y activando la base de datos de la tienda en modo de alto rendimiento.
+showcase.login=Iniciando sesión en el sistema con el operador administrador.
+showcase.sales.catalog=Seleccionando artículos del catálogo interactivo y agregándolos a la cesta.
+showcase.customers=Gestión de clientes, historial de compras y cuentas de crédito.
+showcase.products=Control integral de inventario, existencias, precios y códigos de barras.
+showcase.closecash=Realizando el cierre de caja diario y conciliación de movimientos de efectivo.
+showcase.outro=Demostración completada. Gracias por ver KriolOS POS.</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="4-5-arabic-narration_ar-properties"><a class="anchor" href="#4-5-arabic-narration_ar-properties"></a>4.5 Arabic (<code>narration_ar.properties</code>)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">showcase.intro=مرحبًا بكم في KriolOS POS، نظام نقاط البيع العصري والمرن لإدارة مبيعاتكم.
+showcase.database=جاري الاتصال بقاعدة بيانات المتجر وتفعيلها بأعلى مستويات الأداء.
+showcase.login=تسجيل الدخول إلى النظام باستخدام حساب المسؤول.
+showcase.sales.catalog=اختيار المنتجات من الدليل التفاعلي وإضافتها مباشرة إلى سلة المشتريات.
+showcase.customers=الوصول إلى إدارة العملاء وسجل المشتريات والحسابات الجارية.
+showcase.products=إدارة شاملة للمخزون ومتابعة الكميات والأسعار والباركود.
+showcase.closecash=إجراء إغلاق الصندوق اليومي ومطابقة حركة المقبوضات النقدية.
+showcase.outro=اكتمل العرض التوضيحي. شكرًا لمتابعتكم KriolOS POS.</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="4-6-chinese-simplified-narration_zh-cn-properties"><a class="anchor" href="#4-6-chinese-simplified-narration_zh-cn-properties"></a>4.6 Chinese Simplified (<code>narration_zh-CN.properties</code>)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">showcase.intro=欢迎使用 KriolOS POS，现代、高效且灵活的商业零售收银系统。
+showcase.database=正在连接并激活店铺数据库，启用高响应运行模式。
+showcase.login=正在以系统管理员身份登录收银终端。
+showcase.sales.catalog=正在从商品互动目录中点选商品，并实时添加到购物车。
+showcase.customers=正在访问客户资料管理、购买消费记录及往来账目。
+showcase.products=查看全功能库存管理、实时存货盘点、价格体系及条码管理。
+showcase.closecash=正在执行每日收银结账盘点与现金对账结算。
+showcase.outro=演示完毕。感谢您观看 KriolOS POS 演示。</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="5-core-components-implementation"><a class="anchor" href="#5-core-components-implementation"></a>5. Core Components &amp; Implementation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="5-1-ttsengine-spi"><a class="anchor" href="#5-1-ttsengine-spi"></a>5.1 <code>TtsEngine</code> SPI</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public interface TtsEngine {
+    String getName();
+    boolean isAvailable();
+    File synthesize(String text, Language language, File outputWav);
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>AzureTtsEngine</code></strong>: Microsoft Azure Cognitive Services Speech REST API. Delivers studio-grade broadcast speech (<code>pt-PT-RaquelNeural</code>, <code>en-US-AriaNeural</code>). Configured via <code>AZURE_SPEECH_KEY</code> and <code>AZURE_SPEECH_REGION</code>.</p>
+</li>
+<li>
+<p><strong><code>EdgeNeuralTtsEngine</code></strong>: Microsoft Edge Neural Speech engine. Provides the exact same broadcast neural voices (<code>pt-PT-RaquelNeural</code>, <code>en-US-AriaNeural</code>) without needing API keys. Automatically bootstraps a project-managed venv under <code>target/tts-env</code>.</p>
+</li>
+<li>
+<p><strong><code>RhVoiceTtsEngine</code></strong>: Native offline synthesizer calling <code>/usr/bin/RHVoice-test</code> with <code>Leticia-F123</code> (Portuguese) and <code>slt</code> (English). Enhanced with <code>-q best</code>, <code>-r 92</code> (relaxed pacing), <code>-t 98</code>, and FFmpeg vocal acoustic post-processing (<code>equalizer 3kHz -2.5dB</code>, <code>lowpass 7.5kHz</code>, <code>compand</code>) to eliminate metallic/robotic rasp.</p>
+</li>
+<li>
+<p><strong><code>MockJavaTtsEngine</code></strong>: 100% pure Java algorithmic tone generator via <code>javax.sound.sampled</code> for offline/CI runners without network or audio binaries.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="5-2-pure-java-timeline-mixing-javaaudiotimelinemixer"><a class="anchor" href="#5-2-pure-java-timeline-mixing-javaaudiotimelinemixer"></a>5.2 Pure Java Timeline Mixing (<code>JavaAudioTimelineMixer</code>)</h3>
+<div class="paragraph">
+<p>The mixer processes timed clips without spawning external processes:
+1. Calculates target sample offset: <code>startFrame = (long) (offsetMs * (sampleRate / 1000.0))</code>.
+2. Decodes 16-bit PCM little-endian byte buffers into <code>short[]</code> arrays.
+3. Accumulates overlapping samples into a master timeline buffer with saturation clipping:</p>
+</div>
+<div class="paragraph">
+<p>+</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">int sum = masterBuffer[startSample + i] + src[i];
+if (sum &gt; Short.MAX_VALUE) sum = Short.MAX_VALUE;
+else if (sum &lt; Short.MIN_VALUE) sum = Short.MIN_VALUE;
+masterBuffer[startSample + i] = (short) sum;</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Writes the continuous output WAV using <code>AudioSystem.write()</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="5-3-youtube-multi-audio-track-standard"><a class="anchor" href="#5-3-youtube-multi-audio-track-standard"></a>5.3 YouTube Multi-Audio Track Standard</h3>
+<div class="paragraph">
+<p>YouTube natively supports multiple audio tracks in a single MP4 container if tracks include ISO 639-2 language metadata. The FFmpeg muxer outputs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ffmpeg -y -i session.mp4 -i narration_pt.wav -i narration_en.wav \
+  -map 0:v -map 1:a -map 2:a \
+  -c:v copy -c:a aac -b:a 192k \
+  -metadata:s:a:0 language=por -metadata:s:a:0 title="Português" \
+  -metadata:s:a:1 language=eng -metadata:s:a:1 title="English" \
+  -shortest session_youtube_multilingual.mp4</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When uploaded to YouTube, viewers in Portuguese-speaking regions hear Portuguese by default, while global viewers hear English, with the option to switch languages via the player gear menu.</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="6-adding-a-new-language-e-g-spanish"><a class="anchor" href="#6-adding-a-new-language-e-g-spanish"></a>6. Adding a New Language (e.g. Spanish)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To add Spanish (<code>es</code>) support:
+1. Add <code>narration_es.properties</code> in <code>src/test/resources/narration/</code>.
+2. Register the language in <code>PosAudioNarrator.Language</code>:</p>
+</div>
+<div class="paragraph">
+<p>+</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ES("es", "spa", "Español", "esperanza");</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The engine automatically discovers the new bundle, synthesizes Spanish audio cues, and generates <code>session_es.mp4</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="7-how-to-run"><a class="anchor" href="#7-how-to-run"></a>7. How to Run</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="7-1-running-with-auto-discovery-default"><a class="anchor" href="#7-1-running-with-auto-discovery-default"></a>7.1 Running with Auto Discovery (Default)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw test -f kriolos-opos-automation/pom.xml -Dtest=PosLoginIT</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="7-2-running-with-azure-cognitive-services-neural-speech"><a class="anchor" href="#7-2-running-with-azure-cognitive-services-neural-speech"></a>7.2 Running with Azure Cognitive Services Neural Speech</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw test -f kriolos-opos-automation/pom.xml -Dtest=PosLoginIT \
+  -Dtest.tts.engine=azure \
+  -Dazure.speech.key="YOUR_AZURE_KEY" \
+  -Dazure.speech.region="westeurope"</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="7-3-running-with-edge-neural-speech-free-broadcast-quality"><a class="anchor" href="#7-3-running-with-edge-neural-speech-free-broadcast-quality"></a>7.3 Running with Edge Neural Speech (Free Broadcast Quality)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw test -f kriolos-opos-automation/pom.xml -Dtest=PosLoginIT -Dtest.tts.engine=edge</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="7-4-running-with-rhvoice-offline-native-engine"><a class="anchor" href="#7-4-running-with-rhvoice-offline-native-engine"></a>7.4 Running with RHVoice (Offline Native Engine)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw test -f kriolos-opos-automation/pom.xml -Dtest=PosLoginIT -Dtest.tts.engine=rhvoice</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Generated artifacts in <code>target/recordings/pos_login_run/</code>:
+* <code>session.mp4</code> (Raw video)
+* <code>session.gif</code> (Animated GIF showcase)
+* <code>session_pt.mp4</code> (Portuguese narrated video)
+* <code>session_en.mp4</code> (English narrated video)
+* <code>session_youtube_multilingual.mp4</code> (Dual-track YouTube video)</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="8-vlc-swing-demo-player-panel-vlcvideoplayerpanel"><a class="anchor" href="#8-vlc-swing-demo-player-panel-vlcvideoplayerpanel"></a>8. VLC Swing Demo Player Panel (<code>VlcVideoPlayerPanel</code>)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>kriolos-opos-automation</code> includes an embedded Swing video player panel powered by <a href="https://github.com/caprica/vlcj">vlcj 4.8.3</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="features"><a class="anchor" href="#features"></a>Features</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Embedded Swing Canvas</strong>: Hardware-accelerated rendering directly inside a <code>JPanel</code>.</p>
+</li>
+<li>
+<p><strong>Transport Controls</strong>: Play, Pause, Stop, Seek Slider with millisecond precision.</p>
+</li>
+<li>
+<p><strong>Multi-Language Audio Track Switching</strong>: Live combo box enabling users to switch between Portuguese and English audio tracks in <code>session_youtube_multilingual.mp4</code>.</p>
+</li>
+<li>
+<p><strong>Volume Slider</strong>: Real-time 0-100% volume control.</p>
+</li>
+<li>
+<p><strong>Automatic Fallback</strong>: Graceful fallback UI with setup instructions if native LibVLC is not installed on the host.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="how-to-launch-the-vlc-player"><a class="anchor" href="#how-to-launch-the-vlc-player"></a>How to Launch the VLC Player</h3>
+<div class="sect3">
+<h4 id="a-automatic-post-test-playback"><a class="anchor" href="#a-automatic-post-test-playback"></a>A. Automatic Post-Test Playback</h4>
+<div class="paragraph">
+<p>Pass <code>-Dtest.playback.vlc=true</code> or <code>-Dopos.playback.vlc=true</code> to any automation test:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw test -f kriolos-opos-automation/pom.xml -Dtest=PosLoginIT -Dtest.playback.vlc=true</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="b-standalone-demo-launcher"><a class="anchor" href="#b-standalone-demo-launcher"></a>B. Standalone Demo Launcher</h4>
+<div class="paragraph">
+<p>Run the standalone launcher passing the path to any recorded video:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Run via Maven test runner
+./mvnw test -f kriolos-opos-automation/pom.xml -Dtest=VlcPlayerDemoTest -Dtest.playback.vlc=true
+
+# Or run directly via Java main class
+java -cp ... io.github.kriolos.opos.automation.video.VlcVideoPlayerPanel target/recordings/pos_login_run/session_youtube_multilingual.mp4</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

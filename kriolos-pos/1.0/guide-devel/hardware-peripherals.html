@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Untitled :: KriolOS POS Documentation</title>
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-migration/index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Developer Guide</li>
+    <li>Peripherals &amp; Hardware</li>
+    <li><a href="hardware-peripherals.html">Peripheral &amp; Scales Overview</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-devel/pages/hardware-peripherals.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<div class="sect1">
+<h2 id="gd-peripheral"><a class="anchor" href="#gd-peripheral"></a>Peripheral</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Peripheral chapter Hardware/Device</p>
+</div>
+<div class="sect2">
+<h3 id="overview"><a class="anchor" href="#overview"></a>Overview</h3>
+<div class="paragraph">
+<p>KriolOS POS provides a modular, Service Provider Interface (SPI) architecture for hardware peripherals located in <code>kriolos-opos-spi</code> under package <code>com.openbravo.pos.spi.hardware</code>.</p>
+</div>
+<div class="paragraph">
+<p>The unified façade <code>PeripheralManager</code> dynamically discovers and loads peripheral drivers via Java&#8217;s <code>java.util.ServiceLoader</code>, decoupling application modules from low-level serial communication and vendor-specific protocol details.</p>
+</div>
+<div class="sect3">
+<h4 id="architecture-principles"><a class="anchor" href="#architecture-principles"></a>Architecture Principles</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Unified Entry Point (<code>PeripheralManager</code>)</strong>: Static registry and loader querying all registered <code>PeripheralProvider</code> instances.</p>
+</li>
+<li>
+<p><strong>URN &amp; Selector Classification (<code>DeviceType</code>)</strong>: Every peripheral category maps to a standard URN (<code>urn:kriolos:hardware:*</code>) and selector code (<code>hardware:*</code>):</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>urn:kriolos:hardware:scale</code> (<code>hardware:scale</code>) &#8594; Weight Scales (<code>com.openbravo.pos.spi.hardware.scale</code>)</p>
+</li>
+<li>
+<p><code>urn:kriolos:hardware:printer</code> (<code>hardware:printer</code>) &#8594; Receipt and Kitchen Printers (<code>com.openbravo.pos.spi.hardware.printer</code>)</p>
+</li>
+<li>
+<p><code>urn:kriolos:hardware:display</code> (<code>hardware:display</code>) &#8594; Customer Facing Visors (<code>com.openbravo.pos.spi.hardware.display</code>)</p>
+</li>
+<li>
+<p><code>urn:kriolos:hardware:scanner</code> (<code>hardware:scanner</code>) &#8594; Handheld &amp; Fixed Barcode Scanners (<code>com.openbravo.pos.spi.hardware.scanner</code>)</p>
+</li>
+<li>
+<p><code>urn:kriolos:hardware:fiscal_printer</code> (<code>hardware:fiscal_printer</code>) &#8594; Fiscal Memory Units (<code>com.openbravo.pos.spi.hardware.printer</code>)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Connector &amp; Transport Schemes (<code>ConnectorType</code>)</strong>: Standardized connection enum with canonical URNs:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>urn:kriolos:hardware:connector:serial</code> (<code>serial</code>, <code>rxtx</code>, <code>comm</code>, <code>rs232</code>)</p>
+</li>
+<li>
+<p><code>urn:kriolos:hardware:connector:network</code> (<code>network</code>, <code>tcp</code>, <code>socket</code>)</p>
+</li>
+<li>
+<p><code>urn:kriolos:hardware:connector:usb</code> (<code>usb</code>, <code>hid</code>)</p>
+</li>
+<li>
+<p><code>urn:kriolos:hardware:connector:file</code> (<code>file</code>)</p>
+</li>
+<li>
+<p><code>urn:kriolos:hardware:connector:pipe</code> (<code>pipe</code>)</p>
+</li>
+<li>
+<p><code>urn:kriolos:hardware:connector:system</code> (<code>system</code>, <code>printer</code>, <code>spooler</code>)</p>
+</li>
+<li>
+<p><code>urn:kriolos:hardware:connector:screen</code> (<code>screen</code>, <code>window</code>, <code>dual</code>)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Semantic Configuration Triplet</strong>:
+Every peripheral configuration strictly separates 3 distinct layers without ambiguous parameters:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Protocol / Dialect] : [Connector / Transport Scheme] , [Target / Address / Endpoint]
+    e.g. "epson"     :           "serial"             ,       "/dev/ttyUSB0"
+    e.g. "star"      :          "network"             ,     "192.168.1.50:9100"
+    e.g. "caspdii"   :           "serial"             ,       "/dev/ttyS0"</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Null Object Fallbacks</strong>: When hardware is not connected or misconfigured, typed Null Device instances (<code>NullScaleDevice</code>, <code>NullPrinterDevice</code>, <code>NullDisplayDevice</code>, <code>NullScannerDevice</code>) prevent runtime `NullPointerException`s across UI panels.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="registering-a-custom-peripheral-provider"><a class="anchor" href="#registering-a-custom-peripheral-provider"></a>Registering a Custom Peripheral Provider</h4>
+<div class="paragraph">
+<p>To supply alternative or third-party hardware drivers (e.g. IoT MQTT scale, Webhook printer):
+1. Implement <code>com.openbravo.pos.spi.hardware.PeripheralProvider</code>.
+2. Annotate with <code>@AutoService(PeripheralProvider.class)</code> and <code>@PluginMetadata</code>.
+3. Register under <code>META-INF/services/com.openbravo.pos.spi.hardware.PeripheralProvider</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="common"><a class="anchor" href="#common"></a>Common</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Serial or COM Port</p>
+<div class="ulist">
+<ul>
+<li>
+<p>rfc2217 <a href="https://datatracker.ietf.org/doc/html/rfc2217" class="bare">https://datatracker.ietf.org/doc/html/rfc2217</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="scale"><a class="anchor" href="#scale"></a>Scale</h3>
+<div class="listingblock">
+<div class="title">POS Scale Configuration example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">machine.scale=caspdii:</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Supported Scales</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Weigth</th>
+<th class="tableblock halign-left valign-top">Manufacture</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AcomPC100</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kilogram</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ACOM</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">W, CR (Hex 0x57,0X0D)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9600,7,1,even</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">averyberkel6720</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kilogram</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AVERY</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">W, CR (Hex 0x57,0X0D)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9600,7,1,even</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">casiopd1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kilogram</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CASIO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9600,7,1,even</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dialog1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kilogram</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#8230;&#8203;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5 (Hex 0x05)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#8230;&#8203;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">samsungesp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kilogram</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Samsung</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">caspdii</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gram</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CAS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">screen</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gram</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#8230;&#8203;</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MTIND221</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kilogram</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mettler Toledo</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre>write(new byte[]{0x57, 0X0D}); //DEC (87, 13) ASCII ()</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Mettler Toledo IND226 (MTIND221)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.mt.com/es/en/home/library/operating-instructions/industrial-scales/IND221_IND226_User_Manual.html" class="bare">https://www.mt.com/es/en/home/library/operating-instructions/industrial-scales/IND221_IND226_User_Manual.html</a></p>
+</li>
+<li>
+<p>SICS protocol for communications.</p>
+</li>
+<li>
+<p>Example Command "SI${CR}${LF}"</p>
+<div class="ulist">
+<ul>
+<li>
+<p>RESPONSE "S$ S$ ${WEIGTH}$ ${!S}${CR}${LF}"</p>
+</li>
+<li>
+<p>RESPONSE "S$ D$ ${WEIGTH}$ ${!S}${CR}${LF}"</p>
+</li>
+<li>
+<p>!S - Ignore string</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Serial Port Properties</div>
+<div class="content">
+<pre>speed: 9600
+Paridad:None
+stop bit: 1
+data bit: 8</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Protocols supported:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ACOM. The scale command code is WCR (Hex 0x57,0X0D)</p>
+</li>
+<li>
+<p>Samsung. The scale command code is $ (Hex 0x24). The weight is returned in kilos.</p>
+</li>
+<li>
+<p>Dialog1. The scale command code is 5 (Hex 0x05). The weight is returned in grams</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Neptuno_56PPI</div>
+<div class="content">
+<pre>Velocidad: 9600
+Paridad: None
+BIT de parada: 1
+BIT de datos: 8</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Encoding (More see ASCII table)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>STX (start of text)</p>
+</li>
+<li>
+<p>ETX (end of text)</p>
+</li>
+<li>
+<p>READ MORE: <a href="https://www.sciencebuddies.org/science-fair-projects/references/ascii-table" class="bare">https://www.sciencebuddies.org/science-fair-projects/references/ascii-table</a></p>
+</li>
+<li>
+<p>CR (Carriage Return): ASCII 13 Decimal</p>
+</li>
+<li>
+<p>LF(Line Feed): ASCII 10 Decimal ('')</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Avery Berkel 6720</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Interface Protocols NCI, ECR, 8213 (Sharp), 2250 (Swintec), ATT, 0400 (Olympia).</p>
+<div class="ulist">
+<ul>
+<li>
+<p>NCI – NCI standard;</p>
+</li>
+<li>
+<p>ECR – Cash register compatible;</p>
+</li>
+<li>
+<p>8213 – 8213 compatible (Sharp)</p>
+</li>
+<li>
+<p>2250 – 2250 compatible (Swintec);</p>
+</li>
+<li>
+<p>TEC – MA-1535/1595 compatible (TEC)*</p>
+</li>
+<li>
+<p>ATT –  AT&amp;T compatible</p>
+</li>
+<li>
+<p>o4000 – Olympia Cash Register compatible (Approved for use with 30 and 60 lb or 7, 15, 30 and 60 kg capacities only)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Units</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Gram</p>
+</li>
+<li>
+<p>Kilogram</p>
+</li>
+<li>
+<p>Pound</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Reference</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.mt.com" class="bare">https://www.mt.com</a></p>
+</li>
+<li>
+<p><a href="http://wiki.openbravo.com/wiki/Projects:POS/Hardware_Installation_Guide" class="bare">http://wiki.openbravo.com/wiki/Projects:POS/Hardware_Installation_Guide</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="scanner"><a class="anchor" href="#scanner"></a>Scanner</h3>
+<div class="listingblock">
+<div class="title">POS Scanner configuration example</div>
+<div class="content">
+<pre>machine.scanner=scanpal2</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="printer"><a class="anchor" href="#printer"></a>Printer</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">ESC/POS</dt>
+<dd>
+<p>Printer Command Specification (Epson protocol for thermal receipt printers.</p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Supported Devices</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Epson</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Receipt Printer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ithaca</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Receipt Printer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Star</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Star Micronics</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SurePOS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IBM SurePOS (POS Computer with integrated Receipt Printer)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TMU220</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Epson TM-U220 Receipt Printer</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">POS Printer configuration example</div>
+<div class="content">
+<pre>machine.printername=epson
+machine.printer=TYPE:PARAM1,PARAM2</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>TYPE (OLD URI)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>serial</p>
+</li>
+<li>
+<p>rxtx</p>
+</li>
+<li>
+<p>file</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">POS Printer configuration example</div>
+<div class="content">
+<pre>machine.printername=epson
+machine.printer=TYPE:PARAM1,PARAM2</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>TYPE (NEW URI)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>screen</p>
+</li>
+<li>
+<p>printer</p>
+</li>
+<li>
+<p>epson</p>
+</li>
+<li>
+<p>tmu220</p>
+</li>
+<li>
+<p>star</p>
+</li>
+<li>
+<p>ithaca</p>
+</li>
+<li>
+<p>surepos</p>
+</li>
+<li>
+<p>plain</p>
+</li>
+<li>
+<p>javapos</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>TYPE Printer (Paper Configuration)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="display"><a class="anchor" href="#display"></a>Display</h3>
+<div class="paragraph">
+<p>Display Implemented</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>file</p>
+</li>
+<li>
+<p>serial</p>
+</li>
+<li>
+<p>javapos</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">POS Printer configuration example</div>
+<div class="content">
+<pre>machine.display=javapos:</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>led8 (Display LED 8)</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="audio"><a class="anchor" href="#audio"></a>Audio</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre>Clip clip = AudioSystem.getClip();</pre>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

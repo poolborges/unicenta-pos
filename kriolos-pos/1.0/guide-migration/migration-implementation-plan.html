@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Project Deep Analysis: KriolOS POS :: KriolOS POS Documentation</title>
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-devel/index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-devel/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-devel/product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-devel/contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Migration Guide</li>
+    <li><a href="migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-migration/pages/migration-implementation-plan.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Project Deep Analysis: KriolOS POS</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div id="toc" class="toc">
+<div id="toctitle" class="title">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#1-project-overview">1. Project Overview</a></li>
+<li><a href="#2-architecture-tech-stack">2. Architecture &amp; Tech Stack</a>
+<ul class="sectlevel2">
+<li><a href="#technology-stack">Technology Stack</a></li>
+<li><a href="#module-structure">Module Structure</a></li>
+</ul>
+</li>
+<li><a href="#3-core-architecture-components">3. Core Architecture Components</a>
+<ul class="sectlevel2">
+<li><a href="#application-lifecycle-kriolos-opos-app">Application Lifecycle (<code>kriolos-opos-app</code>)</a></li>
+<li><a href="#domain-model-kriolos-opos-domain">Domain Model (<code>kriolos-opos-domain</code>)</a></li>
+<li><a href="#hardware-abstraction-kriolos-opos-hardware">Hardware Abstraction (<code>kriolos-opos-hardware</code>)</a></li>
+</ul>
+</li>
+<li><a href="#4-logic-extraction-plan-ui-domain">4. Logic Extraction Plan (UI &#8594; Domain)</a>
+<ul class="sectlevel2">
+<li><a href="#4-1-identified-logic-in-ui">4.1 Identified Logic in UI</a></li>
+<li><a href="#4-2-proposed-domain-services">4.2 Proposed Domain Services</a></li>
+<li><a href="#4-3-refactoring-steps">4.3 Refactoring Steps</a></li>
+</ul>
+</li>
+<li><a href="#5-key-design-patterns">5. Key Design Patterns</a></li>
+<li><a href="#6-recommendations">6. Recommendations</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="1-project-overview"><a class="anchor" href="#1-project-overview"></a>1. Project Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>KriolOS POS</strong> is a Point of Sale system, forked from <strong>UnicentaOPOS</strong> (itself a fork of OpenBravoPOS). It is a Java-based desktop application using <strong>Swing</strong> for the UI, built with <strong>Maven</strong> as a multi-module project.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Group ID</strong>: <code>io.github.kriolos.opos</code></p>
+</li>
+<li>
+<p><strong>Artifact ID</strong>: <code>kriolos-opos-parent</code></p>
+</li>
+<li>
+<p><strong>Version</strong>: <code>1.0.0-SNAPSHOT</code></p>
+</li>
+<li>
+<p><strong>Java Version</strong>: 17</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="2-architecture-tech-stack"><a class="anchor" href="#2-architecture-tech-stack"></a>2. Architecture &amp; Tech Stack</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="technology-stack"><a class="anchor" href="#technology-stack"></a>Technology Stack</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Language</strong>: Java 17</p>
+</li>
+<li>
+<p><strong>Build Tool</strong>: Maven (Multi-module)</p>
+</li>
+<li>
+<p><strong>UI Framework</strong>: Java Swing (NetBeans Platform modules used for layout)</p>
+</li>
+<li>
+<p><strong>Database Access</strong>: Custom JDBC wrapper/Session management (<code>com.openbravo.pos.forms.Session</code>, <code>DataLogicSystem</code>)</p>
+</li>
+<li>
+<p><strong>Database Migration</strong>: Liquibase</p>
+</li>
+<li>
+<p><strong>Reporting</strong>: Velocity (Receipt/Ticket generation)</p>
+</li>
+<li>
+<p><strong>Testing</strong>: JUnit 5</p>
+</li>
+<li>
+<p><strong>Quality</strong>: Checkstyle, PMD, SpotBugs</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="module-structure"><a class="anchor" href="#module-structure"></a>Module Structure</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos-opos-app</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Main application entry point (<code>StartPOS</code>) and core UI components (<code>JRootApp</code>, <code>JPrincipalApp</code>).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos-opos-domain</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Core business domain models (<code>TicketInfo</code>, <code>PaymentInfo</code>, <code>CustomerInfoExt</code>). <strong>Framework agnostic logic.</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos-opos-hardware</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Abstraction layer for POS hardware (Printers, Scales, Scanners).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos-opos-base</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Base utilities and shared infrastructure.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos-opos-assets-*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Images and Report templates.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos-opos-spi</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Service Provider Interfaces (Likely for plugin/extension points).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="3-core-architecture-components"><a class="anchor" href="#3-core-architecture-components"></a>3. Core Architecture Components</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="application-lifecycle-kriolos-opos-app"><a class="anchor" href="#application-lifecycle-kriolos-opos-app"></a>Application Lifecycle (<code>kriolos-opos-app</code>)</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Entry Point</strong>: <code>com.openbravo.pos.forms.StartPOS</code> is the <code>main</code> class. It loads configuration (<code>AppConfig</code>) using command-line arguments.</p>
+</li>
+<li>
+<p><strong>Root Controller</strong>: <code>JRootApp</code> handles the main application window, session initialization, database migration checks, and hardware initialization.</p>
+</li>
+<li>
+<p><strong>UI Management</strong>: Uses a <code>CardLayout</code> to switch between <code>JAuthPanel</code> (Login) and <code>JPrincipalApp</code> (Main Application Interface).</p>
+</li>
+<li>
+<p><strong>Instance Management</strong>: Supports single-instance enforcement via <code>InstanceManager</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="domain-model-kriolos-opos-domain"><a class="anchor" href="#domain-model-kriolos-opos-domain"></a>Domain Model (<code>kriolos-opos-domain</code>)</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Ticket (<code>TicketInfo</code>)</strong>: The central entity representing a sales transaction. It aggregates <code>TicketLineInfo</code> (items), <code>PaymentInfo</code> (payments), <code>CustomerInfo</code>, and <code>TaxInfo</code>. Implements <code>SerializableRead</code> and <code>Externalizable</code> for data persistence/transfer.</p>
+</li>
+<li>
+<p><strong>Payments (<code>PaymentInfo</code>)</strong>: Abstract base class for payment methods, extended by specific types (e.g., <code>PaymentInfoMagcard</code>, <code>PaymentInfoTicket</code>).</p>
+</li>
+<li>
+<p><strong>Data Transfer</strong>: Domain objects often implement <code>readValues(DataRead dr)</code> for mapping from JDBC <code>ResultSet</code> equivalents.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="hardware-abstraction-kriolos-opos-hardware"><a class="anchor" href="#hardware-abstraction-kriolos-opos-hardware"></a>Hardware Abstraction (<code>kriolos-opos-hardware</code>)</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Device Support</strong>: Explicit modules for <code>printer</code>, <code>scale</code>, and <code>scanner</code> (Scanpal2).</p>
+</li>
+<li>
+<p><strong>Abstraction</strong>: <code>DeviceTicket</code>, <code>DeviceScale</code>, <code>DeviceScanner</code> interfaces allow the app to interact with hardware without knowing specific implementation details.</p>
+</li>
+<li>
+<p><strong>Printing</strong>: Uses Velocity templates for defining receipt layouts, which are then parsed and sent to the <code>DeviceTicket</code> interface.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="4-logic-extraction-plan-ui-domain"><a class="anchor" href="#4-logic-extraction-plan-ui-domain"></a>4. Logic Extraction Plan (UI &#8594; Domain)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Objective</strong>: Extract business logic from <code>kriolos-opos-app</code> (Swing UI) to <code>kriolos-opos-domain</code> to facilitate migration to Quarkus.</p>
+</div>
+<div class="sect2">
+<h3 id="4-1-identified-logic-in-ui"><a class="anchor" href="#4-1-identified-logic-in-ui"></a>4.1 Identified Logic in UI</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Sales Logic (<code>JPanelTicket.java</code> &amp; <code>JTicketsBagTicket.java</code>)</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>addTicketLine</code>: Adds a product to the ticket. Handles tax lookup.</p>
+</li>
+<li>
+<p><code>removeTicketLine</code>: Removes a line. Handles stock verification callbacks.</p>
+</li>
+<li>
+<p><code>printPartialTotals</code>: Updates UI labels (Model &#8594; View sync).</p>
+</li>
+<li>
+<p><code>paintTicketLine</code>: Updates a specific line.</p>
+</li>
+<li>
+<p><code>countArticles</code>: Enables/Disables split button based on item count.</p>
+</li>
+<li>
+<p><code>saveCurrentTicket</code>: Persists ticket to shared storage.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Payment Logic (<code>JPaymentSelect.java</code>)</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>showDialog</code>: Initializes payment selection, calculates remaining total.</p>
+</li>
+<li>
+<p><code>printState</code>: Updates remaining amount UI.</p>
+</li>
+<li>
+<p><code>getDefaultPayment</code>: Logic to select default payment method.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Inventory Logic</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>checkStock</code>: Verifies product availability (in <code>JPanelTicket</code>).</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="4-2-proposed-domain-services"><a class="anchor" href="#4-2-proposed-domain-services"></a>4.2 Proposed Domain Services</h3>
+<div class="paragraph">
+<p>We will create new Service classes in <code>kriolos-opos-domain</code> to encapsulate this logic:</p>
+</div>
+<div class="sect3">
+<h4 id="com-openbravo-pos-sales-salesservice"><a class="anchor" href="#com-openbravo-pos-sales-salesservice"></a><code>com.openbravo.pos.sales.SalesService</code></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Purpose</strong>: Manage the lifecycle of a <code>TicketInfo</code> object.</p>
+</li>
+<li>
+<p><strong>Key Methods</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>TicketInfo createTicket()</code></p>
+</li>
+<li>
+<p><code>void addLine(TicketInfo ticket, ProductInfoExt product, double quantity)</code></p>
+</li>
+<li>
+<p><code>void removeLine(TicketInfo ticket, int index)</code></p>
+</li>
+<li>
+<p><code>void calculateTaxes(TicketInfo ticket)</code> (Moves logic from <code>TaxesLogic</code> integration)</p>
+</li>
+<li>
+<p><code>double getTotal(TicketInfo ticket)</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="com-openbravo-pos-payment-paymentservice"><a class="anchor" href="#com-openbravo-pos-payment-paymentservice"></a><code>com.openbravo.pos.payment.PaymentService</code></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Purpose</strong>: Handle payment calculations and validation.</p>
+</li>
+<li>
+<p><strong>Key Methods</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>double calculateRemaining(TicketInfo ticket, List&lt;PaymentInfo&gt; payments)</code></p>
+</li>
+<li>
+<p><code>PaymentInfo createPayment(String paymentType, double amount)</code></p>
+</li>
+<li>
+<p><code>boolean validatePayment(PaymentInfo payment)</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="com-openbravo-pos-inventory-inventoryservice"><a class="anchor" href="#com-openbravo-pos-inventory-inventoryservice"></a><code>com.openbravo.pos.inventory.InventoryService</code></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Purpose</strong>: Abstract stock checking.</p>
+</li>
+<li>
+<p><strong>Key Methods</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ProductStock getStock(String productId)</code></p>
+</li>
+<li>
+<p><code>boolean isStockAvailable(String productId, double quantity)</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="4-3-refactoring-steps"><a class="anchor" href="#4-3-refactoring-steps"></a>4.3 Refactoring Steps</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Create Interfaces</strong>: Define <code>SalesService</code>, <code>PaymentService</code>, and <code>InventoryService</code> interfaces in <code>kriolos-opos-domain</code>.</p>
+</li>
+<li>
+<p><strong>Implement Default Services</strong>: Create basic implementations in <code>kriolos-opos-domain</code>. (<code>SalesServiceImpl</code> created).</p>
+</li>
+<li>
+<p><strong>Inject Services</strong>: Update <code>JPanelTicket</code> to use <code>SalesService</code> instead of direct <code>m_oTicket</code> manipulation where complex logic exists.</p>
+</li>
+<li>
+<p><strong>Refactor Payment</strong>: Update <code>JPaymentSelect</code> to use <code>PaymentService</code>.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>TaxesLogic</code> was found to be already in <code>kriolos-opos-domain</code>, so no move was necessary.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="5-key-design-patterns"><a class="anchor" href="#5-key-design-patterns"></a>5. Key Design Patterns</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>MVC (Model-View-Controller)</strong>: Heavily used in Swing components (<code>JRootApp</code> acting as controller for the root view).</p>
+</li>
+<li>
+<p><strong>Factory Pattern</strong>: implementation of hardware devices (e.g., <code>DeviceScannerFactory</code>).</p>
+</li>
+<li>
+<p><strong>Singleton/Instance Management</strong>: <code>AppConfig</code>, <code>InstanceManager</code> for global configuration and singleton app enforcement.</p>
+</li>
+<li>
+<p><strong>Data Access Object (DAO)</strong>: <code>DataLogicSystem</code> acts as a facade/DAO for database operations, abstracting SQL execution.</p>
+</li>
+<li>
+<p><strong>Service Provider Interface (SPI)</strong>: Hinted by the <code>kriolos-opos-spi</code> module, likely for extensibility.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="6-recommendations"><a class="anchor" href="#6-recommendations"></a>6. Recommendations</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Legacy Codebase</strong>: The "OpenBravo" package structure (<code>com.openbravo.pos</code>) is preserved, indicating a legacy fork. Refactoring to a new root package would be a significant effort.</p>
+</li>
+<li>
+<p><strong>Swing UI</strong>: The UI is built on Swing, which is mature but dated. Consider modernizing if a web or mobile interface is desired in the future.</p>
+</li>
+<li>
+<p><strong>Database Coupling</strong>: The data access layer seems custom-built. Adopting a standard ORM (like Hibernate/JPA) might simplify maintenance but requires significant refactoring.</p>
+</li>
+<li>
+<p><strong>Java 17 Upgrade</strong>: Being on Java 17 is excellent, allowing use of modern language features (Records, Switch expressions, etc.), though the codebase itself may not yet fully utilize them.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>KriolOS POS — Iconography Specification &amp; Agnostic Asset Architecture :: KriolOS POS Documentation</title>
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-migration/index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Developer Guide</li>
+    <li>User Interface</li>
+    <li><a href="spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-devel/pages/spec-iconography.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">KriolOS POS — Iconography Specification &amp; Agnostic Asset Architecture</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#1-mission-architectural-directive">1. Mission &amp; Architectural Directive</a></li>
+<li><a href="#2-two-tier-asset-architecture">2. Two-Tier Asset Architecture</a>
+<ul class="sectlevel2">
+<li><a href="#2-1-asset-repository-module-kriolos-opos-assets-svg">2.1 Asset Repository Module: <code>kriolos-opos-assets-svg</code></a></li>
+<li><a href="#2-2-reusable-ui-module-kriolos-opos-ui">2.2 Reusable UI Module: <code>kriolos-opos-ui</code></a></li>
+</ul>
+</li>
+<li><a href="#3-vector-svg-technical-standards">3. Vector SVG Technical Standards</a></li>
+<li><a href="#4-dynamic-coloring-theming-specification-kriolos-pos-symbols-spec">4. Dynamic Coloring &amp; Theming Specification (KriolOS POS Symbols Spec)</a>
+<ul class="sectlevel2">
+<li><a href="#4-1-tier-1-automatic-ambient-tinting-currentcolor">4.1 Tier 1: Automatic Ambient Tinting (<code>currentColor</code>)</a></li>
+<li><a href="#4-2-tier-2-programmatic-color-overrides-filters">4.2 Tier 2: Programmatic Color Overrides &amp; Filters</a></li>
+<li><a href="#4-3-standard-semantic-status-palette">4.3 Standard Semantic Status Palette</a></li>
+<li><a href="#4-4-colorfilter-architecture-in-flatlaf">4.4 ColorFilter Architecture in FlatLaf</a></li>
+</ul>
+</li>
+<li><a href="#5-standard-iconography-specification-matrix">5. Standard Iconography Specification Matrix</a></li>
+<li><a href="#6-agnostic-icon-access-api">6. Agnostic Icon Access API</a>
+<ul class="sectlevel2">
+<li><a href="#6-1-programmatic-access-via-iconkey">6.1 Programmatic Access via <code>IconKey</code></a></li>
+<li><a href="#6-2-literal-access-by-form-name">6.2 Literal Access by Form Name</a></li>
+<li><a href="#6-3-netbeans-form-migration-strategy">6.3 NetBeans <code>.form</code> Migration Strategy</a></li>
+</ul>
+</li>
+<li><a href="#7-summary-of-rules-for-developers">7. Summary of Rules for Developers</a></li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="1-mission-architectural-directive"><a class="anchor" href="#1-mission-architectural-directive"></a>1. Mission &amp; Architectural Directive</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The KriolOS POS iconography system establishes a high-resolution, scalable, vector-first visual foundation for desktop, touch-tablet, and embedded POS terminals.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="title">Core Naming Rule: Form Over Function (Literal Depiction)</div>
+<div class="paragraph">
+<p><strong>Icon assets MUST be named strictly by what they visually depict (their literal physical or geometric shape), NEVER by their domain application or business function in code.</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>❌ <strong>Wrong (Functional Naming)</strong>: <code>customer.svg</code>, <code>pay.svg</code>, <code>delete-ticket.svg</code>, <code>cash-in.svg</code>, <code>parked-order.svg</code>, <code>nav-back.svg</code>.</p>
+</li>
+<li>
+<p>✅ <strong>Right (Literal Depiction)</strong>: <code>user.svg</code>, <code>credit-card.svg</code>, <code>trash.svg</code>, <code>arrow-down.svg</code>, <code>clock.svg</code>, <code>arrow-left.svg</code>.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A single physical icon (e.g., <code>user.svg</code> showing a person silhouette) is reused across multiple unrelated domains:
+* Customer selector in sales
+* Cashier / user login
+* Employee timeclock management
+* User management in back office</p>
+</div>
+<div class="paragraph">
+<p>Naming the file <code>customer.svg</code> couples an agnostic graphic asset to a specific business context, causing asset duplication, naming confusion, and rigid coupling.</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="2-two-tier-asset-architecture"><a class="anchor" href="#2-two-tier-asset-architecture"></a>2. Two-Tier Asset Architecture</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The icon system is decoupled into two complementary tiers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>@startuml
+skinparam packageStyle rectangle
+skinparam monochrome true
+
+package "Assets Tier" {
+    [kriolos-opos-assets-svg] as SvgRepo #AliceBlue
+    note right of SvgRepo: Pure vector SVGs named\nby literal form (e.g. user.svg)
+
+    [kriolos-opos-assets-image] as PngRepo #LightYellow
+    note right of PngRepo: Legacy PNG bitmapped assets
+}
+
+package "UI Resolution Tier (kriolos-opos-ui)" {
+    class IconKey &lt;&lt;enum&gt;&gt; {
+        + CUSTOMER (maps to "user")
+        + PAYMENT (maps to "credit-card")
+        + DELETE_LINE (maps to "trash")
+        + CASH_IN (maps to "arrow-down")
+        + NAV_BACK (maps to "arrow-left")
+    }
+
+    class IconFactory &lt;&lt;utility&gt;&gt; {
+        + {static} getIcon(IconKey, size): Icon
+        + {static} getIcon(String literalName, size): Icon
+        + {static} getIconByLegacyPath(String path, size): Icon
+    }
+}
+
+package "Consumers" {
+    [Modern UI Panels] ..&gt; IconFactory : programmatic
+    [Legacy NetBeans .form] ..&gt; IconFactory : post-init or property code
+}
+
+IconFactory --&gt; SvgRepo : 1. Resolve vector SVG
+IconFactory ..&gt; PngRepo : 2. Fallback to PNG
+@enduml</pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="2-1-asset-repository-module-kriolos-opos-assets-svg"><a class="anchor" href="#2-1-asset-repository-module-kriolos-opos-assets-svg"></a>2.1 Asset Repository Module: <code>kriolos-opos-assets-svg</code></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Maven artifact: <code>io.github.kriolos.opos:kriolos-opos-assets-svg</code></p>
+</li>
+<li>
+<p>Contains pure vector SVG files under classpath: <code>/com/openbravo/images/svg/{literal-name}.svg</code></p>
+</li>
+<li>
+<p>Zero Java code, zero NetBeans dependencies.</p>
+</li>
+<li>
+<p>Asset files use lowercase kebab-case naming: <code>arrow-left.svg</code>, <code>credit-card.svg</code>, <code>trash.svg</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="2-2-reusable-ui-module-kriolos-opos-ui"><a class="anchor" href="#2-2-reusable-ui-module-kriolos-opos-ui"></a>2.2 Reusable UI Module: <code>kriolos-opos-ui</code></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Hosts the agnostic resolver <code>IconFactory</code> and semantic mapping <code>IconKey</code>.</p>
+</li>
+<li>
+<p>Provides runtime vector rasterization via <code>SvgIcon</code> with automatic display DPI scaling.</p>
+</li>
+<li>
+<p>Provides seamless fallback to legacy PNGs from <code>kriolos-opos-assets-image</code>.</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="3-vector-svg-technical-standards"><a class="anchor" href="#3-vector-svg-technical-standards"></a>3. Vector SVG Technical Standards</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>All SVG assets in <code>kriolos-opos-assets-svg</code> must conform to standard vector specifications:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Specification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Canvas Grid</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>viewBox="0 0 24 24"</code>, default <code>width="24" height="24"</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Dynamic Theming</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>stroke="currentColor"</code> or <code>fill="currentColor"</code>.<br>
+Never hardcode fixed black (<code>#000000</code>) or white (<code>#ffffff</code>). Using <code>currentColor</code> ensures icons automatically inherit text/button color across FlatLaf Light, Dark, and high-contrast modes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Stroke Geometry</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>stroke-width="2"</code>, <code>stroke-linecap="round"</code>, <code>stroke-linejoin="round"</code>, <code>fill="none"</code> (outline style).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Clean XML</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stripped of Adobe Illustrator, Inkscape, and Figma editor metadata (<code>sodipodi</code>, <code>inkscape:version</code>, <code>xmlns:ai</code>).</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">Sample: <code>user.svg</code></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"&gt;
+  &lt;path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/&gt;
+  &lt;circle cx="12" cy="7" r="4"/&gt;
+&lt;/svg&gt;</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="4-dynamic-coloring-theming-specification-kriolos-pos-symbols-spec"><a class="anchor" href="#4-dynamic-coloring-theming-specification-kriolos-pos-symbols-spec"></a>4. Dynamic Coloring &amp; Theming Specification (KriolOS POS Symbols Spec)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A core requirement of the KriolOS POS iconography specification is that all symbols must be effortlessly colorable at runtime without altering the underlying SVG source files.</p>
+</div>
+<div class="sect2">
+<h3 id="4-1-tier-1-automatic-ambient-tinting-currentcolor"><a class="anchor" href="#4-1-tier-1-automatic-ambient-tinting-currentcolor"></a>4.1 Tier 1: Automatic Ambient Tinting (<code>currentColor</code>)</h3>
+<div class="paragraph">
+<p>By mandating <code>stroke="currentColor"</code> and <code>fill="currentColor"</code>, icons behave like typography glyphs:
+* In standard light mode on a neutral button: Renders in the theme text color (<code>#1e293b</code>).
+* In dark mode: Automatically inverts to crisp theme text color (<code>#f8fafc</code>).
+* On a primary/accent button: Automatically inherits the high-contrast button text color (e.g. pure white <code>#ffffff</code> on <code>#2563eb</code>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="4-2-tier-2-programmatic-color-overrides-filters"><a class="anchor" href="#4-2-tier-2-programmatic-color-overrides-filters"></a>4.2 Tier 2: Programmatic Color Overrides &amp; Filters</h3>
+<div class="paragraph">
+<p>Developers can supply explicit color tinting when creating or retrieving icons through <code>IconFactory</code> and <code>SvgIcon</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// 1. Explicit tinting via IconFactory
+Icon dangerTrash = IconFactory.getIcon(IconKey.DELETE, 24, Color.RED);
+Icon emeraldCash = IconFactory.getIcon(IconKey.CASH, 24, new Color(22, 163, 74));
+
+// 2. Color derivation from an existing SvgIcon
+SvgIcon baseUser = (SvgIcon) IconFactory.getIcon("user", 24);
+SvgIcon activeUser = baseUser.withColor(new Color(37, 99, 235)); // Royal blue</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="4-3-standard-semantic-status-palette"><a class="anchor" href="#4-3-standard-semantic-status-palette"></a>4.3 Standard Semantic Status Palette</h3>
+<div class="paragraph">
+<p>For consistent touch feedback and accessibility across POS screens, icons use the standardized KriolOS status palette:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Semantic Intent</th>
+<th class="tableblock halign-left valign-top">Constant / Token</th>
+<th class="tableblock halign-left valign-top">Hex Value</th>
+<th class="tableblock halign-left valign-top">Operational Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Default</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>currentColor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ambient</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Standard toolbars, form inputs, dialog navigation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Primary / Accent</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IconPalette.PRIMARY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>#2563eb</code> (Royal Blue)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Active tab, focused action, primary flow indicator.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Success</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IconPalette.SUCCESS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>#16a34a</code> (Emerald Green)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Payment confirmed, cash register open, ticket settled, OK.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Danger</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IconPalette.DANGER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>#ef4444</code> (Coral Red)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Void ticket, delete line item, reject transaction, cancel.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Warning</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IconPalette.WARNING</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>#f59e0b</code> (Amber Orange)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low stock warning, parked ticket timeout, cash drawer limit.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Muted / Inactive</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IconPalette.MUTED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>#9ca3af</code> (Slate Gray)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disabled action, read-only control, inactive status hint.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="4-4-colorfilter-architecture-in-flatlaf"><a class="anchor" href="#4-4-colorfilter-architecture-in-flatlaf"></a>4.4 ColorFilter Architecture in FlatLaf</h3>
+<div class="paragraph">
+<p>Under the hood, <code>SvgIcon</code> integrates with FlatLaf&#8217;s <code>FlatSVGIcon.ColorFilter</code>:
+* Modifies RGB channel values during Graphics2D vector rendering.
+* Preserves anti-aliasing and subpixel vector fidelity without raster blur.
+* Caches colored variants by <code>(resourcePath, width, height, colorRGB)</code> key to eliminate redundant allocations.</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="5-standard-iconography-specification-matrix"><a class="anchor" href="#5-standard-iconography-specification-matrix"></a>5. Standard Iconography Specification Matrix</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following specification maps literal visual glyph names to their standard filenames, legacy PNG equivalents, and POS domain contexts:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 22.2222%;">
+<col style="width: 22.2222%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Literal Form</th>
+<th class="tableblock halign-left valign-top">SVG Asset Filename</th>
+<th class="tableblock halign-left valign-top">Legacy PNG Equivalent</th>
+<th class="tableblock halign-left valign-top">POS Domain Contexts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>User</strong> (Person silhouette)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>user.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>customer_sml.png</code>, <code>user.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Customer selection, cashier indicator, user profile.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Users</strong> (Group of people)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>users.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>users.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">People directory, employee roles, customer group.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Credit Card</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>credit-card.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ccard.png</code>, <code>pay.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Card checkout, electronic payment, bank terminal.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Banknote</strong> (Paper currency)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>banknote.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cash.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cash payment, cash drawer count, tender reconciliation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Trash Can</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trash.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sale_delete.png</code>, <code>editdelete.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete ticket line, purge record, remove item.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Pencil</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pencil.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>edit.png</code>, <code>sale_editline.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Edit price/quantity, edit customer, modify line note.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Plus</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>plus.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>btnplus.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Increase quantity (+1), add new item, insert row.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Minus</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>minus.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>btnminus.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Decrease quantity (-1), decrement counter.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Clock</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>clock.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>timer.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parked / layaway tickets, order holding duration, shifts.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Pause Circle</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pause-circle.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>(none / unicode emoji)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Suspend transaction, hold ticket, temporary pause.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Clipboard List</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>clipboard-list.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reports.png</code>, <code>notes.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parked orders list, open tables, bill review.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Arrow Left</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>arrow-left.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1leftarrow.png</code>, <code>menu-left.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Back navigation, collapse menu, previous catalog page.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Arrow Right</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>arrow-right.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1rightarrow.png</code>, <code>menu-right.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Forward navigation, expand menu, next catalog page.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Arrow Up</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>arrow-up.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1uparrow.png</code>, <code>2uparrow.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scroll up, subcategory parent jump.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Arrow Down</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>arrow-down.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1downarrow.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scroll down, deposit / cash in.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Lock</strong> (Padlock)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lock.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>password.png</code>, <code>encrypted.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Close cash register, lock terminal, supervisor override.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Unlock</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unlock.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>(none)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unlock register, open drawer.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Tag</strong> (Price / Discount tag)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tag.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>discount.png</code>, <code>discount_b.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Line discount, ticket discount, promotional pricing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Magnifying Glass</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>search.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>search24.png</code>, <code>search32.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Product lookup, customer search, receipt search.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Printer</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>printer.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>printer24.png</code>, <code>ticket_print.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Print receipt, reprint ticket, kitchen routing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Rotate CCW</strong> (Reset / Counter-clockwise)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rotate-ccw.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reload.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clear ticket, reset form, reload catalog.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Check</strong> (Checkmark)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>check.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ok.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Confirm action, OK dialog, line verified.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>X</strong> (Cross)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>x.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cancel.png</code>, <code>fileclose.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cancel modal, discard changes, close panel.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Delete Left</strong> (Backspace)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>delete-left.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>btnback.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Numpad backspace, clear last digit.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Database</strong> (Cylinder)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>database.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>database.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database selection, connection settings.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Gear</strong> (Cog)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gear.svg</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>configuration.png</code>, <code>maintain.png</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System settings, peripheral configuration.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="6-agnostic-icon-access-api"><a class="anchor" href="#6-agnostic-icon-access-api"></a>6. Agnostic Icon Access API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Application code <strong>must never</strong> directly reference asset file paths or instantiate <code>new ImageIcon(getClass().getResource(&#8230;&#8203;))</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="6-1-programmatic-access-via-iconkey"><a class="anchor" href="#6-1-programmatic-access-via-iconkey"></a>6.1 Programmatic Access via <code>IconKey</code></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Semantic domain key -&gt; resolves to vector user.svg scaled to 24px
+Icon customerIcon = IconFactory.getIcon(IconKey.CUSTOMER, 24);
+
+// ButtonFactory helper
+JButton customerBtn = ButtonFactory.createActionButton(
+    "Customer: Guest",
+    IconKey.CUSTOMER,
+    ButtonSize.EXTRA_LARGE,
+    KeyEvent.VK_C,
+    "Select active customer",
+    e -&gt; selectCustomer()
+);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="6-2-literal-access-by-form-name"><a class="anchor" href="#6-2-literal-access-by-form-name"></a>6.2 Literal Access by Form Name</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Directly access literal glyph at arbitrary touch dimension
+Icon arrowLeft = IconFactory.getIcon("arrow-left", 32);
+Icon trashIcon = IconFactory.getIcon("trash", 24);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="6-3-netbeans-form-migration-strategy"><a class="anchor" href="#6-3-netbeans-form-migration-strategy"></a>6.3 NetBeans <code>.form</code> Migration Strategy</h3>
+<div class="paragraph">
+<p>There are 125 legacy <code>.form</code> files in <code>kriolos-opos-app</code>. During progressive migration:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Option A: Custom Creation / Post-Init Code in <code>.form</code></strong>:
+In the NetBeans GUI builder, set the button or label <code>icon</code> property using <strong>Custom Code</strong>:
+[source,java]
+----
+btnCancel.setIcon(IconFactory.getIcon(IconKey.CANCEL, 24));
+----</p>
+</li>
+<li>
+<p><strong>Option B: Automatic Legacy Path Aliasing</strong>:
+<code>IconFactory.getIconByLegacyPath(String)</code> accepts existing legacy paths (e.g. <code>"/com/openbravo/images/customer_sml.png"</code>) and transparently translates them to the corresponding vector SVG (<code>user.svg</code>):
+[source,java]
+----
+// Automatically returns vector user.svg scaled appropriately
+Icon icon = IconFactory.getIconByLegacyPath("/com/openbravo/images/customer_sml.png", 24);
+----</p>
+</li>
+<li>
+<p><strong>Option C: Pure Programmatic Refactoring (Task 10)</strong>:
+As <code>.form</code> files are eliminated (per Task 10 on the roadmap), replace them with <code>PaneBuilder</code>, <code>FlexLayout</code>, and <code>ButtonFactory</code> using <code>IconKey</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="7-summary-of-rules-for-developers"><a class="anchor" href="#7-summary-of-rules-for-developers"></a>7. Summary of Rules for Developers</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>New SVG Assets</strong>: Place in <code>kriolos-opos-assets-svg/src/main/resources/com/openbravo/images/svg/{form-name}.svg</code>.</p>
+</li>
+<li>
+<p><strong>Name by Form</strong>: Never name an icon after its action (e.g. use <code>arrow-left.svg</code>, NOT <code>back.svg</code>).</p>
+</li>
+<li>
+<p><strong>Use <code>currentColor</code></strong>: Keep SVGs theme-adaptable.</p>
+</li>
+<li>
+<p><strong>Use <code>IconFactory</code></strong>: Never bypass the resolver with hardcoded string paths in Java code.</p>
+</li>
+<li>
+<p><strong>No Breaking Changes</strong>: Legacy PNG assets remain intact in <code>kriolos-opos-assets-image</code> as fallbacks.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

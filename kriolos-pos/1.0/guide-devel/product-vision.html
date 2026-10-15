@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Untitled :: KriolOS POS Documentation</title>
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-migration/index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Developer Guide</li>
+    <li><a href="product-vision.html">Product Vision</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-devel/pages/product-vision.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<div class="sect1">
+<h2 id="gd-vision"><a class="anchor" href="#gd-vision"></a>Project&#8217;s Vision</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Run on Java Version 17</p>
+</li>
+<li>
+<p>Point Of Sales for (Small/Medium Retail Business).</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Provide as integration with ERP such as: Idempiere; Apache OFBiz,</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="ui-business-logic"><a class="anchor" href="#ui-business-logic"></a>UI &amp; Business Logic</h3>
+<div class="paragraph">
+<p>Evaluate Pattern:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Model View ViewModel(MVVM)</p>
+</li>
+<li>
+<p>Model View Control(MVC)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Java Swing</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Long Term Technology</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>JavaFX</p>
+</div>
+<div class="paragraph">
+<p>Compose for Desktop (Kolin DSL):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/JetBrains/compose-jb" class="bare">https://github.com/JetBrains/compose-jb</a></p>
+</li>
+<li>
+<p><a href="https://github.com/JetBrains/compose-jb/blob/master/tutorials/Swing_Integration" class="bare">https://github.com/JetBrains/compose-jb/blob/master/tutorials/Swing_Integration</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="context"><a class="anchor" href="#context"></a>Context</h3>
+<div class="paragraph">
+<p>AppContext</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Provide info abou current App Instance: provide b underline infra: OSGI; Netbeans Platform</p>
+<div class="ulist">
+<ul>
+<li>
+<p>DI Container, etc&#8230;&#8203;</p>
+</li>
+<li>
+<p>User (Provide info about authenticated User and permission&#8217;s</p>
+</li>
+<li>
+<p>Host (Provide info about host running the POS)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuration"><a class="anchor" href="#configuration"></a>Configuration</h3>
+<div class="paragraph">
+<p>File (Encr Password, KeyStorage, )</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Abstract Config Access (SHOULD be based on MicroProfile Config SPEC)</p>
+</li>
+<li>
+<p>Only database properties SHOULD be available on file (Properies File)</p>
+</li>
+<li>
+<p>database.1.url, database.1.username, database.1.password</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Contextual Config on Database (KVP)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>AppConfig:</p>
+</li>
+<li>
+<p>HosConfig:</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="resource"><a class="anchor" href="#resource"></a>Resource</h3>
+<div class="paragraph">
+<p>APP Resource (Customization)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Should not be stored on database anymore, but provided on specific jar and available on classpath</p>
+<div class="ulist">
+<ul>
+<li>
+<p>on OSGI those resource can be easily updated as fragment of bundle kiolos-pos-resource</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="database-access-migration"><a class="anchor" href="#database-access-migration"></a>Database Access &amp; Migration</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Database Access (On Evaluation/Experimental)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Evaluate?</th>
+<th class="tableblock halign-left valign-top">Reference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JPA (JQL/HQL)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JPA wih JPAStreamer:</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/speedment/speedment" class="bare">https://github.com/speedment/speedment</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reladomo ORM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://goldmansachs.github.io/reladomo/" class="bare">https://goldmansachs.github.io/reladomo/</a></p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Migration tools/Libs</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Evaluate?</th>
+<th class="tableblock halign-left valign-top">Reference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Liquidbase</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X (CHOSED)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obevo</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/goldmansachs/obevo" class="bare">https://github.com/goldmansachs/obevo</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="eventsystem-scriptengine"><a class="anchor" href="#eventsystem-scriptengine"></a>EventSystem &amp; ScriptEngine</h3>
+<div class="paragraph">
+<p>EventSystem Concepts: Event, EventPublisher, EventHandler</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>EventPublisher</p>
+</li>
+<li>
+<p>EventHandler</p>
+<div class="ulist">
+<ul>
+<li>
+<p>EX: ScriptRunnerEventHandler</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>ScriptEngine</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ScriptEngine:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Kotlin(kts)</p>
+</li>
+<li>
+<p>groovy (but may not included, just for testing/evaluation)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="modularity"><a class="anchor" href="#modularity"></a>Modularity</h3>
+<div class="paragraph">
+<p>Frameworks</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>OSGI 7 (core, compendium, &#8230;&#8203;): NON-UI Componen/Modules</p>
+</li>
+<li>
+<p>Netbeans Platform v12+(): UI Modules, Update, Distribuition</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Modularity of code base: API, Reference Implementation(impl)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>krospos-core-api</p>
+</li>
+<li>
+<p>krospos-core-impl</p>
+</li>
+<li>
+<p>krospos-gui-api</p>
+</li>
+<li>
+<p>krospos-gui-core</p>
+</li>
+<li>
+<p>krospos-data-api</p>
+</li>
+<li>
+<p>krospos-data-impl</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="service-provider-interface-spi"><a class="anchor" href="#service-provider-interface-spi"></a>Service Provider Interface (SPI)</h3>
+<div class="paragraph">
+<p>About Java SPI available since Java 1.5 (eg: Used in JDBC driver loading)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>META-INF/services</p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html" class="bare">https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html</a></p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Service_provider_interface" class="bare">https://en.wikipedia.org/wiki/Service_provider_interface</a></p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Example of possible SPI</caption>
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ResourceLoader, ResourceProvider resource:file:// resource:db:// resource:classpath://</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PaymentGatewayProvider</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="osgi"><a class="anchor" href="#osgi"></a>OSGI</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Fragment for static resource customization</p>
+</li>
+<li>
+<p>capabilities and requirement</p>
+</li>
+<li>
+<p>Declarative Service (Dependency Injection)</p>
+</li>
+<li>
+<p>ConfigAdmin</p>
+</li>
+<li>
+<p>Custom Annotation</p>
+</li>
+<li>
+<p>Apache Karaf (Apache Felix)</p>
+</li>
+<li>
+<p>TornadoFX (OSGI and JavaFX)</p>
+</li>
+<li>
+<p>&#8230;&#8203;</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="gui-libraries"><a class="anchor" href="#gui-libraries"></a>GUI Libraries</h3>
+<div class="paragraph">
+<p>Currently GUI is Swing based on <em>Netbeans GUI Designer</em> which use XML to create UI and generate Swing Java code.</p>
+</div>
+<div class="paragraph">
+<p>GUI Framework/Toolkit</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Java Swing (Migra</p>
+</li>
+<li>
+<p>Jetbrains Compose for Desktop</p>
+</li>
+<li>
+<p>Netbeans Platform</p>
+<div class="ulist">
+<ul>
+<li>
+<p>(Property Change Event and Listener)</p>
+</li>
+<li>
+<p>Windows System API (Behaviors: Docking; floating, moving/positioning; Persist state between restart)</p>
+</li>
+<li>
+<p>Node Explore View</p>
+</li>
+<li>
+<p>JFXPanel (allow to use JavaFX content)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>JavaFX (Web View,</p>
+</li>
+<li>
+<p>TornadoFX (Build on top of JavaFX, But comple</p>
+</li>
+<li>
+<p>Eclipse SWT</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Swing Libraries</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>SwingX</p>
+</li>
+<li>
+<p>&#8230;&#8203; (TO BE REMOVED)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="tools-for-improvemen-of-code-quali"><a class="anchor" href="#tools-for-improvemen-of-code-quali"></a>Tools for improvemen of Code Quali</h3>
+<div class="paragraph">
+<p>GUI Test</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>FEST (Deprecate) use AssertJ (Swing Module)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Test Coverage with</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>JaCoCo coverage tool, used to measure how many lines of our code are tested.</p>
+</li>
+<li>
+<p>OpenClover (code coverage tool for Java, Groovy and AspectJ)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Static Source Code Analysis with</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>PMD</p>
+</li>
+<li>
+<p>SpotBugs (Alternative to FindBug) and Find Security Bugs</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Project has strict code style guidelines with</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Checkstyle maven-checkstyle-plugin</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Scan your Dependencies for Vulnerabilities with</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>OWASP Dependency Check</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Dependency-Check is a Software Composition Analysis (SCA) tool suite</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://owasp.org/www-project-dependency-check/" class="bare">https://owasp.org/www-project-dependency-check/</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Performance and</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>SoapUI (API Testing Tooling)</p>
+</li>
+<li>
+<p>Gatlin</p>
+</li>
+<li>
+<p>JMeter</p>
+</li>
+<li>
+<p>Locust (Python Based)</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Example use dependecies check</div>
+<div class="content">
+<pre>mvn org.owasp:dependency-check-maven:check -Dformat=CSV
+mvn org.owasp:dependency-check-maven:aggregate -Dformat=CSV</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example use JaCoCo</div>
+<div class="content">
+<pre>mvn clean install jacoco:prepare-agent jacoco:report
+mvn clean jacoco:prepare-agent install jacoco:report</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="reference"><a class="anchor" href="#reference"></a>Reference</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>todo</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

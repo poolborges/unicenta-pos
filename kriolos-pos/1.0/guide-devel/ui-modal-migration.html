@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Modal Architecture Migration: Panel-First Design &amp; PosUIModal :: KriolOS POS Documentation</title>
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-migration/index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Developer Guide</li>
+    <li>User Interface</li>
+    <li><a href="ui-modal-migration.html">Modal Architecture (PosUIModal)</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-devel/pages/ui-modal-migration.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Modal Architecture Migration: Panel-First Design &amp; PosUIModal</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This document specifies the architectural transition from legacy <code>javax.swing.JDialog</code> inheritance to a <strong>Panel-First Modal Architecture</strong> powered by <code>PosUIModal</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="1-problem-statement-motivation"><a class="anchor" href="#1-problem-statement-motivation"></a>1. Problem Statement &amp; Motivation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Historically, modal interactions across KriolOS POS were implemented by having classes directly extend <code>javax.swing.JDialog</code>. This design created severe architectural and platform-level issues:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Tight Container Coupling</strong>: UI panels are permanently tied to a native top-level window. They cannot be hosted in-frame, embedded in tabs, rendered inside web wrappers, or tested without spawning native OS windows.</p>
+</li>
+<li>
+<p><strong>Wayland &amp; FlatLaf Black Buffer Rendering (BUG-001)</strong>: On modern Linux Wayland compositors (Pop!_OS COSMIC / GNOME), unvalidated dialogs that omit explicit layout validation passes render with an unpainted, solid-black framebuffer until an external damage event (click/drag) is received.</p>
+</li>
+<li>
+<p><strong>Modal Window Detachment &amp; Focus Loss (BUG-002)</strong>: On Linux XWayland, modal dialogs detach as secondary OS windows in the dock/taskbar. Clicking outside or focusing the main window causes the dialog to slip behind the main POS screen, leaving the UI unresponsive with the blocking dialog hidden.</p>
+</li>
+<li>
+<p><strong>Fragmentation of Window Handling</strong>: Over 20 dialogs independently attempt to resolve parent frames (<code>new JFrame()</code>, <code>SwingUtilities.windowForComponent</code>), frequently triggering <code>NullPointerException</code> when <code>parent == null</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="2-architectural-solution-panel-first-design-posuimodal"><a class="anchor" href="#2-architectural-solution-panel-first-design-posuimodal"></a>2. Architectural Solution: Panel-First Design (<code>PosUIModal</code>)</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="core-principles"><a class="anchor" href="#core-principles"></a>Core Principles</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Content Extends <code>javax.swing.JPanel</code></strong>: All dialog content forms extend <code>JPanel</code> rather than <code>JDialog</code>.</p>
+</li>
+<li>
+<p><strong>Consistent Suffix Convention (<code>*Panel</code>)</strong>: All modal panel classes must use the <strong><code>*Panel</code></strong> suffix. If a collision with an existing panel occurs, add a small, useful acronym before the suffix <code>Panel</code> (e.g. <code>JCalendarDialog</code> &#8594; <code>JCalendarDlgPanel</code> because <code>JCalendarPanel</code> already exists).</p>
+</li>
+<li>
+<p><strong>Rule 7.2 Component Identification (<code>setName()</code> URN Anchoring)</strong>: Every Swing component touched during refactoring receives a unique identifier via <code>.setName("kriolos:&lt;domain&gt;:&lt;component-or-action&gt;")</code>.</p>
+</li>
+<li>
+<p><strong>Centralized Modal Orchestration (<code>PosUIModal</code>)</strong>: A unified, fluent controller in <code>com.openbravo.data.gui.modal.PosUIModal</code> handles presentation, window ownership, centering, and lifecycle.</p>
+</li>
+<li>
+<p><strong>Pluggable Presentation Strategies</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>NATIVE_DIALOG</code></strong>: Managed <code>JDialog</code> wrapper with automatic owner resolution, FlatLaf framebuffer validation (curing <code>BUG-001</code>), and IntelliJ-style focus pinning (curing <code>BUG-002</code>).</p>
+</li>
+<li>
+<p><strong><code>IN_FRAME_OVERLAY</code></strong>: Single-window in-frame modal overlay rendered on <code>JRootFrame&#8217;s `JLayeredPane.MODAL_LAYER</code> with a darkened backdrop scrim and <code>SecondaryLoop</code> blocking—<strong>completely eliminating secondary OS windows</strong>.</p>
+</li>
+<li>
+<p><strong>Configurable</strong>: Configurable at runtime via <code>ui.modal.mode = dialog | overlay</code> or <code>-Dkriolos.ui.modal.mode=&#8230;&#8203;</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="3-netbeans-gui-builder-form-specification"><a class="anchor" href="#3-netbeans-gui-builder-form-specification"></a>3. NetBeans GUI Builder (<code>.form</code>) Specification</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When converting dialogs designed with the NetBeans GUI Builder:</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>NetBeans <code>.form</code> files are XML metadata paired with Swing classes.
+* For <code>JDialog</code>, the root element is:
+  <code>&lt;Form type="org.netbeans.modules.form.forminfo.JDialogFormInfo"&gt;</code>
+* For <code>JPanel</code>, the root element MUST be:
+  <code>&lt;Form type="org.netbeans.modules.form.forminfo.JPanelFormInfo"&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>If a <code>.java</code> file is changed to <code>extends JPanel</code> without updating <code>.form</code>, NetBeans GUI Builder will regenerate incompatible <code>JDialog</code> methods (<code>setDefaultCloseOperation</code>, <code>pack()</code>) inside <code>//GEN-BEGIN:initComponents</code>, breaking compilation.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="backward-compatible-migration-pattern"><a class="anchor" href="#backward-compatible-migration-pattern"></a>Backward-Compatible Migration Pattern</h3>
+<div class="paragraph">
+<p>To guarantee zero regressions and seamless backwards compatibility:
+1. Create the new visual form as <code>*Panel.java</code> + <code>*Panel.form</code> with <code>JPanelFormInfo</code>.
+2. Keep the legacy <code>*Dialog.java</code> as a thin delegate wrapper:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class JEditorTextDialog extends JDialog {
+    public static String showEditor(Component parent, String title) {
+        return JEditorTextPanel.show(parent, title);
+    }
+}</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="4-dialog-inventory-identification-mapping-catalog"><a class="anchor" href="#4-dialog-inventory-identification-mapping-catalog"></a>4. Dialog Inventory &amp; Identification Mapping Catalog</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Every modal dialog across the codebase is assigned a unique identifier (<code>MODAL-xxx</code>) for tracking, testing, and migration verification.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 30%;">
+<col style="width: 10%;">
+<col style="width: 30%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">ID</th>
+<th class="tableblock halign-left valign-top">Current Class (<code>extends JDialog</code>)</th>
+<th class="tableblock halign-left valign-top">.form?</th>
+<th class="tableblock halign-left valign-top">Migrated Class (<code>extends JPanel</code>)</th>
+<th class="tableblock halign-left valign-top">Category / Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODAL-001</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.data.gui.JMessageDialog</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.data.gui.JMessagePanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System alerts, warnings, and expandable exception diagnostics.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODAL-002</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.beans.JEditorTextDialog</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.beans.JEditorTextPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">On-screen touch keypad for text and alphanumeric input.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODAL-003</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.beans.JCalendarDialog</code> (Date)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.beans.JCalendarDlgPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Month calendar grid for date selection (acronym <code>Dlg</code> avoids collision with <code>JCalendarPanel</code>).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODAL-004</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.beans.JCalendarDialog</code> (Time)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.beans.JCalendarDlgPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Date and analog clock picker for timestamp selection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODAL-005</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.beans.JIntegerDialog</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.beans.JIntegerPanel</code> (<code>JNumberPanel&lt;Integer&gt;</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Numeric keypad for integer unit quantities.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODAL-006</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.beans.JDoubleDialog</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.beans.JDoublePanel</code> (<code>JNumberPanel&lt;Double&gt;</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Numeric keypad for currency and decimal price input.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODAL-007</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.beans.DinerNumber</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.beans.DinerNumberPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Counter keypad for restaurant table guest count.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODAL-008</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.beans.JPasswordDialog</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.beans.JPasswordPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Masked keypad for manager PIN override and authentication.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODAL-009</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.data.gui.JFind</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.data.gui.JFindPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Record search, field matching, and filtering query dialog.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODAL-010</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.data.gui.JSort</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.data.gui.JSortPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multi-level column ordering and sorting dialog.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODAL-011</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.data.gui.JListData</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.data.gui.JListDataPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generic list item selector dialog.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODAL-012</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.payment.JPaymentSelect</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.payment.JPaymentSelect</code> (<code>JPanel</code> + <code>PosUIModal</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Checkout payment method tabs (Cash, Card, Debt, Paper, etc.).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODAL-013</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.customers.JCustomerFinder</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.customers.JCustomerFinderPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Customer lookup and association dialog.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODAL-014</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.panels.JProductFinder</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.panels.JProductFinderPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Product catalog search and line item selection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODAL-015</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.panels.JTicketsFinder</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.panels.JTicketsFinderPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Receipt history and ticket reprint finder.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MODAL-016</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.admin.JDlgChangePassword</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.admin.JChangePasswordPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User credential and password update dialog.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="5-rule-7-2-component-identification-setname-urn-anchors"><a class="anchor" href="#5-rule-7-2-component-identification-setname-urn-anchors"></a>5. Rule 7.2 Component Identification (<code>setName()</code> URN Anchors)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Every migrated panel executes <code>initDomainAdapters()</code> to attach standardized URNs for automated testing, test fixtures, and future web bindings:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Panel Class</th>
+<th class="tableblock halign-left valign-top">Component / Element</th>
+<th class="tableblock halign-left valign-top"><code>setName()</code> URN Anchor Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JMessagePanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Root Panel<br>
+Alert Icon<br>
+Message Text<br>
+Exception Details<br>
+OK Button<br>
+Cancel Button<br>
+More/Details Button</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos:message:panel</code><br>
+<code>kriolos:message:lbl-icon</code><br>
+<code>kriolos:message:lbl-text</code><br>
+<code>kriolos:message:txt-exception</code><br>
+<code>kriolos:message:btn-ok</code><br>
+<code>kriolos:message:btn-cancel</code><br>
+<code>kriolos:message:btn-more</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JEditorTextPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Root Panel<br>
+On-screen Keypad<br>
+Text Input Field<br>
+OK Button<br>
+Cancel Button<br>
+Message Label</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos:editor:text-panel</code><br>
+<code>kriolos:editor:keypad</code><br>
+<code>kriolos:editor:input-text</code><br>
+<code>kriolos:editor:btn-ok</code><br>
+<code>kriolos:editor:btn-cancel</code><br>
+<code>kriolos:editor:lbl-message</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JPasswordPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Root Panel<br>
+OK Button</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos:auth:password-panel</code><br>
+<code>kriolos:editor:btn-ok</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JCalendarDlgPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Root Panel<br>
+Date Picker<br>
+Time Picker<br>
+OK Button<br>
+Cancel Button</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos:calendar:dialog-panel</code><br>
+<code>kriolos:calendar:date-picker</code><br>
+<code>kriolos:calendar:time-picker</code><br>
+<code>kriolos:calendar:btn-ok</code><br>
+<code>kriolos:calendar:btn-cancel</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JIntegerPanel</code> / <code>JDoublePanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Root Panel<br>
+Numeric Keypad<br>
+Number Field<br>
+OK Button<br>
+Cancel Button<br>
+Message Label</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos:editor:number-panel</code><br>
+<code>kriolos:editor:number-keypad</code><br>
+<code>kriolos:editor:number-field</code><br>
+<code>kriolos:editor:number-btn-ok</code><br>
+<code>kriolos:editor:number-btn-cancel</code><br>
+<code>kriolos:editor:number-lbl-message</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DinerNumberPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Root Panel<br>
+Guest Count Keypad<br>
+Guest Count Field<br>
+OK Button<br>
+Message Label</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos:dining:guest-count-panel</code><br>
+<code>kriolos:dining:guest-count-keypad</code><br>
+<code>kriolos:dining:guest-count-field</code><br>
+<code>kriolos:dining:guest-count-btn-ok</code><br>
+<code>kriolos:dining:guest-count-lbl-message</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JFindPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Root Panel<br>
+Search Text<br>
+Where Field Combo<br>
+Match Condition Combo<br>
+Case Sensitive Checkbox<br>
+OK Button<br>
+Cancel Button</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos:find:search-panel</code><br>
+<code>kriolos:find:input-text</code><br>
+<code>kriolos:find:combo-field</code><br>
+<code>kriolos:find:combo-match</code><br>
+<code>kriolos:find:chk-matchcase</code><br>
+<code>kriolos:find:btn-ok</code><br>
+<code>kriolos:find:btn-cancel</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JSortPanel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Root Panel<br>
+First Sort Column<br>
+Second Sort Column<br>
+Third Sort Column<br>
+OK Button<br>
+Cancel Button</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos:sort:ordering-panel</code><br>
+<code>kriolos:sort:combo-column1</code><br>
+<code>kriolos:sort:combo-column2</code><br>
+<code>kriolos:sort:combo-column3</code><br>
+<code>kriolos:sort:btn-ok</code><br>
+<code>kriolos:sort:btn-cancel</code></p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="6-beanshell-script-templates-bs-audit-read-only"><a class="anchor" href="#6-beanshell-script-templates-bs-audit-read-only"></a>6. BeanShell Script Templates (<code>.bs</code>) Audit (Read-Only)</h2>
+<div class="sectionbody">
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>CRITICAL PROJECT RULE</strong>:
+BeanShell (<code>.bs</code>) template files <strong>MUST NOT BE MODIFIED</strong> during this migration. They are audited and formally documented below for reference and future roadmap enhancements only.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Multiple dynamic BeanShell script templates located in <code>kriolos-opos-app/src/main/resources/com/openbravo/pos/templates/</code> currently invoke dialogs directly, typically passing <code>null</code> as the parent window:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 12.5%;">
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Script File</th>
+<th class="tableblock halign-left valign-top">Line(s)</th>
+<th class="tableblock halign-left valign-top">Call Snippet</th>
+<th class="tableblock halign-left valign-top">Architectural Impact &amp; Known Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Ticket.Close.bs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L24, L55</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pane.createDialog("Cash payment")</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Constructs an independent <code>JDialog</code> detached from the main application frame.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Cash.Close.bs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L26-27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>import javax.swing.JDialog;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Imports native dialog constructs for cash management closing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>script.StockCurrentSet.bs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L42, L57</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JOptionPane.showMessageDialog(null, &#8230;&#8203;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spawns unparented dialog tied to <code>SharedOwnerFrame</code>, causing window focus drops behind POS on Pop!_OS / Wayland.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>script.StockCurrentAdd.bs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L40, L51</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JOptionPane.showMessageDialog(null, &#8230;&#8203;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spawns unparented warning dialogs when stock level is insufficient.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>script.Event.Total.bs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L32</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JOptionPane.showMessageDialog(null, &#8230;&#8203;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spawns unparented warning dialog before ticket closing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>script.upsell.bs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L45-50</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JOptionPane.showOptionDialog(null, &#8230;&#8203;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spawns unparented yes/no option dialog for cross-sell recommendations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>script.SetPerson.bs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L22</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JOptionPane.showInputDialog("Enter Waiter", &#8230;&#8203;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spawns unparented text input prompt dialog for waiter assignment.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Ticket.SetPerson.bs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L21</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JOptionPane.showInputDialog("Enter Waiter", &#8230;&#8203;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spawns unparented text input prompt dialog for waiter assignment.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="future-roadmap-for-scripting-deferred"><a class="anchor" href="#future-roadmap-for-scripting-deferred"></a>Future Roadmap for Scripting (Deferred)</h3>
+<div class="paragraph">
+<p>When BeanShell modernization is prioritized in a future milestone:
+1. Expose <code>PosUIModal</code> into the BeanShell scripting context (e.g., as a global <code>modal</code> helper or static utility).
+2. Scripts will then be updated to call <code>modal.showMessage(&#8230;&#8203;)</code>, <code>modal.confirm(&#8230;&#8203;)</code>, or <code>modal.input(&#8230;&#8203;)</code> so they automatically bind to <code>JRootFrame</code> and participate in the in-frame modal overlay or focus guard without spawning unparented OS windows.
+3. For now, all <code>.bs</code> files remain strictly untouched.</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="7-acceptance-testing-pre-screen-baseline"><a class="anchor" href="#7-acceptance-testing-pre-screen-baseline"></a>7. Acceptance Testing &amp; Pre-Screen Baseline</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>An autonomous acceptance test suite (<code>PosDialogPreScreenBaselineIT</code>) executes every modal dialog in the catalog, asserts non-black framebuffer rendering, captures golden baseline snapshots, and dismisses them automatically.</p>
+</div>
+<div class="sect2">
+<h3 id="pre-screen-post-migration-comparison-naming-standard"><a class="anchor" href="#pre-screen-post-migration-comparison-naming-standard"></a>Pre-Screen &amp; Post-Migration Comparison Naming Standard</h3>
+<div class="paragraph">
+<p>To enable instantaneous side-by-side comparison in file managers, both baseline and migrated screenshots share the <strong>exact same prefix</strong>, with the legacy dialog suffixed with <strong><code>_DIALOG</code></strong> and the migrated panel suffixed with <strong><code>_MODAL</code></strong>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Baseline (Legacy <code>JDialog</code>): <code>NN[x]_&lt;name&gt;_DIALOG.png</code></p>
+</li>
+<li>
+<p>Post-Migration (<code>PosUIModal</code>): <code>NN[x]_&lt;name&gt;_MODAL.png</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When sorted alphabetically in any file manager, each baseline and migrated pair naturally groups adjacent to each other:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>01a_message_dialog_warning_DIALOG.png</code></p>
+</li>
+<li>
+<p><code>01a_message_dialog_warning_MODAL.png</code></p>
+</li>
+<li>
+<p><code>01b_message_dialog_exception_DIALOG.png</code></p>
+</li>
+<li>
+<p><code>01b_message_dialog_exception_MODAL.png</code></p>
+</li>
+<li>
+<p><code>02_editor_text_dialog_DIALOG.png</code></p>
+</li>
+<li>
+<p><code>02_editor_text_dialog_MODAL.png</code></p>
+</li>
+<li>
+<p><code>03_calendar_dialog_date_DIALOG.png</code></p>
+</li>
+<li>
+<p><code>03_calendar_dialog_date_MODAL.png</code></p>
+</li>
+<li>
+<p><code>04_calendar_dialog_time_DIALOG.png</code></p>
+</li>
+<li>
+<p><code>04_calendar_dialog_time_MODAL.png</code></p>
+</li>
+<li>
+<p><code>05_integer_dialog_DIALOG.png</code></p>
+</li>
+<li>
+<p><code>05_integer_dialog_MODAL.png</code></p>
+</li>
+<li>
+<p><code>06_double_dialog_DIALOG.png</code></p>
+</li>
+<li>
+<p><code>06_double_dialog_MODAL.png</code></p>
+</li>
+<li>
+<p><code>07_diner_number_DIALOG.png</code></p>
+</li>
+<li>
+<p><code>07_diner_number_MODAL.png</code></p>
+</li>
+<li>
+<p><code>08_password_dialog_DIALOG.png</code></p>
+</li>
+<li>
+<p><code>08_password_dialog_MODAL.png</code></p>
+</li>
+<li>
+<p><code>09_find_dialog_DIALOG.png</code></p>
+</li>
+<li>
+<p><code>09_find_dialog_MODAL.png</code></p>
+</li>
+<li>
+<p><code>10_sort_dialog_DIALOG.png</code></p>
+</li>
+<li>
+<p><code>10_sort_dialog_MODAL.png</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This convention guarantees pixel-perfect visual fidelity and effortless side-by-side inspection by developers.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

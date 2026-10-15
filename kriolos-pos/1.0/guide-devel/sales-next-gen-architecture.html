@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Specification: Next-Generation Sales Panel &amp; Catalog Architecture :: KriolOS POS Documentation</title>
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-migration/index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Developer Guide</li>
+    <li>Tickets &amp; Sales</li>
+    <li><a href="sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-devel/pages/sales-next-gen-architecture.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Specification: Next-Generation Sales Panel &amp; Catalog Architecture</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#1-sales-view-configuration-ticket-buttons-xml">1. 1. Sales View Configuration: <code>Ticket.Buttons.xml</code></a>
+<ul class="sectlevel2">
+<li><a href="#1-1-configuration-elements">1.1. 1.1 Configuration Elements</a></li>
+<li><a href="#1-2-configuration-template">1.2. 1.2 Configuration Template</a></li>
+</ul>
+</li>
+<li><a href="#2-legacy-sales-architecture-complexity-analysis">2. 2. Legacy Sales Architecture Complexity Analysis</a>
+<ul class="sectlevel2">
+<li><a href="#2-1-the-inheritance-hierarchy-problem">2.1. 2.1 The Inheritance Hierarchy Problem</a></li>
+<li><a href="#2-2-structural-deficiencies">2.2. 2.2 Structural Deficiencies</a></li>
+</ul>
+</li>
+<li><a href="#3-next-generation-design-principles">3. 3. Next-Generation Design Principles</a>
+<ul class="sectlevel2">
+<li><a href="#3-1-prefer-composition-over-inheritance">3.1. 3.1 Prefer Composition Over Inheritance</a></li>
+<li><a href="#3-2-sales-lifecycle-states">3.2. 3.2 Sales Lifecycle States</a></li>
+<li><a href="#3-3-refund-architecture-rule">3.3. 3.3 Refund Architecture Rule</a></li>
+</ul>
+</li>
+<li><a href="#4-immutable-self-contained-closed-ticket">4. 4. Immutable &amp; Self-Contained Closed Ticket</a></li>
+<li><a href="#5-catalogexplorer-modernization">5. 5. <code>CatalogExplorer</code> Modernization</a>
+<ul class="sectlevel2">
+<li><a href="#5-1-architecture-contract">5.1. 5.1 Architecture Contract</a></li>
+<li><a href="#5-2-catalogexplorerconfig">5.2. 5.2 <code>CatalogExplorerConfig</code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph lead">
+<p>Architectural analysis and design blueprint for decomposing the legacy <code>JPanelTicket</code> monolith, reforming the ticket refund/edit workflows, introducing the <code>CatalogExplorer</code> abstraction, and formalizing the immutable closed ticket lifecycle.</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="1-sales-view-configuration-ticket-buttons-xml"><a class="anchor" href="#1-sales-view-configuration-ticket-buttons-xml"></a>1. 1. Sales View Configuration: <code>Ticket.Buttons.xml</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The POS sales interface behavior and extension buttons are configured via <code>Ticket.Buttons.xml</code>. This configuration is parsed directly without template engines to inject user actions and layout sizing.</p>
+</div>
+<div class="sect2">
+<h3 id="1-1-configuration-elements"><a class="anchor" href="#1-1-configuration-elements"></a>1.1. 1.1 Configuration Elements</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tag</th>
+<th class="tableblock halign-left valign-top">Attributes</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;button&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>key</code>, <code>image</code>, <code>code</code>, <code>template</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Renders an action button on the sales pane that triggers a script (<code>code</code>) or template.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;event&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>key</code>, <code>code</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hooks script execution to sales lifecycle events (<code>ticket.close</code>, <code>cash.close</code>).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;property&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>key</code>, <code>value</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UI sizing, default tax inclusion, and pricing visibility settings.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="1-2-configuration-template"><a class="anchor" href="#1-2-configuration-template"></a>1.2. 1.2 Configuration Template</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;configuration&gt;
+    &lt;!-- Custom sales action buttons --&gt;
+    &lt;button key="button.totaldiscount" image="discount" code="script.totaldiscount"/&gt;
+    &lt;button key="button.print" image="ticket_print" template="Printer.TicketPreview"/&gt;
+    &lt;button key="button.refundit" name="button.refundit" code="script.Refundit"/&gt;
+
+    &lt;!-- Lifecycle event hooks --&gt;
+    &lt;event key="ticket.close" code="Ticket.Close"/&gt;
+    &lt;event key="cash.close" code="Cash.Close"/&gt;
+
+    &lt;!-- Sizing and presentation properties --&gt;
+    &lt;property key="catheight" value="320" /&gt;
+    &lt;property key="imgwidth" value="107"/&gt;
+    &lt;property key="imgheight" value="60"/&gt;
+    &lt;property key="printselected" value="true"/&gt;
+    &lt;property key="taxesincluded" value="true"/&gt;
+    &lt;property key="taxcategoryid" value="001"/&gt;
+    &lt;property key="pricevisible" value="true" /&gt;
+
+    &lt;!-- Legacy backward-compatible syntax --&gt;
+    &lt;cat-height value="320" /&gt;
+    &lt;img-width value="107"/&gt;
+    &lt;img-height value="60"/&gt;
+    &lt;printselected value="true"/&gt;
+    &lt;taxesincluded value="true"/&gt;
+    &lt;taxcategoryid value="001"/&gt;
+    &lt;pricevisible value="true" /&gt;
+&lt;/configuration&gt;</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="2-legacy-sales-architecture-complexity-analysis"><a class="anchor" href="#2-legacy-sales-architecture-complexity-analysis"></a>2. 2. Legacy Sales Architecture Complexity Analysis</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="2-1-the-inheritance-hierarchy-problem"><a class="anchor" href="#2-1-the-inheritance-hierarchy-problem"></a>2.1. 2.1 The Inheritance Hierarchy Problem</h3>
+<div class="paragraph">
+<p>In the original Openbravo POS codebase, sales panel management suffered from excessive inheritance and circular references:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">TicketsEditor (interface)
+  └── JPanelTicket (abstract class, 3,300 lines, implements JPanelView, TicketsEditor)
+        └── JPanelTicketEdits
+              ├── m_catandlines (JTicketCatalogLines)
+              │     ├── refoundLines (JRefundLines)
+              │     └── catalogExplorer (CatalogSelector)
+              └── getJTicketsBag() -&gt; JTicketsBagTicket
+                    ├── m_TicketsBagTicketBag (JTicketsBagTicketBag JPanel)
+                    └── m_panelticketedit (JPanelTicketEdits reference back!)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="2-2-structural-deficiencies"><a class="anchor" href="#2-2-structural-deficiencies"></a>2.2. 2.2 Structural Deficiencies</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Circular Coupling</strong>: <code>JPanelTicketEdits</code> passes <code>this</code> to <code>JTicketsBagTicket</code>, which passes itself to <code>JTicketsBagTicketBag</code>, which reaches back into <code>JPanelTicketEdits</code> to toggle card panels.</p>
+</li>
+<li>
+<p><strong>Fragile Refund Mutations</strong>: As seen in legacy <code>m_jRefundActionPerformed</code>, refund lines are built by creating an in-memory <code>TicketInfo(RECEIPT_REFUND)</code> with cloned lines, muting prices, and forcing UI mode switching that breaks state consistency:
+[source,java]
+----
+// Legacy refund flaw: manual state swapping
+TicketInfo refundticket = new TicketInfo();
+refundticket.setTicketType(TicketInfo.RECEIPT_REFUND);
+refundticket.setTicketStatus(m_ticket.getTicketId());
+refundticket.setCustomer(m_ticket.getCustomer());
+refundticket.setPayments(m_ticket.getPayments());
+refundticket.setOldTicket(true);
+m_panelticketedit.setActiveTicket(refundticket, null);
+----</p>
+</li>
+<li>
+<p><strong>Edit Mode Confusion</strong>: Editing an existing ticket (<code>m_jEditActionPerformed</code>) swaps <code>m_ticketCopy = m_ticket.copyTicket()</code>, making it difficult to track what was originally billed versus modified.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="3-next-generation-design-principles"><a class="anchor" href="#3-next-generation-design-principles"></a>3. 3. Next-Generation Design Principles</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="3-1-prefer-composition-over-inheritance"><a class="anchor" href="#3-1-prefer-composition-over-inheritance"></a>3.1. 3.1 Prefer Composition Over Inheritance</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Decompose <code>JPanelTicket</code> into focused, reusable components:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong><code>CatalogExplorer</code></strong>: Pure catalog browsing, search, and category selection.</p>
+</li>
+<li>
+<p><strong><code>TicketSummaryPane</code></strong>: Order lines table, quantities, unit prices, discounts, and customer summary.</p>
+</li>
+<li>
+<p><strong><code>SalesActionPad</code></strong>: Keypad, tenders, hold/split/merge actions.</p>
+</li>
+<li>
+<p><strong><code>SalesCoordinator</code></strong>: Orchestrates state between Catalog, Ticket, and Payment without GUI coupling.</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="3-2-sales-lifecycle-states"><a class="anchor" href="#3-2-sales-lifecycle-states"></a>3.2. 3.2 Sales Lifecycle States</h3>
+<div class="paragraph">
+<p>A sale transitions through explicit, immutable lifecycle states:
+* <strong><code>DRAFT</code></strong>: Active cart. Products can be added, updated, or removed; customer can be linked; discounts applied.
+* <strong><code>HELD</code> / <code>PARKED</code></strong>: Order temporarily saved (e.g. restaurant table or bar tab).
+* <strong><code>PAYMENT</code></strong>: Split-tender / multi-payment entry.
+* <strong><code>PAID</code> / <code>CLOSED</code></strong>: Finalized. Immutable. Stock and financial ledger committed.
+* <strong><code>CANCELLED</code></strong>: Abandoned before payment. Zero ledger mutations.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="3-3-refund-architecture-rule"><a class="anchor" href="#3-3-refund-architecture-rule"></a>3.3. 3.3 Refund Architecture Rule</h3>
+<div class="paragraph">
+<p>A refund on a <code>PAID</code> sale <strong>MUST NEVER</strong> mutate the original closed ticket.
+Instead:
+1. The original ticket remains <strong>100% immutable</strong>.
+2. A new, dedicated <code>REFUND</code> ticket is generated with negative quantities, linked to the original ticket ID (<code>source_ticket_id</code>).
+3. Stock is returned via <code>MovementReason.IN_REFUND</code>.
+4. Payment reversals are recorded as explicit negative or refund tenders.</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="4-immutable-self-contained-closed-ticket"><a class="anchor" href="#4-immutable-self-contained-closed-ticket"></a>4. 4. Immutable &amp; Self-Contained Closed Ticket</h2>
+<div class="sectionbody">
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>THE SELF-CONTAINED REBUILD INVARIANT</strong></p>
+</div>
+<div class="paragraph">
+<p>When a ticket transitions to <code>CLOSED</code>, it must contain <strong>all data necessary to completely rebuild and reprint itself</strong> without querying external catalog, tax, or customer tables.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Tax Rates Stored at Sale Time</strong>: The ticket must record the exact tax rate, tax category name, tax base, and computed tax amount per line. If a tax rate changes in the database next year, reprinting a 2026 ticket must print the 2026 tax rate, not the future rate.</p>
+</li>
+<li>
+<p><strong>Product Snapshots</strong>: Product name, SKU/barcode, and purchase cost are snapshotted in the line item.</p>
+</li>
+<li>
+<p><strong>Structured Storage</strong>: Preserved in relational tables (<code>tickets</code>, <code>ticketlines</code>, <code>taxlines</code>, <code>payments</code>) while maintaining a single canonical <strong>JSON / XML payload</strong> in <code>receipts.ATTRIBUTES</code> for instant reprint verification.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="5-catalogexplorer-modernization"><a class="anchor" href="#5-catalogexplorer-modernization"></a>5. 5. <code>CatalogExplorer</code> Modernization</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The product catalog interface is decoupled from Swing hierarchy via the <code>CatalogExplorer</code> contract:</p>
+</div>
+<div class="sect2">
+<h3 id="5-1-architecture-contract"><a class="anchor" href="#5-1-architecture-contract"></a>5.1. 5.1 Architecture Contract</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public interface CatalogExplorer {
+    void setCatalogConfig(CatalogExplorerConfig config);
+    void setCatalogListener(CatalogListener listener);
+    void refreshCatalog();
+    void showCategories(boolean visible);
+    void filterProducts(String searchCriteria);
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="5-2-catalogexplorerconfig"><a class="anchor" href="#5-2-catalogexplorerconfig"></a>5.2. 5.2 <code>CatalogExplorerConfig</code></h3>
+<div class="paragraph">
+<p>Supports responsive layouts across desktop, tablet, and mobile screens:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;configuration&gt;
+    &lt;property key="catalog-explorer:show-search-box" value="true" /&gt;
+    &lt;property key="catalog-explorer:show-categories" value="true" /&gt;
+    &lt;property key="catalog-explorer:show-category-icons" value="true" /&gt;
+    &lt;property key="catalog-explorer:show-products-icons" value="true" /&gt;
+    &lt;property key="catalog-explorer:button-size" value="107,60" /&gt;
+    &lt;property key="catalog-explorer:product-price-visible" value="true" /&gt;
+    &lt;property key="catalog-explorer:product-price-type" value="sell-price-tax-included" /&gt;
+    &lt;property key="catalog-explorer:products-listing-layout" value="grid" /&gt; &lt;!-- 'grid', 'list', 'table' --&gt;
+&lt;/configuration&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

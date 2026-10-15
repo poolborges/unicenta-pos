@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Specification: Tiered Configuration Architecture (Bootstrap vs. Database Configuration) :: KriolOS POS Documentation</title>
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-migration/index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Developer Guide</li>
+    <li>Architecture &amp; Modeling</li>
+    <li><a href="spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-devel/pages/spec-database-configuration.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Specification: Tiered Configuration Architecture (Bootstrap vs. Database Configuration)</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#1-context-architectural-problem">1. 1. Context &amp; Architectural Problem</a></li>
+<li><a href="#2-two-tier-configuration-architecture">2. 2. Two-Tier Configuration Architecture</a></li>
+<li><a href="#3-application-startup-lifecycle-applicationshell">3. 3. Application Startup Lifecycle (<code>ApplicationShell</code>)</a></li>
+<li><a href="#4-database-schema-config_properties">4. 4. Database Schema: <code>config_properties</code></a>
+<ul class="sectlevel2">
+<li><a href="#4-1-hierarchical-property-resolution-rule">4.1. 4.1 Hierarchical Property Resolution Rule</a></li>
+<li><a href="#4-2-property-scoping-breakdown">4.2. 4.2 Property Scoping Breakdown</a>
+<ul class="sectlevel3">
+<li><a href="#global-properties-pos_id-0000-0000-0000-0000">Global Properties (<code>pos_id = '0000-0000-0000-0000'</code>)</a></li>
+<li><a href="#terminal-specific-properties-pos_id-machine-uuid">Terminal-Specific Properties (<code>pos_id = '{machine.uuid}'</code>)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#5-configuration-provider-spi-design">5. 5. Configuration Provider SPI Design</a>
+<ul class="sectlevel2">
+<li><a href="#concrete-provider-implementations">5.1. Concrete Provider Implementations</a></li>
+</ul>
+</li>
+<li><a href="#6-class-refactoring-plan-eliminating-bloated-appconfig">6. 6. Class Refactoring Plan (Eliminating Bloated <code>AppConfig</code>)</a></li>
+<li><a href="#7-backward-compatibility-migration-strategy">7. 7. Backward Compatibility &amp; Migration Strategy</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph lead">
+<p>Unified architectural specification merging <strong>Roadmap Task 4</strong> and <strong><a href="https://github.com/kriolos-obiz/kriolos-pos/issues/74">GitHub Issue #74</a></strong>: establishing a clean, two-phase lifecycle separating local pre-DB bootstrap configuration from centralized, database-backed application configuration.</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="1-context-architectural-problem"><a class="anchor" href="#1-context-architectural-problem"></a>1. 1. Context &amp; Architectural Problem</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Historically, Openbravo POS maintained a single, monolithic configuration class (<code>com.openbravo.pos.config.AppConfig</code>) backed exclusively by a local properties file (<code>kriolos-opos.properties</code>).</p>
+</div>
+<div class="paragraph">
+<p>This legacy design suffers from severe architectural flaws:
+1. <strong>Coupling of Bootstrap &amp; Business Data</strong>: Low-level infrastructure credentials (JDBC URL, database username, password) are mixed alongside high-level business settings (company legal name, VAT calculation modes, receipt headers) and physical station hardware (scanner port, printer model).
+2. <strong>Administrative Overhead in Multi-Terminal Stores</strong>: In a store with 5 POS registers, changing the store address, email SMTP server, or default tax rate requires manually modifying and restarting 5 separate <code>.properties</code> files across all machines.
+3. <strong>Impediment to Headless &amp; Cloud Deployments</strong>: Web kiosks, self-ordering tablets, and backend microservices cannot rely on local GUI file dialogs or station-bound flat files.</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="2-two-tier-configuration-architecture"><a class="anchor" href="#2-two-tier-configuration-architecture"></a>2. 2. Two-Tier Configuration Architecture</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>KriolOS POS establishes a strict, two-tier separation of concerns:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Configuration Layer</th>
+<th class="tableblock halign-left valign-top">Storage Mechanism</th>
+<th class="tableblock halign-left valign-top">Lifecycle &amp; Timing</th>
+<th class="tableblock halign-left valign-top">Scope &amp; Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Tier 1: Bootstrap Configuration</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Local File (<code>kriolos-opos.properties</code>) + Environment Variables + CLI Flags</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Phase 1 (Pre-DB)</strong>: Evaluated at JVM startup before any database connection exists.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Infrastructure &amp; Identity</strong>:<br>
+  • JDBC URL, Driver, User, Password<br>
+  • Station UUID (<code>machine.uuid</code>)<br>
+  • Initial LookAndFeel theme (<code>pos.ui.theme</code>)<br>
+  • Provider selector: <code>pos.config.provider=database|file</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Tier 2: Application Configuration</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database Table (<code>config_properties</code> / <code>pos_configuration</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Phase 2 (Post-DB)</strong>: Loaded and cached immediately after the database session is established.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Business &amp; Operational</strong>:<br>
+  • Company Legal Name, Tax ID (NIF/VAT), Address<br>
+  • Tax Calculation Strategy (Inclusive, Exclusive)<br>
+  • Currency formatting &amp; cash rounding rules<br>
+  • Station-specific peripherals (Printers, Displays, Scales, Drawers)</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="3-application-startup-lifecycle-applicationshell"><a class="anchor" href="#3-application-startup-lifecycle-applicationshell"></a>3. 3. Application Startup Lifecycle (<code>ApplicationShell</code>)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The application initialization sequence strictly follows a two-phase protocol:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs"> +---------------------------------------------------------------------------------+
+ | JVM Launch (BootstrapPOS / ApplicationShell)                                    |
+ +---------------------------------------------------------------------------------+
+                                      │
+                                      ▼
+ [PHASE 1: PRE-DB BOOTSTRAP]
+ 1. Locate local 'kriolos-opos.properties' or resolve CLI / Environment variables
+ 2. Instantiate 'BootstrapConfiguration' (implements AppProperties)
+ 3. Initialize LaF Theme (FlatLaf / Native)
+ 4. Resolve 'machine.uuid' (Station UUID; auto-generated if first launch)
+ 5. Initialize JDBC Connection Pool (HikariCP) using Bootstrap DB credentials
+                                      │
+                                      ▼
+ [PHASE 2: POST-DB APPLICATION CONFIGURATION]
+ 6. Establish Database Session
+ 7. Initialize 'ApplicationConfigurationService' via BeanContainer
+ 8. Fetch Global settings (pos_id = '0000-0000-0000-0000')
+ 9. Fetch Station-specific settings (pos_id = {machine.uuid})
+ 10. Configure Business Services (TaxService, TicketParser, Peripherals)
+ 11. Render Login / Sales Shell</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="4-database-schema-config_properties"><a class="anchor" href="#4-database-schema-config_properties"></a>4. 4. Database Schema: <code>config_properties</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Schema evolution is managed exclusively via Liquibase (<code>db-changelog-v5_0_2.xml</code>), strictly compatible across <strong>SQLite, MariaDB, HSQLDB, H2, and PostgreSQL</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;createTable tableName="config_properties"&gt;
+    &lt;column name="pos_id" type="VARCHAR(36)"&gt;
+        &lt;constraints nullable="false" primaryKey="true"/&gt;
+    &lt;/column&gt;
+    &lt;column name="config_key" type="VARCHAR(128)"&gt;
+        &lt;constraints nullable="false" primaryKey="true"/&gt;
+    &lt;/column&gt;
+    &lt;column name="config_value" type="VARCHAR(4096)"&gt;
+        &lt;constraints nullable="true"/&gt;
+    &lt;/column&gt;
+    &lt;column name="created_at" type="datetime"&gt;
+        &lt;constraints nullable="false"/&gt;
+    &lt;/column&gt;
+    &lt;column name="updated_at" type="datetime"&gt;
+        &lt;constraints nullable="false"/&gt;
+    &lt;/column&gt;
+&lt;/createTable&gt;</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To guarantee full portability across all supported SQL engines without dialect or SQL mode incompatibilities, <code>created_at</code> and <code>updated_at</code> values are generated in application data logic (<code>DataLogicConfiguration</code>) via <code>Datas.TIMESTAMP</code> and <code>java.util.Date</code>, rather than relying on non-portable computed defaults (<code>CURRENT_TIMESTAMP</code>).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="4-1-hierarchical-property-resolution-rule"><a class="anchor" href="#4-1-hierarchical-property-resolution-rule"></a>4.1. 4.1 Hierarchical Property Resolution Rule</h3>
+<div class="paragraph">
+<p>When <code>applicationConfigurationService.get("machine.printer")</code> is requested by active terminal <code>POS-LANE-01</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">   Check Station-Specific: WHERE pos_id = 'POS-LANE-01' AND config_key = ?
+            │ (Found) ────────► Return value
+            │ (Not found)
+            ▼
+   Check Global Company:   WHERE pos_id = '0000-0000-0000-0000' AND config_key = ?
+            │ (Found) ────────► Return value
+            │ (Not found)
+            ▼
+   Check Bootstrap Fallback: Return default from BootstrapConfiguration / code default</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="4-2-property-scoping-breakdown"><a class="anchor" href="#4-2-property-scoping-breakdown"></a>4.2. 4.2 Property Scoping Breakdown</h3>
+<div class="sect3">
+<h4 id="global-properties-pos_id-0000-0000-0000-0000"><a class="anchor" href="#global-properties-pos_id-0000-0000-0000-0000"></a>Global Properties (<code>pos_id = '0000-0000-0000-0000'</code>)</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>company.name</code>, <code>company.taxid</code>, <code>company.address</code>, <code>company.phone</code>, <code>company.logo</code></p>
+</li>
+<li>
+<p><code>currency.code</code>, <code>currency.symbol</code>, <code>currency.rounding_mode</code></p>
+</li>
+<li>
+<p><code>tax.calculation_mode</code> (e.g. <code>INCLUSIVE</code>, <code>EXCLUSIVE</code>, <code>PER_LINE</code>, <code>SUBTOTAL</code>)</p>
+</li>
+<li>
+<p><code>system.email.smtp_host</code>, <code>system.email.smtp_port</code>, <code>system.email.username</code></p>
+</li>
+<li>
+<p><code>system.backup.auto_enabled</code>, <code>system.backup.cron_schedule</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="terminal-specific-properties-pos_id-machine-uuid"><a class="anchor" href="#terminal-specific-properties-pos_id-machine-uuid"></a>Terminal-Specific Properties (<code>pos_id = '{machine.uuid}'</code>)</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>machine.printer.1</code>, <code>machine.printer.2</code>, <code>machine.printer.preview</code></p>
+</li>
+<li>
+<p><code>machine.display.type</code>, <code>machine.display.com_port</code></p>
+</li>
+<li>
+<p><code>machine.scale.type</code>, <code>machine.scale.baud_rate</code></p>
+</li>
+<li>
+<p><code>machine.scanner.mode</code>, <code>machine.cashdrawer.pin</code></p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="5-configuration-provider-spi-design"><a class="anchor" href="#5-configuration-provider-spi-design"></a>5. 5. Configuration Provider SPI Design</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To allow seamless transitions between offline file mode, local MariaDB, and cloud configurations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.openbravo.pos.spi.config;
+
+public interface ConfigurationProvider {
+    String getProviderName();
+
+    // Scoped property accessors
+    String getProperty(String key);
+    String getProperty(String key, String defaultValue);
+    String getProperty(String posId, String key);
+
+    // Mutations
+    void setProperty(String posId, String key, String value) throws BasicException;
+    void removeProperty(String posId, String key) throws BasicException;
+
+    // Bulk operations &amp; cache management
+    Map&lt;String, String&gt; getAllProperties(String posId);
+    void reloadCache();
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="concrete-provider-implementations"><a class="anchor" href="#concrete-provider-implementations"></a>5.1. Concrete Provider Implementations</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong><code>FileConfigurationProvider</code> (Fallback)</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Retained for offline emergency mode or embedded single-node environments.</p>
+</li>
+<li>
+<p>Directly reads and writes <code>kriolos-opos.properties</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong><code>DatabaseConfigurationProvider</code> (Default / Standard)</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Uses <code>BootstrapConfiguration</code> to connect to the database.</p>
+</li>
+<li>
+<p>Loads <code>config_properties</code> into an in-memory concurrent map (<code>ConcurrentHashMap</code>).</p>
+</li>
+<li>
+<p>Supports atomic database updates and hot cache invalidation without requiring a terminal restart.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="6-class-refactoring-plan-eliminating-bloated-appconfig"><a class="anchor" href="#6-class-refactoring-plan-eliminating-bloated-appconfig"></a>6. 6. Class Refactoring Plan (Eliminating Bloated <code>AppConfig</code>)</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Legacy Component</th>
+<th class="tableblock halign-left valign-top">Target Architecture Replacement</th>
+<th class="tableblock halign-left valign-top">Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.config.AppConfig</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>BootstrapConfiguration</code></strong> (<code>kriolos-opos-base</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Purely pre-DB settings. Implements <code>AppProperties</code>. Stripped of all store, receipt, and tax properties.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Static property reads in UI panels</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>ApplicationConfigurationService</code></strong> (<code>kriolos-opos-domain</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Registered in <code>BeanContainer</code>. Thread-safe, cached business and peripheral settings.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configuration Dialog (<code>JFrmConfig</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Tabbed Config UI Split</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">• <strong>Tab "System / Hardware"</strong>: Writes station-specific settings (<code>machine.uuid</code>).<br>
+  • <strong>Tab "Company &amp; Business"</strong>: Restricted to Admin role; writes global settings (<code>0000-0000-0000-0000</code>) to DB.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="7-backward-compatibility-migration-strategy"><a class="anchor" href="#7-backward-compatibility-migration-strategy"></a>7. 7. Backward Compatibility &amp; Migration Strategy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To ensure zero friction during upgrade:
+1. <strong>Automatic Schema Migration</strong>: Upon first startup against an existing database, a Liquibase / Flyway / SQL migration creates <code>config_properties</code>.
+2. <strong>One-Time Property Lift</strong>: If <code>config_properties</code> is empty, <code>ApplicationConfigurationService</code> reads the existing <code>kriolos-opos.properties</code> and lifts global company keys into <code>pos_id = '0000-0000-0000-0000'</code>, and peripheral keys into <code>pos_id = '{machine.uuid}'</code>.
+3. <strong>Preserved Defaults</strong>: The existing <code>kriolos-opos.properties</code> file is kept intact as the Tier 1 bootstrap file.</p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

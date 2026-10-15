@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Troubleshooting &amp; Known Issues :: KriolOS POS Documentation</title>
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-migration/index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Developer Guide</li>
+    <li>Troubleshooting</li>
+    <li><a href="troubleshooting-known-issues.html">Known Issues</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-devel/pages/troubleshooting-known-issues.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Troubleshooting &amp; Known Issues</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This page documents known operational issues, platform-specific rendering anomalies, and backlog bugs slated for investigation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bug-001-dialog-opens-with-black-content-on-pop_os-24-04-lts"><a class="anchor" href="#bug-001-dialog-opens-with-black-content-on-pop_os-24-04-lts"></a>[BUG-001] Dialog Opens with Black Content on Pop!_OS 24.04 LTS</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Issue ID</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BUG-001</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Status</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Queued for Resolution</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Reported Platform</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Linux Pop!_OS 24.04 LTS (Noble), COSMIC / Wayland</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Component</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Swing Dialogs (<code>JMessageDialog</code>, <code>JOptionPane</code>, FlatLaf)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="symptom"><a class="anchor" href="#symptom"></a>Symptom</h3>
+<div class="paragraph">
+<p>When opening modal dialogs (such as database error notifications or message dialogs), the window contents appear completely black/blank upon initialization. The UI components (labels, buttons, text areas) only render after the user clicks inside the dialog or moves/drags the window across the screen to force a repaint event.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="technical-root-cause"><a class="anchor" href="#technical-root-cause"></a>Technical Root Cause</h3>
+<div class="paragraph">
+<p>In <code>JMessageDialog.java</code>, the dialog sets a hardcoded size (<code>setSize(new Dimension(482, 345))</code>) inside <code>initComponents()</code>, but <strong>never invokes <code>pack()</code></strong>, <strong>never calls <code>setLocationRelativeTo(&#8230;&#8203;)</code></strong>, and <strong>never invokes <code>revalidate()</code> / <code>repaint()</code></strong> prior to <code>setVisible(true)</code>. On modern Linux XWayland/Wayland compositors with FlatLaf dark themes, showing an unvalidated window leaves the backing buffer unpainted until an external damage event (click/drag) is issued.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="resolution-plan"><a class="anchor" href="#resolution-plan"></a>Resolution Plan</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Call <code>myMsg.pack()</code> to calculate dynamic component layout geometry.</p>
+</li>
+<li>
+<p>Call <code>myMsg.setLocationRelativeTo(owner)</code> to center the dialog over its parent.</p>
+</li>
+<li>
+<p>Call <code>myMsg.revalidate()</code> and trigger an explicit repaint pass prior to mapping.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bug-002-modal-dialog-detaches-as-2nd-window-and-disappears-behind-main-window"><a class="anchor" href="#bug-002-modal-dialog-detaches-as-2nd-window-and-disappears-behind-main-window"></a>[BUG-002] Modal Dialog Detaches as 2nd Window and Disappears Behind Main Window</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Issue ID</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BUG-002</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Status</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Queued for Resolution</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Reported Platform</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Linux Pop!_OS 24.04 LTS (Noble), COSMIC / Wayland / X11</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Component</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JMessageDialog</code>, <code>JDialog</code> window ownership &amp; modality</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="symptom-2"><a class="anchor" href="#symptom-2"></a>Symptom</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>When a modal blocking dialog opens, it creates a second, detached window in the OS taskbar/dock and Alt+Tab switcher.</p>
+</li>
+<li>
+<p>Clicking outside the dialog or clicking the main application window causes the dialog to disappear behind the main window.</p>
+</li>
+<li>
+<p>Users lose visibility of the blocking dialog while the main window remains unresponsive.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="comparison-of-ide-behaviors"><a class="anchor" href="#comparison-of-ide-behaviors"></a>Comparison of IDE Behaviors</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>NetBeans IDE Behavior</strong>: Opens dialog as a 2nd window; clicking main window brings main window forward <strong>without</strong> the dialog, burying it behind.</p>
+</li>
+<li>
+<p><strong>IntelliJ IDEA Behavior</strong>: Opens dialog as a 2nd window; clicking main window immediately brings the main window <strong>with the modal dialog pinned on top and blocked</strong>. The dialog never gets lost.</p>
+</li>
+<li>
+<p><strong>Target POS Behavior</strong>: At minimum IntelliJ IDEA behavior (pinned on top, never hidden); ideal target is a single-window in-frame overlay.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="technical-root-cause-2"><a class="anchor" href="#technical-root-cause-2"></a>Technical Root Cause</h3>
+<div class="paragraph">
+<p>In <code>com.openbravo.data.gui.JMessageDialog.java</code> (lines 50–58):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">private static Window getWindow(Component parent) {
+    if (parent == null) {
+        return new JFrame(); // &lt;--- CRITICAL BUG!
+    } else if (parent instanceof Frame || parent instanceof Dialog) {
+        return (Window) parent;
+    } else {
+        return getWindow(parent.getParent());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When <code>parent</code> is null or not yet attached to a Frame, <code>getWindow</code> constructs a disposable <code>new JFrame()</code>. Because the dialog&#8217;s owner is a dummy invisible frame rather than the real <code>JRootFrame</code>, the Linux window manager receives no <code>WM_TRANSIENT_FOR</code> relationship. The dialog becomes an independent root window that detaches from the main window and drops behind it upon focus change.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="resolution-strategies-queued-for-next-sprintissue"><a class="anchor" href="#resolution-strategies-queued-for-next-sprintissue"></a>Resolution Strategies (Queued for Next Sprint/Issue)</h3>
+<div class="sect3">
+<h4 id="strategy-a-solid-window-ownership-focus-guard-intellij-pattern"><a class="anchor" href="#strategy-a-solid-window-ownership-focus-guard-intellij-pattern"></a>Strategy A: Solid Window Ownership &amp; Focus Guard (IntelliJ Pattern)</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Real Ancestor Resolution</strong>: Replace <code>new JFrame()</code> with active <code>JRootFrame</code> detection:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">private static Window getWindow(Component parent) {
+    if (parent != null) {
+        Window w = SwingUtilities.getWindowAncestor(parent);
+        if (w != null) return w;
+    }
+    for (Frame f : Frame.getFrames()) {
+        if (f.isShowing() &amp;&amp; f instanceof JRootFrame) return f;
+    }
+    return JOptionPane.getRootFrame();
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Window Focus Guard</strong>: Add a <code>WindowFocusListener</code> to the owner window while the dialog is active. When the main window receives focus or is clicked, it immediately calls <code>dialog.toFront()</code> and <code>dialog.requestFocus()</code>, ensuring the dialog never goes behind.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="strategy-b-single-window-in-frame-modal-overlay"><a class="anchor" href="#strategy-b-single-window-in-frame-modal-overlay"></a>Strategy B: Single-Window In-Frame Modal Overlay</h4>
+<div class="paragraph">
+<p>Render modal dialogs directly inside <code>JRootFrame&#8217;s `GlassPane</code> or <code>JLayeredPane.MODAL_LAYER</code>:
+* <strong>Zero OS Windows</strong>: Exactly 1 window in the OS taskbar and dock.
+* <strong>Dimmed Backdrop</strong>: Semi-transparent dark overlay blocking clicks to background POS panels.
+* <strong>Wayland Immune</strong>: Completely bypasses all XWayland window mapping and multi-window compositor bugs.</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bug-003-missing-date-values-schema-constraints-on-inserts-after-liquibase-now-removal"><a class="anchor" href="#bug-003-missing-date-values-schema-constraints-on-inserts-after-liquibase-now-removal"></a>[BUG-003] Missing Date Values &amp; Schema Constraints on Inserts After Liquibase <code>now()</code> Removal</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Issue ID</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BUG-003</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Status</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Queued for Resolution / Verification</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Reported Component</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pos_liquidbase/db-changelog-v4_5.xml</code>, <code>DataLogicOrders</code>, <code>DataLogicSystem</code>, <code>DataLogicPresenceManagement</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="symptom-context"><a class="anchor" href="#symptom-context"></a>Symptom &amp; Context</h3>
+<div class="paragraph">
+<p>To support SQLite and database-agnostic schemas, <code>defaultValueComputed="now()"</code> / <code>CURRENT_TIMESTAMP</code> and <code>defaultValueDate</code> were removed from <code>pos_liquidbase/db-changelog-v4_5.xml</code> in commits <code>db592823</code> and <code>020d6175</code>.
+Consequently, database tables no longer generate default timestamps automatically upon insertion. Application code in <code>DataLogic*</code> must supply valid <code>java.util.Date</code> instances for non-nullable timestamp/datetime columns.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="findings-from-the-last-2-liquibase-commits"><a class="anchor" href="#findings-from-the-last-2-liquibase-commits"></a>Findings from the Last 2 Liquibase Commits</h3>
+<div class="sect3">
+<h4 id="1-commit-020d6175-liquidbase-db-agnostic-remove-liquidbase-computed-value"><a class="anchor" href="#1-commit-020d6175-liquidbase-db-agnostic-remove-liquidbase-computed-value"></a>1. Commit <code>020d6175</code> ("Liquidbase DB Agnostic: remove liquidbase computed value")</h4>
+<div class="paragraph">
+<p>Removed <code>defaultValueComputed="now()"</code> from:
+1. <code>draweropened.opendate</code> (<code>datetime</code>, <code>NOT NULL</code>)
+2. <code>lineremoved.removeddate</code> (<code>datetime</code>, <code>NOT NULL</code>)
+3. <code>orders.ordertime</code> (<code>datetime</code>, <code>NOT NULL</code>)
+4. <code>shift_breaks.starttime</code> (<code>datetime</code>, <code>NOT NULL</code>)
+5. <code>shift_breaks.endtime</code> (<code>datetime</code>, <code>NOT NULL</code>)</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="2-commit-db592823-break-change-liquidbase-change-timestamp-to-datetime"><a class="anchor" href="#2-commit-db592823-break-change-liquidbase-change-timestamp-to-datetime"></a>2. Commit <code>db592823</code> ("BREAK CHANGE - liquidbase change timestamp to datetime")</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Changed <code>CURRENT_TIMESTAMP</code> to <code>now()</code> across tables (subsequently removed in <code>020d6175</code>).</p>
+</li>
+<li>
+<p>Removed hardcoded <code>defaultValueDate="2022-01-01T00:00:01"</code> from:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>customers.memodate</code> (nullable)</p>
+</li>
+<li>
+<p><code>products.memodate</code> (nullable)</p>
+</li>
+<li>
+<p><code>reservations.datenew</code> (<code>NOT NULL</code>)</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="detailed-audit-of-tables-datalogic-inserts"><a class="anchor" href="#detailed-audit-of-tables-datalogic-inserts"></a>Detailed Audit of Tables &amp; <code>DataLogic</code> Inserts</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Table &amp; Column</th>
+<th class="tableblock halign-left valign-top">Nullable?</th>
+<th class="tableblock halign-left valign-top">Current Java Handling in <code>DataLogic</code></th>
+<th class="tableblock halign-left valign-top">Audit Status &amp; Defect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>orders.ordertime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NOT NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">* <code>DataLogicSystem.addOrder</code>:
+<code>if (ordertime == null) ordertime = Long.toString(new Date().getTime());</code>
+* <code>DataLogicOrders.addOrder</code>: accepts <code>String ordertime</code>, passes directly without null-check or default.
+* <code>RemoteOrderDisplay</code>: passes <code>null</code> for <code>ordertime</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>DEFECT</strong>:
+1. <code>DataLogicOrders.addOrder</code> passes <code>null</code> when not provided, violating the <code>NOT NULL</code> constraint.
+2. In both <code>DataLogicSystem</code> and <code>DataLogicOrders</code>, <code>ordertime</code> is typed as <code>String</code> but mapped to <code>Datas.TIMESTAMP</code>. At runtime, <code>DatasTIMESTAMP</code> expects a <code>java.util.Date</code>, leading to <code>ClassCastException</code> (<code>String</code> cannot be cast to <code>Date</code>).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>shift_breaks.endtime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NOT NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">* <code>DataLogicPresenceManagement.StartBreak</code>: executes <code>INSERT INTO shift_breaks (ID, SHIFTID, BREAKID, STARTTIME) VALUES (?, ?, ?, ?)</code>.
+* Does <strong>NOT</strong> supply <code>endtime</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>DEFECT</strong>:
+1. When starting a break, <code>endtime</code> is unknown.
+2. Liquibase defines <code>shift_breaks.endtime</code> as <code>&lt;constraints nullable="false"/&gt;</code>.
+3. Because the default was removed and the INSERT omits <code>endtime</code>, executing <code>StartBreak</code> fails with a <code>NOT NULL</code> constraint violation.
+4. <code>endtime</code> must be made nullable in the schema, as <code>EndBreak</code> explicitly updates it: <code>WHERE ENDTIME IS NULL</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>shift_breaks.starttime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NOT NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">* <code>DataLogicPresenceManagement.StartBreak</code>: passes <code>new Date()</code> for parameter 4 (<code>STARTTIME</code>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>OK</strong>: Supplied in Java.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>draweropened.opendate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NOT NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">* <code>DataLogicSystem.execDrawerOpened</code>: requires <code>Date openDate</code>.
+* Callers (<code>JPanelCloseMoney</code>, <code>TicketParser</code>) supply <code>dNow</code> or <code>new Date()</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>OK</strong>: Supplied in Java.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lineremoved.removeddate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NOT NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">* <code>DataLogicSales.addTicketLineRemoved</code>: supplies <code>new Date()</code>.
+* <code>DataLogicSales.addTicketDeleted</code>: supplies <code>new Date()</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>OK</strong>: Supplied in Java.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reservations.datenew</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NOT NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">* <code>DataLogicCustomers.getReservationsInsert</code>: supplies <code>res[2]</code> (<code>m_timereservation.getDate()</code>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>OK</strong>: Supplied in Java.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>customers.memodate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NULLABLE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">* <code>DataLogicCustomers</code> / <code>DataLogicSales</code>: sets <code>memodate</code> (or null if empty).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>OK</strong>: Column is nullable.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>products.memodate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NULLABLE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">* <code>DataLogicSales</code> / <code>DataLogicPIM</code>: sets <code>memodate</code> (or null if empty).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>OK</strong>: Column is nullable.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

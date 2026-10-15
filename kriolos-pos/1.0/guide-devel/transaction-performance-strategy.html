@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Transaction Performance &amp; High-Concurrency Architecture Strategy :: KriolOS POS Documentation</title>
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-migration/index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Developer Guide</li>
+    <li>Database &amp; Persistence</li>
+    <li><a href="transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-devel/pages/transaction-performance-strategy.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Transaction Performance &amp; High-Concurrency Architecture Strategy</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#1-context-architectural-mandate">1. 1. Context &amp; Architectural Mandate</a>
+<ul class="sectlevel2">
+<li><a href="#the-core-transactional-invariant">1.1. The Core Transactional Invariant</a></li>
+</ul>
+</li>
+<li><a href="#2-problem-statement-the-3-critical-bottlenecks">2. 2. Problem Statement: The 3 Critical Bottlenecks</a></li>
+<li><a href="#3-strategic-solution-blueprint">3. 3. Strategic Solution Blueprint</a></li>
+<li><a href="#4-bottleneck-1-high-performance-connection-pooling-hikaricp-spi">4. 4. Bottleneck 1: High-Performance Connection Pooling (HikariCP SPI)</a>
+<ul class="sectlevel2">
+<li><a href="#4-1-current-architecture-analysis">4.1. 4.1 Current Architecture Analysis</a></li>
+<li><a href="#4-2-target-design-thread-scoped-unit-of-work-with-hikaricp">4.2. 4.2 Target Design: Thread-Scoped Unit of Work with HikariCP</a></li>
+<li><a href="#4-3-recommended-pool-configuration">4.3. 4.3 Recommended Pool Configuration</a></li>
+</ul>
+</li>
+<li><a href="#5-bottleneck-2-read-vs-write-contention-cqrs-lite-separation">5. 5. Bottleneck 2: Read vs. Write Contention &amp; CQRS-Lite Separation</a>
+<ul class="sectlevel2">
+<li><a href="#5-1-the-contention-problem">5.1. 5.1 The Contention Problem</a></li>
+<li><a href="#5-2-target-strategy-cqrs-lite-command-query-responsibility-segregation">5.2. 5.2 Target Strategy: CQRS-Lite (Command-Query Responsibility Segregation)</a></li>
+</ul>
+</li>
+<li><a href="#6-bottleneck-3-in-transaction-side-effects-after-commit-dispatch">6. 6. Bottleneck 3: In-Transaction Side Effects &amp; After-Commit Dispatch</a>
+<ul class="sectlevel2">
+<li><a href="#6-1-transactional-invariant-boundaries">6.1. 6.1 Transactional Invariant Boundaries</a></li>
+<li><a href="#6-2-after-commit-event-coordinator-pattern">6.2. 6.2 After-Commit Event Coordinator Pattern</a>
+<ul class="sectlevel3">
+<li><a href="#guarantees-of-this-pattern">Guarantees of this Pattern:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#7-incremental-implementation-roadmap">7. 7. Incremental Implementation Roadmap</a></li>
+<li><a href="#8-verification-qa-protocol">8. 8. Verification &amp; QA Protocol</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph lead">
+<p>Architectural blueprint for resolving connection pooling, read-write lock contention, and peripheral side-effect isolation while preserving <strong>100% of KriolOS POS&#8217;s ACID checkout transactional integrity</strong>.</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="1-context-architectural-mandate"><a class="anchor" href="#1-context-architectural-mandate"></a>1. 1. Context &amp; Architectural Mandate</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the comparative transaction benchmark documented in <strong>GitHub Issue #121</strong>, KriolOS POS demonstrated industry-leading checkout throughput and latency:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Benchmark Metric</th>
+<th class="tableblock halign-left valign-top">KriolOS POS (Java)</th>
+<th class="tableblock halign-left valign-top">React POS (Node)</th>
+<th class="tableblock halign-left valign-top">Laravel POS (PHP)</th>
+<th class="tableblock halign-left valign-top">JavaFX POS (Java)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Mean Latency</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>90.2 ms</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">178.5 ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">244.5 ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">349.7 ms</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Throughput</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>2,218 tx/s</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1,120 tx/s</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">818 tx/s</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">572 tx/s</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Atomicity</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Full ACID (Single DB Tx)</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Partial (Per-request)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full ACID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None (Sequential bare SQL)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="the-core-transactional-invariant"><a class="anchor" href="#the-core-transactional-invariant"></a>1.1. The Core Transactional Invariant</h3>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>STRICT ARCHITECTURAL INVARIANT: ZERO COMPROMISE ON TRANSACTIONALITY</strong></p>
+</div>
+<div class="paragraph">
+<p>The #1 operational reason KriolOS outperforms other open-source POS engines without data corruption is its <strong>strictly atomic <code>saveTicket()</code> multi-table transaction</strong> in <code>com.openbravo.pos.sales.DataLogicSales</code>.</p>
+</div>
+<div class="paragraph">
+<p>Any architectural modification (connection pooling, read-write query splitting, asynchronous domain eventing) <strong>must preserve all-or-nothing atomicity</strong> across financial receipts, ticket lines, payments, tax lines, stock ledger movements, local voucher redemption, and customer debt ledger entries. No partial commits, no phantom receipts, and no uncommitted inventory deductions are permissible.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="2-problem-statement-the-3-critical-bottlenecks"><a class="anchor" href="#2-problem-statement-the-3-critical-bottlenecks"></a>2. 2. Problem Statement: The 3 Critical Bottlenecks</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>While KriolOS delivers exceptional single-station throughput, the benchmark analysis and codebase inspection identified three structural scaling ceilings:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">#</th>
+<th class="tableblock halign-left valign-top">Bottleneck</th>
+<th class="tableblock halign-left valign-top">Root Cause in Active Codebase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>B1</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Single-Connection Bottleneck &amp; Absence of Pooling</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.data.loader.Session</code> holds a single physical <code>Connection mConnection</code>. Multi-threaded workers (background sync, RMI instances, barcode streams, future web/REST headless endpoints) collide on this single socket, triggering <code>"Transaction already started"</code> exceptions or serializing execution.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>B2</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Read/Write Table Contention</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reporting queries (ticket reprints, Z-reports, customer balances) run against the active transactional tables (<code>tickets</code>, <code>receipts</code>, <code>ticketlines</code>, <code>stockcurrent</code>), causing row/gap locks that stall the cashier&#8217;s checkout lane.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>B3</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>In-Transaction Peripheral Overhead &amp; Deadlock Risk</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Peripheral mutations (vouchers, customer debt, external fiscal signing, loyalty callbacks) execute inside the critical DB lock window. Network delays or secondary failures inflate lock times and risk deadlocks under multi-lane concurrency.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="3-strategic-solution-blueprint"><a class="anchor" href="#3-strategic-solution-blueprint"></a>3. 3. Strategic Solution Blueprint</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following diagram illustrates the target decoupled architecture:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs"> +---------------------------------------------------------------------------------------+
+ |                                  KriolOS Application                                  |
+ |  (Swing AppShell / Headless REST Engine / Self-Checkout Kiosk / Mobile Taproom API)   |
+ +---------------------------------------------------------------------------------------+
+                                  |
+            +---------------------+---------------------+
+            |                                           |
+            v [WRITE PATH: saveTicket()]                v [READ PATH: Reprints, Reports, Search]
+ +-------------------------------------+     +-------------------------------------+
+ |       Transactional Sales Unit      |     |         Query &amp; Report Engine       |
+ |  - High-Priority Connection Pool    |     |  - Read-Committed / Read Pool       |
+ |  - Strict ThreadLocal Connection    |     |  - Non-locking MVCC Snapshot Reads  |
+ |  - All 11 DB Mutations Atomic       |     |  - Zero locks on active checkout    |
+ +-------------------------------------+     +-------------------------------------+
+            |                                           |
+            | (On Commit Success)                       |
+            v                                           v
+ +-------------------------------------+     +-------------------------------------+
+ |    After-Commit Domain Publisher    |     |          MariaDB / MySQL DB         |
+ |  - Cash Drawer Kick                 |     |  - Primary Write Master             |
+ |  - Thermal ESC/POS Print Job        |     |  - Optional Read Replica            |
+ |  - Async Cloud Loyalty &amp; Fiscal     |     +-------------------------------------+
+ +-------------------------------------+</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="4-bottleneck-1-high-performance-connection-pooling-hikaricp-spi"><a class="anchor" href="#4-bottleneck-1-high-performance-connection-pooling-hikaricp-spi"></a>4. 4. Bottleneck 1: High-Performance Connection Pooling (HikariCP SPI)</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="4-1-current-architecture-analysis"><a class="anchor" href="#4-1-current-architecture-analysis"></a>4.1. 4.1 Current Architecture Analysis</h3>
+<div class="paragraph">
+<p>In <code>com.openbravo.data.loader.Session</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public final class Session {
+    private Connection mConnection;        // Single shared connection!
+    private boolean isTransactionBegin;    // Flag prevents concurrency!
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If thread A begins a sale transaction (<code>isTransactionBegin = true</code>), thread B attempting an audit query or second transaction fails instantly with <code>SQLException("Transaction already started")</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="4-2-target-design-thread-scoped-unit-of-work-with-hikaricp"><a class="anchor" href="#4-2-target-design-thread-scoped-unit-of-work-with-hikaricp"></a>4.2. 4.2 Target Design: Thread-Scoped Unit of Work with HikariCP</h3>
+<div class="paragraph">
+<p>Instead of binding a physical connection to the long-lived <code>Session</code> instance, <code>Session</code> delegates connection acquisition to a managed <code>javax.sql.DataSource</code> backed by <strong>HikariCP</strong>:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Auto-commit operations</strong>: Acquire connection from pool &rarr; execute statement &rarr; close (return to pool) via try-with-resources.</p>
+</li>
+<li>
+<p><strong>Transactional operations (<code>Transaction.execute()</code>)</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Acquire a dedicated connection from the pool.</p>
+</li>
+<li>
+<p>Bind connection to current thread (<code>ThreadLocal&lt;ConnectionContext&gt;</code>).</p>
+</li>
+<li>
+<p>Disable auto-commit: <code>connection.setAutoCommit(false)</code>.</p>
+</li>
+<li>
+<p>Execute all 11 operations of <code>saveTicket()</code> sequentially on that exact connection.</p>
+</li>
+<li>
+<p>Call <code>connection.commit()</code> and restore <code>connection.setAutoCommit(true)</code>.</p>
+</li>
+<li>
+<p>Release connection back to pool in a mandatory <code>finally</code> block.</p>
+</li>
+<li>
+<p>If any failure occurs, call <code>connection.rollback()</code> and rethrow <code>BasicException</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="4-3-recommended-pool-configuration"><a class="anchor" href="#4-3-recommended-pool-configuration"></a>4.3. 4.3 Recommended Pool Configuration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># HikariCP Configuration for High-Concurrency POS
+kriolos.db.pool.minimum-idle=5
+kriolos.db.pool.maximum-pool-size=20
+kriolos.db.pool.idle-timeout=300000
+kriolos.db.pool.connection-timeout=5000
+kriolos.db.pool.max-lifetime=1800000
+kriolos.db.pool.leak-detection-threshold=15000</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+In embedded single-station desktop mode (Derby / HSQLDB), <code>maximum-pool-size=5</code> provides complete thread isolation between background scanners and the checkout UI while consuming minimal RAM.
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="5-bottleneck-2-read-vs-write-contention-cqrs-lite-separation"><a class="anchor" href="#5-bottleneck-2-read-vs-write-contention-cqrs-lite-separation"></a>5. 5. Bottleneck 2: Read vs. Write Contention &amp; CQRS-Lite Separation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="5-1-the-contention-problem"><a class="anchor" href="#5-1-the-contention-problem"></a>5.1. 5.1 The Contention Problem</h3>
+<div class="paragraph">
+<p>During peak trading hours, running end-of-day reports (Z-reports, cash drawer audits, large ticket reprint searches) acquires shared locks or reads uncommitted blocks across <code>receipts</code>, <code>tickets</code>, and <code>ticketlines</code>. In standard MariaDB/InnoDB configurations, long-running SELECT queries can stall the checkout lane&#8217;s INSERT operations.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="5-2-target-strategy-cqrs-lite-command-query-responsibility-segregation"><a class="anchor" href="#5-2-target-strategy-cqrs-lite-command-query-responsibility-segregation"></a>5.2. 5.2 Target Strategy: CQRS-Lite (Command-Query Responsibility Segregation)</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Isolation Level Optimization</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Set read queries to use <code>TRANSACTION_READ_COMMITTED</code>.</p>
+</li>
+<li>
+<p>In MariaDB/MySQL InnoDB, non-locking consistent snapshot reads (MVCC) ensure read queries NEVER block checkout transactions:
+[source,sql]
+----
+SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+----</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Dual-Pool DataSource Architecture</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Write Pool (<code>ds-write</code>)</strong>: Configured with small, ultra-fast connection limits (5–10 connections) dedicated exclusively to checkout commands (<code>DataLogicSales.saveTicket</code>, <code>StockService.recordStockMovement</code>).</p>
+</li>
+<li>
+<p><strong>Read Pool (<code>ds-read</code>)</strong>: Sized for background searches, catalog navigation, and reporting without starving the checkout queue.</p>
+</li>
+<li>
+<p>Supports <strong>Read Replicas</strong> in multi-station cloud/server deployments transparently without code refactoring.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Reprint Query Pagination</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>getReprintTicketList()</code> currently fetches unbounded result sets.</p>
+</li>
+<li>
+<p>Refactor to indexed keyset pagination (<code>LIMIT 50</code>) to keep read query execution times under <strong>5 ms</strong>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="6-bottleneck-3-in-transaction-side-effects-after-commit-dispatch"><a class="anchor" href="#6-bottleneck-3-in-transaction-side-effects-after-commit-dispatch"></a>6. 6. Bottleneck 3: In-Transaction Side Effects &amp; After-Commit Dispatch</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="6-1-transactional-invariant-boundaries"><a class="anchor" href="#6-1-transactional-invariant-boundaries"></a>6.1. 6.1 Transactional Invariant Boundaries</h3>
+<div class="paragraph">
+<p>To eliminate lock contention and deadlocks without violating transactional integrity, we strictly categorize every operation in <code>saveTicket()</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Operation</th>
+<th class="tableblock halign-left valign-top">Boundary</th>
+<th class="tableblock halign-left valign-top">Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Receipt &amp; Ticket Record</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MUST BE IN-TX</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Core legal fiscal ledger.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Ticket Lines &amp; Taxes</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MUST BE IN-TX</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Line-item audit and VAT ledger.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Stock Movements &amp; Inventory</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MUST BE IN-TX</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Direct decrement of <code>stockcurrent</code> and <code>stockdiary</code> ensures stock can never be oversold or phantom-deducted.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Local Voucher Invalidation</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MUST BE IN-TX</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prevents double-spending of the same voucher across concurrent checkout lanes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Customer Account Debt Update</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MUST BE IN-TX</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prevents customer credit limits from being breached by concurrent sales.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Thermal ESC/POS Printing</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>POST-COMMIT ONLY</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hardware I/O (jam, out of paper, slow serial baud rate) must NEVER hold open a database transaction lock.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Cash Drawer Kick Signal</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>POST-COMMIT ONLY</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Drawer must only open if payment record was successfully persisted to the database.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>External Cloud Loyalty / Sync</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>POST-COMMIT ONLY</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Network roundtrips (HTTP APIs, webhooks) must NEVER run inside the DB lock window.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="6-2-after-commit-event-coordinator-pattern"><a class="anchor" href="#6-2-after-commit-event-coordinator-pattern"></a>6.2. 6.2 After-Commit Event Coordinator Pattern</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public final class TransactionCoordinator {
+
+    private final Session session;
+    private final List&lt;Runnable&gt; afterCommitHooks = new ArrayList&lt;&gt;();
+
+    public void registerAfterCommit(Runnable hook) {
+        afterCommitHooks.add(hook);
+    }
+
+    public &lt;T&gt; T execute(TransactionalAction&lt;T&gt; action) throws BasicException {
+        T result;
+        try {
+            session.begin();
+            result = action.run();
+            session.commit();
+        } catch (Exception ex) {
+            session.rollback();
+            afterCommitHooks.clear(); // Drop all peripheral actions on rollback!
+            throw ex;
+        }
+
+        // Fired ONLY when database commit has permanently succeeded:
+        for (Runnable hook : afterCommitHooks) {
+            try {
+                hook.run();
+            } catch (Throwable t) {
+                LOGGER.log(Level.WARNING, "Peripheral after-commit hook failure", t);
+            }
+        }
+        return result;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="guarantees-of-this-pattern"><a class="anchor" href="#guarantees-of-this-pattern"></a>Guarantees of this Pattern:</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Zero Phantom Hardware Actions</strong>: If the database rollback triggers (e.g. unique constraint violation, disk full), the drawer will NOT kick, the thermal receipt will NOT print, and external webhooks will NOT fire.</p>
+</li>
+<li>
+<p><strong>Minimal DB Lock Duration</strong>: Lock duration is reduced from hundreds of milliseconds to under <strong>15 ms</strong>, maximizing throughput for multi-station retail deployments.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="7-incremental-implementation-roadmap"><a class="anchor" href="#7-incremental-implementation-roadmap"></a>7. 7. Incremental Implementation Roadmap</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Following the project&#8217;s <strong>Agile Trunk-Based Integration Protocol</strong>, this strategy will be executed in 3 isolated, zero-breaking-change PR phases:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Phase</th>
+<th class="tableblock halign-left valign-top">Branch</th>
+<th class="tableblock halign-left valign-top">Scope &amp; Deliverables</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Phase 1</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>feature/hikari-connection-pool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1. Add <code>com.zaxxer:HikariCP</code> to <code>kriolos-opos-base</code>.<br>
+  2. Implement <code>ConnectionPoolProvider</code> SPI.<br>
+  3. Refactor <code>Session.java</code> to support thread-scoped pooling while maintaining backward compatibility with <code>FakeDataSource</code>.<br>
+  4. Verify automation tests and concurrency test suite (<code>PosDatabaseLockIT</code>, <code>PosInstanceManagerIT</code>).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Phase 2</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>feature/transaction-after-commit-hooks</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1. Introduce <code>AfterCommitHook</code> in <code>Transaction.java</code>.<br>
+  2. Decouple ESC/POS printing and drawer kick in <code>JPanelTicket</code> from inside the save block to post-commit listener.<br>
+  3. Ensure transactional rollback cleans up all hooks.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Phase 3</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>feature/cqrs-read-write-split</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1. Configure <code>TRANSACTION_READ_COMMITTED</code> for reporting sessions.<br>
+  2. Paginate <code>getReprintTicketList()</code>.<br>
+  3. Implement dual-datasource abstraction in <code>BeanContainer</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="8-verification-qa-protocol"><a class="anchor" href="#8-verification-qa-protocol"></a>8. 8. Verification &amp; QA Protocol</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To guarantee that no transactional regression occurs:
+1. <strong>ACID Failure Injection Test</strong>: Simulate database network kill during item 5 of <code>saveTicket()</code> &rarr; verify that no partial records exist in <code>receipts</code>, <code>tickets</code>, <code>ticketlines</code>, or <code>stockdiary</code>.
+2. <strong>Multi-Lane Concurrency Benchmark</strong>: Run 50 concurrent virtual cashiers executing <code>saveTicket()</code> against MariaDB &rarr; verify 0 deadlocks and 0 <code>"Transaction already started"</code> exceptions.
+3. <strong>AssertJ-Swing Automation Suite</strong>: Execute <code>mvn test -f kriolos-opos-automation/pom.xml</code> &rarr; verify all robot IT tests remain 100% green.</p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Sales View Architecture Migration: Classical vs. Modern SPI Architecture :: KriolOS POS Documentation</title>
+    <meta name="keywords" content="sales, layout, architecture, spi, jpanelticket, modern, flexlayout, extensibility">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-migration/index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Developer Guide</li>
+    <li>Tickets &amp; Sales</li>
+    <li><a href="sales-layout-migration.html">Sales Layout Architecture Migration</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-devel/pages/sales-layout-migration.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Sales View Architecture Migration: Classical vs. Modern SPI Architecture</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This document details the architectural evolution of the KriolOS POS Sales View, contrasting the legacy <strong>Classical Architecture</strong> (<code>JPanelTicket</code> monolith) with the <strong>Modern SPI Architecture</strong>, and establishing the decoupling roadmap for dynamic runtime layout discovery.</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="1-executive-summary-motivation"><a class="anchor" href="#1-executive-summary-motivation"></a>1. Executive Summary &amp; Motivation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The POS Sales View is the most mission-critical interface in KriolOS POS. Historically, the entire sales screen was anchored to a monolithic 3,300-line class, <code>JPanelTicket</code>, which combined business transaction logic, NetBeans <code>.form</code> visual components, a fixed numeric keypad, and an embedded legacy product catalog (<code>JCatalog</code>).</p>
+</div>
+<div class="paragraph">
+<p>As new touch-optimized, responsive interfaces were developed (such as <strong>Modern One</strong> and <strong>Modern Two</strong>), integrating them into the existing framework created severe architectural friction:
+* Subclasses were forced to inherit the entire legacy UI, only to discard it at runtime using <code>removeAll()</code>.
+* Leaky abstraction conditionals like <code>if (isModernMode())</code> proliferated across multiple base classes.
+* Adding a new sales layout required modifying hardcoded classes in at least five separate locations.</p>
+</div>
+<div class="paragraph">
+<p>This migration resolves these limitations by:
+1. <strong>Decoupling the Classical Architecture</strong>: Isolating <code>JPanelTicket</code> and <code>JCatalog</code> to legacy layouts only.
+2. <strong>Establishing the Modern Architecture</strong>: Treating full-screen, self-contained layouts as first-class citizens.
+3. <strong>Introducing Java SPI Extensibility</strong>: Implementing a Service Provider Interface pattern (identical to <code>POSThemeManager</code>) allowing runtime layout discovery and safe fallback handling.</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="2-classical-architecture-arquitetura-clássica"><a class="anchor" href="#2-classical-architecture-arquitetura-clássica"></a>2. Classical Architecture (Arquitetura Clássica)</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="2-1-classical-component-structure"><a class="anchor" href="#2-1-classical-component-structure"></a>2.1 Classical Component Structure</h3>
+<div class="paragraph">
+<p>In the original architecture inherited from Openbravo POS / uniCenta, <code>JPanelTicket</code> served as both the base controller and the concrete Swing container for all sales operations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">+-------------------------------------------------------------------+
+|                           JPanelTicket                            |
+|  (Extends JPanel, implements JPanelView, TicketsEditor)           |
+|                                                                   |
+|  +-------------------------------------------------------------+  |
+|  | m_jPanelBag (BorderLayout.LINE_START)                       |  |
+|  | -&gt; JTicketsBag.getBagComponent() [Tabs Toolbar / Floor Map] |  |
+|  +-------------------------------------------------------------+  |
+|                                                                   |
+|  +--------------------------------+ +--------------------------+  |
+|  | CardLayout ("ticket" / "null") | | Fixed Keypad &amp; Actions   |  |
+|  | - Table Ticket Lines           | | - m_jNumberKeys          |  |
+|  | - Tax &amp; Total Labels           | | - Scale / Barcode input  |  |
+|  +--------------------------------+ +--------------------------+  |
+|                                                                   |
+|  +-------------------------------------------------------------+  |
+|  | m_jPanelCatalog (BorderLayout.CENTER of bottom panel)       |  |
+|  | -&gt; getSouthComponent() [Instantiates JCatalog]              |  |
+|  +-------------------------------------------------------------+  |
++-------------------------------------------------------------------+</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="2-2-classical-layout-variants-jticketsbag"><a class="anchor" href="#2-2-classical-layout-variants-jticketsbag"></a>2.2 Classical Layout Variants (<code>JTicketsBag</code>)</h3>
+<div class="paragraph">
+<p>Under the Classical Architecture, layout variants only swapped the top toolbar or table selector, while the rest of <code>JPanelTicket</code> remained static:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Layout Mode</th>
+<th class="tableblock halign-left valign-top">Implementation Class</th>
+<th class="tableblock halign-left valign-top">Role in Classical Architecture</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>simple</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JTicketsBagSimple</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Single-ticket mode; displays a minimal toolbar in <code>m_jPanelBag</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>standard</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JTicketsBagShared</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multi-ticket tabbed workflow; renders tab buttons (<code>1</code>, <code>2</code>, <code>3</code>&#8230;&#8203;) in <code>m_jPanelBag</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>restaurant</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JTicketsBagRestaurantMap</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Floor map workflow; switches CardLayout to <code>"null"</code> to display table floor layout when no ticket is active.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="2-3-architectural-flaws-of-the-classical-pattern"><a class="anchor" href="#2-3-architectural-flaws-of-the-classical-pattern"></a>2.3 Architectural Flaws of the Classical Pattern</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Monolithic God Class</strong>: <code>JPanelTicket.java</code> exceeds 3,300 lines of mixed concerns: database persistence, hardware printing, dialog management, keyboard event routing, and visual layout.</p>
+</li>
+<li>
+<p><strong>Forced GUI Construction &amp; Destruction</strong>: When non-classical layouts were instantiated, <code>JPanelTicket.initComponents()</code> still built the entire NetBeans visual form, only for <code>initComponentFromChild()</code> to call:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">if (isModernMode()) {
+    removeAll(); // Brute-force GUI purge
+    setLayout(new BorderLayout());
+    add(m_ticketsbag.getNullComponent(), BorderLayout.CENTER);
+    revalidate();
+    return;
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Leaky Catalog Coupling</strong>: <code>JPanelTicketSales</code> inherited <code>CatalogSelector m_cat</code> and forced <code>JCatalog</code> instantiation inside <code>getSouthComponent()</code>, requiring defensive guards (<code>if (isModernMode()) return new JPanel();</code>) in five separate methods.</p>
+</li>
+<li>
+<p><strong>Rigid Modification Point</strong>: Adding any layout required updating <code>SaleLayout.java</code>, <code>JTicketsBag.java</code>, <code>JPanelTicketSales.java</code>, <code>JPanelTicket.java</code>, and <code>JPanelConfigGeneral.java</code>.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="3-decoupling-strategy-isolating-the-legacy-base"><a class="anchor" href="#3-decoupling-strategy-isolating-the-legacy-base"></a>3. Decoupling Strategy: Isolating the Legacy Base</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To eliminate the <code>removeAll()</code> hack and <code>isModernMode()</code> guards, the Classical Architecture is cleanly decoupled from the entry-point view:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">                   +-------------------------------+
+                   |       JPanelTicketSales       |  (Application Entry Point / Task)
+                   |  (Clean View Host Coordinator)|
+                   +---------------+---------------+
+                                   |
+         +-------------------------+-------------------------+
+         | (if legacy layout)                                | (if modern / standalone layout)
+         v                                                   v
++-------------------------------+             +-------------------------------+
+|      JPanelTicketClassic      |             |       ModernSalesLayout       |
+|    (extends JPanelTicket)     |             |   (ModernOne, ModernTwo...)   |
+|                               |             |                               |
+| - Hosts JCatalog              |             | - Zero JPanelTicket baggage   |
+| - Hosts Fixed Keypad          |             | - Responsive FlexLayout grid  |
+| - Retains classic bag tabs    |             | - Self-contained Touch UI     |
++-------------------------------+             +-------------------------------+</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="key-improvements"><a class="anchor" href="#key-improvements"></a>Key Improvements:</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>JPanelTicket</code> Becomes Purely Legacy</strong>: All <code>isModernMode()</code> branches and <code>removeAll()</code> hacks are deleted from <code>JPanelTicket</code>. It serves solely as the base class for classic sales (<code>JPanelTicketClassic</code>) and ticket editing (<code>JPanelTicketEdits</code>).</p>
+</li>
+<li>
+<p><strong><code>JCatalog</code> Isolation</strong>: <code>JCatalog</code> is instantiated only by <code>JPanelTicketClassic</code>. Modern layouts never touch <code>JCatalog</code> or allocate its resources.</p>
+</li>
+<li>
+<p><strong><code>JPanelTicketSales</code> as a Coordinator</strong>: Acts as a lightweight host (<code>JPanelView</code>, <code>TicketsEditor</code>) that dynamically embeds the selected layout.</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="4-modern-architecture-arquitetura-moderna"><a class="anchor" href="#4-modern-architecture-arquitetura-moderna"></a>4. Modern Architecture (Arquitetura Moderna)</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="4-1-modern-design-principles"><a class="anchor" href="#4-1-modern-design-principles"></a>4.1 Modern Design Principles</h3>
+<div class="paragraph">
+<p>The Modern Architecture departs completely from fixed-size, legacy NetBeans forms, embracing:
+* <strong>Responsive Proportions</strong>: Flex-based dual-pane layouts adapting dynamically to any resolution (1024x768 touch screens to 4K displays).
+* <strong>Touch-First Aesthetics</strong>: High-contrast, clean rectangular cards with subtle border rounding (<code>JButton.buttonType = "roundRect"</code>), eliminating dated 3D bevels and oval pills.
+* <strong>Consolidated Checkout Zone</strong>: Fast visual scanning of digital receipt totals paired with prominent payment triggers.
+* <strong>Dedicated Action Workspace</strong>: Centralized operational controls in a dedicated action panel, keeping the receipt table clean and legible.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="4-2-modern-two-architecture-overview"><a class="anchor" href="#4-2-modern-two-architecture-overview"></a>4.2 Modern Two Architecture Overview</h3>
+<div class="paragraph">
+<p><code>ModernTwoSalesLayout</code> represents the flagship modern layout, structured in three distinct vertical tiers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">+---------------------------------------------------------------------------------+
+| PAGE_START: Operator Status Banner ("Caixa Disponível: Operador 01")             |
++-------------------------------------------------------+-------------------------+
+| CENTER: Main Body (FlexLayout - 70% / 30% Split)                                |
+|                                                       |                         |
+| ModernTwoCatalogPane (70% Width)                      | ModernTwoTicketPane     |
+| - Global search bar with clear button                 | (30% Width)             |
+| - Horizontal category filter pills                    | - Digital receipt table |
+| - Responsive product wrapping cards grid              | - Subtotal, Tax, Total  |
+|   (ModernTwoProductCard - arc: 8)                     | - Large PAGAR (F12)     |
+|                                                       |                         |
++-------------------------------------------------------+-------------------------+
+| SOUTH: ModernTwoActionPane (Consolidated Operational Workspace)                 |
+| Row 1: [Cliente: Consumidor Final] [0] | [Entrada (F3)] [Saída (F4)] [Fechar]   |
+| Row 2: [-1] [+1] [Editar] [Remover]    | [Limpar] [Suspender] [Desconto]        |
++---------------------------------------------------------------------------------+</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="4-3-component-inventory-com-openbravo-pos-sales-modern-two"><a class="anchor" href="#4-3-component-inventory-com-openbravo-pos-sales-modern-two"></a>4.3 Component Inventory (<code>com.openbravo.pos.sales.modern.two</code>)</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component Class</th>
+<th class="tableblock halign-left valign-top">Role</th>
+<th class="tableblock halign-left valign-top">Visual &amp; Technical Specifications</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ModernTwoSalesLayout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Root Sales View</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Extends <code>JTicketsBag</code>, implements <code>JPanelView</code>, <code>TicketsEditor</code>. Manages 70/30 FlexLayout split and global shortcuts (<code>F3</code>, <code>F4</code>, <code>F12</code>).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ModernTwoTicketPane</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Digital Receipt</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Right-hand pane (~30% width). Contains only the ticket item table, financial tax breakdown, and primary <code>PAGAR (F12)</code> checkout button.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ModernTwoCatalogPane</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Product Catalog</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Left-hand pane (~70% width). Features real-time search filtering, category pills, and <code>WrapLayout</code> product tile wrapping.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ModernTwoProductCard</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Product Card Tile</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fixed <code>150x95</code> rectangular card with <code>arc: 8</code> rounded corners, price emphasis, and auto-fit multi-line typography.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ModernTwoActionPane</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Action Workspace</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Two-row southern toolbar (<code>BorderLayout.SOUTH</code>) housing customer selector, parked orders counter, cash operations (<code>Entrada</code>, <code>Saída</code>, <code>Fechar</code>), line modifiers, and ticket actions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ModernTwoCategoryBar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Category Selector</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Horizontal scrollable bar with FlatLaf styled category filter buttons.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="5-target-architecture-java-spi-layout-extensibility"><a class="anchor" href="#5-target-architecture-java-spi-layout-extensibility"></a>5. Target Architecture: Java SPI Layout Extensibility</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="5-1-parity-with-postheme-architecture"><a class="anchor" href="#5-1-parity-with-postheme-architecture"></a>5.1 Parity with POSTheme Architecture</h3>
+<div class="paragraph">
+<p>To ensure zero hardcoding and support external layout plugins, the sales layout system adopts the identical SPI design pattern used by <code>POSThemeManager</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Role</th>
+<th class="tableblock halign-left valign-top">Theme SPI (Reference)</th>
+<th class="tableblock halign-left valign-top">Sales Layout SPI (Target)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Metadata Record</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POSThemeDefinition</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SaleLayoutDefinition</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>SPI Interface</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POSThemeFactory</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SaleLayoutFactory</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Registry Manager</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POSThemeManager</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SaleLayoutManager</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Service Declaration</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>META-INF/services/&#8230;&#8203;POSThemeFactory</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>META-INF/services/&#8230;&#8203;SaleLayoutFactory</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>UI Config Renderer</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POSThemeDefinitionRenderer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SaleLayoutDefinitionRenderer</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="5-2-class-diagram-spi-sales-layout-architecture"><a class="anchor" href="#5-2-class-diagram-spi-sales-layout-architecture"></a>5.2 Class Diagram: SPI Sales Layout Architecture</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-mermaid hljs" data-lang="mermaid">classDiagram
+    direction TB
+    class SaleLayoutDefinition {
+        &lt;&lt;record&gt;&gt;
+        +String id
+        +String name
+        +String description
+        +boolean fullView
+        +boolean restaurant
+    }
+
+    class SaleLayoutFactory {
+        &lt;&lt;interface, SPI&gt;&gt;
+        +boolean hasLayout(String layoutId)
+        +Collection~SaleLayoutDefinition~ getAvailableLayouts()
+        +JTicketsBag createLayout(String layoutId, AppView app, TicketsEditor panelticket)
+        +boolean isFullView(String layoutId)
+        +boolean isRestaurantLayout(String layoutId)
+    }
+
+    class SaleLayoutManager {
+        &lt;&lt;registry singleton&gt;&gt;
+        -ServiceLoader~SaleLayoutFactory~ FACTORY_LOADER
+        +Collection~SaleLayoutDefinition~ getAllAvailableLayouts()
+        +Optional~SaleLayoutDefinition~ getLayoutDefinition(String layoutId)
+        +JTicketsBag createLayout(String layoutId, AppView app, TicketsEditor panelticket)
+        +boolean isFullView(String layoutId)
+        +boolean isRestaurant(String layoutId)
+        -JTicketsBag applyFallback(AppView app, TicketsEditor panelticket)
+        +void reload()
+    }
+
+    class CoreSaleLayoutFactory {
+        &lt;&lt;SPI Provider&gt;&gt;
+        simple
+        standard
+        restaurant
+    }
+
+    class ModernSaleLayoutFactory {
+        &lt;&lt;SPI Provider&gt;&gt;
+        modern_one
+        modern_two
+    }
+
+    SaleLayoutFactory &lt;|.. CoreSaleLayoutFactory
+    SaleLayoutFactory &lt;|.. ModernSaleLayoutFactory
+    SaleLayoutManager o-- SaleLayoutFactory : discovers via ServiceLoader
+    SaleLayoutManager ..&gt; SaleLayoutDefinition</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="5-3-spi-contract-specification"><a class="anchor" href="#5-3-spi-contract-specification"></a>5.3 SPI Contract Specification</h3>
+<div class="sect3">
+<h4 id="1-salelayoutdefinition"><a class="anchor" href="#1-salelayoutdefinition"></a>1. <code>SaleLayoutDefinition</code></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.openbravo.pos.sales.layout;
+
+/**
+ * Immutable metadata representing a discovered Sales Layout.
+ *
+ * @param id          Unique token (e.g. "modern_two", "standard").
+ * @param name        Human-readable label for settings UI (e.g. "Modern Two (Flex Touch)").
+ * @param description Detailed capabilities summary.
+ * @param fullView    True if layout provides a complete standalone UI; false if it docks into the legacy ticket frame.
+ * @param restaurant  True if layout supports table floor mapping workflows.
+ */
+public record SaleLayoutDefinition(
+        String id,
+        String name,
+        String description,
+        boolean fullView,
+        boolean restaurant) {
+
+    public SaleLayoutDefinition {
+        if (id == null || name == null) {
+            throw new IllegalArgumentException("Layout ID and Name tokens cannot be null.");
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="2-salelayoutfactory"><a class="anchor" href="#2-salelayoutfactory"></a>2. <code>SaleLayoutFactory</code></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.openbravo.pos.sales.layout;
+
+import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.sales.JTicketsBag;
+import com.openbravo.pos.sales.TicketsEditor;
+import java.util.Collection;
+
+/**
+ * SPI provider contract for sales layout registration and instantiation.
+ */
+public interface SaleLayoutFactory {
+
+    boolean hasLayout(String layoutId);
+
+    Collection&lt;SaleLayoutDefinition&gt; getAvailableLayouts();
+
+    JTicketsBag createLayout(String layoutId, AppView app, TicketsEditor panelticket);
+
+    default boolean isFullView(String layoutId) {
+        return false;
+    }
+
+    default boolean isRestaurantLayout(String layoutId) {
+        return false;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="3-salelayoutmanager"><a class="anchor" href="#3-salelayoutmanager"></a>3. <code>SaleLayoutManager</code></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.openbravo.pos.sales.layout;
+
+import com.openbravo.pos.forms.AppView;
+import com.openbravo.pos.sales.JTicketsBag;
+import com.openbravo.pos.sales.TicketsEditor;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Global Service Registry aggregating all discovered SaleLayoutFactory providers.
+ */
+public final class SaleLayoutManager {
+
+    private static final Logger LOGGER = Logger.getLogger(SaleLayoutManager.class.getName());
+    private static final ServiceLoader&lt;SaleLayoutFactory&gt; FACTORY_LOADER =
+            ServiceLoader.load(SaleLayoutFactory.class);
+
+    private SaleLayoutManager() {}
+
+    public static Collection&lt;SaleLayoutDefinition&gt; getAllAvailableLayouts() {
+        Collection&lt;SaleLayoutDefinition&gt; all = new ArrayList&lt;&gt;();
+        for (SaleLayoutFactory factory : FACTORY_LOADER) {
+            all.addAll(factory.getAvailableLayouts());
+        }
+        return Collections.unmodifiableCollection(all);
+    }
+
+    public static Optional&lt;SaleLayoutDefinition&gt; getLayoutDefinition(String layoutId) {
+        return getAllAvailableLayouts().stream()
+                .filter(def -&gt; def.id().equalsIgnoreCase(layoutId))
+                .findFirst();
+    }
+
+    public static JTicketsBag createLayout(String layoutId, AppView app, TicketsEditor panelticket) {
+        if (layoutId != null) {
+            for (SaleLayoutFactory factory : FACTORY_LOADER) {
+                if (factory.hasLayout(layoutId)) {
+                    try {
+                        return factory.createLayout(layoutId, app, panelticket);
+                    } catch (Exception ex) {
+                        LOGGER.log(Level.SEVERE, "Failed instantiating layout: " + layoutId, ex);
+                    }
+                }
+            }
+        }
+        LOGGER.log(Level.WARNING, "Requested layout ''{0}'' not found. Applying safety baseline.", layoutId);
+        return applyFallback(app, panelticket);
+    }
+
+    public static boolean isFullView(String layoutId) {
+        return getLayoutDefinition(layoutId).map(SaleLayoutDefinition::fullView).orElse(false);
+    }
+
+    public static boolean isRestaurant(String layoutId) {
+        return getLayoutDefinition(layoutId).map(SaleLayoutDefinition::restaurant).orElse(false);
+    }
+
+    private static JTicketsBag applyFallback(AppView app, TicketsEditor panelticket) {
+        // Attempt standard, then simple, then first available
+        for (String fallbackId : List.of("standard", "simple")) {
+            for (SaleLayoutFactory factory : FACTORY_LOADER) {
+                if (factory.hasLayout(fallbackId)) {
+                    return factory.createLayout(fallbackId, app, panelticket);
+                }
+            }
+        }
+        throw new IllegalStateException("CRITICAL: No sales layout provider found in classpath.");
+    }
+}</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="6-decoupling-modern-layouts-from-legacy-jticketsbag"><a class="anchor" href="#6-decoupling-modern-layouts-from-legacy-jticketsbag"></a>6. Decoupling Modern Layouts from Legacy <code>JTicketsBag</code></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="6-1-jticketsbag-is-purely-classiclegacy"><a class="anchor" href="#6-1-jticketsbag-is-purely-classiclegacy"></a>6.1 <code>JTicketsBag</code> is Purely Classic/Legacy</h3>
+<div class="paragraph">
+<p>In the legacy Openbravo / uniCenta architecture, <code>JTicketsBag</code> was an abstract Swing panel coupled to the top toolbar of <code>JPanelTicket</code> via <code>getBagComponent()</code> and <code>getNullComponent()</code>.</p>
+</div>
+<div class="paragraph">
+<p>Early modern layouts initially inherited <code>JTicketsBag</code> as a convenient bootstrap. However, this introduced artificial legacy coupling. Modern layouts are self-contained full-screen views that do not dock into the legacy toolbar.</p>
+</div>
+<div class="paragraph">
+<p>Modern layouts have now been completely decoupled:
+* <strong>Base Class</strong>: <code>ModernOne</code> and <code>ModernTwoSalesLayout</code> now extend <code>javax.swing.JPanel</code> directly instead of <code>JTicketsBag</code>.
+* <strong>Contracts</strong>: They implement <code>JPanelView</code> and <code>TicketsEditor</code> directly.
+* <strong>No Feature Loss</strong>: All features (receipt table, tax calculations, payments, customer assignment, line editing, barcodes, and parking) remain 100% functional.
+* <strong>Legacy Scope</strong>: <code>JTicketsBag</code> is now exclusively utilized by the Classic/Legacy layouts (<code>simple</code>, <code>standard</code>, <code>restaurant</code>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="6-2-future-extraction-roadmap-kriolos-opos-ui-modern"><a class="anchor" href="#6-2-future-extraction-roadmap-kriolos-opos-ui-modern"></a>6.2 Future Extraction Roadmap: <code>kriolos-opos-ui-modern</code></h3>
+<div class="paragraph">
+<p>To avoid ripple effects across shared modal dialogs (payment receipts, line edits, customer search), Modern layouts remain co-located in <code>kriolos-opos-app</code> for now. When shared modal panels are migrated to <code>opos-ui-modal</code>, extracting <code>kriolos-opos-ui-modern</code> will be a zero-friction packaging step:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">kriolos-pos/
+├── kriolos-opos-ui-api/          &lt;- Hosts SaleLayoutDefinition, SaleLayoutFactory, SaleLayoutManager
+├── kriolos-opos-app/             &lt;- Core application (CoreSaleLayoutFactory, Classic Catalog, JTicketsBag)
+└── kriolos-opos-ui-modern/       &lt;- Future extracted module (&lt;scope&gt;runtime&lt;/scope&gt;)
+    ├── ModernOne.java
+    ├── ModernTwoSalesLayout.java
+    ├── ModernTouchCatalog.java
+    └── META-INF/services/com.openbravo.pos.ui.api.sales.SaleLayoutFactory</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="7-catalog-spi-architecture-decoupling-jcatalog-supporting-modern-catalogs"><a class="anchor" href="#7-catalog-spi-architecture-decoupling-jcatalog-supporting-modern-catalogs"></a>7. Catalog SPI Architecture: Decoupling JCatalog &amp; Supporting Modern Catalogs</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="7-1-overview-motivation"><a class="anchor" href="#7-1-overview-motivation"></a>7.1 Overview &amp; Motivation</h3>
+<div class="paragraph">
+<p>Parallel to Sales Layouts, the POS Catalog was historically coupled to the concrete Swing class <code>JCatalog</code> (a button-based catalog with vertical tabs). While an interface named <code>CatalogSelector</code> existed in <code>kriolos-opos-app</code>, <code>JCatalog</code> was hardcoded with <code>new JCatalog(app)</code> across multiple screens (<code>JPanelTicketSales</code>, <code>JTicketCatalogLines</code>, <code>StockManagement</code>, <code>StockDiaryEditor</code>), and Modern layouts did not implement or reuse the catalog abstraction.</p>
+</div>
+<div class="paragraph">
+<p>To achieve clean decoupling, the catalog subsystem has also been elevated to a Java SPI architecture in <code>kriolos-opos-ui-api</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Artifact</th>
+<th class="tableblock halign-left valign-top">Package</th>
+<th class="tableblock halign-left valign-top">Responsibilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos-opos-ui-api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.ui.api.catalog</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">* <code>CatalogSelector</code>: Base interface for all catalog visual selectors
+* <code>CatalogDefinition</code>: Immutable metadata record (<code>id</code>, <code>name</code>, <code>description</code>)
+* <code>CatalogFactory</code>: Service Provider Interface for catalog creation
+* <code>CatalogManager</code>: SPI registry, discovery, and safety fallback</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos-opos-app</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.catalog</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">* <code>ClassicCatalogFactory</code>: SPI provider supplying <code>"classic"</code> (<code>JCatalog</code>)
+* <code>CatalogSelector</code>: <code>@Deprecated</code> backward-compatible subinterface</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos-opos-app</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.sales.modern</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">* <code>ModernTouchCatalog</code>: Modern touch-first catalog implementing <code>CatalogSelector</code>
+* <code>ModernCatalogFactory</code>: SPI provider supplying <code>"modern"</code> (<code>ModernTouchCatalog</code>)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="7-2-type-safe-service-resolution-with-app-getbeanclass"><a class="anchor" href="#7-2-type-safe-service-resolution-with-app-getbeanclass"></a>7.2 Type-Safe Service Resolution with <code>app.getBean(Class)</code></h3>
+<div class="paragraph">
+<p>Modern layouts and catalogs leverage type-safe domain logic lookup via <code>app.getBean(Class&lt;T&gt;)</code>, replacing legacy string-based lookups and unchecked type casts:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Modern Type-Safe Lookup:
+DataLogicPIM dlPim = app.getBean(DataLogicPIM.class);
+DataLogicSales dlSales = app.getBean(DataLogicSales.class);
+DataLogicReceipts dlReceipts = app.getBean(DataLogicReceipts.class);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="7-3-interoperability-matrix"><a class="anchor" href="#7-3-interoperability-matrix"></a>7.3 Interoperability Matrix</h3>
+<div class="paragraph">
+<p>With the Catalog SPI in place:
+* <strong>Classic Sales Layouts</strong> (<code>simple</code>, <code>standard</code>, <code>restaurant</code>) utilize <code>CatalogManager.createDefaultCatalog(app)</code> to obtain the classic button catalog (<code>JCatalog</code>).
+* <strong>Existing Ticket Edits</strong> (<code>JPanelTicketEdits</code>) and Inventory screens continue using <code>CatalogSelector</code> without depending directly on <code>JCatalog</code> construction.
+* <strong>Modern Catalogs</strong> (<code>ModernTouchCatalog</code>) implement the identical <code>CatalogSelector</code> contract, enabling them to be embedded across different sales layouts.</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="8-buttonfactory-touch-ergonomics"><a class="anchor" href="#8-buttonfactory-touch-ergonomics"></a>8. ButtonFactory &amp; Touch Ergonomics</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="8-1-ergonomic-touch-standards"><a class="anchor" href="#8-1-ergonomic-touch-standards"></a>8.1 Ergonomic Touch Standards</h3>
+<div class="paragraph">
+<p>To address undersized buttons in touch POS environments, <code>com.openbravo.ui.components.ButtonFactory</code> standardizes button construction across all modern layouts:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Sizing Variants (<code>ButtonSize</code>)</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>MEDIUM</code>: 32px height, 14px font (dense toolbars, header pills).</p>
+</li>
+<li>
+<p><code>LARGE</code>: 40px height, 15px font (line modifiers, secondary action bars).</p>
+</li>
+<li>
+<p><code>EXTRA_LARGE</code>: 48px height, 16px font (standard touch action pane controls).</p>
+</li>
+<li>
+<p><code>MASSIVE</code>: 56px height, 18px font (prominent payment &amp; checkout CTA).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Vector &amp; Asset Icons</strong>: Native Swing <code>Icon</code> and vector SVG support providing crisp scaling across all DPIs without distortion.</p>
+</li>
+<li>
+<p><strong>Keyboard Accessibility &amp; Mnemonics</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Standardized <code>Alt+&lt;Key&gt;</code> mnemonics automatically annotated into tooltips (e.g., <code>Alt+C</code> for Customer, <code>Alt+F</code> for Close Cash, <code>Alt+P</code> / <code>F12</code> for Pay).</p>
+</li>
+<li>
+<p>Dynamic orientation (<code>applyComponentOrientation</code>) supporting both LTR and RTL locales natively.</p>
+</li>
+<li>
+<p>Touch focus suppression (<code>isFocusable = false</code>) to ensure barcode scanners and inputs maintain persistent focus.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Cross-LaF Compatibility</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Uses <code>JButton.buttonType = "roundRect"</code> rather than version-specific styling strings, guaranteeing compatibility across FlatLaf 2.x and higher.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

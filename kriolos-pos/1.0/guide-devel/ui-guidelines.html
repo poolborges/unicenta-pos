@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>UI/UX Architecture Guidelines: KriolOS POS :: KriolOS POS Documentation</title>
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-migration/index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Developer Guide</li>
+    <li>User Interface</li>
+    <li><a href="ui-guidelines.html">UI Guidelines</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-devel/pages/ui-guidelines.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">UI/UX Architecture Guidelines: KriolOS POS</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#system-overview">1. System Overview</a></li>
+<li><a href="#design-system-strategy-swing-touch">2. Design System Strategy (Swing + Touch)</a></li>
+<li><a href="#critical-ux-rules-implementation-enforced">3. Critical UX Rules (Implementation-Enforced)</a>
+<ul class="sectlevel2">
+<li><a href="#rule-7-1-root-panel-padding-integrity">3.1. Rule 7.1 — Root Panel Padding Integrity</a></li>
+<li><a href="#rule-7-2-urn-component-anchoring-setname">3.2. Rule 7.2 — URN Component Anchoring (setName)</a></li>
+<li><a href="#rule-7-3-no-root-fixed-size-on-modal-panels">3.3. Rule 7.3 — No Root Fixed Size on Modal Panels</a></li>
+<li><a href="#rule-7-4-laf-agnostic-custom-painted-components">3.4. Rule 7.4 — LAF-Agnostic Custom-Painted Components</a></li>
+<li><a href="#rule-7-5-semantic-alert-colors-are-laf-independent">3.5. Rule 7.5 — Semantic Alert Colors Are LAF-Independent</a></li>
+</ul>
+</li>
+<li><a href="#critical-tap-targets-hitboxes">4. Critical Tap Targets (Hitboxes)</a></li>
+<li><a href="#font-safety-rules">5. Font Safety Rules</a></li>
+<li><a href="#icon-and-graphic-rules">6. Icon and Graphic Rules</a></li>
+<li><a href="#reference-component-poswarningpanel">7. Reference Component: PosWarningPanel</a></li>
+<li><a href="#decoupling-scanner-keyboard-focus">8. Decoupling Scanner Keyboard Focus</a></li>
+<li><a href="#eliminating-traditional-scrollbars">9. Eliminating Traditional Scrollbars</a></li>
+<li><a href="#layout-structure-with-miglayout">10. Layout Structure with MigLayout</a></li>
+<li><a href="#contingency-keyboard-shortcuts-key-bindings">11. Contingency Keyboard Shortcuts (Key Bindings)</a></li>
+<li><a href="#product-category-navigation-layout">12. Product Category Navigation Layout</a></li>
+<li><a href="#touch-screen-numerical-keypad-numpad-overlay">13. Touch-Screen Numerical Keypad (Numpad) Overlay</a></li>
+<li><a href="#kinetic-touch-drag-scrolling-swipe-to-scroll">14. Kinetic Touch-Drag Scrolling (Swipe-to-Scroll)</a></li>
+<li><a href="#global-touch-upscaling-via-flatlaf-configuration">15. Global Touch-Upscaling via FlatLaf Configuration</a></li>
+<li><a href="#references">16. References</a>
+<ul class="sectlevel2">
+<li><a href="#design-systems">16.1. Design Systems</a></li>
+<li><a href="#java-swing">16.2. Java / Swing</a></li>
+<li><a href="#human-interface-guidelines">16.3. Human Interface Guidelines</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="system-overview"><a class="anchor" href="#system-overview"></a>1. System Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>KriolOS POS</strong> is a native desktop application built using <strong>Java Swing</strong>, specifically engineered
+for Point of Sale (POS) terminals equipped with touch-screens.</p>
+</div>
+<div class="paragraph">
+<p>The primary focus of this design ecosystem is <strong>high-speed operation</strong>, <strong>minimal eye strain for
+cashiers</strong>, and <strong>absolute tap precision</strong> without requiring physical mice or keyboard peripherals
+during standard checkout workflows.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="design-system-strategy-swing-touch"><a class="anchor" href="#design-system-strategy-swing-touch"></a>2. Design System Strategy (Swing + Touch)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To avoid the obsolete, dated look of native Swing, this project adopts the tactile concepts of
+<strong>Google Material Design</strong> and the rigid scale rules of <strong>Adobe Spectrum</strong>, implemented seamlessly
+via the <strong>FlatLaf</strong> library.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>FlatLaf is <strong>never applied per component or class</strong>. Any FlatLaf improvement is applied
+<strong>globally</strong> via <code>UIManager</code> at application startup — never inline.</p>
+</li>
+<li>
+<p>The project&#8217;s SPI mechanism keeps components <strong>dependency-free</strong>. At the component level
+everything is pure Swing (<code>javax.swing.<strong></code> / <code>java.awt.</strong></code>). FlatLaf is a runtime concern,
+not a compile-time dependency of individual UI classes.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Approach</th>
+<th class="tableblock halign-left valign-top">Benefit to KriolOS POS</th>
+<th class="tableblock halign-left valign-top">Implementation in Java Swing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Touch-First Philosophy</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enlarged interaction spaces for fingers, eliminating mistaps and typos in fast-paced
+retail or hospitality environments.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Global configuration of margins, paddings, and font sizes using FlatLaf&#8217;s <code>UIManager</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Adobe Spectrum Scaling</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ensures visual components grow proportionally if the terminal uses high-density (High-DPI)
+modern display panels.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Automatic utilisation of FlatLaf&#8217;s built-in scaling engine alongside dynamic layout managers.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="critical-ux-rules-implementation-enforced"><a class="anchor" href="#critical-ux-rules-implementation-enforced"></a>3. Critical UX Rules (Implementation-Enforced)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>These rules are not aspirational — they are enforced via automation, code review, and
+integration tests.</p>
+</div>
+<div class="sect2">
+<h3 id="rule-7-1-root-panel-padding-integrity"><a class="anchor" href="#rule-7-1-root-panel-padding-integrity"></a>3.1. Rule 7.1 — Root Panel Padding Integrity</h3>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Every modal panel managed by <code>PosUIModal</code> <strong>must</strong> apply a root-level
+<code>EmptyBorder(8, 8, 8, 8)</code> as the first statement in <code>initDomainAdapters()</code>.
+This prevents any inner component from touching the modal container edges.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Always the FIRST call in initDomainAdapters():
+setBorder(new EmptyBorder(8, 8, 8, 8));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Rationale: Without this guard, FlatLaf rounded-corner dialogs show components bleeding
+to the edge of the glass pane, which is visually unacceptable on touch POS screens.
+Changes to this rule must be documented in this file.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="rule-7-2-urn-component-anchoring-setname"><a class="anchor" href="#rule-7-2-urn-component-anchoring-setname"></a>3.2. Rule 7.2 — URN Component Anchoring (setName)</h3>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>All interactive components within modal panels <strong>must</strong> receive a <code>setName()</code> call
+using the KriolOS URN format. This is mandatory in <code>initDomainAdapters()</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>URN format: <code>kriolos:&lt;domain&gt;:&lt;component-id&gt;</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Examples
+setName("kriolos:alert:warning-panel");
+btnConfirm.setName("kriolos:alert:btn-confirm");
+txtBody.setName("kriolos:alert:txt-body");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Rationale: URN anchoring enables automated UI testing (<code>ModalPanelUrnAnchoringTest</code>),
+future WebDriver bindings, and accessibility tooling without relying on fragile component
+traversal indices.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="rule-7-3-no-root-fixed-size-on-modal-panels"><a class="anchor" href="#rule-7-3-no-root-fixed-size-on-modal-panels"></a>3.3. Rule 7.3 — No Root Fixed Size on Modal Panels</h3>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Modal panels managed by <code>PosUIModal</code> <strong>must NOT</strong> call <code>setPreferredSize()</code>,
+<code>setMinimumSize()</code>, or <code>setMaximumSize()</code> on the root <code>JPanel</code> (<code>this</code>).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// WRONG — fragile, clips content whenever padding/border changes
+setPreferredSize(new java.awt.Dimension(330, 430));
+
+// CORRECT — let PosUIModal.pack() compute from children
+// Root size intentionally omitted: PosUIModal calls pack() which computes
+// natural size from children. Fixed root sizes are fragile against padding changes.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Rationale: <code>PosUIModal</code> calls <code>dialog.pack()</code> after adding the panel. <code>pack()</code> computes
+the dialog size recursively from all children. A hardcoded root size short-circuits this
+computation and causes content to clip whenever the surrounding context changes
+(border, padding, LAF, font scale). Sub-components retain their own preferred sizes
+for predictable touch targets — only the root panel is left free.</p>
+</div>
+<div class="paragraph">
+<p>Panels corrected under this rule (2026-09-23):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JEditorTextPanel</code> — removed <code>setMinimumSize(350, 450)</code> + <code>setPreferredSize(350, 450)</code></p>
+</li>
+<li>
+<p><code>JNumberPanel</code> — removed <code>setPreferredSize(330, 430)</code></p>
+</li>
+<li>
+<p><code>DinerNumberPanel</code> — removed <code>setPreferredSize(330, 420)</code></p>
+</li>
+<li>
+<p><code>JMessagePanel</code> — removed <code>setMaximumSize</code>, <code>setMinimumSize</code>, <code>setPreferredSize</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="rule-7-4-laf-agnostic-custom-painted-components"><a class="anchor" href="#rule-7-4-laf-agnostic-custom-painted-components"></a>3.4. Rule 7.4 — LAF-Agnostic Custom-Painted Components</h3>
+<div class="paragraph">
+<p>KriolOS POS supports runtime LAF switching (Metal &#8594; FlatLaf Light &#8594; FlatLaf Dark and
+any future LAF). Custom-painted components <strong>must</strong> survive <code>UIManager.setLookAndFeel()</code>
++ <code>SwingUtilities.updateComponentTreeUI()</code> without visual regression.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Every class that overrides <code>paintComponent</code> and relies on <code>setOpaque(false)</code>,
+<code>setContentAreaFilled(false)</code>, <code>setBorderPainted(false)</code>, or <code>setFocusPainted(false)</code>
+<strong>must</strong> also override <code>updateUI()</code> to reapply those settings after the LAF&#8217;s
+<code>installUI()</code> resets them.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Pattern for any JPanel subclass with custom painting:
+@Override
+public void updateUI() {
+    super.updateUI();   // LAF installs its delegate — may reset opaque to true
+    setOpaque(false);   // Re-enforce our transparent background
+}
+
+// Pattern for any JButton subclass with custom painting:
+@Override
+public void updateUI() {
+    super.updateUI();           // LAF resets contentAreaFilled, borderPainted etc.
+    applyLafNeutralDefaults();  // We override what the LAF reset
+}
+
+private void applyLafNeutralDefaults() {
+    setFocusPainted(false);
+    setBorderPainted(false);
+    setContentAreaFilled(false);
+    setOpaque(false);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What each LAF&#8217;s <code>installUI()</code> resets (and must be re-enforced):</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component type</th>
+<th class="tableblock halign-left valign-top">Properties reset by LAF</th>
+<th class="tableblock halign-left valign-top">Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JPanel</code> subclass</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>opaque = true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>updateUI()</code> &#8594; <code>setOpaque(false)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JComponent</code> subclass (icon etc.)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>opaque = true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>updateUI()</code> &#8594; <code>setOpaque(false)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JTextArea</code> / <code>JTextField</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>opaque = true</code>, LAF border replaces custom border</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Anonymous subclass <code>updateUI()</code> &#8594; <code>setOpaque(false)</code> + re-apply margin/border</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JButton</code> subclass</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentAreaFilled</code>, <code>borderPainted</code>, <code>focusPainted</code>, <code>opaque</code> — all reset</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>updateUI()</code> &#8594; <code>applyLafNeutralDefaults()</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><code>paintComponent</code> call order in custom-painted components:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Override
+protected void paintComponent(Graphics g) {
+    // Step 1: LAF delegate runs first (no-op for opaque=false, honours Swing contract)
+    super.paintComponent(g);
+
+    // Step 2: Our custom painting goes ON TOP — always wins regardless of LAF
+    Graphics2D g2 = (Graphics2D) g.create();
+    // ... custom card / icon painting ...
+    g2.dispose();
+    // Children are painted by Swing's paintChildren() — NOT by super.paintComponent()
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="rule-7-5-semantic-alert-colors-are-laf-independent"><a class="anchor" href="#rule-7-5-semantic-alert-colors-are-laf-independent"></a>3.5. Rule 7.5 — Semantic Alert Colors Are LAF-Independent</h3>
+<div class="paragraph">
+<p>Warning / error / success semantic colors <strong>must not</strong> adapt to the active LAF theme
+(dark or light). A cashier must be able to scan-recognise an alert panel in under 200ms
+regardless of which LAF is active.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Adobe Spectrum "Notice/Warning" tokens — hardcoded, never LAF-derived
+private static final Color CLR_BG     = new Color(0xFF, 0xF8, 0xEE); // warm cream-amber
+private static final Color CLR_ACCENT = new Color(0xCB, 0x6F, 0x10); // deep amber
+private static final Color CLR_TITLE  = new Color(0x33, 0x1E, 0x00); // near-black brown</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Rationale: Adobe Spectrum, Material Design, and Apple HIG all maintain semantic warning
+amber in dark mode. A warning panel that turns neutral grey in dark mode loses its
+semantic signal — which is a safety regression for cashiers.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="critical-tap-targets-hitboxes"><a class="anchor" href="#critical-tap-targets-hitboxes"></a>4. Critical Tap Targets (Hitboxes)</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Golden Rule:</strong> No interactive element (button, checkbox, list item) should ever be
+smaller than <strong>48 x 48 pixels</strong>.</p>
+</li>
+<li>
+<p>For rapid-access product and category tiles, minimum recommended height is <strong>80 px</strong>.</p>
+</li>
+<li>
+<p>For modal action buttons (OK, Cancel, Confirm): minimum <strong>56 px</strong> height
+(Adobe Spectrum touch scale standard).</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Enforced via getPreferredSize() override — not via setPreferredSize() on root:
+@Override
+public Dimension getPreferredSize() {
+    Dimension d = super.getPreferredSize();
+    d.width  = Math.max(d.width + 32, BTN_MIN_W); // horizontal label padding
+    d.height = Math.max(d.height, 56);             // Spectrum touch minimum
+    return d;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="font-safety-rules"><a class="anchor" href="#font-safety-rules"></a>5. Font Safety Rules</h2>
+<div class="sectionbody">
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Never</strong> use platform-specific font names (<code>"Segoe UI"</code>, <code>"Helvetica"</code>, <code>"Arial"</code>)
+in component code. Use only <strong>logical font names</strong> which are guaranteed to map
+correctly across Linux (POS terminals), Windows, and macOS JREs.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// WRONG — breaks on Linux POS distros without the font installed
+new Font("Segoe UI", Font.PLAIN, 14)
+
+// CORRECT — maps to the best available sans-serif on every platform
+new Font(Font.SANS_SERIF, Font.PLAIN, 14)
+new Font(Font.DIALOG,     Font.PLAIN, 14)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>FlatLaf global font scaling is configured once at startup via <code>UIManager</code> (see
+<a href="#_global_touch_upscaling_via_flatlaf_configuration">[_global_touch_upscaling_via_flatlaf_configuration]</a>), not per component.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="icon-and-graphic-rules"><a class="anchor" href="#icon-and-graphic-rules"></a>6. Icon and Graphic Rules</h2>
+<div class="sectionbody">
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Do <strong>not</strong> use character emojis for icons. They render as blank squares
+on minimalist POS Linux distros that do not include emoji font packages.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>All icons must be drawn via <code>Graphics2D</code> with antialiasing enabled:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Graphics2D g2 = (Graphics2D) g.create();
+g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,   RenderingHints.VALUE_ANTIALIAS_ON);
+g2.setRenderingHint(RenderingHints.KEY_RENDERING,      RenderingHints.VALUE_RENDER_QUALITY);
+g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+// ... vector drawing via Path2D, Line2D, RoundRectangle2D ...
+g2.dispose();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Reference implementation: <code>PosWarningPanel.WarningIcon</code> — rounded-corner equilateral
+triangle with white exclamation mark, drawn entirely via <code>Path2D</code> bezier arcs.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="reference-component-poswarningpanel"><a class="anchor" href="#reference-component-poswarningpanel"></a>7. Reference Component: PosWarningPanel</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>com.openbravo.beans.PosWarningPanel</code> is the canonical reference implementation for all
+Rules 7.1-7.5. When implementing a new custom-painted panel, use it as the template.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adobe Spectrum amber tokens</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CLR_BG</code>, <code>CLR_ACCENT</code>, <code>CLR_TITLE</code>, <code>CLR_BODY</code> — hardcoded, LAF-independent</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Root padding</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EmptyBorder(PAD_V, PAD_H + ACCENT_W + 8, PAD_V, PAD_H)</code> — no root fixed size</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LAF agnosticism</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>updateUI()</code> on panel, icon, button; JTextArea as anonymous subclass</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Touch button minimum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BTN_H = 56 px</code> enforced via <code>getPreferredSize()</code> override</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fonts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Font.SANS_SERIF</code> / <code>Font.DIALOG</code> only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Icons</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>WarningIcon</code> — pure <code>Graphics2D</code> / <code>Path2D</code> vector, no emoji, no raster</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URN names</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos:alert:warning-panel</code>, <code>kriolos:alert:btn-confirm</code>, etc.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dark / Light LAF</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Amber card colours are semantic — intentionally preserved across all LAFs</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="decoupling-scanner-keyboard-focus"><a class="anchor" href="#decoupling-scanner-keyboard-focus"></a>8. Decoupling Scanner Keyboard Focus</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>The Problem:</strong> If a cashier taps the screen to modify a quantity, traditional text
+fields lose focus. This breaks background hardware barcode scanning.</p>
+</li>
+<li>
+<p><strong>The Solution:</strong> KriolOS POS captures scanner inputs globally via a <code>KeyEventDispatcher</code>
+or directly through dedicated Serial/USB COM ports. The cashier must be able to tap
+anything on the screen without halting active barcode scanning.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="eliminating-traditional-scrollbars"><a class="anchor" href="#eliminating-traditional-scrollbars"></a>9. Eliminating Traditional Scrollbars</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Default native <code>JScrollPane</code> bars are paper-thin and impossible to drag reliably with
+a finger. Replace classic scrollbars with large Up/Down arrow buttons flanking panels,
+or implement smooth kinetic touch-drag listeners (see
+<a href="#_kinetic_touch_drag_scrolling_swipe_to_scroll">[_kinetic_touch_drag_scrolling_swipe_to_scroll]</a>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="layout-structure-with-miglayout"><a class="anchor" href="#layout-structure-with-miglayout"></a>10. Layout Structure with MigLayout</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The main dashboard interface implements an industry-standard split layout:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Left Column (35%):</strong> Checkout Panel — active receipt list, live totals, primary actions.</p>
+</li>
+<li>
+<p><strong>Right Column (65%):</strong> Responsive matrix grid of product and category quick-buttons.</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">setLayout(new MigLayout("fill, insets 10", "[35%!][grow, fill]", "[grow, fill]"));
+add(createReceiptPanel(),     "cell 0 0");
+add(createProductGridPanel(), "cell 1 0");</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="contingency-keyboard-shortcuts-key-bindings"><a class="anchor" href="#contingency-keyboard-shortcuts-key-bindings"></a>11. Contingency Keyboard Shortcuts (Key Bindings)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Use Swing <code>InputMap</code> / <code>ActionMap</code> on <code>JComponent.WHEN_IN_FOCUSED_WINDOW</code> — not
+<code>KeyListener</code>, which fails when focus moves.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Action</th>
+<th class="tableblock halign-left valign-top">Shortcut</th>
+<th class="tableblock halign-left valign-top">Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pay / Checkout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>F10</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Triggers payment processing modal instantly.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Void Transaction</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ESC</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prompts manager authentication to clear basket.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Search / Item Entry</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>F1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Forces focus to universal product search bar.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Print Last Receipt</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Ctrl + P</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Re-sends last transaction to thermal printer.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>UX Best Practice: Always append the hotkey to the button label text: <code>PAY NOW (F10)</code>,
+<code>VOID (ESC)</code>. Minimum <strong>14pt bold</strong> for hint text.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="product-category-navigation-layout"><a class="anchor" href="#product-category-navigation-layout"></a>12. Product Category Navigation Layout</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Use a <code>ButtonGroup</code> of <code>JToggleButton</code> tiles (minimum height <strong>70 px</strong>) instead of native
+<code>JTabbedPane</code> (too narrow for touch). Row 0 fixed at 70 px; Row 1 fills remaining space.</p>
+</div>
+<div class="paragraph">
+<p>Selected category tab must pop visually (brand accent colour). Non-selected tabs are flat.
+Use <code>ItemListener</code> on each toggle to rebuild the product grid content dynamically.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="touch-screen-numerical-keypad-numpad-overlay"><a class="anchor" href="#touch-screen-numerical-keypad-numpad-overlay"></a>13. Touch-Screen Numerical Keypad (Numpad) Overlay</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Use a modal <code>JDialog</code> numpad instead of inline text fields for quantity / price entry.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Grid: 3x4 matrix (<code>7-8-9 / 4-5-6 / 1-2-3 / 0-CLEAR-ENTER</code>)</p>
+</li>
+<li>
+<p>Minimum button size: 75 x 75 px</p>
+</li>
+<li>
+<p>Display field font: &gt;= 28pt bold</p>
+</li>
+<li>
+<p>CLEAR: soft red (<code>new Color(239, 83, 80)</code>)</p>
+</li>
+<li>
+<p>ENTER: operational green (<code>new Color(102, 187, 106)</code>)</p>
+</li>
+<li>
+<p>Validation errors: flash <code>displayField</code> background red for 200 ms via <code>javax.swing.Timer</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="kinetic-touch-drag-scrolling-swipe-to-scroll"><a class="anchor" href="#kinetic-touch-drag-scrolling-swipe-to-scroll"></a>14. Kinetic Touch-Drag Scrolling (Swipe-to-Scroll)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Wrap any long-content <code>JScrollPane</code> with <code>TouchScrollGlassPane</code>. Listens for
+<code>mousePressed</code> (anchor), <code>mouseDragged</code> (delta &#8594; <code>viewport.setViewPosition()</code>),
+<code>mouseReleased</code> (reset). Hide native scrollbars with <code>setPreferredSize(new Dimension(0, 0))</code>.</p>
+</div>
+<div class="paragraph">
+<p>Provide a visual indicator of hidden content — let the last item row clip halfway off
+the container bottom edge.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="global-touch-upscaling-via-flatlaf-configuration"><a class="anchor" href="#global-touch-upscaling-via-flatlaf-configuration"></a>15. Global Touch-Upscaling via FlatLaf Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Applied <strong>once at startup</strong> via <code>UIManager</code> — never per component.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">private static void configureGlobalTouchSettings() {
+    UIManager.put("defaultFont",              new Font(Font.SANS_SERIF, Font.PLAIN, 16));
+    UIManager.put("Button.font",              new Font(Font.SANS_SERIF, Font.BOLD,  16));
+    UIManager.put("ToggleButton.font",        new Font(Font.SANS_SERIF, Font.BOLD,  16));
+    UIManager.put("Button.margin",            new Insets(12, 24, 12, 24));
+    UIManager.put("ToggleButton.margin",      new Insets(12, 24, 12, 24));
+    UIManager.put("Button.minimumHeight",     48);
+    UIManager.put("ToggleButton.minimumHeight", 48);
+    UIManager.put("CheckBox.iconSize",        24);
+    UIManager.put("RadioButton.iconSize",     24);
+    UIManager.put("TextField.margin",         new Insets(8, 12, 8, 12));
+    UIManager.put("TextField.minimumHeight",  45);
+    UIManager.put("ScrollBar.width",          26);
+    UIManager.put("ScrollBar.thumbArc",       12);
+    UIManager.put("Button.arc",               8);
+    UIManager.put("Component.arc",            8);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="references"><a class="anchor" href="#references"></a>16. References</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="design-systems"><a class="anchor" href="#design-systems"></a>16.1. Design Systems</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://spectrum.adobe.com/page/alert-banner/">Adobe Spectrum — Alert Banner</a></p>
+</li>
+<li>
+<p><a href="https://m3.material.io/components/dialogs/overview">Material Design 3 — Dialogs</a></p>
+</li>
+<li>
+<p><a href="https://developer.apple.com/design/human-interface-guidelines/">Apple HIG</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="java-swing"><a class="anchor" href="#java-swing"></a>16.2. Java / Swing</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.formdev.com/flatlaf/">FlatLaf documentation</a></p>
+</li>
+<li>
+<p><a href="https://www.formdev.com/flatlaf/customizing/">FlatLaf UIManager properties</a></p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/swing/package-summary.html">Java 21 Swing API</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="human-interface-guidelines"><a class="anchor" href="#human-interface-guidelines"></a>16.3. Human Interface Guidelines</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Human_interface_guidelines">Wikipedia — HIG</a></p>
+</li>
+<li>
+<p><a href="https://wiki.eclipse.org/User_Interface_Guidelines">Eclipse UI Guidelines</a></p>
+</li>
+<li>
+<p><a href="https://jetbrains.design/intellij">IntelliJ Platform UI Guidelines</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

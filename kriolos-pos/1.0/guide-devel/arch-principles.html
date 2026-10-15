@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Architecture &amp; Migration Principles :: KriolOS POS Documentation</title>
+    <meta name="description" content="KriolosPOS — 14-rule protocol for incremental Hexagonal Architecture migration from legacy Java Swing monolith.">
+    <meta name="keywords" content="hexagonal architecture, strangler fig, modular monolith, java 17, bounded context, clean architecture">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-migration/index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Developer Guide</li>
+    <li>Architecture &amp; Modeling</li>
+    <li><a href="arch-principles.html">Architecture Principles</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-devel/pages/arch-principles.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Architecture &amp; Migration Principles</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#overview">1. Overview</a></li>
+<li><a href="#rule-1-core-philosophy-kiss-principle">2. Rule 1 — Core Philosophy: KISS Principle</a>
+<ul class="sectlevel2">
+<li><a href="#guidelines">2.1. Guidelines</a></li>
+<li><a href="#java-17-toolbox">2.2. Java 17 Toolbox</a></li>
+</ul>
+</li>
+<li><a href="#rule-2-strangler-fig-pattern">3. Rule 2 — Strangler Fig Pattern</a></li>
+<li><a href="#rule-3-hexagonal-architecture-ports-adapters">4. Rule 3 — Hexagonal Architecture (Ports &amp; Adapters)</a>
+<ul class="sectlevel2">
+<li><a href="#swing-adapter-responsibility-contract">4.1. Swing Adapter Responsibility Contract</a></li>
+</ul>
+</li>
+<li><a href="#rule-4-modular-monolith-bounded-contexts">5. Rule 4 — Modular Monolith: Bounded Contexts</a>
+<ul class="sectlevel2">
+<li><a href="#cross-module-communication-rules">5.1. Cross-Module Communication Rules</a></li>
+</ul>
+</li>
+<li><a href="#rule-5-package-namespace-preservation">6. Rule 5 — Package Namespace Preservation</a></li>
+<li><a href="#rule-6-mandatory-invariants">7. Rule 6 — Mandatory Invariants</a>
+<ul class="sectlevel2">
+<li><a href="#6-1-data-integrity-sql-preservation">7.1. 6.1 Data Integrity — SQL Preservation</a></li>
+<li><a href="#6-2-financial-precision-bigdecimal">7.2. 6.2 Financial Precision — BigDecimal</a></li>
+<li><a href="#6-3-multi-tax-system-integrity">7.3. 6.3 Multi-Tax System Integrity</a></li>
+<li><a href="#6-4-internationalization-i18n-l10n">7.4. 6.4 Internationalization (I18N / L10N)</a></li>
+</ul>
+</li>
+<li><a href="#rule-7-ui-adapter-netbeans-form-rules">8. Rule 7 — UI Adapter &amp; NetBeans Form Rules</a>
+<ul class="sectlevel2">
+<li><a href="#7-1-netbeans-xml-gui-form-preservation">8.1. 7.1 NetBeans XML GUI Form Preservation</a></li>
+<li><a href="#7-2-component-identification-setname-urn-anchoring">8.2. 7.2 Component Identification — <code>setName()</code> URN Anchoring</a></li>
+</ul>
+</li>
+<li><a href="#rule-8-quality-testing-automation">9. Rule 8 — Quality, Testing &amp; Automation</a>
+<ul class="sectlevel2">
+<li><a href="#8-1-junit-5-domain-service-tests">9.1. 8.1 JUnit 5 — Domain Service Tests</a></li>
+<li><a href="#8-2-automation-module-integration">9.2. 8.2 Automation Module Integration</a></li>
+</ul>
+</li>
+<li><a href="#rule-9-specification-assets-antora-canonical-paths">10. Rule 9 — Specification Assets (Antora Canonical Paths)</a></li>
+<li><a href="#rule-10-stateless-domain-no-legacy-singletons">11. Rule 10 — Stateless Domain (No Legacy Singletons)</a></li>
+<li><a href="#rule-11-domain-exceptions-only">12. Rule 11 — Domain Exceptions Only</a></li>
+<li><a href="#rule-12-full-data-hydration">13. Rule 12 — Full Data Hydration</a></li>
+<li><a href="#rule-13-token-efficiency-contributor-output-contract">14. Rule 13 — Token Efficiency (Contributor Output Contract)</a></li>
+<li><a href="#rule-14-sdlc-git-branching-protocol">15. Rule 14 — SDLC &amp; Git Branching Protocol</a>
+<ul class="sectlevel2">
+<li><a href="#14-1-git-branching-mandate">15.1. 14.1 Git Branching Mandate</a></li>
+<li><a href="#14-2-agile-sdlc-framework-mandatory-iterative-phases-java-swing-specialized">15.2. 14.2 Agile SDLC Framework — Mandatory Iterative Phases (Java Swing Specialized)</a>
+<ul class="sectlevel3">
+<li><a href="#phase-1-discovery-story-refinement-backlog-grooming">15.2.1. Phase 1: Discovery &amp; Story Refinement (Backlog Grooming)</a></li>
+<li><a href="#phase-2-architectural-contract-portsadapters-design">15.2.2. Phase 2: Architectural Contract &amp; Ports/Adapters Design</a></li>
+<li><a href="#phase-3-test-first-harness-automation-driver-construction-tdd-atdd">15.2.3. Phase 3: Test-First Harness &amp; Automation Driver Construction (TDD / ATDD)</a></li>
+<li><a href="#phase-4-component-implementation-gui-builder-integrity-swing-development">15.2.4. Phase 4: Component Implementation &amp; GUI Builder Integrity (Swing Development)</a></li>
+<li><a href="#phase-5-automated-verification-visual-quality-gates-cicd-matrix">15.2.5. Phase 5: Automated Verification &amp; Visual Quality Gates (CI/CD Matrix)</a></li>
+<li><a href="#phase-6-agile-trunk-based-integration-atomic-pr-retrospective">15.2.6. Phase 6: Agile Trunk-Based Integration, Atomic PR &amp; Retrospective</a></li>
+</ul>
+</li>
+<li><a href="#14-3-agile-trunk-based-integration-protocol-atomic-pr-merge">15.3. 14.3 Agile Trunk-Based Integration Protocol (Atomic PR &amp; Merge)</a>
+<ul class="sectlevel3">
+<li><a href="#mandatory-rules-for-feature-transitions">15.3.1. Mandatory Rules for Feature Transitions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#appendix-a-full-14-rule-protocol-table">16. Appendix A — Full 14-Rule Protocol Table</a></li>
+<li><a href="#appendix-b-bounded-context-package-index">17. Appendix B — Bounded Context Package Index</a></li>
+<li><a href="#appendix-c-per-extraction-output-checklist">18. Appendix C — Per-Extraction Output Checklist</a></li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="overview"><a class="anchor" href="#overview"></a>1. Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This page is the <strong>permanent Source of Truth</strong> for all architecture, migration, and development protocol decisions in the KriolosPOS project — a modernized fork of uniCenta oPOS.</p>
+</div>
+<div class="paragraph">
+<p>It governs the incremental extraction of business logic from a legacy Java Swing monolith into a clean, modular, framework-agnostic domain layer using Java 17 and Hexagonal Architecture principles.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+All 14 rules defined here are <strong>mandatory and non-negotiable</strong>. Any contribution that violates a rule must be rejected at review time.
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rule-1-core-philosophy-kiss-principle"><a class="anchor" href="#rule-1-core-philosophy-kiss-principle"></a>2. Rule 1 — Core Philosophy: KISS Principle</h2>
+<div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>"SIMPLE IS ALWAYS THE BETTER CHOICE."</p>
+</div>
+</blockquote>
+</div>
+<div class="sect2">
+<h3 id="guidelines"><a class="anchor" href="#guidelines"></a>2.1. Guidelines</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Avoid introducing complex Design Patterns unless the business logic <strong>forces</strong> it.</p>
+</li>
+<li>
+<p>Prefer readable, explicit, linear code over deeply nested abstractions.</p>
+</li>
+<li>
+<p>Do not create interfaces, factories, or registries speculatively (YAGNI).</p>
+</li>
+<li>
+<p>Get straight to the code — no architectural manifestos in commit outputs.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="java-17-toolbox"><a class="anchor" href="#java-17-toolbox"></a>2.2. Java 17 Toolbox</h3>
+<div class="paragraph">
+<p>Use modern Java 17 features to write concise, bulletproof domain logic with minimal boilerplate:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>record</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Immutable domain models, value objects, command/result payloads</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sealed interfaces</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exhaustive domain state machines (e.g., <code>PaymentState</code>, <code>TicketStatus</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pattern matching (<code>instanceof</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Type-safe dispatch without casting boilerplate</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Switch expressions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exhaustive, expression-form business rule mapping</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Optional&lt;T&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explicit absence without null propagation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List.of()</code> / <code>Map.of()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Immutable data structures for domain results</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title">Example — Sealed domain result</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public sealed interface PaymentResult
+    permits PaymentResult.Success, PaymentResult.Declined, PaymentResult.Error {
+
+    record Success(BigDecimal amountPaid, BigDecimal change) implements PaymentResult {}
+    record Declined(String reason)                          implements PaymentResult {}
+    record Error(String technicalMessage)                  implements PaymentResult {}
+}</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rule-2-strangler-fig-pattern"><a class="anchor" href="#rule-2-strangler-fig-pattern"></a>3. Rule 2 — Strangler Fig Pattern</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>The existing Swing UI is the <strong>active, production-ready delivery mechanism</strong> and must remain fully compilable and functional at all times.</p>
+</li>
+<li>
+<p>New domain logic grows <strong>alongside</strong> legacy code — never instead of it.</p>
+</li>
+<li>
+<p>Legacy code is strangled incrementally: one feature, one file, one method at a time.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+A contribution that breaks Swing compilation is an <strong>immediate blocker</strong> regardless of the quality of the domain layer change.
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rule-3-hexagonal-architecture-ports-adapters"><a class="anchor" href="#rule-3-hexagonal-architecture-ports-adapters"></a>4. Rule 3 — Hexagonal Architecture (Ports &amp; Adapters)</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs"> +--------------------------------------------------------+
+ |  DRIVING ADAPTERS (Inbound)                            |
+ |  Swing JPanel/ActionListener  |  REST (future)         |
+ +-------------------+------------------------------------+
+                     | calls
+ +-------------------v------------------------------------+
+ |  DOMAIN CORE                                           |
+ |  Domain Services  |  Domain Records  |  Domain Events  |
+ +-------------------+------------------------------------+
+                     | calls
+ +-------------------v------------------------------------+
+ |  DRIVEN ADAPTERS (Outbound) - implement Ports          |
+ |  DataLogicSales  |  JasperReports  |  BeanShell        |
+ |  Printer         |  Peripheral     |  FileSystem        |
+ +--------------------------------------------------------+</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Inbound Port</strong>: A use-case interface the driving adapter calls (optional for simple cases).</p>
+</li>
+<li>
+<p><strong>Outbound Port</strong>: An interface the domain core calls; infrastructure implements it.</p>
+</li>
+<li>
+<p>Domain core has <strong>zero knowledge</strong> of Swing, JDBC, JasperReports, or BeanShell.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="swing-adapter-responsibility-contract"><a class="anchor" href="#swing-adapter-responsibility-contract"></a>4.1. Swing Adapter Responsibility Contract</h3>
+<div class="paragraph">
+<p>A refactored Swing Adapter method does <strong>only</strong> three things:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Extract</strong> raw values from visual components (<code>getText</code>, <code>getSelectedItem</code>, etc.)</p>
+</li>
+<li>
+<p><strong>Delegate</strong> to the Domain Service with a typed command/request object</p>
+</li>
+<li>
+<p><strong>Apply</strong> the domain result back to visual components (<code>setText</code>, <code>setEnabled</code>, etc.)</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="title">Adapter method skeleton</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">private void onConfirmPaymentAction() {
+    // 1. Extract
+    BigDecimal cashReceived = new BigDecimal(txtCashReceived.getText().trim());
+
+    // 2. Delegate
+    PaymentResult result = paymentService.processPayment(
+        PaymentCommand.of(sessionContext, activeTicket, cashReceived)
+    );
+
+    // 3. Apply
+    switch (result) {
+        case PaymentResult.Success s -&gt; {
+            lblChange.setText(s.change().toPlainString());
+            closePaymentPanel();
+        }
+        case PaymentResult.Declined d -&gt; showError(d.reason());
+        case PaymentResult.Error e   -&gt; logAndAlert(e.technicalMessage());
+    }
+}</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rule-4-modular-monolith-bounded-contexts"><a class="anchor" href="#rule-4-modular-monolith-bounded-contexts"></a>5. Rule 4 — Modular Monolith: Bounded Contexts</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each business capability lives in a <strong>strictly isolated domain module/package</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">com.openbravo.pos.domain.shared        &lt;- Shared Kernel only
+com.openbravo.pos.domain.sales
+com.openbravo.pos.domain.inventory
+com.openbravo.pos.domain.payments
+com.openbravo.pos.domain.rbac
+com.openbravo.pos.domain.navigation
+com.openbravo.pos.domain.reporting</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cross-module-communication-rules"><a class="anchor" href="#cross-module-communication-rules"></a>5.1. Cross-Module Communication Rules</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>A module <strong>cannot</strong> import internal classes of another module.</p>
+</li>
+<li>
+<p>Cross-module communication uses <strong>only</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Shared Kernel value objects (<code>com.openbravo.pos.domain.shared</code>)</p>
+</li>
+<li>
+<p>Public API interfaces (outbound ports exposed by the producing module)</p>
+</li>
+<li>
+<p>Domain Events (immutable records published at module boundaries)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Each module must be <strong>copy-paste portable</strong> into a standalone Quarkus, Spring Boot, or WebforJ project with no hidden sibling-module dependencies.</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rule-5-package-namespace-preservation"><a class="anchor" href="#rule-5-package-namespace-preservation"></a>6. Rule 5 — Package Namespace Preservation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The historical base namespace <code>com.openbravo</code> is <strong>frozen and immutable</strong>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Constraint</th>
+<th class="tableblock halign-left valign-top">Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">New domain packages</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Created <strong>under</strong> <code>com.openbravo.pos.domain.*</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing legacy classes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Never renamed or moved</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Legacy integration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Only via Outbound Port interfaces; legacy classes implement or wrap ports</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rule-6-mandatory-invariants"><a class="anchor" href="#rule-6-mandatory-invariants"></a>7. Rule 6 — Mandatory Invariants</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="6-1-data-integrity-sql-preservation"><a class="anchor" href="#6-1-data-integrity-sql-preservation"></a>7.1. 6.1 Data Integrity — SQL Preservation</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Existing SQL queries, result-set mappings, and DB schema interactions are <strong>never modified</strong> during a domain extraction.</p>
+</li>
+<li>
+<p>Extraction wraps legacy <code>DataLogic*</code> singletons behind an Outbound Port; the SQL inside remains <strong>byte-for-byte identical</strong>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="6-2-financial-precision-bigdecimal"><a class="anchor" href="#6-2-financial-precision-bigdecimal"></a>7.2. 6.2 Financial Precision — BigDecimal</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Never</strong> use <code>float</code> or <code>double</code> for monetary values.</p>
+</li>
+<li>
+<p>Preserve the <strong>exact</strong> <code>RoundingMode</code> and <code>BigDecimal</code> scale already present in legacy code.</p>
+</li>
+<li>
+<p>Domain records carry monetary amounts as <code>BigDecimal</code>.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Shared Kernel Money value object</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// com.openbravo.pos.domain.shared
+public record Money(BigDecimal amount, Currency currency) {
+    public Money {
+        Objects.requireNonNull(amount);
+        Objects.requireNonNull(currency);
+        amount = amount.setScale(2, RoundingMode.HALF_EVEN); // match legacy scale
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="6-3-multi-tax-system-integrity"><a class="anchor" href="#6-3-multi-tax-system-integrity"></a>7.3. 6.3 Multi-Tax System Integrity</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Complex, nested, or cumulative multi-tax logic must remain <strong>structurally intact</strong> when separated from UI context.</p>
+</li>
+<li>
+<p>Tax rules are modelled in the domain layer — not flattened or simplified during extraction.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="6-4-internationalization-i18n-l10n"><a class="anchor" href="#6-4-internationalization-i18n-l10n"></a>7.4. 6.4 Internationalization (I18N / L10N)</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Domain services return <strong>locale-agnostic</strong> data payloads (codes, enums, <code>BigDecimal</code>, identifiers).</p>
+</li>
+<li>
+<p>The Swing Adapter resolves resource bundle strings for display.</p>
+</li>
+<li>
+<p><strong>No user-facing strings are hardcoded</strong> in the domain layer.</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rule-7-ui-adapter-netbeans-form-rules"><a class="anchor" href="#rule-7-ui-adapter-netbeans-form-rules"></a>8. Rule 7 — UI Adapter &amp; NetBeans Form Rules</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="7-1-netbeans-xml-gui-form-preservation"><a class="anchor" href="#7-1-netbeans-xml-gui-form-preservation"></a>8.1. 7.1 NetBeans XML GUI Form Preservation</h3>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<strong>Never manually edit code inside <code>// GEN-BEGIN:initComponents</code> &#8230;&#8203; <code>// GEN-END:initComponents</code> blocks.</strong> These blocks are owned by the NetBeans GUI Builder and will be overwritten.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Wiring pattern</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public MyPanel() {
+    initComponents();       // GEN-BEGIN/END - do not touch
+    initDomainAdapters();   // our hook - all domain wiring goes here
+}
+
+private void initDomainAdapters() {
+    // setName() calls, listener wiring, service injection
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="7-2-component-identification-setname-urn-anchoring"><a class="anchor" href="#7-2-component-identification-setname-urn-anchoring"></a>8.2. 7.2 Component Identification — <code>setName()</code> URN Anchoring</h3>
+<div class="paragraph">
+<p>Every Swing component <strong>touched during a refactoring</strong> must receive a unique identifier via <code>.setName()</code> following the <strong>URN specification with mandatory <code>kriolos:</code> prefix</strong>: <code>kriolos:&lt;domain&gt;:&lt;component-or-action&gt;</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Rule</th>
+<th class="tableblock halign-left valign-top">Format</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URN specification</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos:&lt;domain&gt;:&lt;component&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>btnNavBack.setName("kriolos:navigation:back")</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Action / Button URN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos:&lt;domain&gt;:&lt;action&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>btnNavForward.setName("kriolos:navigation:forward")</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Field / Input URN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos:&lt;domain&gt;:&lt;field&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>txtCashReceived.setName("kriolos:sales:cash-received-amount")</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Applied in <code>initDomainAdapters()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Never in GEN blocks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>btnConfirm.setName("kriolos:sales:confirm-payment")</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Purpose</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Automation hook &amp; web-layer mapping</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Standardized URN links Swing to Domain to future Web component</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rule-8-quality-testing-automation"><a class="anchor" href="#rule-8-quality-testing-automation"></a>9. Rule 8 — Quality, Testing &amp; Automation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="8-1-junit-5-domain-service-tests"><a class="anchor" href="#8-1-junit-5-domain-service-tests"></a>9.1. 8.1 JUnit 5 — Domain Service Tests</h3>
+<div class="paragraph">
+<p>Every extracted Domain Service or Record must have a corresponding JUnit 5 test class covering:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Happy path</p>
+</li>
+<li>
+<p>Edge cases (zero amounts, max values, boundary tax transitions)</p>
+</li>
+<li>
+<p>Rounding correctness (assert <code>BigDecimal</code> scale and value exactly)</p>
+</li>
+<li>
+<p>Null / invalid input guards</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Test naming convention</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">src/test/java/com/openbravo/pos/domain/sales/PaymentServiceTest.java</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Minimal test skeleton</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@DisplayName("PaymentService")
+class PaymentServiceTest {
+
+    @Test
+    @DisplayName("exact change is zero when cash equals total")
+    void exactPayment_yieldsZeroChange() {
+        var result = paymentService.processPayment(
+            PaymentCommand.of(session, ticket, new BigDecimal("12.50")));
+        assertInstanceOf(PaymentResult.Success.class, result);
+        assertEquals(BigDecimal.ZERO.setScale(2),
+            ((PaymentResult.Success) result).change());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="8-2-automation-module-integration"><a class="anchor" href="#8-2-automation-module-integration"></a>9.2. 8.2 Automation Module Integration</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>setName()</code> (Rule 7.2) is the primary automation hook — no additional instrumentation required.</p>
+</li>
+<li>
+<p>Provide a boilerplate automation integration test per adapter:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@AutomationTest(screen = "PaymentPanel")
+class PaymentPanelAutomationTest {
+
+    @Test
+    void workflow_cashPayment_capturesScreenshot() {
+        automation.navigate("PaymentPanel");
+        automation.type("cashReceivedAmount", "20.00");
+        automation.click("confirmPayment");
+        automation.assertVisible("changeAmount");
+        automation.screenshot("cash_payment_success");
+    }
+}</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rule-9-specification-assets-antora-canonical-paths"><a class="anchor" href="#rule-9-specification-assets-antora-canonical-paths"></a>10. Rule 9 — Specification Assets (Antora Canonical Paths)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Every refactoring task must produce or update assets at:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Asset Type</th>
+<th class="tableblock halign-left valign-top">Canonical Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Behavioral flow / business rules (AsciiDoc)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>modules/&lt;module&gt;/pages/specification/&lt;feature&gt;.adoc</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data contract / payload schema (JSON Schema)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>modules/&lt;module&gt;/assets/attachments/specification/&lt;feature&gt;.schema.json</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+AsciiDoc spec pages must be valid Antora pages — no hardcoded absolute repository paths.
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rule-10-stateless-domain-no-legacy-singletons"><a class="anchor" href="#rule-10-stateless-domain-no-legacy-singletons"></a>11. Rule 10 — Stateless Domain (No Legacy Singletons)</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>The domain layer must be <strong>completely stateless and thread-safe</strong>.</p>
+</li>
+<li>
+<p>Domain services must <strong>never</strong> access static global objects such as <code>AppView</code>, <code>JRootApp</code>, or any Swing singleton.</p>
+</li>
+<li>
+<p>Active user context, terminal ID, locale, and session state are passed as <strong>immutable parameters</strong> into every domain use case call.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">SessionContext — Shared Kernel record</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// com.openbravo.pos.domain.shared
+public record SessionContext(String operatorId, String terminalId, Locale locale) {}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Anti-pattern (forbidden)</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// FORBIDDEN - couples domain to Swing singleton
+String operatorId = AppView.getApp().getSession().getCurrentUser().getId();</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Correct pattern</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// CORRECT - Swing Adapter extracts and passes context explicitly
+PaymentResult result = paymentService.processPayment(
+    PaymentCommand.of(sessionContext, activeTicket, cashReceived)
+);</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rule-11-domain-exceptions-only"><a class="anchor" href="#rule-11-domain-exceptions-only"></a>12. Rule 11 — Domain Exceptions Only</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Business logic must <strong>never</strong> throw or propagate infrastructure-specific exceptions (<code>SQLException</code>, <code>JRException</code>, <code>IOException</code>) across layer boundaries.</p>
+</li>
+<li>
+<p>All error conditions wrap into <strong>semantic, domain-scoped exceptions</strong> within the bounded context package:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">com.openbravo.pos.domain.sales.SalesException
+com.openbravo.pos.domain.payments.PaymentException
+com.openbravo.pos.domain.inventory.InventoryException</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The infrastructure adapter catches raw infrastructure exceptions and rethrows as the domain exception.</p>
+</li>
+<li>
+<p>The Swing Adapter catches the domain exception and renders the error. <strong>The domain never calls UI message loops.</strong></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Exception wrapping in infrastructure adapter</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Override
+public TicketRecord findById(String ticketId) {
+    try {
+        // ... JDBC call, SQL unchanged ...
+    } catch (SQLException e) {
+        throw new SalesException("Ticket lookup failed: " + ticketId, e);
+    }
+}</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rule-12-full-data-hydration"><a class="anchor" href="#rule-12-full-data-hydration"></a>13. Rule 12 — Full Data Hydration</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Persistence Outbound Ports must return <strong>fully materialized records</strong> — all fields populated before the method returns.</p>
+</li>
+<li>
+<p><strong>Forbidden</strong> across layer boundaries:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Active <code>ResultSet</code> or JDBC cursor references</p>
+</li>
+<li>
+<p>Lazy-loaded proxy objects</p>
+</li>
+<li>
+<p>Unclosed streams or iterators backed by a live DB connection</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Domain <code>record</code> types are the canonical hydrated form; construct them inside the infrastructure adapter.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">Infrastructure adapter hydration pattern</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Override
+public List&lt;TicketLineRecord&gt; findLinesByTicket(String ticketId) {
+    List&lt;TicketLineRecord&gt; lines = new ArrayList&lt;&gt;();
+    try (PreparedStatement ps = conn.prepareStatement(SQL_FIND_LINES)) {
+        ps.setString(1, ticketId);
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lines.add(new TicketLineRecord(
+                    rs.getString("ID"),
+                    rs.getString("PRODUCT"),
+                    rs.getBigDecimal("PRICE"),
+                    rs.getInt("UNITS")
+                ));
+            }
+        }
+    } catch (SQLException e) {
+        throw new SalesException("Line fetch failed: " + ticketId, e);
+    }
+    return List.copyOf(lines); // immutable - safe across threads
+}</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rule-13-token-efficiency-contributor-output-contract"><a class="anchor" href="#rule-13-token-efficiency-contributor-output-contract"></a>14. Rule 13 — Token Efficiency (Contributor Output Contract)</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Constraint</th>
+<th class="tableblock halign-left valign-top">Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Diff-only outputs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Never output an entire legacy file — only modified/added methods with <code>// &#8230;&#8203; rest unchanged</code> markers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No duplication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Do not re-emit SQL, unchanged records, or unmodified Swing boilerplate</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No filler</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No architectural explanations or conversational padding in code outputs</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verification checklist</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Always include a minimal step-by-step regression confirmation checklist</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rule-14-sdlc-git-branching-protocol"><a class="anchor" href="#rule-14-sdlc-git-branching-protocol"></a>15. Rule 14 — SDLC &amp; Git Branching Protocol</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="14-1-git-branching-mandate"><a class="anchor" href="#14-1-git-branching-mandate"></a>15.1. 14.1 Git Branching Mandate</h3>
+<div class="paragraph">
+<p>Every incremental feature extraction or refactoring task runs on a dedicated feature branch:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">git checkout -b feature/decouple-&lt;module-name&gt;
+# e.g.: feature/decouple-navigation, feature/decouple-sales-tax</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>All file creations, code diffs, and spec assets are committed to this branch.</p>
+</li>
+<li>
+<p>Branch is <strong>never</strong> merged until Phase E verification is complete.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="14-2-agile-sdlc-framework-mandatory-iterative-phases-java-swing-specialized"><a class="anchor" href="#14-2-agile-sdlc-framework-mandatory-iterative-phases-java-swing-specialized"></a>15.2. 14.2 Agile SDLC Framework — Mandatory Iterative Phases (Java Swing Specialized)</h3>
+<div class="paragraph">
+<p>Modern desktop applications combining rich Java Swing presentation with Hexagonal Domain Architecture require an industry-standard Agile lifecycle. This lifecycle bridges Agile/Scrum single-piece flow and Test-Driven Development (TDD) with desktop-specific constraints: Swing Event Dispatch Thread (EDT) safety, NetBeans GUI Builder preservation, headless CI/CD execution, and component testability via Rule 7.2 URN anchoring.</p>
+</div>
+<div class="paragraph">
+<p>Every user story or refactoring increment must progress through these six mandatory phases:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top">Phase</th>
+<th class="tableblock halign-left valign-top">Stage Name</th>
+<th class="tableblock halign-left valign-top">Agile Deliverable</th>
+<th class="tableblock halign-left valign-top">Desktop &amp; Swing Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Discovery &amp; Story Refinement</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User Story with Gherkin ACs + Definition of Done (DoD)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UI component &amp; state audit, EDT latency assessment, modal dialog inventory</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Architectural Contract &amp; Port Design</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pure Java 17 Records/Ports + Rule 7.2 URN Schema</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Zero GUI/SQL dependencies in domain, async callback contracts, busy-state specification</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Test-First Harness &amp; Automation Setup (TDD)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JUnit 5 Domain Tests + AssertJ-Swing Action Drivers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URN anchoring tests in <code>ModalPanelUrnAnchoringTest</code>, EDT isolation, <code>System.exit</code> protection</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Component Implementation &amp; Adapter Wiring</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Swing Panel/Frame + <code>initDomainAdapters()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NetBeans GEN blocks untouched, event delegation rule, non-blocking <code>SwingWorker</code>, progress indicators</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Automated Verification &amp; Visual Quality Gates</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Green CI Matrix across JDK 17 to latest</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pure bytecode compilation (<code>--release 17</code>), Wayland/X11 non-black frame assertions, test automation suite</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Agile Trunk Integration &amp; Retrospective</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Atomic PR + Conventional Commit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Single-piece flow (no stacked branches), Strangler Fig verification, known issues log</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="phase-1-discovery-story-refinement-backlog-grooming"><a class="anchor" href="#phase-1-discovery-story-refinement-backlog-grooming"></a>15.2.1. Phase 1: Discovery &amp; Story Refinement (Backlog Grooming)</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>User Story Definition</strong>: Express business requirements with explicit Acceptance Criteria using Gherkin syntax (<code>Given-When-Then</code>).</p>
+</li>
+<li>
+<p><strong>Swing Component &amp; State Audit</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Identify all touched Swing containers (<code>WindowShell</code>, <code>ApplicationShell</code>, <code>WordspacePanel</code>, <code>AuthenticationPanel</code>, or dialogs).</p>
+</li>
+<li>
+<p>Map UI dependencies and couplings to legacy singletons (<code>AppView</code>, <code>AppUserView</code>, <code>DataLogicSystem</code>).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>EDT &amp; Latency Risk Assessment</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Classify every operation: Fast/In-Memory (safe on EDT) vs I/O / Database / Network / Hardware (strictly forbidden on EDT).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Modal Dialog Strategy</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Identify any legacy blocking <code>JDialog</code> or <code>JOptionPane</code> calls.</p>
+</li>
+<li>
+<p>Plan replacement with non-blocking panel-based overlays (<code>PosUIModal</code> / <code>InFrameOverlayModalStrategy</code>) to prevent EDT deadlocks and enable headless automation.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="phase-2-architectural-contract-portsadapters-design"><a class="anchor" href="#phase-2-architectural-contract-portsadapters-design"></a>15.2.2. Phase 2: Architectural Contract &amp; Ports/Adapters Design</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Pure Domain Model</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Formulate domain records, value objects, and domain services in <code>kriolos-opos-domain</code> using Java 17 constructs.</p>
+</li>
+<li>
+<p><strong>Strict Boundary Constraint</strong>: Domain classes must have <strong>zero imports</strong> from <code>javax.swing.<strong></code>, <code>java.awt.</strong></code>, <code>com.openbravo.pos.forms.<strong></code>, or <code>java.sql.</strong></code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Port Interfaces &amp; Callbacks</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Define Driving Ports (invoked by Swing UI) and Driven Ports (implemented by infrastructure).</p>
+</li>
+<li>
+<p>Define asynchronous callbacks (e.g. <code>DatabaseActivationCallback</code>) for multi-step or long-running workflows.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Rule 7.2 URN Anchoring Schema</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Draft the component identification mapping table following <code>kriolos:&lt;domain&gt;:&lt;component-or-action&gt;</code> (e.g. <code>kriolos:auth:combo-databases</code>, <code>kriolos:auth:btn-select-database</code>).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Asynchronous Busy State Specification</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Define visual state transitions for UI components: disable triggers, display indeterminate <code>JProgressBar</code>, update status text during background processing.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="phase-3-test-first-harness-automation-driver-construction-tdd-atdd"><a class="anchor" href="#phase-3-test-first-harness-automation-driver-construction-tdd-atdd"></a>15.2.3. Phase 3: Test-First Harness &amp; Automation Driver Construction (TDD / ATDD)</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Domain Unit Tests First</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Create JUnit 5 unit tests verifying happy paths, error boundaries, and <code>BigDecimal</code> rounding scales.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>URN Anchoring Verification</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Add test cases to <code>ModalPanelUrnAnchoringTest</code> verifying all interactive components expose their Rule 7.2 URNs via <code>.getName()</code> before wiring business logic.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Automation Driver / Action Facade</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Build or enhance reusable action drivers in <code>kriolos-opos-automation/actions/</code> (e.g. <code>DatabaseSelectionAction</code>, <code>LoginAction</code>, <code>MainWindowAction</code>) utilizing AssertJ-Swing.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Test Isolation &amp; Headless Safeguards</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Set <code>machine.uniqueinstance=false</code> to prevent singleton port collisions with dev environments.</p>
+</li>
+<li>
+<p>Wrap application startup with <code>StartPOS.setExitAction(Runnable)</code> to prevent <code>System.exit()</code> from terminating the test JVM.</p>
+</li>
+<li>
+<p>Ensure compatibility with virtual display framebuffers (<code>xvfb</code>) and in-memory 2D double buffering.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="phase-4-component-implementation-gui-builder-integrity-swing-development"><a class="anchor" href="#phase-4-component-implementation-gui-builder-integrity-swing-development"></a>15.2.4. Phase 4: Component Implementation &amp; GUI Builder Integrity (Swing Development)</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>NetBeans Protected Block Rule (Strict)</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>NEVER</strong> edit code inside <code>// GEN-BEGIN:initComponents</code> or <code>// GEN-END:initComponents</code> manually.</p>
+</li>
+<li>
+<p>Structural layout changes belong in the NetBeans visual designer (<code>.form</code> file).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Generated Event Handler Delegation Rule</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Code inside <code>// GEN-FIRST:event_&#8230;&#8203;</code> generated handlers MUST ALWAYS delegate immediately to a single private method (e.g. <code>btnActivateActionPerformed</code> delegates to <code>activateSelectedDatabase()</code>).</p>
+</li>
+<li>
+<p>Document all extracted methods with comprehensive Javadoc detailing purpose, thread safety, and UI state transitions.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Domain Adapter Wiring (<code>initDomainAdapters()</code> / <code>initPanel()</code>)</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Register Rule 7.2 <code>.setName(&#8230;&#8203;)</code> URN anchors programmatically outside GEN blocks.</p>
+</li>
+<li>
+<p>Attach domain listeners and wire presenters.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>EDT Concurrency &amp; Asynchronous Execution</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>All database, filesystem, network, or hardware operations must execute off the EDT using <code>SwingWorker&lt;T, V&gt;</code> or asynchronous background workers.</p>
+</li>
+<li>
+<p>UI state mutations must always be dispatched back to the EDT via <code>SwingUtilities.invokeLater()</code> or <code>SwingWorker.done()</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Real-Time Asynchronous User Feedback</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Whenever a background operation is initiated, immediately set the UI into a responsive busy state (e.g. show <code>kriolos:auth:progress-bar</code>, display status message, disable duplicate action buttons).</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="phase-5-automated-verification-visual-quality-gates-cicd-matrix"><a class="anchor" href="#phase-5-automated-verification-visual-quality-gates-cicd-matrix"></a>15.2.5. Phase 5: Automated Verification &amp; Visual Quality Gates (CI/CD Matrix)</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>JDK 17 Baseline Verification</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Validate that all code compiles strictly with Java 17 bytecode targets (<code>&lt;maven.compiler.release&gt;17&lt;/maven.compiler.release&gt;</code>). Never utilize post-17 APIs (e.g. <code>SequencedCollection</code>).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Continuous Multi-Tier Verification</strong>:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>mvn test -pl kriolos-opos-domain</code> (Unit tests 100% green).</p>
+</li>
+<li>
+<p><code>mvn test-compile -pl kriolos-opos-app</code> (Swing application clean build).</p>
+</li>
+<li>
+<p><code>mvn clean test-compile -f kriolos-opos-automation/pom.xml</code> (Automation test compilation).</p>
+</li>
+<li>
+<p><code>mvn test -f kriolos-opos-automation/pom.xml -Dtest=ModalPanelUrnAnchoringTest</code> (URN verification green).</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><strong>Framebuffer &amp; Visual Rendering Assertion</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Autonomous robot tests take visual snapshots and assert non-black dialog/panel rendering (&gt;50% non-black pixels) on Linux/Wayland graphics environments.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="phase-6-agile-trunk-based-integration-atomic-pr-retrospective"><a class="anchor" href="#phase-6-agile-trunk-based-integration-atomic-pr-retrospective"></a>15.2.6. Phase 6: Agile Trunk-Based Integration, Atomic PR &amp; Retrospective</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Single-Piece Flow (No Stacked Branches)</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Commit all changes to a dedicated feature branch (<code>feature/&lt;name&gt;</code>) cut from clean <code>main</code>.</p>
+</li>
+<li>
+<p>Never stack a new feature on top of an unmerged feature branch.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Professional Conventional Commit</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Use standardized commit syntax: <code>feat(&#8230;&#8203;)</code>, <code>fix(&#8230;&#8203;)</code>, <code>refactor(&#8230;&#8203;)</code>, <code>test(&#8230;&#8203;)</code>, <code>docs(&#8230;&#8203;)</code>.</p>
+</li>
+<li>
+<p>Include structured bullet points detailing architectural rationale, component changes, and URNs.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Atomic Pull Request &amp; Merge</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Submit Pull Request to <code>main</code>. Ensure all automated GitHub Actions CI matrix checks pass.</p>
+</li>
+<li>
+<p>Squash and merge into <code>main</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Clean Main Synchronization</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Run <code>git checkout main &amp;&amp; git pull origin main</code> before starting the next feature branch.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Defect &amp; Retrospective Tracking</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Record any platform-specific quirks (e.g. Wayland compositor rendering issues, X11 focus traps) in <code>docs/modules/guide-devel/pages/troubleshooting-known-issues.adoc</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="14-3-agile-trunk-based-integration-protocol-atomic-pr-merge"><a class="anchor" href="#14-3-agile-trunk-based-integration-protocol-atomic-pr-merge"></a>15.3. 14.3 Agile Trunk-Based Integration Protocol (Atomic PR &amp; Merge)</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>CRITICAL CONSTRAINT: NEVER COMMIT OR PUSH DIRECTLY TO MAIN</strong></p>
+</div>
+<div class="paragraph">
+<p>Direct commits and direct pushes to <code>main</code> (or <code>master</code>) are <strong>strictly forbidden</strong> for both developers and AI assistants. All work—including small tweaks, documentation, and bug fixes—must be developed on a dedicated branch (<code>feature/<strong></code> or <code>fix/</strong></code>) and merged into <code>main</code> exclusively through a reviewed Pull Request.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To maintain an Agile cadence with short, reliable feedback loops and eliminate dependency debt, the project strictly mandates an <strong>atomic PR-and-merge integration cycle</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">feature/decouple-&lt;module-A&gt; (Phase A-E Complete)
+  └── 1. Push branch to remote
+  └── 2. Open Pull Request (PR) &amp; Validate Automation Tests
+  └── 3. Merge PR into main
+        └── 4. Locally: git checkout main &amp;&amp; git pull origin main
+              └── 5. Cut next branch: git checkout -b feature/decouple-&lt;module-B&gt;</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="mandatory-rules-for-feature-transitions"><a class="anchor" href="#mandatory-rules-for-feature-transitions"></a>15.3.1. Mandatory Rules for Feature Transitions</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Never Commit or Push Directly to <code>main</code> (Strict)</strong>:
+Always work on a dedicated branch. Ensure local <code>main</code> remains untouched except via <code>git pull origin main</code>.</p>
+</li>
+<li>
+<p><strong>No Stacked Feature Branches (Strict)</strong>:
+Never create a new feature branch (<code>feature/decouple-&lt;module-B&gt;</code>) off an unmerged feature branch (<code>feature/decouple-&lt;module-A&gt;</code>).</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Rationale</strong>: Stacked branches drag unreviewed commits into future reviews, multiply merge conflict risks, blur bounded context boundaries, and pollute git diffs.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Agile Single-Piece Flow</strong>:
+Each decoupled capability (e.g. <code>navigation</code>, <code>sales</code>, <code>payments</code>) represents a single, verifiable, production-ready increment. Merging it to <code>main</code> immediately anchors the Strangler Fig progress and provides a clean, green baseline for the next sprint or task.</p>
+</li>
+<li>
+<p><strong>Continuous Verification Gate</strong>:
+A branch is ready for PR merge only when:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Code compiles strictly against minimum <strong>JDK 17</strong> baseline (<code>&lt;maven.compiler.release&gt;17&lt;/maven.compiler.release&gt;</code>) to satisfy the GitHub Actions CI/CD matrix (testing JDK 17 minimum up to the latest JDK).</p>
+</li>
+<li>
+<p>Domain unit tests pass (<code>mvn test -pl kriolos-opos-domain</code>).</p>
+</li>
+<li>
+<p>Swing app compiles without errors (<code>mvn compile -pl kriolos-opos-app -am</code>).</p>
+</li>
+<li>
+<p>Robot automation test passes (<code>mvn test-compile -f kriolos-opos-automation/pom.xml</code>).</p>
+</li>
+<li>
+<p>NetBeans GUI builder form blocks (<code>// GEN-BEGIN</code>) remain 100% untouched.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Standard Transition Command Sequence</strong>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell"># 1. Push completed feature branch
+git push -u origin feature/decouple-&lt;current-module&gt;
+
+# 2. (After PR approved and merged on remote) Synchronize local main
+git checkout main
+git pull origin main
+
+# 3. Cut next isolated feature branch from clean main
+git checkout -b feature/decouple-&lt;next-module&gt;</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="appendix-a-full-14-rule-protocol-table"><a class="anchor" href="#appendix-a-full-14-rule-protocol-table"></a>16. Appendix A — Full 14-Rule Protocol Table</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 50%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top">#</th>
+<th class="tableblock halign-left valign-top">Rule</th>
+<th class="tableblock halign-left valign-top">Key Constraint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">KISS — Java 17 features, no over-engineering</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prefer linear, readable code</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Strangler Fig — Swing stays green and compilable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No Big Bang rewrites</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hexagonal Architecture — Ports &amp; Adapters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Domain has zero infra imports</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Modular Monolith — Bounded Contexts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Zero cross-module coupling</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo</code> namespace frozen</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">New code under <code>com.openbravo.pos.domain.*</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL / BigDecimal / multi-tax / I18N invariants</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Zero tolerance for drift</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NetBeans GEN blocks untouched — use <code>initDomainAdapters()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Never edit GEN blocks</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>setName("kriolos:&lt;domain&gt;:&lt;component&gt;")</code> URN on every touched component</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mandatory <code>kriolos:</code> prefix (e.g. <code>kriolos:navigation:back</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">9</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JUnit 5 for domain + automation boilerplate for adapters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Required per extraction</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stateless domain — no AppView/JRootApp singletons</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pass SessionContext as immutable parameter</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">11</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Domain exceptions only — no SQLException crossing boundaries</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Infra wraps; Swing renders</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">12</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full data hydration — no live cursors/lazy proxies across layers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Return List.copyOf() of materialized records</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">13</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Token efficiency — diff-only outputs, no filler</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verification checklist required</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">14</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SDLC &amp; Agile Trunk Integration (Atomic PR &amp; Merge)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No stacked branches; PR &#8594; Merge &#8594; Pull &#8594; New Branch</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="appendix-b-bounded-context-package-index"><a class="anchor" href="#appendix-b-bounded-context-package-index"></a>17. Appendix B — Bounded Context Package Index</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">com.openbravo.pos.domain.shared
+    Money, TaxedAmount, EntityId, SessionContext, DomainEvent
+
+com.openbravo.pos.domain.sales
+    TicketService, TicketRecord, TicketLineRecord, SalesPort, SalesException
+
+com.openbravo.pos.domain.payments
+    PaymentService, PaymentCommand, PaymentResult, PaymentPort, PaymentException
+
+com.openbravo.pos.domain.inventory
+    ProductService, ProductRecord, StockPort, InventoryException
+
+com.openbravo.pos.domain.rbac
+    UserSession, RoleRecord, AuthorizationService, RbacPort
+
+com.openbravo.pos.domain.navigation
+    NavigationService, ScreenRoute, NavigationEvent
+
+com.openbravo.pos.domain.reporting
+    ReportRequest, ReportResult, ReportingPort</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="appendix-c-per-extraction-output-checklist"><a class="anchor" href="#appendix-c-per-extraction-output-checklist"></a>18. Appendix C — Per-Extraction Output Checklist</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each refactoring output must include <strong>all</strong> of the following:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Domain layer additions</strong> — Records, Services, Ports (correct bounded context package)</p>
+</li>
+<li>
+<p><strong>Adapter diff</strong> — Modified methods only, with <code>// &#8230;&#8203; rest unchanged</code> markers</p>
+</li>
+<li>
+<p><strong><code>setName()</code> injection table</strong> — Component to domain field name mapping</p>
+</li>
+<li>
+<p><strong>Specification assets</strong> — Paths and content for <code>pages/specification/</code> and <code>assets/attachments/specification/</code></p>
+</li>
+<li>
+<p><strong>Verification checklist</strong> — Step-by-step regression confirmation steps</p>
+</li>
+<li>
+<p><strong>JUnit 5 test</strong> — Domain unit test + automation adapter boilerplate</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

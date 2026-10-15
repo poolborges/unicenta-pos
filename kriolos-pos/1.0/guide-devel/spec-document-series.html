@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Specification: Robust Multi-Business, Multi-Region Document Number Series Architecture :: KriolOS POS Documentation</title>
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-migration/index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-migration/migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Developer Guide</li>
+    <li>Tickets &amp; Sales</li>
+    <li><a href="spec-document-series.html">Specification: Document Number Series Architecture</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-devel/pages/spec-document-series.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Specification: Robust Multi-Business, Multi-Region Document Number Series Architecture</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#1-strategic-goals-universal-scope">1. 1. Strategic Goals &amp; Universal Scope</a></li>
+<li><a href="#2-document-domain-taxonomy">2. 2. Document Domain Taxonomy</a></li>
+<li><a href="#3-multi-region-fiscal-compliance-matrix">3. 3. Multi-Region &amp; Fiscal Compliance Matrix</a></li>
+<li><a href="#4-multi-tenant-multi-branch-station-scoping">4. 4. Multi-Tenant, Multi-Branch &amp; Station Scoping</a>
+<ul class="sectlevel2">
+<li><a href="#scoping-rules">4.1. Scoping Rules</a></li>
+</ul>
+</li>
+<li><a href="#5-enhanced-database-schema-doc_series">5. 5. Enhanced Database Schema: <code>doc_series</code></a></li>
+<li><a href="#6-offline-operation-distributed-resilience">6. 6. Offline Operation &amp; Distributed Resilience</a>
+<ul class="sectlevel2">
+<li><a href="#strategy-a-station-dedicated-series-recommended">6.1. Strategy A: Station-Dedicated Series (Recommended)</a></li>
+<li><a href="#strategy-b-block-range-pre-leasing">6.2. Strategy B: Block Range Pre-Leasing</a></li>
+</ul>
+</li>
+<li><a href="#7-integration-with-kriolos-transaction-engine">7. 7. Integration with KriolOS Transaction Engine</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph lead">
+<p>Comprehensive, internationally compliant architectural specification for <strong>Document Number Series</strong> in KriolOS POS, engineered to support diverse commercial document types, multi-branch hierarchies, and stringent fiscal regulations across global jurisdictions (Resolves <a href="https://github.com/kriolos-obiz/kriolos-pos/issues/87">GitHub Issue #87</a>).</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="1-strategic-goals-universal-scope"><a class="anchor" href="#1-strategic-goals-universal-scope"></a>1. 1. Strategic Goals &amp; Universal Scope</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Document numbering is not merely an internal counter; in commercial and fiscal software, it is the <strong>legal backbone of transaction validity, taxation auditability, and fraud prevention</strong>.</p>
+</div>
+<div class="paragraph">
+<p>To serve small businesses, multi-store retail, and cross-border deployments, the KriolOS Document Series engine must satisfy three core pillars:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Multi-Business Document Flexibility</strong>: Support all operational documents beyond sales tickets (invoices, credit notes, stock transfers, delivery notes, vouchers, purchase orders).</p>
+</li>
+<li>
+<p><strong>Multi-Region &amp; Fiscal Compliance</strong>: Comply out-of-the-box with jurisdictional rules (e.g., Portugal/Cape Verde SAF-T, Brazil NFC-e, France NF525, Spain TicketBAI/Veri*factu, UK HMRC VAT, and Angola AGT).</p>
+</li>
+<li>
+<p><strong>Multi-Tier Scoping &amp; Fault Tolerance</strong>: Allow series to be scoped at Company, Branch, or POS Terminal levels, with deterministic offline sequence leasing to eliminate duplicate numbers during network partitions.</p>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="2-document-domain-taxonomy"><a class="anchor" href="#2-document-domain-taxonomy"></a>2. 2. Document Domain Taxonomy</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Category</th>
+<th class="tableblock halign-left valign-top">Document Type (<code>doc_type</code>)</th>
+<th class="tableblock halign-left valign-top">Common Acronym</th>
+<th class="tableblock halign-left valign-top">Typical Business Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" rowspan="4"><p class="tableblock"><strong>Sales &amp; Billing</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sale.invoice</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FT</code> (Fatura)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Formal commercial invoice with customer tax details.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sale.simplified</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FS</code> (Fatura Simplificada)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Over-the-counter retail receipt/invoice.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sale.credit_note</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NC</code> (Nota de Crédito)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Legal refund, return, or invoice correction.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sale.debit_note</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ND</code> (Nota de Débito)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Customer surcharge or price adjustment.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" rowspan="3"><p class="tableblock"><strong>Order &amp; Operations</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sale.proforma</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FP</code> (Pró-forma)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Non-fiscal price quote / commercial proposal.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sale.pickup</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TK</code> (Token / Senha)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kitchen, counter, or bar pickup queue token.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sale.table_order</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PED</code> (Pedido)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Restaurant table service order sheet.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" rowspan="4"><p class="tableblock"><strong>Inventory &amp; Logistics</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inventory.goods_receipt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GR</code> / <code>E</code> (Entrada)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Goods intake from supplier against purchase order.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inventory.goods_issue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GI</code> / <code>S</code> (Saída)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Internal consumption, spoilage, or shrinkage write-off.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inventory.transfer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GT</code> (Guia Transporte)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inter-branch transport guide / waybill (fiscalized).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inventory.count</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INV</code> (Inventário)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Physical stock take / reconciliation adjustment.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" rowspan="2"><p class="tableblock"><strong>Treasury &amp; Finance</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>treasury.receipt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RC</code> (Recibo Caixa)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cash/card debt settlement or payment receipt.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>treasury.voucher</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VCH</code> (Vale / Voucher)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gift voucher issuance or store credit note.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="3-multi-region-fiscal-compliance-matrix"><a class="anchor" href="#3-multi-region-fiscal-compliance-matrix"></a>3. 3. Multi-Region &amp; Fiscal Compliance Matrix</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Different jurisdictions impose strict syntactic, semantic, and sequence constraints on commercial series:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Jurisdiction</th>
+<th class="tableblock halign-left valign-top">Standard / Authority</th>
+<th class="tableblock halign-left valign-top">Regulatory Rules</th>
+<th class="tableblock halign-left valign-top">Compliant Series Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Portugal &amp; Cape Verde</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>SAF-T (PT / CV)</strong> + Portaria 363/2010</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gapless monotonic sequence. Series must be pre-communicated/certified. RSA cryptographic hash chaining of previous document hash + current record.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FT SERIE2026/000001</code><br>
+<code>FS A/1042</code><br>
+<code>NC 2026/000015</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Brazil</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>SEFAZ NFC-e / NF-e</strong> (Model 65/55)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Strict 3-digit <code>Série</code> (1–999) + 9-digit <code>Número</code> (1–999.999.999). 44-digit numeric access key (<code>Chave de Acesso</code>) computed with state code, date, and check digit.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Série 001 - N° 000000125</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>France</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>NF525 / Loi Anti-Fraude</strong> + Factur-X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unalterable continuous sequence per physical register. Sequential period and perpetual Z-closures with chained digital signatures.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POS01-2026-000042</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spain</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>TicketBAI / Veri*factu</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mandatory series per issuing device/store. Unique identification code (TBAI identifier) + QR code and cryptographic chaining.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TBAI-B01-2026/000891</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>United Kingdom</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>HMRC VAT Notice 700</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unique sequential numbers on a continuous series. No gaps allowed; separate series permitted for branches or distinct trading departments.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INV-2026-00812</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Angola &amp; Mozambique</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>AGT / AT Certification</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Certified series registration. Document types strictly classified as FT, FR, NC, ND, GT with validation codes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FR AGT2026/000001</code></p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="4-multi-tenant-multi-branch-station-scoping"><a class="anchor" href="#4-multi-tenant-multi-branch-station-scoping"></a>4. 4. Multi-Tenant, Multi-Branch &amp; Station Scoping</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To prevent sequence collision across distributed stores without requiring complex distributed locks, series are resolved through a hierarchical scoping model:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">                  ┌──────────────────────────────────────────────┐
+                  │          Company / Tenant (Legal Entity)     │
+                  │   - Holds master legal series &amp; Tax ID       │
+                  └──────────────────────┬───────────────────────┘
+                                         │
+                  ┌──────────────────────┴───────────────────────┐
+                  │             Branch / Store / Warehouse       │
+                  │   - Scoped Series (e.g. 'LISBON', 'PRAIA')   │
+                  └──────────────────────┬───────────────────────┘
+                                         │
+                  ┌──────────────────────┴───────────────────────┐
+                  │              POS Register / Station          │
+                  │   - Station Series (e.g. 'REG01', 'REG02')   │
+                  │   - Offline Leased Range (1000 - 1500)       │
+                  └──────────────────────────────────────────────┘</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="scoping-rules"><a class="anchor" href="#scoping-rules"></a>4.1. Scoping Rules</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Global/Company Scope</strong>: Used for central billing and webshop sales where all orders pass through a single central coordinator.</p>
+</li>
+<li>
+<p><strong>Branch/Location Scope</strong>: Each physical store operates its own series (<code>LIS-FT 2026/1</code>, <code>OPO-FT 2026/1</code>).</p>
+</li>
+<li>
+<p><strong>Station/Register Scope</strong>: Highly recommended for multi-lane retail. Each lane has an independent series (<code>POS01-FS/1</code>, <code>POS02-FS/1</code>).</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Massive Advantage</strong>: Registers NEVER contend for the same database row lock during checkout, completely eliminating checkout lock queues!</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="5-enhanced-database-schema-doc_series"><a class="anchor" href="#5-enhanced-database-schema-doc_series"></a>5. 5. Enhanced Database Schema: <code>doc_series</code></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sql hljs" data-lang="sql">CREATE TABLE doc_series (
+    id VARCHAR(36) PRIMARY KEY,                  -- Series UUID
+    company_id VARCHAR(36) NOT NULL DEFAULT 'DEFAULT',
+    store_id VARCHAR(36) DEFAULT NULL,           -- NULL = All stores in company
+    terminal_id VARCHAR(36) DEFAULT NULL,        -- NULL = All terminals in store
+    doc_type VARCHAR(32) NOT NULL,               -- e.g. 'sale.invoice', 'sale.credit_note'
+    code VARCHAR(16) NOT NULL,                   -- Short code: 'A', '2026', 'MAIN'
+    name VARCHAR(64) NOT NULL,                   -- Descriptive title
+
+    -- Formatting template &amp; separators
+    prefix_template VARCHAR(64) DEFAULT '',      -- e.g. '{DOC_CODE}/{STORE_CODE}-{YEAR}/'
+    suffix_template VARCHAR(32) DEFAULT '',      -- e.g. '-{TERMINAL_CODE}'
+    separator_char VARCHAR(4) DEFAULT '/',       -- Visual separator
+    padding_digits INT NOT NULL DEFAULT 6,       -- e.g. 6 -&gt; '000001'
+
+    -- Sequential state
+    start_number BIGINT NOT NULL DEFAULT 1,      -- Lower bound
+    end_number BIGINT DEFAULT NULL,              -- Optional ceiling threshold
+    current_index BIGINT NOT NULL DEFAULT 0,     -- Active committed counter
+    increment_by INT NOT NULL DEFAULT 1,         -- Step value
+
+    -- Periodic Reset Policy
+    reset_policy VARCHAR(20) DEFAULT 'NEVER',    -- 'NEVER', 'MONTHLY', 'YEARLY', 'DAILY'
+    last_reset_date TIMESTAMP NULL,              -- Last evaluated reset timestamp
+
+    -- Fiscal &amp; Regulatory Certification
+    fiscal_certification_code VARCHAR(64) NULL,  -- e.g. AT/AGT registration code
+    is_gapless_mandatory BOOLEAN DEFAULT TRUE,   -- Rejects manual skips/jumps
+    requires_crypto_hash BOOLEAN DEFAULT FALSE,  -- Triggers SAF-T/TicketBAI chaining
+
+    -- Validity &amp; Activation
+    start_date TIMESTAMP NULL,                   -- Activation date
+    end_date TIMESTAMP NULL,                     -- Decommission date
+    is_enabled BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
+);
+
+-- Unique index enforces exactly one active series per document type and scope:
+CREATE UNIQUE INDEX idx_doc_series_scope
+ON doc_series (company_id, COALESCE(store_id, 'ALL'), COALESCE(terminal_id, 'ALL'), doc_type, is_enabled);</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="6-offline-operation-distributed-resilience"><a class="anchor" href="#6-offline-operation-distributed-resilience"></a>6. 6. Offline Operation &amp; Distributed Resilience</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In unstable network or mobile pop-up scenarios (e.g. food truck or beach kiosk), cashiers must continue issuing receipts without network access to the central database server.</p>
+</div>
+<div class="sect2">
+<h3 id="strategy-a-station-dedicated-series-recommended"><a class="anchor" href="#strategy-a-station-dedicated-series-recommended"></a>6.1. Strategy A: Station-Dedicated Series (Recommended)</h3>
+<div class="paragraph">
+<p>Assign each terminal a dedicated, isolated series code:
+* Terminal 1: <code>T01-2026/000001</code>
+* Terminal 2: <code>T02-2026/000001</code></p>
+</div>
+<div class="paragraph">
+<p>Because sequences are completely disjoint, terminals generate gapless numbers locally with <strong>zero risk of collision or duplicate numbers upon network reconnection</strong>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="strategy-b-block-range-pre-leasing"><a class="anchor" href="#strategy-b-block-range-pre-leasing"></a>6.2. Strategy B: Block Range Pre-Leasing</h3>
+<div class="paragraph">
+<p>For centralized series where all stations must share a single prefix:
+1. When online, the terminal leases a contiguous sequence block from the server (e.g. numbers <code>5001</code> to <code>5200</code>).
+2. The terminal consumes numbers locally from its secure local ledger.
+3. When the remaining pool drops below a low-water mark (e.g. 20 numbers), the terminal requests the next block in the background.</p>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="7-integration-with-kriolos-transaction-engine"><a class="anchor" href="#7-integration-with-kriolos-transaction-engine"></a>7. 7. Integration with KriolOS Transaction Engine</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Document Series engine integrates cleanly into <code>com.openbravo.pos.sales.DataLogicSales</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Transaction t = new Transaction(sessionDB) {
+    @Override
+    public Object transact() throws BasicException {
+        // 1. Resolve active series with pessimistic row-lock to ensure gapless atomicity
+        DocumentSeries series = seriesService.lockActiveSeries(
+            sessionDB,
+            ticket.getTicketType(),
+            appView.getActiveStoreId(),
+            appView.getActiveTerminalId()
+        );
+
+        // 2. Compute next formatted sequential identifier
+        FormattedDocumentNumber docNum = series.allocateNextNumber(ticket.getDate());
+
+        ticket.setDocumentNumber(docNum.formattedString());
+        ticket.setTicketId((int) docNum.rawIndex());
+
+        // 3. Persist receipt, tickets, ticketlines, stock, and payments...
+        ...
+
+        // 4. Update series counter within the exact same database transaction
+        seriesService.commitSeriesIncrement(sessionDB, series.getId(), docNum.rawIndex());
+
+        return null;
+    }
+};
+t.execute();</code></pre>
+</div>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The series increment and the ticket insert <strong>MUST commit in the same physical database transaction</strong>. If ticket saving fails or rolls back, the series allocation is rolled back simultaneously, strictly maintaining the legal gapless invariant!</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
