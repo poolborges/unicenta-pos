@@ -482,11 +482,11 @@ With the Catalog SPI in place:
 
 ---
 
-== 8. POSButtonFactory & Touch Ergonomics
+== 8. ButtonFactory & Touch Ergonomics
 
 === 8.1 Ergonomic Touch Standards
 
-To address undersized buttons in touch POS environments, `POSButtonFactory` standardizes button construction across all modern layouts:
+To address undersized buttons in touch POS environments, `com.openbravo.ui.components.ButtonFactory` standardizes button construction across all modern layouts:
 
 * **Sizing Variants (`ButtonSize`)**:
   ** `MEDIUM`: 32px height, 14px font (dense toolbars, header pills).
@@ -494,7 +494,7 @@ To address undersized buttons in touch POS environments, `POSButtonFactory` stan
   ** `EXTRA_LARGE`: 48px height, 16px font (standard touch action pane controls).
   ** `MASSIVE`: 56px height, 18px font (prominent payment & checkout CTA).
 
-* **Zero-Dependency Vector Glyphs**: Font-based Unicode symbols (`👤`, `⏸`, `📥`, `📤`, `🔒`, `➖`, `➕`, `✏️`, `🗑️`, `⌫`, `🏷️`, `💳`, `📋`) providing immediate visual scanning without third-party asset jars.
+* **Vector & Asset Icons**: Native Swing `Icon` and vector SVG support providing crisp scaling across all DPIs without distortion.
 
 * **Keyboard Accessibility & Mnemonics**:
   ** Standardized `Alt+<Key>` mnemonics automatically annotated into tooltips (e.g., `Alt+C` for Customer, `Alt+F` for Close Cash, `Alt+P` / `F12` for Pay).

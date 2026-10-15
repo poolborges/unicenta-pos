@@ -3,9 +3,9 @@ package com.openbravo.ui;
 import com.openbravo.ui.animation.*;
 import com.openbravo.ui.components.*;
 import com.openbravo.ui.data.binding.*;
-import com.openbravo.ui.laf.FlexFactory;
-import com.openbravo.ui.laf.FlexLayout;
-import com.openbravo.ui.laf.WrapLayout;
+import com.openbravo.ui.layout.FlexFactory;
+import com.openbravo.ui.layout.FlexLayout;
+import com.openbravo.ui.layout.WrapLayout;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;

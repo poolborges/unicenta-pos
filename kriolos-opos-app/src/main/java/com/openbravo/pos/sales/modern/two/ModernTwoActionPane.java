@@ -18,9 +18,8 @@ package com.openbravo.pos.sales.modern.two;
 
 import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.app.AppLocal;
-import com.openbravo.pos.ui.components.ButtonSize;
-import com.openbravo.pos.ui.components.POSButtonFactory;
-import com.openbravo.pos.ui.components.UnicodeIcon;
+import com.openbravo.ui.components.ButtonSize;
+import com.openbravo.ui.components.ButtonFactory;
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
@@ -99,9 +98,8 @@ public class ModernTwoActionPane extends JPanel {
         JPanel customerGroup = new JPanel(new BorderLayout(6, 0));
         customerGroup.setOpaque(false);
 
-        customerButton = POSButtonFactory.createActionButton(
+        customerButton = ButtonFactory.createActionButton(
                 AppLocal.getIntString("label.customer") + ": " + AppLocal.getIntString("label.guest"),
-                UnicodeIcon.CUSTOMER,
                 touchSize,
                 KeyEvent.VK_C,
                 AppLocal.getIntString("label.customer"),
@@ -112,9 +110,8 @@ public class ModernTwoActionPane extends JPanel {
         customerButton.setPreferredSize(new Dimension(240, touchSize.getHeight()));
         customerGroup.add(customerButton, BorderLayout.CENTER);
 
-        parkedOrdersButton = POSButtonFactory.createActionButton(
+        parkedOrdersButton = ButtonFactory.createActionButton(
                 "0",
-                UnicodeIcon.PARKED,
                 touchSize,
                 KeyEvent.VK_U,
                 AppLocal.getIntString("button.parked.tooltip"),
@@ -130,9 +127,8 @@ public class ModernTwoActionPane extends JPanel {
         JPanel cashActions = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING, 6, 0));
         cashActions.setOpaque(false);
 
-        btnCashIn = POSButtonFactory.createActionButton(
+        btnCashIn = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.cashin"),
-                UnicodeIcon.CASH_IN,
                 touchSize,
                 KeyEvent.VK_E,
                 AppLocal.getIntString("button.cashin.tooltip"),
@@ -142,9 +138,8 @@ public class ModernTwoActionPane extends JPanel {
         );
         btnCashIn.setPreferredSize(new Dimension(175, touchSize.getHeight()));
 
-        btnCashOut = POSButtonFactory.createActionButton(
+        btnCashOut = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.cashout"),
-                UnicodeIcon.CASH_OUT,
                 touchSize,
                 KeyEvent.VK_S,
                 AppLocal.getIntString("button.cashout.tooltip"),
@@ -154,9 +149,8 @@ public class ModernTwoActionPane extends JPanel {
         );
         btnCashOut.setPreferredSize(new Dimension(175, touchSize.getHeight()));
 
-        btnCloseCash = POSButtonFactory.createDangerButton(
+        btnCloseCash = ButtonFactory.createDangerButton(
                 AppLocal.getIntString("button.closecash"),
-                UnicodeIcon.CLOSE_CASH,
                 touchSize,
                 KeyEvent.VK_F,
                 AppLocal.getIntString("button.closecash"),
@@ -183,9 +177,8 @@ public class ModernTwoActionPane extends JPanel {
         JPanel lineActions = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEADING, 6, 0));
         lineActions.setOpaque(false);
 
-        btnQtyMinus = POSButtonFactory.createActionButton(
+        btnQtyMinus = ButtonFactory.createActionButton(
                 "-1",
-                UnicodeIcon.MINUS,
                 touchSize,
                 KeyEvent.VK_MINUS,
                 AppLocal.getIntString("button.qtyminus.tooltip"),
@@ -195,9 +188,8 @@ public class ModernTwoActionPane extends JPanel {
         );
         btnQtyMinus.setPreferredSize(new Dimension(68, touchSize.getHeight()));
 
-        btnQtyPlus = POSButtonFactory.createActionButton(
+        btnQtyPlus = ButtonFactory.createActionButton(
                 "+1",
-                UnicodeIcon.PLUS,
                 touchSize,
                 KeyEvent.VK_PLUS,
                 AppLocal.getIntString("button.qtyplus.tooltip"),
@@ -207,9 +199,8 @@ public class ModernTwoActionPane extends JPanel {
         );
         btnQtyPlus.setPreferredSize(new Dimension(68, touchSize.getHeight()));
 
-        btnEditLine = POSButtonFactory.createActionButton(
+        btnEditLine = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.edit"),
-                UnicodeIcon.EDIT,
                 touchSize,
                 KeyEvent.VK_D,
                 AppLocal.getIntString("button.editline.tooltip"),
@@ -219,9 +210,8 @@ public class ModernTwoActionPane extends JPanel {
         );
         btnEditLine.setPreferredSize(new Dimension(105, touchSize.getHeight()));
 
-        btnDeleteLine = POSButtonFactory.createDangerButton(
+        btnDeleteLine = ButtonFactory.createDangerButton(
                 AppLocal.getIntString("button.delete"),
-                UnicodeIcon.DELETE,
                 touchSize,
                 KeyEvent.VK_R,
                 AppLocal.getIntString("button.deleteline.tooltip"),
@@ -241,9 +231,8 @@ public class ModernTwoActionPane extends JPanel {
         JPanel orderActions = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.TRAILING, 6, 0));
         orderActions.setOpaque(false);
 
-        btnClear = POSButtonFactory.createActionButton(
+        btnClear = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.clean"),
-                UnicodeIcon.CLEAR,
                 touchSize,
                 KeyEvent.VK_L,
                 AppLocal.getIntString("button.clear.tooltip"),
@@ -253,9 +242,8 @@ public class ModernTwoActionPane extends JPanel {
         );
         btnClear.setPreferredSize(new Dimension(110, touchSize.getHeight()));
 
-        btnHold = POSButtonFactory.createActionButton(
+        btnHold = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.hold"),
-                UnicodeIcon.HOLD,
                 touchSize,
                 KeyEvent.VK_H,
                 AppLocal.getIntString("button.hold.tooltip"),
@@ -265,9 +253,8 @@ public class ModernTwoActionPane extends JPanel {
         );
         btnHold.setPreferredSize(new Dimension(125, touchSize.getHeight()));
 
-        btnDiscount = POSButtonFactory.createActionButton(
+        btnDiscount = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.discount"),
-                UnicodeIcon.DISCOUNT,
                 touchSize,
                 KeyEvent.VK_T,
                 AppLocal.getIntString("button.discount.tooltip"),
@@ -289,17 +276,17 @@ public class ModernTwoActionPane extends JPanel {
 
     public void setCustomer(CustomerInfoExt customer) {
         if (customer != null) {
-            customerButton.setText(POSButtonFactory.formatButtonText(AppLocal.getIntString("label.customer") + ": " + customer.getName(), UnicodeIcon.CUSTOMER));
+            customerButton.setText(AppLocal.getIntString("label.customer") + ": " + customer.getName());
             customerButton.putClientProperty("FlatLaf.styleClass", "accent");
         } else {
-            customerButton.setText(POSButtonFactory.formatButtonText(AppLocal.getIntString("label.customer") + ": " + AppLocal.getIntString("label.guest"), UnicodeIcon.CUSTOMER));
+            customerButton.setText(AppLocal.getIntString("label.customer") + ": " + AppLocal.getIntString("label.guest"));
             customerButton.putClientProperty("FlatLaf.styleClass", null);
         }
         customerButton.repaint();
     }
 
     public void setParkedCount(int count) {
-        parkedOrdersButton.setText(UnicodeIcon.PARKED.getCode() + "  " + count);
+        parkedOrdersButton.setText(String.valueOf(count));
         if (count > 0) {
             parkedOrdersButton.putClientProperty("FlatLaf.styleClass", "accent");
         } else {

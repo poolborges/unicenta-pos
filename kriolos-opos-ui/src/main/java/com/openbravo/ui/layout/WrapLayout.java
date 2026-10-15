@@ -1,19 +1,3 @@
-//    KriolOS POS
-//    Copyright (c) 2019-2026 KriolOS
-//
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 package com.openbravo.ui.layout;
 
 import java.awt.Component;
@@ -26,17 +10,18 @@ import javax.swing.SwingUtilities;
 
 /**
  * FlowLayout subclass that dynamically wraps components based on available container width.
- * Essential for touch-screen fluid product catalog grids in {@link ModernOne}.
+ * Essential for touch-screen fluid product catalog grids.
  * Fully compliant with RTL / LTR using {@link FlowLayout#LEADING}.
  *
- * @author KriolOS Team
+ * @author KriolOS
+ * @since 1.0.0
  */
 public class WrapLayout extends FlowLayout {
 
     private static final long serialVersionUID = 1L;
 
     public WrapLayout() {
-        super(FlowLayout.LEADING);
+        super(LEADING);
     }
 
     public WrapLayout(int align) {
@@ -55,7 +40,7 @@ public class WrapLayout extends FlowLayout {
     @Override
     public Dimension minimumLayoutSize(Container target) {
         Dimension minimum = layoutSize(target, false);
-        minimum.width -= (getHgap() + 1);
+        minimum.width -= getHgap() + 1;
         return minimum;
     }
 

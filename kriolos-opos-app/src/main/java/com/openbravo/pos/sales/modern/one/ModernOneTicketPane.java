@@ -19,11 +19,10 @@ package com.openbravo.pos.sales.modern.one;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.app.AppLocal;
-import com.openbravo.ui.components.POSKeyBinder;
+import com.openbravo.ui.components.ButtonKeyBinder;
 import com.openbravo.pos.ticket.TicketInfo;
-import com.openbravo.pos.ui.components.ButtonSize;
-import com.openbravo.pos.ui.components.POSButtonFactory;
-import com.openbravo.pos.ui.components.UnicodeIcon;
+import com.openbravo.ui.components.ButtonSize;
+import com.openbravo.ui.components.ButtonFactory;
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
@@ -112,9 +111,8 @@ public class ModernOneTicketPane extends JPanel {
         ticketHeaderLabel.setHorizontalAlignment(SwingConstants.LEADING);
         titleRow.add(ticketHeaderLabel, BorderLayout.CENTER);
 
-        parkedListButton = POSButtonFactory.createActionButton(
+        parkedListButton = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.parked"),
-                UnicodeIcon.ORDERS,
                 ButtonSize.MEDIUM,
                 KeyEvent.VK_O,
                 AppLocal.getIntString("button.parked.tooltip"),
@@ -127,9 +125,8 @@ public class ModernOneTicketPane extends JPanel {
         titleRow.add(parkedListButton, BorderLayout.LINE_END);
         headerContainer.add(titleRow, BorderLayout.PAGE_START);
 
-        customerButton = POSButtonFactory.createActionButton(
+        customerButton = ButtonFactory.createActionButton(
                 AppLocal.getIntString("label.customer") + ": " + AppLocal.getIntString("label.guest"),
-                UnicodeIcon.CUSTOMER,
                 ButtonSize.LARGE,
                 KeyEvent.VK_C,
                 AppLocal.getIntString("label.customer"),
@@ -189,7 +186,7 @@ public class ModernOneTicketPane extends JPanel {
         lineActionsBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, ButtonSize.EXTRA_LARGE.getHeight()));
         lineActionsBar.setPreferredSize(new Dimension(0, ButtonSize.EXTRA_LARGE.getHeight()));
 
-        btnQtyMinus = POSButtonFactory.createActionButton(
+        btnQtyMinus = ButtonFactory.createActionButton(
                 "-",
                 "",
                 ButtonSize.LARGE,
@@ -202,9 +199,9 @@ public class ModernOneTicketPane extends JPanel {
                 });
         btnQtyMinus.setName("kriolos:sales:modern:btn-minus");
         btnQtyMinus.setMargin(new Insets(0, 0, 0, 0));  // Remove padding to prevent "..." truncation
-        POSKeyBinder.bindNumpadKey(btnQtyMinus, KeyEvent.VK_SUBTRACT, "kriolos:sales:modern:btn-minus");
+        ButtonKeyBinder.bindNumpadKey(btnQtyMinus, KeyEvent.VK_SUBTRACT, "kriolos:sales:modern:btn-minus");
 
-        btnQtyPlus = POSButtonFactory.createActionButton(
+        btnQtyPlus = ButtonFactory.createActionButton(
                 "+",
                 "",
                 ButtonSize.LARGE,
@@ -217,11 +214,10 @@ public class ModernOneTicketPane extends JPanel {
                 });
         btnQtyPlus.setName("kriolos:sales:modern:btn-plus");
         btnQtyPlus.setMargin(new Insets(0, 0, 0, 0));  // Remove padding to prevent "..." truncation
-        POSKeyBinder.bindNumpadKey(btnQtyPlus, KeyEvent.VK_ADD, "kriolos:sales:modern:btn-plus");
+        ButtonKeyBinder.bindNumpadKey(btnQtyPlus, KeyEvent.VK_ADD, "kriolos:sales:modern:btn-plus");
 
-        btnEditLine = POSButtonFactory.createActionButton(
+        btnEditLine = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.edit"),
-                UnicodeIcon.EDIT,
                 ButtonSize.LARGE,
                 KeyEvent.VK_D,
                 AppLocal.getIntString("button.editline.tooltip"),
@@ -234,9 +230,8 @@ public class ModernOneTicketPane extends JPanel {
         btnEditLine.setMargin(new Insets(0, 0, 0, 0));
 
         // Uses a red/danger color as seen in the top right of the UI mockup
-        btnDeleteLine = POSButtonFactory.createDangerButton(
+        btnDeleteLine = ButtonFactory.createDangerButton(
                 AppLocal.getIntString("button.delete"),
-                UnicodeIcon.DELETE,
                 ButtonSize.LARGE,
                 KeyEvent.VK_R,
                 AppLocal.getIntString("button.deleteline.tooltip"),
@@ -262,9 +257,8 @@ public class ModernOneTicketPane extends JPanel {
         orderActionsBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, ButtonSize.LARGE.getHeight()));
         orderActionsBar.setPreferredSize(new Dimension(0, ButtonSize.LARGE.getHeight()));
 
-        clearTicketButton = POSButtonFactory.createActionButton(
+        clearTicketButton = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.clean"),
-                UnicodeIcon.CLEAR,
                 ButtonSize.LARGE,
                 KeyEvent.VK_L,
                 AppLocal.getIntString("button.clear.tooltip"),
@@ -275,9 +269,8 @@ public class ModernOneTicketPane extends JPanel {
                 });
         clearTicketButton.setName("kriolos:sales:modern:clear-btn");
 
-        holdButton = POSButtonFactory.createActionButton(
+        holdButton = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.hold"),
-                UnicodeIcon.HOLD,
                 ButtonSize.LARGE,
                 KeyEvent.VK_H,
                 AppLocal.getIntString("button.hold.tooltip"),
@@ -330,9 +323,8 @@ public class ModernOneTicketPane extends JPanel {
         footerPanel.add(Box.createVerticalStrut(8));
 
         // Massive Pay Button (full width, 56px height)
-        btnPay = POSButtonFactory.createSuccessButton(
+        btnPay = ButtonFactory.createSuccessButton(
                 AppLocal.getIntString("button.pay") + "  " + Formats.CURRENCY.formatValue(0.0),
-                UnicodeIcon.PAY,
                 ButtonSize.MASSIVE,
                 KeyEvent.VK_P,
                 AppLocal.getIntString("button.pay.tooltip"),
@@ -346,7 +338,7 @@ public class ModernOneTicketPane extends JPanel {
         btnPay.setName("kriolos:sales:modern:btn-pay");
 
         // Bind Numpad "Enter"
-        POSKeyBinder.bindNumpadKey(btnPay, KeyEvent.VK_ENTER, "kriolos:sales:modern:btn-pay");
+        ButtonKeyBinder.bindNumpadKey(btnPay, KeyEvent.VK_ENTER, "kriolos:sales:modern:btn-pay");
 
         footerPanel.add(btnPay);
         add(footerPanel, BorderLayout.PAGE_END);
@@ -370,10 +362,8 @@ public class ModernOneTicketPane extends JPanel {
             subtotalValueLabel.setText(Formats.CURRENCY.formatValue(0.0));
             taxValueLabel.setText(Formats.CURRENCY.formatValue(0.0));
             totalValueLabel.setText(Formats.CURRENCY.formatValue(0.0));
-            btnPay.setText(POSButtonFactory.formatButtonText(
-                    AppLocal.getIntString("button.pay") + "  " + Formats.CURRENCY.formatValue(0.0), UnicodeIcon.PAY));
-            customerButton.setText(
-                    POSButtonFactory.formatButtonText(AppLocal.getIntString("label.customer") + ": " + AppLocal.getIntString("label.guest"), UnicodeIcon.CUSTOMER));
+            btnPay.setText(AppLocal.getIntString("button.pay") + "  " + Formats.CURRENCY.formatValue(0.0));
+            customerButton.setText(AppLocal.getIntString("label.customer") + ": " + AppLocal.getIntString("label.guest"));
             customerButton.putClientProperty("FlatLaf.styleClass", null);
             btnPay.setEnabled(false);
             holdButton.setEnabled(false);
@@ -393,14 +383,13 @@ public class ModernOneTicketPane extends JPanel {
         ticketHeaderLabel.setText(ticketName);
 
         if (customer != null && customer.getName() != null) {
-            customerButton.setText(POSButtonFactory.formatButtonText(AppLocal.getIntString("label.customer") + ": " + customer.getName(), UnicodeIcon.CUSTOMER));
+            customerButton.setText(AppLocal.getIntString("label.customer") + ": " + customer.getName());
             customerButton.putClientProperty("FlatLaf.styleClass", "accent");
         } else if (ticket.getCustomer() != null && ticket.getCustomer().getName() != null) {
-            customerButton.setText(POSButtonFactory.formatButtonText(AppLocal.getIntString("label.customer") + ": " + ticket.getCustomer().getName(), UnicodeIcon.CUSTOMER));
+            customerButton.setText(AppLocal.getIntString("label.customer") + ": " + ticket.getCustomer().getName());
             customerButton.putClientProperty("FlatLaf.styleClass", "accent");
         } else {
-            customerButton.setText(
-                    POSButtonFactory.formatButtonText(AppLocal.getIntString("label.customer") + ": " + AppLocal.getIntString("label.guest"), UnicodeIcon.CUSTOMER));
+            customerButton.setText(AppLocal.getIntString("label.customer") + ": " + AppLocal.getIntString("label.guest"));
             customerButton.putClientProperty("FlatLaf.styleClass", null);
         }
 
@@ -416,8 +405,7 @@ public class ModernOneTicketPane extends JPanel {
         taxValueLabel.setText(Formats.CURRENCY.formatValue(taxes));
         totalValueLabel.setText(Formats.CURRENCY.formatValue(total));
 
-        btnPay.setText(POSButtonFactory.formatButtonText(
-                AppLocal.getIntString("button.pay") + "  " + Formats.CURRENCY.formatValue(total), UnicodeIcon.PAY));
+        btnPay.setText(AppLocal.getIntString("button.pay") + "  " + Formats.CURRENCY.formatValue(total));
 
         //ENABLED TicketPane Buttons
         boolean hasLines = ticket.getLinesCount() > 0;
@@ -471,8 +459,8 @@ public class ModernOneTicketPane extends JPanel {
 
     public void setParkedCount(int count) {
         parkedListButton.setText(count > 0
-                ? UnicodeIcon.ORDERS.getCode() + " " + AppLocal.getIntString("button.parked") + " (" + count + ")"
-                : UnicodeIcon.ORDERS.getCode() + " " + AppLocal.getIntString("button.parked"));
+                ? AppLocal.getIntString("button.parked") + " (" + count + ")"
+                : AppLocal.getIntString("button.parked"));
         if (count > 0) {
             parkedListButton.putClientProperty("FlatLaf.styleClass", "accent");
         } else {

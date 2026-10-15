@@ -1,4 +1,4 @@
-package com.openbravo.ui.laf;
+package com.openbravo.ui.layout;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -98,7 +98,6 @@ public class FlexLayout implements LayoutManager2 {
                                 }
                             }
                         } catch (NumberFormatException e) {
-                            // [FIX Issue #3]: Prevent silent swallowing of layout parsing errors
                             LOG.log(Level.WARNING, "FlexLayout syntax error parsing: ''{0}'' on component ''{1}''. Exception: {2}", 
                                     new Object[]{part, comp.getName(), e.getMessage()});
                         }
@@ -172,7 +171,6 @@ public class FlexLayout implements LayoutManager2 {
             
             if (direction == Direction.ROW) {
                 int availableWidth = parent.getWidth() - (insets.left + insets.right);
-                // [FIX Issue #2]: Only apply if > 0. Prevents Integer.MAX_VALUE explosions when unpacked.
                 if (availableWidth > 0) {
                     d.width = (int) Math.round(availableWidth * percent);
                 }
@@ -183,7 +181,6 @@ public class FlexLayout implements LayoutManager2 {
                 }
             }
 
-            // [FIX Issue #1]: Mutation boundary check to prevent PropertyChangeEvent UI loop storms
             Dimension currentPref = comp.getPreferredSize();
             if (currentPref.width != d.width || currentPref.height != d.height) {
                 comp.setPreferredSize(new Dimension(d)); 
@@ -249,7 +246,6 @@ public class FlexLayout implements LayoutManager2 {
     private void layoutSingleSegment(List<Component> components, int crossCoord, int crossMax, Container parent, Insets insets) {
         int totalLength = 0;
         
-        // [FIX Issue #4]: Precision tracking for percentage truncation
         double totalPercent = 0.0;
         Component lastPercentComp = null;
         int actualPercentPixels = 0;
@@ -261,7 +257,6 @@ public class FlexLayout implements LayoutManager2 {
             totalLength += len;
             if (i > 0) totalLength += gap;
             
-            // Track percentages to fix fractional pixel gaps
             if (percentBasisMap.containsKey(comp)) {
                 totalPercent += percentBasisMap.get(comp);
                 actualPercentPixels += len;
@@ -269,7 +264,6 @@ public class FlexLayout implements LayoutManager2 {
             }
         }
         
-        // Calculate the leftover pixels from floating point truncation
         Map<Component, Integer> pixelCompensation = new HashMap<>();
         if (lastPercentComp != null) {
             int availableLayoutLength = (direction == Direction.ROW) 
@@ -299,7 +293,6 @@ public class FlexLayout implements LayoutManager2 {
             Dimension d = getComponentSize(comp, parent);
             int compX, compY, compW, compH;
             
-            // Apply the precision adjustment if this is the final percent component
             int precisionOffset = pixelCompensation.getOrDefault(comp, 0);
 
             if (direction == Direction.ROW) {
@@ -308,7 +301,7 @@ public class FlexLayout implements LayoutManager2 {
                 compW = d.width + precisionOffset;
                 compH = (alignItems == AlignItems.STRETCH) ? crossMax : d.height;
                 if (alignItems == AlignItems.CENTER) compY = crossCoord + (crossMax - d.height) / 2;
-                if (alignItems == AlignItems.END) compY = crossCoord + (crossMax - d.height);
+                if (alignItems == AlignItems.END) compY = crossCoord + crossMax - d.height;
                 
                 comp.setBounds(compX, compY, compW, compH);
                 startCoord += compW + gap;
@@ -318,7 +311,7 @@ public class FlexLayout implements LayoutManager2 {
                 compW = (alignItems == AlignItems.STRETCH) ? crossMax : d.width;
                 compH = d.height + precisionOffset;
                 if (alignItems == AlignItems.CENTER) compX = crossCoord + (crossMax - d.width) / 2;
-                if (alignItems == AlignItems.END) compX = crossCoord + (crossMax - d.width);
+                if (alignItems == AlignItems.END) compX = crossCoord + crossMax - d.width;
                 
                 comp.setBounds(compX, compY, compW, compH);
                 startCoord += compH + gap;
@@ -334,8 +327,6 @@ public class FlexLayout implements LayoutManager2 {
         synchronized (parent.getTreeLock()) {
             Insets insets = parent.getInsets();
             
-            // [FIX Issue #2]: Removed the Integer.MAX_VALUE fallback. 
-            // We now measure natural unconstrained geometry if the window isn't packed yet.
             int targetWidth = parent.getWidth();
             int targetHeight = parent.getHeight();
             
