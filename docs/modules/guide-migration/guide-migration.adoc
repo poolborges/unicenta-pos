@@ -10,4 +10,6 @@
 :source-highlighter: coderay
 :imagesdir: images
 
+include::pages/quarkus-desktop-migration.adoc[leveloffset=+1]
+
 include::pages/migration-implementation-plan.adoc[leveloffset=+1]

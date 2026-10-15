@@ -1,3 +1,4 @@
 * Migration Guide
 ** xref:index.adoc[Overview]
+** xref:quarkus-desktop-migration.adoc[Quarkus Desktop Migration Plan]
 ** xref:migration-implementation-plan.adoc[Deep Analysis & Implementation Plan]

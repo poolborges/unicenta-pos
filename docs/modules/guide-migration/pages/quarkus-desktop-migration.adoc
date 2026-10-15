@@ -1,0 +1,288 @@
+= Quarkus Desktop Migration: Architecture & Implementation Plan
+:author: KriolOS Team
+:toc:
+:toclevels: 3
+:numbered:
+:icons: font
+:source-highlighter: highlight.js
+
+== 1. Executive Summary & Architectural Vision
+
+**KriolOS POS** is modernizing its application core by adopting **Quarkus** as its runtime and dependency injection backbone in a **Desktop (Swing / FlatLaf)** deployment topology.
+
+Historically derived from OpenbravoPOS and Unicenta, the application traditionally relied on ad-hoc singleton registries (`AppConfig`, `AppView.getBean()`), manual JDBC connection management, and monolithic classpath loading.
+
+Migrating to **Quarkus Desktop** provides:
+
+* **Sub-Second Cold Boot**: Build-time pre-indexing and class metadata resolution.
+* **ArC (Build-Time CDI 4.0 Lite)**: Clean, typesafe dependency injection with compile-time verification, eliminating runtime reflection overhead.
+* **Unified Modern Configuration**: Full alignment with MicroProfile Config and SmallRye Config (established in PR #144).
+* **Agroal High-Performance Connection Pooling**: Robust connection lifecycle management across SQLite, MariaDB, MySQL, and PostgreSQL.
+* **Seamless Cross-Platform Distribution**: Packaging Quarkus `fast-jar` binaries with **JPackage** and custom **JLink** runtimes for native Linux (.deb, .rpm), Windows (.msi), and macOS (.dmg) installers.
+
+[IMPORTANT]
+====
+**Swing / EDT Guiding Principle**:
+Quarkus manages the application lifecycle, CDI container, background worker pools, and persistence. The Graphical User Interface (Swing / FlatLaf) is initialized strictly within the Java AWT Event Dispatch Thread (EDT) via `javax.swing.SwingUtilities.invokeLater()`, cleanly separated from the Quarkus runtime bootstrap thread.
+====
+
+---
+
+== 2. Current State vs. Target State Analysis
+
+[cols="1,2,2",options="header"]
+|===
+| Dimension | Current Legacy Architecture | Target Quarkus Desktop Architecture
+
+| **Application Entry Point**
+| `com.openbravo.pos.forms.StartPOS.main(args)` with manual argument parsing and static initializers.
+| `@QuarkusMain` implementing `QuarkusApplication` (`KriolOSDesktopApp`), delegating UI presentation to Swing EDT while managing lifecycle via `Quarkus.waitForExit()`.
+
+| **Dependency Injection**
+| `AppView.getBean(Class<T>)` delegating to manual maps and singleton lookups.
+| **ArC (CDI 4.0 Lite)** with compile-time wiring via `@ApplicationScoped`, `@Singleton`, `@Inject`, and CDI producers.
+
+| **Configuration**
+| Hybrid `AppConfig` properties file + SmallRye MicroProfile Config SPI (PR #144).
+| Native Quarkus configuration via `application.properties`, `@ConfigProperty`, SmallRye profiles (`%prod`, `%dev`, `%desktop`), and database config source.
+
+| **Database & Pooling**
+| Custom `Session.java` wrapping raw `java.sql.Connection` with manual transactions.
+| **Agroal Connection Pool** (`quarkus-agroal`) with declarative `@Transactional` boundaries and unified DataSource management.
+
+| **Database Migrations**
+| Embedded Liquibase execution embedded inside `DataLogicSystem`.
+| `quarkus-liquibase` extension executing schema evolution deterministically at startup.
+
+| **Event Handling**
+| Ad-hoc Swing listener interfaces (`JPaymentNotifier`, custom ticket callbacks).
+| Strongly-typed **CDI Events** (`Event<PaymentCompletedEvent>`, `@Observes TicketLineAddedEvent`) decoupling business events from UI controls.
+
+| **Packaging & Distribution**
+| Multi-jar output assembled into JPackage lib directory.
+| Quarkus `fast-jar` (`quarkus-app/`) packaged into native OS installers (MSI, DMG, DEB) using `jpackage-maven-plugin`.
+|===
+
+---
+
+== 3. Assets & Resource Handling Requirements
+
+KriolOS POS relies on four primary categories of assets spread across dedicated Maven modules:
+
+1. **Vector & Raster Images** (`kriolos-opos-assets-image`, `kriolos-opos-assets-svg`):
+   * PNG and GIF button icons located at `/com/openbravo/images/*`.
+   * High-DPI SVG vectors loaded via FlatLaf SVG Icon and Batik.
+   * *Requirement*: All image paths must be registered in the classpath manifest so Quarkus Fast-Jar packaging retains their exact relative resource hierarchy.
+
+2. **Reporting Templates** (`kriolos-opos-assets-reports`, `kriolos-opos-lib-report`):
+   * JasperReports `.jrxml` templates and pre-compiled `.jasper` report definitions (`/com/openbravo/reports/*`).
+   * *Requirement*: Reporting templates rely on dynamic resource streams. Resource loading must use the Thread Context ClassLoader (`Thread.currentThread().getContextClassLoader().getResourceAsStream()`).
+
+3. **Receipt & Scripting Templates** (`kriolos-opos-scripting-bsvelocity`):
+   * Velocity XML templates (`Printer.Ticket.xml`, `Printer.TicketPreview.xml`, `Printer.CustomerPaid.xml`).
+   * Dynamic BeanShell user scripts (`Ticket.Close.bs`, `Cash.Close.bs`).
+   * *Requirement*: Built-in default templates remain embedded in the JAR; customized user templates are dynamically discovered and loaded from the user configuration directory (`BootstrapConfiguration.getBaseApplicationDataDirectory()`).
+
+4. **Resource Registration Strategy for Native Packaging**:
+   When building standalone distributions, all asset extensions must be declared:
+[source,properties]
+----
+quarkus.native.resources.includes=com/openbravo/images/**,com/openbravo/reports/**,com/openbravo/pos/templates/**,com/openbravo/svg/**
+----
+
+---
+
+== 4. Native Libraries Management
+
+A POS desktop client interfaces directly with physical peripheral hardware, necessitating low-level native operating system access:
+
+[cols="1,1,2,2",options="header"]
+|===
+| Native Dependency | Underlying Technology | POS Functionality | Quarkus Desktop Strategy
+
+| `com.neuronrobotics:nrjavaserial`
+| RXTX (Native `.so`, `.dll`, `.dylib`)
+| ESC/POS serial printers, customer pole displays (VFD/LCD), electronic weighing scales, and RS-232 cash drawers.
+| Embedded native libraries extracted to `${java.io.tmpdir}/kriolos-serial`. Isolated behind `kriolos-opos-hardware` SPI so build-time CDI scanning does not invoke native initialization prematurely.
+
+| `org.usb4java:usb4java` & `usb4java-javax`
+| LibUSB 1.0 (JNI bindings)
+| Direct USB thermal receipt printers, USB cash drawers, and custom HID barcode scanners.
+| Native libraries loaded at runtime when hardware subsystems are initialized. Guarded with graceful degradation when physical USB devices are absent.
+
+| `org.xerial:sqlite-jdbc`
+| Native SQLite binary wrapper
+| Embedded standalone local database (`kriolopos.db`) for zero-configuration, single-station operation.
+| Standard JDBC driver compatibility supported directly by Quarkus Agroal datasource. Native SQLite binaries unpack into runtime memory without external dependencies.
+|===
+
+=== OS Permission Requirements:
+* **Linux**: User running POS must be added to `dialout` and `tty` groups for COM/serial communication:
+  [source,bash]
+  ----
+  sudo usermod -a -G dialout,tty $USER
+  ----
+* **Windows**: Proper WinUSB / COM port driver assignment via Device Manager.
+* **macOS**: TCC (Transparency, Consent, and Control) USB device access confirmation.
+
+---
+
+== 5. ArC (Build-Time CDI Container) Architecture
+
+### 5.1 Service Decomposition
+The business logic extracted from legacy Swing panels into `kriolos-opos-domain` will be registered as CDI beans:
+
+[source,java]
+----
+package com.openbravo.pos.sales;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+@ApplicationScoped
+public class SalesServiceImpl implements SalesService {
+
+    @Inject
+    InventoryService inventoryService;
+
+    @Inject
+    CustomerService customerService;
+
+    @Override
+    public TicketInfo createTicket() {
+        // Pure domain logic
+        return new TicketInfo();
+    }
+}
+----
+
+### 5.2 Transition Pattern: The `ArcBridge`
+During intermediate migration stages where legacy Swing classes still exist alongside modern CDI services, an `ArcBridge` provides typesafe access to CDI beans from Swing components without polluting UI classes with service locator antipatterns:
+
+[source,java]
+----
+package com.openbravo.pos.cdi;
+
+import io.quarkus.arc.Arc;
+
+public final class ArcBridge {
+
+    private ArcBridge() {}
+
+    public static <T> T getBean(Class<T> beanClass) {
+        return Arc.container().instance(beanClass).get();
+    }
+}
+----
+
+### 5.3 Decoupling UI and Business Logic with CDI Events
+Replace direct method calls and tightly coupled UI listeners with asynchronous or synchronous CDI events:
+
+```
+[User clicks 'Pay' in JPaymentSelect]
+              │
+              ▼
+    PaymentService.processPayment(...)
+              │
+              ▼
+   CDI Event: Event<PaymentCompletedEvent>.fire(...)
+        ┌─────┴──────────────────┐
+        ▼                        ▼
+ [Audit Journal Log]    [Hardware Drawer Kick]
+  (@Observes)                 (@Observes)
+```
+
+---
+
+== 6. Cross-Platform Distribution with JPackage
+
+### 6.1 Quarkus Fast-Jar & JPackage Synergy
+Quarkus builds an optimized distribution structure under `target/quarkus-app/`:
+```
+target/quarkus-app/
+├── app/
+│   └── kriolos-opos-app-1.0.0.jar
+├── lib/
+│   └── boot/ & main/ (Indexed dependency jars)
+├── q-config/
+└── quarkus-run.jar
+```
+
+`jpackage` takes this pre-optimized directory as `--input`, executes `jlink` to produce a minimal runtime image containing only the needed JDK modules, and bundles native OS installers.
+
+### 6.2 Modular Runtime Image (JLink Options)
+The custom JRE bundled with the POS installer strips unnecessary debug symbols and documentation while preserving full desktop Swing and cryptographic capabilities:
+
+[source,xml]
+----
+<jLinkOptions>
+    <jLinkOption>--strip-native-commands</jLinkOption>
+    <jLinkOption>--strip-debug</jLinkOption>
+    <jLinkOption>--no-man-pages</jLinkOption>
+    <jLinkOption>--no-header-files</jLinkOption>
+    <jLinkOption>--compress=2</jLinkOption>
+</jLinkOptions>
+----
+
+### 6.3 OS-Specific Packaging Matrix
+
+[cols="1,1,2,2",options="header"]
+|===
+| Operating System | Installer Format | App Icon | Key JPackage Directives
+
+| **Linux**
+| `.deb`, `.rpm`, AppImage
+| `icons/app_icon.png` (512x512)
+| `--linux-shortcut`, `--linux-package-name kriolos-pos`, `--linux-app-category Office`, `--linux-menu-group Office`
+
+| **Windows**
+| `.msi` (via WiX Toolset)
+| `icons/app_icon.ico` (multi-res ICO)
+| `--win-menu`, `--win-menu-group "KriolOS/OPOS"`, `--win-dir-chooser`, `--win-shortcut`
+
+| **macOS**
+| `.dmg` (Apple Disk Image)
+| `icons/app_icon.icns`
+| `--mac-package-identifier io.github.kriolos-obiz.opos`, `--mac-sign` (optional developer ID signing)
+|===
+
+---
+
+== 7. Step-by-Step Implementation Roadmap
+
+```
+Phase 1: CDI Prep & MicroProfile Config (Completed ✅)
+  ├── MicroProfile Config SPI integration (PR #144)
+  ├── Full elimination of legacy JDialog -> PosUIModal (PR #145, #146)
+  └── Business logic extraction to kriolos-opos-domain
+
+Phase 2: Quarkus Desktop Module Integration
+  ├── Add Quarkus BOM and core dependencies to root pom.xml
+  ├── Create kriolos-opos-desktop launcher implementing QuarkusApplication
+  └── Implement Swing EDT handoff in @QuarkusMain
+
+Phase 3: Service Migration to ArC CDI
+  ├── Annotate domain services with @ApplicationScoped
+  ├── Wire Agroal DataSource & Connection Pool
+  └── Replace legacy AppView.getBean() with Arc injection
+
+Phase 4: Peripheral & Asset Hardening
+  ├── Isolate nrjavaserial & usb4java runtime extraction
+  ├── Validate JasperReports & Velocity loading under Fast-Jar classloader
+  └── Verify multi-database profiles under Quarkus (SQLite, MySQL, PG)
+
+Phase 5: JPackage Multi-Platform Release Automation
+  ├── Update kriolos-opos-jpackage to package target/quarkus-app/
+  ├── Add GitHub Actions matrix build for Linux DEB, Windows MSI, macOS DMG
+  └── Automated release asset publication
+```
+
+---
+
+== 8. Verification & Acceptance Criteria
+
+1. **Cold Boot Benchmark**: Cold start to visible Swing login screen under 1.5 seconds on standard hardware.
+2. **Memory Footprint**: Base memory footprint (resident set size) under 180MB at idle.
+3. **Hardware Compatibility**: Serial receipt printing, cash drawer kick, and barcode scan events function identically to legacy execution.
+4. **Offline Resilience**: Standalone SQLite database boots seamlessly without network or external services.
+5. **Installer Validation**: Standalone native installers (DEB, MSI, DMG) install cleanly without requiring an external Java Runtime Environment (JRE).
