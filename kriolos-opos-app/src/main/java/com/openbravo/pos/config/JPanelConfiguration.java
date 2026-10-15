@@ -43,6 +43,7 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
 
     private List<PanelConfig> m_panelconfig;
     private CloseEventListener closeEventListener = null;
+    private AppView m_oApp = null;
 
     private AppConfig config;
 
@@ -53,6 +54,7 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
      */
     public JPanelConfiguration(AppView oApp) {
         this(oApp.getProperties());
+        this.m_oApp = oApp;
         jbtnExit.setVisible(false);
     }
 
@@ -144,17 +146,39 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
             m_panelconfig.forEach(c -> c.saveProperties(config));
             config.save();
 
+            // Synchronize with database-backed ApplicationConfigurationService if running in active application
+            if (m_oApp != null) {
+                try {
+                    ApplicationConfigurationService appConfigService = m_oApp.getBean(ApplicationConfigurationService.class);
+                    if (appConfigService != null && config.getProperties() != null) {
+                        for (String key : config.getProperties().stringPropertyNames()) {
+                            String value = config.getProperty(key);
+                            if (value != null) {
+                                if (key.startsWith("company.") || key.startsWith("currency.") || key.startsWith("tax.") || key.startsWith("tkt.")) {
+                                    appConfigService.setGlobalProperty(key, value);
+                                } else if (key.startsWith("machine.")) {
+                                    appConfigService.setProperty(key, value);
+                                }
+                            }
+                        }
+                        LOGGER.log(Level.INFO, "Synchronized settings to ApplicationConfigurationService database.");
+                    }
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Could not synchronize configuration to database: " + ex.getMessage(), ex);
+                }
+            }
+
             JOptionPane.showMessageDialog(this,
                     AppLocal.getIntString("message.restartchanges"),
                     AppLocal.getIntString("message.title"),
                     JOptionPane.INFORMATION_MESSAGE);
 
-            // Evento on sucess save
+            // Event on successful save
             if (closeEventListener != null) {
                 closeEventListener.windowClosed(new CloseEvent(this));
             }
         } catch (HeadlessException | IOException e) {
-            LOGGER.log(Level.SEVERE, "Erro ao gravar ficheiro de configuração", e);
+            LOGGER.log(Level.SEVERE, "Error saving configuration file", e);
             JMessagePanel.showMessage(this,
                     new MessageInf(MessageInf.SGN_WARNING,
                             AppLocal.getIntString("message.cannotsaveconfig"), e));

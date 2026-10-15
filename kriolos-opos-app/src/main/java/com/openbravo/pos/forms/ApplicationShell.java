@@ -18,13 +18,20 @@ package com.openbravo.pos.forms;
 import com.openbravo.app.AppLocal;
 import com.openbravo.app.AppProperties;
 import com.openbravo.app.AppProperties.DatabaseConfig;
+import com.openbravo.app.BootstrapAppPropertiesAdapter;
 import com.openbravo.pos.admin.AppUser;
 import com.openbravo.pos.admin.AppUserView;
 import com.openbravo.pos.admin.DataLogicSystem;
 import com.openbravo.pos.admin.SecurityService;
 import com.openbravo.pos.admin.SystemService;
 import com.openbravo.pos.config.AppConfig;
+import com.openbravo.pos.config.ApplicationConfigurationService;
+import com.openbravo.pos.config.ApplicationProperties;
 import com.openbravo.pos.container.BeanContainer;
+import com.openbravo.pos.spi.config.BootstrapConfig;
+import com.openbravo.pos.spi.config.BootstrapConfigFactory;
+import com.openbravo.pos.spi.datasource.DataSourceFactory;
+import javax.sql.DataSource;
 import com.openbravo.pos.container.BeanFactoryApp;
 import com.openbravo.pos.container.BeanFactoryException;
 import com.openbravo.pos.panels.AppView;
@@ -70,7 +77,8 @@ public class ApplicationShell extends JPanel implements AppView {
     private static final Logger LOGGER = Logger.getLogger(ApplicationShell.class.getName());
     private static final long serialVersionUID = 1L;
 
-    private final AppProperties appProperties;
+    private AppProperties appProperties;
+    private BootstrapConfig bootstrapConfig;
     private Session session;
     private SystemService systemService;
     @Deprecated
@@ -100,16 +108,40 @@ public class ApplicationShell extends JPanel implements AppView {
         return Formats.DATE.formatValue(new Date());
     }
 
+    public ApplicationShell(BootstrapConfig config) {
+        initComponents();
+        setName("kriolos:app:shell");
+        this.bootstrapConfig = config;
+        this.appProperties = new BootstrapAppPropertiesAdapter(config);
+        remove(topPanel); //Occupie spaces
+    }
+
     public ApplicationShell(AppProperties props) {
         initComponents();
         setName("kriolos:app:shell");
-        appProperties = props;
+        this.appProperties = props;
+        if (props instanceof BootstrapAppPropertiesAdapter adapter) {
+            this.bootstrapConfig = adapter.getBootstrapConfig();
+        } else if (props instanceof BootstrapConfig bc) {
+            this.bootstrapConfig = bc;
+        } else {
+            try {
+                this.bootstrapConfig = BootstrapConfigFactory.load();
+            } catch (Exception e) {
+                this.bootstrapConfig = AppConfig.getInstance();
+            }
+        }
         remove(topPanel); //Occupie spaces
+    }
+
+    public BootstrapConfig getBootstrapConfig() {
+        return bootstrapConfig;
     }
 
     public void initApp() throws BasicException {
 
-        applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
+        Locale startupLocale = (bootstrapConfig != null) ? bootstrapConfig.getStartupLocale() : Locale.getDefault();
+        applyComponentOrientation(ComponentOrientation.getOrientation(startupLocale));
 
         showLoginPanel();
     }
@@ -448,9 +480,6 @@ public class ApplicationShell extends JPanel implements AppView {
             @Override
             protected SystemService doInBackground() throws Exception {
                 publish(AppLocal.getIntString("label.database.checkingparams"));
-                AppConfig.testConnection(dbConfig);
-
-                publish(AppLocal.getIntString("label.database.connectingto", dbConfig.name()));
                 if (session != null) {
                     try {
                         session.close();
@@ -459,7 +488,19 @@ public class ApplicationShell extends JPanel implements AppView {
                         LOGGER.log(Level.WARNING, "Error closing previous session: ", ex);
                     }
                 }
-                session = new Session(dbConfig.url(), dbConfig.username(), dbConfig.password());
+
+                // Check for container/managed DataSourceProvider (e.g. Quarkus Agroal)
+                Optional<DataSource> managedDs = DataSourceFactory.getDataSource(dbConfig.name())
+                        .or(DataSourceFactory::getDataSource);
+
+                if (managedDs.isPresent()) {
+                    LOGGER.log(Level.INFO, "Activating database session with managed DataSourceProvider for: {0}", dbConfig.name());
+                    session = new Session(managedDs.get());
+                } else {
+                    AppConfig.testConnection(dbConfig);
+                    publish(AppLocal.getIntString("label.database.connectingto", dbConfig.name()));
+                    session = new Session(dbConfig.url(), dbConfig.username(), dbConfig.password());
+                }
 
                 publish(AppLocal.getIntString("label.database.runningmigrations"));
                 com.openbravo.pos.data.DBMigrator.execDBMigration(session);
@@ -473,6 +514,18 @@ public class ApplicationShell extends JPanel implements AppView {
                 if (dlogicSystem != null) {
                     dlogicSystem.init(session);
                 }
+
+                // Initialize ApplicationConfigurationService and elevate appProperties to ApplicationProperties
+                try {
+                    ApplicationConfigurationService appConfigService = getBean(ApplicationConfigurationService.class);
+                    if (appConfigService != null) {
+                        appProperties = new ApplicationProperties(appConfigService, bootstrapConfig,
+                                (appProperties != null ? appProperties.getConfigFile() : null));
+                        LOGGER.log(Level.INFO, "Promoted appProperties to database-backed ApplicationProperties.");
+                    }
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Could not initialize ApplicationProperties: " + ex.getMessage(), ex);
+                }
      
                 cashManagementService= null;
                 cashManagementService = new CashManagementServiceImpl(session);
@@ -481,7 +534,7 @@ public class ApplicationShell extends JPanel implements AppView {
                 publish(AppLocal.getIntString("label.database.initcashinventory"));
                 setInventoryLocation();
                 if (checkActiveCash()) {
-                    throw new BasicException("Falha ao verificar ActiveCash");
+                    throw new BasicException("Failed to verify ActiveCash");
                 }
 
                 publish(AppLocal.getIntString("label.database.configinterfaceperipherals"));

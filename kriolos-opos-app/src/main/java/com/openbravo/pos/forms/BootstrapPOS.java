@@ -18,6 +18,7 @@ package com.openbravo.pos.forms;
 import com.openbravo.app.AppLocal;
 import com.openbravo.pos.config.AppConfig;
 import com.openbravo.pos.instance.InstanceManager;
+import com.openbravo.pos.spi.config.BootstrapConfig;
 
 import java.io.File;
 import java.rmi.AlreadyBoundException;
@@ -69,7 +70,7 @@ public class BootstrapPOS {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                final WindowShell rootFrame = new WindowShell(config);
+                final WindowShell rootFrame = new WindowShell((BootstrapConfig) config);
 
                 // CHECK SINGLE INSTANCE RMI
                 if (!checkSingletonInstance(rootFrame, config)) {
@@ -82,7 +83,11 @@ public class BootstrapPOS {
     }
 
     static boolean checkSingletonInstance(WindowShell rootFrame, AppConfig config) {
-        if ("true".equals(config.getProperty("machine.uniqueinstance"))) {
+        return checkSingletonInstance(rootFrame, (BootstrapConfig) config);
+    }
+
+    static boolean checkSingletonInstance(WindowShell rootFrame, BootstrapConfig config) {
+        if (config.isUniqueInstance()) {
 
             try {
                 // Try to find and contact an existing instance

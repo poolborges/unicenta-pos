@@ -21,6 +21,7 @@ module kriolos.opos.base {
     requires java.sql;
     requires java.sql.rowset;
     requires java.logging;
+    requires transitive kriolos.opos.spi;
     
     exports com.openbravo.basic;
     exports com.openbravo.beans; 
@@ -33,4 +34,6 @@ module kriolos.opos.base {
     exports com.openbravo.format; 
     exports com.openbravo.app; 
     exports com.openbravo.util;
+
+    provides com.openbravo.pos.spi.config.BootstrapConfigProvider with com.openbravo.app.FileBootstrapConfigProvider;
 }

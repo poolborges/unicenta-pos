@@ -20,6 +20,7 @@ import com.openbravo.app.AppLocal;
 import com.openbravo.app.AppProperties;
 import com.openbravo.app.AppProperties.DatabaseConfig;
 import com.openbravo.app.BootstrapConfiguration;
+import com.openbravo.pos.spi.config.BootstrapConfig;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,6 +31,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -45,7 +47,7 @@ import javax.swing.JOptionPane;
  *
  * @author JG uniCenta, KriolOS POS
  */
-public class AppConfig extends BootstrapConfiguration {
+public class AppConfig extends BootstrapConfiguration implements AppProperties {
 
     private static final Logger LOGGER = Logger.getLogger(AppConfig.class.getName());
 
@@ -58,6 +60,19 @@ public class AppConfig extends BootstrapConfiguration {
      */
     public AppConfig(File configfile) {
         super(configfile);
+    }
+
+    @Override
+    public List<AppProperties.DatabaseConfig> getAll() {
+        return getDatabaseConfigs().stream()
+                .map(d -> new AppProperties.DatabaseConfig(d.name(), d.url(), d.username(), d.password()))
+                .toList();
+    }
+
+    @Override
+    public AppProperties.DatabaseConfig getPrimary() {
+        var p = getPrimaryDatabaseConfig();
+        return (p != null) ? new AppProperties.DatabaseConfig(p.name(), p.url(), p.username(), p.password()) : null;
     }
 
     public synchronized static AppConfig getInstance() {
@@ -236,16 +251,24 @@ public class AppConfig extends BootstrapConfiguration {
      * @param dbConfig the database configuration
      * @throws BasicException if the database connection fails or is invalid
      */
-    public static void testConnection(DatabaseConfig dbConfig) throws BasicException {
-        LOGGER.log(Level.INFO, "Testing database connection for ({0}): {1}", new Object[]{dbConfig.name(), dbConfig.url()});
-        try (Connection conn = DriverManager.getConnection(dbConfig.url(), dbConfig.username(), dbConfig.password())) {
+    public static void testConnection(AppProperties.DatabaseConfig dbConfig) throws BasicException {
+        testConnection(dbConfig.name(), dbConfig.url(), dbConfig.username(), dbConfig.password());
+    }
+
+    public static void testConnection(BootstrapConfig.DatabaseConfig dbConfig) throws BasicException {
+        testConnection(dbConfig.name(), dbConfig.url(), dbConfig.username(), dbConfig.password());
+    }
+
+    private static void testConnection(String name, String url, String username, String password) throws BasicException {
+        LOGGER.log(Level.INFO, "Testing database connection for ({0}): {1}", new Object[]{name, url});
+        try (Connection conn = DriverManager.getConnection(url, username, password)) {
             if (conn == null || !conn.isValid(3)) {
-                throw new SQLException("Connection test returned invalid status for URL: " + dbConfig.url());
+                throw new SQLException("Connection test returned invalid status for URL: " + url);
             }
-            LOGGER.log(Level.INFO, "Database connection test successful (silent) for ({0})", dbConfig.url());
+            LOGGER.log(Level.INFO, "Database connection test successful (silent) for ({0})", url);
         }
         catch (SQLException ex) {
-            LOGGER.log(Level.WARNING, "Database connection test failed for DB " + dbConfig.url() + ": " + ex.getMessage(), ex);
+            LOGGER.log(Level.WARNING, "Database connection test failed for DB " + url + ": " + ex.getMessage(), ex);
             throw new BasicException(AppLocal.getIntString("message.databaseconnectionerror"), ex);
         }
     }

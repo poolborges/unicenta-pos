@@ -18,6 +18,7 @@ package com.openbravo.pos.forms;
 
 import com.openbravo.pos.config.AppConfig;
 import com.openbravo.format.Formats;
+import com.openbravo.pos.spi.config.BootstrapConfig;
 import com.openbravo.pos.spi.localization.LocalizationFactory;
 import com.openbravo.pos.spi.localization.LocalizationProvider;
 import com.openbravo.pos.ui.api.POSThemeManager;
@@ -36,21 +37,24 @@ public class SystemSettings {
 
     private static final Logger LOGGER = Logger.getLogger(SystemSettings.class.getName());
 
-    public static void applySystemProperties(AppConfig config) {
+    public static void applySystemProperties(BootstrapConfig config) {
         // Set the look and feel.
-        
-        String newThemeProperty = config.getProperty("pos.ui.theme.id");
+        String newThemeProperty = config.getUiTheme();
         applyPosTheme(newThemeProperty);
 
         applyGlobalTouchSettings();
 
         // Localization configuration switch
-        String localizationMode = config.getProperty("localization.configure", "legacy");
+        String localizationMode = config.getLocalizationMode();
         if ("provider".equalsIgnoreCase(localizationMode)) {
             applyLocalizationProvider(config);
         } else {
             applyLocalizationLegacy(config);
         }
+    }
+
+    public static void applySystemProperties(AppConfig config) {
+        applySystemProperties((BootstrapConfig) config);
     }
 
     public static void applyPosTheme(String themeId) {
@@ -107,53 +111,31 @@ public class SystemSettings {
         UIManager.put("ScrollBar.thumbArc", 12);
     }
 
-    private static void applyLocalizationLegacy(AppConfig config) {
+    private static void applyLocalizationLegacy(BootstrapConfig config) {
 
         LOGGER.log(Level.INFO, "Localization from legacy properties");
 
-        //Set I18n or Language 
-        String langTagLang = config.getProperty("user.language");
-        String langTagCountry = config.getProperty("user.country");
-        String langTagVariant = config.getProperty("user.variant");
-        String langTagScript = config.getProperty("user.script");
-        var localeBuilder = new Locale.Builder();
-
-        if (!isNullOrBlank(langTagVariant)) {
-            localeBuilder.setVariant(langTagVariant);
-        }
-
-        if (!isNullOrBlank(langTagScript)) {
-            localeBuilder.setScript(langTagScript);
-        }
-
-        if (!isNullOrBlank(langTagCountry)) {
-            localeBuilder.setRegion(langTagCountry);
-        }
-
-        if (!isNullOrBlank(langTagLang)) {
-            localeBuilder.setLanguage(langTagLang);
-
-            Locale.setDefault(localeBuilder.build());
-        }
+        Locale startupLocale = config.getStartupLocale();
+        Locale.setDefault(startupLocale);
 
         LOGGER.log(Level.INFO, "Localization locale default: " + Locale.getDefault().toLanguageTag());
 
         //Set Format/Pattern for: Number, Date, Currency 
-        Formats.setIntegerPattern(config.getProperty("format.integer"));
-        Formats.setDoublePattern(config.getProperty("format.double"));
-        Formats.setCurrencyPattern(config.getProperty("format.currency"));
-        Formats.setPercentPattern(config.getProperty("format.percent"));
-        Formats.setDatePattern(config.getProperty("format.date"));
-        Formats.setTimePattern(config.getProperty("format.time"));
-        Formats.setDateTimePattern(config.getProperty("format.datetime"));
+        Formats.setIntegerPattern(config.getIntegerPattern());
+        Formats.setDoublePattern(config.getDoublePattern());
+        Formats.setCurrencyPattern(config.getCurrencyPattern());
+        Formats.setPercentPattern(config.getPercentPattern());
+        Formats.setDatePattern(config.getDatePattern());
+        Formats.setTimePattern(config.getTimePattern());
+        Formats.setDateTimePattern(config.getDateTimePattern());
     }
 
-    private static void applyLocalizationProvider(AppConfig config) {
+    private static void applyLocalizationProvider(BootstrapConfig config) {
 
         LOGGER.log(Level.INFO, "Localization from SPI Provider");
 
         // Build target locale from "localization.locale" (ex: "pt-CV")
-        Locale targetLocale = parseLocaleTag(config.getProperty("localization.locale"));
+        Locale targetLocale = parseLocaleTag(config.getLocalizationLocale());
         try {
 
             Locale.setDefault(targetLocale);

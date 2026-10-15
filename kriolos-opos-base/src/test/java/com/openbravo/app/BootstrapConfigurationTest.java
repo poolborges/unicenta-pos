@@ -1,5 +1,6 @@
 package com.openbravo.app;
 
+import com.openbravo.pos.spi.config.BootstrapConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -80,13 +81,50 @@ public class BootstrapConfigurationTest {
         BootstrapConfiguration reloaded = new BootstrapConfiguration(tempFile);
         reloaded.load();
 
-        AppProperties.DatabaseConfig primary = reloaded.getPrimary();
+        BootstrapConfig.DatabaseConfig primary = reloaded.getPrimaryDatabaseConfig();
         assertEquals("ProductionDB", primary.name());
         assertEquals("jdbc:mariadb://localhost:3306/pos", primary.url());
         assertEquals("posuser", primary.username());
 
-        List<AppProperties.DatabaseConfig> all = reloaded.getAll();
+        List<BootstrapConfig.DatabaseConfig> all = reloaded.getDatabaseConfigs();
         assertEquals(2, all.size());
         assertEquals("BackupDB", all.get(1).name());
+
+        // Also verify BootstrapAppPropertiesAdapter converts to AppProperties cleanly
+        BootstrapAppPropertiesAdapter adapter = new BootstrapAppPropertiesAdapter(reloaded);
+        assertEquals(reloaded.getHost(), adapter.getHost());
+        assertEquals(2, adapter.getAll().size());
+        assertEquals("ProductionDB", adapter.getPrimary().name());
+    }
+
+    @Test
+    public void testTypedBootstrapAccessors() throws IOException {
+        BootstrapConfiguration config = new BootstrapConfiguration(tempFile);
+        config.setProperty(BootstrapConfig.KEY_POS_UI_THEME, "modern-dark");
+        config.setProperty(BootstrapConfig.KEY_MACHINE_SCREENMODE, "fullscreen");
+        config.setProperty(BootstrapConfig.KEY_MACHINE_UNIQUEINSTANCE, "true");
+        config.setProperty(BootstrapConfig.KEY_MACHINE_RMI_PORT, "3005");
+        config.setProperty(BootstrapConfig.KEY_LOCALIZATION_LOCALE, "pt-CV");
+        config.setProperty(BootstrapConfig.KEY_APP_DEBUG, "true");
+        config.setProperty(BootstrapConfig.KEY_DB_POOL_MIN_SIZE, "3");
+        config.setProperty(BootstrapConfig.KEY_DB_POOL_MAX_SIZE, "20");
+        config.save();
+
+        BootstrapConfiguration reloaded = new BootstrapConfiguration(tempFile);
+        reloaded.load();
+
+        assertEquals("modern-dark", reloaded.getUiTheme());
+        assertEquals("fullscreen", reloaded.getScreenMode());
+        assertTrue(reloaded.isFullscreen());
+        assertTrue(reloaded.isKioskMode());
+        assertFalse(reloaded.isWindowMaximized());
+        assertTrue(reloaded.isUniqueInstance());
+        assertEquals(3005, reloaded.getRmiPort());
+        assertEquals("pt-CV", reloaded.getLocalizationLocale());
+        assertEquals(java.util.Locale.forLanguageTag("pt-CV"), reloaded.getStartupLocale());
+        assertTrue(reloaded.isDebugMode());
+        assertEquals(3, reloaded.getDatabasePoolMinSize(1));
+        assertEquals(20, reloaded.getDatabasePoolMaxSize(5));
     }
 }
+

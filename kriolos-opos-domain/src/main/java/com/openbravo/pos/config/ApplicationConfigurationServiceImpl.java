@@ -17,7 +17,9 @@ package com.openbravo.pos.config;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.app.AppProperties;
-import com.openbravo.app.BootstrapConfiguration;
+import com.openbravo.app.BootstrapAppPropertiesAdapter;
+import com.openbravo.pos.spi.config.BootstrapConfig;
+import com.openbravo.pos.spi.config.BootstrapConfigFactory;
 import com.openbravo.pos.container.BeanFactoryApp;
 import com.openbravo.pos.container.BeanFactoryException;
 import com.openbravo.pos.panels.AppView;
@@ -34,7 +36,7 @@ import java.util.logging.Logger;
  * <p>
  * Manages database persistence via {@link DataLogicConfiguration} and provides
  * low-latency thread-safe cached reads with hierarchical fallback:
- * Station UUID -> Global (0000-0000-0000-0000) -> BootstrapConfiguration.
+ * Station UUID -> Global (0000-0000-0000-0000) -> BootstrapConfig.
  *
  * @author KriolOS POS
  */
@@ -42,10 +44,10 @@ public class ApplicationConfigurationServiceImpl implements ApplicationConfigura
 
     private static final Logger LOGGER = Logger.getLogger(ApplicationConfigurationServiceImpl.class.getName());
 
-    public static final String GLOBAL_POS_ID = BootstrapConfiguration.GLOBAL_POS_ID;
+    public static final String GLOBAL_POS_ID = BootstrapConfig.GLOBAL_POS_ID;
 
     private DataLogicConfiguration dataLogic;
-    private BootstrapConfiguration bootstrapConfig;
+    private BootstrapConfig bootstrapConfig;
     private String stationId;
 
     /**
@@ -56,10 +58,10 @@ public class ApplicationConfigurationServiceImpl implements ApplicationConfigura
     public ApplicationConfigurationServiceImpl() {
     }
 
-    public ApplicationConfigurationServiceImpl(DataLogicConfiguration dataLogic, BootstrapConfiguration bootstrapConfig) {
+    public ApplicationConfigurationServiceImpl(DataLogicConfiguration dataLogic, BootstrapConfig bootstrapConfig) {
         this.dataLogic = dataLogic;
         this.bootstrapConfig = bootstrapConfig;
-        this.stationId = (bootstrapConfig != null) ? bootstrapConfig.getStationId() : "0000-0000-0000-0000";
+        this.stationId = (bootstrapConfig != null) ? bootstrapConfig.getStationId() : GLOBAL_POS_ID;
         try {
             reloadCache();
         } catch (BasicException e) {
@@ -70,12 +72,18 @@ public class ApplicationConfigurationServiceImpl implements ApplicationConfigura
     @Override
     public void init(AppView app) throws BeanFactoryException {
         AppProperties props = app.getProperties();
-        if (props instanceof BootstrapConfiguration bConfig) {
+        if (props instanceof BootstrapAppPropertiesAdapter adapter) {
+            this.bootstrapConfig = adapter.getBootstrapConfig();
+        } else if (props instanceof BootstrapConfig bConfig) {
             this.bootstrapConfig = bConfig;
         } else {
-            this.bootstrapConfig = AppConfig.getInstance();
+            try {
+                this.bootstrapConfig = BootstrapConfigFactory.load();
+            } catch (Exception e) {
+                this.bootstrapConfig = AppConfig.getInstance();
+            }
         }
-        this.stationId = this.bootstrapConfig.getStationId();
+        this.stationId = (this.bootstrapConfig != null) ? this.bootstrapConfig.getStationId() : GLOBAL_POS_ID;
 
         this.dataLogic = new DataLogicConfiguration();
         this.dataLogic.init(app.getSession());

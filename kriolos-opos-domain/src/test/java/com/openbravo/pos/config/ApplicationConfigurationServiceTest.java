@@ -151,6 +151,7 @@ public class ApplicationConfigurationServiceTest {
     @Test
     @DisplayName("Should resolve ApplicationConfigurationService in BeanContainer")
     public void testBeanContainerResolution() {
+        com.openbravo.app.BootstrapAppPropertiesAdapter adapter = new com.openbravo.app.BootstrapAppPropertiesAdapter(bootstrapConfig);
         AppView appViewProxy = (AppView) Proxy.newProxyInstance(
                 AppView.class.getClassLoader(),
                 new Class<?>[]{AppView.class},
@@ -159,7 +160,7 @@ public class ApplicationConfigurationServiceTest {
                         return session;
                     }
                     if ("getProperties".equals(method.getName())) {
-                        return bootstrapConfig;
+                        return adapter;
                     }
                     return null;
                 }
@@ -168,5 +169,18 @@ public class ApplicationConfigurationServiceTest {
         Object bean = BeanContainer.getBean(ApplicationConfigurationService.class, appViewProxy);
         assertNotNull(bean, "BeanContainer should resolve ApplicationConfigurationService");
         assertInstanceOf(ApplicationConfigurationServiceImpl.class, bean);
+    }
+
+    @Test
+    @DisplayName("ApplicationProperties should delegate to ApplicationConfigurationService with fallback")
+    public void testApplicationPropertiesDelegation() throws BasicException {
+        configService.setGlobalProperty("company.address", "123 Main St");
+
+        ApplicationProperties appProps = new ApplicationProperties(configService, bootstrapConfig, tempFile);
+        assertEquals("123 Main St", appProps.getProperty("company.address"));
+        assertEquals("bootstrap-val", appProps.getProperty("bootstrap.only.key"));
+        assertEquals("fallback-default", appProps.getProperty("missing.key", "fallback-default"));
+        assertEquals(bootstrapConfig.getHost(), appProps.getHost());
+        assertEquals(tempFile, appProps.getConfigFile());
     }
 }
