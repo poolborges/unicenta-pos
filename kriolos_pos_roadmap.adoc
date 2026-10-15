@@ -23,11 +23,11 @@ Goal: _Small but Professional POS_
 | `d6739efa`
 | Merged PR #132 — Hardware SPI, BeanContainer, lazy layout, dirty-mode auth, i18n
 
-| `76aed86d`
-| `feat(auth,i18n)`: user list disabled in dirty mode + UI string externalization
+| `cc3a738f`
+| Merged PR #134 — BootstrapConfig SPI & separation from ApplicationConfig (Issue #74)
 
-| `7c4b2548`
-| `fix`: recursive bean resolution + lazy `JPanelTicketSales`
+| `55ee1ff5`
+| Merged PR #135 — TASK 8: Font- & DPI-agnostic component sizing, CI duplicate execution fix, kriolos-opos-ui reactor integration
 |===
 
 These changes are the **platform foundation** for all items below: clean bootstrap, stable bean lifecycle, SPI isolation, and localizable UI.
@@ -669,11 +669,12 @@ ____
 ----
 feature/spi-ui-agnostic            ← ⭐ (COMPLETED: PR #133)
 feature/scripting-spi              ← ⭐ (COMPLETED: PR #133)
-feature/bootstrap-vs-app-config    ← ⭐ (COMPLETED: PR branch ready)
+feature/bootstrap-vs-app-config    ← ⭐ (COMPLETED: PR #134)
+feature/ui-font-agnostic-sizing    ← ⭐ (COMPLETED: PR #135)
          ↓
-feature/ui-font-agnostic-sizing    ← ⭐ TASK 8: Fixes text box clipping & touch sizing immediately
+feature/ui-modal-and-combobox-fixes← 🔧 CURRENT: Modal auto-fit (Ticket List) & ComboBox styling
          ↓
-feature/headless-base-decoupling   ← ⭐ TASK 9: Decouple base from java.desktop, move & modernize UI components
+feature/headless-base-decoupling   ← ⭐ NEXT: TASK 9: Decouple base from java.desktop, move & modernize UI components
          ↓
 feature/quarkus-desktop-config-spi ← ⭐ TASK 11: Pluggable bootstrap config SPI (Quarkus desktop ready)
          ↓
