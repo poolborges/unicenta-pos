@@ -16,19 +16,17 @@
 package com.openbravo.pos.spi.config;
 
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Bootstrap Configuration contract handling initial application startup (pre-database) settings:
  * <ul>
  *   <li>Database connection profiles (URL, username, password, driver, pool settings)</li>
- *   <li>Station identity ({@code pos.uuid})</li>
+ *   <li>Station identity ({@code machine.uuid})</li>
  *   <li>Configuration provider selection ({@code pos.config.provider})</li>
- *   <li>Startup LookAndFeel theme and UI language locale</li>
+ *   <li>Startup LookAndFeel theme</li>
  *   <li>Screen mode (window, maximized, fullscreen, kiosk)</li>
  *   <li>Single-instance / RMI configuration</li>
  *   <li>Host machine identification</li>
- *   <li>Startup number and date formats</li>
  * </ul>
  *
  * <p>Bootstrap is strictly separated from application runtime business configuration (Issue #74).
@@ -40,7 +38,7 @@ import java.util.Locale;
 public interface BootstrapConfig {
 
     // --- Station & Provider Keys ---
-    String KEY_POS_UUID = "pos.uuid";
+    String KEY_MACHINE_UUID = "machine.uuid";
     String KEY_CONFIG_PROVIDER = "pos.config.provider";
     String DEFAULT_PROVIDER = "database";
     String GLOBAL_POS_ID = "0000-0000-0000-0000";
@@ -56,10 +54,8 @@ public interface BootstrapConfig {
     String DEFAULT_RMI_ID = "com.openbravo.pos.instance.Kriolos-POS";
     int DEFAULT_RMI_PORT = 3005;
 
-    // --- UI Look & Feel Theme Keys ---
-    String KEY_POS_UI_THEME = "pos.ui.theme.id";
-    String KEY_UI_THEME = "ui.theme";
-    String KEY_SWING_DEFAULTLAF = "swing.defaultlaf";
+    // --- UI Look & Feel Theme Key ---
+    String KEY_UI_THEME = "pos.ui.theme";
 
     // --- Application Mode Keys ---
     String KEY_APP_DEBUG = "app.debug";
@@ -69,24 +65,6 @@ public interface BootstrapConfig {
     String KEY_DB_POOL_MAX_SIZE = "db.pool.max";
     String KEY_DB_ENGINE = "db.engine";
     String KEY_DB_DRIVER = "db.driver";
-    String KEY_DB_DRIVERLIB = "db.driverlib";
-
-    // --- Localization & Locale Keys ---
-    String KEY_LOCALIZATION_CONFIGURE = "localization.configure";
-    String KEY_LOCALIZATION_LOCALE = "localization.locale";
-    String KEY_USER_LANGUAGE = "user.language";
-    String KEY_USER_COUNTRY = "user.country";
-    String KEY_USER_VARIANT = "user.variant";
-    String KEY_USER_SCRIPT = "user.script";
-
-    // --- Number, Date & Currency Format Keys ---
-    String KEY_FORMAT_INTEGER = "format.integer";
-    String KEY_FORMAT_DOUBLE = "format.double";
-    String KEY_FORMAT_CURRENCY = "format.currency";
-    String KEY_FORMAT_PERCENT = "format.percent";
-    String KEY_FORMAT_DATE = "format.date";
-    String KEY_FORMAT_TIME = "format.time";
-    String KEY_FORMAT_DATETIME = "format.datetime";
 
     /**
      * Reads a configuration property by key.
@@ -138,14 +116,18 @@ public interface BootstrapConfig {
      *
      * @return station UUID string
      */
-    String getStationId();
+    default String getStationId() {
+        return getProperty(KEY_MACHINE_UUID, GLOBAL_POS_ID).trim();
+    }
 
     /**
      * Resolves the post-DB configuration provider name (e.g. "database", "file").
      *
      * @return provider name
      */
-    String getConfigProvider();
+    default String getConfigProvider() {
+        return getProperty(KEY_CONFIG_PROVIDER, DEFAULT_PROVIDER);
+    }
 
     /**
      * Resolves the local machine host name.
@@ -184,19 +166,14 @@ public interface BootstrapConfig {
      * @return UI theme ID or {@code defaultTheme}
      */
     default String getUiTheme(String defaultTheme) {
-        String theme = getProperty(KEY_POS_UI_THEME);
-        if (theme != null && !theme.isBlank()) {
-            return theme.trim();
+        String theme = getProperty(KEY_UI_THEME);
+        if (theme == null || theme.isBlank()) {
+            theme = getProperty("pos.ui.theme.id");
         }
-        String legacy = getProperty(KEY_UI_THEME);
-        if (legacy != null && !legacy.isBlank()) {
-            return legacy.trim();
+        if (theme == null || theme.isBlank()) {
+            theme = getProperty("swing.defaultlaf");
         }
-        String laf = getProperty(KEY_SWING_DEFAULTLAF);
-        if (laf != null && !laf.isBlank()) {
-            return laf.trim();
-        }
-        return defaultTheme;
+        return (theme != null && !theme.isBlank()) ? theme.trim() : defaultTheme;
     }
 
     /**
@@ -309,127 +286,6 @@ public interface BootstrapConfig {
      */
     default String getDatabaseDriver() {
         return getProperty(KEY_DB_DRIVER);
-    }
-
-    /**
-     * Returns the database JDBC driver library JAR path.
-     *
-     * @return driver library path or null
-     */
-    default String getDatabaseDriverLibrary() {
-        return getProperty(KEY_DB_DRIVERLIB);
-    }
-
-    /**
-     * Returns the localization configuration mode ("legacy" or "provider").
-     *
-     * @return localization mode
-     */
-    default String getLocalizationMode() {
-        return getProperty(KEY_LOCALIZATION_CONFIGURE, "legacy");
-    }
-
-    /**
-     * Returns the target BCP 47 localization locale tag (e.g. "pt-CV", "en-US") if configured.
-     *
-     * @return locale tag or null
-     */
-    default String getLocalizationLocale() {
-        return getProperty(KEY_LOCALIZATION_LOCALE);
-    }
-
-    /**
-     * Resolves the startup Locale based on configured localization tag or legacy language/country/variant properties.
-     *
-     * @return resolved startup Locale or {@link Locale#getDefault()}
-     */
-    default Locale getStartupLocale() {
-        String locTag = getLocalizationLocale();
-        if (locTag != null && !locTag.isBlank()) {
-            return Locale.forLanguageTag(locTag.trim());
-        }
-        String lang = getProperty(KEY_USER_LANGUAGE);
-        if (lang != null && !lang.isBlank()) {
-            Locale.Builder b = new Locale.Builder();
-            b.setLanguage(lang.trim());
-            String country = getProperty(KEY_USER_COUNTRY);
-            if (country != null && !country.isBlank()) {
-                b.setRegion(country.trim());
-            }
-            String variant = getProperty(KEY_USER_VARIANT);
-            if (variant != null && !variant.isBlank()) {
-                b.setVariant(variant.trim());
-            }
-            String script = getProperty(KEY_USER_SCRIPT);
-            if (script != null && !script.isBlank()) {
-                b.setScript(script.trim());
-            }
-            return b.build();
-        }
-        return Locale.getDefault();
-    }
-
-    /**
-     * Returns the custom integer format pattern if configured.
-     *
-     * @return integer pattern or null
-     */
-    default String getIntegerPattern() {
-        return getProperty(KEY_FORMAT_INTEGER);
-    }
-
-    /**
-     * Returns the custom double / decimal format pattern if configured.
-     *
-     * @return double pattern or null
-     */
-    default String getDoublePattern() {
-        return getProperty(KEY_FORMAT_DOUBLE);
-    }
-
-    /**
-     * Returns the custom currency format pattern if configured.
-     *
-     * @return currency pattern or null
-     */
-    default String getCurrencyPattern() {
-        return getProperty(KEY_FORMAT_CURRENCY);
-    }
-
-    /**
-     * Returns the custom percentage format pattern if configured.
-     *
-     * @return percent pattern or null
-     */
-    default String getPercentPattern() {
-        return getProperty(KEY_FORMAT_PERCENT);
-    }
-
-    /**
-     * Returns the custom date format pattern if configured.
-     *
-     * @return date pattern or null
-     */
-    default String getDatePattern() {
-        return getProperty(KEY_FORMAT_DATE);
-    }
-
-    /**
-     * Returns the custom time format pattern if configured.
-     *
-     * @return time pattern or null
-     */
-    default String getTimePattern() {
-        return getProperty(KEY_FORMAT_TIME);
-    }
-
-    /**
-     * Returns the custom date-time format pattern if configured.
-     *
-     * @return date-time pattern or null
-     */
-    default String getDateTimePattern() {
-        return getProperty(KEY_FORMAT_DATETIME);
     }
 
     /**

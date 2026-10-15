@@ -100,11 +100,9 @@ public class BootstrapConfigurationTest {
     @Test
     public void testTypedBootstrapAccessors() throws IOException {
         BootstrapConfiguration config = new BootstrapConfiguration(tempFile);
-        config.setProperty(BootstrapConfig.KEY_POS_UI_THEME, "modern-dark");
+        config.setProperty(BootstrapConfig.KEY_UI_THEME, "modern-dark");
         config.setProperty(BootstrapConfig.KEY_MACHINE_SCREENMODE, "fullscreen");
-        config.setProperty(BootstrapConfig.KEY_MACHINE_UNIQUEINSTANCE, "true");
         config.setProperty(BootstrapConfig.KEY_MACHINE_RMI_PORT, "3005");
-        config.setProperty(BootstrapConfig.KEY_LOCALIZATION_LOCALE, "pt-CV");
         config.setProperty(BootstrapConfig.KEY_APP_DEBUG, "true");
         config.setProperty(BootstrapConfig.KEY_DB_POOL_MIN_SIZE, "3");
         config.setProperty(BootstrapConfig.KEY_DB_POOL_MAX_SIZE, "20");
@@ -120,8 +118,6 @@ public class BootstrapConfigurationTest {
         assertFalse(reloaded.isWindowMaximized());
         assertTrue(reloaded.isUniqueInstance());
         assertEquals(3005, reloaded.getRmiPort());
-        assertEquals("pt-CV", reloaded.getLocalizationLocale());
-        assertEquals(java.util.Locale.forLanguageTag("pt-CV"), reloaded.getStartupLocale());
         assertTrue(reloaded.isDebugMode());
         assertEquals(3, reloaded.getDatabasePoolMinSize(1));
         assertEquals(20, reloaded.getDatabasePoolMaxSize(5));

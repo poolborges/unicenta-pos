@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  * Bootstrap Configuration handling pre-database startup settings:
  * <ul>
  *   <li>Database connection profiles (URL, user, password, driver)</li>
- *   <li>Station identity ({@code pos.uuid})</li>
+ *   <li>Station identity ({@code machine.uuid})</li>
  *   <li>Configuration provider selection ({@code pos.config.provider})</li>
  *   <li>Startup LookAndFeel theme and UI language locale</li>
  *   <li>Physical file path resolution (XDG compliant)</li>
@@ -55,7 +55,7 @@ public class BootstrapConfiguration implements BootstrapConfig {
 
     private static final Logger LOGGER = Logger.getLogger(BootstrapConfiguration.class.getName());
 
-    public static final String KEY_POS_UUID = "pos.uuid";
+    public static final String KEY_MACHINE_UUID = "machine.uuid";
     public static final String KEY_CONFIG_PROVIDER = "pos.config.provider";
     public static final String DEFAULT_PROVIDER = "database";
     public static final String GLOBAL_POS_ID = "0000-0000-0000-0000";
@@ -184,14 +184,14 @@ public class BootstrapConfiguration implements BootstrapConfig {
      * Auto-generates a UUID and persists to the bootstrap file if not already present.
      */
     public synchronized String getStationId() {
-        String uuid = getProperty(KEY_POS_UUID);
+        String uuid = getProperty(KEY_MACHINE_UUID);
         if (uuid == null || uuid.isBlank()) {
             uuid = UUID.randomUUID().toString();
-            setProperty(KEY_POS_UUID, uuid);
+            setProperty(KEY_MACHINE_UUID, uuid);
             try {
                 save();
             } catch (IOException e) {
-                LOGGER.log(Level.WARNING, "Could not persist generated station pos.uuid: " + e.getMessage());
+                LOGGER.log(Level.WARNING, "Could not persist generated station machine.uuid: " + e.getMessage());
             }
         }
         return uuid.trim();
@@ -273,10 +273,11 @@ public class BootstrapConfiguration implements BootstrapConfig {
             return null;
         }
 
-        String name = getProperty("db.name", "DB 0 ()");
-        String url = getProperty("db.URL", "jdbc:hsqldb:file:" + Paths.get(getAppDataDirectory(), "kriolopos.hsqldb").toString());
-        String user = getProperty("db.user", "kriolopos");
-        String password = getProperty("db.password", "kriolopos");
+        String name = getProperty("db.name", "DB 0 (SQLite)");
+        String defaultUrl = "jdbc:sqlite:" + Paths.get(getAppDataDirectory(), "kriolopos.db").toString().replace('\\', '/');
+        String url = getProperty("db.URL", defaultUrl);
+        String user = getProperty("db.user", "");
+        String password = getProperty("db.password", "");
         String decryptPass = decryptPassword(user, password);
 
         return new BootstrapConfig.DatabaseConfig(name, url, user, decryptPass);
@@ -387,7 +388,7 @@ public class BootstrapConfiguration implements BootstrapConfig {
                 || key.equals("db.schema") || key.equals("db.options");
     }
 
-    public String decryptPassword(String username, String passEncrypted) {
+    public static String decryptPassword(String username, String passEncrypted) {
         String sDBPassword = passEncrypted;
         if (username != null && passEncrypted != null && passEncrypted.startsWith("crypt:")) {
             com.openbravo.util.AltEncrypter cypher = new com.openbravo.util.AltEncrypter("cypherkey" + username);

@@ -140,7 +140,7 @@ public class ApplicationShell extends JPanel implements AppView {
 
     public void initApp() throws BasicException {
 
-        Locale startupLocale = (bootstrapConfig != null) ? bootstrapConfig.getStartupLocale() : Locale.getDefault();
+        Locale startupLocale = Locale.getDefault();
         applyComponentOrientation(ComponentOrientation.getOrientation(startupLocale));
 
         showLoginPanel();

@@ -66,6 +66,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <!-- flatlaf config -->
         <flatlaf.version>2.6</flatlaf.version>
 
+        <!-- MicroProfile Config & SmallRye Config -->
+        <microprofile-config.version>3.0.3</microprofile-config.version>
+        <smallrye-config.version>3.4.4</smallrye-config.version>
+
     </properties>
 
     <organization>
@@ -292,6 +296,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <artifactId>auto-service</artifactId>
                 <version>1.1.1</version>
                 <scope>provided</scope>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.eclipse.microprofile.config</groupId>
+                <artifactId>microprofile-config-api</artifactId>
+                <version>${microprofile-config.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.smallrye.config</groupId>
+                <artifactId>smallrye-config</artifactId>
+                <version>${smallrye-config.version}</version>
             </dependency>
             
             <dependency>

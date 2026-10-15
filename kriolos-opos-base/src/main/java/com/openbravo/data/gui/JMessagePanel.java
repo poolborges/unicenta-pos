@@ -169,13 +169,36 @@ public class JMessagePanel extends JPanel {
         return optionChosed;
     }
 
+    @Override
+    public Dimension getPreferredSize() {
+        Dimension pref = super.getPreferredSize();
+        int minW = 560;
+        int minH = (jscrException != null && jscrException.isVisible()) ? 420 : 230;
+        return new Dimension(Math.max(pref.width, minW), Math.max(pref.height, minH));
+    }
+
+    @Override
+    public Dimension getMinimumSize() {
+        int minH = (jscrException != null && jscrException.isVisible()) ? 380 : 200;
+        return new Dimension(500, minH);
+    }
+
     private void handleToggleExceptionDetails() {
         jcmdMore.setEnabled(true);
-        jscrException.setVisible(!jscrException.isVisible());
+        boolean show = !jscrException.isVisible();
+        jscrException.setVisible(show);
+
+        Dimension targetSize = getPreferredSize();
+        setPreferredSize(targetSize);
 
         Window w = SwingUtilities.getWindowAncestor(this);
         if (w != null) {
+            if (w instanceof JDialog) {
+                ((JDialog) w).setPreferredSize(targetSize);
+                ((JDialog) w).setMinimumSize(new Dimension(500, show ? 380 : 200));
+            }
             w.pack();
+            w.setLocationRelativeTo(w.getOwner());
             w.revalidate();
             w.repaint();
         } else {
@@ -216,6 +239,7 @@ public class JMessagePanel extends JPanel {
 
         PosUIModal modal = PosUIModal.create(parent, panel)
                 .setTitle(panel.getTitle())
+                .setPreferredSize(panel.getPreferredSize())
                 .setModal(true)
                 .setResizable(false);
 
@@ -284,6 +308,8 @@ public class JMessagePanel extends JPanel {
         // Configuração do Content Card Principal
         this.setBackground(spectrumBg);
         this.setLayout(new BorderLayout(0, 16));
+        this.setPreferredSize(new Dimension(560, 230));
+        this.setMinimumSize(new Dimension(500, 200));
         this.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(spectrumBorder, 1, false),
             new javax.swing.border.EmptyBorder(20, 20, 20, 20)
@@ -355,22 +381,22 @@ public class JMessagePanel extends JPanel {
         jlblMessage.setEditable(false);
         jlblMessage.setFocusable(false);
         jlblMessage.setOpaque(false);
+        jlblMessage.setBackground(new Color(0, 0, 0, 0));
         jlblMessage.setLineWrap(true);
         jlblMessage.setWrapStyleWord(true);
-        jlblMessage.setBorder(new javax.swing.border.EmptyBorder(4, 4, 4, 4));
+        jlblMessage.setColumns(35);
+        jlblMessage.setBorder(BorderFactory.createEmptyBorder(6, 4, 6, 4));
+        jlblMessage.putClientProperty("FlatLaf.style", "background: null; border: 0,0,0,0");
         centerContainer.add(jlblMessage, BorderLayout.NORTH);
 
         jtxtException = new JTextArea();
         jtxtException.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-        //jtxtException.setBackground(new Color(245, 240, 235));
-        //jtxtException.setForeground(new Color(40, 40, 40));
         jtxtException.setEditable(false);
         jtxtException.setLineWrap(true);
         jtxtException.setWrapStyleWord(true);
 
         jscrException = new JScrollPane(jtxtException);
-        //jscrException.setBorder(BorderFactory.createLineBorder(new Color(210, 200, 190), 1));
-        jscrException.setPreferredSize(new Dimension(450, 150));
+        jscrException.setPreferredSize(new Dimension(500, 160));
         centerContainer.add(jscrException, BorderLayout.CENTER);
 
         this.add(centerContainer, BorderLayout.CENTER);
