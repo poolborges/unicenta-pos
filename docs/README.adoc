@@ -44,6 +44,15 @@ mvn generate-resources -f docs/pom.xml -P asciidoctor
 
 NOTE: Each module under `modules/` contains a master `.adoc` file (`guide-devel/guide-devel.adoc`, `guide-user/guide-user.adoc`, `guide-comercial/guide-comercial.adoc`, `guide-migration/guide-migration.adoc`, `notes/notes.adoc`) used by the `asciidoctor` profile to compile one comprehensive PDF per module into `docs/target/generated-docs/pdf/`.
 
+=== Publishing to GitHub Pages
+
+The documentation site is automatically built and published to the `docs` branch on every push to `main` via the GitHub Actions workflow `.github/workflows/publish-docs.yml`.
+
+To enable GitHub Pages for the repository:
+1. Navigate to **Settings** -> **Pages** in the GitHub repository.
+2. Under **Build and deployment**, select **Deploy from a branch**.
+3. Choose the `docs` branch and `/ (root)` folder, then click **Save**.
+
 == References
 
 * https://docs.antora.org/[Antora Documentation]
