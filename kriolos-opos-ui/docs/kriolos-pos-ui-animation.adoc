@@ -1,0 +1,100 @@
+= KriolOS POS — Animation & Micro-Interactions (`com.openbravo.ui.animation`)
+:author: KriolOS
+:email: dev@kriolos.org
+:revnumber: 1.0.0
+:toc: left
+:toclevels: 3
+:icons: font
+:source-highlighter: rouge
+:experimental:
+
+== 1. Package Overview & Mission
+
+The `com.openbravo.ui.animation` package delivers a 60 FPS hardware-timed animation and micro-interaction suite tailored for high-volume Point of Sale (POS) terminals.
+
+In POS environments, cashier speed and cognitive clarity are paramount. Physical touch feedback on capacitive screens, clear validation error signals, rolling monetary counters, and smooth view transitions prevent duplicate orders, clarify cashier state, and provide a premium user experience.
+
+=== Core Architecture Principles
+* **Timing Framework 7.4.3 Integration**: Synchronized with native Swing EDT repaint loops via `SwingTimerTimingSource` without CPU starvation or thread deadlocks.
+* **100% Self-Contained**: Encapsulates all color contrast, ITU-R BT.709 luminance calculations, alpha blending, Bézier mathematics, and rendering hints within `AnimationUtils`. No external dependencies on other UI modules.
+* **Look-and-Feel (LAF) Agnostic**: Zero hardcoded theme assumptions. Dynamically queries `UIManager` and adapts to light or dark themes at runtime.
+* **Zero Magic Numbers**: All durations, alphas, radiuses, and offsets are defined as named `public static final` constants.
+
+'''
+
+== 2. Mathematical Motion Curves & Easing
+
+Abrupt linear movements feel artificial. KriolOS animations use physical Cubic Bézier splines and organic acceleration curves:
+
+[cols="2,2,4", options="header"]
+|===
+| Interpolator Preset | Formula / Curve | Typical POS Usage
+| `NativeAnimator.FAST_OUT_SLOW_IN` | Cubic Spline: `(0.4, 0.0, 0.2, 1.0)` | Material Design standard. Used for touch ripples, view slides, and fly-to-cart badges.
+| `NativeAnimator.EASE_OUT` | Cubic Spline: `(0.0, 0.0, 0.58, 1.0)` | Decelerating curve. Ideal for key-press flashes and toast appearances.
+| `NativeAnimator.ANTICIPATE` | Tension Polynomial: `t² * ((s+1)*t - s)` | Wind-up before movement. Great for returning items and drawer retracts.
+| `NativeAnimator.OVERSHOOT` | Tension Polynomial: `(t-1)² * ((s+1)*(t-1) + s) + 1` | Bouncy overshoot beyond destination. Ideal for badge notifications.
+|===
+
+'''
+
+== 3. Component & Effect Catalog
+
+=== 3.1. AnimationUtils
+The mathematical foundation of the package:
+* `getLuminance(Color)`: ITU-R BT.709 perceived luminance calculation `(0.2126*R + 0.7152*G + 0.0722*B) / 255.0`.
+* `isDark(Color)`: Evaluates if background luminance is `< 0.5`.
+* `getContrastingColor(Color)`: Returns white or dark slate based on background darkness.
+* `blend(Color, Color, float)`: Linear RGB & Alpha color interpolation.
+* `evaluateQuadraticBezier(Point, Point, Point, float)`: 2D parabolic curve computation.
+* `applyHighQualityRenderingHints(Graphics2D)`: Enables subpixel text and shape antialiasing.
+
+=== 3.2. NativeAnimator
+Central facade over Timing Framework:
+* Supports standard cubic splines and custom Bézier control points.
+* Supports functional lambdas via `@FunctionalInterface TimingCallback`.
+* Supports infinite continuous looping via `NativeAnimator.createLoop(...)`.
+
+=== 3.3. Tactical Feedback: KeyClickEffect & ShakeEffect
+* **`KeyClickEffect.play(Component)`**: 150ms tactile flash highlight adapting to light/dark themes.
+* **`ShakeEffect.play(Component)`**: Damped horizontal sine wave oscillation (4 cycles over 380ms) with temporary error border outline for invalid inputs.
+
+=== 3.4. Touch Micro-Interactions
+* **`RippleEffect` & `RippleButton`**: Material radial touch wave expanding outward from the exact coordinate of the touch or mouse press.
+* **`RollingNumberLabel`**: Eased numeric counter for real-time ticket totals, cash change, and loyalty points (`lbl.rollTo(1500.0)`).
+* **`SlidePanel`**: View transition slider container supporting `LEFT`, `RIGHT`, `UP`, and `DOWN` animated view sliding.
+* **`PulseEffect`**: Breathing sinusoidal glow halo alerting the operator to urgent actions ("PAY SALE", pending kitchen orders).
+* **`ShimmerPanel`**: Skeleton placeholder loading screen with sweeping linear gradient light wave.
+* **`FlyEffect`**: Parabolic Bézier trajectory flying product badge chips from catalog cards directly into the cart badge.
+
+'''
+
+== 4. Usage Recipes
+
+=== Material Touch Button with Ripple
+[source,java]
+----
+RippleButton btnPay = new RippleButton("Cash Payment (F1)");
+btnPay.setBackground(new Color(41, 128, 185));
+btnPay.setForeground(Color.WHITE);
+btnPay.setCornerRadius(8);
+btnPay.addActionListener(e -> processSale());
+----
+
+=== Real-time Rolling Subtotal
+[source,java]
+----
+RollingNumberLabel lblSubtotal = new RollingNumberLabel(0.00, "CVE ", "");
+lblSubtotal.setFont(new Font("Monospaced", Font.BOLD, 26));
+
+// Smoothly rolls from 0 to 2,450 CVE over 500ms
+lblSubtotal.rollTo(2450.00);
+----
+
+=== Fly Product to Cart Badge
+[source,java]
+----
+FlyEffect.fly(btnProductCard, btnCartBadge, "Cachupa", () -> {
+    cartItemCount++;
+    btnCartBadge.setText("Cart (" + cartItemCount + ")");
+});
+----

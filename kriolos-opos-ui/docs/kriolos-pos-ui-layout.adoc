@@ -1,0 +1,92 @@
+= KriolOS POS — Flexbox & Dynamic Wrap Layouts (`com.openbravo.ui.laf`)
+:author: KriolOS
+:email: dev@kriolos.org
+:revnumber: 1.0.0
+:toc: left
+:toclevels: 3
+:icons: font
+:source-highlighter: rouge
+:experimental:
+
+== 1. Package Overview & Mission
+
+The `com.openbravo.ui.laf` package brings modern web-standard CSS Flexbox mechanics and responsive wrapping to Swing desktop applications.
+
+Standard Swing layout managers (like `BorderLayout`, `FlowLayout`, or `GridBagLayout`) often struggle with responsive touch interfaces:
+* `FlowLayout` does not dynamically recalculate the height of wrapped rows inside a `JScrollPane`, leading to clipped items or artificial horizontal scrollbars.
+* `GridBagLayout` is notoriously verbose and difficult to reason about for simple flexible rows and columns.
+
+`FlexLayout` and `WrapLayout` resolve these limitations cleanly with intuitive, web-standard semantics.
+
+'''
+
+== 2. Core Layout Managers
+
+=== 2.1. FlexLayout
+A pure Java Swing implementation replicating the core mechanics of the CSS Flexbox specification:
+
+* **Direction**:
+  - `FlexLayout.Direction.ROW` (Horizontal distribution)
+  - `FlexLayout.Direction.COLUMN` (Vertical distribution)
+* **Justify Content (Main Axis)**:
+  - `START`, `CENTER`, `END`
+* **Align Items (Cross Axis)**:
+  - `START`, `CENTER`, `END`, `STRETCH`
+* **Wrap Modes**:
+  - `NO_WRAP`, `WRAP`
+* **Gap Support**: Direct inter-item pixel spacing (`gap(int)`).
+* **Constraints**:
+  - `grow: 1.0`, `grow: 2.0` (Proportional space expansion)
+  - `shrink: 1.0` (Space contraction)
+  - `basis: 50%`, `basis: 120px` (Base component size)
+
+[source,java]
+----
+JPanel flexPanel = new JPanel();
+flexPanel.setLayout(FlexLayout.builder()
+        .direction(FlexLayout.Direction.ROW)
+        .justifyContent(FlexLayout.JustifyContent.START)
+        .alignItems(FlexLayout.AlignItems.CENTER)
+        .gap(10)
+        .build());
+
+// Proportional growth: middle item occupies twice the width
+flexPanel.add(btnLeft, "grow: 1.0");
+flexPanel.add(txtSearch, "grow: 2.0");
+flexPanel.add(btnRight, "grow: 1.0");
+----
+
+=== 2.2. FlexFactory
+Provides convenient, fluent one-line construction of common Flexbox panels:
+
+[source,java]
+----
+// Flex Row
+JPanel row = FlexFactory.createRow(FlexLayout.JustifyContent.START, FlexLayout.AlignItems.CENTER, 8);
+
+// Flex Row with Wrapping
+JPanel wrapRow = FlexFactory.createRowWrap(FlexLayout.JustifyContent.CENTER, FlexLayout.AlignItems.START, 12);
+
+// Flex Column
+JPanel column = FlexFactory.createColumn(FlexLayout.JustifyContent.START, FlexLayout.AlignItems.STRETCH, 10);
+----
+
+=== 2.3. WrapLayout (Responsive ScrollPanes)
+An extension of `FlowLayout` specifically designed for product catalogs, touch keypad buttons, and responsive item card grids inside a `JScrollPane`:
+
+* **Dynamic Height Computation**: Automatically calculates the required preferred vertical height based on current container width and wrapped rows.
+* **No Artificial Horizontal Scrolling**: Eliminates horizontal scrollbars in catalogs, automatically flowing items onto new lines as window width changes.
+
+[source,java]
+----
+JPanel catalogGrid = new JPanel(new WrapLayout(FlowLayout.LEFT, 10, 10));
+catalogGrid.setBackground(Color.WHITE);
+
+for (Product item : productCatalog) {
+    catalogGrid.add(createProductCard(item));
+}
+
+// JScrollPane will now correctly track catalog height without clipping
+JScrollPane scrollCatalog = new JScrollPane(catalogGrid);
+scrollCatalog.setBorder(BorderFactory.createEmptyBorder());
+----

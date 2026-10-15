@@ -1,0 +1,111 @@
+= KriolOS POS — Two-Way Data Binding Suite (`com.openbravo.ui.data.binding`)
+:author: KriolOS
+:email: dev@kriolos.org
+:revnumber: 1.0.0
+:toc: left
+:toclevels: 3
+:icons: font
+:source-highlighter: rouge
+:experimental:
+
+== 1. Package Overview & Architecture
+
+The `com.openbravo.ui.data.binding` package provides a robust, type-safe data-binding and validation engine for Java Swing, replicating the proven ergonomics of Vaadin Flow’s `Binder` API.
+
+In traditional Swing applications, transferring data between forms and business entities (beans) requires tedious manual boilerplate: reading strings, parsing numbers, handling nulls, and setting text back upon error. `SwingBinder` automates this entire pipeline with fluent type conversion, asynchronous dirty tracking, and declarative validation rules.
+
+=== Architectural Highlights
+* **Type-Safe Method References**: Direct binding using Java 8+ getters (`Bean::getProperty`) and setters (`Bean::setProperty`).
+* **Bidirectional Pipeline**: Presentation (UI) to Model (Bean) and Model to Presentation.
+* **Non-Blocking Dirty Tracking**: Detects when form state diverges from the committed bean.
+* **Component-Agnostic Extensibility**: Tailored builders for all standard Swing inputs.
+
+'''
+
+== 2. Core Classes & Contracts
+
+=== 2.1. SwingBinder<B>
+The central orchestrator managing all active bindings for a backend bean of type `B`.
+
+* `forField(JTextField)`: Creates a `BindingBuilder` with string conversion.
+* `forField(JCheckBox)`: Creates a `CheckBoxBuilder` for boolean flags.
+* `forField(JComboBox<T>)`: Creates a `ComboBoxBuilder` for select lists.
+* `forField(JFormattedTextField)`: Creates a masked input builder.
+* `forField(JSlider)`: Creates a slider integer builder.
+* `forField(JSpinner)`: Creates a numeric spinner builder.
+* `forField(JTextArea)`: Creates a multi-line text builder.
+* `forRadioGroup()`: Creates a `RadioButtonGroupBuilder` for mutually exclusive options.
+* `readBean(B)`: Populates UI components from bean properties.
+* `writeBean(B)`: Validates and commits UI buffer into bean properties.
+* `discard()`: Reverts form components back to the bean state.
+* `clear()`: Wipes all form component values.
+* `isDirty()`: Returns `true` if form values differ from the bean.
+* `isValid()`: Returns `true` if all registered validation rules pass.
+
+=== 2.2. Converters
+Transforms data between presentation representation (e.g. `String`) and backend domain model types:
+
+[cols="2,2,3", options="header"]
+|===
+| Converter Class | Presentation Type | Model Type
+| `Converters.StringToInteger` | `String` | `Integer`
+| `Converters.StringToDouble` | `String` | `Double`
+| `Converters.StringToFloat` | `String` | `Float`
+| `Converters.StringToLong` | `String` | `Long`
+| `Converters.StringToBigDecimal` | `String` | `BigDecimal`
+|===
+
+=== 2.3. Validators
+Functional rule validation executing before bean mutation:
+* `Validator<T>`: Interface with `boolean isValid(T value)` and `String getMessage()`.
+* `EmailValidator`: Validates RFC-compliant email formats.
+* Custom inline lambdas: `field.withValidator(val -> val > 0, "Must be positive")`.
+* Mandatory checks: `field.asRequired("Field cannot be empty")`.
+
+'''
+
+== 3. Complete Integration Example
+
+[source,java]
+----
+// 1. Domain Bean
+public class OperatorProfile {
+    private String name;
+    private String email;
+    private BigDecimal creditLimit;
+    private boolean active;
+    // Getters and Setters...
+}
+
+// 2. Setup SwingBinder
+OperatorProfile profile = new OperatorProfile();
+SwingBinder<OperatorProfile> binder = new SwingBinder<>(profile);
+
+// 3. Bind UI Components with Validation & Conversion
+binder.forField(txtName)
+        .asRequired("Operator Name cannot be empty")
+        .bind(OperatorProfile::getName, OperatorProfile::setName);
+
+binder.forField(txtEmail)
+        .withValidator(new EmailValidator("Invalid corporate email format"))
+        .bind(OperatorProfile::getEmail, OperatorProfile::setEmail);
+
+binder.forField(txtCreditLimit)
+        .withConverter(new Converters.StringToBigDecimal())
+        .withValidator(amount -> amount.compareTo(BigDecimal.ZERO) >= 0, "Credit limit must be positive")
+        .bind(OperatorProfile::getCreditLimit, OperatorProfile::setCreditLimit);
+
+binder.forField(chkActive)
+        .bind(OperatorProfile::isActive, OperatorProfile::setActive);
+
+// 4. Save Button Action
+btnSave.addActionListener(e -> {
+    try {
+        binder.writeBean(profile);
+        ToastManager.show(frame, "Saved successfully!", ToastManager.SUCCESS);
+    } catch (SwingBinder.ValidationException ex) {
+        ShakeEffect.play(txtName);
+        ToastManager.show(frame, "Validation Error: " + ex.getMessage(), ToastManager.ERROR);
+    }
+});
+----
