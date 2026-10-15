@@ -617,7 +617,113 @@ The custom JRE bundled with the POS installer strips unnecessary debug symbols a
 
 ---
 
-== 10. Step-by-Step Implementation Roadmap
+== 10. Reflection Registration Policy (Mandatory Rule)
+
+[IMPORTANT]
+====
+**Absolute Rule — No Configuration Properties for Reflection** +
+Every class, field, method, or constructor that requires runtime or GraalVM native-image reflection registration **MUST** be declared programmatically in a single, canonical Java source file.
+Using `reflect-config.json`, `resources-config.json`, or any other JSON/YAML property configuration file for reflection registration is **strictly prohibited** in this project.
+====
+
+=== 10.1 Rationale
+
+Reflection registrations scattered across multiple configuration files:
+
+* **Fragment the contract** — there is no single source of truth; changes require hunting across `src/main/resources/META-INF/native-image/`.
+* **Are invisible to the compiler** — typos in class names in JSON silently fail at native-image link time, not at build time.
+* **Break refactoring** — IDE rename/move refactorings do not update JSON entries, creating stale registrations that become dead weight or, worse, hidden security surface.
+* **Oppose ArC build-time CDI** — ArC already performs complete build-time analysis; adding JSON side-channels defeats the purpose.
+
+=== 10.2 Canonical Registration Class
+
+All reflection registrations live in **one** class per module:
+
+[source,java]
+----
+package io.github.kriolos.opos.app.native_;
+
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
+/**
+ * SINGLE SOURCE OF TRUTH for all GraalVM native-image reflection registrations
+ * in the kriolos-opos-app module.
+ *
+ * RULE: No reflect-config.json or resources-config.json files are allowed.
+ *       Every reflection need MUST be declared here as code.
+ *
+ * HOW TO ADD A NEW ENTRY:
+ *   1. Add the class to the @RegisterForReflection targets array below.
+ *   2. Commit this file — code review enforces the single-place rule.
+ */
+@RegisterForReflection(
+    targets = {
+        // --- Receipt / Ticket model (used by Qute Engine API type-safe bindings) ---
+        com.openbravo.data.loader.TableDef.class,
+        com.openbravo.pos.ticket.TicketInfo.class,
+        com.openbravo.pos.ticket.TicketLineInfo.class,
+        com.openbravo.pos.ticket.TaxInfo.class,
+
+        // --- Hardware SPI implementations discovered via ServiceLoader ---
+        io.github.kriolos.opos.hardware.printer.EscPosReceiptPrinter.class,
+        io.github.kriolos.opos.hardware.scale.NciScale.class,
+
+        // --- FlatLaf / Look and Feel internals needed by Swing native rendering ---
+        com.formdev.flatlaf.FlatLightLaf.class,
+        com.formdev.flatlaf.FlatDarkLaf.class,
+
+        // --- JasperReports compiled report classes (generated at build time) ---
+        // Add each net.sf.jasperreports.engine.fill.JR* class explicitly here.
+    },
+    // Include fields and methods so CDI producers and Qute binders can introspect them
+    fields = true,
+    methods = true
+)
+public class OposReflectionRegistrations {
+    // This class body intentionally left empty.
+    // Its sole purpose is to carry the @RegisterForReflection annotation.
+}
+----
+
+[NOTE]
+====
+Quarkus processes `@RegisterForReflection` at **build time** via the ArC annotation processor.
+The class is not instantiated at runtime; it is a pure metadata carrier.
+====
+
+=== 10.3 Module-Level Convention
+
+Each Quarkus-enabled module that needs reflection declares its own `*ReflectionRegistrations` class in a `native_` sub-package:
+
+[cols="2,3",options="header"]
+|===
+| Module | Registration Class
+
+| `kriolos-opos-app`
+| `io.github.kriolos.opos.app.native_.OposReflectionRegistrations`
+
+| `kriolos-opos-hardware`
+| `io.github.kriolos.opos.hardware.native_.HardwareReflectionRegistrations`
+
+| `kriolos-opos-scripting-quickjs`
+| `io.github.kriolos.opos.scripting.quickjs.native_.QuickJsReflectionRegistrations`
+
+| `kriolos-opos-scripting-qute`
+| `io.github.kriolos.opos.scripting.qute.native_.QuteReflectionRegistrations`
+|===
+
+=== 10.4 Code Review Gate
+
+The following rule **must** be enforced in every Pull Request review checklist:
+
+* [ ] No `reflect-config.json` file was added or modified.
+* [ ] No `resources-config.json` file was added or modified.
+* [ ] Any new reflection need was added to the appropriate `*ReflectionRegistrations.java` class.
+* [ ] The `targets` array entry references a fully-qualified, import-resolvable class — not a string literal.
+
+---
+
+== 11. Step-by-Step Implementation Roadmap
 
 ```
 Phase 1: CDI Prep & MicroProfile Config (Completed ✅)
@@ -655,7 +761,7 @@ Phase 6: JPackage Multi-Platform Release Automation
 
 ---
 
-== 11. Verification & Acceptance Criteria
+== 12. Verification & Acceptance Criteria
 
 1. **Cold Boot Benchmark**: Cold start to visible Swing login screen under 1.5 seconds on standard hardware.
 2. **Memory Footprint**: Base memory footprint (resident set size) under 180MB at idle.
@@ -665,3 +771,4 @@ Phase 6: JPackage Multi-Platform Release Automation
 6. **Hardware Compatibility**: Serial receipt printing, cash drawer kick, and barcode scan events function identically to legacy execution.
 7. **Offline Resilience**: Standalone SQLite database boots seamlessly without network or external services.
 8. **Installer Validation**: Standalone native installers (DEB, MSI, DMG) install cleanly without requiring an external Java Runtime Environment (JRE).
+9. **Reflection Policy Compliance**: Zero `reflect-config.json` or `resources-config.json` files present in the repository. All GraalVM reflection registrations are declared in the canonical `*ReflectionRegistrations.java` class of each module.
