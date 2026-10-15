@@ -20,6 +20,7 @@ import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.app.AppLocal;
 import com.openbravo.ui.components.ButtonSize;
 import com.openbravo.ui.components.ButtonFactory;
+import com.openbravo.ui.icon.IconKey;
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
@@ -100,6 +101,7 @@ public class ModernTwoActionPane extends JPanel {
 
         customerButton = ButtonFactory.createActionButton(
                 AppLocal.getIntString("label.customer") + ": " + AppLocal.getIntString("label.guest"),
+                IconKey.CUSTOMER,
                 touchSize,
                 KeyEvent.VK_C,
                 AppLocal.getIntString("label.customer"),
@@ -112,6 +114,7 @@ public class ModernTwoActionPane extends JPanel {
 
         parkedOrdersButton = ButtonFactory.createActionButton(
                 "0",
+                IconKey.PARKED,
                 touchSize,
                 KeyEvent.VK_U,
                 AppLocal.getIntString("button.parked.tooltip"),
@@ -129,6 +132,7 @@ public class ModernTwoActionPane extends JPanel {
 
         btnCashIn = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.cashin"),
+                IconKey.CASH_IN,
                 touchSize,
                 KeyEvent.VK_E,
                 AppLocal.getIntString("button.cashin.tooltip"),
@@ -140,6 +144,7 @@ public class ModernTwoActionPane extends JPanel {
 
         btnCashOut = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.cashout"),
+                IconKey.CASH_OUT,
                 touchSize,
                 KeyEvent.VK_S,
                 AppLocal.getIntString("button.cashout.tooltip"),
@@ -179,6 +184,7 @@ public class ModernTwoActionPane extends JPanel {
 
         btnQtyMinus = ButtonFactory.createActionButton(
                 "-1",
+                IconKey.MINUS,
                 touchSize,
                 KeyEvent.VK_MINUS,
                 AppLocal.getIntString("button.qtyminus.tooltip"),
@@ -190,6 +196,7 @@ public class ModernTwoActionPane extends JPanel {
 
         btnQtyPlus = ButtonFactory.createActionButton(
                 "+1",
+                IconKey.PLUS,
                 touchSize,
                 KeyEvent.VK_PLUS,
                 AppLocal.getIntString("button.qtyplus.tooltip"),
@@ -201,6 +208,7 @@ public class ModernTwoActionPane extends JPanel {
 
         btnEditLine = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.edit"),
+                IconKey.EDIT,
                 touchSize,
                 KeyEvent.VK_D,
                 AppLocal.getIntString("button.editline.tooltip"),
@@ -233,6 +241,7 @@ public class ModernTwoActionPane extends JPanel {
 
         btnClear = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.clean"),
+                IconKey.CLEAR,
                 touchSize,
                 KeyEvent.VK_L,
                 AppLocal.getIntString("button.clear.tooltip"),
@@ -244,6 +253,7 @@ public class ModernTwoActionPane extends JPanel {
 
         btnHold = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.hold"),
+                IconKey.HOLD,
                 touchSize,
                 KeyEvent.VK_H,
                 AppLocal.getIntString("button.hold.tooltip"),
@@ -255,6 +265,7 @@ public class ModernTwoActionPane extends JPanel {
 
         btnDiscount = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.discount"),
+                IconKey.DISCOUNT,
                 touchSize,
                 KeyEvent.VK_T,
                 AppLocal.getIntString("button.discount.tooltip"),

@@ -1,5 +1,8 @@
 package com.openbravo.ui.components;
 
+import com.openbravo.ui.icon.IconFactory;
+import com.openbravo.ui.icon.IconKey;
+import com.openbravo.ui.icon.PosIcon;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -23,10 +26,13 @@ import javax.swing.border.EmptyBorder;
  */
 public class ButtonFactory {
 
-    public static final Color SUCCESS_COLOR = new Color(22, 163, 74);  // Emerald green #16a34a
-    public static final Color DANGER_COLOR = new Color(239, 68, 68);   // Coral red #ef4444
-    public static final Color ACCENT_COLOR = new Color(37, 99, 235);   // Royal blue #2563eb
-    public static final Color WARNING_COLOR = new Color(245, 158, 11); // Amber #f59e0b
+    public static final Color SUCCESS_COLOR = UIColor.SUCCESS;
+    public static final Color DANGER_COLOR = UIColor.DANGER;
+    public static final Color ACCENT_COLOR = UIColor.PRIMARY;
+    public static final Color WARNING_COLOR = UIColor.WARNING;
+    public static final Color PRIMARY_COLOR = UIColor.PRIMARY;
+    public static final Color INFO_COLOR = UIColor.INFO;
+    public static final Color MUTED_COLOR = UIColor.MUTED;
 
     /**
      * Creates a JButton configured with native LTR/RTL support without
@@ -223,6 +229,59 @@ public class ButtonFactory {
             ButtonSize size,
             ActionListener listener) {
         return createActionButton(text, icon, size, 0, null, listener);
+    }
+
+    public static JButton createActionButton(
+            String text,
+            IconKey iconKey,
+            ButtonSize size,
+            ActionListener listener) {
+        return createActionButton(text, iconKey, size, 0, null, listener);
+    }
+
+    public static JButton createActionButton(
+            String text,
+            IconKey iconKey,
+            ButtonSize size,
+            int mnemonic,
+            String tooltip,
+            ActionListener listener) {
+        int iconSize = size != null ? size.getFontSize() + 4 : 20;
+        Icon icon = iconKey != null ? IconFactory.getIcon(iconKey, iconSize) : null;
+        return createActionButton(text, icon, size, mnemonic, tooltip, listener);
+    }
+
+    public static JButton createActionButton(
+            String text,
+            IconKey iconKey,
+            Color iconColor,
+            ButtonSize size,
+            int mnemonic,
+            String tooltip,
+            ActionListener listener) {
+        int iconSize = size != null ? size.getFontSize() + 4 : 20;
+        Icon icon = iconKey != null ? IconFactory.getIcon(iconKey, iconSize, iconColor) : null;
+        return createActionButton(text, icon, size, mnemonic, tooltip, listener);
+    }
+
+    public static JButton createActionButton(
+            String text,
+            PosIcon posIcon,
+            ButtonSize size,
+            int mnemonic,
+            String tooltip,
+            ActionListener listener) {
+        return createActionButton(text, posIcon != null ? posIcon.getIconKey() : null, size, mnemonic, tooltip, listener);
+    }
+
+    public static JButton createIconButton(
+            IconKey iconKey,
+            ButtonSize size,
+            String tooltip,
+            ActionListener listener) {
+        int iconSize = size != null ? size.getFontSize() + 4 : 20;
+        Icon icon = iconKey != null ? IconFactory.getIcon(iconKey, iconSize) : null;
+        return createActionButton("", icon, size, 0, tooltip, listener);
     }
 
     public static JButton createActionButton(

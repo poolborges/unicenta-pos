@@ -10,6 +10,7 @@
 *** xref:spec-database-configuration.adoc[Specification: Tiered Configuration (Bootstrap vs. DB)]
 ** User Interface
 *** xref:ui-guidelines.adoc[UI Guidelines]
+*** xref:spec-iconography.adoc[Specification: Iconography & Agnostic Vector Assets]
 *** xref:ui-modal-migration.adoc[Modal Architecture (PosUIModal)]
 *** xref:ui-custom-buttons.adoc[Custom Buttons & Events]
 ** Tickets & Sales

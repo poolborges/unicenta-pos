@@ -70,6 +70,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>kriolos-opos-assets-svg</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>kriolos-opos-assets-reports</artifactId>
         </dependency>
         <dependency>
