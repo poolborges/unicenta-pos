@@ -23,11 +23,11 @@ Goal: _Small but Professional POS_
 | `d6739efa`
 | Merged PR #132 — Hardware SPI, BeanContainer, lazy layout, dirty-mode auth, i18n
 
-| `76aed86d`
-| `feat(auth,i18n)`: user list disabled in dirty mode + UI string externalization
+| `cc3a738f`
+| Merged PR #134 — BootstrapConfig SPI & separation from ApplicationConfig (Issue #74)
 
-| `7c4b2548`
-| `fix`: recursive bean resolution + lazy `JPanelTicketSales`
+| `55ee1ff5`
+| Merged PR #135 — TASK 8: Font- & DPI-agnostic component sizing, CI duplicate execution fix, kriolos-opos-ui reactor integration
 |===
 
 These changes are the **platform foundation** for all items below: clean bootstrap, stable bean lifecycle, SPI isolation, and localizable UI.
@@ -664,16 +664,74 @@ ____
 
 '''
 
+== TASK 12 — Consolidate POS UI Components into `kriolos-opos-ui` & Migrate to SVG Icons ⭐
+
+[quote]
+____
+_"Move com.openbravo.pos.ui from kriolos-opos-app to kriolos-opos-ui, take in consideration any improvement needed or merge functionality into single class if that provides better code arch and clean arch. UnicodeIcon may be removed, because is not really good alternative to png icon. Planning to move to svg icon"_
+____
+
+**Why starred**: Eliminates architectural fragmentation between UI creation logic in `kriolos-opos-app` and reusable component infrastructure in `kriolos-opos-ui`. Retires fragile Unicode emoji glyphs in favor of scalable, high-fidelity vector SVG icons.
+
+=== Current Deficiencies & Motivation
+1. **Scattered UI Factories**:
+   * `kriolos-opos-app` maintains `com.openbravo.pos.ui.components` containing `POSButtonFactory`, `ButtonSize`, and `UnicodeIcon`.
+   * `kriolos-opos-ui` maintains `com.openbravo.ui.components` containing `ComponentFactory`, `PaneBuilder`, and `ComponentUtils`.
+   * Callers must coordinate between two distinct component factories with overlapping responsibilities.
+2. **Inconsistent & Fragile Unicode Icons (`UnicodeIcon`)**:
+   * Zero-dependency font-based Unicode glyphs (e.g. `\uD83D\uDC64` for User, `\uD83D\uDCB3` for Pay, `\uD83D\uDDD1` for Delete) render unpredictably across operating systems (Apple Color Emoji vs Segoe UI Emoji vs Noto Color Emoji vs bare X11 fonts).
+   * Emojis suffer from platform-dependent clipping, missing glyph tofu blocks (`□`), inconsistent coloring, and lack of crisp vector rendering at various POS touch resolutions.
+   * Unicode icons are not an adequate long-term alternative to image icons.
+
+=== Clean Architecture & Consolidation Design
+
+1. **Namespace Standardization**:
+   * All classes migrate to **`com.openbravo.ui.components`** in `kriolos-opos-ui`.
+   * Package `com.openbravo.pos.ui` in `kriolos-opos-app` is fully eliminated.
+
+2. **Unified Button Architecture in `ComponentFactory`**:
+   * Merge `POSButtonFactory` methods into `ComponentFactory` (or a cohesive `ButtonBuilder` / `ButtonFactory` in `kriolos-opos-ui`):
+     * Standardize touch button variants: `ButtonSize` (`MEDIUM`, `LARGE`, `EXTRA_LARGE`, `MASSIVE`).
+     * Standardize semantic action button styles (`createActionButton`, `createPrimaryButton`, `createSuccessButton`, `createDangerButton`).
+     * Dynamic font metric compliance: Respect Task 8 dynamic sizing rules (never rigid height clamps; calculate preferred bounds dynamically with touch minimum floors).
+     * Universal focus-clearing hook (`clearFocus`) to prevent touch buttons from stealing keyboard focus from barcode scanners and numpad inputs.
+
+3. **Transition to Vector SVG Icons**:
+   * Retire and remove `UnicodeIcon.java` and `UnicodeIconTest.java`.
+   * Introduce a modern, scalable SVG icon infrastructure (e.g. FlatLaf `FlatSVGIcon` or neutral `PosSvgIcon` SPI/loader) in `kriolos-opos-ui`.
+   * Provide crisp vector icons for POS actions:
+     * Actions: `PAY`, `CUSTOMER`, `HOLD`, `PARKED`, `ORDERS`, `CASH_IN`, `CASH_OUT`, `CLOSE_CASH`, `MINUS`, `PLUS`, `EDIT`, `DELETE`, `CLEAR`, `DISCOUNT`, `SEARCH`, `SETTINGS`, `PRINTER`.
+   * Support dynamic theme recoloring (adapting icon stroke/fill automatically to light, dark, and high-contrast modes).
+
+4. **Callsite Modernization in `kriolos-opos-app`**:
+   * Migrate `ModernOneTicketPane`, `ModernTwoActionPane`, `ModernTwoTicketPane`, `ModernTwoCatalogPane`, and `AuthenticationPanel` to import `com.openbravo.ui.components.*`.
+   * Replace all `UnicodeIcon.*` usages with high-resolution vector SVG icons.
+
+=== Sub-tasks
+. Move and consolidate `ButtonSize` into `com.openbravo.ui.components` in `kriolos-opos-ui`.
+. Merge `POSButtonFactory` button building logic, color constants, and focus protection hooks into `ComponentFactory` in `kriolos-opos-ui`.
+. Design vector SVG icon loader/catalog in `kriolos-opos-ui` supporting scalable HiDPI vector rendering.
+. Migrate modern sales panes (`ModernOneTicketPane`, `ModernTwoActionPane`, `ModernTwoTicketPane`, `ModernTwoCatalogPane`) and auth panels to the consolidated `ComponentFactory` and SVG icons.
+. Remove `UnicodeIcon.java`, `POSButtonFactory.java`, `ButtonSize.java`, and the `com.openbravo.pos.ui` package from `kriolos-opos-app`.
+. Unit and visual tests in `kriolos-opos-ui` verifying button styling, sizes, focus hooks, and SVG icon rendering.
+
+=== Branch: `feature/pos-ui-consolidation-svg-icons`
+
+'''
+
 == Recommended Execution Order
 
 ----
 feature/spi-ui-agnostic            ← ⭐ (COMPLETED: PR #133)
 feature/scripting-spi              ← ⭐ (COMPLETED: PR #133)
-feature/bootstrap-vs-app-config    ← ⭐ (COMPLETED: PR branch ready)
+feature/bootstrap-vs-app-config    ← ⭐ (COMPLETED: PR #134)
+feature/ui-font-agnostic-sizing    ← ⭐ (COMPLETED: PR #135)
          ↓
-feature/ui-font-agnostic-sizing    ← ⭐ TASK 8: Fixes text box clipping & touch sizing immediately
+feature/ui-modal-and-combobox-fixes← 🔧 CURRENT: Modal auto-fit (Ticket List) & ComboBox styling
          ↓
-feature/headless-base-decoupling   ← ⭐ TASK 9: Decouple base from java.desktop, move & modernize UI components
+feature/headless-base-decoupling   ← ⭐ NEXT: TASK 9: Decouple base from java.desktop, move & modernize UI components
+         ↓
+feature/pos-ui-consolidation-svg-icons ← ⭐ TASK 12: Consolidate POS UI components into kriolos-opos-ui & SVG icons
          ↓
 feature/quarkus-desktop-config-spi ← ⭐ TASK 11: Pluggable bootstrap config SPI (Quarkus desktop ready)
          ↓
