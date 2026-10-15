@@ -16,6 +16,7 @@
  */
 package com.openbravo.pos.spi.scripting;
 
+import com.openbravo.pos.spi.annotation.PluginContract;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -34,6 +35,7 @@ import java.util.Set;
  * @author KriolOS
  * @since 1.0.0
  */
+@PluginContract(category = "SCRIPTING", description = "Script and template execution")
 public interface ScriptEngineProvider {
 
     /**

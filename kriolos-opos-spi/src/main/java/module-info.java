@@ -8,6 +8,7 @@ module kriolos.opos.spi {
     exports com.openbravo.pos.spi.hardware.printer;
     exports com.openbravo.pos.spi.hardware.scale;
     exports com.openbravo.pos.spi.hardware.scanner;
+    exports com.openbravo.pos.spi.i18n;
     exports com.openbravo.pos.spi.localization;
     exports com.openbravo.pos.spi.provider;
     exports com.openbravo.pos.spi.scripting;
@@ -15,6 +16,8 @@ module kriolos.opos.spi {
     uses com.openbravo.pos.spi.scripting.ScriptEngineProvider;
     uses com.openbravo.pos.spi.localization.LocalizationProvider;
     uses com.openbravo.pos.spi.hardware.PeripheralProvider;
+    uses com.openbravo.pos.spi.i18n.I18nProvider;
+    uses com.openbravo.pos.spi.core.PluginContractProvider;
 }
 
 
