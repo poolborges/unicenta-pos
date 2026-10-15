@@ -49,6 +49,19 @@ public class ApplicationConfigurationServiceTest {
         String dbName = "mem_config_test_" + UUID.randomUUID().toString().replace("-", "");
         session = new Session("jdbc:hsqldb:mem:" + dbName + ";sql.syntax_mys=true", "SA", "");
 
+        // Setup test schema fixture (matches Liquibase v5_0_2 definition)
+        try (var stmt = session.getConnection().createStatement()) {
+            stmt.executeUpdate(
+                    "CREATE TABLE config_properties ("
+                    + "pos_id VARCHAR(36) NOT NULL, "
+                    + "config_key VARCHAR(128) NOT NULL, "
+                    + "config_value VARCHAR(4096), "
+                    + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, "
+                    + "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, "
+                    + "PRIMARY KEY (pos_id, config_key))"
+            );
+        }
+
         tempFile = File.createTempFile("kriolos-config-test-", ".properties");
         bootstrapConfig = new BootstrapConfiguration(tempFile);
         bootstrapConfig.setProperty("bootstrap.only.key", "bootstrap-val");

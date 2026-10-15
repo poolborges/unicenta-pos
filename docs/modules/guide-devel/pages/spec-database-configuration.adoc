@@ -85,19 +85,33 @@ The application initialization sequence strictly follows a two-phase protocol:
 
 == 4. Database Schema: `config_properties`
 
-[source,sql]
-----
-CREATE TABLE config_properties (
-    pos_id VARCHAR(36) NOT NULL,             -- Terminal UUID, or '0000-0000-0000-0000' for Global
-    config_key VARCHAR(128) NOT NULL,        -- Key name (e.g. 'company.name', 'tax.calculation_mode')
-    config_value TEXT,                       -- Property value (plain text, JSON, or Base64)
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (pos_id, config_key)
-);
+Schema evolution is managed exclusively via Liquibase (`db-changelog-v5_0_2.xml`), strictly compatible across **SQLite, MariaDB, HSQLDB, H2, and PostgreSQL**:
 
-CREATE INDEX idx_config_properties_lookup ON config_properties (pos_id, config_key);
+[source,xml]
 ----
+<createTable tableName="config_properties">
+    <column name="pos_id" type="VARCHAR(36)">
+        <constraints nullable="false" primaryKey="true"/>
+    </column>
+    <column name="config_key" type="VARCHAR(128)">
+        <constraints nullable="false" primaryKey="true"/>
+    </column>
+    <column name="config_value" type="VARCHAR(4096)">
+        <constraints nullable="true"/>
+    </column>
+    <column name="created_at" type="datetime">
+        <constraints nullable="false"/>
+    </column>
+    <column name="updated_at" type="datetime">
+        <constraints nullable="false"/>
+    </column>
+</createTable>
+----
+
+[NOTE]
+====
+To guarantee full portability across all supported SQL engines without dialect or SQL mode incompatibilities, `created_at` and `updated_at` values are generated in application data logic (`DataLogicConfiguration`) via `Datas.TIMESTAMP` and `java.util.Date`, rather than relying on non-portable computed defaults (`CURRENT_TIMESTAMP`).
+====
 
 === 4.1 Hierarchical Property Resolution Rule
 

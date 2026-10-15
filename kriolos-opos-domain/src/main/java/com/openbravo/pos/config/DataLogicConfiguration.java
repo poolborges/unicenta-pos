@@ -26,17 +26,12 @@ import com.openbravo.data.loader.SerializerWriteString;
 import com.openbravo.data.loader.Session;
 import com.openbravo.data.loader.StaticSentence;
 import com.openbravo.pos.container.BeanFactoryDataSingle;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Data access logic for the {@code config_properties} table.
+ * Table creation and schema evolution are managed exclusively via Liquibase.
  *
  * @author KriolOS POS
  */
@@ -54,56 +49,6 @@ public class DataLogicConfiguration extends BeanFactoryDataSingle {
     @Override
     public void init(Session s) {
         this.sessionDB = s;
-        if (s != null) {
-            try {
-                ensureTableExists();
-            } catch (BasicException e) {
-                LOGGER.log(Level.WARNING, "Could not verify or create config_properties table: " + e.getMessage(), e);
-            }
-        }
-    }
-
-    public synchronized void ensureTableExists() throws BasicException {
-        if (sessionDB == null) {
-            return;
-        }
-
-        try {
-            Connection conn = sessionDB.getConnection();
-            DatabaseMetaData meta = conn.getMetaData();
-
-            boolean exists = false;
-            try (ResultSet rs = meta.getTables(null, null, "CONFIG_PROPERTIES", null)) {
-                if (rs.next()) {
-                    exists = true;
-                }
-            }
-            if (!exists) {
-                try (ResultSet rs = meta.getTables(null, null, "config_properties", null)) {
-                    if (rs.next()) {
-                        exists = true;
-                    }
-                }
-            }
-
-            if (!exists) {
-                LOGGER.info("Table config_properties not found. Auto-creating table...");
-                try (Statement stmt = conn.createStatement()) {
-                    stmt.executeUpdate(
-                            "CREATE TABLE config_properties ("
-                            + "pos_id VARCHAR(36) NOT NULL, "
-                            + "config_key VARCHAR(128) NOT NULL, "
-                            + "config_value VARCHAR(4096), "
-                            + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, "
-                            + "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, "
-                            + "PRIMARY KEY (pos_id, config_key))"
-                    );
-                }
-                LOGGER.info("Table config_properties created successfully.");
-            }
-        } catch (SQLException e) {
-            throw new BasicException("Failed to verify/create table config_properties: " + e.getMessage(), e);
-        }
     }
 
     public List<ConfigPropertyEntry> readAll() throws BasicException {
@@ -135,23 +80,25 @@ public class DataLogicConfiguration extends BeanFactoryDataSingle {
     }
 
     public void saveProperty(String posId, String key, String value) throws BasicException {
+        java.util.Date now = new java.util.Date();
+
         // Try portable UPDATE first
         SentenceExec updateSentence = new PreparedSentence<>(
                 sessionDB,
-                "UPDATE config_properties SET config_value = ?, updated_at = CURRENT_TIMESTAMP WHERE pos_id = ? AND config_key = ?",
-                new SerializerWriteBasic(new Datas[]{Datas.STRING, Datas.STRING, Datas.STRING})
+                "UPDATE config_properties SET config_value = ?, updated_at = ? WHERE pos_id = ? AND config_key = ?",
+                new SerializerWriteBasic(new Datas[]{Datas.STRING, Datas.TIMESTAMP, Datas.STRING, Datas.STRING})
         );
 
-        int updated = updateSentence.exec(new Object[]{value, posId, key});
+        int updated = updateSentence.exec(new Object[]{value, now, posId, key});
         if (updated == 0) {
             // Row didn't exist; perform INSERT
             SentenceExec insertSentence = new PreparedSentence<>(
                     sessionDB,
                     "INSERT INTO config_properties (pos_id, config_key, config_value, created_at, updated_at) "
-                    + "VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",
-                    new SerializerWriteBasic(new Datas[]{Datas.STRING, Datas.STRING, Datas.STRING})
+                    + "VALUES (?, ?, ?, ?, ?)",
+                    new SerializerWriteBasic(new Datas[]{Datas.STRING, Datas.STRING, Datas.STRING, Datas.TIMESTAMP, Datas.TIMESTAMP})
             );
-            insertSentence.exec(new Object[]{posId, key, value});
+            insertSentence.exec(new Object[]{posId, key, value, now, now});
         }
     }
 
