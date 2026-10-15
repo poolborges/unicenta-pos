@@ -1,4 +1,4 @@
-package com.openbravo.ui.laf;
+package com.openbravo.ui.layout;
 
 import javax.swing.*;
 
@@ -16,6 +16,7 @@ public final class FlexFactory {
 
     /**
      * Creates a horizontal flex row container without wrapping.
+     * Ideal for toolbars, footers, or headers.
      *
      * @param justify justification along the main axis
      * @param align alignment along the cross axis
@@ -36,6 +37,7 @@ public final class FlexFactory {
 
     /**
      * Creates a horizontal flex row container with wrapping enabled.
+     * Ideal for card grids, dynamic product lists, or tag buttons.
      *
      * @param justify justification along the main axis
      * @param align alignment along the cross axis
@@ -56,6 +58,7 @@ public final class FlexFactory {
 
     /**
      * Creates a vertical flex column container without wrapping.
+     * Ideal for forms, side navigation menus, and vertical component stacks.
      *
      * @param justify justification along the main axis
      * @param align alignment along the cross axis

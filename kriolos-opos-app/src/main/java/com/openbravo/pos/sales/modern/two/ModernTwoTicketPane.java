@@ -21,9 +21,8 @@ import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.app.AppLocal;
 import com.openbravo.pos.ticket.TicketInfo;
 import com.openbravo.pos.ticket.TicketLineInfo;
-import com.openbravo.pos.ui.components.ButtonSize;
-import com.openbravo.pos.ui.components.POSButtonFactory;
-import com.openbravo.pos.ui.components.UnicodeIcon;
+import com.openbravo.ui.components.ButtonSize;
+import com.openbravo.ui.components.ButtonFactory;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
@@ -166,9 +165,8 @@ public class ModernTwoTicketPane extends JPanel {
         bottomContainer.add(totalsPanel, BorderLayout.PAGE_START);
 
         // Massive Pay Button (Image 1 style)
-        btnPay = POSButtonFactory.createSuccessButton(
+        btnPay = ButtonFactory.createSuccessButton(
                 AppLocal.getIntString("button.pay") + " (F12)",
-                UnicodeIcon.PAY,
                 ButtonSize.MASSIVE,
                 KeyEvent.VK_P,
                 AppLocal.getIntString("button.pay.tooltip"),

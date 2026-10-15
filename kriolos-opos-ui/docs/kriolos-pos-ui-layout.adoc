@@ -1,4 +1,4 @@
-= KriolOS POS — Flexbox & Dynamic Wrap Layouts (`com.openbravo.ui.laf`)
+= KriolOS POS — Flexbox & Dynamic Wrap Layouts (`com.openbravo.ui.layout`)
 :author: KriolOS
 :email: dev@kriolos.org
 :revnumber: 1.0.0
@@ -10,7 +10,7 @@
 
 == 1. Package Overview & Mission
 
-The `com.openbravo.ui.laf` package brings modern web-standard CSS Flexbox mechanics and responsive wrapping to Swing desktop applications.
+The `com.openbravo.ui.layout` package brings modern web-standard CSS Flexbox mechanics and responsive wrapping to Swing desktop applications.
 
 Standard Swing layout managers (like `BorderLayout`, `FlowLayout`, or `GridBagLayout`) often struggle with responsive touch interfaces:
 * `FlowLayout` does not dynamically recalculate the height of wrapped rows inside a `JScrollPane`, leading to clipped items or artificial horizontal scrollbars.

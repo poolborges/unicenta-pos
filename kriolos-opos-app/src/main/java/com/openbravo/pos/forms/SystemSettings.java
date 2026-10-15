@@ -22,12 +22,9 @@ import com.openbravo.pos.spi.config.BootstrapConfig;
 import com.openbravo.pos.spi.localization.LocalizationFactory;
 import com.openbravo.pos.spi.localization.LocalizationProvider;
 import com.openbravo.pos.ui.api.POSThemeManager;
-import java.awt.Font;
-import java.awt.Insets;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.UIManager;
 
 /**
  *
@@ -41,8 +38,6 @@ public class SystemSettings {
         // Set the look and feel.
         String newThemeProperty = config.getUiTheme();
         applyPosTheme(newThemeProperty);
-
-        applyGlobalTouchSettings();
 
         // Localization configuration switch
         String localizationMode = config.getLocalizationMode();
@@ -59,70 +54,6 @@ public class SystemSettings {
 
     public static void applyPosTheme(String themeId) {
         POSThemeManager.applyTheme(themeId);
-    }
-
-    /**
-     * Injects touch-first layout variables directly into the Swing UIManager
-     * framework. Upscales text, buttons, form controls, and icons to achieve
-     * standard 48px hitboxes.
-     */
-    private static void applyGlobalTouchSettings() {
-        // --- 1. Typography & Readability Scale ---
-        // Enforces clean, crisp, enlarged typography for 8+ hour shifts
-        Font touchFontBold = new Font("SansSerif", Font.BOLD, 16);
-        Font touchFontPlain = new Font("SansSerif", Font.PLAIN, 16);
-
-        UIManager.put("defaultFont", touchFontPlain);
-        UIManager.put("Button.font", touchFontBold);
-        UIManager.put("ToggleButton.font", touchFontBold);
-        UIManager.put("Label.font", touchFontPlain);
-        UIManager.put("List.font", touchFontPlain);
-        UIManager.put("Table.font", touchFontPlain);
-        UIManager.put("TableHeader.font", touchFontBold);
-        UIManager.put("TextField.font", touchFontPlain);
-        UIManager.put("PasswordField.font", touchFontPlain);
-        UIManager.put("FormattedTextField.font", touchFontPlain);
-        UIManager.put("ComboBox.font", touchFontPlain);
-        UIManager.put("Spinner.font", touchFontPlain);
-
-        // --- 2. Button Hitbox Scaling (Touch Rule) ---
-        // Balanced internal padding [Top, Left, Bottom, Right] allowing comfortable finger tap
-        UIManager.put("Button.margin", new Insets(8, 16, 8, 16));
-        UIManager.put("ToggleButton.margin", new Insets(8, 16, 8, 16));
-
-        // Hard fallback layout boundaries to ensure buttons never collapse
-        UIManager.put("Button.minimumHeight", 40);
-        UIManager.put("ToggleButton.minimumHeight", 40);
-
-        // --- 3. Form & Input Component Enhancements ---
-        // Standardized padding and height floor across all input components to prevent text clipping
-        Insets inputMargin = new Insets(6, 12, 6, 12);
-        UIManager.put("TextField.margin", inputMargin);
-        UIManager.put("PasswordField.margin", inputMargin);
-        UIManager.put("FormattedTextField.margin", inputMargin);
-        UIManager.put("ComboBox.padding", inputMargin);
-        UIManager.put("Spinner.padding", inputMargin);
-
-        UIManager.put("TextField.minimumHeight", 38);
-        UIManager.put("PasswordField.minimumHeight", 38);
-        UIManager.put("FormattedTextField.minimumHeight", 38);
-        UIManager.put("ComboBox.minimumHeight", 38);
-        UIManager.put("Spinner.minimumHeight", 38);
-
-        // --- 4. Selection Toggles & Vectors ---
-        // Scales native tiny selection boxes so they can be easily checked on tablets
-        UIManager.put("CheckBox.iconSize", 24);
-        UIManager.put("RadioButton.iconSize", 24);
-
-        // --- 5. Component Borders & Rounded Corners ---
-        // Gives the app a clean, modern, slightly rounded visual aesthetic
-        UIManager.put("Button.arc", 8);
-        UIManager.put("Component.arc", 8);
-
-        // --- 6. Thick Fallback Scrollbars ---
-        // Ensures fallback scrollbars are thick enough to grab if kinetic touch is disabled
-        UIManager.put("ScrollBar.width", 26);
-        UIManager.put("ScrollBar.thumbArc", 12);
     }
 
     private static void applyLocalizationLegacy(BootstrapConfig config) {

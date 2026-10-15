@@ -20,9 +20,8 @@ import com.openbravo.app.AppLocal;
 import com.openbravo.pos.pim.CategoryInfo;
 import com.openbravo.ui.layout.WrapLayout;
 import com.openbravo.pos.ticket.ProductInfoExt;
-import com.openbravo.pos.ui.components.ButtonSize;
-import com.openbravo.pos.ui.components.POSButtonFactory;
-import com.openbravo.pos.ui.components.UnicodeIcon;
+import com.openbravo.ui.components.ButtonSize;
+import com.openbravo.ui.components.ButtonFactory;
 
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
@@ -93,8 +92,7 @@ public class ModernTwoCatalogPane extends JPanel {
         searchContainer.setOpaque(false);
         searchContainer.setBorder(BorderFactory.createEmptyBorder(0, 0, 6, 0));
 
-        JLabel lblIcon = new JLabel(UnicodeIcon.SEARCH.getCode());
-        lblIcon.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        JLabel lblIcon = new JLabel();
         lblIcon.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 4));
 
         searchField = new JTextField();
@@ -107,9 +105,8 @@ public class ModernTwoCatalogPane extends JPanel {
         searchField.putClientProperty("JTextField.showClearButton", true);
         searchField.putClientProperty("JComponent.roundRect", true);
 
-        JButton btnClear = POSButtonFactory.createActionButton(
+        JButton btnClear = ButtonFactory.createActionButton(
                 AppLocal.getIntString("button.clean"),
-                UnicodeIcon.CLEAR,
                 ButtonSize.LARGE,
                 0,
                 AppLocal.getIntString("button.clear.tooltip"),

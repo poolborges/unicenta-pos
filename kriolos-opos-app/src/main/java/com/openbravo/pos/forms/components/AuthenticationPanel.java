@@ -31,8 +31,8 @@ import com.openbravo.pos.forms.ApplicationShell;
 import com.openbravo.pos.admin.DataLogicSystem;
 import com.openbravo.pos.admin.SecurityService;
 import com.openbravo.pos.forms.DatabaseActivationCallback;
-import com.openbravo.pos.ui.components.ButtonSize;
-import com.openbravo.pos.ui.components.POSButtonFactory;
+import com.openbravo.ui.components.ButtonSize;
+import com.openbravo.ui.components.ButtonFactory;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -582,7 +582,7 @@ public class AuthenticationPanel extends javax.swing.JPanel {
         JFlowPanel jPeople = new JFlowPanel();
         for (AppUser user : people) {
             // 2. Instantiate using the native Factory
-            JButton btn = POSButtonFactory.createButton(variant);
+            JButton btn = ButtonFactory.createButton(variant);
             btn.setAction(new SetUserAction(user));
             
             // 3. Apply the specific layout width (280px) and get the dynamic height from the variant

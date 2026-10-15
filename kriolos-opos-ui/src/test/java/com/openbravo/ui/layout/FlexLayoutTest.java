@@ -1,4 +1,4 @@
-package com.openbravo.ui.laf;
+package com.openbravo.ui.layout;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
