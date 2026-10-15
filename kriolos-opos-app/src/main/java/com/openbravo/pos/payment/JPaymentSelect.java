@@ -1,31 +1,24 @@
-//    KriolOS POS
-//    Copyright (c) 2019-2023 KriolOS
-//
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.payment;
 
+import com.openbravo.app.AppLocal;
+import com.openbravo.data.gui.modal.PosUIModal;
 import com.openbravo.format.Formats;
+import com.openbravo.pos.admin.DataLogicSystem;
 import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.pos.customers.CustomerService;
 import com.openbravo.pos.customers.DataLogicCustomers;
-import com.openbravo.app.AppLocal;
 import com.openbravo.pos.panels.AppView;
-import com.openbravo.pos.admin.DataLogicSystem;
-import com.openbravo.pos.resources.ResourceService;
 import com.openbravo.pos.resources.ImageResources;
-
-import java.awt.*;
+import com.openbravo.pos.resources.ResourceService;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.Frame;
+import java.awt.Rectangle;
+import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +26,8 @@ import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
@@ -41,15 +36,18 @@ import javax.swing.text.View;
 import org.apache.commons.lang3.StringUtils;
 
 /**
+ * Payment selection panel and modal orchestrator.
  *
- * @author adrianromero
+ * @author KriolOS
  */
-public abstract class JPaymentSelect extends javax.swing.JDialog implements JPaymentNotifier {
+public abstract class JPaymentSelect extends JPanel implements JPaymentNotifier {
 
     private static final long serialVersionUID = 1L;
 
-    private PaymentInfoList m_aPaymentInfo;
+    protected Component parentComponent;
+    protected PosUIModal modalContext;
 
+    private PaymentInfoList m_aPaymentInfo;
     private boolean accepted;
 
     private AppView app;
@@ -76,18 +74,75 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
         JPaymentSelect.returnPayment = returnPayment;
     }
 
-    protected JPaymentSelect(java.awt.Frame parent, boolean modal, ComponentOrientation o) {
-        super(parent, modal);
-        initComponents();
-        this.applyComponentOrientation(o);
-        getRootPane().setDefaultButton(m_jButtonOK);
-
+    protected JPaymentSelect() {
+        this((Component) null, (ComponentOrientation) null);
     }
 
-    protected JPaymentSelect(java.awt.Dialog parent, boolean modal, ComponentOrientation o) {
-        super(parent, modal);
+    protected JPaymentSelect(Component parent, ComponentOrientation o) {
+        this.parentComponent = parent;
         initComponents();
-        this.applyComponentOrientation(o);
+        if (o != null) {
+            this.applyComponentOrientation(o);
+        }
+        initDomainAdapters();
+    }
+
+    @Deprecated
+    protected JPaymentSelect(java.awt.Frame parent, boolean modal, ComponentOrientation o) {
+        this((Component) parent, o);
+    }
+
+    @Deprecated
+    protected JPaymentSelect(java.awt.Dialog parent, boolean modal, ComponentOrientation o) {
+        this((Component) parent, o);
+    }
+
+    private void initDomainAdapters() {
+        setName("kriolos:payment:select-panel");
+        if (m_jButtonOK != null) {
+            m_jButtonOK.setName("kriolos:payment:btn-ok");
+        }
+        if (m_jButtonCancel != null) {
+            m_jButtonCancel.setName("kriolos:payment:btn-cancel");
+        }
+        if (m_jButtonAdd != null) {
+            m_jButtonAdd.setName("kriolos:payment:btn-add");
+        }
+        if (m_jButtonRemove != null) {
+            m_jButtonRemove.setName("kriolos:payment:btn-remove");
+        }
+        if (m_jButtonPrint != null) {
+            m_jButtonPrint.setName("kriolos:payment:btn-print");
+        }
+        if (m_jTabPayment != null) {
+            m_jTabPayment.setName("kriolos:payment:tabs");
+        }
+        if (m_jTotalEuros != null) {
+            m_jTotalEuros.setName("kriolos:payment:lbl-total");
+        }
+        if (m_jRemaininglEuros != null) {
+            m_jRemaininglEuros.setName("kriolos:payment:lbl-remaining");
+        }
+    }
+
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        JRootPane rootPane = SwingUtilities.getRootPane(this);
+        if (rootPane != null && m_jButtonOK != null) {
+            rootPane.setDefaultButton(m_jButtonOK);
+        }
+    }
+
+    public void dispose() {
+        if (modalContext != null) {
+            modalContext.close();
+            modalContext = null;
+        }
+    }
+
+    public String getTitle() {
+        return AppLocal.getIntString("payment.title");
     }
 
     public void init(AppView app, PaymentService paymentService) {
@@ -118,7 +173,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
     /**
      * List of PaymentInfo
      * 
-     * @return
+     * @return list of selected payments
      */
     public List<PaymentInfo> getSelectedPayments() {
         return m_aPaymentInfo.getPayments();
@@ -127,7 +182,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
     /**
      * Get PaymentInfoList
      * 
-     * @return
+     * @return payment info list
      */
     public PaymentInfoList getPaymentInfoList() {
         return m_aPaymentInfo;
@@ -136,7 +191,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
     /**
      * Get total
      *
-     * @return
+     * @return total amount
      */
     public double getTotal() {
         return paymentService.getTotal(m_aPaymentInfo);
@@ -145,39 +200,23 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
     /**
      * Get total Paid
      *
-     * @return
+     * @return total paid amount
      */
     public double getPaidTotal() {
         return paymentService.getPaidTotal(m_aPaymentInfo);
     }
-
 
     public boolean showDialog(double total, CustomerInfoExt customerext, double deposit) {
         return showDialog(total - deposit, customerext);
     }
 
     public boolean showDialog(double total, CustomerInfoExt customerext) {
-
         m_aPaymentInfo = paymentService.createPaymentList();
         accepted = false;
-
         m_dTotal = total;
-
         this.customerext = customerext;
-        
-        m_jTotalEuros.setText(Formats.CURRENCY.formatValue(m_dTotal));
 
-        /**
-         * m_jPayTotal.setText(Formats.CURRENCY.formatValue(m_dTotal));
-         * N. Deppe 08/11/2018
-         * Fix issue where dialog keeps moving lower and lower on the screen
-         * Get the size of the screen, and center the dialog in the window
-         */
-        Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension thisDim = this.getSize();
-        int x = (screenDim.width - thisDim.width) / 2;
-        int y = (screenDim.height - thisDim.height) / 2;
-        this.setLocation(x, y);
+        m_jTotalEuros.setText(Formats.CURRENCY.formatValue(m_dTotal));
 
         addTabs();
 
@@ -186,9 +225,12 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
             m_aPaymentInfo.add(getDefaultPayment(total));
             accepted = true;
         } else {
-            getRootPane().setDefaultButton(m_jButtonOK);
             printState();
-            setVisible(true);
+            modalContext = PosUIModal.create(parentComponent != null ? parentComponent : this, this)
+                    .setTitle(getTitle())
+                    .setPreferredSize(new Dimension(800, 520))
+                    .setModal(true);
+            modalContext.show();
         }
         m_jTabPayment.removeAll();
 
@@ -235,7 +277,6 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
     }
 
     private String fixedStringRithPad(String text, int length) {
-
         if (text.length() > length) {
             text = text.substring(0, length - 1);
         }
@@ -322,7 +363,6 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
         }
     }
 
-    // TODO: CARD
     public class JPaymentCardCreator implements JPaymentCreator {
 
         @Override
@@ -554,7 +594,6 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
     }
 
     private void printState() {
-
         m_jRemaininglEuros.setText(Formats.CURRENCY.formatValue(
                 paymentService.calculateRemaining(m_aPaymentInfo, m_dTotal)));
         m_jButtonRemove.setEnabled(!m_aPaymentInfo.isEmpty());
@@ -565,10 +604,11 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
                         m_sTransactionID);
     }
 
+    @Deprecated
     protected static Window getWindow(Component parent) {
         if (parent == null) {
             return new JFrame();
-        } else if (parent instanceof Frame || parent instanceof Dialog) {
+        } else if (parent instanceof Window) {
             return (Window) parent;
         } else {
             return getWindow(parent.getParent());
@@ -577,7 +617,6 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
 
     @Override
     public void setStatus(boolean isPositive, boolean isComplete) {
-
         setStatusPanel(isPositive, isComplete);
     }
 
@@ -585,13 +624,6 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
         this.m_sTransactionID = tID;
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel4 = new javax.swing.JPanel();
@@ -611,12 +643,9 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
         m_jButtonPrint = new javax.swing.JToggleButton();
         jlblPrinterStatus = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(AppLocal.getIntString("payment.title")); // NOI18N
-        setMaximumSize(new java.awt.Dimension(800, 600));
+        setLayout(new java.awt.BorderLayout());
+        setPreferredSize(new java.awt.Dimension(800, 520));
         setMinimumSize(new java.awt.Dimension(600, 400));
-        setPreferredSize(new java.awt.Dimension(600, 400));
-        setResizable(false);
 
         jPanel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
@@ -705,7 +734,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
                 .addContainerGap())
         );
 
-        getContentPane().add(jPanel4, java.awt.BorderLayout.NORTH);
+        add(jPanel4, java.awt.BorderLayout.NORTH);
 
         jPanel3.setName(""); // NOI18N
         jPanel3.setLayout(new java.awt.BorderLayout());
@@ -726,7 +755,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
         });
         jPanel3.add(m_jTabPayment, java.awt.BorderLayout.CENTER);
 
-        getContentPane().add(jPanel3, java.awt.BorderLayout.CENTER);
+        add(jPanel3, java.awt.BorderLayout.CENTER);
 
         jPanel5.setLayout(new java.awt.BorderLayout());
 
@@ -786,32 +815,24 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
         jlblPrinterStatus.setText(bundle.getString("label.printerstatusOn")); // NOI18N
         jPanel5.add(jlblPrinterStatus, java.awt.BorderLayout.CENTER);
 
-        getContentPane().add(jPanel5, java.awt.BorderLayout.SOUTH);
+        add(jPanel5, java.awt.BorderLayout.SOUTH);
+    }
 
-        setSize(new java.awt.Dimension(758, 497));
-        setLocationRelativeTo(null);
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void m_jButtonRemoveActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_m_jButtonRemoveActionPerformed
-
+    private void m_jButtonRemoveActionPerformed(java.awt.event.ActionEvent evt) {
         paymentService.removeLastPayment(m_aPaymentInfo);
         printState();
+    }
 
-    }// GEN-LAST:event_m_jButtonRemoveActionPerformed
-
-    private void m_jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_m_jButtonAddActionPerformed
-
+    private void m_jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {
         PaymentInfo returnPayment = ((JPaymentInterface) m_jTabPayment.getSelectedComponent())
                 .executePayment();
         if (returnPayment != null) {
             paymentService.addPayment(m_aPaymentInfo, returnPayment);
             printState();
         }
+    }
 
-    }// GEN-LAST:event_m_jButtonAddActionPerformed
-
-    private void m_jTabPaymentStateChanged(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_m_jTabPaymentStateChanged
-
+    private void m_jTabPaymentStateChanged(javax.swing.event.ChangeEvent evt) {
         if (m_jTabPayment.getSelectedComponent() != null) {
             ((JPaymentInterface) m_jTabPayment.getSelectedComponent())
                     .activate(customerext,
@@ -821,11 +842,9 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
                     Formats.CURRENCY.formatValue(
                             paymentService.calculateRemaining(m_aPaymentInfo, m_dTotal)));
         }
+    }
 
-    }// GEN-LAST:event_m_jTabPaymentStateChanged
-
-    private void m_jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_m_jButtonOKActionPerformed
-
+    private void m_jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {
         SwingWorker<Object, Object> worker = new SwingWorker<>() {
             @Override
             protected Object doInBackground() throws Exception {
@@ -848,30 +867,24 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
         };
 
         worker.execute();
-    }// GEN-LAST:event_m_jButtonOKActionPerformed
+    }
 
-    private void m_jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_m_jButtonCancelActionPerformed
-
+    private void m_jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {
         dispose();
+    }
 
-    }// GEN-LAST:event_m_jButtonCancelActionPerformed
-
-    private void m_jButtonPrintActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_m_jButtonPrintActionPerformed
-        //To update label
+    private void m_jButtonPrintActionPerformed(java.awt.event.ActionEvent evt) {
         setPrintSelected(m_jButtonPrint.isSelected());
-        
-    }// GEN-LAST:event_m_jButtonPrintActionPerformed
+    }
 
-    private void m_jTabPaymentKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_m_jTabPaymentKeyPressed
-
+    private void m_jTabPaymentKeyPressed(java.awt.event.KeyEvent evt) {
         if (evt.getKeyCode() == KeyEvent.VK_F1) {
 
         } else if (evt.getKeyCode() == KeyEvent.VK_F2) {
             // m_jEditLine.doClick();
         }
-    }// GEN-LAST:event_m_jTabPaymentKeyPressed
+    }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -888,10 +901,8 @@ public abstract class JPaymentSelect extends javax.swing.JDialog implements JPay
     private javax.swing.JLabel m_jRemaininglEuros;
     private javax.swing.JTabbedPane m_jTabPayment;
     private javax.swing.JLabel m_jTotalEuros;
-    // End of variables declaration//GEN-END:variables
 }
 
-// tabbedPane.setUI(new MyTabbedPaneUI());
 class MyTabbedPaneUI extends MetalTabbedPaneUI {
 
     private final JTabbedPane tabPane;
@@ -915,7 +926,7 @@ class MyTabbedPaneUI extends MetalTabbedPaneUI {
         SwingUtilities.layoutCompoundLabel((JComponent) tabPane,
                 metrics, title, icon,
                 SwingUtilities.CENTER,
-                SwingUtilities.LEFT, // CENTER, &lt;----
+                SwingUtilities.LEFT,
                 SwingUtilities.CENTER,
                 SwingUtilities.TRAILING,
                 tabRect,
@@ -923,8 +934,7 @@ class MyTabbedPaneUI extends MetalTabbedPaneUI {
                 textRect,
                 textIconGap);
         tabPane.putClientProperty("html", null);
-        textRect.translate(tabInsets.left, 0); // &lt;----
-        // textRect.width -= tabInsets.left+tabInsets.right;
+        textRect.translate(tabInsets.left, 0);
 
         int xNudge = getTabLabelShiftX(tabPlacement, tabIndex, isSelected);
         int yNudge = getTabLabelShiftY(tabPlacement, tabIndex, isSelected);

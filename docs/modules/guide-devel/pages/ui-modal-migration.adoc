@@ -133,7 +133,7 @@ Every modal dialog across the codebase is assigned a unique identifier (`MODAL-x
 | `MODAL-012`
 | `com.openbravo.pos.payment.JPaymentSelect`
 | Yes
-| `com.openbravo.pos.payment.JPaymentSelectPanel`
+| `com.openbravo.pos.payment.JPaymentSelect` (`JPanel` + `PosUIModal`)
 | Checkout payment method tabs (Cash, Card, Debt, Paper, etc.).
 
 | `MODAL-013`
