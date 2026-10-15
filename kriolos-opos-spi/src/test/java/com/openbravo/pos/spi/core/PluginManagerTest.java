@@ -150,4 +150,13 @@ public class PluginManagerTest {
                     "The core manager failed to route and inject data settings into the provider lifecycle dynamically");
         }
     }
+
+    @Test
+    public void testDynamicContractRegistration() {
+        interface CustomTestContract {}
+
+        assertFalse(manager.getRegisteredContracts().contains(CustomTestContract.class));
+        manager.registerContract(CustomTestContract.class);
+        assertTrue(manager.getRegisteredContracts().contains(CustomTestContract.class));
+    }
 }

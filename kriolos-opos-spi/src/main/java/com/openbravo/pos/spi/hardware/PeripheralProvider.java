@@ -27,6 +27,7 @@ import com.openbravo.pos.spi.hardware.scale.ScaleDevice;
 import com.openbravo.pos.spi.hardware.scanner.ScannerConfig;
 import com.openbravo.pos.spi.hardware.scanner.ScannerDevice;
 import com.openbravo.pos.spi.provider.ConfigurableProvider;
+import com.openbravo.pos.spi.annotation.PluginContract;
 import com.openbravo.pos.spi.provider.Provider;
 
 import java.util.Collections;
@@ -43,6 +44,7 @@ import java.util.Optional;
  * @author KriolOS Team
  * @since 1.0.0
  */
+@PluginContract(category = "HARDWARE", description = "Hardware peripheral devices")
 public interface PeripheralProvider extends Provider, ConfigurableProvider {
 
     /**

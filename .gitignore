@@ -15,7 +15,12 @@
 /**/kriolopos.lck
 /**/kriolopos.log
 /kriolos-opos-app/nbproject/
-/dev/
+/dev/venv/
+/.dev/venv/
+/dev/*.log
+/.dev/*.log
+/dev/src/
+/.dev/src/
 **/derby.log
 *.code-workspace
 /modal-screenshots-baseline/

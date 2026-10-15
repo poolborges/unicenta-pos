@@ -8,6 +8,7 @@ import com.openbravo.pos.spi.provider.ConfigProperty;
 import com.openbravo.pos.spi.provider.PropertyType;
 import com.openbravo.pos.spi.localization.LocalizationProvider;
 import com.openbravo.pos.spi.hardware.PeripheralProvider;
+import com.openbravo.pos.spi.i18n.I18nProvider;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -32,14 +33,54 @@ public final class PluginManager {
 
     private static PluginManager instance;
     private ConfigurationStore configurationStore;
-    private final List<Class<?>> registeredContracts;
+    private final java.util.Set<Class<?>> registeredContracts = Collections.synchronizedSet(new java.util.LinkedHashSet<>());
 
     private PluginManager() {
         this.configurationStore = pluginId -> Collections.emptyMap();
-        List<Class<?>> contracts = new ArrayList<>();
-        contracts.add(LocalizationProvider.class);
-        contracts.add(PeripheralProvider.class);
-        this.registeredContracts = List.copyOf(contracts);
+        registerContract(LocalizationProvider.class);
+        registerContract(PeripheralProvider.class);
+        registerContract(I18nProvider.class);
+        discoverContracts();
+    }
+
+    /**
+     * Discovers external plugin contracts advertised via ServiceLoader.
+     */
+    public synchronized void discoverContracts() {
+        try {
+            ServiceLoader<PluginContractProvider> providers = ServiceLoader.load(PluginContractProvider.class);
+            for (PluginContractProvider provider : providers) {
+                if (provider != null && provider.getContract() != null) {
+                    registerContract(provider.getContract());
+                }
+            }
+        } catch (Exception ex) {
+            LOGGER.fine(() -> "Unable to load PluginContractProvider: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Registers a new SPI plugin contract dynamically without changing PluginManager.
+     *
+     * @param contract The contract interface class.
+     */
+    public synchronized void registerContract(Class<?> contract) {
+        if (contract != null && !registeredContracts.contains(contract)) {
+            registeredContracts.add(contract);
+            LOGGER.fine(() -> "Registered plugin contract: " + contract.getName());
+        }
+    }
+
+    /**
+     * Returns an unmodifiable snapshot of all currently registered plugin contracts.
+     *
+     * @return List of contract types.
+     */
+    public List<Class<?>> getRegisteredContracts() {
+        discoverContracts();
+        synchronized (registeredContracts) {
+            return List.copyOf(registeredContracts);
+        }
     }
 
     /**
@@ -78,7 +119,7 @@ public final class PluginManager {
     public List<PluginInfo> getAllPlugins() {
         List<PluginInfo> masterCatalog = new ArrayList<>();
 
-        for (Class<?> contract : registeredContracts) {
+        for (Class<?> contract : getRegisteredContracts()) {
             // Instantiates a local targeted stream avoiding cross-thread caching overrides
             ServiceLoader<?> loader = ServiceLoader.load(contract);
 
@@ -114,7 +155,7 @@ public final class PluginManager {
 
         List<PluginInfo> masterCatalog = new ArrayList<>();
 
-        for (Class<?> contract : registeredContracts) {
+        for (Class<?> contract : getRegisteredContracts()) {
             ServiceLoader<?> loader = ServiceLoader.load(contract);
 
             for (ServiceLoader.Provider<?> provider : loader.stream().toList()) {
@@ -171,6 +212,7 @@ public final class PluginManager {
         if (serviceType == null) {
             return List.of();
         }
+        registerContract(serviceType);
 
         ServiceLoader<?> loader = ServiceLoader.load(serviceType);
 
@@ -200,7 +242,7 @@ public final class PluginManager {
             return List.of();
         }
 
-        for (Class<?> contract : registeredContracts) {
+        for (Class<?> contract : getRegisteredContracts()) {
             ServiceLoader<?> loader = ServiceLoader.load(contract);
 
             for (ServiceLoader.Provider<?> provider : loader.stream().toList()) {
@@ -237,7 +279,7 @@ public final class PluginManager {
         if (serviceType == null || uniquePluginId == null) {
             return null;
         }
-        
+        registerContract(serviceType);
         return getInstanceById(serviceType, uniquePluginId);
     }
 
@@ -272,6 +314,9 @@ public final class PluginManager {
     }
 
     public <T> T getInstanceBySelector(Class<T> serviceType, String selector) {
+        if (serviceType != null) {
+            registerContract(serviceType);
+        }
         // Implementation for getting instance by selection
         return getInstance(serviceType, new PluginFilter() {
             @Override
@@ -286,6 +331,9 @@ public final class PluginManager {
     }
 
     public <T> T getInstanceById(Class<T> serviceType, String pluginId) {
+        if (serviceType != null) {
+            registerContract(serviceType);
+        }
         // Implementation for getting instance by ID
         return getInstance(serviceType, new PluginFilter() {
             @Override

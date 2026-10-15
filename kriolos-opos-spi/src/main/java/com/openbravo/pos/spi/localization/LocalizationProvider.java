@@ -1,5 +1,6 @@
 package com.openbravo.pos.spi.localization;
 
+import com.openbravo.pos.spi.annotation.PluginContract;
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +14,7 @@ import java.util.Locale;
  * @author KriolOS POS
  * @since 1.0.0
  */
+@PluginContract(category = "L10N", description = "Regional localization and formatting")
 public interface LocalizationProvider {
     
     /**

@@ -1,0 +1,120 @@
+= KriolOS POS - Internationalization (i18n) & Translation Tool
+:toc: manual
+
+This directory contains automation tooling for managing translations across KriolOS POS modules.
+
+== Setup Virtual Environment
+
+[source,bash]
+----
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+----
+
+== Usage
+
+=== 1. Audit Missing Keys
+Reports missing translation keys across all supported languages without modifying files:
+[source,bash]
+----
+python translate_properties.py --audit
+----
+
+=== 2. Initialize / Scaffold All Projects
+Ensures all 11 language modules are created in `kriolos-opos-i18n/`, registered in `kriolos-opos-i18n/pom.xml`, and have their SPI providers:
+[source,bash]
+----
+python translate_properties.py --init-all
+----
+
+=== 3. Translate Specific Language(s)
+Translate one or more languages using Google Translation:
+[source,bash]
+----
+python translate_properties.py --langs es,fr,ar
+----
+
+=== 4. Translate All Languages
+Translates missing keys across all languages in `TARGET_LANGS`:
+[source,bash]
+----
+python translate_properties.py --all
+----
+
+=== 5. Sort Properties
+Re-sorts all `.properties` files alphabetically (case-insensitive) while preserving comments:
+[source,bash]
+----
+python translate_properties.py --sort
+----
+
+== Supported Languages (TARGET_LANGS)
+
+[cols="1,2,2,3"]
+|===
+| Code | Language | Native Name | Module
+
+| `pt`
+| Portuguese
+| Português
+| `kriolos-opos-i18n_pt`
+
+| `es`
+| Spanish
+| Español
+| `kriolos-opos-i18n_es`
+
+| `fr`
+| French
+| Français
+| `kriolos-opos-i18n_fr`
+
+| `ar`
+| Arabic
+| العربية
+| `kriolos-opos-i18n_ar`
+
+| `zh-CN`
+| Chinese (Simplified)
+| 中文 (简体)
+| `kriolos-opos-i18n_zh_cn`
+
+| `ru`
+| Russian
+| Русский
+| `kriolos-opos-i18n_ru`
+
+| `id`
+| Indonesian
+| Bahasa Indonesia
+| `kriolos-opos-i18n_id`
+
+| `hi`
+| Hindi
+| हिन्दी
+| `kriolos-opos-i18n_hi`
+
+| `bn`
+| Bengali
+| বাংলা
+| `kriolos-opos-i18n_bn`
+
+| `jv`
+| Javanese
+| Basa Jawa
+| `kriolos-opos-i18n_jv`
+
+| `ar-KW`
+| Arabic (Kuwait)
+| العربية (الكويت)
+| `kriolos-opos-i18n_ar_kw`
+|===
+
+== SPI Architecture
+
+Every language module is an independent Java modular JAR providing the `com.openbravo.pos.spi.i18n.I18nProvider` SPI via `java.util.ServiceLoader`.
+
+- Contracts are marked with `@com.openbravo.pos.spi.annotation.PluginContract`.
+- `PluginManager` dynamically discovers and registers SPI contracts without hardcoded classes.
+- Applications discover installed language packages via `com.openbravo.pos.spi.i18n.I18nFactory.getInstance().getAvailableProviders()`.
