@@ -214,10 +214,9 @@ public class DevicePrinterPrinter implements DevicePrinter {
             logger.warning("No printers was found");
             prtservice = null;
         } else {
-            SelectPrinter selectprinter = SelectPrinter.getSelectPrinter(parent, printers);
-            selectprinter.setVisible(true);
-            if (selectprinter.isOK()) {
-                prtservice = ReportUtils.getPrintService(selectprinter.getPrintService());
+            String selectedPrinter = SelectPrinterPanel.show(parent, printers);
+            if (selectedPrinter != null) {
+                prtservice = ReportUtils.getPrintService(selectedPrinter);
             }
         }
 
