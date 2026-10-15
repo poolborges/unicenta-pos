@@ -150,6 +150,69 @@ localization.locale=pt-MZ
 ----
 
 
+== Internationalization (i18n) & Supported Languages
+
+KriolOS POS provides a modular, SPI-based internationalization architecture (`kriolos-opos-i18n`). Language packs are distributed as modular JARs discovered automatically by Java's `ServiceLoader` at runtime.
+
+=== Supported Languages
+
+[cols="1,2,2,2", options="header"]
+|===
+| Code | Language | Native Name | Module
+| `en` | English | English | Core Base (`opos-app` / `opos-assets-reports`)
+| `pt` | Portuguese | Português | `kriolos-opos-i18n_pt`
+| `es` | Spanish | Español | `kriolos-opos-i18n_es`
+| `fr` | French | Français | `kriolos-opos-i18n_fr`
+| `ar` | Arabic | العربية | `kriolos-opos-i18n_ar`
+| `zh-CN` | Chinese (Simplified) | 中文 (简体) | `kriolos-opos-i18n_zh_cn`
+| `ru` | Russian | Русский | `kriolos-opos-i18n_ru`
+| `id` | Indonesian | Bahasa Indonesia | `kriolos-opos-i18n_id`
+| `hi` | Hindi | हिन्दी | `kriolos-opos-i18n_hi`
+| `bn` | Bengali | বাংলা | `kriolos-opos-i18n_bn`
+| `jv` | Javanese | Basa Jawa | `kriolos-opos-i18n_jv`
+| `ar-KW` | Arabic (Kuwait) | العربية (الكويت) | `kriolos-opos-i18n_ar_kw`
+|===
+
+=== Runtime Inclusion
+
+To include all supported languages at runtime, simply add the aggregator module to your application dependencies:
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.github.kriolos.opos</groupId>
+    <artifactId>kriolos-opos-i18n-all</artifactId>
+    <scope>runtime</scope>
+</dependency>
+----
+
+=== Translation Audit & Verification Tool
+
+An automated verification tool audits bundle completeness and placeholder integrity:
+
+[source,bash]
+----
+# Run audit via test suite
+./mvnw test -pl kriolos-opos-i18n/kriolos-opos-i18n-all -am
+
+# Or run the standalone verifier with logging to target/i18n-audit.log
+./mvnw exec:java -pl kriolos-opos-i18n/kriolos-opos-i18n-all -am -Dexec.args="--log"
+----
+
+=== Adding or Updating Translations
+
+Automated properties translation is supported via `dev/translate_properties.py`:
+
+[source,bash]
+----
+# Audit translation completeness across all files
+python3 dev/translate_properties.py --audit
+
+# Translate or update specific languages
+python3 dev/translate_properties.py --langs es,fr,ar --untranslated
+----
+
+
 == Run DB on Docker 
 
 .Run MySQL database for Developer Env 
