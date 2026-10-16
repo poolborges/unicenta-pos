@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Quarkus Desktop Migration: Architecture &amp; Implementation Plan :: KriolOS POS Documentation</title>
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../..">KriolOS POS Documentation</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="kriolos-pos" data-version="1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">KriolOS POS Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <span class="nav-text">Home
+.Guides</span>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-devel/index.html">Developer Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-user/index.html">User Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../guide-comercial/index.html">Commercial Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Migration Guide</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../notes/index.html">Architecture Notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Developer Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-devel/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-devel/product-vision.html">Product Vision</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-devel/contributors.html">Contributors</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture &amp; Modeling</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/arch-principles.html">Architecture Principles</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/arch-dev-environment.html">Development Environment &amp; QA</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/arch-domain-modeling.html">Domain Modeling</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-navigation-flow.html">Specification: Navigation History Flow</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-database-configuration.html">Specification: Tiered Configuration (Bootstrap vs. DB)</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Interface</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/ui-guidelines.html">UI Guidelines</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-iconography.html">Specification: Iconography &amp; Agnostic Vector Assets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/ui-modal-migration.html">Modal Architecture (PosUIModal)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/ui-custom-buttons.html">Custom Buttons &amp; Events</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Tickets &amp; Sales</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/sales-layout-migration.html">Sales Layout Architecture Migration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/sales-ticket-lifecycle.html">Ticket Lifecycle &amp; Taxes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/sales-backoffice-tickets.html">Back Office Tickets</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/sales-next-gen-architecture.html">Next-Generation Sales &amp; Catalog Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-document-series.html">Specification: Document Number Series Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-audit-journal.html">Specification: Audit Journal &amp; Event Log</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Database &amp; Persistence</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/data-schema-overview.html">Database Schema Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/data-access-layer.html">Database Access Layer</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/transaction-performance-strategy.html">Transaction Performance &amp; Pooling Strategy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Peripherals &amp; Hardware</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/hardware-peripherals.html">Peripheral &amp; Scales Overview</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/hardware-printers.html">Printers &amp; ESC/POS</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/hardware-barcodes.html">Barcode Support</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reporting &amp; Printing</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/report-jasper-overview.html">Reporting Overview (JasperReports)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/report-pdf-export.html">PDF Export</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/spec-cash-reporting-standards.html">Specification: Standard Cash Reports (X/Z Reports &amp; PosLog)</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/resources-assets.html">Resources &amp; Assets Overview</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Testing &amp; Automation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/automation-multilingual-audio-narration.html">Automated Video Showcase &amp; Multi-Language Audio Narration</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Troubleshooting</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../guide-devel/troubleshooting-known-issues.html">Known Issues</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">User Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-user/user-setup-guide.html">Setup &amp; Installation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Commercial Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../guide-comercial/commercial-product-vision.html">Product Vision</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Migration Guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="quarkus-desktop-migration.html">Quarkus Desktop Migration Plan</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="migration-implementation-plan.html">Deep Analysis &amp; Implementation Plan</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Legacy Architecture</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../legacy/legacy-datalogic-architecture.html">DataLogic Scope &amp; Monolith Analysis</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Architecture Notes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../notes/notes-taxes-rounding.html">Taxes &amp; Rounding</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">KriolOS POS Documentation</span>
+    <span class="version">1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">KriolOS POS Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">KriolOS POS Documentation</a></li>
+    <li>Migration Guide</li>
+    <li><a href="quarkus-desktop-migration.html">Quarkus Desktop Migration Plan</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/kriolos-obiz/kriolos-pos/edit/main/docs/modules/guide-migration/pages/quarkus-desktop-migration.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Quarkus Desktop Migration: Architecture &amp; Implementation Plan</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#1-executive-summary-architectural-vision">1. 1. Executive Summary &amp; Architectural Vision</a></li>
+<li><a href="#2-current-state-vs-target-state-analysis">2. 2. Current State vs. Target State Analysis</a></li>
+<li><a href="#3-assets-native-resources-specification-quarkus-native-resources-includes">3. 3. Assets &amp; Native Resources Specification (<code>quarkus.native.resources.includes</code>)</a>
+<ul class="sectlevel2">
+<li><a href="#3-1-comprehensive-resource-inclusion-manifest">3.1. 3.1 Comprehensive Resource Inclusion Manifest</a></li>
+<li><a href="#3-2-breakdown-by-asset-category">3.2. 3.2 Breakdown by Asset Category</a></li>
+</ul>
+</li>
+<li><a href="#4-native-libraries-management">4. 4. Native Libraries Management</a>
+<ul class="sectlevel2">
+<li><a href="#os-permission-requirements">4.1. OS Permission Requirements:</a></li>
+</ul>
+</li>
+<li><a href="#5-arc-build-time-cdi-container-architecture">5. 5. ArC (Build-Time CDI Container) Architecture</a>
+<ul class="sectlevel2">
+<li><a href="#5-1-service-decomposition">5.1. 5.1 Service Decomposition</a></li>
+<li><a href="#5-2-transition-pattern-the-arcbridge">5.2. 5.2 Transition Pattern: The <code>ArcBridge</code></a></li>
+<li><a href="#5-3-decoupling-ui-and-business-logic-with-cdi-events">5.3. 5.3 Decoupling UI and Business Logic with CDI Events</a></li>
+</ul>
+</li>
+<li><a href="#6-desktop-ui-integration-via-quarkiverse-quarkus-desktop-swing">6. 6. Desktop UI Integration via Quarkiverse Quarkus Desktop (Swing)</a>
+<ul class="sectlevel2">
+<li><a href="#6-1-overview-dependency">6.1. 6.1 Overview &amp; Dependency</a></li>
+<li><a href="#6-2-cdi-window-lifecycle">6.2. 6.2 CDI Window Lifecycle</a></li>
+<li><a href="#6-3-thread-safety-runonedt-edtexecutor">6.3. 6.3 Thread Safety: <code>@RunOnEdt</code> &amp; <code>EdtExecutor</code></a></li>
+<li><a href="#6-4-native-os-integration">6.4. 6.4 Native OS Integration</a></li>
+</ul>
+</li>
+<li><a href="#7-receipt-templating-apache-velocity-to-quarkus-qute-engine-api">7. 7. Receipt Templating: Apache Velocity to Quarkus Qute (Engine API)</a>
+<ul class="sectlevel2">
+<li><a href="#7-1-architectural-motivation">7.1. 7.1 Architectural Motivation</a></li>
+<li><a href="#7-2-the-quarkus-qute-standalone-engine-api">7.2. 7.2 The Quarkus Qute Standalone Engine API</a></li>
+<li><a href="#7-3-implementation-via-scriptengineprovider-spi">7.3. 7.3 Implementation via <code>ScriptEngineProvider</code> SPI</a></li>
+<li><a href="#7-4-template-syntax-migration-guide">7.4. 7.4 Template Syntax Migration Guide</a></li>
+</ul>
+</li>
+<li><a href="#8-scripting-business-rules-beanshell-to-quickjs">8. 8. Scripting &amp; Business Rules: BeanShell to QuickJS</a>
+<ul class="sectlevel2">
+<li><a href="#8-1-architectural-motivation">8.1. 8.1 Architectural Motivation</a></li>
+<li><a href="#8-2-why-quickjs">8.2. 8.2 Why QuickJS?</a></li>
+<li><a href="#8-3-implementation-via-scriptengineprovider-spi">8.3. 8.3 Implementation via <code>ScriptEngineProvider</code> SPI</a></li>
+<li><a href="#8-4-script-migration-guide-beanshell-bs-quickjs-js">8.4. 8.4 Script Migration Guide (BeanShell <code>.bs</code> → QuickJS <code>.js</code>)</a></li>
+</ul>
+</li>
+<li><a href="#9-cross-platform-distribution-with-jpackage">9. 9. Cross-Platform Distribution with JPackage</a>
+<ul class="sectlevel2">
+<li><a href="#9-1-quarkus-fast-jar-jpackage-synergy">9.1. 9.1 Quarkus Fast-Jar &amp; JPackage Synergy</a></li>
+<li><a href="#9-2-modular-runtime-image-jlink-options">9.2. 9.2 Modular Runtime Image (JLink Options)</a></li>
+<li><a href="#9-3-os-specific-packaging-matrix">9.3. 9.3 OS-Specific Packaging Matrix</a></li>
+</ul>
+</li>
+<li><a href="#10-reflection-registration-policy-mandatory-rule">10. 10. Reflection Registration Policy (Mandatory Rule)</a>
+<ul class="sectlevel2">
+<li><a href="#10-1-rationale">10.1. 10.1 Rationale</a></li>
+<li><a href="#10-2-canonical-registration-class">10.2. 10.2 Canonical Registration Class</a></li>
+<li><a href="#10-3-module-level-convention">10.3. 10.3 Module-Level Convention</a></li>
+<li><a href="#10-4-code-review-gate">10.4. 10.4 Code Review Gate</a></li>
+</ul>
+</li>
+<li><a href="#11-step-by-step-implementation-roadmap">11. 11. Step-by-Step Implementation Roadmap</a></li>
+<li><a href="#12-verification-acceptance-criteria">12. 12. Verification &amp; Acceptance Criteria</a></li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="1-executive-summary-architectural-vision"><a class="anchor" href="#1-executive-summary-architectural-vision"></a>1. 1. Executive Summary &amp; Architectural Vision</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>KriolOS POS</strong> is modernizing its application core by adopting <strong>Quarkus</strong> as its runtime and dependency injection backbone in a <strong>Desktop (Swing / FlatLaf)</strong> deployment topology.</p>
+</div>
+<div class="paragraph">
+<p>Historically derived from OpenbravoPOS and Unicenta, the application traditionally relied on ad-hoc singleton registries (<code>AppConfig</code>, <code>AppView.getBean()</code>), manual JDBC connection management, legacy BeanShell scripting, Apache Velocity templating, and monolithic classpath loading.</p>
+</div>
+<div class="paragraph">
+<p>Migrating to <strong>Quarkus Desktop</strong> provides:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Quarkiverse Quarkus Desktop (<code>quarkus-desktop-swing</code>)</strong>: Modern AWT/Swing desktop lifecycle integration, CDI-driven windows, <code>@RunOnEdt</code> thread safety, native OS menu events, and automated GraalVM native image metadata.</p>
+</li>
+<li>
+<p><strong>Sub-Second Cold Boot</strong>: Build-time pre-indexing and class metadata resolution.</p>
+</li>
+<li>
+<p><strong>ArC (Build-Time CDI 4.0 Lite)</strong>: Clean, typesafe dependency injection with compile-time verification, eliminating runtime reflection overhead.</p>
+</li>
+<li>
+<p><strong>Unified Modern Configuration</strong>: Full alignment with MicroProfile Config and SmallRye Config (established in PR #144).</p>
+</li>
+<li>
+<p><strong>Quarkus Qute Engine API</strong>: Ultra-fast, zero-reflection template engine replacing Apache Velocity for receipt and invoice printing.</p>
+</li>
+<li>
+<p><strong>QuickJS Embedded Script Engine</strong>: Modern, sandboxed ECMAScript (ES2020) engine replacing unmaintained BeanShell for business event rules.</p>
+</li>
+<li>
+<p><strong>Agroal High-Performance Connection Pooling</strong>: Robust connection lifecycle management across SQLite, MariaDB, MySQL, and PostgreSQL.</p>
+</li>
+<li>
+<p><strong>Seamless Cross-Platform Distribution</strong>: Packaging Quarkus <code>fast-jar</code> binaries with <strong>JPackage</strong> and custom <strong>JLink</strong> runtimes for native Linux (.deb, .rpm), Windows (.msi), and macOS (.dmg) installers.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Swing / EDT Guiding Principle</strong>:
+Quarkus manages the application lifecycle, CDI container, background worker pools, and persistence. The Graphical User Interface (Swing / FlatLaf) is initialized strictly within the Java AWT Event Dispatch Thread (EDT) via <code>javax.swing.SwingUtilities.invokeLater()</code> or through Quarkus Desktop&#8217;s <code>@RunOnEdt</code> / <code>DesktopStartupEvent</code>, cleanly separated from the Quarkus runtime bootstrap thread.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="2-current-state-vs-target-state-analysis"><a class="anchor" href="#2-current-state-vs-target-state-analysis"></a>2. 2. Current State vs. Target State Analysis</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Dimension</th>
+<th class="tableblock halign-left valign-top">Current Legacy Architecture</th>
+<th class="tableblock halign-left valign-top">Target Quarkus Desktop Architecture</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Application Entry Point</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.forms.StartPOS.main(args)</code> with manual argument parsing and static initializers.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Quarkiverse Quarkus Desktop</strong>: <code>@Singleton</code> main window (<code>JRootApp</code>) observing <code>DesktopStartupEvent</code> or <code>@QuarkusMain</code> with <code>Quarkus.waitForExit()</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Desktop UI Lifecycle &amp; Threading</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ad-hoc <code>SwingUtilities.invokeLater()</code> calls mixed throughout business logic.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>io.quarkiverse.desktop:quarkus-desktop-swing</code></strong> with declarative <code>@RunOnEdt</code>, <code>EdtExecutor</code>, and native OS event hooks (About, Preferences, Quit).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Dependency Injection</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AppView.getBean(Class&lt;T&gt;)</code> delegating to manual maps and singleton lookups.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ArC (CDI 4.0 Lite)</strong> with compile-time wiring via <code>@ApplicationScoped</code>, <code>@Singleton</code>, <code>@Inject</code>, and CDI producers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Configuration</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hybrid <code>AppConfig</code> properties file + SmallRye MicroProfile Config SPI (PR #144).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Native Quarkus configuration via <code>application.properties</code>, <code>@ConfigProperty</code>, SmallRye profiles (<code>%prod</code>, <code>%dev</code>, <code>%desktop</code>), and database config source.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Receipt Templating</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Apache Velocity 2.x</strong> (<code>.vm</code> / <code>.xml</code> templates) relying on heavy reflection and runtime introspection.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Quarkus Qute (Engine API)</strong> (<code>.qute</code> / <code>.qute.xml</code>) providing pre-parsed, zero-reflection, sub-millisecond receipt rendering.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Scripting &amp; Business Rules</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>BeanShell 2.x</strong> (<code>.bs</code> / <code>.bsh</code>) interpreting Java 1.3 syntax via dynamic reflection at runtime.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>QuickJS (ES2020)</strong> (<code>.js</code>) ultra-compact, sandboxed embedded JavaScript engine with execution timeouts and memory caps.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Database &amp; Pooling</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Custom <code>Session.java</code> wrapping raw <code>java.sql.Connection</code> with manual transactions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Agroal Connection Pool</strong> (<code>quarkus-agroal</code>) with declarative <code>@Transactional</code> boundaries and unified DataSource management.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Database Migrations</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Embedded Liquibase execution embedded inside <code>DataLogicSystem</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quarkus-liquibase</code> extension executing schema evolution deterministically at startup.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Event Handling</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ad-hoc Swing listener interfaces (<code>JPaymentNotifier</code>, custom ticket callbacks).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Strongly-typed <strong>CDI Events</strong> (<code>Event&lt;PaymentCompletedEvent&gt;</code>, <code>@Observes TicketLineAddedEvent</code>) decoupling business events from UI controls.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Packaging &amp; Distribution</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multi-jar output assembled into JPackage lib directory.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quarkus <code>fast-jar</code> (<code>quarkus-app/</code>) packaged into native OS installers (MSI, DMG, DEB) using <code>jpackage-maven-plugin</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="3-assets-native-resources-specification-quarkus-native-resources-includes"><a class="anchor" href="#3-assets-native-resources-specification-quarkus-native-resources-includes"></a>3. 3. Assets &amp; Native Resources Specification (<code>quarkus.native.resources.includes</code>)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In traditional JVM execution, resource discovery relies on classpath crawling. In Quarkus desktop and native builds, all resources required at runtime must be deterministically declared at build time.</p>
+</div>
+<div class="sect2">
+<h3 id="3-1-comprehensive-resource-inclusion-manifest"><a class="anchor" href="#3-1-comprehensive-resource-inclusion-manifest"></a>3.1. 3.1 Comprehensive Resource Inclusion Manifest</h3>
+<div class="paragraph">
+<p>The <code>quarkus.native.resources.includes</code> configuration property tells the Quarkus build-time processor which files to index, bundle, and expose to <code>ClassLoader.getResourceAsStream()</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># ==============================================================================
+# Quarkus Desktop: Native Resource Inclusion Manifest
+# ==============================================================================
+
+quarkus.native.resources.includes=\
+  com/openbravo/images/**,\
+  com/openbravo/svg/**,\
+  com/openbravo/reports/**,\
+  com/openbravo/pos/templates/**,\
+  com/openbravo/pos/scripts/**,\
+  db/changelog/**,\
+  db/migrations/**,\
+  pos_messages*.properties,\
+  erp_messages*.properties,\
+  META-INF/services/**,\
+  icons/**
+
+# Exclude unnecessary build metadata and source templates from runtime artifact
+quarkus.native.resources.excludes=\
+  **/*.java,\
+  **/*.form,\
+  **/*.bak,\
+  **/.DS_Store</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="3-2-breakdown-by-asset-category"><a class="anchor" href="#3-2-breakdown-by-asset-category"></a>3.2. 3.2 Breakdown by Asset Category</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Category</th>
+<th class="tableblock halign-left valign-top">Resource Pattern</th>
+<th class="tableblock halign-left valign-top">Purpose &amp; Runtime Loading</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Raster Icons</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com/openbravo/images/**</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PNG, GIF button icons loaded via <code>ImageResources.getIcon(&#8230;&#8203;)</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Vector Icons</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com/openbravo/svg/<strong></code>, <code>icons/</strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">High-DPI scalable vectors rendered by FlatLaf SVG Icon / Batik.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>JasperReports</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com/openbravo/reports/**</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compiled <code>.jasper</code> and source <code>.jrxml</code> definitions loaded for standard A4 and thermal reports.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Receipt &amp; Display Templates</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com/openbravo/pos/templates/**</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default built-in Qute XML receipt templates (<code>Printer.Ticket.xml</code>, <code>Printer.CustomerPaid.xml</code>).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>QuickJS Scripts</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com/openbravo/pos/scripts/**</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Built-in default user event scripts (<code>Ticket.Close.js</code>, <code>script.StockCurrentSet.js</code>).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Internationalization</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pos_messages*.properties</code>, <code>erp_messages*.properties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multi-language resource bundles loaded by <code>AppLocal.getIntString()</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Database Migrations</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>db/changelog/<strong></code>, <code>db/migrations/</strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Liquibase changelog XML/SQL scripts executed at startup.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>SPI Providers</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>META-INF/services/**</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ServiceLoader registrations (<code>POSThemeFactory</code>, <code>ScriptEngineProvider</code>, <code>ConfigDatabaseProfile</code>).</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="4-native-libraries-management"><a class="anchor" href="#4-native-libraries-management"></a>4. 4. Native Libraries Management</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A POS desktop client interfaces directly with physical peripheral hardware, necessitating low-level native operating system access:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Native Dependency</th>
+<th class="tableblock halign-left valign-top">Underlying Technology</th>
+<th class="tableblock halign-left valign-top">POS Functionality</th>
+<th class="tableblock halign-left valign-top">Quarkus Desktop Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.neuronrobotics:nrjavaserial</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RXTX (Native <code>.so</code>, <code>.dll</code>, <code>.dylib</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ESC/POS serial printers, customer pole displays (VFD/LCD), electronic weighing scales, and RS-232 cash drawers.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Embedded native libraries extracted to <code>${java.io.tmpdir}/kriolos-serial</code>. Isolated behind <code>kriolos-opos-hardware</code> SPI so build-time CDI scanning does not invoke native initialization prematurely.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.usb4java:usb4java</code> &amp; <code>usb4java-javax</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LibUSB 1.0 (JNI bindings)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Direct USB thermal receipt printers, USB cash drawers, and custom HID barcode scanners.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Native libraries loaded at runtime when hardware subsystems are initialized. Guarded with graceful degradation when physical USB devices are absent.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.xerial:sqlite-jdbc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Native SQLite binary wrapper</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Embedded standalone local database (<code>kriolopos.db</code>) for zero-configuration, single-station operation.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Standard JDBC driver compatibility supported directly by Quarkus Agroal datasource. Native SQLite binaries unpack into runtime memory without external dependencies.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="os-permission-requirements"><a class="anchor" href="#os-permission-requirements"></a>4.1. OS Permission Requirements:</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Linux</strong>: User running POS must be added to <code>dialout</code> and <code>tty</code> groups for COM/serial communication:
+[source,bash]
+----
+sudo usermod -a -G dialout,tty $USER
+----</p>
+</li>
+<li>
+<p><strong>Windows</strong>: Proper WinUSB / COM port driver assignment via Device Manager.</p>
+</li>
+<li>
+<p><strong>macOS</strong>: TCC (Transparency, Consent, and Control) USB device access confirmation.</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="5-arc-build-time-cdi-container-architecture"><a class="anchor" href="#5-arc-build-time-cdi-container-architecture"></a>5. 5. ArC (Build-Time CDI Container) Architecture</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="5-1-service-decomposition"><a class="anchor" href="#5-1-service-decomposition"></a>5.1. 5.1 Service Decomposition</h3>
+<div class="paragraph">
+<p>The business logic extracted from legacy Swing panels into <code>kriolos-opos-domain</code> will be registered as CDI beans:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.openbravo.pos.sales;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+@ApplicationScoped
+public class SalesServiceImpl implements SalesService {
+
+    @Inject
+    InventoryService inventoryService;
+
+    @Inject
+    CustomerService customerService;
+
+    @Override
+    public TicketInfo createTicket() {
+        return new TicketInfo();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="5-2-transition-pattern-the-arcbridge"><a class="anchor" href="#5-2-transition-pattern-the-arcbridge"></a>5.2. 5.2 Transition Pattern: The <code>ArcBridge</code></h3>
+<div class="paragraph">
+<p>During intermediate migration stages where legacy Swing classes still exist alongside modern CDI services, an <code>ArcBridge</code> provides typesafe access to CDI beans from Swing components without polluting UI classes with service locator antipatterns:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.openbravo.pos.cdi;
+
+import io.quarkus.arc.Arc;
+
+public final class ArcBridge {
+
+    private ArcBridge() {}
+
+    public static &lt;T&gt; T getBean(Class&lt;T&gt; beanClass) {
+        return Arc.container().instance(beanClass).get();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="5-3-decoupling-ui-and-business-logic-with-cdi-events"><a class="anchor" href="#5-3-decoupling-ui-and-business-logic-with-cdi-events"></a>5.3. 5.3 Decoupling UI and Business Logic with CDI Events</h3>
+<div class="paragraph">
+<p>Replace direct method calls and tightly coupled UI listeners with asynchronous or synchronous CDI events:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">[User clicks 'Pay' in JPaymentSelect]
+              │
+              ▼
+    PaymentService.processPayment(...)
+              │
+              ▼
+   CDI Event: Event&lt;PaymentCompletedEvent&gt;.fire(...)
+        ┌─────┴──────────────────┐
+        ▼                        ▼
+ [Audit Journal Log]    [Hardware Drawer Kick]
+  (@Observes)                 (@Observes)</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="6-desktop-ui-integration-via-quarkiverse-quarkus-desktop-swing"><a class="anchor" href="#6-desktop-ui-integration-via-quarkiverse-quarkus-desktop-swing"></a>6. 6. Desktop UI Integration via Quarkiverse Quarkus Desktop (Swing)</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="6-1-overview-dependency"><a class="anchor" href="#6-1-overview-dependency"></a>6.1. 6.1 Overview &amp; Dependency</h3>
+<div class="paragraph">
+<p>The Swing desktop UI layer (<code>kriolos-opos-app</code>) will be integrated using <strong>Quarkus Desktop</strong> from the Quarkiverse community (<a href="https://github.com/quarkiverse/quarkus-desktop" class="bare">https://github.com/quarkiverse/quarkus-desktop</a>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkiverse.desktop&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-desktop-swing&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0.Alpha1&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This extension provides:
+1. <strong>Automated GraalVM Native Image Support</strong>: Configures reflection, resource bundles, JNI metadata, and copies required JDK native libraries (<code>libawt.so</code>, <code>libfontmanager.so</code>, <code>awt.dll</code>, <code>libosxapp.dylib</code>) automatically.
+2. <strong>CDI-Powered Window Lifecycle</strong>: Turns standard <code>JFrame</code> and <code>JPanel</code> components into manageable CDI beans.
+3. <strong>Thread Safety with <code>@RunOnEdt</code> and <code>EdtExecutor</code></strong>: Eliminates manual <code>SwingUtilities.invokeLater()</code> boilerplate when returning from background worker threads.
+4. <strong>Native OS Desktop Integration</strong>: Bridges macOS Application menu items (About, Preferences, Quit) directly into CDI events.
+5. <strong>Live Coding in Dev Mode</strong>: Supports Quarkus Dev Mode live-reload for desktop Swing UI development.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="6-2-cdi-window-lifecycle"><a class="anchor" href="#6-2-cdi-window-lifecycle"></a>6.2. 6.2 CDI Window Lifecycle</h3>
+<div class="paragraph">
+<p>The main application window <code>JRootApp</code> becomes a managed <code>@Singleton</code> bean reacting to <code>DesktopStartupEvent</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.openbravo.pos.forms;
+
+import io.quarkiverse.desktop.awt.DesktopStartupEvent;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import javax.swing.JFrame;
+
+@Singleton
+public class JRootApp extends JFrame {
+
+    @Inject
+    AppConfig config;
+
+    @Inject
+    SalesService salesService;
+
+    void onStartup(@Observes DesktopStartupEvent event) {
+        setTitle("KriolOS POS");
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        initUI();
+        pack();
+        setVisible(true);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="6-3-thread-safety-runonedt-edtexecutor"><a class="anchor" href="#6-3-thread-safety-runonedt-edtexecutor"></a>6.3. 6.3 Thread Safety: <code>@RunOnEdt</code> &amp; <code>EdtExecutor</code></h3>
+<div class="paragraph">
+<p>Peripheral scanners, scales, and payment gateways operate asynchronously in background threads. <code>quarkus-desktop-swing</code> provides declarative dispatching back to the Swing Event Dispatch Thread:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.openbravo.pos.sales;
+
+import io.quarkiverse.desktop.swing.RunOnEdt;
+import io.quarkiverse.desktop.swing.EdtExecutor;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+@ApplicationScoped
+public class SalesBarcodeScanCoordinator {
+
+    @Inject
+    EdtExecutor edtExecutor;
+
+    @Inject
+    TicketLineController ticketLineController;
+
+    // Asynchronous background peripheral scan event
+    public void onRawBarcodeReceived(String barcode) {
+        // Runs in background worker pool
+        ProductInfoExt product = lookupProductDatabase(barcode);
+
+        // Dispatches safely to Swing EDT
+        edtExecutor.execute(() -&gt; {
+            ticketLineController.addProductLine(product);
+        });
+    }
+
+    // Alternatively, declarative annotation for automatic EDT execution
+    @RunOnEdt
+    public void updateCartUI(TicketInfo ticket) {
+        // Guaranteed to run on Swing Event Dispatch Thread
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="6-4-native-os-integration"><a class="anchor" href="#6-4-native-os-integration"></a>6.4. 6.4 Native OS Integration</h3>
+<div class="paragraph">
+<p><code>quarkus-desktop-swing</code> translates platform-specific desktop signals into CDI events:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package com.openbravo.pos.forms;
+
+import io.quarkiverse.desktop.awt.AboutEvent;
+import io.quarkiverse.desktop.awt.PreferencesEvent;
+import io.quarkiverse.desktop.awt.QuitEvent;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+
+@ApplicationScoped
+public class DesktopMenuObserver {
+
+    void onAbout(@Observes AboutEvent event) {
+        // Display POS About dialog
+    }
+
+    void onPreferences(@Observes PreferencesEvent event) {
+        // Open Database / Peripheral Configuration Panel
+    }
+
+    void onQuit(@Observes QuitEvent event) {
+        // Confirm no open unpaid tickets exist before graceful shutdown
+    }
+}</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="7-receipt-templating-apache-velocity-to-quarkus-qute-engine-api"><a class="anchor" href="#7-receipt-templating-apache-velocity-to-quarkus-qute-engine-api"></a>7. 7. Receipt Templating: Apache Velocity to Quarkus Qute (Engine API)</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="7-1-architectural-motivation"><a class="anchor" href="#7-1-architectural-motivation"></a>7.1. 7.1 Architectural Motivation</h3>
+<div class="paragraph">
+<p>Currently, receipt, invoice, and customer display formatting is performed by <strong>Apache Velocity 2.x</strong>. While functional, Velocity presents significant limitations:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Heavy Runtime Reflection</strong>: Velocity parses templates dynamically and inspects Java objects using reflection on every render pass.</p>
+</li>
+<li>
+<p><strong>Cold Start Penalty</strong>: Velocity initializes introspectors and resource managers, slowing POS startup.</p>
+</li>
+<li>
+<p><strong>GraalVM &amp; Native Incompatibility</strong>: Dynamic introspection requires hundreds of explicit reflection registrations.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="7-2-the-quarkus-qute-standalone-engine-api"><a class="anchor" href="#7-2-the-quarkus-qute-standalone-engine-api"></a>7.2. 7.2 The Quarkus Qute Standalone Engine API</h3>
+<div class="paragraph">
+<p><strong>Quarkus Qute</strong> provides a programmatic <strong>Engine API</strong> (<code>io.quarkus.qute.Engine</code>) that can be used standalone in desktop applications without requiring an HTTP server or REST endpoints:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.quarkus.qute.Engine;
+import io.quarkus.qute.Template;
+
+// Initialized as a singleton CDI bean or via SPI
+Engine engine = Engine.builder()
+    .addDefaults()
+    .build();
+
+// Parse and cache template
+Template receiptTemplate = engine.parse(rawTemplateXml);
+
+// Zero-reflection, sub-millisecond rendering
+String renderedXml = receiptTemplate
+    .data("ticket", ticket)
+    .data("taxes", taxMap)
+    .render();</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="7-3-implementation-via-scriptengineprovider-spi"><a class="anchor" href="#7-3-implementation-via-scriptengineprovider-spi"></a>7.3. 7.3 Implementation via <code>ScriptEngineProvider</code> SPI</h3>
+<div class="paragraph">
+<p>Under <code>kriolos-opos-spi</code>, a dedicated <code>QuteScriptEngineProvider</code> implements <code>ScriptEngineProvider</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package io.github.kriolos.opos.scripting.qute;
+
+import com.openbravo.pos.spi.scripting.*;
+import io.quarkus.qute.Engine;
+import io.quarkus.qute.Template;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class QuteScriptEngineProvider implements ScriptEngineProvider {
+
+    public static final String ENGINE_ID = "qute";
+    private final Engine quteEngine = Engine.builder().addDefaults().build();
+    private final Map&lt;String, Template&gt; cache = new ConcurrentHashMap&lt;&gt;();
+
+    @Override
+    public boolean hasEngine(String engineId) {
+        return ENGINE_ID.equalsIgnoreCase(engineId);
+    }
+
+    @Override
+    public String render(String engineId, String templateName, Map&lt;String, Object&gt; model) {
+        Template template = cache.computeIfAbsent(templateName, quteEngine::getTemplate);
+        var instance = template.instance();
+        model.forEach(instance::data);
+        return instance.render();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="7-4-template-syntax-migration-guide"><a class="anchor" href="#7-4-template-syntax-migration-guide"></a>7.4. 7.4 Template Syntax Migration Guide</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Construct</th>
+<th class="tableblock halign-left valign-top">Legacy Velocity Syntax</th>
+<th class="tableblock halign-left valign-top">Modern Quarkus Qute Syntax</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Looping over Ticket Lines</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>#foreach($line in $ticket.getLines()) &#8230;&#8203; #end</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{#for line in ticket.lines} &#8230;&#8203; {/for}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Conditionals</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>#if($ticket.hasDiscount()) &#8230;&#8203; #else &#8230;&#8203; #end</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{#if ticket.hasDiscount} &#8230;&#8203; {#else} &#8230;&#8203; {/if}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Property Access</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$ticket.printTotal()</code> or <code>$ticket.getTotal()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>\{ticket.printTotal()}</code> or <code>\{ticket.total}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Index in Loop</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$velocityCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{line_count}</code> or <code>{line_index}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Null Safe Output</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$!customer.getName()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>\{customer.name.or('')}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>XML Escaping</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Velocity raw text or explicit escape tool</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configurable raw vs XML mode: <code>\{line.productName.raw}</code></p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="8-scripting-business-rules-beanshell-to-quickjs"><a class="anchor" href="#8-scripting-business-rules-beanshell-to-quickjs"></a>8. 8. Scripting &amp; Business Rules: BeanShell to QuickJS</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="8-1-architectural-motivation"><a class="anchor" href="#8-1-architectural-motivation"></a>8.1. 8.1 Architectural Motivation</h3>
+<div class="paragraph">
+<p>User-configurable sales events, discount rules, and payment callbacks currently use <strong>BeanShell 2.x</strong> (<code>bsh.Interpreter</code>). BeanShell:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Is effectively unmaintained and stuck in Java 1.3 language syntax.</p>
+</li>
+<li>
+<p>Has high memory overhead (~15MB overhead per complex interpreter session).</p>
+</li>
+<li>
+<p>Relies on full dynamic JVM reflection, completely incompatible with GraalVM build-time analysis.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="8-2-why-quickjs"><a class="anchor" href="#8-2-why-quickjs"></a>8.2. 8.2 Why QuickJS?</h3>
+<div class="paragraph">
+<p><strong>QuickJS</strong> (created by Fabrice Bellard) is an ultra-compact, high-performance embeddable JavaScript engine supporting the full ECMAScript 2020 specification:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Microscopic Footprint</strong>: Runtime engine size is under 300KB RAM with sub-millisecond execution startup.</p>
+</li>
+<li>
+<p><strong>Deterministic Sandboxing</strong>: Enforces strict instruction execution limits and memory ceilings, protecting POS terminals from infinite loops or memory leaks in user scripts.</p>
+</li>
+<li>
+<p><strong>Modern Developer Syntax</strong>: POS customizers write clean modern JavaScript (ES6+ arrow functions, <code>const</code>/<code>let</code>, destructuring, template literals) instead of dated Java 1.3 syntax.</p>
+</li>
+<li>
+<p><strong>Panama / FFM Ready</strong>: Embedded via lightweight JNI bindings or modern Java 22+ Foreign Function &amp; Memory API (Project Panama), running with native execution speed.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="8-3-implementation-via-scriptengineprovider-spi"><a class="anchor" href="#8-3-implementation-via-scriptengineprovider-spi"></a>8.3. 8.3 Implementation via <code>ScriptEngineProvider</code> SPI</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package io.github.kriolos.opos.scripting.quickjs;
+
+import com.openbravo.pos.spi.scripting.*;
+import java.util.Map;
+
+public class QuickJsScriptEngineProvider implements ScriptEngineProvider {
+
+    public static final String ENGINE_ID = "quickjs";
+
+    @Override
+    public boolean hasEngine(String engineId) {
+        return ENGINE_ID.equalsIgnoreCase(engineId) || "javascript".equalsIgnoreCase(engineId);
+    }
+
+    @Override
+    public Object execute(String engineId, String script, Map&lt;String, Object&gt; bindings)
+            throws ScriptEngineException {
+        // Enforce execution sandbox: 50MB max memory, 2000ms max CPU time
+        try (QuickJsContext ctx = QuickJsRuntime.createContext(50 * 1024 * 1024, 2000)) {
+            bindings.forEach(ctx::bind);
+            return ctx.evaluate(script);
+        } catch (QuickJsTimeoutException e) {
+            throw new ScriptEngineException("POS Script timed out after 2000ms execution limit", e);
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="8-4-script-migration-guide-beanshell-bs-quickjs-js"><a class="anchor" href="#8-4-script-migration-guide-beanshell-bs-quickjs-js"></a>8.4. 8.4 Script Migration Guide (BeanShell <code>.bs</code> → QuickJS <code>.js</code>)</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Task</th>
+<th class="tableblock halign-left valign-top">Legacy BeanShell (<code>.bs</code>)</th>
+<th class="tableblock halign-left valign-top">Modern QuickJS (<code>.js</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Order Event Trigger</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Ticket.Close.bs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Ticket.Close.js</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Variable Declarations</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>double discount = 0.10;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>const discount = 0.10;</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Looping Lines</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>for (int i = 0; i &lt; ticket.getLinesCount(); i++) { &#8230;&#8203; }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>for (const line of ticket.lines) { &#8230;&#8203; }</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>String Formatting</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String.format("Total: %.2f", total);</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code> <code>Total: ${total.toFixed(2)}</code> </code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Calling POS Services</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>taxeslogic.calculateTaxes(ticket);</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>salesService.calculateTaxes(ticket);</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>During the migration phase, the <code>ScriptEngineProvider</code> SPI automatically routes <code>.bs</code> / <code>.bsh</code> files to BeanShell and <code>.js</code> files to QuickJS, allowing existing retail deployments to migrate their custom scripts progressively without breaking existing installations.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="9-cross-platform-distribution-with-jpackage"><a class="anchor" href="#9-cross-platform-distribution-with-jpackage"></a>9. 9. Cross-Platform Distribution with JPackage</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="9-1-quarkus-fast-jar-jpackage-synergy"><a class="anchor" href="#9-1-quarkus-fast-jar-jpackage-synergy"></a>9.1. 9.1 Quarkus Fast-Jar &amp; JPackage Synergy</h3>
+<div class="paragraph">
+<p>Quarkus builds an optimized distribution structure under <code>target/quarkus-app/</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">target/quarkus-app/
+├── app/
+│   └── kriolos-opos-app-1.0.0.jar
+├── lib/
+│   └── boot/ &amp; main/ (Indexed dependency jars)
+├── q-config/
+└── quarkus-run.jar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>jpackage</code> takes this pre-optimized directory as <code>--input</code>, executes <code>jlink</code> to produce a minimal runtime image containing only the needed JDK modules, and bundles native OS installers.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="9-2-modular-runtime-image-jlink-options"><a class="anchor" href="#9-2-modular-runtime-image-jlink-options"></a>9.2. 9.2 Modular Runtime Image (JLink Options)</h3>
+<div class="paragraph">
+<p>The custom JRE bundled with the POS installer strips unnecessary debug symbols and documentation while preserving full desktop Swing and cryptographic capabilities:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;jLinkOptions&gt;
+    &lt;jLinkOption&gt;--strip-native-commands&lt;/jLinkOption&gt;
+    &lt;jLinkOption&gt;--strip-debug&lt;/jLinkOption&gt;
+    &lt;jLinkOption&gt;--no-man-pages&lt;/jLinkOption&gt;
+    &lt;jLinkOption&gt;--no-header-files&lt;/jLinkOption&gt;
+    &lt;jLinkOption&gt;--compress=2&lt;/jLinkOption&gt;
+&lt;/jLinkOptions&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="9-3-os-specific-packaging-matrix"><a class="anchor" href="#9-3-os-specific-packaging-matrix"></a>9.3. 9.3 OS-Specific Packaging Matrix</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Operating System</th>
+<th class="tableblock halign-left valign-top">Installer Format</th>
+<th class="tableblock halign-left valign-top">App Icon</th>
+<th class="tableblock halign-left valign-top">Key JPackage Directives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Linux</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.deb</code>, <code>.rpm</code>, AppImage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>icons/app_icon.png</code> (512x512)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--linux-shortcut</code>, <code>--linux-package-name kriolos-pos</code>, <code>--linux-app-category Office</code>, <code>--linux-menu-group Office</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Windows</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.msi</code> (via WiX Toolset)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>icons/app_icon.ico</code> (multi-res ICO)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--win-menu</code>, <code>--win-menu-group "KriolOS/OPOS"</code>, <code>--win-dir-chooser</code>, <code>--win-shortcut</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>macOS</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.dmg</code> (Apple Disk Image)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>icons/app_icon.icns</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--mac-package-identifier io.github.kriolos-obiz.opos</code>, <code>--mac-sign</code> (optional developer ID signing)</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="10-reflection-registration-policy-mandatory-rule"><a class="anchor" href="#10-reflection-registration-policy-mandatory-rule"></a>10. 10. Reflection Registration Policy (Mandatory Rule)</h2>
+<div class="sectionbody">
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Absolute Rule — No Configuration Properties for Reflection</strong><br>
+Every class, field, method, or constructor that requires runtime or GraalVM native-image reflection registration <strong>MUST</strong> be declared programmatically in a single, canonical Java source file.
+Using <code>reflect-config.json</code>, <code>resources-config.json</code>, or any other JSON/YAML property configuration file for reflection registration is <strong>strictly prohibited</strong> in this project.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="10-1-rationale"><a class="anchor" href="#10-1-rationale"></a>10.1. 10.1 Rationale</h3>
+<div class="paragraph">
+<p>Reflection registrations scattered across multiple configuration files:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Fragment the contract</strong> — there is no single source of truth; changes require hunting across <code>src/main/resources/META-INF/native-image/</code>.</p>
+</li>
+<li>
+<p><strong>Are invisible to the compiler</strong> — typos in class names in JSON silently fail at native-image link time, not at build time.</p>
+</li>
+<li>
+<p><strong>Break refactoring</strong> — IDE rename/move refactorings do not update JSON entries, creating stale registrations that become dead weight or, worse, hidden security surface.</p>
+</li>
+<li>
+<p><strong>Oppose ArC build-time CDI</strong> — ArC already performs complete build-time analysis; adding JSON side-channels defeats the purpose.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="10-2-canonical-registration-class"><a class="anchor" href="#10-2-canonical-registration-class"></a>10.2. 10.2 Canonical Registration Class</h3>
+<div class="paragraph">
+<p>All reflection registrations live in <strong>one</strong> class per module:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package io.github.kriolos.opos.app.native_;
+
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
+/**
+ * SINGLE SOURCE OF TRUTH for all GraalVM native-image reflection registrations
+ * in the kriolos-opos-app module.
+ *
+ * RULE: No reflect-config.json or resources-config.json files are allowed.
+ *       Every reflection need MUST be declared here as code.
+ *
+ * HOW TO ADD A NEW ENTRY:
+ *   1. Add the class to the @RegisterForReflection targets array below.
+ *   2. Commit this file — code review enforces the single-place rule.
+ */
+@RegisterForReflection(
+    targets = {
+        // --- Receipt / Ticket model (used by Qute Engine API type-safe bindings) ---
+        com.openbravo.data.loader.TableDef.class,
+        com.openbravo.pos.ticket.TicketInfo.class,
+        com.openbravo.pos.ticket.TicketLineInfo.class,
+        com.openbravo.pos.ticket.TaxInfo.class,
+
+        // --- Hardware SPI implementations discovered via ServiceLoader ---
+        io.github.kriolos.opos.hardware.printer.EscPosReceiptPrinter.class,
+        io.github.kriolos.opos.hardware.scale.NciScale.class,
+
+        // --- FlatLaf / Look and Feel internals needed by Swing native rendering ---
+        com.formdev.flatlaf.FlatLightLaf.class,
+        com.formdev.flatlaf.FlatDarkLaf.class,
+
+        // --- JasperReports compiled report classes (generated at build time) ---
+        // Add each net.sf.jasperreports.engine.fill.JR* class explicitly here.
+    },
+    // Include fields and methods so CDI producers and Qute binders can introspect them
+    fields = true,
+    methods = true
+)
+public class OposReflectionRegistrations {
+    // This class body intentionally left empty.
+    // Its sole purpose is to carry the @RegisterForReflection annotation.
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Quarkus processes <code>@RegisterForReflection</code> at <strong>build time</strong> via the ArC annotation processor.
+The class is not instantiated at runtime; it is a pure metadata carrier.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="10-3-module-level-convention"><a class="anchor" href="#10-3-module-level-convention"></a>10.3. 10.3 Module-Level Convention</h3>
+<div class="paragraph">
+<p>Each Quarkus-enabled module that needs reflection declares its own <code>*ReflectionRegistrations</code> class in a <code>native_</code> sub-package:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Registration Class</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos-opos-app</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.github.kriolos.opos.app.native_.OposReflectionRegistrations</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos-opos-hardware</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.github.kriolos.opos.hardware.native_.HardwareReflectionRegistrations</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos-opos-scripting-quickjs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.github.kriolos.opos.scripting.quickjs.native_.QuickJsReflectionRegistrations</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kriolos-opos-scripting-qute</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.github.kriolos.opos.scripting.qute.native_.QuteReflectionRegistrations</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="10-4-code-review-gate"><a class="anchor" href="#10-4-code-review-gate"></a>10.4. 10.4 Code Review Gate</h3>
+<div class="paragraph">
+<p>The following rule <strong>must</strong> be enforced in every Pull Request review checklist:</p>
+</div>
+<div class="ulist checklist">
+<ul class="checklist">
+<li>
+<p><i class="fa fa-square-o"></i> No <code>reflect-config.json</code> file was added or modified.</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> No <code>resources-config.json</code> file was added or modified.</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Any new reflection need was added to the appropriate <code>*ReflectionRegistrations.java</code> class.</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> The <code>targets</code> array entry references a fully-qualified, import-resolvable class — not a string literal.</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="11-step-by-step-implementation-roadmap"><a class="anchor" href="#11-step-by-step-implementation-roadmap"></a>11. 11. Step-by-Step Implementation Roadmap</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Phase 1: CDI Prep &amp; MicroProfile Config (Completed ✅)
+  ├── MicroProfile Config SPI integration (PR #144)
+  ├── Full elimination of legacy JDialog -&gt; PosUIModal (PR #145, #146)
+  └── Business logic extraction to kriolos-opos-domain
+
+Phase 2: Scripting &amp; Templating Modernization (Qute + QuickJS)
+  ├── Implement QuteScriptEngineProvider using programmatic Qute Engine API
+  ├── Convert core receipt XML templates to Qute format with dual-engine fallback
+  ├── Implement QuickJsScriptEngineProvider with execution sandboxing
+  └── Provide script compatibility layer for legacy BeanShell scripts
+
+Phase 3: Quarkus Desktop Module Integration (quarkus-desktop-swing)
+  ├── Add io.quarkiverse.desktop:quarkus-desktop-swing dependency
+  ├── Convert JRootApp to @Singleton observing DesktopStartupEvent
+  ├── Apply @RunOnEdt &amp; EdtExecutor for peripheral event dispatches
+  └── Configure quarkus.native.resources.includes manifest
+
+Phase 4: Service Migration to ArC CDI
+  ├── Annotate domain services with @ApplicationScoped
+  ├── Wire Agroal DataSource &amp; Connection Pool
+  └── Replace legacy AppView.getBean() with Arc injection
+
+Phase 5: Peripheral &amp; Hardware Hardening
+  ├── Isolate nrjavaserial &amp; usb4java runtime extraction
+  ├── Validate JasperReports &amp; Qute loading under Fast-Jar classloader
+  └── Verify multi-database profiles under Quarkus (SQLite, MySQL, PG)
+
+Phase 6: JPackage Multi-Platform Release Automation
+  ├── Update kriolos-opos-jpackage to package target/quarkus-app/
+  ├── Add GitHub Actions matrix build for Linux DEB, Windows MSI, macOS DMG
+  └── Automated release asset publication</code></pre>
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="12-verification-acceptance-criteria"><a class="anchor" href="#12-verification-acceptance-criteria"></a>12. 12. Verification &amp; Acceptance Criteria</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Cold Boot Benchmark</strong>: Cold start to visible Swing login screen under 1.5 seconds on standard hardware.</p>
+</li>
+<li>
+<p><strong>Memory Footprint</strong>: Base memory footprint (resident set size) under 180MB at idle.</p>
+</li>
+<li>
+<p><strong>Receipt Rendering Speed</strong>: Qute template render time under 2ms per receipt pass.</p>
+</li>
+<li>
+<p><strong>Script Execution Safety</strong>: QuickJS terminates any customer script running longer than 2000ms with a graceful error.</p>
+</li>
+<li>
+<p><strong>Thread Safety</strong>: All Swing mutations verified strictly executing on the Event Dispatch Thread via <code>@RunOnEdt</code>.</p>
+</li>
+<li>
+<p><strong>Hardware Compatibility</strong>: Serial receipt printing, cash drawer kick, and barcode scan events function identically to legacy execution.</p>
+</li>
+<li>
+<p><strong>Offline Resilience</strong>: Standalone SQLite database boots seamlessly without network or external services.</p>
+</li>
+<li>
+<p><strong>Installer Validation</strong>: Standalone native installers (DEB, MSI, DMG) install cleanly without requiring an external Java Runtime Environment (JRE).</p>
+</li>
+<li>
+<p><strong>Reflection Policy Compliance</strong>: Zero <code>reflect-config.json</code> or <code>resources-config.json</code> files present in the repository. All GraalVM reflection registrations are declared in the canonical <code>*ReflectionRegistrations.java</code> class of each module.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
