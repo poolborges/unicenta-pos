@@ -4,6 +4,7 @@ import com.openbravo.pos.config.AppConfig;
 import com.openbravo.pos.forms.BootstrapPOS;
 import com.openbravo.pos.forms.WindowShell;
 import com.openbravo.pos.instance.InstanceManager;
+import com.openbravo.pos.spi.config.BootstrapConfig;
 import io.github.kriolos.opos.automation.actions.InstanceManagerAction;
 import org.assertj.swing.core.BasicRobot;
 import org.assertj.swing.core.Robot;
@@ -141,7 +142,7 @@ public class PosInstanceManagerIT {
             WindowShell rootFrame = new WindowShell(config);
             sanitizeFrame(rootFrame);
             try {
-                InstanceManager manager = new InstanceManager(rootFrame, config);
+                InstanceManager manager = new InstanceManager(rootFrame, (BootstrapConfig) config);
                 manager.registerInstance();
             } catch (Exception e) {
                 LOGGER.log(Level.WARNING, "Could not register test instance: " + e.getMessage());
