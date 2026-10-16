@@ -1,0 +1,774 @@
+= Quarkus Desktop Migration: Architecture & Implementation Plan
+:author: KriolOS Team
+:toc:
+:toclevels: 3
+:numbered:
+:icons: font
+:source-highlighter: highlight.js
+
+== 1. Executive Summary & Architectural Vision
+
+**KriolOS POS** is modernizing its application core by adopting **Quarkus** as its runtime and dependency injection backbone in a **Desktop (Swing / FlatLaf)** deployment topology.
+
+Historically derived from OpenbravoPOS and Unicenta, the application traditionally relied on ad-hoc singleton registries (`AppConfig`, `AppView.getBean()`), manual JDBC connection management, legacy BeanShell scripting, Apache Velocity templating, and monolithic classpath loading.
+
+Migrating to **Quarkus Desktop** provides:
+
+* **Quarkiverse Quarkus Desktop (`quarkus-desktop-swing`)**: Modern AWT/Swing desktop lifecycle integration, CDI-driven windows, `@RunOnEdt` thread safety, native OS menu events, and automated GraalVM native image metadata.
+* **Sub-Second Cold Boot**: Build-time pre-indexing and class metadata resolution.
+* **ArC (Build-Time CDI 4.0 Lite)**: Clean, typesafe dependency injection with compile-time verification, eliminating runtime reflection overhead.
+* **Unified Modern Configuration**: Full alignment with MicroProfile Config and SmallRye Config (established in PR #144).
+* **Quarkus Qute Engine API**: Ultra-fast, zero-reflection template engine replacing Apache Velocity for receipt and invoice printing.
+* **QuickJS Embedded Script Engine**: Modern, sandboxed ECMAScript (ES2020) engine replacing unmaintained BeanShell for business event rules.
+* **Agroal High-Performance Connection Pooling**: Robust connection lifecycle management across SQLite, MariaDB, MySQL, and PostgreSQL.
+* **Seamless Cross-Platform Distribution**: Packaging Quarkus `fast-jar` binaries with **JPackage** and custom **JLink** runtimes for native Linux (.deb, .rpm), Windows (.msi), and macOS (.dmg) installers.
+
+[IMPORTANT]
+====
+**Swing / EDT Guiding Principle**:
+Quarkus manages the application lifecycle, CDI container, background worker pools, and persistence. The Graphical User Interface (Swing / FlatLaf) is initialized strictly within the Java AWT Event Dispatch Thread (EDT) via `javax.swing.SwingUtilities.invokeLater()` or through Quarkus Desktop's `@RunOnEdt` / `DesktopStartupEvent`, cleanly separated from the Quarkus runtime bootstrap thread.
+====
+
+---
+
+== 2. Current State vs. Target State Analysis
+
+[cols="1,2,2",options="header"]
+|===
+| Dimension | Current Legacy Architecture | Target Quarkus Desktop Architecture
+
+| **Application Entry Point**
+| `com.openbravo.pos.forms.StartPOS.main(args)` with manual argument parsing and static initializers.
+| **Quarkiverse Quarkus Desktop**: `@Singleton` main window (`JRootApp`) observing `DesktopStartupEvent` or `@QuarkusMain` with `Quarkus.waitForExit()`.
+
+| **Desktop UI Lifecycle & Threading**
+| Ad-hoc `SwingUtilities.invokeLater()` calls mixed throughout business logic.
+| **`io.quarkiverse.desktop:quarkus-desktop-swing`** with declarative `@RunOnEdt`, `EdtExecutor`, and native OS event hooks (About, Preferences, Quit).
+
+| **Dependency Injection**
+| `AppView.getBean(Class<T>)` delegating to manual maps and singleton lookups.
+| **ArC (CDI 4.0 Lite)** with compile-time wiring via `@ApplicationScoped`, `@Singleton`, `@Inject`, and CDI producers.
+
+| **Configuration**
+| Hybrid `AppConfig` properties file + SmallRye MicroProfile Config SPI (PR #144).
+| Native Quarkus configuration via `application.properties`, `@ConfigProperty`, SmallRye profiles (`%prod`, `%dev`, `%desktop`), and database config source.
+
+| **Receipt Templating**
+| **Apache Velocity 2.x** (`.vm` / `.xml` templates) relying on heavy reflection and runtime introspection.
+| **Quarkus Qute (Engine API)** (`.qute` / `.qute.xml`) providing pre-parsed, zero-reflection, sub-millisecond receipt rendering.
+
+| **Scripting & Business Rules**
+| **BeanShell 2.x** (`.bs` / `.bsh`) interpreting Java 1.3 syntax via dynamic reflection at runtime.
+| **QuickJS (ES2020)** (`.js`) ultra-compact, sandboxed embedded JavaScript engine with execution timeouts and memory caps.
+
+| **Database & Pooling**
+| Custom `Session.java` wrapping raw `java.sql.Connection` with manual transactions.
+| **Agroal Connection Pool** (`quarkus-agroal`) with declarative `@Transactional` boundaries and unified DataSource management.
+
+| **Database Migrations**
+| Embedded Liquibase execution embedded inside `DataLogicSystem`.
+| `quarkus-liquibase` extension executing schema evolution deterministically at startup.
+
+| **Event Handling**
+| Ad-hoc Swing listener interfaces (`JPaymentNotifier`, custom ticket callbacks).
+| Strongly-typed **CDI Events** (`Event<PaymentCompletedEvent>`, `@Observes TicketLineAddedEvent`) decoupling business events from UI controls.
+
+| **Packaging & Distribution**
+| Multi-jar output assembled into JPackage lib directory.
+| Quarkus `fast-jar` (`quarkus-app/`) packaged into native OS installers (MSI, DMG, DEB) using `jpackage-maven-plugin`.
+|===
+
+---
+
+== 3. Assets & Native Resources Specification (`quarkus.native.resources.includes`)
+
+In traditional JVM execution, resource discovery relies on classpath crawling. In Quarkus desktop and native builds, all resources required at runtime must be deterministically declared at build time.
+
+### 3.1 Comprehensive Resource Inclusion Manifest
+The `quarkus.native.resources.includes` configuration property tells the Quarkus build-time processor which files to index, bundle, and expose to `ClassLoader.getResourceAsStream()`:
+
+[source,properties]
+----
+# ==============================================================================
+# Quarkus Desktop: Native Resource Inclusion Manifest
+# ==============================================================================
+
+quarkus.native.resources.includes=\
+  com/openbravo/images/**,\
+  com/openbravo/svg/**,\
+  com/openbravo/reports/**,\
+  com/openbravo/pos/templates/**,\
+  com/openbravo/pos/scripts/**,\
+  db/changelog/**,\
+  db/migrations/**,\
+  pos_messages*.properties,\
+  erp_messages*.properties,\
+  META-INF/services/**,\
+  icons/**
+
+# Exclude unnecessary build metadata and source templates from runtime artifact
+quarkus.native.resources.excludes=\
+  **/*.java,\
+  **/*.form,\
+  **/*.bak,\
+  **/.DS_Store
+----
+
+### 3.2 Breakdown by Asset Category
+
+[cols="1,2,2",options="header"]
+|===
+| Category | Resource Pattern | Purpose & Runtime Loading
+
+| **Raster Icons**
+| `com/openbravo/images/**`
+| PNG, GIF button icons loaded via `ImageResources.getIcon(...)`.
+
+| **Vector Icons**
+| `com/openbravo/svg/**`, `icons/**`
+| High-DPI scalable vectors rendered by FlatLaf SVG Icon / Batik.
+
+| **JasperReports**
+| `com/openbravo/reports/**`
+| Compiled `.jasper` and source `.jrxml` definitions loaded for standard A4 and thermal reports.
+
+| **Receipt & Display Templates**
+| `com/openbravo/pos/templates/**`
+| Default built-in Qute XML receipt templates (`Printer.Ticket.xml`, `Printer.CustomerPaid.xml`).
+
+| **QuickJS Scripts**
+| `com/openbravo/pos/scripts/**`
+| Built-in default user event scripts (`Ticket.Close.js`, `script.StockCurrentSet.js`).
+
+| **Internationalization**
+| `pos_messages*.properties`, `erp_messages*.properties`
+| Multi-language resource bundles loaded by `AppLocal.getIntString()`.
+
+| **Database Migrations**
+| `db/changelog/**`, `db/migrations/**`
+| Liquibase changelog XML/SQL scripts executed at startup.
+
+| **SPI Providers**
+| `META-INF/services/**`
+| ServiceLoader registrations (`POSThemeFactory`, `ScriptEngineProvider`, `ConfigDatabaseProfile`).
+|===
+
+---
+
+== 4. Native Libraries Management
+
+A POS desktop client interfaces directly with physical peripheral hardware, necessitating low-level native operating system access:
+
+[cols="1,1,2,2",options="header"]
+|===
+| Native Dependency | Underlying Technology | POS Functionality | Quarkus Desktop Strategy
+
+| `com.neuronrobotics:nrjavaserial`
+| RXTX (Native `.so`, `.dll`, `.dylib`)
+| ESC/POS serial printers, customer pole displays (VFD/LCD), electronic weighing scales, and RS-232 cash drawers.
+| Embedded native libraries extracted to `${java.io.tmpdir}/kriolos-serial`. Isolated behind `kriolos-opos-hardware` SPI so build-time CDI scanning does not invoke native initialization prematurely.
+
+| `org.usb4java:usb4java` & `usb4java-javax`
+| LibUSB 1.0 (JNI bindings)
+| Direct USB thermal receipt printers, USB cash drawers, and custom HID barcode scanners.
+| Native libraries loaded at runtime when hardware subsystems are initialized. Guarded with graceful degradation when physical USB devices are absent.
+
+| `org.xerial:sqlite-jdbc`
+| Native SQLite binary wrapper
+| Embedded standalone local database (`kriolopos.db`) for zero-configuration, single-station operation.
+| Standard JDBC driver compatibility supported directly by Quarkus Agroal datasource. Native SQLite binaries unpack into runtime memory without external dependencies.
+|===
+
+=== OS Permission Requirements:
+* **Linux**: User running POS must be added to `dialout` and `tty` groups for COM/serial communication:
+  [source,bash]
+  ----
+  sudo usermod -a -G dialout,tty $USER
+  ----
+* **Windows**: Proper WinUSB / COM port driver assignment via Device Manager.
+* **macOS**: TCC (Transparency, Consent, and Control) USB device access confirmation.
+
+---
+
+== 5. ArC (Build-Time CDI Container) Architecture
+
+### 5.1 Service Decomposition
+The business logic extracted from legacy Swing panels into `kriolos-opos-domain` will be registered as CDI beans:
+
+[source,java]
+----
+package com.openbravo.pos.sales;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+@ApplicationScoped
+public class SalesServiceImpl implements SalesService {
+
+    @Inject
+    InventoryService inventoryService;
+
+    @Inject
+    CustomerService customerService;
+
+    @Override
+    public TicketInfo createTicket() {
+        return new TicketInfo();
+    }
+}
+----
+
+### 5.2 Transition Pattern: The `ArcBridge`
+During intermediate migration stages where legacy Swing classes still exist alongside modern CDI services, an `ArcBridge` provides typesafe access to CDI beans from Swing components without polluting UI classes with service locator antipatterns:
+
+[source,java]
+----
+package com.openbravo.pos.cdi;
+
+import io.quarkus.arc.Arc;
+
+public final class ArcBridge {
+
+    private ArcBridge() {}
+
+    public static <T> T getBean(Class<T> beanClass) {
+        return Arc.container().instance(beanClass).get();
+    }
+}
+----
+
+### 5.3 Decoupling UI and Business Logic with CDI Events
+Replace direct method calls and tightly coupled UI listeners with asynchronous or synchronous CDI events:
+
+```
+[User clicks 'Pay' in JPaymentSelect]
+              │
+              ▼
+    PaymentService.processPayment(...)
+              │
+              ▼
+   CDI Event: Event<PaymentCompletedEvent>.fire(...)
+        ┌─────┴──────────────────┐
+        ▼                        ▼
+ [Audit Journal Log]    [Hardware Drawer Kick]
+  (@Observes)                 (@Observes)
+```
+
+---
+
+== 6. Desktop UI Integration via Quarkiverse Quarkus Desktop (Swing)
+
+### 6.1 Overview & Dependency
+The Swing desktop UI layer (`kriolos-opos-app`) will be integrated using **Quarkus Desktop** from the Quarkiverse community (https://github.com/quarkiverse/quarkus-desktop):
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.quarkiverse.desktop</groupId>
+    <artifactId>quarkus-desktop-swing</artifactId>
+    <version>1.0.0.Alpha1</version>
+</dependency>
+----
+
+This extension provides:
+1. **Automated GraalVM Native Image Support**: Configures reflection, resource bundles, JNI metadata, and copies required JDK native libraries (`libawt.so`, `libfontmanager.so`, `awt.dll`, `libosxapp.dylib`) automatically.
+2. **CDI-Powered Window Lifecycle**: Turns standard `JFrame` and `JPanel` components into manageable CDI beans.
+3. **Thread Safety with `@RunOnEdt` and `EdtExecutor`**: Eliminates manual `SwingUtilities.invokeLater()` boilerplate when returning from background worker threads.
+4. **Native OS Desktop Integration**: Bridges macOS Application menu items (About, Preferences, Quit) directly into CDI events.
+5. **Live Coding in Dev Mode**: Supports Quarkus Dev Mode live-reload for desktop Swing UI development.
+
+### 6.2 CDI Window Lifecycle
+The main application window `JRootApp` becomes a managed `@Singleton` bean reacting to `DesktopStartupEvent`:
+
+[source,java]
+----
+package com.openbravo.pos.forms;
+
+import io.quarkiverse.desktop.awt.DesktopStartupEvent;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import javax.swing.JFrame;
+
+@Singleton
+public class JRootApp extends JFrame {
+
+    @Inject
+    AppConfig config;
+
+    @Inject
+    SalesService salesService;
+
+    void onStartup(@Observes DesktopStartupEvent event) {
+        setTitle("KriolOS POS");
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        initUI();
+        pack();
+        setVisible(true);
+    }
+}
+----
+
+### 6.3 Thread Safety: `@RunOnEdt` & `EdtExecutor`
+Peripheral scanners, scales, and payment gateways operate asynchronously in background threads. `quarkus-desktop-swing` provides declarative dispatching back to the Swing Event Dispatch Thread:
+
+[source,java]
+----
+package com.openbravo.pos.sales;
+
+import io.quarkiverse.desktop.swing.RunOnEdt;
+import io.quarkiverse.desktop.swing.EdtExecutor;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+@ApplicationScoped
+public class SalesBarcodeScanCoordinator {
+
+    @Inject
+    EdtExecutor edtExecutor;
+
+    @Inject
+    TicketLineController ticketLineController;
+
+    // Asynchronous background peripheral scan event
+    public void onRawBarcodeReceived(String barcode) {
+        // Runs in background worker pool
+        ProductInfoExt product = lookupProductDatabase(barcode);
+
+        // Dispatches safely to Swing EDT
+        edtExecutor.execute(() -> {
+            ticketLineController.addProductLine(product);
+        });
+    }
+
+    // Alternatively, declarative annotation for automatic EDT execution
+    @RunOnEdt
+    public void updateCartUI(TicketInfo ticket) {
+        // Guaranteed to run on Swing Event Dispatch Thread
+    }
+}
+----
+
+### 6.4 Native OS Integration
+`quarkus-desktop-swing` translates platform-specific desktop signals into CDI events:
+
+[source,java]
+----
+package com.openbravo.pos.forms;
+
+import io.quarkiverse.desktop.awt.AboutEvent;
+import io.quarkiverse.desktop.awt.PreferencesEvent;
+import io.quarkiverse.desktop.awt.QuitEvent;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+
+@ApplicationScoped
+public class DesktopMenuObserver {
+
+    void onAbout(@Observes AboutEvent event) {
+        // Display POS About dialog
+    }
+
+    void onPreferences(@Observes PreferencesEvent event) {
+        // Open Database / Peripheral Configuration Panel
+    }
+
+    void onQuit(@Observes QuitEvent event) {
+        // Confirm no open unpaid tickets exist before graceful shutdown
+    }
+}
+----
+
+---
+
+== 7. Receipt Templating: Apache Velocity to Quarkus Qute (Engine API)
+
+### 7.1 Architectural Motivation
+Currently, receipt, invoice, and customer display formatting is performed by **Apache Velocity 2.x**. While functional, Velocity presents significant limitations:
+
+1. **Heavy Runtime Reflection**: Velocity parses templates dynamically and inspects Java objects using reflection on every render pass.
+2. **Cold Start Penalty**: Velocity initializes introspectors and resource managers, slowing POS startup.
+3. **GraalVM & Native Incompatibility**: Dynamic introspection requires hundreds of explicit reflection registrations.
+
+### 7.2 The Quarkus Qute Standalone Engine API
+**Quarkus Qute** provides a programmatic **Engine API** (`io.quarkus.qute.Engine`) that can be used standalone in desktop applications without requiring an HTTP server or REST endpoints:
+
+[source,java]
+----
+import io.quarkus.qute.Engine;
+import io.quarkus.qute.Template;
+
+// Initialized as a singleton CDI bean or via SPI
+Engine engine = Engine.builder()
+    .addDefaults()
+    .build();
+
+// Parse and cache template
+Template receiptTemplate = engine.parse(rawTemplateXml);
+
+// Zero-reflection, sub-millisecond rendering
+String renderedXml = receiptTemplate
+    .data("ticket", ticket)
+    .data("taxes", taxMap)
+    .render();
+----
+
+### 7.3 Implementation via `ScriptEngineProvider` SPI
+Under `kriolos-opos-spi`, a dedicated `QuteScriptEngineProvider` implements `ScriptEngineProvider`:
+
+[source,java]
+----
+package io.github.kriolos.opos.scripting.qute;
+
+import com.openbravo.pos.spi.scripting.*;
+import io.quarkus.qute.Engine;
+import io.quarkus.qute.Template;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class QuteScriptEngineProvider implements ScriptEngineProvider {
+
+    public static final String ENGINE_ID = "qute";
+    private final Engine quteEngine = Engine.builder().addDefaults().build();
+    private final Map<String, Template> cache = new ConcurrentHashMap<>();
+
+    @Override
+    public boolean hasEngine(String engineId) {
+        return ENGINE_ID.equalsIgnoreCase(engineId);
+    }
+
+    @Override
+    public String render(String engineId, String templateName, Map<String, Object> model) {
+        Template template = cache.computeIfAbsent(templateName, quteEngine::getTemplate);
+        var instance = template.instance();
+        model.forEach(instance::data);
+        return instance.render();
+    }
+}
+----
+
+### 7.4 Template Syntax Migration Guide
+
+[cols="1,2,2",options="header"]
+|===
+| Construct | Legacy Velocity Syntax | Modern Quarkus Qute Syntax
+
+| **Looping over Ticket Lines**
+| `#foreach($line in $ticket.getLines()) ... #end`
+| `{#for line in ticket.lines} ... {/for}`
+
+| **Conditionals**
+| `#if($ticket.hasDiscount()) ... #else ... #end`
+| `{#if ticket.hasDiscount} ... {#else} ... {/if}`
+
+| **Property Access**
+| `$ticket.printTotal()` or `$ticket.getTotal()`
+| `\{ticket.printTotal()}` or `\{ticket.total}`
+
+| **Index in Loop**
+| `$velocityCount`
+| `\{line_count}` or `\{line_index}`
+
+| **Null Safe Output**
+| `$!customer.getName()`
+| `\{customer.name.or('')}`
+
+| **XML Escaping**
+| Velocity raw text or explicit escape tool
+| Configurable raw vs XML mode: `\{line.productName.raw}`
+|===
+
+---
+
+== 8. Scripting & Business Rules: BeanShell to QuickJS
+
+### 8.1 Architectural Motivation
+User-configurable sales events, discount rules, and payment callbacks currently use **BeanShell 2.x** (`bsh.Interpreter`). BeanShell:
+
+* Is effectively unmaintained and stuck in Java 1.3 language syntax.
+* Has high memory overhead (~15MB overhead per complex interpreter session).
+* Relies on full dynamic JVM reflection, completely incompatible with GraalVM build-time analysis.
+
+### 8.2 Why QuickJS?
+**QuickJS** (created by Fabrice Bellard) is an ultra-compact, high-performance embeddable JavaScript engine supporting the full ECMAScript 2020 specification:
+
+* **Microscopic Footprint**: Runtime engine size is under 300KB RAM with sub-millisecond execution startup.
+* **Deterministic Sandboxing**: Enforces strict instruction execution limits and memory ceilings, protecting POS terminals from infinite loops or memory leaks in user scripts.
+* **Modern Developer Syntax**: POS customizers write clean modern JavaScript (ES6+ arrow functions, `const`/`let`, destructuring, template literals) instead of dated Java 1.3 syntax.
+* **Panama / FFM Ready**: Embedded via lightweight JNI bindings or modern Java 22+ Foreign Function & Memory API (Project Panama), running with native execution speed.
+
+### 8.3 Implementation via `ScriptEngineProvider` SPI
+
+[source,java]
+----
+package io.github.kriolos.opos.scripting.quickjs;
+
+import com.openbravo.pos.spi.scripting.*;
+import java.util.Map;
+
+public class QuickJsScriptEngineProvider implements ScriptEngineProvider {
+
+    public static final String ENGINE_ID = "quickjs";
+
+    @Override
+    public boolean hasEngine(String engineId) {
+        return ENGINE_ID.equalsIgnoreCase(engineId) || "javascript".equalsIgnoreCase(engineId);
+    }
+
+    @Override
+    public Object execute(String engineId, String script, Map<String, Object> bindings) 
+            throws ScriptEngineException {
+        // Enforce execution sandbox: 50MB max memory, 2000ms max CPU time
+        try (QuickJsContext ctx = QuickJsRuntime.createContext(50 * 1024 * 1024, 2000)) {
+            bindings.forEach(ctx::bind);
+            return ctx.evaluate(script);
+        } catch (QuickJsTimeoutException e) {
+            throw new ScriptEngineException("POS Script timed out after 2000ms execution limit", e);
+        }
+    }
+}
+----
+
+### 8.4 Script Migration Guide (BeanShell `.bs` → QuickJS `.js`)
+
+[cols="1,2,2",options="header"]
+|===
+| Task | Legacy BeanShell (`.bs`) | Modern QuickJS (`.js`)
+
+| **Order Event Trigger**
+| `Ticket.Close.bs`
+| `Ticket.Close.js`
+
+| **Variable Declarations**
+| `double discount = 0.10;`
+| `const discount = 0.10;`
+
+| **Looping Lines**
+| `for (int i = 0; i < ticket.getLinesCount(); i++) { ... }`
+| `for (const line of ticket.lines) { ... }`
+
+| **String Formatting**
+| `String.format("Total: %.2f", total);`
+| `` `Total: ${total.toFixed(2)}` ``
+
+| **Calling POS Services**
+| `taxeslogic.calculateTaxes(ticket);`
+| `salesService.calculateTaxes(ticket);`
+|===
+
+[NOTE]
+====
+During the migration phase, the `ScriptEngineProvider` SPI automatically routes `.bs` / `.bsh` files to BeanShell and `.js` files to QuickJS, allowing existing retail deployments to migrate their custom scripts progressively without breaking existing installations.
+====
+
+---
+
+== 9. Cross-Platform Distribution with JPackage
+
+### 9.1 Quarkus Fast-Jar & JPackage Synergy
+Quarkus builds an optimized distribution structure under `target/quarkus-app/`:
+```
+target/quarkus-app/
+├── app/
+│   └── kriolos-opos-app-1.0.0.jar
+├── lib/
+│   └── boot/ & main/ (Indexed dependency jars)
+├── q-config/
+└── quarkus-run.jar
+```
+
+`jpackage` takes this pre-optimized directory as `--input`, executes `jlink` to produce a minimal runtime image containing only the needed JDK modules, and bundles native OS installers.
+
+### 9.2 Modular Runtime Image (JLink Options)
+The custom JRE bundled with the POS installer strips unnecessary debug symbols and documentation while preserving full desktop Swing and cryptographic capabilities:
+
+[source,xml]
+----
+<jLinkOptions>
+    <jLinkOption>--strip-native-commands</jLinkOption>
+    <jLinkOption>--strip-debug</jLinkOption>
+    <jLinkOption>--no-man-pages</jLinkOption>
+    <jLinkOption>--no-header-files</jLinkOption>
+    <jLinkOption>--compress=2</jLinkOption>
+</jLinkOptions>
+----
+
+### 9.3 OS-Specific Packaging Matrix
+
+[cols="1,1,2,2",options="header"]
+|===
+| Operating System | Installer Format | App Icon | Key JPackage Directives
+
+| **Linux**
+| `.deb`, `.rpm`, AppImage
+| `icons/app_icon.png` (512x512)
+| `--linux-shortcut`, `--linux-package-name kriolos-pos`, `--linux-app-category Office`, `--linux-menu-group Office`
+
+| **Windows**
+| `.msi` (via WiX Toolset)
+| `icons/app_icon.ico` (multi-res ICO)
+| `--win-menu`, `--win-menu-group "KriolOS/OPOS"`, `--win-dir-chooser`, `--win-shortcut`
+
+| **macOS**
+| `.dmg` (Apple Disk Image)
+| `icons/app_icon.icns`
+| `--mac-package-identifier io.github.kriolos-obiz.opos`, `--mac-sign` (optional developer ID signing)
+|===
+
+---
+
+== 10. Reflection Registration Policy (Mandatory Rule)
+
+[IMPORTANT]
+====
+**Absolute Rule — No Configuration Properties for Reflection** +
+Every class, field, method, or constructor that requires runtime or GraalVM native-image reflection registration **MUST** be declared programmatically in a single, canonical Java source file.
+Using `reflect-config.json`, `resources-config.json`, or any other JSON/YAML property configuration file for reflection registration is **strictly prohibited** in this project.
+====
+
+=== 10.1 Rationale
+
+Reflection registrations scattered across multiple configuration files:
+
+* **Fragment the contract** — there is no single source of truth; changes require hunting across `src/main/resources/META-INF/native-image/`.
+* **Are invisible to the compiler** — typos in class names in JSON silently fail at native-image link time, not at build time.
+* **Break refactoring** — IDE rename/move refactorings do not update JSON entries, creating stale registrations that become dead weight or, worse, hidden security surface.
+* **Oppose ArC build-time CDI** — ArC already performs complete build-time analysis; adding JSON side-channels defeats the purpose.
+
+=== 10.2 Canonical Registration Class
+
+All reflection registrations live in **one** class per module:
+
+[source,java]
+----
+package io.github.kriolos.opos.app.native_;
+
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
+/**
+ * SINGLE SOURCE OF TRUTH for all GraalVM native-image reflection registrations
+ * in the kriolos-opos-app module.
+ *
+ * RULE: No reflect-config.json or resources-config.json files are allowed.
+ *       Every reflection need MUST be declared here as code.
+ *
+ * HOW TO ADD A NEW ENTRY:
+ *   1. Add the class to the @RegisterForReflection targets array below.
+ *   2. Commit this file — code review enforces the single-place rule.
+ */
+@RegisterForReflection(
+    targets = {
+        // --- Receipt / Ticket model (used by Qute Engine API type-safe bindings) ---
+        com.openbravo.data.loader.TableDef.class,
+        com.openbravo.pos.ticket.TicketInfo.class,
+        com.openbravo.pos.ticket.TicketLineInfo.class,
+        com.openbravo.pos.ticket.TaxInfo.class,
+
+        // --- Hardware SPI implementations discovered via ServiceLoader ---
+        io.github.kriolos.opos.hardware.printer.EscPosReceiptPrinter.class,
+        io.github.kriolos.opos.hardware.scale.NciScale.class,
+
+        // --- FlatLaf / Look and Feel internals needed by Swing native rendering ---
+        com.formdev.flatlaf.FlatLightLaf.class,
+        com.formdev.flatlaf.FlatDarkLaf.class,
+
+        // --- JasperReports compiled report classes (generated at build time) ---
+        // Add each net.sf.jasperreports.engine.fill.JR* class explicitly here.
+    },
+    // Include fields and methods so CDI producers and Qute binders can introspect them
+    fields = true,
+    methods = true
+)
+public class OposReflectionRegistrations {
+    // This class body intentionally left empty.
+    // Its sole purpose is to carry the @RegisterForReflection annotation.
+}
+----
+
+[NOTE]
+====
+Quarkus processes `@RegisterForReflection` at **build time** via the ArC annotation processor.
+The class is not instantiated at runtime; it is a pure metadata carrier.
+====
+
+=== 10.3 Module-Level Convention
+
+Each Quarkus-enabled module that needs reflection declares its own `*ReflectionRegistrations` class in a `native_` sub-package:
+
+[cols="2,3",options="header"]
+|===
+| Module | Registration Class
+
+| `kriolos-opos-app`
+| `io.github.kriolos.opos.app.native_.OposReflectionRegistrations`
+
+| `kriolos-opos-hardware`
+| `io.github.kriolos.opos.hardware.native_.HardwareReflectionRegistrations`
+
+| `kriolos-opos-scripting-quickjs`
+| `io.github.kriolos.opos.scripting.quickjs.native_.QuickJsReflectionRegistrations`
+
+| `kriolos-opos-scripting-qute`
+| `io.github.kriolos.opos.scripting.qute.native_.QuteReflectionRegistrations`
+|===
+
+=== 10.4 Code Review Gate
+
+The following rule **must** be enforced in every Pull Request review checklist:
+
+* [ ] No `reflect-config.json` file was added or modified.
+* [ ] No `resources-config.json` file was added or modified.
+* [ ] Any new reflection need was added to the appropriate `*ReflectionRegistrations.java` class.
+* [ ] The `targets` array entry references a fully-qualified, import-resolvable class — not a string literal.
+
+---
+
+== 11. Step-by-Step Implementation Roadmap
+
+```
+Phase 1: CDI Prep & MicroProfile Config (Completed ✅)
+  ├── MicroProfile Config SPI integration (PR #144)
+  ├── Full elimination of legacy JDialog -> PosUIModal (PR #145, #146)
+  └── Business logic extraction to kriolos-opos-domain
+
+Phase 2: Scripting & Templating Modernization (Qute + QuickJS)
+  ├── Implement QuteScriptEngineProvider using programmatic Qute Engine API
+  ├── Convert core receipt XML templates to Qute format with dual-engine fallback
+  ├── Implement QuickJsScriptEngineProvider with execution sandboxing
+  └── Provide script compatibility layer for legacy BeanShell scripts
+
+Phase 3: Quarkus Desktop Module Integration (quarkus-desktop-swing)
+  ├── Add io.quarkiverse.desktop:quarkus-desktop-swing dependency
+  ├── Convert JRootApp to @Singleton observing DesktopStartupEvent
+  ├── Apply @RunOnEdt & EdtExecutor for peripheral event dispatches
+  └── Configure quarkus.native.resources.includes manifest
+
+Phase 4: Service Migration to ArC CDI
+  ├── Annotate domain services with @ApplicationScoped
+  ├── Wire Agroal DataSource & Connection Pool
+  └── Replace legacy AppView.getBean() with Arc injection
+
+Phase 5: Peripheral & Hardware Hardening
+  ├── Isolate nrjavaserial & usb4java runtime extraction
+  ├── Validate JasperReports & Qute loading under Fast-Jar classloader
+  └── Verify multi-database profiles under Quarkus (SQLite, MySQL, PG)
+
+Phase 6: JPackage Multi-Platform Release Automation
+  ├── Update kriolos-opos-jpackage to package target/quarkus-app/
+  ├── Add GitHub Actions matrix build for Linux DEB, Windows MSI, macOS DMG
+  └── Automated release asset publication
+```
+
+---
+
+== 12. Verification & Acceptance Criteria
+
+1. **Cold Boot Benchmark**: Cold start to visible Swing login screen under 1.5 seconds on standard hardware.
+2. **Memory Footprint**: Base memory footprint (resident set size) under 180MB at idle.
+3. **Receipt Rendering Speed**: Qute template render time under 2ms per receipt pass.
+4. **Script Execution Safety**: QuickJS terminates any customer script running longer than 2000ms with a graceful error.
+5. **Thread Safety**: All Swing mutations verified strictly executing on the Event Dispatch Thread via `@RunOnEdt`.
+6. **Hardware Compatibility**: Serial receipt printing, cash drawer kick, and barcode scan events function identically to legacy execution.
+7. **Offline Resilience**: Standalone SQLite database boots seamlessly without network or external services.
+8. **Installer Validation**: Standalone native installers (DEB, MSI, DMG) install cleanly without requiring an external Java Runtime Environment (JRE).
+9. **Reflection Policy Compliance**: Zero `reflect-config.json` or `resources-config.json` files present in the repository. All GraalVM reflection registrations are declared in the canonical `*ReflectionRegistrations.java` class of each module.

@@ -5,4 +5,5 @@ Welcome to the **Migration Guide** for KriolOS POS.
 
 == Topics
 
-* xref:migration-implementation-plan.adoc[Deep Analysis & Implementation Plan]: Comprehensive architectural analysis and modernization roadmap.
+* xref:quarkus-desktop-migration.adoc[Quarkus Desktop Migration Plan]: Comprehensive architecture, asset requirements, native libraries, ArC CDI, and JPackage distribution strategy.
+* xref:migration-implementation-plan.adoc[Deep Analysis & Implementation Plan]: Comprehensive architectural analysis and domain modernization roadmap.
