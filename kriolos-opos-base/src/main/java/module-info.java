@@ -21,10 +21,8 @@ module kriolos.opos.base {
     requires java.sql;
     requires java.sql.rowset;
     requires java.logging;
-    requires transitive kriolos.opos.spi;
-    requires transitive microprofile.config.api;
-    requires smallrye.config;
     
+    exports com.openbravo.app;
     exports com.openbravo.basic;
     exports com.openbravo.beans; 
     exports com.openbravo.data.gui; 
@@ -34,11 +32,5 @@ module kriolos.opos.base {
     exports com.openbravo.data.user; 
     exports com.openbravo.editor;  
     exports com.openbravo.format; 
-    exports com.openbravo.app; 
     exports com.openbravo.util;
-
-    provides com.openbravo.pos.spi.config.BootstrapConfigProvider with 
-        com.openbravo.app.MicroProfileBootstrapConfigProvider,
-        com.openbravo.app.FileBootstrapConfigProvider;
-    provides org.eclipse.microprofile.config.spi.ConfigSource with com.openbravo.app.KriolosPropertiesConfigSource;
 }

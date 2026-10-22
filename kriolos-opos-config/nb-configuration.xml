@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-shared-configuration>
+    <properties xmlns="http://www.netbeans.org/ns/maven-properties-data/1">
+        <netbeans.checkstyle.format>true</netbeans.checkstyle.format>
+        <netbeans.compile.on.save>all</netbeans.compile.on.save>
+        <netbeans.hint.licensePath>${project.basedir}/../licenseheader.txt</netbeans.hint.licensePath>
+    </properties>
+</project-shared-configuration>

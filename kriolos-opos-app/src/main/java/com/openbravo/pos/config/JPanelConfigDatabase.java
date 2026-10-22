@@ -1,7 +1,7 @@
 package com.openbravo.pos.config;
 
 import com.openbravo.app.AppLocal;
-import com.openbravo.app.BootstrapConfiguration;
+import com.openbravo.app.config.BootstrapConfiguration;
 import com.openbravo.data.gui.JMessagePanel;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.loader.Session;

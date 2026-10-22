@@ -18,7 +18,7 @@ package com.openbravo.pos.forms;
 import com.openbravo.app.AppLocal;
 import com.openbravo.app.AppProperties;
 import com.openbravo.app.AppProperties.DatabaseConfig;
-import com.openbravo.app.BootstrapAppPropertiesAdapter;
+import com.openbravo.app.config.BootstrapAppPropertiesAdapter;
 import com.openbravo.pos.admin.AppUser;
 import com.openbravo.pos.admin.AppUserView;
 import com.openbravo.pos.admin.DataLogicSystem;

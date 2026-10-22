@@ -17,7 +17,6 @@ package com.openbravo.pos.config;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.Session;
-import com.openbravo.app.BootstrapConfiguration;
 import com.openbravo.pos.container.BeanContainer;
 import com.openbravo.pos.panels.AppView;
 import org.junit.jupiter.api.AfterEach;
@@ -151,7 +150,7 @@ public class ApplicationConfigurationServiceTest {
     @Test
     @DisplayName("Should resolve ApplicationConfigurationService in BeanContainer")
     public void testBeanContainerResolution() {
-        com.openbravo.app.BootstrapAppPropertiesAdapter adapter = new com.openbravo.app.BootstrapAppPropertiesAdapter(bootstrapConfig);
+        BootstrapAppPropertiesAdapter adapter = new BootstrapAppPropertiesAdapter(bootstrapConfig);
         AppView appViewProxy = (AppView) Proxy.newProxyInstance(
                 AppView.class.getClassLoader(),
                 new Class<?>[]{AppView.class},

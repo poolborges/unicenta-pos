@@ -67,8 +67,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <flatlaf.version>2.6</flatlaf.version>
 
         <!-- MicroProfile Config & SmallRye Config -->
-        <microprofile-config.version>3.0.3</microprofile-config.version>
-        <smallrye-config.version>3.4.4</smallrye-config.version>
+        <microprofile-config.version>3.1.1</microprofile-config.version>
+        <smallrye-config.version>3.18.0</smallrye-config.version>
 
     </properties>
 
@@ -147,6 +147,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <module>kriolos-opos-assets-svg</module>
         <module>kriolos-opos-thirdparty</module>
         <module>kriolos-opos-base</module>
+        <module>kriolos-opos-config</module>
         <module>kriolos-opos-hardware</module>
         <module>kriolos-opos-domain</module>
         <module>kriolos-opos-i18n</module>
@@ -177,6 +178,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>kriolos-opos-base</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>kriolos-opos-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -424,7 +430,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <version>3.16.0</version>
                     <configuration>
                         <!-- Inherits global properties definition keys -->
-                         <!-- Standard source, target, and release level variables (mapped to Java Version in properties) -->
+                        <!-- Standard source, target, and release level variables (mapped to Java Version in properties) -->
                         <source>${maven.compiler.source}</source>
                         <target>${maven.compiler.target}</target>
                         <!-- The release tag forces a modern JDK to strictly validate code against Java Version APIs -->

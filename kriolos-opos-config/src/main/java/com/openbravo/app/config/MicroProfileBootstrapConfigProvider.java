@@ -1,4 +1,4 @@
-package com.openbravo.app;
+package com.openbravo.app.config;
 
 import com.openbravo.pos.spi.config.BootstrapConfig;
 import com.openbravo.pos.spi.config.BootstrapConfigProvider;

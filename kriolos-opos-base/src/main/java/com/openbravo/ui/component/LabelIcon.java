@@ -1,3 +1,5 @@
+package com.openbravo.ui.component;
+
 /*
  * Copyright (C) 2022 KiolOS<https://github.com/kriolos>
  *
@@ -15,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.openbravo.util;
+
 
 import java.awt.Component;
 import java.awt.Graphics;

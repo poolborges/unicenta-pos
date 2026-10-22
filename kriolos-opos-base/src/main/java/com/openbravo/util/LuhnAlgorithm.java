@@ -23,12 +23,7 @@ import com.openbravo.util.StringUtils;
  *
  * @author Mikel Irurita
  */
-public class LuhnAlgorithm {
-    
-    /** Creates a new instance of LuhnAlgorithm */
-    private LuhnAlgorithm() {
-    }
-
+public interface LuhnAlgorithm {
     /**
      *
      * @param cardNumber

@@ -1,4 +1,4 @@
-package com.openbravo.app;
+package com.openbravo.app.config;
 
 import org.eclipse.microprofile.config.spi.ConfigSource;
 

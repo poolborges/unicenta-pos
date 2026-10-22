@@ -25,32 +25,12 @@ import java.util.List;
  */
 public interface AppProperties {
 
-    /**
-     * Gets the configuration properties settings
-     * @return config file
-     */
     public File getConfigFile(); 
 
-    /**
-     * Gets the Host machine name
-     * @return host name
-     */
     public String getHost();    
 
-    /**
-     * Read the property from the key pair
-     * @param sKey key pair value
-     * @return key pair property
-     */
     public String getProperty(String sKey);
 
-
-    /**
-     * Read the property from the key pair
-     * @param sKey key pair value
-     * @param defaultValue defaultValue
-     * @return key pair property
-     */
     public String getProperty(String sKey, String defaultValue);
     
     public List<DatabaseConfig> getAll();

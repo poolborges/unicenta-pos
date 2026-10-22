@@ -1,4 +1,4 @@
-package com.openbravo.app;
+package com.openbravo.app.config;
 
 import com.openbravo.pos.spi.config.BootstrapConfig;
 import org.eclipse.microprofile.config.Config;
@@ -96,7 +96,7 @@ public class MicroProfileBootstrapConfig implements BootstrapConfig {
             return null;
         }
 
-        String name = getProperty("db.name", "DB 0 ()");
+        String name = getProperty("db.name", "DB (Primary)");
         String user = getProperty("quarkus.datasource.username");
         if (user == null || user.isBlank()) {
             user = getProperty("db.user", "kriolopos");

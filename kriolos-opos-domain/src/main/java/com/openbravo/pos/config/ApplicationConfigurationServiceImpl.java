@@ -17,7 +17,7 @@ package com.openbravo.pos.config;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.app.AppProperties;
-import com.openbravo.app.BootstrapAppPropertiesAdapter;
+import com.openbravo.app.config.BootstrapAppPropertiesAdapter;
 import com.openbravo.pos.spi.config.BootstrapConfig;
 import com.openbravo.pos.spi.config.BootstrapConfigFactory;
 import com.openbravo.pos.container.BeanFactoryApp;

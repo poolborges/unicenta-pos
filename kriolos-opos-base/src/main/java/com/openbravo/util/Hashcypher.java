@@ -18,7 +18,7 @@
 package com.openbravo.util;
 
 import com.openbravo.util.StringUtils;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -26,12 +26,7 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author JG uniCenta
  */
-public class Hashcypher {
-    
-    
-    /** Creates a new instance of Hashcypher */
-    public Hashcypher() {
-    }
+public interface Hashcypher {
 
     /**
      *
@@ -63,12 +58,10 @@ public class Hashcypher {
         } else {
             try {
                 MessageDigest md = MessageDigest.getInstance("SHA-1");
-                md.update(sPassword.getBytes("UTF-8"));
+                md.update(sPassword.getBytes(StandardCharsets.UTF_8));
                 byte[] res = md.digest();
                 return "sha1:" + StringUtils.byte2hex(res);
             } catch (NoSuchAlgorithmException e) {
-                return "plain:" + sPassword;
-            } catch (UnsupportedEncodingException e) {
                 return "plain:" + sPassword;
             }
         }

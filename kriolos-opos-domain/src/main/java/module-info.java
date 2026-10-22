@@ -22,6 +22,7 @@ module kriolos.opos.domain {
     requires java.logging;
 
     requires transitive kriolos.opos.base;
+    requires transitive kriolos.opos.config;
     requires transitive kriolos.opos.spi;
 
     exports com.openbravo.pos.admin;

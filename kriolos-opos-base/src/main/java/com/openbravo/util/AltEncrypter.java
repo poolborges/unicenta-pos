@@ -17,8 +17,7 @@
 
 package com.openbravo.util;
 
-import com.openbravo.util.StringUtils;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import javax.crypto.*;
 
@@ -31,13 +30,11 @@ public class AltEncrypter {
     private Cipher cipherDecrypt;
     private Cipher cipherEncrypt;
     
-    /** Creates a new instance of Encrypter
-     * @param passPhrase */
     public AltEncrypter(String passPhrase) {
 
         try {
             SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-            sr.setSeed(passPhrase.getBytes("UTF8"));
+            sr.setSeed(passPhrase.getBytes(StandardCharsets.UTF_8));
             KeyGenerator kGen = KeyGenerator.getInstance("DESEDE");
             kGen.init(168, sr);
             Key key = kGen.generateKey();
@@ -47,8 +44,7 @@ public class AltEncrypter {
             
             cipherDecrypt = Cipher.getInstance("DESEDE/ECB/PKCS5Padding");
             cipherDecrypt.init(Cipher.DECRYPT_MODE, key);
-        } catch (UnsupportedEncodingException | NoSuchPaddingException 
-                | NoSuchAlgorithmException | InvalidKeyException e) {
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException e) {
         }
     }
     
@@ -59,9 +55,8 @@ public class AltEncrypter {
      */
     public String encrypt(String str) {
         try {
-            return StringUtils.byte2hex(cipherEncrypt.doFinal(str.getBytes("UTF8")));
-        } catch (UnsupportedEncodingException | BadPaddingException 
-                | IllegalBlockSizeException e) {
+            return StringUtils.byte2hex(cipherEncrypt.doFinal(str.getBytes(StandardCharsets.UTF_8)));
+        } catch (BadPaddingException | IllegalBlockSizeException e) {
         }
         return null;
     }
@@ -73,8 +68,8 @@ public class AltEncrypter {
      */
     public String decrypt(String str) {
         try {
-            return new String(cipherDecrypt.doFinal(StringUtils.hex2byte(str)), "UTF8");
-        } catch (UnsupportedEncodingException | BadPaddingException | IllegalBlockSizeException e) {
+            return new String(cipherDecrypt.doFinal(StringUtils.hex2byte(str)),StandardCharsets.UTF_8);
+        } catch (BadPaddingException | IllegalBlockSizeException e) {
        
         }
         return null;

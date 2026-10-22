@@ -1,0 +1,2 @@
+com.openbravo.app.config.MicroProfileBootstrapConfigProvider
+com.openbravo.app.config.FileBootstrapConfigProvider

@@ -13,7 +13,7 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package com.openbravo.app;
+package com.openbravo.app.config;
 
 import com.openbravo.pos.spi.config.BootstrapConfig;
 import java.io.File;
@@ -55,15 +55,10 @@ public class BootstrapConfiguration implements BootstrapConfig {
 
     private static final Logger LOGGER = Logger.getLogger(BootstrapConfiguration.class.getName());
 
-    public static final String KEY_MACHINE_UUID = "machine.uuid";
-    public static final String KEY_CONFIG_PROVIDER = "pos.config.provider";
-    public static final String DEFAULT_PROVIDER = "database";
-    public static final String GLOBAL_POS_ID = "0000-0000-0000-0000";
-
     protected Properties properties;
     protected File configfile;
 
-    private static final String APP_CONFIG_FILE_NAME = AppLocal.APP_ID + ".properties";
+    private static final String APP_CONFIG_FILE_NAME = "kriolos-opos.properties";
 
     public BootstrapConfiguration() {
         this(null);
@@ -166,6 +161,7 @@ public class BootstrapConfiguration implements BootstrapConfig {
         return Boolean.valueOf(getProperty(sKey));
     }
 
+    @Override
     public boolean getBoolean(String sKey, boolean defaultValue) {
         String val = getProperty(sKey);
         return val != null ? Boolean.parseBoolean(val) : defaultValue;
@@ -183,6 +179,7 @@ public class BootstrapConfiguration implements BootstrapConfig {
      * Resolves the persistent Station / Terminal UUID.
      * Auto-generates a UUID and persists to the bootstrap file if not already present.
      */
+    @Override
     public synchronized String getStationId() {
         String uuid = getProperty(KEY_MACHINE_UUID);
         if (uuid == null || uuid.isBlank()) {

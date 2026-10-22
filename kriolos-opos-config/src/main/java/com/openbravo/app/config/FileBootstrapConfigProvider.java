@@ -13,7 +13,7 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-package com.openbravo.app;
+package com.openbravo.app.config;
 
 import com.openbravo.pos.spi.config.BootstrapConfig;
 import com.openbravo.pos.spi.config.BootstrapConfigProvider;

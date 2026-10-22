@@ -16,18 +16,6 @@
     </description>
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>kriolos-opos-spi</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.microprofile.config</groupId>
-            <artifactId>microprofile-config-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.smallrye.config</groupId>
-            <artifactId>smallrye-config</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>

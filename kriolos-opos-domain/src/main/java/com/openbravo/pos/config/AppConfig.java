@@ -18,8 +18,7 @@ package com.openbravo.pos.config;
 import com.openbravo.basic.BasicException;
 import com.openbravo.app.AppLocal;
 import com.openbravo.app.AppProperties;
-import com.openbravo.app.AppProperties.DatabaseConfig;
-import com.openbravo.app.BootstrapConfiguration;
+import com.openbravo.app.config.BootstrapConfiguration;
 import com.openbravo.pos.spi.config.BootstrapConfig;
 import java.awt.Component;
 import java.io.File;
@@ -118,68 +117,6 @@ public class AppConfig extends BootstrapConfiguration implements AppProperties {
             return INSTANCE;
         }
     }
-
-    public String getTicketHeaderLine1() {
-        return getProperty("tkt.header1");
-    }
-
-    public String getTicketHeaderLine2() {
-        return getProperty("tkt.header2");
-    }
-
-    public String getTicketHeaderLine3() {
-        return getProperty("tkt.header3");
-    }
-
-    public String getTicketHeaderLine4() {
-        return getProperty("tkt.header4");
-    }
-
-    public String getTicketHeaderLine5() {
-        return getProperty("tkt.header5");
-    }
-
-    public String getTicketHeaderLine6() {
-        return getProperty("tkt.header6");
-    }
-
-    public String getTicketFooterLine1() {
-        return getProperty("tkt.footer1");
-    }
-
-    public String getTicketFooterLine2() {
-        return getProperty("tkt.footer2");
-    }
-
-    public String getTicketFooterLine3() {
-        return getProperty("tkt.footer3");
-    }
-
-    public String getTicketFooterLine4() {
-        return getProperty("tkt.footer4");
-    }
-
-    public String getTicketFooterLine5() {
-        return getProperty("tkt.footer5");
-    }
-
-    public String getTicketFooterLine6() {
-        return getProperty("tkt.footer6");
-    }
-
-    /**
-     *
-     * @return 0 or 00 number keypad boolean true/false
-     */
-    public Boolean isPriceWith00() {
-        String prop = getProperty("pricewith00");
-        if (prop == null) {
-            return false;
-        } else {
-            return prop.equals("true");
-        }
-    }
-
     /**
      * Get instance settings
      */
@@ -367,6 +304,8 @@ enum ConfigProperty {
     PAPER_STANDARD_WIDTH("paper.standard.width", "451"),
     PAPER_STANDARD_HEIGHT("paper.standard.height", "698"),
     PAPER_STANDARD_MEDIASIZENAME("paper.standard.mediasizename", "A4"),
+    //
+    PRICE_WITH_ZERO("pricewith00", "false"),
     // TICKET HEADERS
     TKT_HEADER1("tkt.header1", "KriolOS POS"),
     TKT_HEADER2("tkt.header2", "Open Source Point Of Sale"),

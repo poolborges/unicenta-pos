@@ -1,7 +1,7 @@
 package com.openbravo.pos.instance;
 
 import com.openbravo.app.AppProperties;
-import com.openbravo.app.BootstrapAppPropertiesAdapter;
+import com.openbravo.app.config.BootstrapAppPropertiesAdapter;
 import com.openbravo.pos.spi.config.BootstrapConfig;
 
 import java.rmi.AlreadyBoundException;

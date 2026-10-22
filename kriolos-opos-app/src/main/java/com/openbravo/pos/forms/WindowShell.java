@@ -17,7 +17,7 @@ package com.openbravo.pos.forms;
 
 import com.openbravo.app.AppProperties;
 import com.openbravo.app.AppLocal;
-import com.openbravo.app.BootstrapAppPropertiesAdapter;
+import com.openbravo.app.config.BootstrapAppPropertiesAdapter;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.JMessagePanel;
 import com.openbravo.data.gui.MessageInf;

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.openbravo.util;
+package com.openbravo.ui.event;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,34 +29,33 @@ import com.openbravo.app.AppLocal;
  *
  * @author JG uniCenta
  */
-public class DirectoryEvent implements ActionListener {
+public class FileChooserEvent implements ActionListener {
     
     private JTextComponent m_jTxtField;
     private JFileChooser m_fc;
     
-    /** Creates a new instance of DirectoryChooser
+    /** Creates a new instance of FileChooser
      * @param TxtField */
-    public DirectoryEvent(JTextComponent TxtField) {
+    public FileChooserEvent(JTextComponent TxtField) {
         m_jTxtField = TxtField;
         m_fc = new JFileChooser();
         
         m_fc.resetChoosableFileFilters();
         m_fc.addChoosableFileFilter(new FileFilter() {
-            @Override
             public boolean accept(File f) {
                 if (f.isDirectory()) {
                     return true;
                 } else {
                     String filename = f.getName();
-                    return filename.endsWith(".jar")
-                        || filename.endsWith(".JAR")
-                        || filename.endsWith(".zip")
-                        || filename.endsWith(".ZIP");
+                    return filename.endsWith(".jpg")
+                        || filename.endsWith(".JPG")
+                        || filename.endsWith(".png")
+                        || filename.endsWith(".PNG");
                 }
             }
             @Override
             public String getDescription() {
-                return AppLocal.getIntString("filter.dbdriverlib");
+                return AppLocal.getIntString("filter.imgfile");
             }
         });
         m_fc.setFileSelectionMode(JFileChooser.FILES_ONLY );
