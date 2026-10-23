@@ -8,7 +8,7 @@ import com.openbravo.data.user.EditorRecord;
 import com.openbravo.data.user.ListProvider;
 import com.openbravo.data.user.ListProviderCreator;
 import com.openbravo.data.user.DefaultSaveProvider;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.catalog.CatalogService;
 import com.openbravo.pos.panels.JPanelTable;
 import javax.swing.ListCellRenderer;

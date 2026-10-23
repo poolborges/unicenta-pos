@@ -22,15 +22,15 @@ import com.openbravo.beans.JPasswordPanel;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.config.JFrmConfig;
 import com.openbravo.pos.config.AppConfig;
-import com.openbravo.app.AppLocal;
-import com.openbravo.app.AppProperties;
-import com.openbravo.app.AppProperties.DatabaseConfig;
+import com.openbravo.basic.AppLocal;
+import com.openbravo.basic.AppProperties;
 import com.openbravo.pos.admin.AppUser;
 import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.forms.ApplicationShell;
 import com.openbravo.pos.admin.DataLogicSystem;
 import com.openbravo.pos.admin.SecurityService;
 import com.openbravo.pos.forms.DatabaseActivationCallback;
+import com.openbravo.pos.spi.config.BootstrapConfig.DatabaseConfig;
 import com.openbravo.ui.components.ButtonSize;
 import com.openbravo.ui.components.ButtonFactory;
 import java.awt.BorderLayout;
@@ -40,7 +40,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -251,12 +250,12 @@ public class AuthenticationPanel extends javax.swing.JPanel {
      * Populates database options from configuration properties.
      */
     private void loadDatabases() {
-        if (appProperties == null) {
+        if ( this.appView.getBootstrapConfig() == null ||  this.appView.getBootstrapConfig().getDatabaseConfigs() == null) {
             showNoDatabasesState();
             return;
         }
 
-        List<DatabaseConfig> dbs = appProperties.getAll();
+        List<DatabaseConfig> dbs = this.appView.getBootstrapConfig().getDatabaseConfigs();
         if (dbs == null || dbs.isEmpty()) {
             showNoDatabasesState();
             return;

@@ -25,7 +25,7 @@ import com.openbravo.beans.*;
 import com.openbravo.data.gui.*;
 import com.openbravo.data.user.*;
 
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.container.BeanFactoryException;
 import com.openbravo.format.Formats;

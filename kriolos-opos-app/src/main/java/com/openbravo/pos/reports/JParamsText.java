@@ -22,7 +22,7 @@ import com.openbravo.data.loader.QBFCompareEnum;
 import com.openbravo.data.loader.SerializerWrite;
 import com.openbravo.data.loader.SerializerWriteBasic;
 import com.openbravo.format.Formats;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.panels.AppView;
 import java.awt.Component;
 

@@ -21,7 +21,7 @@ import com.openbravo.data.gui.ComboBoxValModel;
 import com.openbravo.data.loader.IKeyed;
 import com.openbravo.data.user.DirtyManager;
 import com.openbravo.data.user.EditorRecord;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import java.awt.Component;
 import java.util.Date;
 import java.util.UUID;

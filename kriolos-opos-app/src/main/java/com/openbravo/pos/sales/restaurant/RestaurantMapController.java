@@ -18,7 +18,7 @@ package com.openbravo.pos.sales.restaurant;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.customers.CustomerInfo;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.admin.DataLogicSystem;
 import com.openbravo.pos.sales.DataLogicReceipts;

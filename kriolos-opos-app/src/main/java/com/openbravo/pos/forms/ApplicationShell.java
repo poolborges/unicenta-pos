@@ -15,10 +15,8 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>
 package com.openbravo.pos.forms;
 
-import com.openbravo.app.AppLocal;
-import com.openbravo.app.AppProperties;
-import com.openbravo.app.AppProperties.DatabaseConfig;
-import com.openbravo.app.config.BootstrapAppPropertiesAdapter;
+import com.openbravo.basic.AppLocal;
+import com.openbravo.basic.AppProperties;
 import com.openbravo.pos.admin.AppUser;
 import com.openbravo.pos.admin.AppUserView;
 import com.openbravo.pos.admin.DataLogicSystem;
@@ -53,6 +51,7 @@ import com.openbravo.pos.spi.hardware.scanner.ScannerDevice;
 import com.openbravo.pos.scripting.ScriptEngine;
 import com.openbravo.pos.scripting.ScriptException;
 import com.openbravo.pos.scripting.ScriptFactory;
+import com.openbravo.pos.spi.config.BootstrapConfig.DatabaseConfig;
 import com.openbravo.pos.spi.hardware.scale.ScaleException;
 import java.awt.CardLayout;
 import java.awt.ComponentOrientation;
@@ -108,29 +107,11 @@ public class ApplicationShell extends JPanel implements AppView {
         return Formats.DATE.formatValue(new Date());
     }
 
-    public ApplicationShell(BootstrapConfig config) {
+    public ApplicationShell(AppConfig config) {
         initComponents();
         setName("kriolos:app:shell");
         this.bootstrapConfig = config;
-        this.appProperties = new BootstrapAppPropertiesAdapter(config);
-        remove(topPanel); //Occupie spaces
-    }
-
-    public ApplicationShell(AppProperties props) {
-        initComponents();
-        setName("kriolos:app:shell");
-        this.appProperties = props;
-        if (props instanceof BootstrapAppPropertiesAdapter adapter) {
-            this.bootstrapConfig = adapter.getBootstrapConfig();
-        } else if (props instanceof BootstrapConfig bc) {
-            this.bootstrapConfig = bc;
-        } else {
-            try {
-                this.bootstrapConfig = BootstrapConfigFactory.load();
-            } catch (Exception e) {
-                this.bootstrapConfig = AppConfig.getInstance();
-            }
-        }
+        this.appProperties = config;
         remove(topPanel); //Occupie spaces
     }
 
@@ -515,17 +496,8 @@ public class ApplicationShell extends JPanel implements AppView {
                     dlogicSystem.init(session);
                 }
 
-                // Initialize ApplicationConfigurationService and elevate appProperties to ApplicationProperties
-                try {
-                    ApplicationConfigurationService appConfigService = getBean(ApplicationConfigurationService.class);
-                    if (appConfigService != null) {
-                        appProperties = new ApplicationProperties(appConfigService, bootstrapConfig,
-                                (appProperties != null ? appProperties.getConfigFile() : null));
-                        LOGGER.log(Level.INFO, "Promoted appProperties to database-backed ApplicationProperties.");
-                    }
-                } catch (Exception ex) {
-                    LOGGER.log(Level.WARNING, "Could not initialize ApplicationProperties: " + ex.getMessage(), ex);
-                }
+                ApplicationConfigurationService appConfigService = getBean(ApplicationConfigurationService.class);
+                appProperties = new ApplicationProperties(appConfigService, bootstrapConfig);
      
                 cashManagementService= null;
                 cashManagementService = new CashManagementServiceImpl(session);

@@ -25,7 +25,7 @@ import com.openbravo.data.user.ListProviderCreator;
 import com.openbravo.data.user.SaveProvider;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.catalog.CategoryStock;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.container.BeanFactoryDataSingle;
 import com.openbravo.pos.inventory.AttributeSetInfo;
 import com.openbravo.pos.inventory.ProductsBundleInfo;

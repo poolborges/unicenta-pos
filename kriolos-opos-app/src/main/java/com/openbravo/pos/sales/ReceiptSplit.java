@@ -19,7 +19,7 @@ package com.openbravo.pos.sales;
 import com.openbravo.data.gui.modal.PosUIModal;
 import com.openbravo.pos.customers.CustomerService;
 import com.openbravo.pos.customers.DataLogicCustomers;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.ticket.TicketInfo;
 import java.awt.Component;
 

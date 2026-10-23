@@ -23,7 +23,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.text.JTextComponent;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 
 /**
  *

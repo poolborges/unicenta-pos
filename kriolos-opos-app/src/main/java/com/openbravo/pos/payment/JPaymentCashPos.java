@@ -19,7 +19,7 @@ import com.openbravo.data.gui.MessageInf;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.pos.config.AppConfig;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.admin.DataLogicSystem;
 import com.openbravo.pos.resources.ResourceService;
 import com.openbravo.pos.scripting.ScriptEngine;

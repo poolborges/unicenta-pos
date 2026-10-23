@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.sales.modern.two;
 
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.pim.CategoryInfo;
 import com.openbravo.ui.layout.WrapLayout;
 import com.openbravo.pos.ticket.ProductInfoExt;

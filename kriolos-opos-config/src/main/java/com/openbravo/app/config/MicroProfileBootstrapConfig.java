@@ -54,11 +54,6 @@ public class MicroProfileBootstrapConfig implements BootstrapConfig {
     }
 
     @Override
-    public boolean getBoolean(String key, boolean defaultValue) {
-        return config.getOptionalValue(key, Boolean.class).orElse(defaultValue);
-    }
-
-    @Override
     public int getInt(String key, int defaultValue) {
         return config.getOptionalValue(key, Integer.class).orElse(defaultValue);
     }
@@ -105,7 +100,7 @@ public class MicroProfileBootstrapConfig implements BootstrapConfig {
         if (password == null) {
             password = getProperty("db.password", "");
         }
-        String decryptedPassword = BootstrapConfiguration.decryptPassword(user, password);
+        String decryptedPassword = LegacyBootstrapConfiguration.decryptPassword(user, password);
 
         String driver = getProperty("quarkus.datasource.jdbc.driver");
         if (driver == null || driver.isBlank()) {
@@ -140,7 +135,7 @@ public class MicroProfileBootstrapConfig implements BootstrapConfig {
             }
             String user = getProperty("db." + id + ".user", getProperty("db.user." + id, "SA"));
             String pass = getProperty("db." + id + ".password", getProperty("db.password." + id, ""));
-            String decryptPass = BootstrapConfiguration.decryptPassword(user, pass);
+            String decryptPass = LegacyBootstrapConfiguration.decryptPassword(user, pass);
             String driver = getProperty("db." + id + ".driver");
             list.add(new DatabaseConfig(name, url, user, decryptPass, driver));
         }

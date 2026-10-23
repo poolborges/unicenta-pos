@@ -22,8 +22,8 @@ package com.openbravo.pos.imports;
 import com.openbravo.pos.panels.JPanelView;
 import com.openbravo.pos.config.AppConfig;
 import com.openbravo.pos.panels.AppView;
-import com.openbravo.app.AppLocal;
-import com.openbravo.app.AppProperties;
+import com.openbravo.basic.AppLocal;
+import com.openbravo.basic.AppProperties;
 import com.openbravo.basic.BasicException;
 import com.openbravo.util.AltEncrypter;
 import java.sql.Connection;
@@ -36,7 +36,7 @@ public class JPanelCSVCleardb extends JPanel implements JPanelView {
     private Connection con;  
     private Statement stmt;
     private String SQL;
-    private AppConfig config;
+    private AppProperties config;
 
     /**
      *
@@ -55,8 +55,7 @@ public class JPanelCSVCleardb extends JPanel implements JPanelView {
 
         initComponents();
         
-        config = new AppConfig(props.getConfigFile());
-        config.load();
+        config = props;
 
         jMessageBox.setText("Performing this action, will clear all "
                 + "data in the CSVImport table. \n\n"

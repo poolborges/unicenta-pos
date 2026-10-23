@@ -22,7 +22,7 @@ import com.openbravo.data.loader.TableDefinition;
 import com.openbravo.data.model.*;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.panels.JPanelTable2;
 
 public class VoucherPanel extends JPanelTable2 {

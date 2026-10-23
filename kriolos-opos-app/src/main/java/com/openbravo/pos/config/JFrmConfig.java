@@ -16,8 +16,8 @@
 package com.openbravo.pos.config;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.app.AppLocal;
-import com.openbravo.app.AppProperties;
+import com.openbravo.basic.AppLocal;
+import com.openbravo.basic.AppProperties;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;

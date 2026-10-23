@@ -66,7 +66,7 @@ The application initialization sequence strictly follows a two-phase protocol:
                                       ▼
  [PHASE 1: PRE-DB BOOTSTRAP]
  1. Locate local 'kriolos-opos.properties' or resolve CLI / Environment variables
- 2. Instantiate 'BootstrapConfiguration' (implements AppProperties)
+ 2. Instantiate 'LegacyBootstrapConfiguration' (implements AppProperties)
  3. Initialize LaF Theme (FlatLaf / Native)
  4. Resolve 'machine.uuid' (Station UUID; auto-generated if first launch)
  5. Initialize JDBC Connection Pool (HikariCP) using Bootstrap DB credentials
@@ -126,7 +126,7 @@ When `applicationConfigurationService.get("machine.printer")` is requested by ac
             │ (Found) ────────► Return value
             │ (Not found)
             ▼
-   Check Bootstrap Fallback: Return default from BootstrapConfiguration / code default
+   Check Bootstrap Fallback: Return default from LegacyBootstrapConfiguration / code default
 ```
 
 === 4.2 Property Scoping Breakdown
@@ -177,7 +177,7 @@ public interface ConfigurationProvider {
    * Retained for offline emergency mode or embedded single-node environments.
    * Directly reads and writes `kriolos-opos.properties`.
 2. **`DatabaseConfigurationProvider` (Default / Standard)**:
-   * Uses `BootstrapConfiguration` to connect to the database.
+   * Uses `LegacyBootstrapConfiguration` to connect to the database.
    * Loads `config_properties` into an in-memory concurrent map (`ConcurrentHashMap`).
    * Supports atomic database updates and hot cache invalidation without requiring a terminal restart.
 
@@ -190,7 +190,7 @@ public interface ConfigurationProvider {
 | Legacy Component | Target Architecture Replacement | Responsibility
 
 | `com.openbravo.pos.config.AppConfig`
-| **`BootstrapConfiguration`** (`kriolos-opos-base`)
+| **`LegacyBootstrapConfiguration`** (`kriolos-opos-base`)
 | Purely pre-DB settings. Implements `AppProperties`. Stripped of all store, receipt, and tax properties.
 
 | Static property reads in UI panels

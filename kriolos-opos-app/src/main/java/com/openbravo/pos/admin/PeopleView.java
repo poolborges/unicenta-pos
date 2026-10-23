@@ -22,7 +22,7 @@ import com.openbravo.data.gui.ComboBoxValModel;
 import com.openbravo.data.loader.SentenceList;
 import com.openbravo.data.user.*;
 import com.openbravo.format.Formats;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.util.Hashcypher;
 import com.openbravo.util.StringUtils;
 import java.awt.Component;

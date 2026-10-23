@@ -1,7 +1,7 @@
 package com.openbravo.pos.instance;
 
-import com.openbravo.app.AppProperties;
-import com.openbravo.app.config.BootstrapAppPropertiesAdapter;
+import com.openbravo.basic.AppProperties;
+import com.openbravo.pos.config.AppConfig;
 import com.openbravo.pos.spi.config.BootstrapConfig;
 
 import java.rmi.AlreadyBoundException;
@@ -33,24 +33,6 @@ public class InstanceManager {
     private final String applicationId;
     private final int rmiPort;
 
-    /**
-     * Constructs an InstanceManager using the BootstrapConfig SPI contract.
-     *
-     * @param message remote message handler for inter-process notifications
-     * @param config bootstrap configuration instance
-     * @throws RemoteException if RMI initialization fails
-     * @throws AlreadyBoundException if an instance is already bound
-     */
-    public InstanceManager(AppMessage message, BootstrapConfig config) throws RemoteException, AlreadyBoundException {
-        this.message = message;
-        if (config == null) {
-            this.applicationId = DEFAULT_APPLICATION_ID;
-            this.rmiPort = DEFAULT_RMI_PORT;
-        } else {
-            this.applicationId = config.getRmiApplicationId();
-            this.rmiPort = config.getRmiPort();
-        }
-    }
 
     /**
      * Constructs an InstanceManager using the AppProperties interface.
@@ -60,23 +42,20 @@ public class InstanceManager {
      * @throws RemoteException if RMI initialization fails
      * @throws AlreadyBoundException if an instance is already bound
      */
-    public InstanceManager(AppMessage message, AppProperties config) throws RemoteException, AlreadyBoundException {
+    public InstanceManager(AppMessage message, AppConfig config) throws RemoteException, AlreadyBoundException {
         this.message = message;
 
         if (config == null) {
             this.applicationId = DEFAULT_APPLICATION_ID;
             this.rmiPort = DEFAULT_RMI_PORT;
-        } else if (config instanceof BootstrapAppPropertiesAdapter adapter) {
-            this.applicationId = adapter.getBootstrapConfig().getRmiApplicationId();
-            this.rmiPort = adapter.getBootstrapConfig().getRmiPort();
-        } else if (config instanceof BootstrapConfig bc) {
-            this.applicationId = bc.getRmiApplicationId();
-            this.rmiPort = bc.getRmiPort();
-        } else {
-            this.applicationId = config.getProperty("machine.rmi.id", DEFAULT_APPLICATION_ID);
-
-            String portStr = config.getProperty("machine.rmi.port");
-            this.rmiPort = parsePort(portStr, DEFAULT_RMI_PORT);
+        }else {
+            //this.applicationId = config.getProperty("machine.rmi.id", DEFAULT_APPLICATION_ID);
+            //String portStr = config.getProperty("machine.rmi.port");
+            //this.rmiPort = parsePort(portStr, DEFAULT_RMI_PORT);
+            
+            
+            this.applicationId = config.getRmiApplicationId();
+            this.rmiPort = config.getRmiPort();
         }
     }
 
@@ -88,32 +67,9 @@ public class InstanceManager {
      * @throws RemoteException on RMI communication failure
      * @throws NotBoundException if no instance is currently registered
      */
-    public static AppMessage queryInstance(BootstrapConfig config) throws RemoteException, NotBoundException {
+    public static AppMessage queryInstance(AppConfig config) throws RemoteException, NotBoundException {
         String id = (config != null) ? config.getRmiApplicationId() : DEFAULT_APPLICATION_ID;
         int port = (config != null) ? config.getRmiPort() : DEFAULT_RMI_PORT;
-
-        LOGGER.info("Querying for instance identified by ID: " + id + " on PORT: " + port);
-        return (AppMessage) LocateRegistry.getRegistry("127.0.0.1", port).lookup(id);
-    }
-
-    /**
-     * Queries for an existing running application instance using AppProperties.
-     *
-     * @param config application properties
-     * @return remote handle to the existing instance
-     * @throws RemoteException on RMI communication failure
-     * @throws NotBoundException if no instance is currently registered
-     */
-    public static AppMessage queryInstance(AppProperties config) throws RemoteException, NotBoundException {
-        if (config instanceof BootstrapAppPropertiesAdapter adapter) {
-            return queryInstance(adapter.getBootstrapConfig());
-        }
-        if (config instanceof BootstrapConfig bc) {
-            return queryInstance(bc);
-        }
-        String id = (config != null) ? config.getProperty("machine.rmi.id", DEFAULT_APPLICATION_ID) : DEFAULT_APPLICATION_ID;
-        String portStr = (config != null) ? config.getProperty("machine.rmi.port") : null;
-        int port = parsePort(portStr, DEFAULT_RMI_PORT);
 
         LOGGER.info("Querying for instance identified by ID: " + id + " on PORT: " + port);
         return (AppMessage) LocateRegistry.getRegistry("127.0.0.1", port).lookup(id);

@@ -22,7 +22,7 @@ import com.openbravo.data.model.Field;
 import com.openbravo.data.model.Row;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.panels.JPanelTable2;
 import com.openbravo.pos.reports.JParamsLocation;
 import java.awt.Component;

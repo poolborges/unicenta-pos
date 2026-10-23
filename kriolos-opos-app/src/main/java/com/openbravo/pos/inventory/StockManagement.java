@@ -11,7 +11,7 @@ import com.openbravo.pos.resources.ResourceService;
 import com.openbravo.pos.admin.DataLogicSystem;
 import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.panels.JPanelView;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.basic.BasicException;
 import com.openbravo.beans.DateUtils;
 import com.openbravo.beans.JCalendarPanel2;

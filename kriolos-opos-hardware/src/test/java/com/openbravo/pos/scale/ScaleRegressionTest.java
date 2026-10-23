@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.scale;
 
-import com.openbravo.app.AppProperties;
+import com.openbravo.basic.AppProperties;
 import gnu.io.SerialPortEvent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -169,21 +169,6 @@ public class ScaleRegressionTest {
             @Override
             public String getHost() {
                 return "localhost";
-            }
-
-            @Override
-            public java.io.File getConfigFile() {
-                return null;
-            }
-
-            @Override
-            public java.util.List<DatabaseConfig> getAll() {
-                return java.util.Collections.emptyList();
-            }
-
-            @Override
-            public DatabaseConfig getPrimary() {
-                return null;
             }
         };
     }

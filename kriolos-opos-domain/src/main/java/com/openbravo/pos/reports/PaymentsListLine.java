@@ -4,7 +4,7 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.DataRead;
 import com.openbravo.data.loader.SerializableRead;
 import com.openbravo.format.Formats;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import java.io.Serializable;
 
 // Renamed from PaymentsLine to avoid confusion with PaymentInfo or similar

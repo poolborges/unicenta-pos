@@ -17,7 +17,7 @@ package com.openbravo.pos.reports;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.format.Formats;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.panels.AppView;
 import com.openbravo.util.StringUtils;
 import java.util.ArrayList;

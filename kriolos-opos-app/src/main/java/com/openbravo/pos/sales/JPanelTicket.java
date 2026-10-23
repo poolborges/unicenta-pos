@@ -15,12 +15,12 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.sales;
 
-import com.openbravo.app.AppProperties;
+import com.openbravo.basic.AppProperties;
 import com.openbravo.pos.resources.ResourceService;
 import com.openbravo.pos.panels.JPanelView;
 import com.openbravo.pos.admin.DataLogicSystem;
 import com.openbravo.pos.panels.AppView;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.ComboBoxValModel;
 import com.openbravo.pos.customers.CustomerInfoExt;

@@ -1,4 +1,4 @@
-package com.openbravo.app;
+package com.openbravo.basic;
 
 import java.io.File;
 import java.net.MalformedURLException;

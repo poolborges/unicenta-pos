@@ -22,7 +22,7 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.*;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.admin.ResourceInfo;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.util.ThumbNailBuilder;
 import com.openbravo.pos.voucher.VoucherInfo;
 import java.awt.image.BufferedImage;

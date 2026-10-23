@@ -24,7 +24,7 @@ import com.openbravo.data.loader.SerializerWriteBasic;
 import com.openbravo.pos.suppliers.SupplierInfo;
 import com.openbravo.pos.suppliers.SupplierService;
 import com.openbravo.pos.suppliers.JSupplierFinder;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.panels.AppView;
 import java.awt.Component;
 import javax.swing.event.DocumentEvent;

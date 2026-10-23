@@ -11,7 +11,7 @@ import com.openbravo.pos.reports.CashReport;
 import com.openbravo.pos.admin.DataLogicSystem;
 import com.openbravo.pos.container.BeanFactoryException;
 import com.openbravo.pos.container.BeanFactoryApp;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.admin.DataLogicSystem;
 import com.openbravo.pos.admin.SystemService;
 import com.openbravo.basic.BasicException;

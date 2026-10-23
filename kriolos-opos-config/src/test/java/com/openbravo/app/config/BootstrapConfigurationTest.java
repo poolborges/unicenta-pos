@@ -29,34 +29,34 @@ public class BootstrapConfigurationTest {
 
     @Test
     public void testBootstrapCreationAndDefaults() {
-        BootstrapConfiguration config = new BootstrapConfiguration(tempFile);
+        LegacyBootstrapConfiguration config = new LegacyBootstrapConfiguration(tempFile);
         assertEquals(tempFile, config.getConfigFile());
-        assertEquals(BootstrapConfiguration.DEFAULT_PROVIDER, config.getConfigProvider());
+        assertEquals(LegacyBootstrapConfiguration.DEFAULT_PROVIDER, config.getConfigProvider());
         assertNotNull(config.getHost());
     }
 
     @Test
     public void testStationIdAutoGenerationAndPersistence() throws IOException {
-        BootstrapConfiguration config = new BootstrapConfiguration(tempFile);
+        LegacyBootstrapConfiguration config = new LegacyBootstrapConfiguration(tempFile);
         String stationId = config.getStationId();
         assertNotNull(stationId);
         assertFalse(stationId.isBlank());
 
         // Load into another instance from the same file to verify persistence
-        BootstrapConfiguration config2 = new BootstrapConfiguration(tempFile);
+        LegacyBootstrapConfiguration config2 = new LegacyBootstrapConfiguration(tempFile);
         config2.load();
         assertEquals(stationId, config2.getStationId());
     }
 
     @Test
     public void testPropertiesAccessAndSave() throws IOException {
-        BootstrapConfiguration config = new BootstrapConfiguration(tempFile);
+        LegacyBootstrapConfiguration config = new LegacyBootstrapConfiguration(tempFile);
         config.setProperty("test.key", "hello-world");
         config.setBoolean("test.boolean", true);
         config.setConfigProvider("database");
         config.save();
 
-        BootstrapConfiguration reloaded = new BootstrapConfiguration(tempFile);
+        LegacyBootstrapConfiguration reloaded = new LegacyBootstrapConfiguration(tempFile);
         reloaded.load();
 
         assertEquals("hello-world", reloaded.getProperty("test.key"));
@@ -66,7 +66,7 @@ public class BootstrapConfigurationTest {
 
     @Test
     public void testDatabaseConfigResolution() throws IOException {
-        BootstrapConfiguration config = new BootstrapConfiguration(tempFile);
+        LegacyBootstrapConfiguration config = new LegacyBootstrapConfiguration(tempFile);
         config.setProperty("db.name", "ProductionDB");
         config.setProperty("db.URL", "jdbc:mariadb://localhost:3306/pos");
         config.setProperty("db.user", "posuser");
@@ -78,7 +78,7 @@ public class BootstrapConfigurationTest {
         config.setProperty("db.password.1", "secret2");
         config.save();
 
-        BootstrapConfiguration reloaded = new BootstrapConfiguration(tempFile);
+        LegacyBootstrapConfiguration reloaded = new LegacyBootstrapConfiguration(tempFile);
         reloaded.load();
 
         BootstrapConfig.DatabaseConfig primary = reloaded.getPrimaryDatabaseConfig();
@@ -89,17 +89,11 @@ public class BootstrapConfigurationTest {
         List<BootstrapConfig.DatabaseConfig> all = reloaded.getDatabaseConfigs();
         assertEquals(2, all.size());
         assertEquals("BackupDB", all.get(1).name());
-
-        // Also verify BootstrapAppPropertiesAdapter converts to AppProperties cleanly
-        BootstrapAppPropertiesAdapter adapter = new BootstrapAppPropertiesAdapter(reloaded);
-        assertEquals(reloaded.getHost(), adapter.getHost());
-        assertEquals(2, adapter.getAll().size());
-        assertEquals("ProductionDB", adapter.getPrimary().name());
     }
 
     @Test
     public void testTypedBootstrapAccessors() throws IOException {
-        BootstrapConfiguration config = new BootstrapConfiguration(tempFile);
+        LegacyBootstrapConfiguration config = new LegacyBootstrapConfiguration(tempFile);
         config.setProperty(BootstrapConfig.KEY_UI_THEME, "modern-dark");
         config.setProperty(BootstrapConfig.KEY_MACHINE_SCREENMODE, "fullscreen");
         config.setProperty(BootstrapConfig.KEY_MACHINE_RMI_PORT, "3005");
@@ -108,7 +102,7 @@ public class BootstrapConfigurationTest {
         config.setProperty(BootstrapConfig.KEY_DB_POOL_MAX_SIZE, "20");
         config.save();
 
-        BootstrapConfiguration reloaded = new BootstrapConfiguration(tempFile);
+        LegacyBootstrapConfiguration reloaded = new LegacyBootstrapConfiguration(tempFile);
         reloaded.load();
 
         assertEquals("modern-dark", reloaded.getUiTheme());

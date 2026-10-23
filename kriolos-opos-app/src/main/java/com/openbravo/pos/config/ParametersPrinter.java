@@ -17,7 +17,7 @@
 package com.openbravo.pos.config;
 
 import com.openbravo.data.user.DirtyManager;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.util.StringParser;
 import java.awt.Component;
 

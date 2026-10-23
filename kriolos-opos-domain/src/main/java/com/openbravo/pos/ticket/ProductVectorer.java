@@ -22,7 +22,7 @@ package com.openbravo.pos.ticket;
 import com.openbravo.format.Formats;
 import com.openbravo.data.loader.Vectorer;
 import com.openbravo.basic.BasicException;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 /**
  *
  * @author  adrian

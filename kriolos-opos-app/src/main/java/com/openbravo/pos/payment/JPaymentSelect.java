@@ -1,6 +1,6 @@
 package com.openbravo.pos.payment;
 
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.data.gui.modal.PosUIModal;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.admin.DataLogicSystem;

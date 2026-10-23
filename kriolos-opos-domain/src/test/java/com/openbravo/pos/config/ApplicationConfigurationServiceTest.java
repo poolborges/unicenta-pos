@@ -16,17 +16,20 @@
 package com.openbravo.pos.config;
 
 import com.openbravo.basic.BasicException;
+import com.openbravo.app.config.LegacyBootstrapConfiguration;
 import com.openbravo.data.loader.Session;
 import com.openbravo.pos.container.BeanContainer;
 import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.spi.config.BootstrapConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import org.mockito.Mockito;
+
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Proxy;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.UUID;
@@ -38,7 +41,7 @@ public class ApplicationConfigurationServiceTest {
 
     private Session session;
     private File tempFile;
-    private BootstrapConfiguration bootstrapConfig;
+    private LegacyBootstrapConfiguration bootstrapConfig;
     private DataLogicConfiguration dataLogic;
     private ApplicationConfigurationServiceImpl configService;
 
@@ -62,7 +65,7 @@ public class ApplicationConfigurationServiceTest {
         }
 
         tempFile = File.createTempFile("kriolos-config-test-", ".properties");
-        bootstrapConfig = new BootstrapConfiguration(tempFile);
+        bootstrapConfig = new LegacyBootstrapConfiguration(tempFile);
         bootstrapConfig.setProperty("bootstrap.only.key", "bootstrap-val");
         bootstrapConfig.setProperty("overridden.key", "bootstrap-layer");
         bootstrapConfig.setProperty("company.name", "KriolOS Store Global");
@@ -86,7 +89,7 @@ public class ApplicationConfigurationServiceTest {
     }
 
     @Test
-    @DisplayName("Should fall back to BootstrapConfiguration when DB has no entry")
+    @DisplayName("Should fall back to LegacyBootstrapConfiguration when DB has no entry")
     public void testBootstrapFallback() {
         assertEquals("bootstrap-val", configService.getProperty("bootstrap.only.key"));
         assertEquals("default-fallback", configService.getProperty("nonexistent.key", "default-fallback"));
@@ -150,22 +153,17 @@ public class ApplicationConfigurationServiceTest {
     @Test
     @DisplayName("Should resolve ApplicationConfigurationService in BeanContainer")
     public void testBeanContainerResolution() {
-        BootstrapAppPropertiesAdapter adapter = new BootstrapAppPropertiesAdapter(bootstrapConfig);
-        AppView appViewProxy = (AppView) Proxy.newProxyInstance(
-                AppView.class.getClassLoader(),
-                new Class<?>[]{AppView.class},
-                (proxy, method, args) -> {
-                    if ("getSession".equals(method.getName())) {
-                        return session;
-                    }
-                    if ("getProperties".equals(method.getName())) {
-                        return adapter;
-                    }
-                    return null;
-                }
-        );
+   
 
-        Object bean = BeanContainer.getBean(ApplicationConfigurationService.class, appViewProxy);
+        // Cria um mock tipado de AppView sem Proxy manual
+        AppView appViewMock = Mockito.mock(AppView.class);
+
+        // Define o comportamento com segurança de tipos (Type-safe)
+        Mockito.when(appViewMock.getSession()).thenReturn(session);
+        Mockito.when(appViewMock.getBootstrapConfig()).thenReturn(bootstrapConfig);
+
+        Object bean = BeanContainer.getBean(ApplicationConfigurationService.class, appViewMock);
+
         assertNotNull(bean, "BeanContainer should resolve ApplicationConfigurationService");
         assertInstanceOf(ApplicationConfigurationServiceImpl.class, bean);
     }
@@ -175,11 +173,10 @@ public class ApplicationConfigurationServiceTest {
     public void testApplicationPropertiesDelegation() throws BasicException {
         configService.setGlobalProperty("company.address", "123 Main St");
 
-        ApplicationProperties appProps = new ApplicationProperties(configService, bootstrapConfig, tempFile);
+        ApplicationProperties appProps = new ApplicationProperties(configService, bootstrapConfig);
         assertEquals("123 Main St", appProps.getProperty("company.address"));
         assertEquals("bootstrap-val", appProps.getProperty("bootstrap.only.key"));
         assertEquals("fallback-default", appProps.getProperty("missing.key", "fallback-default"));
         assertEquals(bootstrapConfig.getHost(), appProps.getHost());
-        assertEquals(tempFile, appProps.getConfigFile());
     }
 }

@@ -22,7 +22,7 @@ import com.openbravo.data.loader.ImageUtils;
 import com.openbravo.data.user.DirtyManager;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.format.Formats;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.util.Base64Encoder;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;

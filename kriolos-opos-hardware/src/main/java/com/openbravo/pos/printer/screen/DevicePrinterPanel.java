@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.printer.screen;
 
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.spi.hardware.PosImage;
 import com.openbravo.pos.printer.SwingPosImage;
 import com.openbravo.pos.spi.hardware.printer.VirtualPrinter;

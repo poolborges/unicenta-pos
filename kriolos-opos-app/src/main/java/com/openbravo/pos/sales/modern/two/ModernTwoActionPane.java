@@ -17,7 +17,7 @@
 package com.openbravo.pos.sales.modern.two;
 
 import com.openbravo.pos.customers.CustomerInfoExt;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.ui.components.ButtonSize;
 import com.openbravo.ui.components.ButtonFactory;
 import com.openbravo.ui.icon.IconKey;

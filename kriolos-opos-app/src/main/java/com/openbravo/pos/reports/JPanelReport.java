@@ -20,7 +20,7 @@ import com.openbravo.pos.sales.TaxService;
 import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.container.BeanFactoryApp;
 import com.openbravo.pos.container.BeanFactoryException;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.loader.BaseSentence;

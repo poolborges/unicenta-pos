@@ -157,7 +157,7 @@ public abstract class JNumberPanel<T extends Number> extends JPanel {
 
         jcmdCancel.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jcmdCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/cancel.png"))); // NOI18N
-        jcmdCancel.setText(com.openbravo.app.AppLocal.getIntString("button.cancel")); // NOI18N
+        jcmdCancel.setText(com.openbravo.basic.AppLocal.getIntString("button.cancel")); // NOI18N
         jcmdCancel.setMargin(new java.awt.Insets(8, 16, 8, 16));
         jcmdCancel.setPreferredSize(new java.awt.Dimension(80, 45));
         jcmdCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -169,7 +169,7 @@ public abstract class JNumberPanel<T extends Number> extends JPanel {
 
         jcmdOK.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jcmdOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/openbravo/images/ok.png"))); // NOI18N
-        jcmdOK.setText(com.openbravo.app.AppLocal.getIntString("button.ok")); // NOI18N
+        jcmdOK.setText(com.openbravo.basic.AppLocal.getIntString("button.ok")); // NOI18N
         jcmdOK.setMargin(new java.awt.Insets(8, 16, 8, 16));
         jcmdOK.setPreferredSize(new java.awt.Dimension(80, 45));
         jcmdOK.addActionListener(new java.awt.event.ActionListener() {

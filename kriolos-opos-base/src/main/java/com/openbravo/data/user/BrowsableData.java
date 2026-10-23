@@ -17,7 +17,7 @@
 package com.openbravo.data.user;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import java.util.*;
 import javax.swing.ListModel;
 import javax.swing.event.EventListenerList;

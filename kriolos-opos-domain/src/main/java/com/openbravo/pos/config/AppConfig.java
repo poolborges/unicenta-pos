@@ -16,9 +16,9 @@
 package com.openbravo.pos.config;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.app.AppLocal;
-import com.openbravo.app.AppProperties;
-import com.openbravo.app.config.BootstrapConfiguration;
+import com.openbravo.basic.AppLocal;
+import com.openbravo.basic.AppProperties;
+import com.openbravo.app.config.LegacyBootstrapConfiguration;
 import com.openbravo.pos.spi.config.BootstrapConfig;
 import java.awt.Component;
 import java.io.File;
@@ -39,14 +39,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
- * Legacy application configuration facade extending {@link BootstrapConfiguration}.
+ * Legacy application configuration facade extending {@link LegacyBootstrapConfiguration}.
  * <p>
  * Business settings and peripheral configurations are moving to the database-backed
  * {@link ApplicationConfigurationService} as part of Issue #74.
  *
  * @author JG uniCenta, KriolOS POS
  */
-public class AppConfig extends BootstrapConfiguration implements AppProperties {
+public class AppConfig extends LegacyBootstrapConfiguration implements AppProperties {
 
     private static final Logger LOGGER = Logger.getLogger(AppConfig.class.getName());
 
@@ -61,17 +61,17 @@ public class AppConfig extends BootstrapConfiguration implements AppProperties {
         super(configfile);
     }
 
-    @Override
-    public List<AppProperties.DatabaseConfig> getAll() {
+
+    public List<DatabaseConfig> getAll() {
         return getDatabaseConfigs().stream()
-                .map(d -> new AppProperties.DatabaseConfig(d.name(), d.url(), d.username(), d.password()))
+                .map(d -> new DatabaseConfig(d.name(), d.url(), d.username(), d.password()))
                 .toList();
     }
 
-    @Override
-    public AppProperties.DatabaseConfig getPrimary() {
+
+    public DatabaseConfig getPrimary() {
         var p = getPrimaryDatabaseConfig();
-        return (p != null) ? new AppProperties.DatabaseConfig(p.name(), p.url(), p.username(), p.password()) : null;
+        return (p != null) ? new DatabaseConfig(p.name(), p.url(), p.username(), p.password()) : null;
     }
 
     public synchronized static AppConfig getInstance() {
@@ -188,11 +188,7 @@ public class AppConfig extends BootstrapConfiguration implements AppProperties {
      * @param dbConfig the database configuration
      * @throws BasicException if the database connection fails or is invalid
      */
-    public static void testConnection(AppProperties.DatabaseConfig dbConfig) throws BasicException {
-        testConnection(dbConfig.name(), dbConfig.url(), dbConfig.username(), dbConfig.password());
-    }
-
-    public static void testConnection(BootstrapConfig.DatabaseConfig dbConfig) throws BasicException {
+    public static void testConnection(DatabaseConfig dbConfig) throws BasicException {
         testConnection(dbConfig.name(), dbConfig.url(), dbConfig.username(), dbConfig.password());
     }
 

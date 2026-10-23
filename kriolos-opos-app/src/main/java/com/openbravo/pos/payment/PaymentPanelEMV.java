@@ -16,7 +16,7 @@
 
 package com.openbravo.pos.payment;
 
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 
 import javax.swing.*;
 

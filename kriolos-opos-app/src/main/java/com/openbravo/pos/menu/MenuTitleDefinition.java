@@ -16,7 +16,7 @@
 
 package com.openbravo.pos.menu;
 
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import java.awt.Color;
 import java.awt.Insets;
 import javax.swing.JLabel;

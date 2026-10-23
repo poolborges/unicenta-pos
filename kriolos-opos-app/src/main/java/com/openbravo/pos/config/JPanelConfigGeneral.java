@@ -16,7 +16,7 @@
 package com.openbravo.pos.config;
 
 import com.openbravo.data.user.DirtyManager;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.ui.api.sales.SaleLayoutDefinition;
 import com.openbravo.pos.ui.api.sales.SaleLayoutManager;
 import com.openbravo.pos.ui.api.POSThemeDefinition;

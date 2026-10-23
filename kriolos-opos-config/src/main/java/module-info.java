@@ -27,6 +27,6 @@ module kriolos.opos.config {
 
     provides com.openbravo.pos.spi.config.BootstrapConfigProvider with 
         com.openbravo.app.config.MicroProfileBootstrapConfigProvider, 
-        com.openbravo.app.config.FileBootstrapConfigProvider;
-    provides org.eclipse.microprofile.config.spi.ConfigSource with com.openbravo.app.config.KriolosPropertiesConfigSource;
+        com.openbravo.app.config.LegacyBootstrapConfigProvider;
+    provides org.eclipse.microprofile.config.spi.ConfigSource with com.openbravo.app.config.MicroProfileConfigSource;
 }

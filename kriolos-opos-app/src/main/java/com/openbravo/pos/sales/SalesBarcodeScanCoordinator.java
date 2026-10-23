@@ -21,7 +21,7 @@ import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.catalog.CatalogService;
 import com.openbravo.pos.customers.CustomerService;
 import com.openbravo.pos.customers.DataLogicCustomers;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.customers.CustomerInfoExt;
 import com.openbravo.pos.ticket.ProductInfoExt;

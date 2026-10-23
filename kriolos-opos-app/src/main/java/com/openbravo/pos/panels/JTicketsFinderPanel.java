@@ -32,7 +32,7 @@ import com.openbravo.pos.customers.CustomerService;
 import com.openbravo.pos.customers.DataLogicCustomers;
 import com.openbravo.pos.customers.JCustomerFinder;
 import com.openbravo.pos.customers.JCustomerFinderPanel;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.sales.DataLogicSales;
 import com.openbravo.pos.inventory.TaxCategoryInfo;
 import com.openbravo.pos.sales.TaxService;

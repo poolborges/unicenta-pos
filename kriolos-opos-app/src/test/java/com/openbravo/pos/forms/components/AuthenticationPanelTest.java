@@ -17,13 +17,14 @@
 package com.openbravo.pos.forms.components;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.app.AppProperties;
-import com.openbravo.app.AppProperties.DatabaseConfig;
+import com.openbravo.basic.AppProperties;
 import com.openbravo.pos.admin.AppUser;
 import com.openbravo.pos.admin.SecurityService;
+import com.openbravo.pos.panels.AppView;
+import com.openbravo.pos.spi.config.BootstrapConfig;
+import com.openbravo.pos.spi.config.BootstrapConfig.DatabaseConfig;
 import java.awt.Component;
 import java.awt.Container;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,6 +37,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.mockito.Mockito;
 
 class AuthenticationPanelTest {
 
@@ -51,12 +53,19 @@ class AuthenticationPanelTest {
         db1 = new DatabaseConfig("Store DB", "jdbc:hsqldb:mem:test_db1", "sa", "");
         db2 = new DatabaseConfig("Branch DB", "jdbc:hsqldb:mem:test_db2", "sa", "");
 
-        appProps = new TestAppProperties(Arrays.asList(db1, db2));
+        var bootConfig = new TestBootstrapConfig(Arrays.asList(db1, db2));
+        appProps = new TestAppProperties();
         securityService = new TestSecurityService();
         authSuccess = new AtomicBoolean(false);
+        
+        // Cria um mock tipado de AppView sem Proxy manual
+        AppView appViewMock = Mockito.mock(AppView.class);
+
+        // Define o comportamento com segurança de tipos (Type-safe)
+        Mockito.when(appViewMock.getBootstrapConfig()).thenReturn(bootConfig);
 
         authPanel = new AuthenticationPanel(
-                null,
+                appViewMock,
                 securityService,
                 appProps,
                 user -> authSuccess.set(true)
@@ -150,19 +159,49 @@ class AuthenticationPanelTest {
         }
     }
 
-    private static class TestAppProperties implements AppProperties {
-        private final List<DatabaseConfig> dbs;
+    private static class TestBootstrapConfig implements BootstrapConfig{
 
-        TestAppProperties(List<DatabaseConfig> dbs) {
+        List<DatabaseConfig> dbs;
+        
+        public TestBootstrapConfig(List<DatabaseConfig> dbs){
             this.dbs = dbs;
         }
+        
+        
+        @Override
+        public String getProperty(String key) {
+            return null;
+        }
 
-        @Override public File getConfigFile() { return null; }
+        @Override
+        public String getProperty(String key, String defaultValue) {
+             return defaultValue; 
+        }
+
+        @Override
+        public String getHost() {
+             return "localhost";
+        }
+
+        @Override
+        public List<DatabaseConfig> getDatabaseConfigs() {
+            return dbs;
+        }
+
+        @Override
+        public DatabaseConfig getPrimaryDatabaseConfig() {
+            return dbs.get(0);
+        }
+    }
+    
+    private static class TestAppProperties implements AppProperties {
+
+        TestAppProperties() {
+        }
+
         @Override public String getHost() { return "localhost"; }
         @Override public String getProperty(String sKey) { return null; }
         @Override public String getProperty(String sKey, String defaultValue) { return defaultValue; }
-        @Override public List<DatabaseConfig> getAll() { return dbs; }
-        @Override public DatabaseConfig getPrimary() { return dbs.isEmpty() ? null : dbs.get(0); }
     }
 
     private static class TestSecurityService implements SecurityService {

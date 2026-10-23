@@ -1,6 +1,6 @@
 package com.openbravo.pos.printer.printer;
 
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.data.gui.modal.PosUIModal;
 import java.awt.BorderLayout;
 import java.awt.Component;

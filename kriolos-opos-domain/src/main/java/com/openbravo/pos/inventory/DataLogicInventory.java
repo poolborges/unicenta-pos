@@ -15,7 +15,7 @@ import com.openbravo.data.loader.SerializerWriteString;
 import com.openbravo.data.loader.Session;
 import com.openbravo.pos.container.BeanFactoryDataSingle;
 import com.openbravo.format.Formats;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.data.loader.DataRead;
 import com.openbravo.data.loader.SerializerReadClass;
 import com.openbravo.data.loader.StaticSentence;

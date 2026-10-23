@@ -1,3 +1,5 @@
+package com.openbravo.pos.app;
+
 /*
  * Copyright (C) 2026 Paulo Borges
  *

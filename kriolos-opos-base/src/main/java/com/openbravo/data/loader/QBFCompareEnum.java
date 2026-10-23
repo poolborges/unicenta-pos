@@ -16,7 +16,7 @@
 
 package com.openbravo.data.loader;
 
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 
 /**
  *

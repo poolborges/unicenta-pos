@@ -32,7 +32,7 @@
               <Image iconType="3" name="/com/openbravo/images/logo_100&#xd7;100.png"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="pos_messages.properties" key="JAuthPanel.m_vendorImageLabel.text" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="" key="JAuthPanel.m_vendorImageLabel.text" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="com/openbravo/pos/forms/Bundle.properties" key="JAuthPanel.m_vendorImageLabel.toolTipText" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
@@ -114,7 +114,7 @@
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="pos_messages.properties" key="JAuthPanel.m_LoginLabel.text" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="" key="JAuthPanel.m_LoginLabel.text" replaceFormat="AppLocal.getIntString(&quot;{key}&quot;)"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="m_LoginLabel" noResource="true"/>
               </Properties>

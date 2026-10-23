@@ -12,7 +12,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests verifying {@link MicroProfileBootstrapConfig}, {@link KriolosPropertiesConfigSource},
+ * Unit tests verifying {@link MicroProfileBootstrapConfig}, {@link MicroProfileConfigSource},
  * and provider discovery via {@link BootstrapConfigFactory}.
  *
  * @author KriolOS
@@ -72,7 +72,7 @@ class MicroProfileBootstrapConfigTest {
             writer.write("machine.uuid=station-office-01\n");
         }
 
-        KriolosPropertiesConfigSource source = new KriolosPropertiesConfigSource(tempFile, 105);
+        MicroProfileConfigSource source = new MicroProfileConfigSource(tempFile, 105);
         assertEquals("kriolos-opos.properties", source.getName());
         assertEquals(105, source.getOrdinal());
         assertEquals("jdbc:postgresql://db.corp:5432/pos", source.getValue("db.URL"));

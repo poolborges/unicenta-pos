@@ -90,7 +90,17 @@ public interface BootstrapConfig {
      * @param defaultValue default boolean value if key is not found
      * @return boolean property value
      */
-    boolean getBoolean(String key, boolean defaultValue);
+    default boolean getBoolean(String key, boolean defaultValue){
+        String val = getProperty(key);
+        if (val == null || val.isBlank()) {
+            return defaultValue;
+        }
+        try {
+            return Boolean.parseBoolean(val.trim());
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
 
     /**
      * Reads an integer property by key with a fallback default value.

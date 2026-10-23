@@ -1,6 +1,6 @@
 module kriolos.opos.spi {
     requires java.logging;
-    requires java.sql;
+    requires transitive java.sql;
 
     exports com.openbravo.pos.spi.annotation;
     exports com.openbravo.pos.spi.config;

@@ -18,7 +18,7 @@ package com.openbravo.pos.reports;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 
 /**
  *

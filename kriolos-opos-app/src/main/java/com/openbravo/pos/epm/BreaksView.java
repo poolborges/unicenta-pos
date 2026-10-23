@@ -20,7 +20,7 @@ import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.SentenceList;
 import com.openbravo.data.user.DirtyManager;
 import com.openbravo.data.user.EditorRecord;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.panels.AppView;
 import java.awt.Component;
 import java.util.List;

@@ -19,7 +19,7 @@ import com.openbravo.data.user.DirtyManager;
 import com.openbravo.format.Formats;
 import java.awt.Component;
 import java.util.Locale;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;

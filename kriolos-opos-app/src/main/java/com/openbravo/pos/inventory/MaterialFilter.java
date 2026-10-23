@@ -28,7 +28,7 @@ import com.openbravo.data.loader.SentenceList;
 import com.openbravo.data.user.EditorCreator;
 import com.openbravo.format.Formats;
 import com.openbravo.pos.catalog.CatalogService;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.pim.DataLogicPIM;
 

@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.scanpal2;
 
-import com.openbravo.app.AppProperties;
+import com.openbravo.basic.AppProperties;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -75,21 +75,6 @@ public class DeviceScannerRegressionTest {
             @Override
             public String getHost() {
                 return "localhost";
-            }
-
-            @Override
-            public File getConfigFile() {
-                return null;
-            }
-
-            @Override
-            public List<DatabaseConfig> getAll() {
-                return Collections.emptyList();
-            }
-
-            @Override
-            public DatabaseConfig getPrimary() {
-                return null;
             }
         };
     }

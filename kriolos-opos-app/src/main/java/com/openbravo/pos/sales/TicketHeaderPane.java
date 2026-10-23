@@ -16,7 +16,7 @@
 
 package com.openbravo.pos.sales;
 
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;

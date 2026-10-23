@@ -37,7 +37,7 @@
 // Nothing else.
 package com.openbravo.pos.reports;
 
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.HeadlessException;

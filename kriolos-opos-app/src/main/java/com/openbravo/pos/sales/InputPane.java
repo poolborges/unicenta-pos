@@ -18,7 +18,7 @@ package com.openbravo.pos.sales;
 
 import com.openbravo.beans.JNumberEventListener;
 import com.openbravo.beans.JNumberKeys;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
