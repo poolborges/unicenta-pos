@@ -471,6 +471,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             </path>
                         </annotationProcessorPaths>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>default-testCompile</id>
+                            <phase>test-compile</phase>
+                            <goals>
+                                <goal>testCompile</goal>
+                            </goals>
+                            <configuration>
+                                <!-- Forces tests to compile on the classpath instead of module-path -->
+                                <useModulePath>false</useModulePath>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.6.0</version>
+                    <configuration>
+                        <!-- Forces tests to run on the classpath -->
+                        <useModulePath>false</useModulePath>
+                    </configuration>
                 </plugin>
                 
                 <!-- Enforcer Plugin: Ensures the build tool is JDK 17 or newer -->
@@ -620,6 +643,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </executions>
             </plugin>
             
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
             <!-- 
             TO Force module-info.java verification if exist in all subproject
             -->

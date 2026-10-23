@@ -21,7 +21,7 @@ package com.openbravo.pos.suppliers;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.*;
 import com.openbravo.format.Formats;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.container.BeanFactoryDataSingle;
 import java.util.List;
 import java.util.logging.Level;

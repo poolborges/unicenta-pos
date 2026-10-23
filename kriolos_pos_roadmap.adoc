@@ -271,11 +271,11 @@ public class TemplateException extends Exception { ... }
 
 '''
 
-== TASK 4 — Split BootstrapConfiguration from ApplicationConfiguration (Issue #74) ⭐ Do First
+== TASK 4 — Split LegacyBootstrapConfiguration from ApplicationConfiguration (Issue #74) ⭐ Do First
 
 [quote]
 ____
-_"Split BootstrapConfiguration(DB) from ApplicationConfig(Store in DB Tables)"_
+_"Split LegacyBootstrapConfiguration(DB) from ApplicationConfig(Store in DB Tables)"_
 ____
 
 **Specification**: See `docs/modules/guide-devel/pages/spec-database-configuration.adoc` and https://github.com/kriolos-obiz/kriolos-pos/issues/74[Issue #74]. +
@@ -289,7 +289,7 @@ Clear separation between two configuration layers:
 |===
 | Layer | Where stored | When read | Examples
 
-| **`BootstrapConfiguration`**
+| **`LegacyBootstrapConfiguration`**
 | `.properties` file / env vars
 | At JVM startup, before DB
 | DB URL, credentials, host, locale, theme
@@ -302,15 +302,15 @@ Clear separation between two configuration layers:
 
 === Design
 
-* `AppConfig` → refactored to `BootstrapConfiguration implements AppProperties` (file only, no business data).
+* `AppConfig` → refactored to `LegacyBootstrapConfiguration implements AppProperties` (file only, no business data).
 * New `ApplicationConfigurationService`: `get(key)`, `get(key, default)`, `set(key, value)`, `reload()`.
 * `ApplicationShell` init sequence:
-. Phase 1 (before DB) — load `BootstrapConfiguration`
+. Phase 1 (before DB) — load `LegacyBootstrapConfiguration`
 . Phase 2 (after DB) — load `ApplicationConfiguration` via `ApplicationConfigurationService`
 
 === Sub-tasks
 
-. `BootstrapConfiguration` — refactor `AppConfig`, strip store-level keys.
+. `LegacyBootstrapConfiguration` — refactor `AppConfig`, strip store-level keys.
 . DB migration — `POS_CONFIGURATION(CONFIG_KEY PK, CONFIG_VALUE, MODIFIED_AT)` + seed defaults.
 . `ApplicationConfigurationService` bean — cache + invalidation.
 . Migrate existing store-level `.properties` keys → `POS_CONFIGURATION`.
@@ -575,7 +575,7 @@ ____
 * `com.openbravo.base.data.model` (domain models)
 * `com.openbravo.base.data.user` (headless user/security entities)
 * `com.openbravo.base.format` (headless data formatters)
-* `com.openbravo.base.config` (BootstrapConfiguration)
+* `com.openbravo.base.config` (LegacyBootstrapConfiguration)
 * `com.openbravo.base.util` (headless helpers)
 
 === Sub-tasks
@@ -650,7 +650,7 @@ ____
    * Leverage SmallRye / MicroProfile Config (`application.properties`, `@ConfigProperty`, profile-based config `dev`, `test`, `prod`).
    * Read database connection URL, credentials, and pool settings directly from Quarkus `quarkus.datasource.*`.
 3. **DataSource Bridge**:
-   * Standalone desktop: Uses `HikariCP` pool initialized via `BootstrapConfiguration`.
+   * Standalone desktop: Uses `HikariCP` pool initialized via `LegacyBootstrapConfiguration`.
    * Quarkus desktop: Injects container-managed `AgroalDataSource` seamlessly into `Session`.
 
 === Sub-tasks

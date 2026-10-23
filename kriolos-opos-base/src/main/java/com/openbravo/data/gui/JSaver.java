@@ -19,7 +19,7 @@ package com.openbravo.data.gui;
 import java.util.*;
 import javax.swing.*;
 import com.openbravo.basic.BasicException;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.data.user.BrowsableEditableData;
 import com.openbravo.data.user.StateListener;
 

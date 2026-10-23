@@ -1,7 +1,7 @@
 package com.openbravo.pos.config;
 
-import com.openbravo.app.AppLocal;
-import com.openbravo.app.config.BootstrapConfiguration;
+import com.openbravo.basic.AppLocal;
+import com.openbravo.app.config.LegacyBootstrapConfiguration;
 import com.openbravo.data.gui.JMessagePanel;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.loader.Session;
@@ -432,7 +432,7 @@ public class JPanelConfigDatabase extends JPanel implements PanelConfig {
     }
 
     private String getOsIndependentSqlitePath(String fileName) {
-        File baseDir = BootstrapConfiguration.getBaseApplicationDataDirectory();
+        File baseDir = LegacyBootstrapConfiguration.getBaseApplicationDataDirectory();
         return "jdbc:sqlite:" + new File(baseDir, fileName).getAbsolutePath().replace('\\', '/');
     }
 

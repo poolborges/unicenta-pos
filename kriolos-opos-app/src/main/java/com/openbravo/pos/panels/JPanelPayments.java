@@ -19,7 +19,7 @@ package com.openbravo.pos.panels;
 import com.openbravo.data.user.EditorRecord;
 import com.openbravo.data.user.ListProvider;
 import com.openbravo.data.user.SaveProvider;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.payment.DataLogicPayments;
 import com.openbravo.pos.payment.TreasuryService;
 

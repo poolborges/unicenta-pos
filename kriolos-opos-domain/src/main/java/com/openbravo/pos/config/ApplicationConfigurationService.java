@@ -25,7 +25,7 @@ import java.util.Map;
  * <ol>
  *   <li>Station-specific override: {@code pos_id = {stationId}}</li>
  *   <li>Global store setting: {@code pos_id = '0000-0000-0000-0000'}</li>
- *   <li>Bootstrap fallback: {@code BootstrapConfiguration.getProperty(key)}</li>
+ *   <li>Bootstrap fallback: {@code LegacyBootstrapConfiguration.getProperty(key)}</li>
  * </ol>
  *
  * @author KriolOS POS

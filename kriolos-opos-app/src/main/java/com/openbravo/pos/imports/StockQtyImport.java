@@ -16,8 +16,8 @@
 
 package com.openbravo.pos.imports;
 
-import com.openbravo.app.AppProperties;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppProperties;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.resources.ResourceService;
 import com.openbravo.pos.admin.DataLogicSystem;
 import com.openbravo.pos.config.AppConfig;
@@ -89,7 +89,6 @@ public class StockQtyImport extends JPanel implements JPanelView {
 
   // the csv filename
   private String last_folder;
-  private File config_file;
   private String csvFileName;
 
   // Status area messages
@@ -108,6 +107,8 @@ public class StockQtyImport extends JPanel implements JPanelView {
     initComponents();
 
     dbSession = appView.getSession();
+    
+    this.m_props = appView.getProperties();
     
     CatalogService resolvedCatalog = null;
     try {
@@ -164,10 +165,7 @@ public class StockQtyImport extends JPanel implements JPanelView {
       LOGGER.log(Level.WARNING, null, ex);
     }
 
-    AppProperties props = appView.getProperties();
-
-    last_folder = props.getProperty("CSV.last_folder");
-    config_file = props.getConfigFile();
+    last_folder = this.m_props.getProperty("CSV.last_folder");
 
     jFileName.getDocument().addDocumentListener(documentListener);
     documentListener = new DocumentListener() {
@@ -822,7 +820,7 @@ public class StockQtyImport extends JPanel implements JPanelView {
     resetForm();
     setWorker();
 
-    JFileChooser chooser = new JFileChooser(last_folder == null ? "C:\\" : last_folder);
+    JFileChooser chooser = new JFileChooser(last_folder);
     FileNameExtensionFilter filter = new FileNameExtensionFilter("csv files", "csv");
     chooser.setFileFilter(filter);
     chooser.showOpenDialog(null);
@@ -835,15 +833,8 @@ public class StockQtyImport extends JPanel implements JPanelView {
     File current_folder = chooser.getCurrentDirectory();
 
     if (last_folder == null || !last_folder.equals(current_folder.getAbsolutePath())) {
-      AppConfig CSVConfig = new AppConfig(config_file);
-      CSVConfig.load();
-      CSVConfig.setProperty("CSV.last_folder", current_folder.getAbsolutePath());
-      last_folder = current_folder.getAbsolutePath();
-      try {
-        CSVConfig.save();
-      } catch (IOException ex) {
-        LOGGER.log(Level.WARNING, null, ex);
-      }
+        last_folder = current_folder.getAbsolutePath();
+        //TODO save latest directory CSVConfig.setProperty("CSV.last_folder", last_folder);
     }
 
     String csv = csvFile.getName();

@@ -16,10 +16,7 @@
 package com.openbravo.pos.config;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.app.AppProperties;
-import com.openbravo.app.config.BootstrapAppPropertiesAdapter;
 import com.openbravo.pos.spi.config.BootstrapConfig;
-import com.openbravo.pos.spi.config.BootstrapConfigFactory;
 import com.openbravo.pos.container.BeanFactoryApp;
 import com.openbravo.pos.container.BeanFactoryException;
 import com.openbravo.pos.panels.AppView;
@@ -71,18 +68,7 @@ public class ApplicationConfigurationServiceImpl implements ApplicationConfigura
 
     @Override
     public void init(AppView app) throws BeanFactoryException {
-        AppProperties props = app.getProperties();
-        if (props instanceof BootstrapAppPropertiesAdapter adapter) {
-            this.bootstrapConfig = adapter.getBootstrapConfig();
-        } else if (props instanceof BootstrapConfig bConfig) {
-            this.bootstrapConfig = bConfig;
-        } else {
-            try {
-                this.bootstrapConfig = BootstrapConfigFactory.load();
-            } catch (Exception e) {
-                this.bootstrapConfig = AppConfig.getInstance();
-            }
-        }
+        this.bootstrapConfig = app.getBootstrapConfig();
         this.stationId = (this.bootstrapConfig != null) ? this.bootstrapConfig.getStationId() : GLOBAL_POS_ID;
 
         this.dataLogic = new DataLogicConfiguration();
@@ -136,7 +122,7 @@ public class ApplicationConfigurationServiceImpl implements ApplicationConfigura
             }
         }
 
-        // 3. Fallback to BootstrapConfiguration or defaultValue
+        // 3. Fallback to LegacyBootstrapConfiguration or defaultValue
         if (bootstrapConfig != null) {
             return bootstrapConfig.getProperty(key, defaultValue);
         }

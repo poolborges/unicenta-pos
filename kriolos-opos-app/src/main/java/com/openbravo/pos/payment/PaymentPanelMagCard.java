@@ -19,7 +19,7 @@ package com.openbravo.pos.payment;
 import com.openbravo.data.gui.JMessagePanel;
 import com.openbravo.data.gui.MessageInf;
 import com.openbravo.pos.config.AppConfig;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import java.io.File;
 import javax.swing.*;
 

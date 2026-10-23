@@ -21,7 +21,7 @@ import com.openbravo.pos.panels.JPanelView;
 import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.container.BeanFactoryException;
 import com.openbravo.pos.container.BeanFactoryApp;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.basic.BasicException;
 import com.openbravo.beans.JFlowPanel;
 import com.openbravo.data.gui.MessageInf;

@@ -15,8 +15,8 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.imports;
 
-import com.openbravo.app.AppProperties;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppProperties;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.admin.DataLogicSystem;
 import com.openbravo.pos.config.AppConfig;
 import com.openbravo.pos.container.BeanFactoryException;
@@ -77,7 +77,6 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
     private int currentRecord;
     private int rowCount = 0;
     private String last_folder;
-    private File config_file;
 
     private static String category_default = "[ USE DEFAULT CATEGORY ]";
     private static String reject_bad_category = "[ REJECT ITEMS WITH BAD CATEGORIES ]";
@@ -205,7 +204,6 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         spr = catalogService.getProductSaveProvider();
 
         last_folder = props.getProperty("CSV.last_folder");
-        config_file = props.getConfigFile();
 
         jFileName.getDocument().addDocumentListener(documentListener);
 
@@ -1813,15 +1811,8 @@ public class JPanelCSVImport extends JPanel implements JPanelView {
         File current_folder = chooser.getCurrentDirectory();
 
         if (last_folder == null || !last_folder.equals(current_folder.getAbsolutePath())) {
-            AppConfig CSVConfig = new AppConfig(config_file);
-            CSVConfig.load();
-            CSVConfig.setProperty("CSV.last_folder", current_folder.getAbsolutePath());
-            last_folder = current_folder.getAbsolutePath();
-            try {
-                CSVConfig.save();
-            } catch (IOException ex) {
-                LOGGER.log(Level.WARNING, null, ex);
-            }
+          last_folder = current_folder.getAbsolutePath();
+          //TODO save latest directory CSVConfig.setProperty("CSV.last_folder", last_folder);
         }
 
         String csv = csvFile.getName();

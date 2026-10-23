@@ -16,7 +16,7 @@
 package com.openbravo.data.gui;
 
 import com.openbravo.data.gui.modal.PosUIModal;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import java.awt.*;
 import javax.swing.*;
 

@@ -15,7 +15,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.forms;
 
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.resources.ResourceService;
 import com.openbravo.pos.panels.JPanelView;
 import com.openbravo.pos.admin.SecurityService;

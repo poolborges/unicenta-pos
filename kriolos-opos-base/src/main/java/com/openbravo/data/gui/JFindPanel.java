@@ -17,7 +17,7 @@ package com.openbravo.data.gui;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.modal.PosUIModal;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.data.loader.Vectorer;
 import java.awt.Component;
 import javax.swing.JButton;

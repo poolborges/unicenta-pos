@@ -16,7 +16,7 @@
 
 package com.openbravo.pos.sales;
 
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import java.awt.CardLayout;
 import javax.swing.JOptionPane;
 

@@ -25,15 +25,15 @@ import java.io.File;
  *
  * @author KriolOS POS
  */
-public class FileBootstrapConfigProvider implements BootstrapConfigProvider {
+public class LegacyBootstrapConfigProvider implements BootstrapConfigProvider {
 
     private final File configFile;
 
-    public FileBootstrapConfigProvider() {
+    public LegacyBootstrapConfigProvider() {
         this(null);
     }
 
-    public FileBootstrapConfigProvider(File configFile) {
+    public LegacyBootstrapConfigProvider(File configFile) {
         this.configFile = configFile;
     }
 
@@ -54,9 +54,9 @@ public class FileBootstrapConfigProvider implements BootstrapConfigProvider {
 
     @Override
     public BootstrapConfig getBootstrapConfig() {
-        BootstrapConfiguration config = (configFile != null)
-                ? new BootstrapConfiguration(configFile)
-                : new BootstrapConfiguration();
+        LegacyBootstrapConfiguration config = (configFile != null)
+                ? new LegacyBootstrapConfiguration(configFile)
+                : new LegacyBootstrapConfiguration();
         config.load();
         return config;
     }

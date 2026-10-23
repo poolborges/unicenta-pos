@@ -16,7 +16,7 @@
  */
 package com.openbravo.pos.printer.escpos;
 
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.spi.hardware.display.DeviceDisplay;
 import com.openbravo.pos.printer.DeviceDisplayEngine;
 /**

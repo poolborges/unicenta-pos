@@ -51,20 +51,20 @@ import java.util.logging.Logger;
  * {@code docs/modules/guide-devel/pages/spec-database-configuration.adoc}.
  * Does NOT implement AppProperties as bootstrap is strictly used during initial setup.
  */
-public class BootstrapConfiguration implements BootstrapConfig {
+public class LegacyBootstrapConfiguration implements BootstrapConfig {
 
-    private static final Logger LOGGER = Logger.getLogger(BootstrapConfiguration.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(LegacyBootstrapConfiguration.class.getName());
 
     protected Properties properties;
     protected File configfile;
 
     private static final String APP_CONFIG_FILE_NAME = "kriolos-opos.properties";
 
-    public BootstrapConfiguration() {
+    public LegacyBootstrapConfiguration() {
         this(null);
     }
 
-    public BootstrapConfiguration(File configfile) {
+    public LegacyBootstrapConfiguration(File configfile) {
         if (configfile != null) {
             this.configfile = configfile;
         } else {
@@ -161,11 +161,6 @@ public class BootstrapConfiguration implements BootstrapConfig {
         return Boolean.valueOf(getProperty(sKey));
     }
 
-    @Override
-    public boolean getBoolean(String sKey, boolean defaultValue) {
-        String val = getProperty(sKey);
-        return val != null ? Boolean.parseBoolean(val) : defaultValue;
-    }
 
     public void setBoolean(String sKey, Boolean sValue) {
         if (sValue == null) {

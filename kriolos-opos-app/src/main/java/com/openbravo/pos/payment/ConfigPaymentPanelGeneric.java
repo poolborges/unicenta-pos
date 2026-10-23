@@ -17,7 +17,7 @@
 package com.openbravo.pos.payment;
 
 import com.openbravo.pos.config.AppConfig;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.util.AltEncrypter;
 import javax.swing.JPanel;
 

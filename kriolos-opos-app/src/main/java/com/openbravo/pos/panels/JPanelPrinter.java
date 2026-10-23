@@ -17,7 +17,7 @@
 package com.openbravo.pos.panels;
 
 import com.openbravo.basic.BasicException;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.hardware.PosHardwareManager;
 import com.openbravo.pos.spi.hardware.printer.DeviceFiscalPrinter;
 import com.openbravo.pos.spi.hardware.printer.DevicePrinter;

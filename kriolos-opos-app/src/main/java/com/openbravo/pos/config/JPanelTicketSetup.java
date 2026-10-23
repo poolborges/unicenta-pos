@@ -24,7 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import java.sql.SQLException;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.ticket.TicketInfo;
 import com.openbravo.util.AltEncrypter;
 import javax.swing.JOptionPane;

@@ -18,7 +18,7 @@ package com.openbravo.pos.reports;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.BaseSentence;
 import com.openbravo.data.loader.DataResultSet;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sf.jasperreports.engine.JRDataSource;

@@ -19,7 +19,7 @@ package com.openbravo.data.gui;
 import java.util.*;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.ComparatorCreator;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.data.loader.Vectorer;
 import com.openbravo.data.user.BrowseListener;
 import com.openbravo.data.user.BrowsableEditableData;

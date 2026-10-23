@@ -17,7 +17,7 @@ package com.openbravo.pos.panels;
 
 import com.openbravo.pos.container.BeanFactoryApp;
 import com.openbravo.pos.container.BeanFactoryException;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.*;
 import com.openbravo.data.loader.ComparatorCreator;

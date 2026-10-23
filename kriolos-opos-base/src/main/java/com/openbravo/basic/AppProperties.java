@@ -14,10 +14,7 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package com.openbravo.app;
-
-import java.io.File;
-import java.util.List;
+package com.openbravo.basic;
 
 /**
  *
@@ -25,17 +22,9 @@ import java.util.List;
  */
 public interface AppProperties {
 
-    public File getConfigFile(); 
-
     public String getHost();    
 
     public String getProperty(String sKey);
 
     public String getProperty(String sKey, String defaultValue);
-    
-    public List<DatabaseConfig> getAll();
-    
-    public DatabaseConfig getPrimary();
-    
-    public static record DatabaseConfig(String name, String url, String username, String password) {}
 }

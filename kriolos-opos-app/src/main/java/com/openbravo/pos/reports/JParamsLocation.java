@@ -19,7 +19,7 @@ package com.openbravo.pos.reports;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.ComboBoxValModel;
 import com.openbravo.data.loader.*;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.inventory.InventoryService;
 import com.openbravo.pos.inventory.LocationInfo;

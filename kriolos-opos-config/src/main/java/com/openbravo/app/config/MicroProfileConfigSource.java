@@ -22,9 +22,9 @@ import java.util.logging.Logger;
  *
  * @author KriolOS
  */
-public class KriolosPropertiesConfigSource implements ConfigSource {
+public class MicroProfileConfigSource implements ConfigSource {
 
-    private static final Logger LOGGER = Logger.getLogger(KriolosPropertiesConfigSource.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(MicroProfileConfigSource.class.getName());
 
     public static final String NAME = "kriolos-opos.properties";
     public static final int DEFAULT_ORDINAL = 105;
@@ -32,15 +32,15 @@ public class KriolosPropertiesConfigSource implements ConfigSource {
     private final Map<String, String> properties;
     private final int ordinal;
 
-    public KriolosPropertiesConfigSource() {
-        this(BootstrapConfiguration.getDefaultConfigFile(), DEFAULT_ORDINAL);
+    public MicroProfileConfigSource() {
+        this(LegacyBootstrapConfiguration.getDefaultConfigFile(), DEFAULT_ORDINAL);
     }
 
-    public KriolosPropertiesConfigSource(File configFile) {
+    public MicroProfileConfigSource(File configFile) {
         this(configFile, DEFAULT_ORDINAL);
     }
 
-    public KriolosPropertiesConfigSource(File configFile, int ordinal) {
+    public MicroProfileConfigSource(File configFile, int ordinal) {
         this.ordinal = ordinal;
         this.properties = new HashMap<>();
 

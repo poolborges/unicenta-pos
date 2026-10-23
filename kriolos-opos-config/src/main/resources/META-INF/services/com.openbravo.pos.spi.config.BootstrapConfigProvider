@@ -1,2 +1,2 @@
 com.openbravo.app.config.MicroProfileBootstrapConfigProvider
-com.openbravo.app.config.FileBootstrapConfigProvider
+com.openbravo.app.config.LegacyBootstrapConfigProvider

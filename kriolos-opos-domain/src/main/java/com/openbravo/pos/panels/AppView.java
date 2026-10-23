@@ -19,9 +19,10 @@ package com.openbravo.pos.panels;
 import com.openbravo.pos.admin.AppUserView;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.loader.Session;
-import com.openbravo.app.AppProperties;
+import com.openbravo.basic.AppProperties;
 import com.openbravo.pos.container.BeanFactoryException;
 import com.openbravo.pos.admin.DataLogicSystem;
+import com.openbravo.pos.spi.config.BootstrapConfig;
 import com.openbravo.pos.spi.hardware.DeviceTicket;
 
 import com.openbravo.pos.ticket.TicketParser;
@@ -58,6 +59,8 @@ public interface AppView {
 
     public Session getSession();
     public AppProperties getProperties();
+    
+    public BootstrapConfig getBootstrapConfig();
 
     /**
      *

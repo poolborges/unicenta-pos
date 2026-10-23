@@ -16,7 +16,7 @@
 package com.openbravo.pos.config;
 
 import com.openbravo.data.user.DirtyManager;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.payment.ConfigPaymentPanelEmpty;
 import com.openbravo.pos.payment.PaymentConfiguration;
 import java.awt.Component;

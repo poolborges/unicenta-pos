@@ -17,7 +17,7 @@
 package com.openbravo.pos.inventory;
 
 import com.openbravo.data.gui.modal.PosUIModal;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import java.awt.Component;
 import javax.swing.JPanel;
 

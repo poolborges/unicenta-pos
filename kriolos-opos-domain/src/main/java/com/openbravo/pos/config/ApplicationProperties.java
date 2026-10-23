@@ -15,13 +15,8 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.openbravo.pos.config;
 
-import com.openbravo.app.AppProperties;
+import com.openbravo.basic.AppProperties;
 import com.openbravo.pos.spi.config.BootstrapConfig;
-import java.io.File;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * Production implementation of {@link AppProperties} for the running application lifecycle.
  * <p>
@@ -34,16 +29,11 @@ public class ApplicationProperties implements AppProperties {
 
     private final ApplicationConfigurationService configService;
     private final BootstrapConfig bootstrapConfig;
-    private final File configFile;
+
 
     public ApplicationProperties(ApplicationConfigurationService configService, BootstrapConfig bootstrapConfig) {
-        this(configService, bootstrapConfig, null);
-    }
-
-    public ApplicationProperties(ApplicationConfigurationService configService, BootstrapConfig bootstrapConfig, File configFile) {
         this.configService = configService;
         this.bootstrapConfig = bootstrapConfig;
-        this.configFile = configFile;
     }
 
     public ApplicationConfigurationService getConfigurationService() {
@@ -52,11 +42,6 @@ public class ApplicationProperties implements AppProperties {
 
     public BootstrapConfig getBootstrapConfig() {
         return bootstrapConfig;
-    }
-
-    @Override
-    public File getConfigFile() {
-        return configFile;
     }
 
     @Override
@@ -78,24 +63,5 @@ public class ApplicationProperties implements AppProperties {
             return bootstrapConfig.getProperty(sKey, defaultValue);
         }
         return defaultValue;
-    }
-
-    @Override
-    public List<DatabaseConfig> getAll() {
-        if (bootstrapConfig == null) {
-            return Collections.emptyList();
-        }
-        return bootstrapConfig.getDatabaseConfigs().stream()
-                .map(d -> new DatabaseConfig(d.name(), d.url(), d.username(), d.password()))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public DatabaseConfig getPrimary() {
-        if (bootstrapConfig == null) {
-            return null;
-        }
-        BootstrapConfig.DatabaseConfig p = bootstrapConfig.getPrimaryDatabaseConfig();
-        return (p != null) ? new DatabaseConfig(p.name(), p.url(), p.username(), p.password()) : null;
     }
 }

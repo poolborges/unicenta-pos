@@ -17,7 +17,7 @@
 package com.openbravo.pos.payment;
 
 import com.openbravo.pos.customers.CustomerInfoExt;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import java.awt.Component;
 
 /**

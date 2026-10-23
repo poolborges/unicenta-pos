@@ -25,7 +25,7 @@ import com.openbravo.data.user.SaveProvider;
 import com.openbravo.data.model.Field;
 import com.openbravo.data.model.Row;
 import com.openbravo.format.Formats;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.container.BeanFactoryDataSingle;
 import com.openbravo.pos.container.BeanFactoryException;
 import com.openbravo.pos.sales.restaurant.DataLogicRestaurant;

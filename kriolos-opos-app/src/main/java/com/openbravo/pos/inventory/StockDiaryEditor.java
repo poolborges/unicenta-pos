@@ -18,7 +18,7 @@ package com.openbravo.pos.inventory;
 
 import com.openbravo.data.user.DirtyManager;
 import com.openbravo.data.user.EditorRecord;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.panels.AppView;
 import com.openbravo.pos.admin.DataLogicSystem;
 import com.openbravo.pos.resources.ResourceService;

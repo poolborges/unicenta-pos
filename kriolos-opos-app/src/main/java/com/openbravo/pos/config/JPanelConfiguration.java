@@ -17,8 +17,8 @@ package com.openbravo.pos.config;
 
 import com.openbravo.pos.panels.JPanelView;
 import com.openbravo.pos.panels.AppView;
-import com.openbravo.app.AppLocal;
-import com.openbravo.app.AppProperties;
+import com.openbravo.basic.AppLocal;
+import com.openbravo.basic.AppProperties;
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.JMessagePanel;
 import com.openbravo.data.gui.MessageInf;
@@ -65,7 +65,7 @@ public class JPanelConfiguration extends JPanel implements JPanelView {
     public JPanelConfiguration(AppProperties props) {
 
         initComponents();
-        config = new AppConfig(props.getConfigFile());
+        config = AppConfig.getInstance();
 
         m_panelconfig = new ArrayList<>();
 

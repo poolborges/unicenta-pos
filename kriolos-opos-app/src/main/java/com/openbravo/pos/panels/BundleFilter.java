@@ -21,7 +21,7 @@ import com.openbravo.data.gui.MessageInf;
 import com.openbravo.data.loader.SerializerWrite;
 import com.openbravo.data.loader.SerializerWriteString;
 import com.openbravo.pos.catalog.CatalogService;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.pim.DataLogicPIM;
 import com.openbravo.pos.reports.ReportEditorCreator;
 import com.openbravo.pos.ticket.ProductInfoExt;

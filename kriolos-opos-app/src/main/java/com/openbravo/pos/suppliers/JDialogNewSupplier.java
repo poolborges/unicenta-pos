@@ -18,7 +18,7 @@ package com.openbravo.pos.suppliers;
 
 import com.openbravo.basic.BasicException;
 import com.openbravo.data.gui.modal.PosUIModal;
-import com.openbravo.app.AppLocal;
+import com.openbravo.basic.AppLocal;
 import com.openbravo.pos.panels.AppView;
 import java.awt.Component;
 
