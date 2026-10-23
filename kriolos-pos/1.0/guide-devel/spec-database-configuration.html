@@ -462,7 +462,7 @@
                                       ▼
  [PHASE 1: PRE-DB BOOTSTRAP]
  1. Locate local 'kriolos-opos.properties' or resolve CLI / Environment variables
- 2. Instantiate 'BootstrapConfiguration' (implements AppProperties)
+ 2. Instantiate 'LegacyBootstrapConfiguration' (implements AppProperties)
  3. Initialize LaF Theme (FlatLaf / Native)
  4. Resolve 'machine.uuid' (Station UUID; auto-generated if first launch)
  5. Initialize JDBC Connection Pool (HikariCP) using Bootstrap DB credentials
@@ -536,7 +536,7 @@
             │ (Found) ────────► Return value
             │ (Not found)
             ▼
-   Check Bootstrap Fallback: Return default from BootstrapConfiguration / code default</code></pre>
+   Check Bootstrap Fallback: Return default from LegacyBootstrapConfiguration / code default</code></pre>
 </div>
 </div>
 </div>
@@ -637,7 +637,7 @@ public interface ConfigurationProvider {
 <div class="ulist">
 <ul>
 <li>
-<p>Uses <code>BootstrapConfiguration</code> to connect to the database.</p>
+<p>Uses <code>LegacyBootstrapConfiguration</code> to connect to the database.</p>
 </li>
 <li>
 <p>Loads <code>config_properties</code> into an in-memory concurrent map (<code>ConcurrentHashMap</code>).</p>
@@ -673,7 +673,7 @@ public interface ConfigurationProvider {
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.openbravo.pos.config.AppConfig</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>BootstrapConfiguration</code></strong> (<code>kriolos-opos-base</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>LegacyBootstrapConfiguration</code></strong> (<code>kriolos-opos-base</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Purely pre-DB settings. Implements <code>AppProperties</code>. Stripped of all store, receipt, and tax properties.</p></td>
 </tr>
 <tr>
